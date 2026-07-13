@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐛 Studio Debug — Technologie 3ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#818cf8; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:14px 0 4px;font-size:28px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:8px}
+.hud{display:flex;gap:18px;margin:6px 0;font-weight:800;font-size:15px;flex-wrap:wrap;justify-content:center}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:580px}
+.jauges{display:flex;gap:14px;align-items:center;margin:4px 0 8px}
+.jauge{flex:1}
+.jauge .lbl{font-size:11px;color:#94a3b8;font-weight:700;letter-spacing:1px}
+.jauge .barre{height:12px;background:#1e293b;border-radius:7px;overflow:hidden;border:1px solid #334155}
+.jauge .barre div{height:100%;transition:width .2s}
+#tmfill{background:#818cf8}
+#journeefill{background:#38bdf8}
+h4{font-size:12px;letter-spacing:2px;color:#94a3b8;text-transform:uppercase;margin:8px 4px 6px}
+#alertes{min-height:150px;display:flex;flex-direction:column;gap:8px}
+.alerte{background:#1e293b;border:2px solid #7f1d1d;border-left:6px solid var(--rouge);border-radius:12px;padding:9px 12px;position:relative;overflow:hidden}
+.alerte .txt{font-size:13.5px;font-weight:700;line-height:1.4}
+.alerte .tempo{position:absolute;left:0;bottom:0;height:4px;background:var(--rouge)}
+.alerte.auto{border-color:#312e81;border-left-color:var(--neon)}
+#reglesActives{font-size:12px;color:#a5b4fc;font-weight:700;margin:4px;min-height:18px}
+.actionneurs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.actionneurs button{border:2px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:12px;padding:11px 4px;font-size:12px;font-weight:800;cursor:pointer;line-height:1.35}
+.actionneurs button:hover{border-color:var(--neon)}
+.actionneurs button .ic{font-size:21px;display:block}
+.actionneurs button small{display:block;font-weight:600;color:#94a3b8;font-size:10px}
+#flash{min-height:24px;text-align:center;font-weight:800;font-size:13px;margin-top:6px}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.95);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:24px}
+.overlay p{color:#cbd5e1;font-size:14px;max-width:460px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay .gros{border:none;border-radius:12px;padding:12px 24px;font-size:16px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+.boutique{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:460px}
+.boutique button{border:2px solid #475569;background:#0f172a;color:#e2e8f0;border-radius:11px;padding:10px;font-size:12.5px;font-weight:700;cursor:pointer;text-align:left;line-height:1.4}
+.boutique button:hover{border-color:var(--neon)}
+.boutique button:disabled{opacity:.4;cursor:default}
+.boutique button.achete{border-color:#166534;color:#4ade80}
+.qbox{background:#1e293b;border:2px solid var(--or);border-radius:14px;padding:16px;max-width:410px}
+.qbox .q{font-weight:800;color:#fff;margin-bottom:10px;font-size:14.5px}
+.qbox button{display:block;width:100%;margin:6px 0;padding:10px;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13.5px;font-weight:700;cursor:pointer}
+.qbox button:hover{border-color:var(--neon)}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23818cf8'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🐛 STUDIO DEBUG</h1>
+<div class="sous">La démo publique approche et les bugs pleuvent : applique le bon correctif à chaque plantage avant le crash !</div>
+
+<div class="hud">
+  <div>Journée : <span class="v" id="hJour">1</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Crashs : <span class="v" id="hInc">0 / 3</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div class="jauges">
+    <div class="jauge"><div class="lbl">⚡ TEMPS DÉVELOPPEUR</div><div class="barre"><div id="tmfill" style="width:100%"></div></div></div>
+    <div class="jauge"><div class="lbl">🕐 JOURNÉE</div><div class="barre"><div id="journeefill" style="width:0%"></div></div></div>
+  </div>
+  <h4>🚨 Bugs signalés</h4>
+  <div id="alertes"></div>
+  <div id="reglesActives">Aucun outil installé.</div>
+  <h4>🧰 Tes correctifs — clique directement le BON correctif pour le bug de son type</h4>
+  <div class="actionneurs">
+    <button data-a="variable"><span class="ic">📦</span>INITIALISER LA VARIABLE<small>valeur de départ correcte</small></button>
+    <button data-a="boucle"><span class="ic">🔁</span>CORRIGER LA BOUCLE<small>compteur, condition d'arrêt</small></button>
+    <button data-a="condition"><span class="ic">🔀</span>CORRIGER LE TEST<small>le si… alors… sinon…</small></button>
+    <button data-a="syntaxe"><span class="ic">🧩</span>RÉPARER LES BLOCS<small>bloc manquant, mal connecté</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Studio verrouillé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Le studio de code</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button class="gros" id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Lead développeur, c'est toi</h2>
+    <p>Chaque bug a UN correctif idéal.<br>
+    📦 valeur folle ou score qui part de n'importe où → initialiser la variable ·
+    🔁 ça tourne sans fin ou pas assez → corriger la boucle ·
+    🔀 mauvaise décision du programme → corriger le test ·
+    🧩 rien ne se lance, bloc manquant → réparer les blocs.<br>
+    Chaque correctif consomme du <b>⚡ temps développeur</b> (une erreur en gaspille le double). Il se recharge entre les journées.<br>
+    <b>3 crashs en démo = le studio ferme.</b> Le soir : boutique d'outils + question bonus !</p>
+    <button class="gros" id="btnGo">🐛 Ouvrir le tableau des bugs</button>
+  </div>
+
+  <div class="overlay cache" id="ovBoutique">
+    <h2>🌙 Fin de la journée <span id="bJour"></span></h2>
+    <div class="qbox" id="qbox"></div>
+    <p style="margin:4px 0 0"><b>🛒 Outils du studio</b> (<span id="bScore" style="color:#fbbf24;font-weight:900"></span> pts)</p>
+    <div class="boutique" id="boutique"></div>
+    <button class="gros" id="btnJourSuiv">☀️ Journée suivante (⚡ +40)</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Démo annulée !</h2>
+    <p id="finTexte"></p>
+    <button class="gros" id="btnRejouer">↺ Rouvrir le studio</button>
+  </div>
+</div>
+
+<footer>Jeu de gestion · Séquence Algorithmes & programmation · 3ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='BOUCLE10';
+function dejaOuvert(){ try{ return localStorage.getItem('studiodebug_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('studiodebug_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ================== DONNÉES ================== */
+const NOMS_P={variable:'📦 INITIALISER LA VARIABLE',boucle:'🔁 CORRIGER LA BOUCLE',condition:'🔀 CORRIGER LE TEST',syntaxe:'🧩 RÉPARER LES BLOCS'};
+const BUGS=[
+ {ic:'📦',txt:'Jeu « AstroRun » : le score affiche n\u2019importe quoi dès le lancement — il n\u2019a jamais reçu de valeur de départ',def:'variable',exp:'variable jamais initialisée : ajouter « score ← 0 » au démarrage.'},
+ {ic:'📦',txt:'Jeu « Kart ESTIC » : le joueur démarre la course avec les vies de la partie PRÉCÉDENTE',def:'variable',exp:'la variable vies n\u2019est pas réinitialisée : « vies ← 3 » au début de chaque partie.'},
+ {ic:'🔁',txt:'Jeu « PixelFarm » : l\u2019écran se fige, la boucle d\u2019arrosage tourne SANS FIN',def:'boucle',exp:'boucle infinie : sa condition d\u2019arrêt n\u2019est jamais vraie. Corriger le « répéter jusqu\u2019à… ».'},
+ {ic:'🔁',txt:'Jeu « AstroRun » : l\u2019animation de victoire ne joue qu\u2019UNE fois au lieu de 10',def:'boucle',exp:'compteur mal réglé : « répéter 1 fois » au lieu de « répéter 10 fois ».'},
+ {ic:'🔀',txt:'Jeu « Kart ESTIC » : le turbo s\u2019active même quand la jauge est VIDE',def:'condition',exp:'test à l\u2019envers : « si jauge < 0 » au lieu de « si jauge > 0 ». Corriger la comparaison.'},
+ {ic:'🔀',txt:'Jeu « PixelFarm » : le « GAME OVER » ne s\u2019affiche jamais, même à 0 vie',def:'condition',exp:'le test « vies = 0 » n\u2019est jamais évalué au bon endroit : corriger le si… alors.'},
+ {ic:'🧩',txt:'Jeu « AstroRun » : rien ne se lance — le bloc « quand drapeau cliqué » n\u2019est connecté à rien',def:'syntaxe',exp:'bloc de départ orphelin : raccrocher le script au déclencheur.'},
+ {ic:'🧩',txt:'Jeu « PixelFarm » : le programme plante — un bloc « fin de si » a été supprimé par erreur',def:'syntaxe',exp:'structure incomplète : chaque « si » doit être refermé. Réparer l\u2019emboîtement des blocs.'},
+];
+const QUESTIONS=[
+ {q:"Après « x ← 3 » puis « x ← x × 2 », x vaut…", r:["3","6","32"], b:1},
+ {q:"Une boucle « tant que » s'arrête quand son test devient…", r:["FAUX","VRAI","négatif"], b:0},
+ {q:"Dans « si… alors… sinon… », combien de branches s'exécutent ?", r:["une seule","les deux","zéro"], b:0},
+ {q:"Chercher et corriger les erreurs d'un programme, c'est…", r:["déboguer","compresser","formater"], b:0},
+ {q:"« Répéter 5 fois : avancer 30 » fait avancer en tout de…", r:["30","150","35"], b:1},
+];
+const UPGRADES=[
+ {id:'variable', cout:230, t:'📦 Vérificateur d\u2019initialisation', d:'les bugs de variable se corrigent seuls'},
+ {id:'boucle', cout:250, t:'🔁 Détecteur de boucles infinies', d:'les bugs de boucle se corrigent seuls'},
+ {id:'condition', cout:220, t:'🔀 Testeur de conditions', d:'les bugs de condition se corrigent seuls'},
+ {id:'syntaxe', cout:200, t:'🧩 Vérificateur de blocs', d:'les bugs de syntaxe se corrigent seuls'},
+];
+
+/* ================== JEU ================== */
+const JOURNEE_S=30;
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('studiodebug_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={t:0,jour:1,score:0,incidents:0,tm:100,alertes:[],prochaine:1.2,fini:false,pause:false,ups:[],qUtil:[]};
+  window.J_DEBUG=J;
+  dernierTs=null;
+  majHUD(); majAlertes(); majRegles();
+}
+function majHUD(){
+  document.getElementById('hJour').textContent=J.jour;
+  document.getElementById('hScore').textContent=Math.floor(J.score);
+  document.getElementById('hInc').textContent=J.incidents+' / 3';
+  document.getElementById('tmfill').style.width=Math.max(0,J.tm)+'%';
+  document.getElementById('tmfill').style.background= J.tm>50?'#818cf8':(J.tm>25?'#fbbf24':'#f87171');
+}
+function majRegles(){
+  document.getElementById('reglesActives').textContent=
+    J.ups.length? '🤖 Automatisé : '+UPGRADES.filter(u=>J.ups.includes(u.id)).map(u=>u.t).join(' · ')
+    : 'Aucun outil installé.';
+}
+function flash(t,coul){ const f=document.getElementById('flash'); f.textContent=t; f.style.color=coul; }
+function creerBug(){
+  const a0=BUGS[Math.floor(Math.random()*BUGS.length)];
+  const duree=Math.max(6, 12-J.jour);
+  J.alertes.push({def:a0.def, ic:a0.ic, txt:a0.txt, exp:a0.exp, reste:duree, duree, auto:J.ups.includes(a0.def), autoDelai:1.6});
+  majAlertes();
+}
+function majAlertes(){
+  const zone=document.getElementById('alertes'); zone.innerHTML='';
+  J.alertes.forEach(a=>{
+    const d=document.createElement('div'); d.className='alerte'+(a.auto?' auto':'');
+    d.innerHTML='<div class="txt">'+a.ic+' '+a.txt+(a.auto?' <span style="color:#a5b4fc">· 🤖 correction auto…</span>':'')+'</div>'+
+      '<div class="tempo" style="width:'+(a.reste/a.duree*100)+'%"></div>';
+    zone.appendChild(d);
+  });
+}
+document.querySelectorAll('.actionneurs button').forEach(b=>{
+  b.onclick=()=>{
+    if(!J||J.fini||J.pause) return;
+    const def=b.dataset.a;
+    if(J.tm<=0){ flash('⚡ Plus de temps développeur ! Tiens jusqu\u2019au soir…','#f87171'); return; }
+    const idx=J.alertes.findIndex(a=>a.def===def && !a.auto);
+    if(idx>=0){
+      const a=J.alertes.splice(idx,1)[0];
+      J.tm=Math.max(0,J.tm-6);
+      J.score+=20+Math.round(a.reste*2);
+      flash('✅ Bug corrigé ! '+a.exp,'#4ade80');
+      majHUD(); majAlertes();
+    } else {
+      J.tm=Math.max(0,J.tm-10);
+      flash('❌ Mauvais correctif : temps gaspillé ! Relis le symptôme : valeur folle (variable), ça tourne mal (boucle), mauvaise décision (condition), rien ne marche (blocs) ?','#f87171');
+      majHUD();
+    }
+  };
+});
+/* -------- boutique / questions -------- */
+function finDeJournee(){
+  J.pause=true;
+  document.getElementById('bJour').textContent=J.jour;
+  document.getElementById('bScore').textContent=Math.floor(J.score);
+  let dispo=QUESTIONS.map((_,i)=>i).filter(i=>!J.qUtil.includes(i));
+  if(dispo.length===0){ J.qUtil=[]; dispo=QUESTIONS.map((_,i)=>i); }
+  const qi=dispo[Math.floor(Math.random()*dispo.length)]; J.qUtil.push(qi);
+  const q=QUESTIONS[qi], box=document.getElementById('qbox');
+  box.innerHTML='<div class="q">🧠 Question bonus — '+q.q+'</div>';
+  q.r.forEach((rep,k)=>{
+    const b=document.createElement('button'); b.textContent=rep;
+    b.onclick=()=>{
+      [...box.querySelectorAll('button')].forEach(x=>x.disabled=true);
+      if(k===q.b){ J.score+=100; b.style.borderColor='#4ade80'; }
+      else b.style.borderColor='#f87171';
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+      majBoutique();
+    };
+    box.appendChild(b);
+  });
+  majBoutique();
+  document.getElementById('ovBoutique').classList.remove('cache');
+}
+function majBoutique(){
+  const zone=document.getElementById('boutique'); zone.innerHTML='';
+  UPGRADES.forEach(u=>{
+    const b=document.createElement('button');
+    const possede=J.ups.includes(u.id);
+    b.innerHTML=u.t+' — <b>'+(possede?'✅ installé':u.cout+' pts')+'</b><br>'+u.d;
+    if(possede) b.classList.add('achete');
+    b.disabled = possede || J.score<u.cout;
+    b.onclick=()=>{
+      J.score-=u.cout; J.ups.push(u.id);
+      majBoutique(); majRegles();
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+    };
+    zone.appendChild(b);
+  });
+}
+document.getElementById('btnJourSuiv').onclick=()=>{
+  document.getElementById('ovBoutique').classList.add('cache');
+  J.jour++; J.pause=false; dernierTs=null; J.prochaine=1.5;
+  J.tm=Math.min(100,J.tm+40);
+  J.alertes.forEach(a=>{ if(J.ups.includes(a.def)) a.auto=true; });
+  majHUD(); majAlertes();
+};
+function finPartie(raison){
+  J.fini=true;
+  if(Math.floor(J.score)>record){ record=Math.floor(J.score); try{ localStorage.setItem('studiodebug_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.jour>=4 ? '🏆 Studio de l\u2019année !' : '💥 Démo annulée !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Journées tenues : <b>'+J.jour+'</b> · Score : <b>'+Math.floor(J.score)+'</b> · Outils : <b>'+J.ups.length+'/4</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+/* -------- boucle -------- */
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini||J.pause){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  const jourAvant=Math.floor(J.t/JOURNEE_S);
+  J.t+=dt;
+  document.getElementById('journeefill').style.width=((J.t%JOURNEE_S)/JOURNEE_S*100)+'%';
+  if(Math.floor(J.t/JOURNEE_S)>jourAvant){ finDeJournee(); return; }
+  J.prochaine-=dt;
+  if(J.prochaine<=0 && J.alertes.length<4){
+    creerBug();
+    J.prochaine=Math.max(2.2, 6-J.jour*0.6)+Math.random()*2;
+  }
+  let change=false;
+  for(const a of [...J.alertes]){
+    if(a.auto){
+      a.autoDelai-=dt;
+      if(a.autoDelai<=0){
+        J.alertes.splice(J.alertes.indexOf(a),1);
+        J.tm=Math.max(0,J.tm-0.5);
+        J.score+=12;
+        flash('🤖 '+a.ic+' bug corrigé automatiquement (+12)','#a5b4fc');
+        change=true; continue;
+      }
+    }
+    a.reste-=dt;
+    if(a.reste<=0){
+      J.alertes.splice(J.alertes.indexOf(a),1);
+      J.incidents++; change=true;
+      flash('💥 CRASH en pleine démo : '+a.txt+' (correctif : '+NOMS_P[a.def]+')','#f87171');
+      majHUD();
+      if(J.incidents>=3) return finPartie('Trois crashs devant le public… La leçon du studio : un bug se DIAGNOSTIQUE avant de se corriger — symptôme, cause, correctif.');
+    }
+  }
+  const zone=document.getElementById('alertes');
+  [...zone.children].forEach((d,i)=>{
+    const a=J.alertes[i]; if(!a) return;
+    const t=d.querySelector('.tempo'); if(t) t.style.width=(a.reste/a.duree*100)+'%';
+  });
+  if(change) majAlertes();
+  J.score+=dt;
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📐 Bureau d'étude — Technologie 5ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#fbbf24; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:14px 0 4px;font-size:28px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:8px}
+.hud{display:flex;gap:18px;margin:6px 0;font-weight:800;font-size:15px;flex-wrap:wrap;justify-content:center}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:580px}
+.jauges{display:flex;gap:14px;align-items:center;margin:4px 0 8px}
+.jauge{flex:1}
+.jauge .lbl{font-size:11px;color:#94a3b8;font-weight:700;letter-spacing:1px}
+.jauge .barre{height:12px;background:#1e293b;border-radius:7px;overflow:hidden;border:1px solid #334155}
+.jauge .barre div{height:100%;transition:width .2s}
+#tmfill{background:#fbbf24}
+#journeefill{background:#38bdf8}
+h4{font-size:12px;letter-spacing:2px;color:#94a3b8;text-transform:uppercase;margin:8px 4px 6px}
+#alertes{min-height:150px;display:flex;flex-direction:column;gap:8px}
+.alerte{background:#1e293b;border:2px solid #7f1d1d;border-left:6px solid var(--rouge);border-radius:12px;padding:9px 12px;position:relative;overflow:hidden}
+.alerte .txt{font-size:13.5px;font-weight:700;line-height:1.4}
+.alerte .tempo{position:absolute;left:0;bottom:0;height:4px;background:var(--rouge)}
+.alerte.auto{border-color:#78350f;border-left-color:var(--neon)}
+#reglesActives{font-size:12px;color:#fde68a;font-weight:700;margin:4px;min-height:18px}
+.actionneurs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.actionneurs button{border:2px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:12px;padding:11px 4px;font-size:12px;font-weight:800;cursor:pointer;line-height:1.35}
+.actionneurs button:hover{border-color:var(--neon)}
+.actionneurs button .ic{font-size:21px;display:block}
+.actionneurs button small{display:block;font-weight:600;color:#94a3b8;font-size:10px}
+#flash{min-height:24px;text-align:center;font-weight:800;font-size:13px;margin-top:6px}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.95);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:24px}
+.overlay p{color:#cbd5e1;font-size:14px;max-width:460px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay .gros{border:none;border-radius:12px;padding:12px 24px;font-size:16px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+.boutique{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:460px}
+.boutique button{border:2px solid #475569;background:#0f172a;color:#e2e8f0;border-radius:11px;padding:10px;font-size:12.5px;font-weight:700;cursor:pointer;text-align:left;line-height:1.4}
+.boutique button:hover{border-color:var(--neon)}
+.boutique button:disabled{opacity:.4;cursor:default}
+.boutique button.achete{border-color:#166534;color:#4ade80}
+.qbox{background:#1e293b;border:2px solid var(--or);border-radius:14px;padding:16px;max-width:410px}
+.qbox .q{font-weight:800;color:#fff;margin-bottom:10px;font-size:14.5px}
+.qbox button{display:block;width:100%;margin:6px 0;padding:10px;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13.5px;font-weight:700;cursor:pointer}
+.qbox button:hover{border-color:var(--neon)}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23fbbf24'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>📐 BUREAU D'ÉTUDE</h1>
+<div class="sous">Ton entreprise vend des objets du quotidien… et les plaintes des clients pleuvent. Corrige chaque défaut de conception avant le bad buzz !</div>
+
+<div class="hud">
+  <div>Journée : <span class="v" id="hJour">1</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Bad buzz : <span class="v" id="hInc">0 / 3</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div class="jauges">
+    <div class="jauge"><div class="lbl">⚡ TEMPS DE CONCEPTION</div><div class="barre"><div id="tmfill" style="width:100%"></div></div></div>
+    <div class="jauge"><div class="lbl">🕐 JOURNÉE</div><div class="barre"><div id="journeefill" style="width:0%"></div></div></div>
+  </div>
+  <h4>📋 Plaintes des clients</h4>
+  <div id="alertes"></div>
+  <div id="reglesActives">Aucun outil installé.</div>
+  <h4>🧰 Tes corrections — clique directement la BONNE correction pour la plainte de son type</h4>
+  <div class="actionneurs">
+    <button data-a="forme"><span class="ic">🤚</span>RETRAVAILLER LA FORME<small>galbes, taille, prise en main</small></button>
+    <button data-a="signal"><span class="ic">👁️</span>CLARIFIER LE SIGNAL<small>l'usage doit se voir</small></button>
+    <button data-a="effort"><span class="ic">💪</span>RÉDUIRE L'EFFORT<small>alléger, répartir, faciliter</small></button>
+    <button data-a="securite"><span class="ic">🛡️</span>SÉCURISER<small>arrondir, isoler, verrouiller</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Bureau d'étude fermé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Le bureau design</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button class="gros" id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Chef du bureau d'étude, c'est toi</h2>
+    <p>Chaque plainte a UNE correction idéale.<br>
+    🤚 ça fait mal à la main → forme · 👁️ on se trompe d'usage → signal ·
+    💪 trop lourd ou trop dur → effort · 🛡️ ça coupe, pince ou brûle → sécurité.<br>
+    Chaque correction consomme du <b>⚡ temps de conception</b> (une erreur en gaspille le double). Il se recharge entre les journées.<br>
+    <b>3 bad buzz = l'entreprise ferme.</b> Le soir : boutique d'outils + question bonus !</p>
+    <button class="gros" id="btnGo">📐 Ouvrir le bureau</button>
+  </div>
+
+  <div class="overlay cache" id="ovBoutique">
+    <h2>🌙 Fin de la journée <span id="bJour"></span></h2>
+    <div class="qbox" id="qbox"></div>
+    <p style="margin:4px 0 0"><b>🛒 Outils du designer</b> (<span id="bScore" style="color:#fbbf24;font-weight:900"></span> pts)</p>
+    <div class="boutique" id="boutique"></div>
+    <button class="gros" id="btnJourSuiv">☀️ Journée suivante (⚡ +40)</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Bad buzz général !</h2>
+    <p id="finTexte"></p>
+    <button class="gros" id="btnRejouer">↺ Rouvrir le bureau</button>
+  </div>
+</div>
+
+<footer>Jeu de gestion · Séquence Design & ergonomie · 5ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='CONFORT5';
+function dejaOuvert(){ try{ return localStorage.getItem('bureaudesign_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('bureaudesign_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ================== DONNÉES ================== */
+const NOMS_P={forme:'🤚 RETRAVAILLER LA FORME',signal:'👁️ CLARIFIER LE SIGNAL',effort:'💪 RÉDUIRE L\u2019EFFORT',securite:'🛡️ SÉCURISER'};
+const INCIDENTS=[
+ {ic:'✂️',txt:'« Les anneaux des ciseaux ScolCoup font mal au pouce après 5 minutes »',def:'forme',exp:'anneaux trop étroits : galber et élargir à partir de mesures de vraies mains.'},
+ {ic:'🖱️',txt:'« La souris MaxiClic est trop grosse : les enfants n\u2019atteignent pas les boutons »',def:'forme',exp:'pas aux mesures de l\u2019utilisateur : décliner une taille enfant.'},
+ {ic:'🚪',txt:'« Tout le monde POUSSE la porte VitraLuxe… qui se tire ! »',def:'signal',exp:'la poignée envoie le mauvais message : plaque côté pousser, poignée côté tirer — merci Norman !'},
+ {ic:'🎛️',txt:'« Impossible de trouver le bouton marche du four Cuistotron : 8 boutons identiques »',def:'signal',exp:'des commandes indifférenciées : formes et pictos distincts pour que l\u2019usage se VOIE.'},
+ {ic:'🎒',txt:'« Les bretelles fines du cartable UltraLight scient les épaules »',def:'effort',exp:'le poids se concentre sur 2 cm : bretelles larges et rembourrées pour répartir l\u2019effort.'},
+ {ic:'🫙',txt:'« Le couvercle du bocal SuperFrais est impossible à ouvrir sans un adulte »',def:'effort',exp:'trop de force demandée : couvercle à ouverture facilitée, effort limité au cahier des charges.'},
+ {ic:'🍳',txt:'« La poignée métallique de la poêle Cuivrella devient BRÛLANTE sur le feu »',def:'securite',exp:'risque de brûlure : manche isolant obligatoire.'},
+ {ic:'🗄️',txt:'« Le tiroir du bureau Scolix se referme tout seul… sur les doigts »',def:'securite',exp:'risque de pincement : amortisseur de fermeture et butée.'},
+];
+const QUESTIONS=[
+ {q:"Adapter l'objet au corps humain, c'est…", r:["l'ergonomie","l'esthétique","la publicité"], b:0},
+ {q:"Si tout le monde se trompe d'usage, le fautif est…", r:["le design de l'objet","l'utilisateur","le hasard"], b:0},
+ {q:"Avant la fabrication en série, on…", r:["fabrique un prototype et on le teste","lance l'usine directement","choisit le logo"], b:0},
+ {q:"Une chaise pour Zoé (150 cm) doit avoir une assise à… (règle des 27 %)", r:["40,5 cm","27 cm","75 cm"], b:0},
+ {q:"Un cartable pour un élève de 40 kg ne devrait pas dépasser…", r:["4 kg (10 %)","20 kg","40 kg"], b:0},
+];
+const UPGRADES=[
+ {id:'forme', cout:230, t:'🤚 Scanner 3D de mains', d:'les plaintes de forme se règlent seules'},
+ {id:'signal', cout:250, t:'👁️ Banque de pictos universels', d:'les plaintes de signal se règlent seules'},
+ {id:'effort', cout:220, t:'💪 Matériaux ultralégers', d:'les plaintes d\u2019effort se règlent seules'},
+ {id:'securite', cout:200, t:'🛡️ Contrôle normes automatisé', d:'les plaintes de sécurité se règlent seules'},
+];
+
+/* ================== JEU ================== */
+const JOURNEE_S=30;
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('bureaudesign_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={t:0,jour:1,score:0,incidents:0,tm:100,alertes:[],prochaine:1.2,fini:false,pause:false,ups:[],qUtil:[]};
+  window.J_DEBUG=J;
+  dernierTs=null;
+  majHUD(); majAlertes(); majRegles();
+}
+function majHUD(){
+  document.getElementById('hJour').textContent=J.jour;
+  document.getElementById('hScore').textContent=Math.floor(J.score);
+  document.getElementById('hInc').textContent=J.incidents+' / 3';
+  document.getElementById('tmfill').style.width=Math.max(0,J.tm)+'%';
+  document.getElementById('tmfill').style.background= J.tm>50?'#fbbf24':(J.tm>25?'#fb923c':'#f87171');
+}
+function majRegles(){
+  document.getElementById('reglesActives').textContent=
+    J.ups.length? '🤖 Automatisé : '+UPGRADES.filter(u=>J.ups.includes(u.id)).map(u=>u.t).join(' · ')
+    : 'Aucun outil installé.';
+}
+function flash(t,coul){ const f=document.getElementById('flash'); f.textContent=t; f.style.color=coul; }
+function creerIncident(){
+  const a0=INCIDENTS[Math.floor(Math.random()*INCIDENTS.length)];
+  const duree=Math.max(6, 12-J.jour);
+  J.alertes.push({def:a0.def, ic:a0.ic, txt:a0.txt, exp:a0.exp, reste:duree, duree, auto:J.ups.includes(a0.def), autoDelai:1.6});
+  majAlertes();
+}
+function majAlertes(){
+  const zone=document.getElementById('alertes'); zone.innerHTML='';
+  J.alertes.forEach(a=>{
+    const d=document.createElement('div'); d.className='alerte'+(a.auto?' auto':'');
+    d.innerHTML='<div class="txt">'+a.ic+' '+a.txt+(a.auto?' <span style="color:#fde68a">· 🤖 corrigé automatiquement…</span>':'')+'</div>'+
+      '<div class="tempo" style="width:'+(a.reste/a.duree*100)+'%"></div>';
+    zone.appendChild(d);
+  });
+}
+document.querySelectorAll('.actionneurs button').forEach(b=>{
+  b.onclick=()=>{
+    if(!J||J.fini||J.pause) return;
+    const def=b.dataset.a;
+    if(J.tm<=0){ flash('⚡ Plus de temps de conception ! Tiens jusqu\u2019au soir…','#f87171'); return; }
+    const idx=J.alertes.findIndex(a=>a.def===def && !a.auto);
+    if(idx>=0){
+      const a=J.alertes.splice(idx,1)[0];
+      J.tm=Math.max(0,J.tm-6);
+      J.score+=20+Math.round(a.reste*2);
+      flash('✅ Plainte corrigée ! '+a.exp,'#4ade80');
+      majHUD(); majAlertes();
+    } else {
+      J.tm=Math.max(0,J.tm-10);
+      flash('❌ Mauvaise correction : temps gaspillé ! Relis la plainte : ça fait MAL (forme), on se TROMPE (signal), c\u2019est FATIGANT (effort) ou DANGEREUX (sécurité) ?','#f87171');
+      majHUD();
+    }
+  };
+});
+/* -------- boutique / questions -------- */
+function finDeJournee(){
+  J.pause=true;
+  document.getElementById('bJour').textContent=J.jour;
+  document.getElementById('bScore').textContent=Math.floor(J.score);
+  let dispo=QUESTIONS.map((_,i)=>i).filter(i=>!J.qUtil.includes(i));
+  if(dispo.length===0){ J.qUtil=[]; dispo=QUESTIONS.map((_,i)=>i); }
+  const qi=dispo[Math.floor(Math.random()*dispo.length)]; J.qUtil.push(qi);
+  const q=QUESTIONS[qi], box=document.getElementById('qbox');
+  box.innerHTML='<div class="q">🧠 Question bonus — '+q.q+'</div>';
+  q.r.forEach((rep,k)=>{
+    const b=document.createElement('button'); b.textContent=rep;
+    b.onclick=()=>{
+      [...box.querySelectorAll('button')].forEach(x=>x.disabled=true);
+      if(k===q.b){ J.score+=100; b.style.borderColor='#4ade80'; }
+      else b.style.borderColor='#f87171';
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+      majBoutique();
+    };
+    box.appendChild(b);
+  });
+  majBoutique();
+  document.getElementById('ovBoutique').classList.remove('cache');
+}
+function majBoutique(){
+  const zone=document.getElementById('boutique'); zone.innerHTML='';
+  UPGRADES.forEach(u=>{
+    const b=document.createElement('button');
+    const possede=J.ups.includes(u.id);
+    b.innerHTML=u.t+' — <b>'+(possede?'✅ installé':u.cout+' pts')+'</b><br>'+u.d;
+    if(possede) b.classList.add('achete');
+    b.disabled = possede || J.score<u.cout;
+    b.onclick=()=>{
+      J.score-=u.cout; J.ups.push(u.id);
+      majBoutique(); majRegles();
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+    };
+    zone.appendChild(b);
+  });
+}
+document.getElementById('btnJourSuiv').onclick=()=>{
+  document.getElementById('ovBoutique').classList.add('cache');
+  J.jour++; J.pause=false; dernierTs=null; J.prochaine=1.5;
+  J.tm=Math.min(100,J.tm+40);
+  J.alertes.forEach(a=>{ if(J.ups.includes(a.def)) a.auto=true; });
+  majHUD(); majAlertes();
+};
+function finPartie(raison){
+  J.fini=true;
+  if(Math.floor(J.score)>record){ record=Math.floor(J.score); try{ localStorage.setItem('bureaudesign_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.jour>=4 ? '🏆 Bureau d\u2019étude en or !' : '💥 Bad buzz général !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Journées tenues : <b>'+J.jour+'</b> · Score : <b>'+Math.floor(J.score)+'</b> · Outils : <b>'+J.ups.length+'/4</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+/* -------- boucle -------- */
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini||J.pause){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  const jourAvant=Math.floor(J.t/JOURNEE_S);
+  J.t+=dt;
+  document.getElementById('journeefill').style.width=((J.t%JOURNEE_S)/JOURNEE_S*100)+'%';
+  if(Math.floor(J.t/JOURNEE_S)>jourAvant){ finDeJournee(); return; }
+  J.prochaine-=dt;
+  if(J.prochaine<=0 && J.alertes.length<4){
+    creerIncident();
+    J.prochaine=Math.max(2.2, 6-J.jour*0.6)+Math.random()*2;
+  }
+  let change=false;
+  for(const a of [...J.alertes]){
+    if(a.auto){
+      a.autoDelai-=dt;
+      if(a.autoDelai<=0){
+        J.alertes.splice(J.alertes.indexOf(a),1);
+        J.tm=Math.max(0,J.tm-0.5);
+        J.score+=12;
+        flash('🤖 '+a.ic+' plainte corrigée automatiquement (+12)','#fde68a');
+        change=true; continue;
+      }
+    }
+    a.reste-=dt;
+    if(a.reste<=0){
+      J.alertes.splice(J.alertes.indexOf(a),1);
+      J.incidents++; change=true;
+      flash('📣 BAD BUZZ : '+a.txt+' (correction : '+NOMS_P[a.def]+')','#f87171');
+      majHUD();
+      if(J.incidents>=3) return finPartie('Trois bad buzz, les clients fuient et l\u2019entreprise ferme… La leçon : chaque plainte a SON défaut — forme, signal, effort ou sécurité.');
+    }
+  }
+  const zone=document.getElementById('alertes');
+  [...zone.children].forEach((d,i)=>{
+    const a=J.alertes[i]; if(!a) return;
+    const t=d.querySelector('.tempo'); if(t) t.style.width=(a.reste/a.duree*100)+'%';
+  });
+  if(change) majAlertes();
+  J.score+=dt;
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

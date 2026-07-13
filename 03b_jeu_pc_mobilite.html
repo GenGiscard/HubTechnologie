@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚦 PC Mobilité — Technologie 5ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#fca5a5; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:14px 0 4px;font-size:28px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:8px}
+.hud{display:flex;gap:18px;margin:6px 0;font-weight:800;font-size:15px;flex-wrap:wrap;justify-content:center}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:580px}
+.jauges{display:flex;gap:14px;align-items:center;margin:4px 0 8px}
+.jauge{flex:1}
+.jauge .lbl{font-size:11px;color:#94a3b8;font-weight:700;letter-spacing:1px}
+.jauge .barre{height:12px;background:#1e293b;border-radius:7px;overflow:hidden;border:1px solid #334155}
+.jauge .barre div{height:100%;transition:width .2s}
+#tmfill{background:#fca5a5}
+#journeefill{background:#fca5a5}
+h4{font-size:12px;letter-spacing:2px;color:#94a3b8;text-transform:uppercase;margin:8px 4px 6px}
+#alertes{min-height:150px;display:flex;flex-direction:column;gap:8px}
+.alerte{background:#1e293b;border:2px solid #7f1d1d;border-left:6px solid var(--rouge);border-radius:12px;padding:9px 12px;position:relative;overflow:hidden}
+.alerte .txt{font-size:13.5px;font-weight:700;line-height:1.4}
+.alerte .tempo{position:absolute;left:0;bottom:0;height:4px;background:var(--rouge)}
+.alerte.auto{border-color:#881337;border-left-color:var(--neon)}
+#reglesActives{font-size:12px;color:#fda4af;font-weight:700;margin:4px;min-height:18px}
+.actionneurs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.actionneurs button{border:2px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:12px;padding:11px 4px;font-size:12px;font-weight:800;cursor:pointer;line-height:1.35}
+.actionneurs button:hover{border-color:var(--neon)}
+.actionneurs button .ic{font-size:21px;display:block}
+.actionneurs button small{display:block;font-weight:600;color:#94a3b8;font-size:10px}
+#flash{min-height:24px;text-align:center;font-weight:800;font-size:13px;margin-top:6px}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.95);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:24px}
+.overlay p{color:#cbd5e1;font-size:14px;max-width:460px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay .gros{border:none;border-radius:12px;padding:12px 24px;font-size:16px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+.boutique{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:460px}
+.boutique button{border:2px solid #475569;background:#0f172a;color:#e2e8f0;border-radius:11px;padding:10px;font-size:12.5px;font-weight:700;cursor:pointer;text-align:left;line-height:1.4}
+.boutique button:hover{border-color:var(--neon)}
+.boutique button:disabled{opacity:.4;cursor:default}
+.boutique button.achete{border-color:#166534;color:#4ade80}
+.qbox{background:#1e293b;border:2px solid var(--or);border-radius:14px;padding:16px;max-width:410px}
+.qbox .q{font-weight:800;color:#fff;margin-bottom:10px;font-size:14.5px}
+.qbox button{display:block;width:100%;margin:6px 0;padding:10px;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13.5px;font-weight:700;cursor:pointer}
+.qbox button:hover{border-color:var(--neon)}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23fb7185'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🚦 PC MOBILITÉ</h1>
+<div class="sous">Tu tiens le poste de commande des mobilités : mauvais modes choisis, camionnettes surchargées, correspondances ratées, pics de pollution… Interviens avant la pagaille !</div>
+
+<div class="hud">
+  <div>Journée : <span class="v" id="hJour">1</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Fiascos : <span class="v" id="hInc">0 / 3</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div class="jauges">
+    <div class="jauge"><div class="lbl">⚡ CRÉDITS TRANSPORT</div><div class="barre"><div id="tmfill" style="width:100%"></div></div></div>
+    <div class="jauge"><div class="lbl">🕐 JOURNÉE</div><div class="barre"><div id="journeefill" style="width:0%"></div></div></div>
+  </div>
+  <h4>🚨 Dossiers en alerte</h4>
+  <div id="alertes"></div>
+  <div id="reglesActives">Aucun service installé.</div>
+  <h4>🧰 Tes interventions — clique directement la BONNE intervention pour l'alerte de son type</h4>
+  <div class="actionneurs">
+    <button data-a="criteres"><span class="ic">📊</span>REFAIRE LE COMPARATIF<small>mauvais mode choisi</small></button>
+    <button data-a="capacite"><span class="ic">🚂</span>AFFRÉTER PLUS GROS<small>charge sous-estimée</small></button>
+    <button data-a="correspondance"><span class="ic">🔗</span>RESYNCHRONISER LES HORAIRES<small>correspondance ratée</small></button>
+    <button data-a="ecologie"><span class="ic">🌱</span>BASCULER EN MODE DOUX<small>pollution, saturation</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Poste verrouillé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Le PC mobilité</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button class="gros" id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Chef du PC mobilité, c'est toi</h2>
+    <p>Chaque dossier en alerte attend UNE intervention idéale.<br>
+    📊 mauvais MODE choisi → refaire le comparatif · 🚂 CHARGE sous-estimée → affréter plus gros ·
+    🔗 CORRESPONDANCE ratée → resynchroniser · 🌱 POLLUTION / saturation → basculer en mode doux.<br>
+    Chaque intervention consomme des <b>⚡ crédits transport</b> (une erreur en gaspille le double). Ils se rechargent entre les journées.<br>
+    <b>3 pagailles = le PC ferme.</b> Le soir : boutique de services + question bonus !</p>
+    <button class="gros" id="btnGo">🚦 Prendre le poste</button>
+  </div>
+
+  <div class="overlay cache" id="ovBoutique">
+    <h2>🌙 Fin de la journée <span id="bJour"></span></h2>
+    <div class="qbox" id="qbox"></div>
+    <p style="margin:4px 0 0"><b>🛒 Services du PC</b> (<span id="bScore" style="color:#fbbf24;font-weight:900"></span> pts)</p>
+    <div class="boutique" id="boutique"></div>
+    <button class="gros" id="btnJourSuiv">☀️ Journée suivante (⚡ +40)</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Le PC ferme !</h2>
+    <p id="finTexte"></p>
+    <button class="gros" id="btnRejouer">↺ Reprendre la direction</button>
+  </div>
+</div>
+
+<footer>Jeu de gestion · Séquence Transports & mobilité · 5ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='TRAJET21';
+function dejaOuvert(){ try{ return localStorage.getItem('pcmobilite_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('pcmobilite_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ================== DONNÉES ================== */
+const NOMS_P={criteres:'📊 REFAIRE LE COMPARATIF',capacite:'🚂 AFFRÉTER PLUS GROS',correspondance:'🔗 RESYNCHRONISER LES HORAIRES',ecologie:'🌱 BASCULER EN MODE DOUX'};
+const INCIDENTS=[
+ {ic:'💸',txt:'M. Durand veut prendre l\u2019AVION pour un Metz–Nancy (55 km) : détour par Paris !',def:'criteres',exp:'comparer d\u2019abord : sur 55 km, le TER gagne en temps réel, coût et CO\u2082.'},
+ {ic:'🐌',txt:'Une entreprise envoie ses colis URGENTS de médicaments… par porte-conteneurs (3 semaines)',def:'criteres',exp:'critère décisif ici : le TEMPS — pour l\u2019urgent, l\u2019aérien ou l\u2019express s\u2019imposent.'},
+ {ic:'🏗️',txt:'500 tonnes de graviers réparties dans… des camionnettes de 1 tonne : 500 voyages !',def:'capacite',exp:'charge énorme = grande CAPACITÉ : une péniche ou un train de fret avale tout d\u2019un coup.'},
+ {ic:'📦',txt:'800 colis entassés dans une seule camionnette qui frotte par terre',def:'capacite',exp:'la charge dépasse la capacité du véhicule : affréter un porteur adapté.'},
+ {ic:'⏱️',txt:'Le tram part 2 minutes AVANT l\u2019arrivée du TER : quai plein de voyageurs furieux',def:'correspondance',exp:'la multimodalité vit ou meurt sur ses CORRESPONDANCES : resynchroniser les horaires.'},
+ {ic:'🧳',txt:'La navette aéroport et le train ne se croisent jamais : 40 minutes d\u2019attente à chaque fois',def:'correspondance',exp:'40 minutes perdues à chaque changement : caler les horaires l\u2019un sur l\u2019autre.'},
+ {ic:'🌫️',txt:'Pic de pollution : le centre-ville sature de voitures avec UNE personne à bord',def:'ecologie',exp:'basculer vers les modes doux et partagés : vélo, tram, covoiturage — l\u2019air respire.'},
+ {ic:'🚸',txt:'Devant le collège, 200 voitures déposent 200 élèves… qui habitent à moins de 2 km',def:'ecologie',exp:'2 km = distance idéale du vélo et de la marche : mode doux, zéro CO\u2082, zéro bouchon.'},
+];
+const QUESTIONS=[
+ {q:"Le transport des marchandises s'appelle…", r:["le fret","la flotte","le forfait"], b:0},
+ {q:"Pour 500 tonnes de graviers avec peu d'énergie…", r:["la péniche","500 camionnettes","l'hélicoptère"], b:0},
+ {q:"Combiner vélo + train + tram sur un trajet, c'est…", r:["la multimodalité","l'autopartage","le fret"], b:0},
+ {q:"Un TGV parcourt 300 km en 1,5 h. Vitesse moyenne ?", r:["200 km/h","450 km/h","150 km/h"], b:0},
+ {q:"L'infrastructure du transport ferroviaire, c'est…", r:["le rail","la route","le canal"], b:0},
+];
+const UPGRADES=[
+ {id:'criteres', cout:230, t:'📊 Comparateur d\u2019itinéraires automatique', d:'les mauvais choix de mode se corrigent seuls'},
+ {id:'capacite', cout:250, t:'🚂 Flotte de fret mutualisée', d:'les charges sous-estimées s\u2019affrètent seules'},
+ {id:'correspondance', cout:220, t:'🔗 Synchronisateur d\u2019horaires', d:'les correspondances se recalent seules'},
+ {id:'ecologie', cout:200, t:'🌱 Flotte de vélos électriques', d:'les saturations basculent seules en mode doux'},
+];
+
+/* ================== JEU ================== */
+const JOURNEE_S=30;
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('pcmobilite_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={t:0,jour:1,score:0,incidents:0,tm:100,alertes:[],prochaine:1.2,fini:false,pause:false,ups:[],qUtil:[]};
+  window.J_DEBUG=J;
+  dernierTs=null;
+  majHUD(); majAlertes(); majRegles();
+}
+function majHUD(){
+  document.getElementById('hJour').textContent=J.jour;
+  document.getElementById('hScore').textContent=Math.floor(J.score);
+  document.getElementById('hInc').textContent=J.incidents+' / 3';
+  document.getElementById('tmfill').style.width=Math.max(0,J.tm)+'%';
+  document.getElementById('tmfill').style.background= J.tm>50?'#fca5a5':(J.tm>25?'#fbbf24':'#f87171');
+}
+function majRegles(){
+  document.getElementById('reglesActives').textContent=
+    J.ups.length? '🤖 Automatisé : '+UPGRADES.filter(u=>J.ups.includes(u.id)).map(u=>u.t).join(' · ')
+    : 'Aucun service installé.';
+}
+function flash(t,coul){ const f=document.getElementById('flash'); f.textContent=t; f.style.color=coul; }
+function creerIncident(){
+  const a0=INCIDENTS[Math.floor(Math.random()*INCIDENTS.length)];
+  const duree=Math.max(6, 12-J.jour);
+  J.alertes.push({def:a0.def, ic:a0.ic, txt:a0.txt, exp:a0.exp, reste:duree, duree, auto:J.ups.includes(a0.def), autoDelai:1.6});
+  majAlertes();
+}
+function majAlertes(){
+  const zone=document.getElementById('alertes'); zone.innerHTML='';
+  J.alertes.forEach(a=>{
+    const d=document.createElement('div'); d.className='alerte'+(a.auto?' auto':'');
+    d.innerHTML='<div class="txt">'+a.ic+' '+a.txt+(a.auto?' <span style="color:#fda4af">· 🤖 réglé automatiquement…</span>':'')+'</div>'+
+      '<div class="tempo" style="width:'+(a.reste/a.duree*100)+'%"></div>';
+    zone.appendChild(d);
+  });
+}
+document.querySelectorAll('.actionneurs button').forEach(b=>{
+  b.onclick=()=>{
+    if(!J||J.fini||J.pause) return;
+    const def=b.dataset.a;
+    if(J.tm<=0){ flash('⚡ Plus de crédits transport ! Tiens jusqu\u2019au soir…','#f87171'); return; }
+    const idx=J.alertes.findIndex(a=>a.def===def && !a.auto);
+    if(idx>=0){
+      const a=J.alertes.splice(idx,1)[0];
+      J.tm=Math.max(0,J.tm-6);
+      J.score+=20+Math.round(a.reste*2);
+      flash('✅ Dossier réglé, trafic fluide ! '+a.exp,'#4ade80');
+      majHUD(); majAlertes();
+    } else {
+      J.tm=Math.max(0,J.tm-10);
+      flash('❌ Mauvaise intervention : crédits gaspillés ! Relis : mauvais MODE (comparatif), CHARGE sous-estimée (affréter), CORRESPONDANCE ratée (resynchroniser) ou POLLUTION (mode doux) ?','#f87171');
+      majHUD();
+    }
+  };
+});
+/* -------- boutique / questions -------- */
+function finDeJournee(){
+  J.pause=true;
+  document.getElementById('bJour').textContent=J.jour;
+  document.getElementById('bScore').textContent=Math.floor(J.score);
+  let dispo=QUESTIONS.map((_,i)=>i).filter(i=>!J.qUtil.includes(i));
+  if(dispo.length===0){ J.qUtil=[]; dispo=QUESTIONS.map((_,i)=>i); }
+  const qi=dispo[Math.floor(Math.random()*dispo.length)]; J.qUtil.push(qi);
+  const q=QUESTIONS[qi], box=document.getElementById('qbox');
+  box.innerHTML='<div class="q">🧠 Question bonus — '+q.q+'</div>';
+  q.r.forEach((rep,k)=>{
+    const b=document.createElement('button'); b.textContent=rep;
+    b.onclick=()=>{
+      [...box.querySelectorAll('button')].forEach(x=>x.disabled=true);
+      if(k===q.b){ J.score+=100; b.style.borderColor='#4ade80'; }
+      else b.style.borderColor='#f87171';
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+      majBoutique();
+    };
+    box.appendChild(b);
+  });
+  majBoutique();
+  document.getElementById('ovBoutique').classList.remove('cache');
+}
+function majBoutique(){
+  const zone=document.getElementById('boutique'); zone.innerHTML='';
+  UPGRADES.forEach(u=>{
+    const b=document.createElement('button');
+    const possede=J.ups.includes(u.id);
+    b.innerHTML=u.t+' — <b>'+(possede?'✅ installé':u.cout+' pts')+'</b><br>'+u.d;
+    if(possede) b.classList.add('achete');
+    b.disabled = possede || J.score<u.cout;
+    b.onclick=()=>{
+      J.score-=u.cout; J.ups.push(u.id);
+      majBoutique(); majRegles();
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+    };
+    zone.appendChild(b);
+  });
+}
+document.getElementById('btnJourSuiv').onclick=()=>{
+  document.getElementById('ovBoutique').classList.add('cache');
+  J.jour++; J.pause=false; dernierTs=null; J.prochaine=1.5;
+  J.tm=Math.min(100,J.tm+40);
+  J.alertes.forEach(a=>{ if(J.ups.includes(a.def)) a.auto=true; });
+  majHUD(); majAlertes();
+};
+function finPartie(raison){
+  J.fini=true;
+  if(Math.floor(J.score)>record){ record=Math.floor(J.score); try{ localStorage.setItem('pcmobilite_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.jour>=4 ? '🏆 PC mobilité d\u2019élite !' : '💥 Le PC ferme !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Journées tenues : <b>'+J.jour+'</b> · Score : <b>'+Math.floor(J.score)+'</b> · Outils : <b>'+J.ups.length+'/4</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+/* -------- boucle -------- */
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini||J.pause){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  const jourAvant=Math.floor(J.t/JOURNEE_S);
+  J.t+=dt;
+  document.getElementById('journeefill').style.width=((J.t%JOURNEE_S)/JOURNEE_S*100)+'%';
+  if(Math.floor(J.t/JOURNEE_S)>jourAvant){ finDeJournee(); return; }
+  J.prochaine-=dt;
+  if(J.prochaine<=0 && J.alertes.length<4){
+    creerIncident();
+    J.prochaine=Math.max(2.2, 6-J.jour*0.6)+Math.random()*2;
+  }
+  let change=false;
+  for(const a of [...J.alertes]){
+    if(a.auto){
+      a.autoDelai-=dt;
+      if(a.autoDelai<=0){
+        J.alertes.splice(J.alertes.indexOf(a),1);
+        J.tm=Math.max(0,J.tm-0.5);
+        J.score+=12;
+        flash('🤖 '+a.ic+' dossier réglé automatiquement (+12)','#fecaca');
+        change=true; continue;
+      }
+    }
+    a.reste-=dt;
+    if(a.reste<=0){
+      J.alertes.splice(J.alertes.indexOf(a),1);
+      J.incidents++; change=true;
+      flash('🚨 FIASCO : '+a.txt+' (intervention : '+NOMS_P[a.def]+')','#f87171');
+      majHUD();
+      if(J.incidents>=3) return finPartie('Trois pagailles, la ville sature et le PC ferme… La leçon : chaque dossier a SON intervention — critères, capacité, correspondances ou modes doux.');
+    }
+  }
+  const zone=document.getElementById('alertes');
+  [...zone.children].forEach((d,i)=>{
+    const a=J.alertes[i]; if(!a) return;
+    const t=d.querySelector('.tempo'); if(t) t.style.width=(a.reste/a.duree*100)+'%';
+  });
+  if(change) majAlertes();
+  J.score+=dt;
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

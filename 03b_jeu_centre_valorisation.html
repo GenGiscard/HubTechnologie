@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏭 Centre de valorisation — Technologie 3ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#2dd4bf; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:14px 0 4px;font-size:28px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:8px}
+.hud{display:flex;gap:18px;margin:6px 0;font-weight:800;font-size:15px;flex-wrap:wrap;justify-content:center}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:580px}
+.jauges{display:flex;gap:14px;align-items:center;margin:4px 0 8px}
+.jauge{flex:1}
+.jauge .lbl{font-size:11px;color:#94a3b8;font-weight:700;letter-spacing:1px}
+.jauge .barre{height:12px;background:#1e293b;border-radius:7px;overflow:hidden;border:1px solid #334155}
+.jauge .barre div{height:100%;transition:width .2s}
+#tmfill{background:#2dd4bf}
+#journeefill{background:#a78bfa}
+h4{font-size:12px;letter-spacing:2px;color:#94a3b8;text-transform:uppercase;margin:8px 4px 6px}
+#alertes{min-height:150px;display:flex;flex-direction:column;gap:8px}
+.alerte{background:#1e293b;border:2px solid #7f1d1d;border-left:6px solid var(--rouge);border-radius:12px;padding:9px 12px;position:relative;overflow:hidden}
+.alerte .txt{font-size:13.5px;font-weight:700;line-height:1.4}
+.alerte .tempo{position:absolute;left:0;bottom:0;height:4px;background:var(--rouge)}
+.alerte.auto{border-color:#115e59;border-left-color:var(--neon)}
+#reglesActives{font-size:12px;color:#5eead4;font-weight:700;margin:4px;min-height:18px}
+.actionneurs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.actionneurs button{border:2px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:12px;padding:11px 4px;font-size:12px;font-weight:800;cursor:pointer;line-height:1.35}
+.actionneurs button:hover{border-color:var(--neon)}
+.actionneurs button .ic{font-size:21px;display:block}
+.actionneurs button small{display:block;font-weight:600;color:#94a3b8;font-size:10px}
+#flash{min-height:24px;text-align:center;font-weight:800;font-size:13px;margin-top:6px}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.95);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:24px}
+.overlay p{color:#cbd5e1;font-size:14px;max-width:450px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay .gros{border:none;border-radius:12px;padding:12px 24px;font-size:16px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+.boutique{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:460px}
+.boutique button{border:2px solid #475569;background:#0f172a;color:#e2e8f0;border-radius:11px;padding:10px;font-size:12.5px;font-weight:700;cursor:pointer;text-align:left;line-height:1.4}
+.boutique button:hover{border-color:var(--neon)}
+.boutique button:disabled{opacity:.4;cursor:default}
+.boutique button.achete{border-color:#166534;color:#4ade80}
+.qbox{background:#1e293b;border:2px solid var(--or);border-radius:14px;padding:16px;max-width:410px}
+.qbox .q{font-weight:800;color:#fff;margin-bottom:10px;font-size:14.5px}
+.qbox button{display:block;width:100%;margin:6px 0;padding:10px;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13.5px;font-weight:700;cursor:pointer}
+.qbox button:hover{border-color:var(--neon)}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%232dd4bf'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🏭 CENTRE DE VALORISATION</h1>
+<div class="sous">Les objets en fin de vie affluent : recyclage, réemploi, compost ou DEEE — oriente chacun vers la bonne filière !</div>
+
+<div class="hud">
+  <div>Journée : <span class="v" id="hJour">1</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Bennes perdues : <span class="v" id="hInc">0 / 3</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div class="jauges">
+    <div class="jauge"><div class="lbl">⚡ TEMPS MACHINE</div><div class="barre"><div id="tmfill" style="width:100%"></div></div></div>
+    <div class="jauge"><div class="lbl">🕐 JOURNÉE</div><div class="barre"><div id="journeefill" style="width:0%"></div></div></div>
+  </div>
+  <h4>🚛 Arrivages en attente</h4>
+  <div id="alertes"></div>
+  <div id="reglesActives">Aucun tri automatique installé.</div>
+  <h4>🏗️ Tes filières — clique directement la BONNE filière pour l'arrivage le plus urgent de son type</h4>
+  <div class="actionneurs">
+    <button data-a="recyclage"><span class="ic">♻️</span>RECYCLAGE<small>refondre la matière</small></button>
+    <button data-a="reemploi"><span class="ic">🔧</span>RÉEMPLOI<small>réparer, donner, revendre</small></button>
+    <button data-a="compost"><span class="ic">🌱</span>COMPOST<small>déchets organiques</small></button>
+    <button data-a="deee"><span class="ic">⚡</span>DEEE<small>électronique, piles</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Centre verrouillé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Mission ACV</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button class="gros" id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Directeur du centre, c'est toi</h2>
+    <p>Des arrivages débarquent : chacun a UNE filière idéale.<br>
+    ♻️ matière à refondre · 🔧 objets encore utilisables (réparer &gt; recycler !) · 🌱 organique · ⚡ électronique et piles.<br>
+    Chaque tri consomme du <b>⚡ temps machine</b> (une erreur en gaspille le double). Il se recharge entre les journées.<br>
+    <b>3 bennes parties en décharge = fermeture.</b> Le soir : boutique de tri AUTOMATIQUE + question bonus !</p>
+    <button class="gros" id="btnGo">🚛 Ouvrir les portes</button>
+  </div>
+
+  <div class="overlay cache" id="ovBoutique">
+    <h2>🌙 Fin de la journée <span id="bJour"></span></h2>
+    <div class="qbox" id="qbox"></div>
+    <p style="margin:4px 0 0"><b>🛒 Investissements</b> (<span id="bScore" style="color:#fbbf24;font-weight:900"></span> pts)</p>
+    <div class="boutique" id="boutique"></div>
+    <button class="gros" id="btnJourSuiv">☀️ Journée suivante (⚡ +40)</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">🗑️ Centre fermé !</h2>
+    <p id="finTexte"></p>
+    <button class="gros" id="btnRejouer">↺ Rouvrir le centre</button>
+  </div>
+</div>
+
+<footer>Jeu de gestion · Séquence Éco-conception & cycle de vie · 3ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='CYCLE360';
+function dejaOuvert(){ try{ return localStorage.getItem('valocentre_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('valocentre_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ================== DONNÉES ================== */
+const NOMS_F={recyclage:'♻️ RECYCLAGE',reemploi:'🔧 RÉEMPLOI',compost:'🌱 COMPOST',deee:'⚡ DEEE'};
+const ARRIVAGES=[
+ {ic:'🥫',txt:'Palette de canettes en aluminium écrasées',def:'recyclage',exp:'l\u2019alu se refond à l\u2019infini en économisant 95 % d\u2019énergie : recyclage matière.'},
+ {ic:'🍾',txt:'Benne de bouteilles en verre',def:'recyclage',exp:'le verre se refond sans perte de qualité : recyclage.'},
+ {ic:'📰',txt:'Ballots de papiers et cartons',def:'recyclage',exp:'le papier se recycle 5 à 7 fois : filière matière.'},
+ {ic:'🚲',txt:'Vélo complet en bon état, donné par un particulier',def:'reemploi',exp:'il roule encore : réemploi (don, revente) — toujours mieux que détruire !'},
+ {ic:'📱',txt:'Smartphones récents, écrans fissurés mais réparables',def:'reemploi',exp:'réparables = reconditionnement : le réemploi évite 80 kg de CO₂ de fabrication par appareil.'},
+ {ic:'🪑',txt:'Meubles solides issus d\u2019un déménagement',def:'reemploi',exp:'la ressourcerie leur donnera une seconde vie : réemploi.'},
+ {ic:'🍂',txt:'Remorque de feuilles mortes et tontes de pelouse',def:'compost',exp:'les végétaux se compostent en engrais naturel.'},
+ {ic:'🍎',txt:'Bacs de déchets alimentaires de la cantine',def:'compost',exp:'biodéchets = compost (obligatoire de les trier depuis 2024 !).'},
+ {ic:'☕',txt:'Fûts de marc de café d\u2019une usine',def:'compost',exp:'organique : direction la plateforme de compostage.'},
+ {ic:'🖥️',txt:'Ordinateurs hors service, ne s\u2019allument plus',def:'deee',exp:'DEEE : dépollution puis récupération des métaux (or, cuivre, terres rares).'},
+ {ic:'🔋',txt:'Caisse de batteries et piles usagées',def:'deee',exp:'dangereuses en décharge : filière DEEE obligatoire.'},
+ {ic:'❄️',txt:'Vieux réfrigérateur qui ne refroidit plus',def:'deee',exp:'ses gaz doivent être captés : DEEE spécialisée.'},
+];
+const QUESTIONS=[
+ {q:"Le plus gros du CO₂ d'un smartphone vient de…", r:["sa fabrication","ses recharges","sa livraison"], b:0},
+ {q:"Mieux que recycler un objet qui marche encore :", r:["le jeter","le réemployer","le brûler"], b:1},
+ {q:"L'économie circulaire, c'est…", r:["extraire → jeter","reboucler la fin de vie vers la matière","acheter en ligne"], b:1},
+ {q:"L'éco-conception se décide…", r:["à la déchèterie","au bureau d'études","à la caisse"], b:1},
+ {q:"Recycler l'aluminium économise environ…", r:["95 % d'énergie","5 % d'énergie","0 %"], b:0},
+];
+const UPGRADES=[
+ {id:'recyclage', cout:220, t:'♻️ Tri optique automatique', d:'les arrivages matière se trient seuls'},
+ {id:'reemploi', cout:240, t:'🔧 Atelier de reconditionnement', d:'le réemploi se traite automatiquement'},
+ {id:'compost', cout:180, t:'🌱 Plateforme de compostage', d:'l\u2019organique se traite automatiquement'},
+ {id:'deee', cout:260, t:'⚡ Ligne DEEE robotisée', d:'l\u2019électronique se traite automatiquement'},
+];
+
+/* ================== JEU ================== */
+const JOURNEE_S=30;
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('valocentre_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={t:0,jour:1,score:0,incidents:0,tm:100,alertes:[],prochaine:1.2,fini:false,pause:false,ups:[],qUtil:[]};
+  window.J_DEBUG=J;
+  dernierTs=null;
+  majHUD(); majAlertes(); majRegles();
+}
+function majHUD(){
+  document.getElementById('hJour').textContent=J.jour;
+  document.getElementById('hScore').textContent=Math.floor(J.score);
+  document.getElementById('hInc').textContent=J.incidents+' / 3';
+  document.getElementById('tmfill').style.width=Math.max(0,J.tm)+'%';
+  document.getElementById('tmfill').style.background= J.tm>50?'#2dd4bf':(J.tm>25?'#fbbf24':'#f87171');
+}
+function majRegles(){
+  document.getElementById('reglesActives').textContent=
+    J.ups.length? '🤖 Tri automatique : '+UPGRADES.filter(u=>J.ups.includes(u.id)).map(u=>u.t).join(' · ')
+    : 'Aucun tri automatique installé.';
+}
+function flash(t,coul){ const f=document.getElementById('flash'); f.textContent=t; f.style.color=coul; }
+function creerArrivage(){
+  const a0=ARRIVAGES[Math.floor(Math.random()*ARRIVAGES.length)];
+  const duree=Math.max(6, 12-J.jour);
+  J.alertes.push({def:a0.def, ic:a0.ic, txt:a0.txt, exp:a0.exp, reste:duree, duree, auto:J.ups.includes(a0.def), autoDelai:1.6});
+  majAlertes();
+}
+function majAlertes(){
+  const zone=document.getElementById('alertes'); zone.innerHTML='';
+  J.alertes.forEach(a=>{
+    const d=document.createElement('div'); d.className='alerte'+(a.auto?' auto':'');
+    d.innerHTML='<div class="txt">'+a.ic+' '+a.txt+(a.auto?' <span style="color:#5eead4">· 🤖 tri auto…</span>':'')+'</div>'+
+      '<div class="tempo" style="width:'+(a.reste/a.duree*100)+'%"></div>';
+    zone.appendChild(d);
+  });
+}
+document.querySelectorAll('.actionneurs button').forEach(b=>{
+  b.onclick=()=>{
+    if(!J||J.fini||J.pause) return;
+    const def=b.dataset.a;
+    if(J.tm<=0){ flash('⚡ Plus de temps machine ! Tiens jusqu\u2019au soir…','#f87171'); return; }
+    const idx=J.alertes.findIndex(a=>a.def===def && !a.auto);
+    if(idx>=0){
+      const a=J.alertes.splice(idx,1)[0];
+      J.tm=Math.max(0,J.tm-6);
+      J.score+=20+Math.round(a.reste*2);
+      flash('✅ Bien orienté ! '+a.exp,'#4ade80');
+      majHUD(); majAlertes();
+    } else {
+      J.tm=Math.max(0,J.tm-10);
+      flash('❌ Mauvaise filière : temps machine gaspillé ! Relis l\u2019arrivage : matière ? objet utilisable ? organique ? électronique ?','#f87171');
+      majHUD();
+    }
+  };
+});
+/* -------- boutique / questions -------- */
+function finDeJournee(){
+  J.pause=true;
+  document.getElementById('bJour').textContent=J.jour;
+  document.getElementById('bScore').textContent=Math.floor(J.score);
+  let dispo=QUESTIONS.map((_,i)=>i).filter(i=>!J.qUtil.includes(i));
+  if(dispo.length===0){ J.qUtil=[]; dispo=QUESTIONS.map((_,i)=>i); }
+  const qi=dispo[Math.floor(Math.random()*dispo.length)]; J.qUtil.push(qi);
+  const q=QUESTIONS[qi], box=document.getElementById('qbox');
+  box.innerHTML='<div class="q">🧠 Question bonus — '+q.q+'</div>';
+  q.r.forEach((rep,k)=>{
+    const b=document.createElement('button'); b.textContent=rep;
+    b.onclick=()=>{
+      [...box.querySelectorAll('button')].forEach(x=>x.disabled=true);
+      if(k===q.b){ J.score+=100; b.style.borderColor='#4ade80'; }
+      else b.style.borderColor='#f87171';
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+      majBoutique();
+    };
+    box.appendChild(b);
+  });
+  majBoutique();
+  document.getElementById('ovBoutique').classList.remove('cache');
+}
+function majBoutique(){
+  const zone=document.getElementById('boutique'); zone.innerHTML='';
+  UPGRADES.forEach(u=>{
+    const b=document.createElement('button');
+    const possede=J.ups.includes(u.id);
+    b.innerHTML=u.t+' — <b>'+(possede?'✅ installé':u.cout+' pts')+'</b><br>'+u.d;
+    if(possede) b.classList.add('achete');
+    b.disabled = possede || J.score<u.cout;
+    b.onclick=()=>{
+      J.score-=u.cout; J.ups.push(u.id);
+      majBoutique(); majRegles();
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+    };
+    zone.appendChild(b);
+  });
+}
+document.getElementById('btnJourSuiv').onclick=()=>{
+  document.getElementById('ovBoutique').classList.add('cache');
+  J.jour++; J.pause=false; dernierTs=null; J.prochaine=1.5;
+  J.tm=Math.min(100,J.tm+40);
+  J.alertes.forEach(a=>{ if(J.ups.includes(a.def)) a.auto=true; });
+  majHUD(); majAlertes();
+};
+function finPartie(raison){
+  J.fini=true;
+  if(Math.floor(J.score)>record){ record=Math.floor(J.score); try{ localStorage.setItem('valocentre_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.jour>=4 ? '🏆 Centre exemplaire !' : '🗑️ Centre fermé !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Journées tenues : <b>'+J.jour+'</b> · Score : <b>'+Math.floor(J.score)+'</b> · Filières automatisées : <b>'+J.ups.length+'/4</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+/* -------- boucle -------- */
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini||J.pause){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  const jourAvant=Math.floor(J.t/JOURNEE_S);
+  J.t+=dt;
+  document.getElementById('journeefill').style.width=((J.t%JOURNEE_S)/JOURNEE_S*100)+'%';
+  if(Math.floor(J.t/JOURNEE_S)>jourAvant){ finDeJournee(); return; }
+  J.prochaine-=dt;
+  if(J.prochaine<=0 && J.alertes.length<4){
+    creerArrivage();
+    J.prochaine=Math.max(2.2, 6-J.jour*0.6)+Math.random()*2;
+  }
+  let change=false;
+  for(const a of [...J.alertes]){
+    if(a.auto){
+      a.autoDelai-=dt;
+      if(a.autoDelai<=0){
+        J.alertes.splice(J.alertes.indexOf(a),1);
+        J.tm=Math.max(0,J.tm-0.5);
+        J.score+=12;
+        flash('🤖 '+a.ic+' arrivage trié automatiquement (+12)','#5eead4');
+        change=true; continue;
+      }
+    }
+    a.reste-=dt;
+    if(a.reste<=0){
+      J.alertes.splice(J.alertes.indexOf(a),1);
+      J.incidents++; change=true;
+      flash('🚨 Benne partie en décharge : '+a.txt+' (filière : '+NOMS_F[a.def]+')','#f87171');
+      majHUD();
+      if(J.incidents>=3) return finPartie('Trois bennes parties en décharge : des ressources précieuses enfouies pour rien… La valorisation, c\u2019est la BONNE filière au BON moment.');
+    }
+  }
+  const zone=document.getElementById('alertes');
+  [...zone.children].forEach((d,i)=>{
+    const a=J.alertes[i]; if(!a) return;
+    const t=d.querySelector('.tempo'); if(t) t.style.width=(a.reste/a.duree*100)+'%';
+  });
+  if(change) majAlertes();
+  J.score+=dt;
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

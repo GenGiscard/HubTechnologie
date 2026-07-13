@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🕹️ Nuit de Garde — Technologie 4ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#a78bfa; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:14px 0 4px;font-size:28px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:8px}
+.hud{display:flex;gap:18px;margin:6px 0;font-weight:800;font-size:15px;flex-wrap:wrap;justify-content:center}
+.hud .v{color:var(--or)}
+#batt{width:540px;height:12px;background:#1e293b;border-radius:6px;overflow:hidden;border:1px solid #334155;margin-bottom:4px}
+#batt div{height:100%;background:var(--vert);width:100%;transition:width .2s}
+#scene{position:relative;width:560px;min-height:330px}
+#alertes{display:flex;flex-direction:column;gap:8px;padding:6px;min-height:250px}
+.alerte{background:#1e293b;border:2px solid #475569;border-radius:12px;padding:9px 12px;font-weight:700;font-size:14px;position:relative;overflow:hidden}
+.alerte .tempo{position:absolute;left:0;bottom:0;height:4px;background:var(--rouge)}
+.alerte.auto{border-color:#166534;color:#4ade80}
+#reglesActives{font-size:12px;color:#4ade80;text-align:center;min-height:18px;font-weight:700;margin-top:2px}
+.actionneurs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:540px;margin-top:8px}
+.actionneurs button{border:2px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:12px;padding:11px 6px;font-size:13.5px;font-weight:800;cursor:pointer}
+.actionneurs button:hover{border-color:var(--neon)}
+.actionneurs button:active{transform:scale(.95)}
+.actionneurs button .ic{font-size:22px;display:block}
+.actionneurs button .k{display:block;font-size:10.5px;color:#64748b;margin-top:2px;font-weight:600}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.95);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:24px}
+.overlay p{color:#cbd5e1;font-size:14px;max-width:430px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay .gros{border:none;border-radius:12px;padding:12px 24px;font-size:16px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+.boutique{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:430px}
+.boutique button{border:2px solid #475569;background:#0f172a;color:#e2e8f0;border-radius:11px;padding:10px;font-size:12.5px;font-weight:700;cursor:pointer;text-align:left;line-height:1.4}
+.boutique button:hover{border-color:var(--neon)}
+.boutique button:disabled{opacity:.4;cursor:default}
+.boutique button.achete{border-color:#166534;color:#4ade80}
+.qbox{background:#1e293b;border:2px solid var(--or);border-radius:14px;padding:16px;max-width:400px}
+.qbox .q{font-weight:800;color:#fff;margin-bottom:10px;font-size:14.5px}
+.qbox button{display:block;width:100%;margin:6px 0;padding:10px;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13.5px;font-weight:700;cursor:pointer}
+.qbox button:hover{border-color:var(--neon)}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23a78bfa'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🕹️ NUIT DE GARDE</h1>
+<div class="sous">Gère la maison à la main… ou programme-la pour qu'elle se gère toute seule. C'est ça, la domotique.</div>
+
+<div class="hud">
+  <div>Nuit : <span class="v" id="hNuit">1</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Incidents : <span class="v" id="hInc">0 / 3</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+<div id="batt"><div id="battfill"></div></div>
+<div id="reglesActives"></div>
+
+<div id="scene">
+  <div id="alertes"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Poste de garde verrouillé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Maison connectée</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button class="gros" id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Première nuit de garde</h2>
+    <p>Les capteurs de la maison lèvent des <b>alertes</b> : réponds avec le bon actionneur avant la fin du compte à rebours.<br>
+    Chaque action manuelle coûte de la <b>🔋 batterie</b> (erreur = double coût !).<br>
+    3 alertes expirées = renvoi. Batterie vide = renvoi.<br>
+    Entre les nuits : la <b>boutique de règles SI…ALORS</b> — chaque règle achetée traite ses alertes <b>automatiquement</b>. Programme, et dors tranquille. 😴</p>
+    <button class="gros" id="btnGo">🌙 Prendre la garde</button>
+  </div>
+
+  <div class="overlay cache" id="ovBoutique">
+    <h2>🌅 Fin de la nuit <span id="bNuit"></span> !</h2>
+    <div class="qbox" id="qbox"></div>
+    <p style="margin:4px 0 0"><b>🛒 Boutique de règles</b> — ton score est ta monnaie (<span id="bScore" style="color:#fbbf24;font-weight:900"></span> pts)</p>
+    <div class="boutique" id="boutique"></div>
+    <button class="gros" id="btnNuitSuiv">🌙 Nuit suivante (batterie +40)</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">😴 Renvoyé !</h2>
+    <p id="finTexte"></p>
+    <button class="gros" id="btnRejouer">↺ Reprendre la garde</button>
+  </div>
+</div>
+
+<div class="actionneurs">
+  <button data-a="lampe"><span class="ic">💡</span>LAMPE<span class="k">touche 1</span></button>
+  <button data-a="chauffage"><span class="ic">🔥</span>CHAUFFAGE<span class="k">touche 2</span></button>
+  <button data-a="volet"><span class="ic">🪟</span>VOLET<span class="k">touche 3</span></button>
+  <button data-a="alarme"><span class="ic">🔔</span>ALARME<span class="k">touche 4</span></button>
+</div>
+
+<footer>Jeu de gestion · Séquence Domotique & Objets connectés · 4ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='MAISON24';
+function dejaOuvert(){ try{ return localStorage.getItem('nuitdegarde_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('nuitdegarde_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ================== DONNÉES ================== */
+const TYPES=[
+ {id:'froid', textes:['🥶 16 °C au salon !','🌡️ La température chute dans la chambre'], act:'chauffage'},
+ {id:'noir',  textes:['🌙 Luminosité 8 % dans le couloir','🔦 Panne d\u2019éclairage : il fait noir'], act:'lampe'},
+ {id:'intrus',textes:['🚶 Mouvement détecté au jardin !','🚪 Porte du garage ouverte à 3 h !'], act:'alarme'},
+ {id:'soleil',textes:['☀️ Plein soleil sur la baie vitrée','💨 Rafales annoncées sur la véranda'], act:'volet'},
+];
+const REGLES=[
+ {id:'froid', cout:180, t:'SI température < 19 °C ALORS chauffage ON', ic:'🔥'},
+ {id:'noir',  cout:180, t:'SI luminosité < 30 % ALORS lampe ON', ic:'💡'},
+ {id:'intrus',cout:260, t:'SI mouvement la nuit ALORS alarme ON', ic:'🔔'},
+ {id:'soleil',cout:220, t:'SI soleil/vent fort ALORS fermer volet', ic:'🪟'},
+];
+const QUESTIONS=[
+ {q:"Une règle SI…ALORS est exécutée par…", r:["la carte programmable","le voisin","la batterie"], b:0},
+ {q:"Le détecteur de mouvement est…", r:["un actionneur","un capteur","une règle"], b:1},
+ {q:"Automatiser la maison permet surtout de…", r:["réagir sans intervention humaine","consommer plus","supprimer les capteurs"], b:0},
+ {q:"La sirène d'alarme est…", r:["un capteur","un actionneur","un programme"], b:1},
+ {q:"Dans la chaîne d'information, TRAITER c'est…", r:["mesurer","décider avec le programme","sonner"], b:1},
+];
+
+/* ================== JEU ================== */
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('nuitdegarde_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+const NUIT_ALERTES=7; // alertes à traiter par nuit (augmente)
+function nouveauJeu(){
+  J={nuit:1, score:0, incidents:0, batt:100, regles:[], alertes:[], aTraiter:NUIT_ALERTES,
+     prochaine:1.2, fini:false, pause:false};
+  dernierTs=null;
+  document.getElementById('alertes').innerHTML='';
+  majHUD(); majRegles();
+}
+function majHUD(){
+  document.getElementById('hNuit').textContent=J.nuit;
+  document.getElementById('hScore').textContent=Math.floor(J.score);
+  document.getElementById('hInc').textContent=J.incidents+' / 3';
+  const bf=document.getElementById('battfill');
+  bf.style.width=Math.max(0,J.batt)+'%';
+  bf.style.background= J.batt>50?'#4ade80':(J.batt>25?'#fbbf24':'#f87171');
+}
+function majRegles(){
+  document.getElementById('reglesActives').textContent =
+    J.regles.length? '🤖 Règles actives : '+J.regles.map(id=>REGLES.find(r=>r.id===id).ic).join(' ') : '🤖 Aucune règle programmée — tout est manuel !';
+}
+function creerAlerte(){
+  const type=TYPES[Math.floor(Math.random()*TYPES.length)];
+  const duree=Math.max(3.4, 7-J.nuit*0.5);
+  const a={type:type.id, act:type.act, reste:duree, duree, dom:null, autoDelai: J.regles.includes(type.id)? 0.9 : -1};
+  const d=document.createElement('div'); d.className='alerte';
+  d.innerHTML=type.textes[Math.floor(Math.random()*type.textes.length)]+
+    (a.autoDelai>=0?' <span style="color:#4ade80">· prise en charge auto 🤖</span>':'')+
+    '<div class="tempo"></div>';
+  if(a.autoDelai>=0) d.classList.add('auto');
+  a.dom=d;
+  document.getElementById('alertes').appendChild(d);
+  J.alertes.push(a);
+}
+function resoudre(a, auto){
+  a.dom.remove();
+  J.alertes.splice(J.alertes.indexOf(a),1);
+  if(auto){ J.score+=8; J.batt-=0.5; }
+  else { J.score+=15+Math.round(a.reste*3); J.batt-=6; }
+  J.aTraiter--;
+  majHUD();
+  if(J.batt<=0) return finPartie('🔋 Batterie à plat ! Sans énergie, la maison connectée n\u2019est qu\u2019une maison… Automatise davantage : une règle consomme 10× moins qu\u2019une action manuelle.');
+  if(J.aTraiter<=0 && J.alertes.length===0) finDeNuit();
+}
+function actionner(act){
+  if(!J||J.fini||J.pause) return;
+  // la plus ancienne alerte demandant cet actionneur
+  const cible=J.alertes.find(a=>a.act===act && a.autoDelai<0);
+  if(cible) resoudre(cible,false);
+  else {
+    J.batt-=10; J.score=Math.max(0,J.score-5); majHUD();
+    if(J.batt<=0) finPartie('🔋 Batterie vidée à force d\u2019actionner dans le vide ! Chaque erreur coûte double : observe les capteurs avant d\u2019agir.');
+  }
+}
+document.querySelectorAll('.actionneurs button').forEach(b=>b.addEventListener('click',()=>actionner(b.dataset.a)));
+document.addEventListener('keydown',e=>{
+  const map={'1':'lampe','2':'chauffage','3':'volet','4':'alarme'};
+  if(map[e.key]) actionner(map[e.key]);
+});
+
+function finDeNuit(){
+  J.pause=true;
+  document.getElementById('bNuit').textContent=J.nuit;
+  document.getElementById('bScore').textContent=Math.floor(J.score);
+  // question
+  const q=QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)];
+  const box=document.getElementById('qbox');
+  box.innerHTML='<div class="q">🧠 Question bonus — '+q.q+'</div>';
+  q.r.forEach((rep,k)=>{
+    const b=document.createElement('button'); b.textContent=rep;
+    b.onclick=()=>{
+      [...box.querySelectorAll('button')].forEach(x=>x.disabled=true);
+      if(k===q.b){ J.score+=100; b.style.borderColor='#4ade80'; }
+      else b.style.borderColor='#f87171';
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+      majBoutique();
+    };
+    box.appendChild(b);
+  });
+  majBoutique();
+  document.getElementById('ovBoutique').classList.remove('cache');
+}
+function majBoutique(){
+  const zone=document.getElementById('boutique'); zone.innerHTML='';
+  REGLES.forEach(r=>{
+    const b=document.createElement('button');
+    const possede=J.regles.includes(r.id);
+    b.innerHTML=r.ic+' <b>'+r.t+'</b><br>'+(possede?'✅ programmée':r.cout+' pts');
+    if(possede) b.classList.add('achete');
+    b.disabled = possede || J.score<r.cout;
+    b.onclick=()=>{
+      J.score-=r.cout; J.regles.push(r.id);
+      majBoutique(); majRegles();
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+    };
+    zone.appendChild(b);
+  });
+}
+document.getElementById('btnNuitSuiv').onclick=()=>{
+  document.getElementById('ovBoutique').classList.add('cache');
+  J.nuit++; J.batt=Math.min(100,J.batt+40);
+  J.aTraiter=NUIT_ALERTES+J.nuit; J.prochaine=1;
+  J.pause=false; dernierTs=null;
+  majHUD();
+};
+function finPartie(raison){
+  J.fini=true;
+  if(Math.floor(J.score)>record){ record=Math.floor(J.score); try{ localStorage.setItem('nuitdegarde_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent = J.nuit>=4 ? '🏆 Maître domoticien !' : '😴 Renvoyé !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Nuits tenues : <b>'+J.nuit+'</b> · Score : <b>'+Math.floor(J.score)+'</b> · Règles programmées : <b>'+J.regles.length+'/4</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini||J.pause){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  // apparitions
+  J.prochaine-=dt;
+  const enAttente=J.aTraiter - J.alertes.length;
+  if(J.prochaine<=0 && enAttente>0 && J.alertes.length<5){
+    creerAlerte();
+    J.prochaine=Math.max(0.9, 2.6-J.nuit*0.25)+Math.random();
+  }
+  // vieillissement + auto-résolution
+  for(const a of [...J.alertes]){
+    if(a.autoDelai>=0){
+      a.autoDelai-=dt;
+      if(a.autoDelai<=0){ resoudre(a,true); continue; }
+    } else {
+      a.reste-=dt;
+      a.dom.querySelector('.tempo').style.width=(a.reste/a.duree*100)+'%';
+      if(a.reste<=0){
+        a.dom.remove(); J.alertes.splice(J.alertes.indexOf(a),1);
+        J.incidents++; J.aTraiter--; majHUD();
+        if(J.incidents>=3) return finPartie('🚨 3 alertes ignorées : les habitants se sont réveillés furieux. Un gardien humain sature vite — c\u2019est exactement pour ça qu\u2019on programme la maison !');
+        if(J.aTraiter<=0 && J.alertes.length===0) finDeNuit();
+      }
+    }
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

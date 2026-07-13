@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🕹️ Inspecteur des Ouvrages — Technologie 5ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#60a5fa; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:14px 0 4px;font-size:28px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:8px}
+.hud{display:flex;gap:18px;margin:8px 0;font-weight:800;font-size:15px;flex-wrap:wrap;justify-content:center}
+.hud .v{color:var(--or)}
+#jourbar{width:560px;height:8px;background:#1e293b;border-radius:5px;overflow:hidden;margin-bottom:6px}
+#jourbar div{height:100%;background:var(--neon);width:0%}
+#scene{position:relative;width:580px}
+.parc{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:4px}
+.ouv{background:#1e293b;border:2px solid #334155;border-radius:14px;padding:10px;text-align:center;position:relative}
+.ouv .ic{font-size:30px}
+.ouv h3{font-size:13px;margin:3px 0 6px;color:#e2e8f0}
+.pv{height:12px;background:#0f172a;border-radius:6px;overflow:hidden;border:1px solid #334155}
+.pv div{height:100%;transition:width .3s}
+.ouv .etatxt{font-size:11px;color:#94a3b8;margin:4px 0 6px;min-height:14px}
+.ouv button{border:2px solid #475569;background:#0f172a;color:#e2e8f0;border-radius:9px;padding:6px 8px;font-size:11.5px;font-weight:800;cursor:pointer;margin:2px;width:calc(100% - 4px)}
+.ouv button:hover{border-color:var(--neon)}
+.ouv button:disabled{opacity:.35;cursor:default}
+.ouv button.fait{border-color:#166534;color:#4ade80}
+.ouv.danger{border-color:var(--rouge);animation:cligne .7s infinite}
+@keyframes cligne{50%{box-shadow:0 0 14px rgba(248,113,113,.5)}}
+#bandeau{min-height:26px;text-align:center;font-weight:800;font-size:14.5px;margin:6px 0}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:420px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.overlay button:hover{filter:brightness(1.1)}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+.qbox{background:#1e293b;border:2px solid var(--or);border-radius:14px;padding:18px;max-width:400px}
+.qbox .q{font-weight:800;color:#fff;margin-bottom:12px;font-size:15px}
+.qbox button{display:block;width:100%;margin:7px 0;padding:11px;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:14px;font-weight:700;cursor:pointer}
+.qbox button:hover{border-color:var(--neon)}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%2360a5fa'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🕹️ INSPECTEUR DES OUVRAGES</h1>
+<div class="sous">6 ouvrages, 2 équipes par jour, et la météo qui n'attend personne. Rien ne doit s'effondrer.</div>
+
+<div class="hud">
+  <div>Jour : <span class="v" id="hJour">1</span></div>
+  <div>Équipes : <span class="v" id="hEq">👷👷</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+<div id="jourbar"><div id="jourfill"></div></div>
+
+<div id="scene">
+  <div id="bandeau"></div>
+  <div class="parc" id="parc"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Bureau d'inspection verrouillé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Simulateur de pont</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Ta ville, tes ouvrages</h2>
+    <p>Chaque ouvrage s'use avec le temps (barre de vie).<br>
+    Tu as <b>2 équipes par jour</b> : 🔧 Réparer (+35), ou investir 2 équipes dans une <b>amélioration définitive</b>
+    (△ trianguler, 🧣 isoler, ⚖️ limiter le tonnage) qui protège des événements.<br>
+    Tempêtes, convois exceptionnels et vagues de gel frappent au hasard…<br>
+    <b>Un seul effondrement et c'est fini.</b> Chaque aube : question bonus = équipe supplémentaire !</p>
+    <button id="btnGo">👷 Prendre mon poste</button>
+  </div>
+
+  <div class="overlay cache" id="ovQuestion"><div class="qbox" id="qbox"></div></div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Effondrement !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Reprendre le poste</button>
+  </div>
+</div>
+
+<footer>Jeu de gestion · Séquence Habitat & Ouvrages · 5ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='PONT343';
+function dejaOuvert(){ try{ return localStorage.getItem('inspecteur_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('inspecteur_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ================== QUESTIONS DE L'AUBE ================== */
+const QUESTIONS=[
+ {q:"Pour rigidifier un cadre qui se déforme, on ajoute…", r:["une diagonale (triangulation)","de la peinture","un étage"], b:0},
+ {q:"Une poutre trop chargée casse par…", r:["flexion","évaporation","aimantation"], b:0},
+ {q:"L'isolation d'un bâtiment sert à…", r:["ralentir le transfert de chaleur","porter la toiture","décorer"], b:0},
+ {q:"Les piles d'un pont travaillent en…", r:["traction","compression","torsion"], b:1},
+ {q:"Les câbles d'un pont suspendu travaillent en…", r:["compression","flexion","traction"], b:2},
+ {q:"Le béton armé associe béton et…", r:["acier","bois","verre"], b:0},
+];
+
+/* ================== JEU ================== */
+const JOUR_S=11;
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('inspecteur_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={t:0, jour:1, eq:2, score:0, fini:false, enQuestion:false, qUtil:[],
+     ouvrages:[
+      {n:'Pont poutre',ic:'🌉',pv:90,decay:2.4,type:'pont',prot:false,protNom:'⚖️ Limiter le tonnage',protInfo:'protège des convois'},
+      {n:'Pont en arc',ic:'🌁',pv:95,decay:1.7,type:'pont',prot:false,protNom:'⚖️ Limiter le tonnage',protInfo:'protège des convois'},
+      {n:'Pont suspendu',ic:'🌉',pv:85,decay:2.2,type:'pont',prot:false,protNom:'⚖️ Limiter le tonnage',protInfo:'protège des convois'},
+      {n:'Gymnase',ic:'🏟️',pv:90,decay:1.8,type:'bat',prot:false,protNom:'△ Trianguler la charpente',protInfo:'protège des tempêtes'},
+      {n:'École',ic:'🏫',pv:95,decay:1.6,type:'bat',prot:false,protNom:'🧣 Isoler les murs',protInfo:'protège du gel'},
+      {n:'Immeuble',ic:'🏢',pv:88,decay:2.0,type:'bat',prot:false,protNom:'△ Trianguler la structure',protInfo:'protège des tempêtes'},
+     ]};
+  dernierTs=null;
+  construireParc(); majHUD(); bandeau('');
+}
+function majHUD(){
+  document.getElementById('hJour').textContent=J.jour;
+  document.getElementById('hEq').textContent= J.eq>0 ? '👷'.repeat(J.eq) : '—';
+  document.getElementById('hScore').textContent=Math.floor(J.score);
+}
+function bandeau(txt,coul='#fbbf24'){
+  const b=document.getElementById('bandeau');
+  b.textContent=txt; b.style.color=coul;
+}
+function construireParc(){
+  const parc=document.getElementById('parc'); parc.innerHTML='';
+  J.ouvrages.forEach((o,i)=>{
+    const d=document.createElement('div'); d.className='ouv'; d.id='ouv'+i;
+    d.innerHTML='<div class="ic">'+o.ic+'</div><h3>'+o.n+'</h3>'+
+      '<div class="pv"><div id="pv'+i+'"></div></div>'+
+      '<div class="etatxt" id="et'+i+'"></div>'+
+      '<button id="rep'+i+'">🔧 Réparer +35 (1 équipe)</button>'+
+      '<button id="pro'+i+'">'+o.protNom+' (2 équipes)</button>';
+    parc.appendChild(d);
+    document.getElementById('rep'+i).onclick=()=>{
+      if(J.fini||J.enQuestion||J.eq<1||o.pv<=0) return;
+      J.eq--; o.pv=Math.min(100,o.pv+35); J.score+=10; majHUD(); majTous();
+    };
+    document.getElementById('pro'+i).onclick=()=>{
+      if(J.fini||J.enQuestion||J.eq<2||o.prot) return;
+      J.eq-=2; o.prot=true; J.score+=40; majHUD(); majTous();
+      bandeau('🛡️ '+o.n+' : amélioration réalisée ('+o.protInfo+') !','#4ade80');
+    };
+    majOuvrage(i);
+  });
+}
+function majOuvrage(i){
+  const o=J.ouvrages[i];
+  const bar=document.getElementById('pv'+i);
+  bar.style.width=Math.max(0,o.pv)+'%';
+  bar.style.background= o.pv>60?'#4ade80':(o.pv>30?'#fbbf24':'#f87171');
+  document.getElementById('et'+i).textContent= (o.prot?'🛡️ protégé · ':'')+Math.round(Math.max(0,o.pv))+' / 100';
+  const carte=document.getElementById('ouv'+i);
+  carte.classList.toggle('danger', o.pv<=30 && o.pv>0);
+  document.getElementById('rep'+i).disabled = J.eq<1 || o.pv>=100;
+  const bp=document.getElementById('pro'+i);
+  bp.disabled = J.eq<2 || o.prot;
+  if(o.prot){ bp.classList.add('fait'); bp.textContent='🛡️ Amélioration faite'; }
+}
+function majTous(){ J.ouvrages.forEach((_,i)=>majOuvrage(i)); }
+
+function evenement(){
+  const r=Math.random();
+  if(r<0.34){ // tempête
+    bandeau('🌪️ TEMPÊTE sur la ville !','#f87171');
+    J.ouvrages.forEach(o=>{ if(o.type==='bat') o.pv-=o.prot?4:24; });
+  } else if(r<0.67){ // convoi
+    const ponts=J.ouvrages.filter(o=>o.type==='pont'&&o.pv>0);
+    const p=ponts[Math.floor(Math.random()*ponts.length)];
+    bandeau('🚛 Convoi exceptionnel sur « '+p.n+' » !','#f87171');
+    p.pv-=p.prot?5:22;
+  } else { // gel
+    bandeau('❄️ Vague de gel : les bâtiments souffrent !','#f87171');
+    J.ouvrages.forEach(o=>{ if(o.type==='bat') o.pv-= (o.protNom.includes('Isoler') ? (o.prot?3:16) : 8); });
+  }
+  majTous();
+}
+function poserQuestion(){
+  J.enQuestion=true;
+  let dispo=QUESTIONS.map((_,i)=>i).filter(i=>!J.qUtil.includes(i));
+  if(dispo.length===0){ J.qUtil=[]; dispo=QUESTIONS.map((_,i)=>i); }
+  const qi=dispo[Math.floor(Math.random()*dispo.length)]; J.qUtil.push(qi);
+  const q=QUESTIONS[qi], box=document.getElementById('qbox');
+  box.innerHTML='<div class="q">🌅 RAPPORT DU MATIN — JOUR '+J.jour+' — '+q.q+'</div>';
+  q.r.forEach((rep,k)=>{
+    const b=document.createElement('button'); b.textContent=rep;
+    b.onclick=()=>{
+      document.getElementById('ovQuestion').classList.add('cache');
+      J.enQuestion=false; dernierTs=null;
+      if(k===q.b){ J.eq++; J.score+=60; bandeau('✅ Bonne réponse : une 3ème équipe débarque ! (+60 pts)','#4ade80'); }
+      else bandeau('❌ La réponse était : '+q.r[q.b],'#f87171');
+      majHUD(); majTous();
+    };
+    box.appendChild(b);
+  });
+  document.getElementById('ovQuestion').classList.remove('cache');
+}
+function finPartie(o){
+  J.fini=true;
+  if(Math.floor(J.score)>record){ record=Math.floor(J.score); try{ localStorage.setItem('inspecteur_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent='💥 '+o.n+' s\u2019est effondré !';
+  document.getElementById('finTexte').innerHTML='Un ouvrage négligé finit toujours par céder — en vrai aussi, d\u2019où les inspections obligatoires des ponts !<br><br>Jours tenus : <b>'+J.jour+'</b> · Score : <b>'+Math.floor(J.score)+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini||J.enQuestion) { dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  const jourAvant=Math.floor(J.t/JOUR_S);
+  J.t+=dt;
+  document.getElementById('jourfill').style.width=((J.t%JOUR_S)/JOUR_S*100)+'%';
+  // usure continue
+  J.ouvrages.forEach(o=>{ o.pv-=o.decay*dt*(1+J.jour*0.09); });
+  // événement aléatoire en cours de journée
+  if(Math.random()<0.0035*(1+J.jour*0.12)) evenement();
+  majTous();
+  // effondrement ?
+  const mort=J.ouvrages.find(o=>o.pv<=0);
+  if(mort){ majTous(); return finPartie(mort); }
+  // score de survie
+  J.score+=dt*6;
+  if(Math.floor(J.t/JOUR_S)>jourAvant){
+    J.jour++; J.eq=2;
+    J.score+=J.ouvrages.reduce((s,o)=>s+o.pv,0)/12;
+    majHUD(); poserQuestion();
+  }
+  if(Math.floor(J.score)!==+document.getElementById('hScore').textContent) majHUD();
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

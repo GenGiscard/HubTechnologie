@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Évaluation 3ème — Internet & Cybersécurité · ESTIC</title>
+<style>
+:root{
+  --ink:#1e3a5f; --niv:#1d4ed8; --niv-fonce:#1e40af; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
+  --ombre:0 4px 14px rgba(30,58,95,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);min-height:100vh;padding-bottom:60px}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--vert);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.conteneur{max-width:820px;margin:26px auto;padding:0 20px}
+.panneau{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:28px;border-top:5px solid var(--vert)}
+h1{font-size:26px;color:var(--vert);margin-bottom:6px}
+.sous{color:var(--gris);font-size:14.5px;margin-bottom:14px;line-height:1.55}
+.rassure{background:#f0fdf4;border-left:4px solid var(--vert);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13.5px;margin-bottom:16px;line-height:1.6}
+label{display:block;font-weight:700;font-size:14px;margin:12px 0 5px;color:var(--niv-fonce)}
+input,select{width:100%;padding:11px;border-radius:10px;border:2px solid #cbd5e1;font-size:15px;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:var(--vert)}
+.btn{border:none;border-radius:10px;padding:13px 24px;font-size:16px;font-weight:800;cursor:pointer;color:#fff;background:var(--vert);margin-top:14px}
+.btn:hover{filter:brightness(1.07)}
+.btn.bleu{background:var(--niv)}
+.btn.gris{background:#64748b}
+.btn:disabled{background:#cbd5e1;cursor:default}
+.cache{display:none}
+/* En-tête d'activité */
+.barre{height:12px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin-bottom:16px}
+.barre div{height:100%;background:var(--vert);width:0%;transition:width .3s}
+.entete-act{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.entete-act .numa{font-size:12.5px;font-weight:800;letter-spacing:2px;color:var(--orange);text-transform:uppercase}
+.entete-act .ptsmax{margin-left:auto;font-size:13px;font-weight:800;color:var(--gris);background:#f1f5f9;border-radius:14px;padding:4px 12px}
+.titre-act{font-size:21px;font-weight:800;color:var(--niv-fonce);margin-bottom:6px}
+.consigne-act{font-size:15px;background:#eff6ff;border-left:4px solid var(--niv);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55;margin-bottom:16px}
+/* Widgets communs */
+.zone-act svg,.zone-act canvas{display:block;margin:0 auto;max-width:100%;background:#fdfdfd;border:1px solid #eef2f7;border-radius:12px}
+.etiqs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+.etiqs button{border:2.5px solid var(--niv);background:#fff;color:var(--niv-fonce);border-radius:12px;padding:11px 16px;font-size:15px;font-weight:800;cursor:pointer}
+.etiqs button.choisi{background:var(--niv);color:#fff}
+.etiqs button.pose{opacity:.35;cursor:default}
+.choix-cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:10px 0}
+.choix-cartes .cc{border:3px solid #cbd5e1;border-radius:14px;background:#fff;padding:12px;cursor:pointer;text-align:center;font-weight:700;font-size:14px;transition:.15s}
+.choix-cartes .cc:hover{border-color:var(--niv)}
+.choix-cartes .cc.sel{border-color:var(--orange);background:#fff7ed}
+.choix-cartes .cc.bon{border-color:var(--vert);background:#f0fdf4}
+.choix-cartes .cc.faux{border-color:var(--rouge);background:#fef2f2}
+.feedback{margin-top:14px;padding:13px 16px;border-radius:12px;font-weight:700;font-size:14.5px;display:none;line-height:1.6}
+.feedback.ok{display:block;background:#dcfce7;color:#14532d;border-left:5px solid var(--vert)}
+.feedback.moyen{display:block;background:#fef9c3;color:#713f12;border-left:5px solid #eab308}
+.feedback.ko{display:block;background:#fee2e2;color:#7f1d1d;border-left:5px solid var(--rouge)}
+.pied-act{display:flex;align-items:center;gap:12px;margin-top:14px}
+.pied-act .gain{font-weight:900;font-size:17px;color:var(--niv-fonce)}
+/* Résultat */
+.notefinale{text-align:center;padding:14px}
+.notefinale .gros{font-size:56px;font-weight:900;color:var(--vert)}
+.notefinale .sur{font-size:20px;color:var(--gris)}
+.detail .ligne{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;background:#f8fafc;margin:6px 0;font-size:14px}
+.detail .ligne .bar{flex:1;height:12px;background:#e2e8f0;border-radius:6px;overflow:hidden}
+.detail .ligne .bar div{height:100%;background:var(--vert)}
+.detail .ligne b{min-width:200px}
+.etat-envoi{margin-top:14px;padding:11px 14px;border-radius:10px;font-weight:700;font-size:14px}
+.etat-envoi.ok{background:#dcfce7;color:#14532d}
+.etat-envoi.ko{background:#fee2e2;color:#7f1d1d}
+.lienprof{display:block;text-align:center;margin-top:22px;font-size:13px;color:var(--gris);cursor:pointer;text-decoration:underline}
+table.res{width:100%;border-collapse:collapse;margin-top:16px;font-size:13.5px}
+table.res th{background:var(--niv-fonce);color:#fff;padding:9px;text-align:left;position:sticky;top:0}
+table.res td{padding:8px 9px;border-bottom:1px solid #eef2f7}
+table.res tr:nth-child(even) td{background:#f8fafc}
+.statq{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:13px}
+.statq b{width:220px;font-weight:700}
+.statq .bq{flex:1;height:12px;background:#e2e8f0;border-radius:6px;overflow:hidden}
+.statq .bq div{height:100%}
+.kpis{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap}
+.kpi{flex:1;min-width:130px;background:#eff6ff;border-radius:12px;padding:14px;text-align:center}
+.kpi b{display:block;font-size:26px;color:var(--niv-fonce)}
+.kpi span{font-size:12px;color:var(--gris)}
+svg .cliquable{cursor:pointer}
+svg .cliquable:hover{opacity:.75}
+/* ===== Calculatrice latérale ===== */
+#calcToggle{position:fixed;right:16px;bottom:16px;z-index:60;border:none;border-radius:50%;width:58px;height:58px;font-size:26px;background:var(--niv);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+#calcToggle:hover{filter:brightness(1.1)}
+#calcPanel{position:fixed;right:16px;bottom:84px;z-index:60;width:238px;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.28);padding:12px;display:none;border:2.5px solid var(--niv)}
+#calcPanel.ouvert{display:block}
+#calcPanel .titrecalc{font-size:12px;font-weight:800;letter-spacing:1px;color:var(--gris);text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between}
+#calcAff{background:#0f172a;color:#4ade80;font-family:'Consolas',monospace;font-size:20px;text-align:right;border-radius:8px;padding:10px;min-height:46px;word-wrap:break-word;margin-bottom:8px}
+.calcbtns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.calcbtns button{border:none;border-radius:8px;padding:11px 0;font-size:16px;font-weight:800;cursor:pointer;background:#f1f5f9;color:var(--ink)}
+.calcbtns button:hover{filter:brightness(.94)}
+.calcbtns button.op{background:var(--niv);color:#fff}
+.calcbtns button.eg{background:var(--orange);color:#fff}
+.num-rep{display:flex;gap:10px;align-items:center;justify-content:center;margin:16px 0;flex-wrap:wrap}
+.num-rep input{width:160px;font-size:20px;font-weight:800;text-align:center;padding:12px;border:3px solid var(--niv);border-radius:12px}
+.num-rep .unite{font-size:18px;font-weight:900;color:var(--niv-fonce)}
+.rappel-formule{text-align:center;font-weight:800;color:var(--niv-fonce);background:#f1f5f9;border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:15.5px}
+</style>
+</head>
+<body>
+
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%2316a34a'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<button id="calcToggle" title="Ouvrir / fermer la calculatrice" aria-label="Calculatrice">🧮</button>
+<div id="calcPanel" role="region" aria-label="Calculatrice">
+  <div class="titrecalc"><span>🧮 Calculatrice</span><span style="cursor:pointer" id="calcFermer">✕</span></div>
+  <div id="calcAff">0</div>
+  <div class="calcbtns" id="calcBtns"></div>
+</div>
+
+<div class="conteneur">
+
+ <!-- IDENTIFICATION -->
+ <div class="panneau" id="ecranLogin">
+  <!-- ===CONFIG_TITRE=== -->
+  <h1>🌐 Évaluation — Internet & Cybersécurité</h1>
+  <div class="sous">8 activités variées : réseau à étiqueter, paquets à prédire, phishing à démasquer, animation à interpréter et calculs de débit avec la calculatrice intégrée.</div>
+  <!-- ===FIN CONFIG_TITRE=== -->
+  <div class="rassure">🕐 <b>Aucune limite de temps.</b> · 👆 Tout se fait en cliquant. · 🔍 Tu peux zoomer la page si besoin. ·
+  💬 Après chaque activité, la bonne réponse t'est expliquée. · ⭐ Ta note est calculée sur l'ensemble : une activité ratée ne fait pas tout perdre.</div>
+  <label>Nom</label><input id="fNom" autocomplete="off">
+  <label>Prénom</label><input id="fPrenom" autocomplete="off">
+  <label>Classe</label>
+  <select id="fClasse">
+    <option value="">— Choisis ta classe —</option>
+    <option>3A</option><option>3B</option><option>3C</option><option>3D</option><option>3E</option>
+  </select>
+  <button class="btn" id="btnCommencer">🚀 C'est parti !</button>
+  <div class="lienprof" id="lienProf">Espace professeur</div>
+ </div>
+
+ <!-- ACTIVITÉ -->
+ <div class="panneau cache" id="ecranAct">
+  <div class="barre"><div id="barreP"></div></div>
+  <div class="entete-act"><span class="numa" id="numAct"></span><span class="ptsmax" id="ptsMaxAct"></span></div>
+  <div class="titre-act" id="titreAct"></div>
+  <div class="consigne-act" id="consigneAct"></div>
+  <div class="zone-act" id="zoneAct"></div>
+  <div class="feedback" id="fbAct"></div>
+  <div class="pied-act">
+    <span class="gain cache" id="gainAct"></span>
+    <button class="btn bleu cache" id="btnSuivant" style="margin:0 0 0 auto">Suivant ➜</button>
+  </div>
+ </div>
+
+ <!-- RÉSULTAT -->
+ <div class="panneau cache" id="ecranFin">
+  <h1>🎓 Résultat</h1>
+  <div class="notefinale"><span class="gros" id="note20"></span><span class="sur"> / 20</span>
+    <div class="sous" id="scoreBrut"></div></div>
+  <div class="etat-envoi" id="etatEnvoi"></div>
+  <div class="detail" id="detailRep"></div>
+ </div>
+
+ <!-- ESPACE PROF -->
+ <div class="panneau cache" id="ecranProf">
+  <h1>👨‍🏫 Tableau de bord professeur</h1>
+  <div id="profLogin">
+    <label>Mot de passe</label><input id="fMdp" type="password">
+    <button class="btn bleu" id="btnProf">Accéder</button>
+    <div class="etat-envoi ko cache" id="errMdp">Mot de passe incorrect.</div>
+  </div>
+  <div class="cache" id="profContenu">
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <select id="filtreClasse" style="max-width:160px"><option value="">Toutes les classes</option>
+        <option>3A</option><option>3B</option><option>3C</option><option>3D</option><option>3E</option></select>
+      <button class="btn bleu" id="btnRafraichir" style="margin-top:0">⟳ Actualiser</button>
+      <button class="btn gris" id="btnCSV" style="margin-top:0">⬇ Export CSV</button>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <h2 style="font-size:16px;color:var(--niv-fonce);margin-top:20px">Réussite par activité</h2>
+    <div id="statsQ"></div>
+    <h2 style="font-size:16px;color:var(--niv-fonce);margin-top:20px">Résultats individuels</h2>
+    <div style="max-height:380px;overflow:auto"><table class="res" id="tableRes"></table></div>
+  </div>
+ </div>
+
+</div>
+
+<script>
+/* ===CONFIG=== */
+const FIREBASE='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/evaluations/internet_3e';
+const MDP_PROF='Agostini2025';
+const CSV_NOM='resultats_internet_3e.csv';
+/* ===FIN CONFIG=== */
+
+/* ============================================================
+   BOÎTE À OUTILS DES ACTIVITÉS (inclusif : clic uniquement,
+   pas de chrono, feedback explicatif, symboles + couleurs)
+   ============================================================ */
+const SVGNS='http://www.w3.org/2000/svg';
+function el(tag,attrs={},parent=null,texte=''){
+  const e=document.createElement(tag);
+  Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+  if(texte) e.textContent=texte;
+  if(parent) parent.appendChild(e);
+  return e;
+}
+function svgEl(tag,attrs={},parent=null,texte=''){
+  const e=document.createElementNS(SVGNS,tag);
+  Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+  if(texte) e.textContent=texte;
+  if(parent) parent.appendChild(e);
+  return e;
+}
+function boutonValider(zone,cb){
+  const b=el('button',{class:'btn'},zone,'✔ Valider ma réponse');
+  b.disabled=true; b.onclick=cb; return b;
+}
+function feedback(type,html){
+  const fb=document.getElementById('fbAct');
+  fb.className='feedback '+type; fb.innerHTML=html;
+}
+/* ===== Calculatrice : évaluateur maison (sans eval), gère , × ÷ − et parenthèses ===== */
+function calcEval(expr){
+  expr=String(expr).replace(/,/g,'.').replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/\s/g,'');
+  let i=0;
+  function expre(){ let v=terme();
+    while(expr[i]==='+'||expr[i]==='-'){ const op=expr[i++]; const r=terme(); v= op==='+'? v+r : v-r; }
+    return v; }
+  function terme(){ let v=fact();
+    while(expr[i]==='*'||expr[i]==='/'){ const op=expr[i++]; const r=fact(); v= op==='*'? v*r : v/r; }
+    return v; }
+  function fact(){
+    if(expr[i]==='('){ i++; const v=expre(); if(expr[i]===')') i++; return v; }
+    if(expr[i]==='-'){ i++; return -fact(); }
+    const s=i; while(i<expr.length && /[0-9.]/.test(expr[i])) i++;
+    return parseFloat(expr.slice(s,i));
+  }
+  const v=expre();
+  return (i===expr.length && isFinite(v)) ? v : null;
+}
+(function initCalculatrice(){
+  const aff=document.getElementById('calcAff');
+  const grille=document.getElementById('calcBtns');
+  let saisie='';
+  function maj(){ aff.textContent = saisie===''? '0' : saisie; }
+  const touches=['7','8','9','÷','4','5','6','×','1','2','3','−','0',',','(',')','C','⌫','+','='];
+  touches.forEach(t=>{
+    const b=document.createElement('button');
+    b.textContent=t;
+    if('÷×−+'.includes(t)) b.className='op';
+    if(t==='=') b.className='eg';
+    b.onclick=()=>{
+      if(t==='C'){ saisie=''; }
+      else if(t==='⌫'){ saisie=saisie.slice(0,-1); }
+      else if(t==='='){
+        const r=calcEval(saisie);
+        saisie = (r===null)? '' : String(Math.round(r*1e6)/1e6).replace('.',',');
+        if(r===null) aff.textContent='Erreur';
+        maj(); return;
+      }
+      else saisie+=t;
+      maj();
+    };
+    grille.appendChild(b);
+  });
+  document.getElementById('calcToggle').onclick=()=>document.getElementById('calcPanel').classList.toggle('ouvert');
+  document.getElementById('calcFermer').onclick=()=>document.getElementById('calcPanel').classList.remove('ouvert');
+})();
+function ouvrirCalculatrice(){ document.getElementById('calcPanel').classList.add('ouvert'); }
+/* Widget « question de calcul » : schéma optionnel, rappel de formule, saisie numérique (virgule acceptée), tolérance */
+function activiteCalcul(zone,done,cfg){
+  ouvrirCalculatrice();
+  if(cfg.schema){ const s=cfg.schema(); if(s) zone.appendChild(s); }
+  if(cfg.rappel) el('div',{class:'rappel-formule'},zone,'📐 '+cfg.rappel);
+  const rang=el('div',{class:'num-rep'},zone);
+  el('span',{style:'font-weight:800;font-size:16px'},rang,'Réponse :');
+  const inp=el('input',{type:'text',inputmode:'decimal',placeholder:'…','aria-label':'ta réponse'},rang);
+  el('span',{class:'unite'},rang,cfg.unite);
+  inp.addEventListener('input',()=>{ valider.disabled=inp.value.trim()===''; });
+  const valider=boutonValider(zone,()=>{
+    const v=parseFloat(inp.value.replace(',','.'));
+    valider.disabled=true; inp.disabled=true;
+    const ok=isFinite(v) && Math.abs(v-cfg.bonne)<=(cfg.tol!==undefined?cfg.tol:0.001);
+    inp.style.borderColor= ok?'#16a34a':'#dc2626';
+    feedback(ok?'ok':'ko',(ok?'✓ Calcul exact ! ':'✗ Ce n\u2019est pas la bonne valeur. ')+cfg.solution);
+    done(ok?cfg.max:0);
+  });
+}
+/* Widget « étiquettes à poser » : clique une étiquette, puis sa zone sur le schéma */
+function widgetEtiquettes(zone, svg, zonesDef, etiquettesDef, bonnes, aideCorrection, done, maxPts){
+  let etiqChoisie=null; const poses={};
+  const rangEtiq=el('div',{class:'etiqs'},zone);
+  const btns={};
+  etiquettesDef.forEach(nom=>{
+    const b=el('button',{},rangEtiq,nom);
+    btns[nom]=b;
+    b.onclick=()=>{ if(b.classList.contains('pose'))return;
+      Object.values(btns).forEach(x=>x.classList.remove('choisi'));
+      etiqChoisie=nom; b.classList.add('choisi'); };
+  });
+  zone.appendChild(svg);
+  const textesPoses={};
+  zonesDef.forEach(z=>{
+    z.forme.classList.add('cliquable');
+    z.forme.addEventListener('click',()=>{
+      if(!etiqChoisie) return;
+      // retirer l'étiquette de son ancienne zone éventuelle
+      Object.keys(poses).forEach(k=>{ if(poses[k]===etiqChoisie){ delete poses[k]; textesPoses[k].textContent='?'; } });
+      poses[z.id]=etiqChoisie;
+      textesPoses[z.id].textContent=etiqChoisie;
+      btns[etiqChoisie].classList.remove('choisi'); btns[etiqChoisie].classList.add('pose');
+      etiqChoisie=null;
+      // toutes posées ?
+      valider.disabled = Object.keys(poses).length<zonesDef.length;
+    });
+    const t=svgEl('text',{x:z.tx,y:z.ty,'text-anchor':'middle','font-size':'14','font-weight':'bold',fill:'#ea580c','font-family':'Segoe UI'},svg,'?');
+    textesPoses[z.id]=t;
+  });
+  const valider=boutonValider(zone,()=>{
+    valider.disabled=true;
+    let pts=0;
+    zonesDef.forEach(z=>{
+      const ok=poses[z.id]===bonnes[z.id];
+      if(ok) pts++;
+      textesPoses[z.id].setAttribute('fill', ok?'#16a34a':'#dc2626');
+      textesPoses[z.id].textContent=(ok?'✓ ':'✗ ')+bonnes[z.id];
+    });
+    const p=Math.round(pts/zonesDef.length*maxPts*10)/10;
+    feedback(pts===zonesDef.length?'ok':(pts>0?'moyen':'ko'),
+      (pts===zonesDef.length?'👏 Toutes les étiquettes sont bien placées !':'Les bonnes réponses sont affichées en vert sur le schéma. ')+aideCorrection);
+    done(p);
+  });
+}
+
+/* ============================================================
+   MOTEUR : enchaîne les activités, score, envoi Firebase
+   ============================================================ */
+/* ===ACTIVITES=== */
+const ACTIVITES=[
+
+/* ---- 1. Étiquette le réseau ---- */
+{ titre:'Étiquette le réseau', icone:'🗺️', max:3,
+  consigne:'Voici le trajet d\u2019une page web jusqu\u2019à toi. Clique une étiquette, puis la machine correspondante. Place les 3 étiquettes, puis valide.',
+  render(zone,done){
+    const svg=svgEl('svg',{viewBox:'0 0 620 220',width:'620'});
+    svgEl('line',{x1:110,y1:110,x2:310,y2:110,stroke:'#cbd5e1','stroke-width':'4'},svg);
+    svgEl('line',{x1:310,y1:110,x2:510,y2:110,stroke:'#cbd5e1','stroke-width':'4'},svg);
+    // client (écran)
+    const client=svgEl('g',{},svg);
+    svgEl('rect',{x:70,y:70,width:80,height:56,rx:9,fill:'#dbeafe',stroke:'#1d4ed8','stroke-width':'3'},client);
+    svgEl('text',{x:110,y:106,'text-anchor':'middle','font-size':'26'},client,'💻');
+    // routeur (cercle antennes)
+    const routeur=svgEl('g',{},svg);
+    svgEl('circle',{cx:310,cy:98,r:34,fill:'#ffedd5',stroke:'#ea580c','stroke-width':'3'},routeur);
+    svgEl('text',{x:310,y:108,'text-anchor':'middle','font-size':'26'},routeur,'📡');
+    // serveur (tour)
+    const serveur=svgEl('g',{},svg);
+    svgEl('rect',{x:475,y:56,width:70,height:88,rx:9,fill:'#dcfce7',stroke:'#16a34a','stroke-width':'3'},serveur);
+    svgEl('text',{x:510,y:110,'text-anchor':'middle','font-size':'26'},serveur,'🗄️');
+    widgetEtiquettes(zone,svg,
+      [{id:'client',forme:client,tx:110,ty:165},
+       {id:'routeur',forme:routeur,tx:310,ty:165},
+       {id:'serveur',forme:serveur,tx:510,ty:180}],
+      ['Client (demande)','Routeur (aiguille)','Serveur (fournit)'],
+      {client:'Client (demande)',routeur:'Routeur (aiguille)',serveur:'Serveur (fournit)'},
+      'Le CLIENT demande, le ROUTEUR aiguille les paquets grâce à leur adresse IP de destination, le SERVEUR stocke et fournit les contenus.',
+      done,3);
+  }
+},
+
+/* ---- 2. L'ordre du DNS ---- */
+{ titre:'Tu tapes « estic.fr »…', icone:'🔢', max:3,
+  consigne:'Quatre étapes se déclenchent entre ta frappe et l\u2019affichage de la page. Clique-les DANS L\u2019ORDRE (la vérification est automatique après le 4ème clic).',
+  render(zone,done){
+    const ETAPES=[
+      {id:0,t:'📖 Demande au serveur DNS : « estic.fr, quelle IP ? »'},
+      {id:1,t:'📬 Le DNS répond : « 92.243.16.108 ! »'},
+      {id:2,t:'📨 Requête envoyée au serveur du site, à cette IP'},
+      {id:3,t:'📄 La page arrive en paquets et s\u2019affiche'},
+    ];
+    const BON=[0,1,2,3];
+    const rang=el('div',{class:'choix-cartes'},zone);
+    const choix=[];
+    ETAPES.slice().sort(()=>0.5-Math.random()).forEach(e=>{
+      const c=el('div',{class:'cc'},rang,e.t);
+      c.onclick=()=>{
+        if(choix.length>=4 || choix.includes(e.id)) return;
+        choix.push(e.id);
+        c.style.opacity='.45';
+        const badge=el('span',{style:'display:inline-block;background:#1d4ed8;color:#fff;border-radius:50%;width:24px;height:24px;line-height:24px;font-weight:900;margin-left:8px'},c,String(choix.length));
+        if(choix.length===4){
+          const exact=choix.join()===BON.join();
+          const premierOk=choix[0]===BON[0];
+          const pts=exact?3:(premierOk?1:0);
+          feedback(exact?'ok':(pts?'moyen':'ko'),
+            (exact?'✓ Parfait !':'L\u2019ordre correct : DNS interrogé → IP reçue → requête au serveur → page reçue.')+
+            ' On ne peut PAS contacter le serveur avant de connaître son adresse IP : le DNS passe toujours en premier.');
+          done(pts);
+        }
+      };
+    });
+  }
+},
+
+/* ---- 3. La panne ---- */
+{ titre:'Une liaison tombe en panne', icone:'✂️', max:2,
+  consigne:'Ton message part en 3 paquets vers un serveur… et une liaison du réseau tombe en panne pendant le trajet. Que deviennent les paquets ? Clique ta prédiction.',
+  render(zone,done){
+    const rang=el('div',{class:'choix-cartes'},zone);
+    const options=[
+      {t:'Ils sont définitivement perdus.', ok:false},
+      {t:'Ils passent par un autre chemin du réseau maillé.', ok:true},
+      {t:'Ils attendent que la liaison soit réparée.', ok:false},
+    ];
+    let repondu=false;
+    options.forEach(o=>{
+      const c=el('div',{class:'cc'},rang,o.t);
+      c.onclick=()=>{
+        if(repondu)return; repondu=true;
+        [...rang.children].forEach((cc,i)=>{ if(options[i].ok) cc.classList.add('bon'); });
+        if(!o.ok) c.classList.add('faux');
+        feedback(o.ok?'ok':'ko',(o.ok?'✓ Exactement !':'✗ Non :')+' les routeurs détectent la panne et aiguillent les paquets par les routes restantes. C\u2019est le principe du réseau MAILLÉ : aucune route n\u2019est indispensable, Internet résiste aux pannes.');
+        done(o.ok?2:0);
+      };
+    });
+  }
+},
+
+/* ---- 4. L'animation mystère ---- */
+{ titre:'L\u2019animation mystère', icone:'🎬', max:2,
+  consigne:'Observe cette animation (elle tourne en boucle)… puis clique la légende qui décrit correctement ce qui se passe.',
+  render(zone,done){
+    const cv=el('canvas',{width:620,height:200},zone);
+    const ctx=cv.getContext('2d'); let t=0,fini=false,raf;
+    function machine(x,y,emoji,coul){
+      ctx.fillStyle='#fff';ctx.strokeStyle=coul;ctx.lineWidth=3;
+      ctx.beginPath();ctx.roundRect(x-30,y-26,60,52,10);ctx.fill();ctx.stroke();
+      ctx.font='24px Segoe UI';ctx.textAlign='center';ctx.fillStyle='#000';ctx.fillText(emoji,x,y+9);
+    }
+    function boucle(){
+      if(fini)return;
+      t+=0.011;
+      ctx.clearRect(0,0,620,200);
+      ctx.strokeStyle='#cbd5e1';ctx.lineWidth=3;
+      ctx.beginPath();ctx.moveTo(100,100);ctx.lineTo(520,100);ctx.stroke();
+      machine(100,100,'💻','#1d4ed8'); machine(520,100,'🗄️','#16a34a');
+      ctx.font='26px Segoe UI';ctx.textAlign='center';ctx.fillStyle='#000';ctx.fillText('🕵️',310,52);
+      const cycle=(t%2)/2, chiffre=Math.floor(t/2)%2===1;
+      const x=100+cycle*420;
+      ctx.fillStyle=chiffre?'#16a34a':'#dc2626';
+      ctx.beginPath();ctx.roundRect(x-26,88,52,24,6);ctx.fill();
+      ctx.fillStyle='#fff';ctx.font='bold 13px Segoe UI';
+      ctx.fillText(chiffre?'#k!7§':'salut',x,105);
+      ctx.font='bold 13px Segoe UI';
+      ctx.fillStyle=chiffre?'#16a34a':'#dc2626';
+      ctx.fillText(chiffre?'🕵️ « je ne comprends rien »':'🕵️ « je lis tout ! »',310,160);
+      raf=requestAnimationFrame(boucle);
+    }
+    boucle();
+    const rang=el('div',{class:'choix-cartes'},zone);
+    const legs=[
+      {t:'Une compression : le message devient plus petit pour aller plus vite.', ok:false},
+      {t:'Un chiffrement : le message est codé, l\u2019espion ne peut plus le lire.', ok:true},
+      {t:'Un pare-feu : l\u2019espion est bloqué à l\u2019entrée du réseau.', ok:false},
+    ];
+    let repondu=false;
+    legs.forEach(L=>{
+      const c=el('div',{class:'cc'},rang,L.t);
+      c.onclick=()=>{
+        if(repondu)return; repondu=true; fini=true; cancelAnimationFrame(raf);
+        [...rang.children].forEach((cc,i)=>{ if(legs[i].ok) cc.classList.add('bon'); });
+        if(!L.ok) c.classList.add('faux');
+        feedback(L.ok?'ok':'ko',(L.ok?'✓ Exactement !':'✗ Regarde à nouveau :')+' en clair (rouge), l\u2019espion lit « salut » ; chiffré (vert), il ne voit que « #k!7§ ». C\u2019est le CHIFFREMENT — le 🔒 de HTTPS — qui protège tes mots de passe en transit.');
+        done(L.ok?2:0);
+      };
+    });
+  }
+},
+
+/* ---- 5. Démasque le phishing ---- */
+{ titre:'Démasque le phishing', icone:'🎣', max:2,
+  consigne:'Deux messages sont arrivés dans ta boîte. L\u2019un est une ARNAQUE. Clique sur le message de PHISHING.',
+  render(zone,done){
+    const rang=el('div',{class:'choix-cartes'},zone);
+    const mails=[
+      {de:'vie-scolaire@estic-saintdizier.fr', obj:'Sortie au musée : autorisation', corps:'Merci de rapporter l\u2019autorisation signée avant vendredi.', ok:false},
+      {de:'ent-supp0rt@estic-secours.xyz', obj:'⚠️ URGENT : compte suprimé dans 2h !!', corps:'Cliquez vite ici et saisissez votre mot de passe pour conservé votre compte.', ok:true},
+    ].sort(()=>0.5-Math.random());
+    let repondu=false;
+    mails.forEach(m=>{
+      const c=el('div',{class:'cc',style:'text-align:left'},rang);
+      el('div',{style:'font-size:12px;color:#64748b'},c,'De : '+m.de);
+      el('div',{style:'font-weight:900;margin:4px 0'},c,m.obj);
+      el('div',{style:'font-size:13px'},c,m.corps);
+      c.onclick=()=>{
+        if(repondu)return; repondu=true;
+        [...rang.children].forEach((cc,i)=>{ if(mails[i].ok) cc.classList.add(cc===c?'bon':'faux'); });
+        const ok=m.ok;
+        if(!ok) c.classList.add('faux');
+        feedback(ok?'ok':'ko',(ok?'✓ Bien démasqué !':'✗ C\u2019était l\u2019autre !')+' Les indices du phishing : adresse louche (supp0rt avec un zéro, domaine .xyz), URGENCE artificielle, fautes d\u2019orthographe, et surtout : on te demande ton MOT DE PASSE. Aucun service sérieux ne fait ça par mail.');
+        done(ok?2:0);
+      };
+    });
+  }
+},
+
+/* ---- 6. Verdicts de cybersécurité ---- */
+{ titre:'Verdicts de sécurité', icone:'⚖️', max:2,
+  consigne:'Deux affirmations entendues dans la cour. Pour chacune, rends ton verdict, puis valide.',
+  render(zone,done){
+    const CAS=[
+      {n:'« Un mot de passe LONG et unique par site est plus sûr qu\u2019un mot de passe court et compliqué. »', vrai:true},
+      {n:'« Sur le Wi-Fi public du fast-food, je peux consulter ma banque sans risque. »', vrai:false},
+    ];
+    const verdicts=[null,null];
+    const grille=el('div',{class:'choix-cartes'},zone);
+    CAS.forEach((c,i)=>{
+      const carte=el('div',{class:'cc',style:'cursor:default'},grille);
+      el('div',{style:'font-size:14.5px;line-height:1.5'},carte,c.n);
+      const rang=el('div',{style:'display:flex;gap:8px;justify-content:center;margin-top:10px'},carte);
+      const bV=el('button',{class:'btn bleu',style:'margin:0;padding:8px 14px;font-size:13px'},rang,'✅ VRAI');
+      const bF=el('button',{class:'btn gris',style:'margin:0;padding:8px 14px;font-size:13px'},rang,'❌ FAUX');
+      bV.onclick=()=>{ verdicts[i]=true; bV.style.outline='4px solid #ea580c'; bF.style.outline='none'; maj(); };
+      bF.onclick=()=>{ verdicts[i]=false; bF.style.outline='4px solid #ea580c'; bV.style.outline='none'; maj(); };
+    });
+    const valider=boutonValider(zone,()=>{
+      valider.disabled=true;
+      let pts=0;
+      [...grille.children].forEach((carte,i)=>{
+        const ok=verdicts[i]===CAS[i].vrai;
+        if(ok) pts++;
+        carte.classList.add(ok?'bon':'faux');
+      });
+      feedback(pts===2?'ok':(pts===1?'moyen':'ko'),
+        'La LONGUEUR bat la complexité : une phrase de passe se retient et résiste aux essais automatiques. Et sur un Wi-Fi ouvert, le trafic peut être espionné : jamais d\u2019opération sensible sans HTTPS 🔒.');
+      done(pts);
+    });
+    function maj(){ valider.disabled=verdicts.some(v=>v===null); }
+  }
+},
+
+/* ---- 7. CALCUL : le téléchargement ---- */
+{ titre:'Calcule le téléchargement', icone:'🧮', max:2,
+  consigne:'Un documentaire pèse 900 Mo. Ta connexion offre un débit de 60 Mo/s. Combien de temps dure le téléchargement, en secondes ? La calculatrice est ouverte à droite !',
+  render(zone,done){
+    activiteCalcul(zone,done,{max:2,unite:'secondes',bonne:15,tol:0.01,
+      rappel:'temps = taille ÷ débit',
+      solution:'Le calcul : temps = 900 ÷ 60 = 15 secondes. Les Mo s\u2019annulent (Mo ÷ Mo/s), il reste des secondes.'});
+  }
+},
+
+/* ---- 8. CALCUL : le forfait ---- */
+{ titre:'Le forfait mobile', icone:'📱', max:2,
+  consigne:'Ton forfait mobile offre 2 000 Mo de données par mois. Chaque photo envoyée pèse 5 Mo. Combien de photos peux-tu envoyer au maximum dans le mois ?',
+  render(zone,done){
+    activiteCalcul(zone,done,{max:2,unite:'photos',bonne:400,tol:0.001,
+      rappel:'nombre = données disponibles ÷ taille d\u2019une photo',
+      solution:'Le calcul : 2 000 ÷ 5 = 400 photos. Au-delà, débit bridé ou hors-forfait ! Comprendre les tailles de fichiers, c\u2019est aussi maîtriser sa consommation.'});
+  }
+},
+
+];
+/* ===FIN ACTIVITES=== */
+
+/* ============ Déroulement ============ */
+let eleve=null, idx=0, pts=[], t0=0;
+const MAXTOT=ACTIVITES.reduce((s,a)=>s+a.max,0);
+const $=id=>document.getElementById(id);
+function montrer(id){ ['ecranLogin','ecranAct','ecranFin','ecranProf'].forEach(e=>$(e).classList.add('cache')); $(id).classList.remove('cache'); }
+
+$('btnCommencer').onclick=()=>{
+  const nom=$('fNom').value.trim(), prenom=$('fPrenom').value.trim(), classe=$('fClasse').value;
+  if(!nom||!prenom||!classe){ alert('Complète ton nom, ton prénom et ta classe !'); return; }
+  eleve={nom,prenom,classe}; idx=0; pts=[]; t0=Date.now();
+  montrer('ecranAct'); lancerActivite();
+};
+function lancerActivite(){
+  const a=ACTIVITES[idx];
+  $('barreP').style.width=(idx/ACTIVITES.length*100)+'%';
+  $('numAct').textContent='Activité '+(idx+1)+' / '+ACTIVITES.length;
+  $('ptsMaxAct').textContent=a.max+' pt'+(a.max>1?'s':'');
+  $('titreAct').textContent=a.icone+' '+a.titre;
+  $('consigneAct').textContent=a.consigne;
+  $('fbAct').className='feedback';
+  $('gainAct').classList.add('cache');
+  $('btnSuivant').classList.add('cache');
+  const zone=$('zoneAct'); zone.innerHTML='';
+  a.render(zone, p=>{
+    pts[idx]=p;
+    $('gainAct').textContent='➜ '+String(p).replace('.',',')+' / '+a.max+' pt'+(a.max>1?'s':'');
+    $('gainAct').classList.remove('cache');
+    $('btnSuivant').textContent = idx<ACTIVITES.length-1 ? 'Suivant ➜' : 'Voir mon résultat 🎓';
+    $('btnSuivant').classList.remove('cache');
+  });
+}
+$('btnSuivant').onclick=()=>{
+  idx++;
+  if(idx<ACTIVITES.length) lancerActivite(); else terminer();
+};
+function terminer(){
+  montrer('ecranFin');
+  const total=pts.reduce((s,p)=>s+p,0);
+  const note=Math.round(total/MAXTOT*20*10)/10;
+  $('note20').textContent=String(note).replace('.',',');
+  $('note20').style.color= note>=10?'var(--vert)':'var(--rouge)';
+  $('scoreBrut').textContent=String(Math.round(total*10)/10).replace('.',',')+' points sur '+MAXTOT;
+  const zone=$('detailRep'); zone.innerHTML='';
+  ACTIVITES.forEach((a,i)=>{
+    const l=el('div',{class:'ligne'},zone);
+    el('b',{},l,a.icone+' '+a.titre);
+    const bar=el('div',{class:'bar'},l);
+    el('div',{style:'width:'+(pts[i]/a.max*100)+'%'},bar);
+    el('span',{style:'font-weight:800;min-width:64px;text-align:right'},l,String(pts[i]).replace('.',',')+'/'+a.max);
+  });
+  envoyer(note,total);
+}
+async function envoyer(note,total){
+  const elx=$('etatEnvoi');
+  elx.className='etat-envoi'; elx.textContent='⏳ Transmission au professeur…';
+  const donnees={ nom:eleve.nom, prenom:eleve.prenom, classe:eleve.classe,
+    score:Math.round(total*10)/10, sur:MAXTOT, note20:note,
+    duree_s:Math.round((Date.now()-t0)/1000),
+    date:new Date().toISOString(),
+    reponses:pts };
+  try{
+    const rep=await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(donnees)});
+    if(!rep.ok) throw new Error(rep.status);
+    elx.className='etat-envoi ok'; elx.textContent='✅ Résultat transmis au professeur.';
+  }catch(e){
+    elx.className='etat-envoi ko'; elx.textContent='⚠️ Résultat non transmis (pas de connexion ?). Montre cet écran à ton professeur.';
+  }
+}
+
+/* ============ Espace prof ============ */
+let cacheRes={};
+$('lienProf').onclick=()=>montrer('ecranProf');
+$('btnProf').onclick=()=>{
+  if($('fMdp').value===MDP_PROF){ $('profLogin').classList.add('cache'); $('profContenu').classList.remove('cache'); chargerRes(); }
+  else $('errMdp').classList.remove('cache');
+};
+$('fMdp').addEventListener('keydown',e=>{ if(e.key==='Enter') $('btnProf').click(); });
+$('btnRafraichir').onclick=chargerRes;
+$('filtreClasse').onchange=afficherRes;
+async function chargerRes(){
+  try{ const rep=await fetch(FIREBASE+'.json'); cacheRes=await rep.json()||{}; }
+  catch(e){ cacheRes={}; alert('Impossible de charger les résultats (connexion ?).'); }
+  afficherRes();
+}
+function lignesFiltrees(){
+  const f=$('filtreClasse').value;
+  return Object.values(cacheRes).filter(r=>!f||r.classe===f)
+    .sort((a,b)=>(a.classe+a.nom).localeCompare(b.classe+b.nom));
+}
+function afficherRes(){
+  const lignes=lignesFiltrees(), n=lignes.length;
+  const moy=n?(lignes.reduce((s,r)=>s+r.note20,0)/n):0;
+  const reussite=n?Math.round(lignes.filter(r=>r.note20>=10).length/n*100):0;
+  $('kpis').innerHTML=
+    '<div class="kpi"><b>'+n+'</b><span>copies</span></div>'+
+    '<div class="kpi"><b>'+moy.toFixed(1).replace('.',',')+'</b><span>moyenne / 20</span></div>'+
+    '<div class="kpi"><b>'+reussite+' %</b><span>élèves ≥ 10</span></div>';
+  const stats=ACTIVITES.map((a,i)=>{
+    const rep=lignes.filter(r=>Array.isArray(r.reponses)&&r.reponses.length===ACTIVITES.length);
+    if(!rep.length) return 0;
+    return Math.round(rep.reduce((s,r)=>s+r.reponses[i]/a.max,0)/rep.length*100);
+  });
+  $('statsQ').innerHTML=stats.map((s,i)=>
+    '<div class="statq"><b>'+ACTIVITES[i].icone+' '+ACTIVITES[i].titre+'</b><div class="bq"><div style="width:'+s+'%;background:'+(s>=60?'#16a34a':(s>=40?'#f59e0b':'#dc2626'))+'"></div></div><span style="width:44px;text-align:right">'+s+' %</span></div>').join('');
+  let html='<tr><th>Classe</th><th>Nom</th><th>Prénom</th><th>Score</th><th>Note /20</th><th>Durée</th><th>Date</th></tr>';
+  lignes.forEach(r=>{
+    html+='<tr><td>'+r.classe+'</td><td>'+r.nom+'</td><td>'+r.prenom+'</td><td>'+String(r.score).replace('.',',')+'/'+r.sur+
+      '</td><td style="font-weight:800;color:'+(r.note20>=10?'#16a34a':'#dc2626')+'">'+String(r.note20).replace('.',',')+
+      '</td><td>'+(r.duree_s?Math.floor(r.duree_s/60)+'min'+String(r.duree_s%60).padStart(2,'0'):'—')+
+      '</td><td>'+new Date(r.date).toLocaleDateString('fr-FR')+' '+new Date(r.date).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</td></tr>';
+  });
+  $('tableRes').innerHTML=html;
+}
+$('btnCSV').onclick=()=>{
+  const lignes=lignesFiltrees();
+  let csv='Classe;Nom;Prenom;Score;Sur;Note20;Duree_s;Date;'+ACTIVITES.map((a,i)=>'Act'+(i+1)).join(';')+'\n';
+  lignes.forEach(r=>{ csv+=[r.classe,r.nom,r.prenom,String(r.score).replace('.',','),r.sur,String(r.note20).replace('.',','),r.duree_s||'',r.date,
+    ...(Array.isArray(r.reponses)?r.reponses.map(p=>String(p).replace('.',',')):[])].join(';')+'\n'; });
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=CSV_NOM; a.click(); URL.revokeObjectURL(a.href);
+};
+</script>
+</body>
+</html>

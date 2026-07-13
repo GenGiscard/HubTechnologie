@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💡 Bureau des inventions — Technologie 5ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#f59e0b; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:14px 0 4px;font-size:28px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:8px}
+.hud{display:flex;gap:18px;margin:6px 0;font-weight:800;font-size:15px;flex-wrap:wrap;justify-content:center}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:600px}
+h4{font-size:12px;letter-spacing:2px;color:#94a3b8;text-transform:uppercase;margin:8px 4px 6px}
+#commandes{display:flex;gap:10px;min-height:122px;padding:0 4px}
+.cmd{flex:1;background:#1e293b;border:2px solid #475569;border-radius:12px;padding:9px;cursor:pointer;position:relative;overflow:hidden}
+.cmd:hover{border-color:var(--neon)}
+.cmd.sel{border-color:var(--or);box-shadow:0 0 12px rgba(251,191,36,.35)}
+.cmd .client{font-size:11.5px;color:#94a3b8;font-weight:700}
+.cmd .besoin{font-size:13.5px;font-weight:900;color:#fff;margin:4px 0;line-height:1.35}
+.cmd .indice{font-size:11px;color:#fbbf24;font-weight:700;min-height:14px}
+.cmd .tempo{position:absolute;left:0;bottom:0;height:4px;background:var(--rouge)}
+#stock{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 4px}
+.decouverte{border:2px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:12px;padding:9px 4px;font-size:12.5px;font-weight:800;cursor:pointer;text-align:center;line-height:1.3}
+.decouverte .ic{font-size:20px;display:block}
+.decouverte:hover{border-color:var(--neon)}
+.decouverte.vide{opacity:.15;cursor:default}
+#formule{text-align:center;font-size:12.5px;color:#64748b;font-weight:700;margin:8px 0 2px}
+#flash{min-height:38px;text-align:center;font-weight:800;font-size:13px;margin-top:4px;line-height:1.4}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.95);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:24px}
+.overlay p{color:#cbd5e1;font-size:14px;max-width:440px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay .gros{border:none;border-radius:12px;padding:12px 24px;font-size:16px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+.boutique{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:440px}
+.boutique button{border:2px solid #475569;background:#0f172a;color:#e2e8f0;border-radius:11px;padding:10px;font-size:12.5px;font-weight:700;cursor:pointer;text-align:left;line-height:1.4}
+.boutique button:hover{border-color:var(--neon)}
+.boutique button:disabled{opacity:.4;cursor:default}
+.boutique button.achete{border-color:#166534;color:#4ade80}
+.qbox{background:#1e293b;border:2px solid var(--or);border-radius:14px;padding:16px;max-width:400px}
+.qbox .q{font-weight:800;color:#fff;margin-bottom:10px;font-size:14.5px}
+.qbox button{display:block;width:100%;margin:6px 0;padding:10px;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13.5px;font-weight:700;cursor:pointer}
+.qbox button:hover{border-color:var(--neon)}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23f59e0b'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>💡 BUREAU DES INVENTIONS</h1>
+<div class="sous">La société a des besoins, ton laboratoire a des découvertes : à toi de lancer les bonnes innovations !</div>
+
+<div class="hud">
+  <div>Époque : <span class="v" id="hVague">1</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Ratées : <span class="v" id="hPerdues">0 / 3</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <h4>📜 Besoins de la société <span style="float:right" id="hLivr">0/5 innovations lancées</span></h4>
+  <div id="commandes"></div>
+  <div id="formule">1️⃣ clique un besoin · 2️⃣ clique LA découverte du laboratoire qui permet d'y répondre</div>
+  <h4>🧪 Découvertes du laboratoire</h4>
+  <div id="stock"></div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Bureau verrouillé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP La machine à remonter le temps</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button class="gros" id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Directeur du bureau, c'est toi</h2>
+    <p>La société exprime des <b>besoins</b> (« s'éclairer sans flamme ! »). Ton laboratoire regorge de <b>découvertes</b> (électricité, acier, transistor…).<br>
+    Associe le bon besoin à la bonne découverte pour lancer une <b>innovation</b> — avant que le client s'impatiente.<br>
+    Mauvais mariage = temps perdu. <b>3 besoins abandonnés = le bureau ferme.</b><br>
+    Toutes les 5 innovations : changement d'époque, boutique + question bonus !</p>
+    <button class="gros" id="btnGo">🔬 Ouvrir le bureau</button>
+  </div>
+
+  <div class="overlay cache" id="ovBoutique">
+    <h2>📈 Époque <span id="bVague"></span> révolue !</h2>
+    <div class="qbox" id="qbox"></div>
+    <p style="margin:4px 0 0"><b>🛒 Investissements</b> (<span id="bScore" style="color:#fbbf24;font-weight:900"></span> pts)</p>
+    <div class="boutique" id="boutique"></div>
+    <button class="gros" id="btnVagueSuiv">⏩ Époque suivante</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">📉 Le bureau ferme !</h2>
+    <p id="finTexte"></p>
+    <button class="gros" id="btnRejouer">↺ Rouvrir le bureau</button>
+  </div>
+</div>
+
+<footer>Jeu de gestion · Séquence L'évolution des objets techniques · 5ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='LIGNEE18';
+function dejaOuvert(){ try{ return localStorage.getItem('bureauinv_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('bureauinv_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ================== DONNÉES ================== */
+const TECHS={
+ electricite:{ic:'⚡',n:'Électricité'},
+ moteur:{ic:'🛢️',n:'Moteur à explosion'},
+ chaine:{ic:'⚙️',n:'Chaîne & pignons'},
+ transistor:{ic:'🔬',n:'Transistor'},
+ plastique:{ic:'🧴',n:'Plastique'},
+ acier:{ic:'🏗️',n:'Acier'},
+ led:{ic:'🔆',n:'LED'},
+ lithium:{ic:'🔋',n:'Batterie lithium'},
+ ondes:{ic:'📡',n:'Ondes radio'},
+ vapeur:{ic:'♨️',n:'Machine à vapeur'},
+ beton:{ic:'🧱',n:'Béton armé'},
+ tactile:{ic:'👆',n:'Écran tactile'},
+};
+const PAIRES=[
+ {tech:'electricite', besoin:'S\u2019éclairer sans flamme ni fumée', innov:'la lampe électrique'},
+ {tech:'moteur', besoin:'Rouler plus vite qu\u2019un cheval', innov:'l\u2019automobile'},
+ {tech:'chaine', besoin:'Pédaler vite SANS roue géante', innov:'la bicyclette moderne'},
+ {tech:'transistor', besoin:'Mettre une radio dans la poche', innov:'la radio portable'},
+ {tech:'plastique', besoin:'Des objets légers et pas chers', innov:'les objets moulés du quotidien'},
+ {tech:'acier', besoin:'Franchir les grands fleuves', innov:'les ponts suspendus'},
+ {tech:'led', besoin:'Éclairer en consommant très peu', innov:'l\u2019éclairage basse consommation'},
+ {tech:'lithium', besoin:'Un téléphone qui tient toute la journée', innov:'le smartphone autonome'},
+ {tech:'ondes', besoin:'Communiquer SANS fil', innov:'la radio puis le mobile'},
+ {tech:'vapeur', besoin:'Tirer des trains sans chevaux', innov:'la locomotive'},
+ {tech:'beton', besoin:'Construire haut et solide', innov:'les gratte-ciel'},
+ {tech:'tactile', besoin:'Tout piloter du bout du doigt', innov:'le smartphone tactile'},
+];
+const QUESTIONS=[
+ {q:"Une amélioration qui se diffuse dans la société, c'est…", r:["une invention","une innovation","une panne"], b:1},
+ {q:"Dans une lignée, ce qui reste constant, c'est…", r:["le besoin","le matériau","le prix"], b:0},
+ {q:"La fonction d'usage du vélo, c'est…", r:["être beau","se déplacer","coûter cher"], b:1},
+ {q:"L'invention de la chaîne a permis au vélo de…", r:["se passer de la roue géante","voler","freiner"], b:0},
+ {q:"La LED a remplacé l'incandescence car elle consomme…", r:["autant","plus","environ 7 fois moins"], b:2},
+];
+const UPGRADES=[
+ {id:'stock10', cout:250, t:'🧪 Grand laboratoire', d:'10 découvertes en stock au lieu de 8'},
+ {id:'patience',cout:200, t:'🤝 Clients mécènes', d:'minuteurs +6 s'},
+ {id:'indice', cout:220, t:'📖 Encyclopédie', d:'le besoin sélectionné affiche un indice'},
+ {id:'prime', cout:150, t:'🏅 Brevets déposés', d:'innovations +50 % de points'},
+];
+
+/* ================== JEU ================== */
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('bureauinv_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+const TECH_IDS=Object.keys(TECHS);
+
+function nouveauJeu(){
+  J={vague:1,score:0,perdues:0,livrVague:0,stock:[],commandes:[],prochaine:0.6,
+     selCmd:null,fini:false,pause:false,ups:[],qUtil:[]};
+  window.J_DEBUG=J;
+  for(let k=0;k<8;k++) J.stock.push(piocherTech());
+  dernierTs=null;
+  majHUD(); majStock(); majCommandes();
+}
+function tailleStock(){ return J.ups.includes('stock10')?10:8; }
+function dureeCmd(){ return Math.max(13, 24-J.vague*2) + (J.ups.includes('patience')?6:0); }
+function piocherTech(){ return TECH_IDS[Math.floor(Math.random()*TECH_IDS.length)]; }
+function majHUD(){
+  document.getElementById('hVague').textContent=J.vague;
+  document.getElementById('hScore').textContent=Math.floor(J.score);
+  document.getElementById('hPerdues').textContent=J.perdues+' / 3';
+  document.getElementById('hLivr').textContent=J.livrVague+'/5 innovations lancées';
+}
+function flash(t,coul){ const f=document.getElementById('flash'); f.textContent=t; f.style.color=coul; }
+/* -------- besoins : toujours réalisables avec le stock courant -------- */
+function creerCommande(){
+  if(J.stock.length===0) return;
+  const tech=J.stock[Math.floor(Math.random()*J.stock.length)];
+  const paire=PAIRES.find(p=>p.tech===tech);
+  if(!paire) return;
+  if(J.commandes.some(c=>c.tech===tech)) return; // pas deux fois le même besoin
+  const duree=dureeCmd();
+  J.commandes.push({client:'📜 Époque '+J.vague, besoin:paire.besoin, tech, innov:paire.innov, reste:duree, duree});
+  majCommandes();
+}
+function majCommandes(){
+  const zone=document.getElementById('commandes'); zone.innerHTML='';
+  J.commandes.forEach((c,i)=>{
+    const d=document.createElement('div'); d.className='cmd'+(J.selCmd===i?' sel':'');
+    const indice=(J.selCmd===i && J.ups.includes('indice'))? '💡 indice : '+TECHS[c.tech].n.toLowerCase() : (J.selCmd===i?'choisis la découverte !':'');
+    d.innerHTML='<div class="client">'+c.client+'</div>'+
+      '<div class="besoin">« '+c.besoin+' »</div>'+
+      '<div class="indice">'+indice+'</div>'+
+      '<div class="tempo" style="width:'+(c.reste/c.duree*100)+'%"></div>';
+    d.onclick=()=>{
+      if(J.fini||J.pause) return;
+      J.selCmd=i;
+      majCommandes();
+    };
+    zone.appendChild(d);
+  });
+}
+function majStock(){
+  const zone=document.getElementById('stock'); zone.innerHTML='';
+  for(let k=0;k<tailleStock();k++){
+    const b=document.createElement('button'); b.className='decouverte';
+    if(k<J.stock.length){
+      const t=TECHS[J.stock[k]];
+      b.innerHTML='<span class="ic">'+t.ic+'</span>'+t.n;
+      b.onclick=()=>choisirTech(k);
+    } else { b.classList.add('vide'); b.innerHTML='—'; }
+    zone.appendChild(b);
+  }
+}
+function choisirTech(k){
+  if(J.fini||J.pause) return;
+  if(J.selCmd===null){ flash('👉 Clique d\u2019abord un besoin !','#fbbf24'); return; }
+  const cmd=J.commandes[J.selCmd];
+  const tech=J.stock[k];
+  if(tech===cmd.tech){
+    const pts=Math.round((40+cmd.reste*2)*(J.ups.includes('prime')?1.5:1));
+    J.score+=pts;
+    flash('✅ '+TECHS[tech].n+' + « '+cmd.besoin+' » = '+cmd.innov+' ! +'+pts+' pts','#4ade80');
+    J.stock.splice(k,1);
+    while(J.stock.length<tailleStock()) J.stock.push(piocherTech());
+    J.commandes.splice(J.selCmd,1);
+    J.selCmd=null;
+    J.livrVague++;
+    majHUD(); majStock(); majCommandes();
+    if(J.livrVague>=5) finDeVague();
+  } else {
+    J.score=Math.max(0,J.score-8);
+    flash('❌ '+TECHS[tech].n+' ne répond pas à ce besoin… (−8 pts) Réfléchis à ce que chaque découverte PERMET.','#f87171');
+    majHUD();
+  }
+}
+/* -------- boutique / questions -------- */
+function finDeVague(){
+  J.pause=true;
+  document.getElementById('bVague').textContent=J.vague;
+  document.getElementById('bScore').textContent=Math.floor(J.score);
+  let dispo=QUESTIONS.map((_,i)=>i).filter(i=>!J.qUtil.includes(i));
+  if(dispo.length===0){ J.qUtil=[]; dispo=QUESTIONS.map((_,i)=>i); }
+  const qi=dispo[Math.floor(Math.random()*dispo.length)]; J.qUtil.push(qi);
+  const q=QUESTIONS[qi], box=document.getElementById('qbox');
+  box.innerHTML='<div class="q">🧠 Question bonus — '+q.q+'</div>';
+  q.r.forEach((rep,k)=>{
+    const b=document.createElement('button'); b.textContent=rep;
+    b.onclick=()=>{
+      [...box.querySelectorAll('button')].forEach(x=>x.disabled=true);
+      if(k===q.b){ J.score+=100; b.style.borderColor='#4ade80'; }
+      else b.style.borderColor='#f87171';
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+      majBoutique();
+    };
+    box.appendChild(b);
+  });
+  majBoutique();
+  document.getElementById('ovBoutique').classList.remove('cache');
+}
+function majBoutique(){
+  const zone=document.getElementById('boutique'); zone.innerHTML='';
+  UPGRADES.forEach(u=>{
+    const b=document.createElement('button');
+    const possede=J.ups.includes(u.id);
+    b.innerHTML=u.t+' — <b>'+(possede?'✅ acquis':u.cout+' pts')+'</b><br>'+u.d;
+    if(possede) b.classList.add('achete');
+    b.disabled = possede || J.score<u.cout;
+    b.onclick=()=>{
+      J.score-=u.cout; J.ups.push(u.id);
+      if(u.id==='stock10') while(J.stock.length<10) J.stock.push(piocherTech());
+      majBoutique(); majStock();
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+    };
+    zone.appendChild(b);
+  });
+}
+document.getElementById('btnVagueSuiv').onclick=()=>{
+  document.getElementById('ovBoutique').classList.add('cache');
+  J.vague++; J.livrVague=0; J.pause=false; dernierTs=null; J.prochaine=0.8;
+  majHUD();
+};
+function finPartie(raison){
+  J.fini=true;
+  if(Math.floor(J.score)>record){ record=Math.floor(J.score); try{ localStorage.setItem('bureauinv_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.vague>=4 ? '🏆 Génie du siècle !' : '📉 Le bureau ferme !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Époques traversées : <b>'+J.vague+'</b> · Score : <b>'+Math.floor(J.score)+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+/* -------- boucle -------- */
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini||J.pause){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.prochaine-=dt;
+  if(J.prochaine<=0 && J.commandes.length<3){
+    creerCommande();
+    J.prochaine=Math.max(3, 8-J.vague)+Math.random()*3;
+  }
+  let expire=false;
+  for(const c of [...J.commandes]){
+    c.reste-=dt;
+    if(c.reste<=0){
+      const idx=J.commandes.indexOf(c);
+      J.commandes.splice(idx,1);
+      if(J.selCmd===idx) J.selCmd=null;
+      else if(J.selCmd!==null && J.selCmd>idx) J.selCmd--;
+      J.perdues++; expire=true;
+      flash('⏰ Besoin abandonné : « '+c.besoin+' » (il fallait : '+TECHS[c.tech].n+')','#f87171');
+      majHUD();
+      if(J.perdues>=3) return finPartie('Trois besoins restés sans réponse : la concurrence a innové avant toi ! Retiens : chaque grande innovation marie un BESOIN et une DÉCOUVERTE.');
+    }
+  }
+  const zone=document.getElementById('commandes');
+  [...zone.children].forEach((d,i)=>{
+    const c=J.commandes[i]; if(!c) return;
+    const t=d.querySelector('.tempo'); if(t) t.style.width=(c.reste/c.duree*100)+'%';
+  });
+  if(expire) majCommandes();
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

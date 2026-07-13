@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🕹️ Entrepôt 4.0 — Technologie 3ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#2dd4bf; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:14px 0 4px;font-size:28px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:8px}
+.hud{display:flex;gap:18px;margin:6px 0;font-weight:800;font-size:15px;flex-wrap:wrap;justify-content:center}
+.hud .v{color:var(--or)}
+#scene{position:relative}
+canvas{border:3px solid #334155;border-radius:14px;display:block;background:#111827;cursor:pointer}
+.consigne-jeu{width:540px;text-align:center;font-size:12.5px;color:#94a3b8;margin-top:6px;line-height:1.5}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.95);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:24px}
+.overlay p{color:#cbd5e1;font-size:14px;max-width:430px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay .gros{border:none;border-radius:12px;padding:12px 24px;font-size:16px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+.boutique{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:430px}
+.boutique button{border:2px solid #475569;background:#0f172a;color:#e2e8f0;border-radius:11px;padding:10px;font-size:12.5px;font-weight:700;cursor:pointer;text-align:left;line-height:1.4}
+.boutique button:hover{border-color:var(--neon)}
+.boutique button:disabled{opacity:.4;cursor:default}
+.boutique button.achete{border-color:#166534;color:#4ade80}
+.qbox{background:#1e293b;border:2px solid var(--or);border-radius:14px;padding:16px;max-width:400px}
+.qbox .q{font-weight:800;color:#fff;margin-bottom:10px;font-size:14.5px}
+.qbox button{display:block;width:100%;margin:6px 0;padding:10px;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13.5px;font-weight:700;cursor:pointer}
+.qbox button:hover{border-color:var(--neon)}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%232dd4bf'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🕹️ ENTREPÔT 4.0</h1>
+<div class="sous">Ta flotte de robots contre le rush des commandes. Assigne, recharge, améliore — aucun colis en retard.</div>
+
+<div class="hud">
+  <div>Vague : <span class="v" id="hVague">1</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Colis perdus : <span class="v" id="hPerdus">0 / 3</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <canvas id="cv" width="540" height="380"></canvas>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Entrepôt verrouillé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Programme ton robot</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button class="gros" id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Chef d'exploitation, c'est toi</h2>
+    <p>Des 📦 colis apparaissent avec un compte à rebours.<br>
+    <b>Clique un robot</b> (ou touches 1/2/3), puis <b>clique un colis</b> : le robot va le chercher et le ramène au 🏠 dock.<br>
+    Chaque case parcourue consomme de la 🔋 batterie — elle ne se recharge qu'au dock, à l'arrêt.
+    Un robot à plat devient une limace. 🐌<br>
+    <b>3 colis expirés = licencié.</b> Entre les vagues : boutique d'améliorations + question bonus !</p>
+    <button class="gros" id="btnGo">📦 Ouvrir l'entrepôt</button>
+  </div>
+
+  <div class="overlay cache" id="ovBoutique">
+    <h2>📈 Fin de la vague <span id="bVague"></span> !</h2>
+    <div class="qbox" id="qbox"></div>
+    <p style="margin:4px 0 0"><b>🛒 Améliorations</b> — ton score est ta monnaie (<span id="bScore" style="color:#fbbf24;font-weight:900"></span> pts)</p>
+    <div class="boutique" id="boutique"></div>
+    <button class="gros" id="btnVagueSuiv">📦 Vague suivante</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">📉 Licencié !</h2>
+    <p id="finTexte"></p>
+    <button class="gros" id="btnRejouer">↺ Reprendre l'entrepôt</button>
+  </div>
+</div>
+<div class="consigne-jeu">💡 Stratégie : le robot le plus PROCHE n'est pas toujours le bon choix — regarde les batteries et les minuteurs !</div>
+
+<footer>Jeu de gestion · Séquence Robotique & Projet · 3ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='ROBOT26';
+function dejaOuvert(){ try{ return localStorage.getItem('entrepot_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('entrepot_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ================== DONNÉES ================== */
+const QUESTIONS=[
+ {q:"Le robot compte ses tours de roue grâce à un…", r:["encodeur","haut-parleur","relais"], b:0},
+ {q:"« Aller chercher le colis » : dans la chaîne d'information du robot, décider du chemin, c'est…", r:["ACQUÉRIR","TRAITER","COMMUNIQUER"], b:1},
+ {q:"Répéter 5 fois {avancer, tourner} exécute…", r:["7 instructions","10 instructions","5 instructions"], b:1},
+ {q:"La batterie du robot stocke de l'énergie…", r:["chimique","lumineuse","mécanique"], b:0},
+ {q:"« Autonomie ≥ 2 h » dans un cahier des charges est…", r:["une fonction d'usage","un critère chiffré","un prototype"], b:1},
+ {q:"SI obstacle ALORS tourner SINON avancer : c'est…", r:["une boucle","une condition","une variable"], b:1},
+];
+const UPGRADES=[
+ {id:'robot3', cout:300, t:'🤖 3ème robot', d:'un renfort au dock'},
+ {id:'vitesse',cout:250, t:'⚡ Moteurs boostés', d:'déplacements +30 %'},
+ {id:'batxl', cout:200, t:'🔋 Batteries XL', d:'capacité 150, recharge +50 %'},
+ {id:'patience',cout:150, t:'⏱️ Clients patients', d:'minuteurs des colis +4 s'},
+];
+
+/* ================== JEU ================== */
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+const COLS=7, LIGS=5, CASE=64;
+const OX=(cv.width-COLS*CASE)/2, OY=(cv.height-LIGS*CASE)/2;
+const DOCK={c:0,l:2};
+const VAGUE_S=38;
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('entrepot_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function creerRobot(n){
+  return {n, c:DOCK.c, l:DOCK.l, bat:100, etat:'libre', cible:null, chemin:[], pas:0, porte:false};
+}
+function nouveauJeu(){
+  J={t:0, vague:1, score:0, perdus:0, robots:[creerRobot(1),creerRobot(2)],
+     colis:[], prochaine:0.8, sel:0, fini:false, pause:false, ups:[], qUtil:[], premier:true};
+  window.J_DEBUG=J;
+  dernierTs=null; majHUD();
+}
+function majHUD(){
+  document.getElementById('hVague').textContent=J.vague;
+  document.getElementById('hScore').textContent=Math.floor(J.score);
+  document.getElementById('hPerdus').textContent=J.perdus+' / 3';
+}
+function batMax(){ return J.ups.includes('batxl')?150:100; }
+function pasDuree(rob){
+  let d=J.ups.includes('vitesse')?0.21:0.3;
+  if(rob.bat<=0) d*=3;
+  return d;
+}
+function dureeColis(){ return (16-Math.min(6,J.vague))+ (J.ups.includes('patience')?4:0); }
+function caseLibre(c,l){
+  if(c===DOCK.c&&l===DOCK.l) return false;
+  return !J.colis.some(k=>k.c===c&&k.l===l);
+}
+function apparaitreColis(){
+  let c,l,essais=0;
+  if(J.premier){ c=5; l=1; J.premier=false; }
+  else do{ c=1+Math.floor(Math.random()*(COLS-1)); l=Math.floor(Math.random()*LIGS); essais++; }
+  while(!caseLibre(c,l)&&essais<40);
+  if(!caseLibre(c,l)) return;
+  const duree=dureeColis();
+  J.colis.push({c,l,reste:duree,duree,vise:false});
+}
+function cheminVers(rob,c,l){
+  const ch=[]; let cc=rob.c, ll=rob.l;
+  while(cc!==c){ cc+= cc<c?1:-1; ch.push([cc,ll]); }
+  while(ll!==l){ ll+= ll<l?1:-1; ch.push([cc,ll]); }
+  return ch;
+}
+function assigner(rob,colis){
+  if(rob.etat!=='libre'||colis.vise) return;
+  rob.etat='aller'; rob.cible=colis; colis.vise=true;
+  rob.chemin=cheminVers(rob,colis.c,colis.l); rob.pas=pasDuree(rob);
+}
+/* -------- clics -------- */
+cv.addEventListener('click',e=>{
+  if(!J||J.fini||J.pause) return;
+  const r=cv.getBoundingClientRect();
+  const mx=(e.clientX-r.left)*cv.width/r.width, my=(e.clientY-r.top)*cv.height/r.height;
+  // robot proche ?
+  let meilleur=null, dmin=30;
+  J.robots.forEach((rob,i)=>{
+    const x=OX+rob.c*CASE+CASE/2, y=OY+rob.l*CASE+CASE/2;
+    const d=Math.hypot(mx-x,my-y);
+    if(d<dmin){ dmin=d; meilleur=i; }
+  });
+  if(meilleur!==null){ J.sel=meilleur; return; }
+  // colis sur la case ?
+  const c=Math.floor((mx-OX)/CASE), l=Math.floor((my-OY)/CASE);
+  const colis=J.colis.find(k=>k.c===c&&k.l===l&&!k.vise);
+  if(colis) assigner(J.robots[J.sel],colis);
+});
+document.addEventListener('keydown',e=>{
+  if(!J) return;
+  const n=+e.key;
+  if(n>=1&&n<=J.robots.length) J.sel=n-1;
+});
+/* -------- boutique / questions -------- */
+function finDeVague(){
+  J.pause=true;
+  document.getElementById('bVague').textContent=J.vague;
+  document.getElementById('bScore').textContent=Math.floor(J.score);
+  let dispo=QUESTIONS.map((_,i)=>i).filter(i=>!J.qUtil.includes(i));
+  if(dispo.length===0){ J.qUtil=[]; dispo=QUESTIONS.map((_,i)=>i); }
+  const qi=dispo[Math.floor(Math.random()*dispo.length)]; J.qUtil.push(qi);
+  const q=QUESTIONS[qi], box=document.getElementById('qbox');
+  box.innerHTML='<div class="q">🧠 Question bonus — '+q.q+'</div>';
+  q.r.forEach((rep,k)=>{
+    const b=document.createElement('button'); b.textContent=rep;
+    b.onclick=()=>{
+      [...box.querySelectorAll('button')].forEach(x=>x.disabled=true);
+      if(k===q.b){ J.score+=100; b.style.borderColor='#4ade80'; }
+      else b.style.borderColor='#f87171';
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+      majBoutique();
+    };
+    box.appendChild(b);
+  });
+  majBoutique();
+  document.getElementById('ovBoutique').classList.remove('cache');
+}
+function majBoutique(){
+  const zone=document.getElementById('boutique'); zone.innerHTML='';
+  UPGRADES.forEach(u=>{
+    const b=document.createElement('button');
+    const possede=J.ups.includes(u.id);
+    b.innerHTML=u.t+' — <b>'+(possede?'✅ acheté':u.cout+' pts')+'</b><br>'+u.d;
+    if(possede) b.classList.add('achete');
+    b.disabled = possede || J.score<u.cout;
+    b.onclick=()=>{
+      J.score-=u.cout; J.ups.push(u.id);
+      if(u.id==='robot3') J.robots.push(creerRobot(3));
+      if(u.id==='batxl') J.robots.forEach(r=>r.bat=batMax());
+      majBoutique();
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+    };
+    zone.appendChild(b);
+  });
+}
+document.getElementById('btnVagueSuiv').onclick=()=>{
+  document.getElementById('ovBoutique').classList.add('cache');
+  J.vague++; J.pause=false; dernierTs=null; J.prochaine=1;
+  majHUD();
+};
+function finPartie(raison){
+  J.fini=true;
+  if(Math.floor(J.score)>record){ record=Math.floor(J.score); try{ localStorage.setItem('entrepot_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.vague>=4 ? '🏆 Direction logistique !' : '📉 Licencié !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Vagues tenues : <b>'+J.vague+'</b> · Score : <b>'+Math.floor(J.score)+'</b> · Flotte : <b>'+J.robots.length+' robots</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+/* -------- boucle -------- */
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  dessiner();
+  if(!J||J.fini||J.pause){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  const vagueAvant=Math.floor(J.t/VAGUE_S);
+  J.t+=dt;
+  if(Math.floor(J.t/VAGUE_S)>vagueAvant){ finDeVague(); return; }
+  // apparitions
+  J.prochaine-=dt;
+  if(J.prochaine<=0 && J.colis.length<6){
+    apparaitreColis();
+    J.prochaine=Math.max(1.6, 4.4-J.vague*0.45)+Math.random()*1.4;
+  }
+  // colis qui expirent
+  for(const k of [...J.colis]){
+    k.reste-=dt;
+    if(k.reste<=0){
+      // libérer le robot qui le visait
+      J.robots.forEach(r=>{ if(r.cible===k){ r.etat='retour'; r.cible=null; r.chemin=cheminVers(r,DOCK.c,DOCK.l); r.pas=pasDuree(r); } });
+      J.colis.splice(J.colis.indexOf(k),1);
+      J.perdus++; majHUD();
+      if(J.perdus>=3) return finPartie('🚨 Trop de colis en retard : les clients sont partis chez la concurrence. Anticiper, prioriser, recharger : la logistique est un vrai problème d\u2019ALGORITHME !');
+    }
+  }
+  // robots
+  J.robots.forEach(rob=>{
+    if(rob.etat==='libre'){
+      if(rob.c===DOCK.c&&rob.l===DOCK.l) rob.bat=Math.min(batMax(), rob.bat+(J.ups.includes('batxl')?15:10)*dt);
+      return;
+    }
+    rob.pas-=dt;
+    if(rob.pas<=0){
+      if(rob.chemin.length>0){
+        const [nc,nl]=rob.chemin.shift();
+        rob.c=nc; rob.l=nl; rob.bat=Math.max(0,rob.bat-1);
+        rob.pas=pasDuree(rob);
+      }
+      if(rob.chemin.length===0){
+        if(rob.etat==='aller'){
+          if(rob.cible && J.colis.includes(rob.cible)){
+            J.colis.splice(J.colis.indexOf(rob.cible),1);
+            rob.porte=true;
+          }
+          rob.cible=null; rob.etat='retour';
+          rob.chemin=cheminVers(rob,DOCK.c,DOCK.l); rob.pas=pasDuree(rob);
+        } else if(rob.etat==='retour'){
+          if(rob.porte){ rob.porte=false; J.score+=25+J.vague*5; majHUD(); }
+          rob.etat='libre';
+        }
+      }
+    }
+  });
+  J.score+=dt*2;
+}
+/* -------- dessin -------- */
+function dessiner(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  // grille
+  ctx.strokeStyle='#1f2937'; ctx.lineWidth=1.5;
+  for(let c=0;c<=COLS;c++){ ctx.beginPath(); ctx.moveTo(OX+c*CASE,OY); ctx.lineTo(OX+c*CASE,OY+LIGS*CASE); ctx.stroke(); }
+  for(let l=0;l<=LIGS;l++){ ctx.beginPath(); ctx.moveTo(OX,OY+l*CASE); ctx.lineTo(OX+COLS*CASE,OY+l*CASE); ctx.stroke(); }
+  // dock
+  ctx.fillStyle='#134e4a';
+  ctx.fillRect(OX+DOCK.c*CASE+3,OY+DOCK.l*CASE+3,CASE-6,CASE-6);
+  ctx.font='22px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText('🏠',OX+DOCK.c*CASE+CASE/2,OY+DOCK.l*CASE+CASE/2+8);
+  ctx.font='9px Segoe UI'; ctx.fillStyle='#5eead4';
+  ctx.fillText('DOCK + RECHARGE',OX+DOCK.c*CASE+CASE/2,OY+DOCK.l*CASE+CASE-6);
+  if(!J) return;
+  // colis
+  J.colis.forEach(k=>{
+    const x=OX+k.c*CASE+CASE/2, y=OY+k.l*CASE+CASE/2;
+    ctx.font='24px Segoe UI'; ctx.fillText('📦',x,y+8);
+    // minuteur
+    const frac=k.reste/k.duree;
+    ctx.strokeStyle= frac>0.5?'#4ade80':(frac>0.25?'#fbbf24':'#f87171');
+    ctx.lineWidth=4;
+    ctx.beginPath(); ctx.arc(x,y,24,-Math.PI/2,-Math.PI/2+frac*Math.PI*2); ctx.stroke();
+    if(k.vise){ ctx.font='11px Segoe UI'; ctx.fillStyle='#5eead4'; ctx.fillText('🤖 en route',x,y+34); }
+  });
+  // robots
+  J.robots.forEach((rob,i)=>{
+    const x=OX+rob.c*CASE+CASE/2, y=OY+rob.l*CASE+CASE/2;
+    if(i===J.sel){ ctx.strokeStyle='#fbbf24'; ctx.lineWidth=3.5;
+      ctx.beginPath(); ctx.arc(x,y,25,0,7); ctx.stroke(); }
+    ctx.fillStyle= rob.bat<=0? '#7f1d1d' : '#0d9488';
+    ctx.beginPath(); ctx.arc(x,y,18,0,7); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.font='bold 13px Segoe UI';
+    ctx.fillText(rob.n,x,y+5);
+    if(rob.porte){ ctx.font='15px Segoe UI'; ctx.fillText('📦',x+15,y-13); }
+    // batterie
+    ctx.fillStyle='#0f172a'; ctx.fillRect(x-17,y+21,34,6);
+    ctx.fillStyle= rob.bat>50?'#4ade80':(rob.bat>25?'#fbbf24':'#f87171');
+    ctx.fillRect(x-17,y+21,34*Math.max(0,rob.bat)/batMax(),6);
+    if(rob.bat<=0){ ctx.font='13px Segoe UI'; ctx.fillText('🐌',x-24,y-12); }
+  });
+  // barre de vague
+  if(!J.fini){
+    ctx.fillStyle='#1e293b'; ctx.fillRect(OX,6,COLS*CASE,7);
+    ctx.fillStyle='#2dd4bf'; ctx.fillRect(OX,6,COLS*CASE*((J.t%VAGUE_S)/VAGUE_S),7);
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

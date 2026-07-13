@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🖥️ SOS Salle info — Technologie 5ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#38bdf8; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:14px 0 4px;font-size:28px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:8px}
+.hud{display:flex;gap:18px;margin:6px 0;font-weight:800;font-size:15px;flex-wrap:wrap;justify-content:center}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:580px}
+.jauges{display:flex;gap:14px;align-items:center;margin:4px 0 8px}
+.jauge{flex:1}
+.jauge .lbl{font-size:11px;color:#94a3b8;font-weight:700;letter-spacing:1px}
+.jauge .barre{height:12px;background:#1e293b;border-radius:7px;overflow:hidden;border:1px solid #334155}
+.jauge .barre div{height:100%;transition:width .2s}
+#tmfill{background:#38bdf8}
+#journeefill{background:#818cf8}
+h4{font-size:12px;letter-spacing:2px;color:#94a3b8;text-transform:uppercase;margin:8px 4px 6px}
+#alertes{min-height:150px;display:flex;flex-direction:column;gap:8px}
+.alerte{background:#1e293b;border:2px solid #7f1d1d;border-left:6px solid var(--rouge);border-radius:12px;padding:9px 12px;position:relative;overflow:hidden}
+.alerte .txt{font-size:13.5px;font-weight:700;line-height:1.4}
+.alerte .tempo{position:absolute;left:0;bottom:0;height:4px;background:var(--rouge)}
+.alerte.auto{border-color:#0c4a6e;border-left-color:var(--neon)}
+#reglesActives{font-size:12px;color:#7dd3fc;font-weight:700;margin:4px;min-height:18px}
+.actionneurs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.actionneurs button{border:2px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:12px;padding:11px 4px;font-size:12px;font-weight:800;cursor:pointer;line-height:1.35}
+.actionneurs button:hover{border-color:var(--neon)}
+.actionneurs button .ic{font-size:21px;display:block}
+.actionneurs button small{display:block;font-weight:600;color:#94a3b8;font-size:10px}
+#flash{min-height:24px;text-align:center;font-weight:800;font-size:13px;margin-top:6px}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.95);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:24px}
+.overlay p{color:#cbd5e1;font-size:14px;max-width:460px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay .gros{border:none;border-radius:12px;padding:12px 24px;font-size:16px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+.boutique{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:460px}
+.boutique button{border:2px solid #475569;background:#0f172a;color:#e2e8f0;border-radius:11px;padding:10px;font-size:12.5px;font-weight:700;cursor:pointer;text-align:left;line-height:1.4}
+.boutique button:hover{border-color:var(--neon)}
+.boutique button:disabled{opacity:.4;cursor:default}
+.boutique button.achete{border-color:#166534;color:#4ade80}
+.qbox{background:#1e293b;border:2px solid var(--or);border-radius:14px;padding:16px;max-width:410px}
+.qbox .q{font-weight:800;color:#fff;margin-bottom:10px;font-size:14.5px}
+.qbox button{display:block;width:100%;margin:6px 0;padding:10px;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13.5px;font-weight:700;cursor:pointer}
+.qbox button:hover{border-color:var(--neon)}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%2338bdf8'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🖥️ SOS SALLE INFO</h1>
+<div class="sous">30 postes, 30 élèves, et les pépins qui pleuvent : applique la bonne intervention avant que le cours parte en vrille !</div>
+
+<div class="hud">
+  <div>Journée : <span class="v" id="hJour">1</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Cours perturbés : <span class="v" id="hInc">0 / 3</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div class="jauges">
+    <div class="jauge"><div class="lbl">⚡ TEMPS TECHNICIEN</div><div class="barre"><div id="tmfill" style="width:100%"></div></div></div>
+    <div class="jauge"><div class="lbl">🕐 JOURNÉE</div><div class="barre"><div id="journeefill" style="width:0%"></div></div></div>
+  </div>
+  <h4>🚨 Appels à l'aide</h4>
+  <div id="alertes"></div>
+  <div id="reglesActives">Aucun équipement installé.</div>
+  <h4>🧰 Tes interventions — clique directement la BONNE intervention pour l'appel de son type</h4>
+  <div class="actionneurs">
+    <button data-a="session"><span class="ic">🔑</span>GÉRER LA SESSION<small>verrouiller, mot de passe</small></button>
+    <button data-a="fichier"><span class="ic">🗄️</span>RANGER SUR LE SERVEUR<small>retrouver, enregistrer</small></button>
+    <button data-a="reseau"><span class="ic">🔌</span>RÉPARER LE RÉSEAU<small>câble, switch, wifi</small></button>
+    <button data-a="impression"><span class="ic">🖨️</span>DÉBLOQUER L'IMPRIMANTE<small>file d'attente, papier</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Salle verrouillée</h2>
+    <p>Entre le code obtenu à la fin du <b>TP La salle info</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button class="gros" id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Responsable de la salle info, c'est toi</h2>
+    <p>Chaque appel a UNE intervention idéale.<br>
+    🔑 session restée ouverte, mot de passe → gérer la session · 🗄️ fichier introuvable ou mal rangé → serveur ·
+    🔌 « pas d\u2019internet », câble → réseau · 🖨️ imprimante en folie → la débloquer.<br>
+    Chaque intervention consomme du <b>⚡ temps technicien</b> (une erreur en gaspille le double). Il se recharge entre les journées.<br>
+    <b>3 cours perturbés = la salle ferme.</b> Le soir : boutique d'équipements + question bonus !</p>
+    <button class="gros" id="btnGo">🖥️ Ouvrir la salle</button>
+  </div>
+
+  <div class="overlay cache" id="ovBoutique">
+    <h2>🌙 Fin de la journée <span id="bJour"></span></h2>
+    <div class="qbox" id="qbox"></div>
+    <p style="margin:4px 0 0"><b>🛒 Équipements</b> (<span id="bScore" style="color:#fbbf24;font-weight:900"></span> pts)</p>
+    <div class="boutique" id="boutique"></div>
+    <button class="gros" id="btnJourSuiv">☀️ Journée suivante (⚡ +40)</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Salle fermée !</h2>
+    <p id="finTexte"></p>
+    <button class="gros" id="btnRejouer">↺ Rouvrir la salle</button>
+  </div>
+</div>
+
+<footer>Jeu de gestion · Séquence L'environnement numérique · 5ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='FICHIER7';
+function dejaOuvert(){ try{ return localStorage.getItem('salleinfo_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('salleinfo_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ================== DONNÉES ================== */
+const NOMS_P={session:'🔑 GÉRER LA SESSION',fichier:'🗄️ RANGER SUR LE SERVEUR',reseau:'🔌 RÉPARER LE RÉSEAU',impression:'🖨️ DÉBLOQUER L\u2019IMPRIMANTE'};
+const INCIDENTS=[
+ {ic:'🔓',txt:'Poste 7 : un élève est parti en récré en laissant sa SESSION OUVERTE',def:'session',exp:'session ouverte = dossiers accessibles à tous ! La verrouiller — et rappeler la règle : on ferme sa session en partant.'},
+ {ic:'🙈',txt:'Poste 15 : « mon mot de passe ne marche plus, je l\u2019avais prêté à un copain… »',def:'session',exp:'mot de passe compromis : le faire changer immédiatement, et ne plus JAMAIS le prêter.'},
+ {ic:'😱',txt:'Poste 3 : « mon exposé a DISPARU ! Je l\u2019avais mis sur le bureau du poste 12 hier »',def:'fichier',exp:'le fichier est resté en local sur le poste 12 : le récupérer et l\u2019enregistrer sur le serveur, dans le dossier personnel.'},
+ {ic:'🌪️',txt:'Poste 22 : 47 fichiers « sans titre » en vrac à la racine du dossier classe',def:'fichier',exp:'impossible de s\u2019y retrouver : ranger dans l\u2019arborescence et nommer clairement (quoi_qui_version).'},
+ {ic:'🔌',txt:'Poste 9 : « pas d\u2019internet !! » — le câble réseau pend sous la table',def:'reseau',exp:'câble débranché du poste (ou du switch) : le reconnecter, la liaison revient.'},
+ {ic:'📶',txt:'Fond de salle : les tablettes ne captent plus le wifi depuis 5 minutes',def:'reseau',exp:'borne wifi plantée : la redémarrer et vérifier le switch.'},
+ {ic:'🖨️',txt:'Imprimante : Nino a cliqué 12 fois sur « Imprimer »… 12 copies en file d\u2019attente !',def:'impression',exp:'purger la file d\u2019attente — un clic suffit, l\u2019imprimante n\u2019est pas sourde, juste lente !'},
+ {ic:'📄',txt:'Imprimante : plus de papier ET un bourrage au milieu du TP',def:'impression',exp:'recharger le bac et retirer la feuille coincée : la file repart.'},
+];
+const QUESTIONS=[
+ {q:"Pour retrouver son fichier depuis n'importe quel poste, on l'enregistre…", r:["sur le serveur","sur le bureau du poste","sur l'écran"], b:0},
+ {q:"L'ordinateur central qui stocke les fichiers de tout le collège est…", r:["le switch","le serveur","la borne wifi"], b:1},
+ {q:"1 Go = …", r:["1 000 Mo","100 Ko","10 Mo"], b:0},
+ {q:"L'extension .mp4 correspond à…", r:["une vidéo","un texte","une photo"], b:0},
+ {q:"Avant de quitter le poste, on…", r:["ferme sa session","éteint l'écran","cache la souris"], b:0},
+];
+const UPGRADES=[
+ {id:'session', cout:230, t:'🔑 Verrouillage automatique', d:'les incidents de session se règlent seuls'},
+ {id:'fichier', cout:250, t:'🗄️ Sauvegarde auto sur le serveur', d:'les incidents de fichiers se règlent seuls'},
+ {id:'reseau', cout:220, t:'🔌 Supervision du réseau', d:'les incidents réseau se règlent seuls'},
+ {id:'impression', cout:200, t:'🖨️ Imprimante intelligente', d:'les incidents d\u2019impression se règlent seuls'},
+];
+
+/* ================== JEU ================== */
+const JOURNEE_S=30;
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('salleinfo_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={t:0,jour:1,score:0,incidents:0,tm:100,alertes:[],prochaine:1.2,fini:false,pause:false,ups:[],qUtil:[]};
+  window.J_DEBUG=J;
+  dernierTs=null;
+  majHUD(); majAlertes(); majRegles();
+}
+function majHUD(){
+  document.getElementById('hJour').textContent=J.jour;
+  document.getElementById('hScore').textContent=Math.floor(J.score);
+  document.getElementById('hInc').textContent=J.incidents+' / 3';
+  document.getElementById('tmfill').style.width=Math.max(0,J.tm)+'%';
+  document.getElementById('tmfill').style.background= J.tm>50?'#38bdf8':(J.tm>25?'#fbbf24':'#f87171');
+}
+function majRegles(){
+  document.getElementById('reglesActives').textContent=
+    J.ups.length? '🤖 Automatisé : '+UPGRADES.filter(u=>J.ups.includes(u.id)).map(u=>u.t).join(' · ')
+    : 'Aucun équipement installé.';
+}
+function flash(t,coul){ const f=document.getElementById('flash'); f.textContent=t; f.style.color=coul; }
+function creerIncident(){
+  const a0=INCIDENTS[Math.floor(Math.random()*INCIDENTS.length)];
+  const duree=Math.max(6, 12-J.jour);
+  J.alertes.push({def:a0.def, ic:a0.ic, txt:a0.txt, exp:a0.exp, reste:duree, duree, auto:J.ups.includes(a0.def), autoDelai:1.6});
+  majAlertes();
+}
+function majAlertes(){
+  const zone=document.getElementById('alertes'); zone.innerHTML='';
+  J.alertes.forEach(a=>{
+    const d=document.createElement('div'); d.className='alerte'+(a.auto?' auto':'');
+    d.innerHTML='<div class="txt">'+a.ic+' '+a.txt+(a.auto?' <span style="color:#7dd3fc">· 🤖 réglé automatiquement…</span>':'')+'</div>'+
+      '<div class="tempo" style="width:'+(a.reste/a.duree*100)+'%"></div>';
+    zone.appendChild(d);
+  });
+}
+document.querySelectorAll('.actionneurs button').forEach(b=>{
+  b.onclick=()=>{
+    if(!J||J.fini||J.pause) return;
+    const def=b.dataset.a;
+    if(J.tm<=0){ flash('⚡ Plus de temps technicien ! Tiens jusqu\u2019au soir…','#f87171'); return; }
+    const idx=J.alertes.findIndex(a=>a.def===def && !a.auto);
+    if(idx>=0){
+      const a=J.alertes.splice(idx,1)[0];
+      J.tm=Math.max(0,J.tm-6);
+      J.score+=20+Math.round(a.reste*2);
+      flash('✅ Élève dépanné ! '+a.exp,'#4ade80');
+      majHUD(); majAlertes();
+    } else {
+      J.tm=Math.max(0,J.tm-10);
+      flash('❌ Mauvaise intervention : temps gaspillé ! Relis l\u2019appel : session (🔑), fichier égaré (🗄️), câble/wifi (🔌) ou imprimante (🖨️) ?','#f87171');
+      majHUD();
+    }
+  };
+});
+/* -------- boutique / questions -------- */
+function finDeJournee(){
+  J.pause=true;
+  document.getElementById('bJour').textContent=J.jour;
+  document.getElementById('bScore').textContent=Math.floor(J.score);
+  let dispo=QUESTIONS.map((_,i)=>i).filter(i=>!J.qUtil.includes(i));
+  if(dispo.length===0){ J.qUtil=[]; dispo=QUESTIONS.map((_,i)=>i); }
+  const qi=dispo[Math.floor(Math.random()*dispo.length)]; J.qUtil.push(qi);
+  const q=QUESTIONS[qi], box=document.getElementById('qbox');
+  box.innerHTML='<div class="q">🧠 Question bonus — '+q.q+'</div>';
+  q.r.forEach((rep,k)=>{
+    const b=document.createElement('button'); b.textContent=rep;
+    b.onclick=()=>{
+      [...box.querySelectorAll('button')].forEach(x=>x.disabled=true);
+      if(k===q.b){ J.score+=100; b.style.borderColor='#4ade80'; }
+      else b.style.borderColor='#f87171';
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+      majBoutique();
+    };
+    box.appendChild(b);
+  });
+  majBoutique();
+  document.getElementById('ovBoutique').classList.remove('cache');
+}
+function majBoutique(){
+  const zone=document.getElementById('boutique'); zone.innerHTML='';
+  UPGRADES.forEach(u=>{
+    const b=document.createElement('button');
+    const possede=J.ups.includes(u.id);
+    b.innerHTML=u.t+' — <b>'+(possede?'✅ installé':u.cout+' pts')+'</b><br>'+u.d;
+    if(possede) b.classList.add('achete');
+    b.disabled = possede || J.score<u.cout;
+    b.onclick=()=>{
+      J.score-=u.cout; J.ups.push(u.id);
+      majBoutique(); majRegles();
+      document.getElementById('bScore').textContent=Math.floor(J.score);
+    };
+    zone.appendChild(b);
+  });
+}
+document.getElementById('btnJourSuiv').onclick=()=>{
+  document.getElementById('ovBoutique').classList.add('cache');
+  J.jour++; J.pause=false; dernierTs=null; J.prochaine=1.5;
+  J.tm=Math.min(100,J.tm+40);
+  J.alertes.forEach(a=>{ if(J.ups.includes(a.def)) a.auto=true; });
+  majHUD(); majAlertes();
+};
+function finPartie(raison){
+  J.fini=true;
+  if(Math.floor(J.score)>record){ record=Math.floor(J.score); try{ localStorage.setItem('salleinfo_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.jour>=4 ? '🏆 Salle info modèle !' : '💥 Salle fermée !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Journées tenues : <b>'+J.jour+'</b> · Score : <b>'+Math.floor(J.score)+'</b> · Équipements : <b>'+J.ups.length+'/4</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+/* -------- boucle -------- */
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini||J.pause){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  const jourAvant=Math.floor(J.t/JOURNEE_S);
+  J.t+=dt;
+  document.getElementById('journeefill').style.width=((J.t%JOURNEE_S)/JOURNEE_S*100)+'%';
+  if(Math.floor(J.t/JOURNEE_S)>jourAvant){ finDeJournee(); return; }
+  J.prochaine-=dt;
+  if(J.prochaine<=0 && J.alertes.length<4){
+    creerIncident();
+    J.prochaine=Math.max(2.2, 6-J.jour*0.6)+Math.random()*2;
+  }
+  let change=false;
+  for(const a of [...J.alertes]){
+    if(a.auto){
+      a.autoDelai-=dt;
+      if(a.autoDelai<=0){
+        J.alertes.splice(J.alertes.indexOf(a),1);
+        J.tm=Math.max(0,J.tm-0.5);
+        J.score+=12;
+        flash('🤖 '+a.ic+' incident réglé automatiquement (+12)','#7dd3fc');
+        change=true; continue;
+      }
+    }
+    a.reste-=dt;
+    if(a.reste<=0){
+      J.alertes.splice(J.alertes.indexOf(a),1);
+      J.incidents++; change=true;
+      flash('😤 Cours perturbé : '+a.txt+' (intervention : '+NOMS_P[a.def]+')','#f87171');
+      majHUD();
+      if(J.incidents>=3) return finPartie('Trois cours perturbés, les professeurs sont furieux… La leçon : chaque pépin a SA solution — session, serveur, câble ou imprimante.');
+    }
+  }
+  const zone=document.getElementById('alertes');
+  [...zone.children].forEach((d,i)=>{
+    const a=J.alertes[i]; if(!a) return;
+    const t=d.querySelector('.tempo'); if(t) t.style.width=(a.reste/a.duree*100)+'%';
+  });
+  if(change) majAlertes();
+  J.score+=dt;
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>
