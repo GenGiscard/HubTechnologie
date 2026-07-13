@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Bâtisseur Fou — Technologie 5ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#38bdf8; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+#scene{position:relative}
+canvas{background:linear-gradient(#1e3a8a 0%,#0f172a 60%);border:3px solid #334155;border-radius:14px;display:block;touch-action:manipulation}
+.hud{display:flex;gap:22px;margin:10px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+/* Overlays */
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.92);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center}
+.overlay h2{color:var(--neon);font-size:26px}
+.overlay p{color:#cbd5e1;font-size:15px;max-width:380px;line-height:1.5}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:220px;text-transform:uppercase}
+.overlay button, .gros{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.overlay button:hover{filter:brightness(1.1)}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+/* Question bonus */
+.qbox{background:#1e293b;border:2px solid var(--or);border-radius:14px;padding:18px;max-width:400px}
+.qbox .q{font-weight:800;color:#fff;margin-bottom:12px;font-size:15.5px}
+.qbox button{display:block;width:100%;margin:7px 0;padding:11px;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:14.5px;font-weight:700;cursor:pointer}
+.qbox button:hover{border-color:var(--neon)}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%2338bdf8'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🏗️ BÂTISSEUR FOU</h1>
+<div class="sous">Empile les étages · vise juste · le vent souffle en altitude !</div>
+
+<div class="hud">
+  <div>Étages : <span class="v" id="hEtages">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <canvas id="cv" width="420" height="560"></canvas>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Chantier verrouillé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Simulateur de pont</b> pour ouvrir le chantier.</p>
+    <input id="inCode" maxlength="8" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Prêt à bâtir ?</h2>
+    <p>Clique (ou <b>Espace</b>) pour lâcher le bloc au bon moment.<br>
+    Bloc mal aligné = étage raboté. Étage trop étroit = effondrement !<br>
+    Tous les 4 étages : question techno bonus pour <b>consolider</b> ta tour. 🧠</p>
+    <button id="btnGo">🚀 Commencer</button>
+  </div>
+
+  <div class="overlay cache" id="ovQuestion">
+    <div class="qbox" id="qbox"></div>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Effondrement !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence Habitat & Ouvrages · 5ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='PONT343';
+function dejaOuvert(){ try{ return localStorage.getItem('batisseur_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('batisseur_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ================== QUESTIONS BONUS ================== */
+const QUESTIONS=[
+ {q:"Le triangle est la seule figure…", r:["déformable","indéformable","invisible"], b:1},
+ {q:"Une pile de pont travaille en…", r:["traction","flexion","compression"], b:2},
+ {q:"Les câbles d'un pont suspendu travaillent en…", r:["traction","compression","torsion"], b:0},
+ {q:"Dans le béton armé, l'acier résiste à la…", r:["compression","traction","chaleur"], b:1},
+ {q:"Un isolant thermique sert à…", r:["ralentir le transfert de chaleur","chauffer la maison","porter les murs"], b:0},
+ {q:"Une poutre chargée subit de la…", r:["flexion","traction pure","dilatation"], b:0},
+ {q:"Quel matériau est champion de la compression ?", r:["le béton","le caoutchouc","la laine de verre"], b:0},
+ {q:"Un ouvrage qui sert à franchir un fleuve :", r:["un barrage","un pont","un pylône"], b:1},
+ {q:"Le pont du Gard (pont en arc) est en…", r:["acier","pierre","plastique"], b:1},
+ {q:"Pour rigidifier un cadre carré, on ajoute…", r:["une diagonale","de la peinture","un deuxième carré"], b:0},
+];
+
+/* ================== JEU ================== */
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+const W=cv.width, H=cv.height, HB=34; // hauteur bloc
+const COULEURS=['#38bdf8','#4ade80','#fbbf24','#f472b6','#a78bfa','#fb923c'];
+let J=null, record=0;
+try{ record=+localStorage.getItem('batisseur_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={ blocs:[{x:W/2-70,w:140}], mobile:{x:0,w:140,dir:1}, vitesse:2.2,
+      etages:0, score:0, tombant:null, camY:0, actif:true, enQuestion:false, qUtilisees:[] };
+  majHUD();
+}
+function majHUD(){
+  document.getElementById('hEtages').textContent=J.etages;
+  document.getElementById('hScore').textContent=J.score;
+}
+function yEtage(i){ return H-60-(i+1)*HB + J.camY; }
+
+function lacher(){
+  if(!J||!J.actif||J.enQuestion||J.tombant) return;
+  J.tombant={ x:J.mobile.x, w:J.mobile.w, y:40 };
+}
+cv.addEventListener('pointerdown',lacher);
+document.addEventListener('keydown',e=>{ if(e.code==='Space'){ e.preventDefault(); lacher(); } });
+
+function poserBloc(){
+  const t=J.tombant, dessus=J.blocs[J.blocs.length-1];
+  const gauche=Math.max(t.x,dessus.x), droite=Math.min(t.x+t.w,dessus.x+dessus.w);
+  const recouvrement=droite-gauche;
+  J.tombant=null;
+  if(recouvrement<=12){ finPartie('Le bloc est tombé dans le vide !'); return; }
+  const precis = recouvrement > t.w-6;
+  const nw = precis ? t.w : recouvrement;
+  J.blocs.push({x:precis?dessus.x+(dessus.w-nw)/2:gauche, w:nw});
+  J.etages++; J.score += precis ? 25 : Math.round(recouvrement/4);
+  if(precis) J.score+=10;
+  J.vitesse = 2.2 + J.etages*0.14;
+  J.mobile.w = nw;
+  if(nw<26){ finPartie('Étage trop étroit ('+Math.round(nw)+' px) : la tour s\u2019est effondrée en flexion !'); return; }
+  majHUD();
+  if(J.etages%4===0) poserQuestion();
+}
+
+function poserQuestion(){
+  J.enQuestion=true;
+  let dispo=QUESTIONS.map((_,i)=>i).filter(i=>!J.qUtilisees.includes(i));
+  if(dispo.length===0){ J.qUtilisees=[]; dispo=QUESTIONS.map((_,i)=>i); }
+  const qi=dispo[Math.floor(Math.random()*dispo.length)];
+  J.qUtilisees.push(qi);
+  const q=QUESTIONS[qi], box=document.getElementById('qbox');
+  box.innerHTML='<div class="q">🧠 CONSOLIDATION — '+q.q+'</div>';
+  q.r.forEach((rep,k)=>{
+    const b=document.createElement('button'); b.textContent=rep;
+    b.onclick=()=>{
+      document.getElementById('ovQuestion').classList.add('cache');
+      J.enQuestion=false;
+      if(k===q.b){
+        J.score+=30;
+        const dernier=J.blocs[J.blocs.length-1];
+        const nw=Math.min(140,dernier.w+14);
+        dernier.x-= (nw-dernier.w)/2; dernier.w=nw; J.mobile.w=nw;
+        flash='✅ +30 pts, étage consolidé (+14 px) !';
+      } else flash='❌ Raté ! La bonne réponse était : '+q.r[q.b];
+      flashT=90; majHUD();
+    };
+    box.appendChild(b);
+  });
+  document.getElementById('ovQuestion').classList.remove('cache');
+}
+
+function finPartie(raison){
+  J.actif=false;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('batisseur_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent = J.etages>=12 ? '🏆 Sacré gratte-ciel !' : '💥 Effondrement !';
+  document.getElementById('finTexte').innerHTML = raison+'<br><br>Étages : <b>'+J.etages+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+
+let flash='', flashT=0;
+function boucle(){
+  requestAnimationFrame(boucle);
+  if(!J) return;
+  ctx.clearRect(0,0,W,H);
+  // étoiles de fond
+  ctx.fillStyle='rgba(255,255,255,.25)';
+  for(let i=0;i<26;i++){ ctx.fillRect((i*73)%W, (i*131+((J.camY|0)>>1))%H, 2,2); }
+  // caméra suit le sommet
+  const cible=Math.max(0,(J.etages-8)*HB);
+  J.camY += (cible-J.camY)*0.08;
+  // sol
+  ctx.fillStyle='#334155'; ctx.fillRect(0,H-60+J.camY,W,60);
+  ctx.fillStyle='#94a3b8'; ctx.font='12px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText('SOL', W/2, H-38+J.camY);
+  // blocs posés
+  J.blocs.forEach((b,i)=>{
+    ctx.fillStyle=COULEURS[i%COULEURS.length];
+    ctx.fillRect(b.x, yEtage(i-1)-HB+HB, b.w, HB-3);
+    ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(b.x, yEtage(i-1)+HB-9, b.w, 6);
+  });
+  if(J.actif && !J.enQuestion){
+    // vent (dès l'étage 6) : la grue oscille plus fort
+    const vent=Math.min(1,(J.etages-5)/10);
+    // grue + bloc mobile
+    if(!J.tombant){
+      J.mobile.x += J.mobile.dir*J.vitesse*(1+ (vent>0? 0.4*Math.sin(Date.now()/300):0));
+      if(J.mobile.x<6){J.mobile.x=6;J.mobile.dir=1;}
+      if(J.mobile.x+J.mobile.w>W-6){J.mobile.x=W-6-J.mobile.w;J.mobile.dir=-1;}
+      ctx.strokeStyle='#64748b'; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.moveTo(J.mobile.x+J.mobile.w/2,0); ctx.lineTo(J.mobile.x+J.mobile.w/2,38); ctx.stroke();
+      ctx.fillStyle=COULEURS[J.etages%COULEURS.length];
+      ctx.fillRect(J.mobile.x,40,J.mobile.w,HB-3);
+      if(vent>0){ ctx.fillStyle='#7dd3fc'; ctx.font='bold 13px Segoe UI'; ctx.textAlign='left';
+        ctx.fillText('🌬️ vent x'+(1+vent).toFixed(1), 10, 22); }
+    } else {
+      // chute
+      J.tombant.y+=9;
+      ctx.fillStyle=COULEURS[J.etages%COULEURS.length];
+      ctx.fillRect(J.tombant.x,J.tombant.y,J.tombant.w,HB-3);
+      const yc=yEtage(J.blocs.length-1);
+      if(J.tombant.y+HB-3>=yc+HB) poserBloc();
+    }
+  }
+  if(flashT>0){ flashT--;
+    ctx.fillStyle= flash.startsWith('✅') ? '#4ade80' : '#f87171';
+    ctx.font='bold 15px Segoe UI'; ctx.textAlign='center'; ctx.fillText(flash, W/2, 90); }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+boucle();
+</script>
+</body>
+</html>

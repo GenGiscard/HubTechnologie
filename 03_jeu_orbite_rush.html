@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Orbite Rush — Technologie 3ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#67e8f9; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:520px;min-height:400px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#action{background:#1e293b;border:2px solid var(--neon);border-radius:14px;padding:18px;text-align:center;margin-bottom:12px}
+#action .em{font-size:36px}
+#action .txt{font-size:18px;font-weight:900;color:#fff;margin-top:6px;min-height:56px;line-height:1.5}
+#choix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:13px 6px;font-size:14px;font-weight:900;cursor:pointer;transition:.1s;line-height:1.4}
+#choix button small{display:block;font-size:10.5px;color:#94a3b8;font-weight:600}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:40px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:430px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23fb7185'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🛰️ ORBITE RUSH</h1>
+<div class="sous">Une mission satellite s'affiche : communication, navigation, météo & observation ou science ? Classe la famille avant la fin du chrono !</div>
+
+<div class="hud">
+  <div>Classées : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div id="action"><div class="em" id="eEm">🛰️</div><div class="txt" id="eTxt"></div></div>
+  <div id="choix">
+    <button data-f="communication">📡 COMMUNICATION<small>relayer TV, téléphone, Internet</small></button>
+    <button data-f="navigation">🧭 NAVIGATION (GPS)<small>diffuser l'heure, donner la position</small></button>
+    <button data-f="meteo">🌀 MÉTÉO & OBSERVATION<small>photographier la planète</small></button>
+    <button data-f="science">🔭 SCIENCE<small>comprendre l'univers</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Salle de contrôle fermée</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Le centre spatial</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Les règles du tri de satellites</h2>
+    <p>Une mission s'affiche… à toi de trouver sa famille :<br>
+    📡 COMMUNICATION = relayer les signaux · 🧭 NAVIGATION = heure et position ·
+    🌀 MÉTÉO & OBSERVATION = photographier la Terre · 🔭 SCIENCE = comprendre l'univers.<br>
+    Erreur ou chrono écoulé = une vie. Ça accélère ! 🏁</p>
+    <button id="btnGo">🛰️ Trier les satellites</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Perte de signal !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence Espace & satellites · 3ème</footer>
+
+<script>
+const CODE='ORBITE66';
+function dejaOuvert(){ try{ return localStorage.getItem('orbiterush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('orbiterush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const NOMS_F={communication:'📡 la COMMUNICATION',navigation:'🧭 la NAVIGATION (GPS)',meteo:'🌀 la MÉTÉO & OBSERVATION',science:'🔭 la SCIENCE'};
+const ACTIONS=[
+ {t:'Le direct du match retransmis par-dessus l\u2019océan',f:'communication',exp:'relayer la TV d\u2019un continent à l\u2019autre : satellite de COMMUNICATION.'},
+ {t:'Le satellite géostationnaire qui relaie Internet aux zones isolées',f:'communication',exp:'à 36 000 km, il couvre un tiers de la planète : COMMUNICATION.'},
+ {t:'L\u2019appel passé depuis un bateau en plein Pacifique',f:'communication',exp:'le téléphone satellite passe par un relais spatial : COMMUNICATION.'},
+ {t:'Le satellite qui reste fixe au-dessus du même point de l\u2019équateur',f:'communication',exp:'l\u2019orbite géostationnaire (36 000 km) : idéale pour relayer en continu — COMMUNICATION.'},
+ {t:'La constellation de ~30 satellites qui diffuse l\u2019heure exacte',f:'navigation',exp:'ton téléphone croise ces signaux pour se positionner : NAVIGATION.'},
+ {t:'Galileo, le système de positionnement européen',f:'navigation',exp:'l\u2019équivalent européen du GPS : NAVIGATION.'},
+ {t:'L\u2019horloge atomique corrigée des effets de la relativité',f:'navigation',exp:'la précision extrême des horloges fait tout le GPS : NAVIGATION.'},
+ {t:'Ce que ton téléphone écoute pour tracer ton itinéraire',f:'navigation',exp:'il ÉCOUTE les signaux des satellites (il n\u2019émet rien vers eux) : NAVIGATION.'},
+ {t:'L\u2019ouragan photographié et suivi 5 jours avant son arrivée',f:'meteo',exp:'anticiper les catastrophes : satellite MÉTÉO & OBSERVATION.'},
+ {t:'Les images de la fonte des glaces année après année',f:'meteo',exp:'surveiller le climat : les yeux de la planète — OBSERVATION.'},
+ {t:'Le repérage des départs d\u2019incendies de forêt depuis l\u2019orbite',f:'meteo',exp:'détecter les points chauds en temps réel : OBSERVATION.'},
+ {t:'La carte des cultures agricoles dressée depuis l\u2019espace',f:'meteo',exp:'photographier et mesurer la Terre : OBSERVATION.'},
+ {t:'Le télescope spatial qui photographie des galaxies lointaines',f:'science',exp:'observer l\u2019univers sans l\u2019atmosphère qui brouille : SCIENCE.'},
+ {t:'L\u2019ISS et ses expériences en chute permanente',f:'science',exp:'un laboratoire habité à 400 km d\u2019altitude : SCIENCE.'},
+ {t:'La sonde qui part analyser une comète',f:'science',exp:'explorer le système solaire : SCIENCE.'},
+ {t:'L\u2019expérience qui étudie des cellules en apesanteur',f:'science',exp:'la microgravité comme outil de recherche : SCIENCE.'},
+];
+
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('orbiterush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:10,reste:10,fini:false,pioche:[],action:null};
+  window.J_DEBUG=J;
+  majHUD(); nouvelElement(); dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function nouvelElement(){
+  if(J.pioche.length===0) J.pioche=ACTIONS.map((_,i)=>i).sort(()=>0.5-Math.random());
+  J.element=ACTIONS[J.pioche.pop()];
+  J.reste=J.duree;
+  document.getElementById('eTxt').textContent=J.element.t;
+}
+function repondre(f){
+  if(!J||J.fini) return;
+  const flash=document.getElementById('flash');
+  if(f===J.element.f){
+    J.serie++; J.score+=15+Math.round(J.reste*3);
+    flash.textContent='✅ Oui : '+J.element.exp;
+    flash.style.color='#4ade80';
+    J.duree=Math.max(4.2,J.duree-0.35);
+    majHUD(); nouvelElement();
+  } else {
+    J.vies--;
+    flash.textContent='❌ Non, c\u2019était '+NOMS_F[J.element.f]+' : '+J.element.exp;
+    flash.style.color='#f87171';
+    majHUD();
+    if(J.vies<=0) return finPartie('Le tri s\u2019arrête ! Retiens : COMMUNICATION = relayer, NAVIGATION = heure et position, MÉTÉO & OBSERVATION = photographier la Terre, SCIENCE = comprendre l\u2019univers.');
+    nouvelElement();
+  }
+}
+document.querySelectorAll('#choix button').forEach(b=>b.onclick=()=>repondre(b.dataset.f));
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('orbiterush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=15 ? '🏆 Opérateur spatial senior !' : '💥 Perte de signal !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Éléments classés : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').textContent='⏰ Trop lent ! C\u2019était '+NOMS_F[J.element.f]+' : '+J.element.exp;
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('Le chrono a gagné : un bon opérateur reconnaît la mission de chaque satellite d\u2019un coup d\u2019œil !');
+    nouvelElement();
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

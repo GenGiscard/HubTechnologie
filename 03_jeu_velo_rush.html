@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Vélo Rush — Technologie 5ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#86efac; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:520px;min-height:400px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#action{background:#1e293b;border:2px solid var(--neon);border-radius:14px;padding:18px;text-align:center;margin-bottom:12px}
+#action .em{font-size:36px}
+#action .txt{font-size:18px;font-weight:900;color:#fff;margin-top:6px;min-height:56px;line-height:1.5}
+#choix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:13px 6px;font-size:14px;font-weight:900;cursor:pointer;transition:.1s;line-height:1.4}
+#choix button small{display:block;font-size:10.5px;color:#94a3b8;font-weight:600}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:40px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:430px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23fb7185'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🚲 VÉLO RUSH</h1>
+<div class="sous">Une pièce du vélo s'affiche : propulsion, freinage, direction ou confort & sécurité ? Classe la fonction avant la fin du chrono !</div>
+
+<div class="hud">
+  <div>Classées : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div id="action"><div class="em" id="eEm">🚲</div><div class="txt" id="eTxt"></div></div>
+  <div id="choix">
+    <button data-f="propulsion">⚙️ SE PROPULSER<small>faire avancer le vélo</small></button>
+    <button data-f="freinage">🛑 FREINER<small>ralentir et s'arrêter</small></button>
+    <button data-f="direction">🧭 SE DIRIGER<small>choisir la trajectoire</small></button>
+    <button data-f="confort">🛋️ CONFORT & SÉCURITÉ<small>porter, voir, être vu</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Atelier fermé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP L’atelier vélo</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Les règles du tri de pièces</h2>
+    <p>Une pièce s'affiche… à toi de trouver la FONCTION qu'elle réalise :<br>
+    ⚙️ SE PROPULSER = avancer · 🛑 FREINER = s'arrêter ·
+    🧭 SE DIRIGER = tourner · 🛋️ CONFORT & SÉCURITÉ = porter, voir, être vu.<br>
+    Erreur ou chrono écoulé = une vie. Ça accélère ! 🏁</p>
+    <button id="btnGo">🚲 Trier les pièces</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Chaîne cassée !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence Le vélo · 5ème</footer>
+
+<script>
+const CODE='PEDALIER';
+function dejaOuvert(){ try{ return localStorage.getItem('velorush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('velorush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const NOMS_F={propulsion:'⚙️ SE PROPULSER',freinage:'🛑 FREINER',direction:'🧭 SE DIRIGER',confort:'🛋️ CONFORT & SÉCURITÉ'};
+const ACTIONS=[
+ {t:'Le pédalier et son grand plateau denté',f:'propulsion',exp:'le pédalier reçoit l\u2019énergie de tes jambes : fonction SE PROPULSER.'},
+ {t:'La chaîne qui relie le plateau au pignon',f:'propulsion',exp:'la chaîne TRANSMET le mouvement vers la roue : SE PROPULSER.'},
+ {t:'Le pignon de la roue arrière',f:'propulsion',exp:'dernier maillon de la transmission : SE PROPULSER.'},
+ {t:'Le dérailleur qui change de vitesse dans la côte',f:'propulsion',exp:'changer de rapport plateau/pignon, c\u2019est régler la PROPULSION.'},
+ {t:'Les patins qui pincent la jante',f:'freinage',exp:'la friction des patins transforme la vitesse en chaleur : FREINER.'},
+ {t:'Le levier au guidon relié à un câble',f:'freinage',exp:'le levier tire le câble qui serre l\u2019étrier : la commande du FREINAGE.'},
+ {t:'Le disque métallique fixé au moyeu de la roue',f:'freinage',exp:'le frein à disque : une autre SOLUTION pour la même fonction FREINER.'},
+ {t:'Ce qui transforme ta vitesse en chaleur… en s\u2019usant',f:'freinage',exp:'la friction du FREINAGE use les patins : à entretenir !'},
+ {t:'Le guidon que tu tiens à deux mains',f:'direction',exp:'le guidon commande la roue avant : SE DIRIGER.'},
+ {t:'La fourche qui tient la roue avant et pivote',f:'direction',exp:'la fourche transmet la rotation du guidon à la roue : SE DIRIGER.'},
+ {t:'La potence qui relie le guidon à la fourche',f:'direction',exp:'un maillon de la chaîne de DIRECTION : guidon → potence → fourche → roue.'},
+ {t:'Ce qui a du « jeu » quand la trajectoire devient imprécise',f:'direction',exp:'du jeu dans la DIRECTION = danger : on resserre potence et fourche.'},
+ {t:'La selle réglable en hauteur',f:'confort',exp:'porter le cycliste à la bonne hauteur : CONFORT & SÉCURITÉ.'},
+ {t:'L\u2019éclairage avant et les catadioptres',f:'confort',exp:'voir et être vu la nuit : la SÉCURITÉ du cycliste.'},
+ {t:'La sonnette qui prévient les piétons',f:'confort',exp:'signaler sa présence : équipement de SÉCURITÉ obligatoire.'},
+ {t:'Le cadre rigide qui porte tout le reste',f:'confort',exp:'le cadre PORTE le cycliste et relie toutes les pièces : la structure.'},
+];
+
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('velorush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:10,reste:10,fini:false,pioche:[],action:null};
+  window.J_DEBUG=J;
+  majHUD(); nouvelElement(); dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function nouvelElement(){
+  if(J.pioche.length===0) J.pioche=ACTIONS.map((_,i)=>i).sort(()=>0.5-Math.random());
+  J.element=ACTIONS[J.pioche.pop()];
+  J.reste=J.duree;
+  document.getElementById('eTxt').textContent=J.element.t;
+}
+function repondre(f){
+  if(!J||J.fini) return;
+  const flash=document.getElementById('flash');
+  if(f===J.element.f){
+    J.serie++; J.score+=15+Math.round(J.reste*3);
+    flash.textContent='✅ Oui : '+J.element.exp;
+    flash.style.color='#4ade80';
+    J.duree=Math.max(4.2,J.duree-0.35);
+    majHUD(); nouvelElement();
+  } else {
+    J.vies--;
+    flash.textContent='❌ Non, c\u2019était '+NOMS_F[J.element.f]+' : '+J.element.exp;
+    flash.style.color='#f87171';
+    majHUD();
+    if(J.vies<=0) return finPartie('Le tri s\u2019arrête ! Retiens : chaque pièce du vélo répond à UNE fonction — se propulser, freiner, se diriger, ou porter et sécuriser.');
+    nouvelElement();
+  }
+}
+document.querySelectorAll('#choix button').forEach(b=>b.onclick=()=>repondre(b.dataset.f));
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('velorush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=15 ? '🏆 Mécano cycles senior !' : '💥 Chaîne cassée !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Éléments classés : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').textContent='⏰ Trop lent ! C\u2019était '+NOMS_F[J.element.f]+' : '+J.element.exp;
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('Le chrono a gagné : un bon mécano associe chaque pièce à sa fonction d\u2019un coup d\u2019œil !');
+    nouvelElement();
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Procédé Rush — Technologie 4ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#a78bfa; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:520px;min-height:400px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#operation{background:#1e293b;border:2px solid var(--neon);border-radius:14px;padding:18px;text-align:center;margin-bottom:12px}
+#operation .em{font-size:44px}
+#operation .txt{font-size:17px;font-weight:900;color:#fff;margin-top:6px;min-height:52px;line-height:1.45}
+#choix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:13px 6px;font-size:14px;font-weight:900;cursor:pointer;transition:.1s;line-height:1.4}
+#choix button small{display:block;font-size:10.5px;color:#94a3b8;font-weight:600}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:40px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:420px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23a78bfa'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🏭 PROCÉDÉ RUSH</h1>
+<div class="sous">Une opération de fabrication s'affiche : additif, soustractif, moulage ou assemblage ? Classe-la avant la fin du chrono !</div>
+
+<div class="hud">
+  <div>Classées : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div id="operation"><div class="em" id="oEm"></div><div class="txt" id="oTxt"></div></div>
+  <div id="choix">
+    <button data-f="additif">🧱 ADDITIF<small>on AJOUTE la matière</small></button>
+    <button data-f="soustractif">🪚 SOUSTRACTIF<small>on ENLÈVE la matière</small></button>
+    <button data-f="moulage">🫙 MOULAGE / FORMAGE<small>on DONNE une forme à la matière</small></button>
+    <button data-f="assemblage">🔩 ASSEMBLAGE<small>on RÉUNIT des pièces</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Atelier verrouillé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Le fab lab</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Les règles de l'atelier</h2>
+    <p>Une opération de fabrication arrive :<br>
+    🧱 ADDITIF = on ajoute (impression 3D…) · 🪚 SOUSTRACTIF = on enlève (fraiser, percer, découper…) ·
+    🫙 MOULAGE = on forme la matière (injection, pliage…) · 🔩 ASSEMBLAGE = on réunit (visser, souder, coller…).<br>
+    Erreur ou chrono écoulé = une vie. Ça accélère ! 🏁</p>
+    <button id="btnGo">🏭 Lancer la production</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Production arrêtée !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence Modélisation & impression 3D · 4ème</footer>
+
+<script>
+const CODE='STRATE64';
+function dejaOuvert(){ try{ return localStorage.getItem('procrush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('procrush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const NOMS_F={additif:'🧱 ADDITIF',soustractif:'🪚 SOUSTRACTIF',moulage:'🫙 MOULAGE/FORMAGE',assemblage:'🔩 ASSEMBLAGE'};
+const OPERATIONS=[
+ {e:'🖨️',t:'Déposer du fil fondu couche par couche',f:'additif',exp:'l\u2019impression 3D FDM ajoute la matière : additif.'},
+ {e:'💡',t:'Imprimer une pièce en résine durcie par la lumière',f:'additif',exp:'la stéréolithographie durcit la résine couche par couche : additive.'},
+ {e:'✨',t:'Fusionner de la poudre métallique au laser, strate par strate',f:'additif',exp:'la fusion laser sur lit de poudre : de l\u2019additif haut de gamme (aéronautique !).'},
+ {e:'🧴',t:'Construire un prototype en ajoutant du PLA sur un plateau',f:'additif',exp:'on part de rien et on empile : additif.'},
+ {e:'🔄',t:'Fraiser une rainure dans un bloc d\u2019aluminium',f:'soustractif',exp:'la fraise ENLÈVE des copeaux : soustractif.'},
+ {e:'🕳️',t:'Percer un trou de 8 mm dans une plaque d\u2019acier',f:'soustractif',exp:'percer = retirer de la matière : soustractif.'},
+ {e:'🔦',t:'Découper une plaque au laser',f:'soustractif',exp:'la découpe retire (vaporise !) la matière : soustractif.'},
+ {e:'🪵',t:'Tourner un pied de chaise dans un morceau de hêtre',f:'soustractif',exp:'le tour à bois enlève des copeaux : soustractif.'},
+ {e:'🧸',t:'Injecter du plastique fondu dans un moule de jouet',f:'moulage',exp:'l\u2019injection donne la forme du moule : moulage.'},
+ {e:'🔔',t:'Couler du bronze en fusion dans un moule de cloche',f:'moulage',exp:'la fonderie : le métal prend la forme du moule.'},
+ {e:'🫗',t:'Souffler une bouteille en plastique dans son moule',f:'moulage',exp:'l\u2019extrusion-soufflage forme la bouteille : formage.'},
+ {e:'🚗',t:'Emboutir un capot de voiture dans une tôle',f:'moulage',exp:'l\u2019emboutissage DÉFORME la tôle sans en enlever : formage.'},
+ {e:'🔩',t:'Visser le dossier du support sur son socle',f:'assemblage',exp:'visser réunit des pièces : assemblage.'},
+ {e:'⚡',t:'Souder deux tubes du cadre de vélo',f:'assemblage',exp:'souder unit définitivement deux pièces : assemblage.'},
+ {e:'🧴',t:'Coller les deux coques d\u2019un drone',f:'assemblage',exp:'coller = réunir des pièces : assemblage.'},
+ {e:'📎',t:'Riveter la carlingue d\u2019un avion',f:'assemblage',exp:'le rivet réunit les tôles : assemblage.'},
+];
+
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('procrush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:10,reste:10,fini:false,pioche:[],op:null};
+  window.J_DEBUG=J;
+  majHUD(); nouvelleOp(); dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function nouvelleOp(){
+  if(J.pioche.length===0) J.pioche=OPERATIONS.map((_,i)=>i).sort(()=>0.5-Math.random());
+  J.op=OPERATIONS[J.pioche.pop()];
+  J.reste=J.duree;
+  document.getElementById('oEm').textContent=J.op.e;
+  document.getElementById('oTxt').textContent='« '+J.op.t+' »';
+}
+function repondre(f){
+  if(!J||J.fini) return;
+  const flash=document.getElementById('flash');
+  if(f===J.op.f){
+    J.serie++; J.score+=15+Math.round(J.reste*3);
+    flash.textContent='✅ Oui : '+J.op.exp;
+    flash.style.color='#4ade80';
+    J.duree=Math.max(4.2,J.duree-0.35);
+    majHUD(); nouvelleOp();
+  } else {
+    J.vies--;
+    flash.textContent='❌ Non, c\u2019était '+NOMS_F[J.op.f]+' : '+J.op.exp;
+    flash.style.color='#f87171';
+    majHUD();
+    if(J.vies<=0) return finPartie('L\u2019atelier s\u2019arrête ! Retiens le geste : on AJOUTE (additif), on ENLÈVE (soustractif), on FORME (moulage) ou on RÉUNIT (assemblage).');
+    nouvelleOp();
+  }
+}
+document.querySelectorAll('#choix button').forEach(b=>b.onclick=()=>repondre(b.dataset.f));
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('procrush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=15 ? '🏆 Chef d\u2019atelier !' : '💥 Production arrêtée !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Opérations classées : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').textContent='⏰ Trop lent ! C\u2019était '+NOMS_F[J.op.f]+' : '+J.op.exp;
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('Le chrono a gagné : sur une chaîne de production, la cadence ne pardonne pas !');
+    nouvelleOp();
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

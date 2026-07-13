@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 3ème — Intelligence artificielle & données · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#9333ea; --niv-fonce:#7e22ce; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#faf5ff;color:var(--niv-fonce)}
+nav.side a.actif{background:#f3e8ff;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:18px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:32px}
+.carte h3{font-size:16px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:13.5px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#faf5ff;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%239333ea'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>Personne n'a écrit la règle</a>
+  <a href="#s2"><span class="dot"></span>Données, modèle, prédiction</a>
+  <a href="#s3"><span class="dot"></span>Règles ou exemples ? (animation)</a>
+  <a href="#s4"><span class="dot"></span>La démarche en 4 étapes</a>
+  <a href="#s5"><span class="dot"></span>L'entraînement (animation)</a>
+  <a href="#s6"><span class="dot"></span>Le piège du biais (animation)</a>
+  <a href="#s7"><span class="dot"></span>Garder l'esprit critique</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 3ème · Séquence Intelligence artificielle</div>
+  <h1>📱 Ton téléphone reconnaît ton visage.<br>Personne ne lui a écrit la règle.</h1>
+  <p class="sous" style="margin-top:16px">« Si deux yeux ET un nez ET une bouche alors visage » ? Impossible : lunettes, barbes, pénombre, grimaces… aucune liste de règles ne tient.
+  Alors on a changé de méthode : au lieu d'écrire les règles, on montre à la machine <b>des milliers d'exemples</b>… et elle <b>apprend</b>.
+  C'est ça, l'intelligence artificielle par apprentissage — et tu vas voir que tout repose sur les <b>données</b>.</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Trois mots à ne plus jamais confondre</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#9333ea"><div class="ic">📦</div><h3>LES DONNÉES</h3><p>Des milliers d'exemples ÉTIQUETÉS : cette photo → « chat », celle-ci → « chien ». C'est la nourriture de l'IA.</p><span class="ex">10 000 photos étiquetées</span></div>
+    <div class="carte" style="--accent:#0e7490"><div class="ic">🧠</div><h3>LE MODÈLE</h3><p>Le programme qui APPREND : à chaque erreur sur un exemple, il s'ajuste un tout petit peu. Des millions de réglages internes.</p><span class="ex">le réseau de neurones</span></div>
+    <div class="carte" style="--accent:#16a34a"><div class="ic">🎯</div><h3>LA PRÉDICTION</h3><p>La réponse du modèle sur un cas NOUVEAU, avec un pourcentage de confiance. Ce n'est jamais une certitude !</p><span class="ex">« chat, à 87 % »</span></div>
+  </div>
+  <p class="sous" style="margin-top:22px">La grande différence avec tes programmes de la séquence Algorithmes : là-bas, <b>tu écrivais les règles</b>. Ici, le modèle les <b>découvre tout seul</b> dans les données.</p>
+</section>
+
+<section class="slide" id="s3">
+  <h2>Écrire les règles… ou montrer des exemples ?</h2>
+  <div class="animbox">
+    <canvas id="cvRegles" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capRegles"></div><button data-anim="regles">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsRegles"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>La démarche de l'IA en 4 étapes</h2>
+  <table class="mat">
+    <tr><th>Étape</th><th>Ce qu'on fait</th><th>Exemple : trier les déchets</th></tr>
+    <tr><td>1️⃣ <b>COLLECTER</b></td><td>rassembler des milliers d'exemples étiquetés, VARIÉS</td><td>50 000 photos de déchets, chacune étiquetée « verre / plastique / carton »</td></tr>
+    <tr><td>2️⃣ <b>ENTRAÎNER</b></td><td>le modèle devine, se trompe, s'ajuste… des millions de fois</td><td>l'ordinateur mouline pendant des heures</td></tr>
+    <tr><td>3️⃣ <b>TESTER</b></td><td>mesurer la précision sur des exemples JAMAIS VUS</td><td>184 bonnes réponses sur 200 photos → 92 %</td></tr>
+    <tr><td>4️⃣ <b>UTILISER</b></td><td>prédire sur des cas nouveaux… en gardant un œil humain</td><td>la caméra du centre de tri classe les déchets</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">L'étape 3 est cruciale : on teste sur des exemples que le modèle <b>n'a jamais vus</b> — sinon c'est comme réviser avec le sujet du contrôle dans la poche !</p>
+</section>
+
+<section class="slide" id="s5">
+  <h2>L'entraînement : deviner, se tromper, s'ajuster</h2>
+  <div class="animbox">
+    <canvas id="cvEntrainement" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capEntrainement"></div><button data-anim="entrainement">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsEntrainement"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>Le piège du biais : l'affaire des chats roux</h2>
+  <div class="animbox">
+    <canvas id="cvBiais" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capBiais"></div><button data-anim="biais">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsBiais"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>⚠️ Garder l'esprit critique face à l'IA</h2>
+  <table class="mat">
+    <tr><th>Piège</th><th>Exemple</th><th>Parade</th></tr>
+    <tr><td>🤏 <b>Trop peu de données</b></td><td>une IA de tri entraînée avec… 20 photos</td><td>collecter beaucoup plus d'exemples avant d'entraîner</td></tr>
+    <tr><td>🎯 <b>Données biaisées</b></td><td>que des pommes ROUGES dans les exemples → la pomme verte devient « poire »</td><td>varier les données : toutes les couleurs, tous les angles, tous les cas</td></tr>
+    <tr><td>😴 <b>Confiance aveugle</b></td><td>suivre une prédiction à 51 % de confiance les yeux fermés</td><td>garder un HUMAIN qui vérifie les décisions importantes</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">Une IA n'est ni magique ni infaillible : elle vaut ce que valent ses <b>données</b>. ➡️ Au <b>TP</b>, le centre d'entraînement t'embauche : trois IA qui déraillent à expertiser !</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>Un programme classique suit des <b>règles écrites par un humain</b>. Une IA par apprentissage découvre les règles toute seule dans des <b>exemples étiquetés</b>.</li>
+      <li>La démarche : <b>collecter</b> des données variées → <b>entraîner</b> le modèle → <b>tester</b> la précision sur des exemples jamais vus → <b>utiliser</b> pour prédire.</li>
+      <li>Une prédiction s'accompagne d'un <b>pourcentage de confiance</b> : ce n'est jamais une certitude. Précision = bonnes réponses ÷ total × 100.</li>
+      <li>Le <b>biais</b> : des données non représentatives donnent une IA qui se trompe systématiquement. Une IA vaut ce que valent ses données.</li>
+      <li>On garde toujours l'<b>esprit critique</b> : pour les décisions importantes, un humain vérifie. L'IA propose, l'humain dispose.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function frame(ts){
+    if(etat.t0===null)etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){ if(etat.i<phases.length-1){etat.i++;etat.t0=ts;cap.textContent=phases[etat.i].caption;majPts();} else return; }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){cancelAnimationFrame(etat.raf);etat.i=0;etat.t0=null;
+    cap.textContent=phases[0].caption;majPts();etat.raf=requestAnimationFrame(frame);}
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption;majPts();phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#7e22ce',taille=15){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+function boiteRonde(ctx,x,y,w,h,fill,stroke,lw){
+  ctx.fillStyle=fill; ctx.strokeStyle=stroke; ctx.lineWidth=lw||2;
+  ctx.beginPath(); ctx.roundRect(x,y,w,h,12); ctx.fill(); ctx.stroke();
+}
+function emoji(ctx,em,x,y,taille){ ctx.font=(taille||26)+'px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000'; ctx.fillText(em,x,y); }
+
+/* ====== ANIM 1 : RÈGLES vs EXEMPLES ====== */
+creerAnim('regles','cvRegles','capRegles','ptsRegles',[
+ {dur:3600,caption:'STRUCTURE — Mission : trier des photos de chats et de chiens. Méthode 1 : un humain ÉCRIT LES RÈGLES : « si oreilles pointues alors chat »… Méthode 2 : on montre des milliers d\u2019EXEMPLES étiquetés.',
+  draw(ctx,p){
+    boiteRonde(ctx,60,90,320,220,'#fff','#94a3b8',2);
+    etiquette(ctx,'Méthode 1 : les RÈGLES',220,70,'#64748b',15);
+    etiquette(ctx,'si oreilles pointues → chat',220,150,'#1e3a5f',13.5);
+    etiquette(ctx,'si museau long → chien',220,180,'#1e3a5f',13.5);
+    etiquette(ctx,'si moustaches → chat ?',220,210,'#1e3a5f',13.5);
+    boiteRonde(ctx,440,90,320,220,'#fff','#9333ea',2.5);
+    etiquette(ctx,'Méthode 2 : les EXEMPLES',600,70,'#7e22ce',15);
+    emoji(ctx,'🐱',500,160,30); emoji(ctx,'🐶',560,160,30); emoji(ctx,'🐱',620,160,30); emoji(ctx,'🐶',680,160,30);
+    etiquette(ctx,'chat',500,190,'#16a34a',11); etiquette(ctx,'chien',560,190,'#16a34a',11);
+    etiquette(ctx,'chat',620,190,'#16a34a',11); etiquette(ctx,'chien',680,190,'#16a34a',11);
+    etiquette(ctx,'× 10 000…',600,240,'#7e22ce',14); }},
+ {dur:5400,caption:'ACTION — Les règles écrites CRAQUENT : chien aux oreilles pointues, chat vu de dos, photo sombre… Chaque exception demande une règle de plus, puis une exception à l\u2019exception. Pendant ce temps, le modèle nourri d\u2019exemples s\u2019ajuste tout seul.',
+  draw(ctx,p){ const q=lisse(p);
+    boiteRonde(ctx,60,90,320,220,'#fef2f2','#dc2626',2.5);
+    etiquette(ctx,'Méthode 1 : les RÈGLES',220,70,'#64748b',15);
+    etiquette(ctx,'❌ chien aux oreilles pointues ?',220,150,'#dc2626',13.5);
+    if(q>0.3) etiquette(ctx,'❌ chat vu de dos ?',220,185,'#dc2626',13.5);
+    if(q>0.6) etiquette(ctx,'❌ photo dans la pénombre ?',220,220,'#dc2626',13.5);
+    if(q>0.8) etiquette(ctx,'💥 340 règles… et ça rate encore',220,265,'#dc2626',14);
+    boiteRonde(ctx,440,90,320,220,'#faf5ff','#9333ea',2.5);
+    etiquette(ctx,'Méthode 2 : les EXEMPLES',600,70,'#7e22ce',15);
+    emoji(ctx,'🧠',600,190,54);
+    const n=Math.floor(q*10000);
+    etiquette(ctx,n.toLocaleString('fr-FR')+' exemples appris',600,250,'#7e22ce',14.5);
+    etiquette(ctx,'le modèle s\u2019ajuste à chaque exemple',600,282,'#64748b',12.5); }},
+ {dur:4600,caption:'PROPRIÉTÉ — Une IA par apprentissage n\u2019est PAS programmée avec des règles : elle DÉCOUVRE les règles toute seule, cachées dans les données. Sa force ET sa faiblesse : tout dépend des exemples qu\u2019on lui a montrés.',
+  draw(ctx,p){
+    boiteRonde(ctx,250,100,320,190,'#faf5ff','#9333ea',3);
+    emoji(ctx,'📦',330,180,40); etiquette(ctx,'données',330,215,'#7e22ce',13);
+    ctx.strokeStyle='#ea580c'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(370,175); ctx.lineTo(430,175); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(430,175); ctx.lineTo(419,168); ctx.moveTo(430,175); ctx.lineTo(419,182); ctx.stroke();
+    emoji(ctx,'🧠',480,190,44); etiquette(ctx,'modèle',480,222,'#7e22ce',13);
+    etiquette(ctx,'l\u2019IA apprend des données — elle vaut ce que valent ses exemples',410,340,'#7e22ce',16); }},
+]);
+
+/* ====== ANIM 2 : L'ENTRAÎNEMENT ====== */
+function jaugePrecision(ctx,pc){
+  ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(560,120,180,26,8); ctx.fill(); ctx.stroke();
+  ctx.fillStyle= pc<70?'#dc2626':(pc<85?'#ea580c':'#16a34a');
+  ctx.beginPath(); ctx.roundRect(560,120,180*pc/100,26,8); ctx.fill();
+  etiquette(ctx,'précision : '+pc.toFixed(0)+' %',650,108,'#1e3a5f',15);
+}
+creerAnim('entrainement','cvEntrainement','capEntrainement','ptsEntrainement',[
+ {dur:3200,caption:'STRUCTURE — Le modèle démarre IGNORANT : ses millions de réglages internes sont au hasard. Sa précision de départ : 50 %, autant que pile ou face. On lui présente le premier exemple étiqueté…',
+  draw(ctx,p){
+    emoji(ctx,'🧠',250,210,64);
+    etiquette(ctx,'le modèle (réglages au hasard)',250,260,'#64748b',13.5);
+    jaugePrecision(ctx,50);
+    emoji(ctx,'🐱',480,200,36); etiquette(ctx,'étiquette : « chat »',480,240,'#16a34a',13); }},
+ {dur:6200,caption:'ACTION — La boucle tourne : le modèle DEVINE (« chien ? »), on compare à l\u2019étiquette (« chat ! »), erreur → il S\u2019AJUSTE un tout petit peu. Exemple suivant. Des milliers de fois. La précision grimpe : 60… 75… 90 %.',
+  draw(ctx,p){ const q=lisse(p);
+    emoji(ctx,'🧠',250,210,64);
+    const n=Math.floor(q*8000);
+    etiquette(ctx,n.toLocaleString('fr-FR')+' exemples vus',250,262,'#7e22ce',14);
+    const cyc=(p*8)%1;
+    const ex=['🐱','🐶'][Math.floor(p*8)%2];
+    emoji(ctx,ex,480,200,36);
+    if(cyc<0.5) etiquette(ctx,'le modèle devine…',480,240,'#64748b',12.5);
+    else etiquette(ctx,'comparaison → ajustement !',480,240,'#ea580c',12.5);
+    jaugePrecision(ctx,50+q*42);
+    etiquette(ctx,'deviner → comparer → s\u2019ajuster → recommencer',410,330,'#7e22ce',15); }},
+ {dur:4600,caption:'PROPRIÉTÉ — Après l\u2019entraînement : 92 % de précision, mesurée sur des exemples JAMAIS VUS. Plus les exemples sont nombreux et variés, meilleure est la précision… mais elle n\u2019atteint jamais 100 % : une IA peut TOUJOURS se tromper.',
+  draw(ctx,p){
+    emoji(ctx,'🧠',250,210,64);
+    etiquette(ctx,'modèle entraîné ✅',250,260,'#16a34a',14);
+    jaugePrecision(ctx,92);
+    etiquette(ctx,'8 % d\u2019erreurs restantes : jamais 100 % !',650,190,'#dc2626',13.5);
+    etiquette(ctx,'précision = bonnes réponses ÷ total × 100',410,330,'#7e22ce',15.5); }},
+]);
+
+/* ====== ANIM 3 : LE BIAIS ====== */
+function chat(ctx,x,y,coul,taille){
+  ctx.save(); ctx.translate(x,y);
+  const s=taille||16;
+  ctx.fillStyle=coul;
+  ctx.beginPath(); ctx.arc(0,0,s,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(-s*0.7,-s*0.6); ctx.lineTo(-s*0.9,-s*1.5); ctx.lineTo(-s*0.2,-s*0.9); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(s*0.7,-s*0.6); ctx.lineTo(s*0.9,-s*1.5); ctx.lineTo(s*0.2,-s*0.9); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#1e3a5f';
+  ctx.beginPath(); ctx.arc(-s*0.35,-s*0.15,s*0.12,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(s*0.35,-s*0.15,s*0.12,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+}
+creerAnim('biais','cvBiais','capBiais','ptsBiais',[
+ {dur:3600,caption:'STRUCTURE — Une IA « reconnaisseuse de chats » a été entraînée… uniquement avec des chats ROUX. Précision annoncée : 98 % ! Le centre est fier. Mais regarde bien les données d\u2019entraînement…',
+  draw(ctx,p){
+    etiquette(ctx,'données d\u2019entraînement',230,70,'#64748b',14);
+    for(let i=0;i<8;i++) chat(ctx,110+ (i%4)*80, 130+Math.floor(i/4)*90, '#ea8c3a', 20);
+    emoji(ctx,'🧠',560,190,54);
+    etiquette(ctx,'« précision : 98 % ! »',560,240,'#16a34a',14); }},
+ {dur:5200,caption:'ACTION — Un chat NOIR se présente : « euh… CHIEN, à 81 % ». Catastrophe ! Le modèle n\u2019a jamais vu de chat noir : pour lui, chat = roux. Les données n\u2019étaient PAS REPRÉSENTATIVES : c\u2019est un BIAIS.',
+  draw(ctx,p){ const q=lisse(p);
+    for(let i=0;i<8;i++) chat(ctx,110+(i%4)*80, 130+Math.floor(i/4)*90, '#ea8c3a', 20);
+    chat(ctx,460,190,'#1e293b',26);
+    if(q>0.4){ emoji(ctx,'🧠',620,190,54);
+      etiquette(ctx,'« CHIEN, à 81 % » ❌',620,245,'#dc2626',15); }
+    if(q>0.7) etiquette(ctx,'jamais vu de chat noir → biais !',410,330,'#dc2626',15.5); }},
+ {dur:5000,caption:'PROPRIÉTÉ — La parade : COMPLÉTER et VARIER les données — chats noirs, blancs, tigrés, de face, de dos… Le modèle réentraîné reconnaît enfin tout le monde. Un BIAIS = des données non représentatives : une IA vaut ce que valent ses données.',
+  draw(ctx,p){
+    const couls=['#ea8c3a','#1e293b','#e2e8f0','#a16207','#64748b','#f5d0a9','#374151','#c2712d'];
+    for(let i=0;i<8;i++) chat(ctx,110+(i%4)*80, 130+Math.floor(i/4)*90, couls[i], 20);
+    if(couls[2]==='#e2e8f0'){ /* contour pour le chat blanc */ }
+    emoji(ctx,'🧠',560,180,54);
+    etiquette(ctx,'« CHAT, à 96 % » ✅',560,235,'#16a34a',15);
+    etiquette(ctx,'des données VARIÉES = une IA juste pour tous les cas',410,330,'#7e22ce',15.5); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s3:'regles',s5:'entrainement',s6:'biais'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

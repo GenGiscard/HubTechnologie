@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 3ème — Espace & satellites · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#0c4a6e; --niv-fonce:#082f49; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#f0f9ff;color:var(--niv-fonce)}
+nav.side a.actif{background:#e0f2fe;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:18px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:32px}
+.carte h3{font-size:16px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:13.5px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#0f172a;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#f0f9ff;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%230c4a6e'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>Tu utilises l'espace 50 fois par jour</a>
+  <a href="#s2"><span class="dot"></span>Les familles de satellites</a>
+  <a href="#s3"><span class="dot"></span>La fusée : action-réaction (animation)</a>
+  <a href="#s4"><span class="dot"></span>Anatomie d'un satellite</a>
+  <a href="#s5"><span class="dot"></span>L'orbite : la chute infinie (animation)</a>
+  <a href="#s6"><span class="dot"></span>Le GPS décodé (animation)</a>
+  <a href="#s7"><span class="dot"></span>Les débris spatiaux</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 3ème · Séquence Espace & satellites</div>
+  <h1>🛰️ Tu utilises l'espace<br>50 fois par jour.</h1>
+  <p class="sous" style="margin-top:16px">La météo de ce matin, l'itinéraire du GPS, l'heure exacte de ton téléphone, le match retransmis en direct,
+  la photo satellite de ta maison : tout ça vient de <b>machines qui tournent au-dessus de ta tête</b>, entre 400 et 36 000 km d'altitude.
+  Plus de 8 000 satellites actifs travaillent pour toi en silence. Comment les envoie-t-on là-haut ? Pourquoi ne retombent-ils pas ? Décodage.</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Les grandes familles de satellites</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#0c4a6e"><div class="ic">📡</div><h3>COMMUNICATION</h3><p>Ils relaient TV, téléphone et Internet par-dessus les océans, souvent depuis l'orbite géostationnaire (36 000 km).</p><span class="ex">le direct d'un match à l'autre bout du monde</span></div>
+    <div class="carte" style="--accent:#16a34a"><div class="ic">🧭</div><h3>NAVIGATION (GPS)</h3><p>Des constellations de ~30 satellites qui diffusent l'heure exacte : ton téléphone en déduit ta position au mètre près.</p><span class="ex">GPS, Galileo (l'européen !)</span></div>
+    <div class="carte" style="--accent:#ea580c"><div class="ic">🌀</div><h3>MÉTÉO & OBSERVATION</h3><p>Ils photographient nuages, ouragans, incendies, fonte des glaces : les yeux de la planète.</p><span class="ex">l'ouragan repéré 5 jours avant</span></div>
+    <div class="carte" style="--accent:#7c3aed"><div class="ic">🔭</div><h3>SCIENCE</h3><p>Télescopes spatiaux, stations habitées, sondes : comprendre l'univers… et la Terre.</p><span class="ex">l'ISS, à 400 km, 16 levers de soleil par jour</span></div>
+  </div>
+</section>
+
+<section class="slide" id="s3">
+  <h2>La fusée : pousser sans rien toucher</h2>
+  <div class="animbox">
+    <canvas id="cvFusee" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capFusee"></div><button data-anim="fusee">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsFusee"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>Anatomie d'un satellite : un objet connecté géant</h2>
+  <table class="mat">
+    <tr><th>Élément</th><th>Rôle</th><th>Tu connais déjà !</th></tr>
+    <tr><td>☀️ Panneaux solaires + batteries</td><td>ALIMENTER en énergie</td><td>ta chaîne d'énergie (source → stockage → distribution)</td></tr>
+    <tr><td>📷 Capteurs (caméras, thermomètres…)</td><td>ACQUÉRIR l'information</td><td>tes capteurs d'objets connectés</td></tr>
+    <tr><td>💻 Ordinateur de bord</td><td>TRAITER les données</td><td>ta chaîne d'information</td></tr>
+    <tr><td>📡 Antennes</td><td>TRANSMETTRE vers la Terre</td><td>tes réseaux… en version 36 000 km</td></tr>
+    <tr><td>🚀 Petits propulseurs</td><td>CORRIGER l'orbite</td><td>les actionneurs de ta chaîne d'énergie</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">Un satellite = un <b>objet connecté</b> extrême : mêmes chaînes d'information et d'énergie que ta lampe domotique… mais dans le vide, à −150 °C à l'ombre, sans réparateur possible.</p>
+</section>
+
+<section class="slide" id="s5">
+  <h2>L'orbite : tomber… sans jamais toucher le sol</h2>
+  <div class="animbox">
+    <canvas id="cvOrbite" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capOrbite"></div><button data-anim="orbite">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsOrbite"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>Le GPS décodé : 3 distances, 1 position</h2>
+  <div class="animbox">
+    <canvas id="cvGps" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capGps"></div><button data-anim="gps">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsGps"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>⚠️ Le revers : les débris spatiaux</h2>
+  <table class="mat">
+    <tr><th>Le problème</th><th>Les chiffres</th><th>Les solutions</th></tr>
+    <tr><td>Satellites morts, étages de fusées, éclats de collisions… tournent à 28 000 km/h</td><td>plus de 36 000 débris de +10 cm suivis ; 1 boulon à cette vitesse = une grenade</td><td>désorbiter les satellites en fin de vie (rentrée contrôlée)</td></tr>
+    <tr><td>Chaque collision crée des milliers de nouveaux débris (effet boule de neige)</td><td>l'ISS manœuvre plusieurs fois par an pour esquiver</td><td>« orbite cimetière » pour les géostationnaires, satellites nettoyeurs à l'étude</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">Tu reconnais ta séquence <b>éco-conception</b> : même dans l'espace, il faut penser à la FIN DE VIE dès la conception ! ➡️ Au <b>TP</b>, le centre spatial t'embauche : trois missions qui déraillent à expertiser.</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>Une fusée avance par <b>action-réaction</b> : elle éjecte des gaz vers le bas à très grande vitesse, les gaz la poussent vers le haut. Elle n'a besoin de s'appuyer sur RIEN — ça marche même dans le vide.</li>
+      <li>Un satellite en orbite est en <b>chute permanente</b> autour de la Terre : lancé à environ <b>28 000 km/h</b>, il tombe… mais la Terre se dérobe sous lui à la même vitesse. Trop lent, il retombe.</li>
+      <li>Familles de satellites : <b>communication</b>, <b>navigation</b> (GPS/Galileo), <b>météo & observation</b>, <b>science</b>. Un satellite = un objet connecté extrême (capteurs, énergie solaire, antennes).</li>
+      <li>Le <b>GPS</b> : ton téléphone mesure sa distance à au moins <b>3-4 satellites</b> (grâce au temps de trajet du signal radio, qui file à 300 000 km/s) et croise ces distances pour trouver sa position.</li>
+      <li>Les <b>débris spatiaux</b> menacent tout le monde : un satellite se conçoit avec sa fin de vie (désorbitation, orbite cimetière) — l'éco-conception jusque dans l'espace.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function frame(ts){
+    if(etat.t0===null)etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){ if(etat.i<phases.length-1){etat.i++;etat.t0=ts;cap.textContent=phases[etat.i].caption;majPts();} else return; }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){cancelAnimationFrame(etat.raf);etat.i=0;etat.t0=null;
+    cap.textContent=phases[0].caption;majPts();etat.raf=requestAnimationFrame(frame);}
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption;majPts();phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#e2e8f0',taille=15){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+function etoiles(ctx){
+  ctx.fillStyle='#cbd5e1';
+  for(let i=0;i<40;i++){
+    const x=(i*197)%820, y=(i*113)%380;
+    ctx.globalAlpha=0.25+((i*37)%50)/100;
+    ctx.beginPath(); ctx.arc(x,y,1.1,0,Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha=1;
+}
+function fusee(ctx,x,y,s,flamme){
+  ctx.save(); ctx.translate(x,y);
+  ctx.fillStyle='#e2e8f0'; ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(-12*s,-46*s,24*s,60*s,8*s); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-12*s,-44*s); ctx.lineTo(0,-70*s); ctx.lineTo(12*s,-44*s); ctx.closePath();
+  ctx.fillStyle='#ea580c'; ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#94a3b8';
+  ctx.beginPath(); ctx.moveTo(-12*s,8*s); ctx.lineTo(-22*s,20*s); ctx.lineTo(-12*s,14*s); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(12*s,8*s); ctx.lineTo(22*s,20*s); ctx.lineTo(12*s,14*s); ctx.closePath(); ctx.fill();
+  if(flamme>0){
+    ctx.fillStyle='#fbbf24';
+    ctx.beginPath(); ctx.moveTo(-8*s,14*s); ctx.lineTo(0,14*s+flamme*40*s); ctx.lineTo(8*s,14*s); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#ea580c';
+    ctx.beginPath(); ctx.moveTo(-4*s,14*s); ctx.lineTo(0,14*s+flamme*24*s); ctx.lineTo(4*s,14*s); ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+}
+/* ====== ANIM 1 : ACTION-RÉACTION ====== */
+creerAnim('fusee','cvFusee','capFusee','ptsFusee',[
+ {dur:3600,caption:'STRUCTURE — La fusée sur son pas de tir. Question piège : dans l\u2019espace, il n\u2019y a NI air NI sol… sur quoi va-t-elle « pousser » pour avancer ? Réponse : sur RIEN. Elle va éjecter de la matière.',
+  draw(ctx,p){ etoiles(ctx);
+    ctx.fillStyle='#334155'; ctx.fillRect(0,330,820,50);
+    fusee(ctx,410,300,1.4,0);
+    etiquette(ctx,'❓ sur quoi s\u2019appuyer, sans air ni sol ?',410,80,'#fbbf24',16); }},
+ {dur:6200,caption:'ACTION — Allumage ! Les moteurs éjectent des GAZ vers le bas à très grande vitesse (l\u2019ACTION)… et les gaz poussent la fusée vers le haut (la RÉACTION). Comme un ballon qu\u2019on lâche : l\u2019air sort d\u2019un côté, le ballon file de l\u2019autre.',
+  draw(ctx,p){ const q=lisse(p);
+    etoiles(ctx);
+    ctx.fillStyle='#334155'; ctx.fillRect(0,330,820,50);
+    const y=300-q*230;
+    fusee(ctx,410,y,1.4,1);
+    ctx.strokeStyle='#fbbf24'; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.moveTo(410,y+40); ctx.lineTo(410,y+110); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(410,y+110); ctx.lineTo(402,y+98); ctx.moveTo(410,y+110); ctx.lineTo(418,y+98); ctx.stroke();
+    etiquette(ctx,'ACTION : gaz éjectés ⬇️',530,y+90,'#fbbf24',13.5);
+    ctx.strokeStyle='#4ade80';
+    ctx.beginPath(); ctx.moveTo(410,y-90); ctx.lineTo(410,y-150); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(410,y-150); ctx.lineTo(402,y-138); ctx.moveTo(410,y-150); ctx.lineTo(418,y-138); ctx.stroke();
+    etiquette(ctx,'RÉACTION : poussée ⬆️',270,y-120,'#4ade80',13.5); }},
+ {dur:5000,caption:'PROPRIÉTÉ — Le principe d\u2019ACTION-RÉACTION fonctionne PARTOUT, même dans le vide : éjecter de la matière d\u2019un côté = être poussé de l\u2019autre. Détail malin : les ÉTAGES vides sont largués en route — pourquoi soulever des réservoirs vides jusqu\u2019en orbite ?',
+  draw(ctx,p){ etoiles(ctx);
+    fusee(ctx,300,220,1.1,0.6);
+    ctx.save(); ctx.globalAlpha=0.5; ctx.translate(240,320); ctx.rotate(0.5);
+    ctx.fillStyle='#94a3b8'; ctx.fillRect(-10,-24,20,48); ctx.restore();
+    etiquette(ctx,'étage vide largué 🪂',210,360,'#94a3b8',12.5);
+    etiquette(ctx,'éjecter de la matière = être poussé dans l\u2019autre sens',520,120,'#4ade80',15);
+    etiquette(ctx,'objectif : 28 000 km/h pour la mise en orbite',520,160,'#fbbf24',14); }},
+]);
+
+/* ====== ANIM 2 : L'ORBITE ====== */
+function terre(ctx,cx,cy,r){
+  ctx.fillStyle='#0369a1'; ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#16a34a';
+  ctx.beginPath(); ctx.arc(cx-r*0.3,cy-r*0.2,r*0.34,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx+r*0.35,cy+r*0.3,r*0.22,0,Math.PI*2); ctx.fill();
+}
+creerAnim('orbite','cvOrbite','capOrbite','ptsOrbite',[
+ {dur:3600,caption:'STRUCTURE — L\u2019expérience de Newton : un canon au sommet d\u2019une montagne géante. Si on lance un objet horizontalement… il finit toujours par TOMBER. Mais tout dépend de la VITESSE de lancement.',
+  draw(ctx,p){ etoiles(ctx);
+    terre(ctx,410,520,330);
+    ctx.fillStyle='#94a3b8'; ctx.fillRect(400,180,20,20);
+    etiquette(ctx,'💣 canon en altitude',410,160,'#e2e8f0',14); }},
+ {dur:6600,caption:'ACTION — Tir n°1, LENT : l\u2019objet tombe vite au sol. Tir n°2, plus rapide : il va plus loin… mais retombe. Tir n°3, à 28 000 km/h : il tombe TOUJOURS… mais la Terre, ronde, se dérobe sous lui exactement au même rythme. Il ne touche jamais le sol !',
+  draw(ctx,p){ const q=lisse(p);
+    etoiles(ctx);
+    terre(ctx,410,520,330);
+    ctx.fillStyle='#94a3b8'; ctx.fillRect(400,180,20,20);
+    // tir 1
+    if(q>0.05){ ctx.strokeStyle='#dc2626'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(420,190);
+      const f1=Math.min(1,q*3);
+      ctx.quadraticCurveTo(470,192,480+f1*10,230); ctx.stroke();
+      etiquette(ctx,'trop lent : retombe',540,225,'#f87171',12); }
+    // tir 2
+    if(q>0.35){ ctx.strokeStyle='#ea580c'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(420,190);
+      ctx.quadraticCurveTo(560,195,620,270); ctx.stroke();
+      etiquette(ctx,'plus vite : plus loin… retombe',655,250,'#fdba74',11.5); }
+    // tir 3 : orbite
+    if(q>0.6){ const a=-Math.PI/2 + (q-0.6)*2.5*Math.PI*2;
+      ctx.strokeStyle='#4ade80'; ctx.lineWidth=2; ctx.setLineDash([5,5]);
+      ctx.beginPath(); ctx.arc(410,520,340,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+      const sx=410+340*Math.cos(a), sy=520+340*Math.sin(a);
+      ctx.font='20px Segoe UI'; ctx.textAlign='center'; ctx.fillText('🛰️',sx,sy+7);
+      etiquette(ctx,'28 000 km/h : il tombe AUTOUR de la Terre !',410,60,'#4ade80',15); } }},
+ {dur:5000,caption:'PROPRIÉTÉ — Être en orbite = être en CHUTE PERMANENTE autour de la Terre. C\u2019est pour ça que les astronautes de l\u2019ISS flottent : ils ne sont pas « sans gravité », ils TOMBENT en continu avec leur station, à 28 000 km/h, 400 km au-dessus de nos têtes.',
+  draw(ctx,p){ etoiles(ctx);
+    terre(ctx,410,520,330);
+    ctx.strokeStyle='#4ade80'; ctx.lineWidth=2; ctx.setLineDash([5,5]);
+    ctx.beginPath(); ctx.arc(410,520,340,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    const a=-Math.PI/2 + p*Math.PI*2;
+    const sx=410+340*Math.cos(a), sy=520+340*Math.sin(a);
+    ctx.font='20px Segoe UI'; ctx.textAlign='center'; ctx.fillText('🛰️',sx,sy+7);
+    etiquette(ctx,'l\u2019orbite : une chute qui rate le sol pour toujours',410,70,'#4ade80',16);
+    etiquette(ctx,'ISS : 400 km d\u2019altitude · 16 tours de Terre par jour',410,110,'#94a3b8',13); }},
+]);
+
+/* ====== ANIM 3 : LE GPS ====== */
+creerAnim('gps','cvGps','capGps','ptsGps',[
+ {dur:3600,caption:'STRUCTURE — Ton téléphone n\u2019ÉMET rien vers les satellites : il ÉCOUTE. Là-haut, une constellation de ~30 satellites diffuse en continu un message ultra simple : « je suis ICI, et il est exactement TELLE heure ».',
+  draw(ctx,p){ etoiles(ctx);
+    [[180,80],[410,50],[640,90]].forEach(([x,y])=>{ ctx.font='24px Segoe UI'; ctx.textAlign='center'; ctx.fillText('🛰️',x,y); });
+    ctx.font='26px Segoe UI'; ctx.fillText('📱',410,330);
+    etiquette(ctx,'« je suis ici, il est 14:03:07,000000 »',410,130,'#94a3b8',13); }},
+ {dur:6400,caption:'ACTION — Le signal radio file à 300 000 km/s. Ton téléphone mesure le RETARD de chaque signal → il en déduit sa DISTANCE à chaque satellite. Une distance = un cercle de positions possibles. Deux cercles = deux points. TROIS cercles… un seul point : TOI.',
+  draw(ctx,p){ const q=lisse(p);
+    etoiles(ctx);
+    const sats=[[180,80],[410,50],[640,90]];
+    sats.forEach(([x,y])=>{ ctx.font='24px Segoe UI'; ctx.textAlign='center'; ctx.fillText('🛰️',x,y); });
+    ctx.font='26px Segoe UI'; ctx.fillText('📱',410,330);
+    const rayons=[275,272,282];
+    sats.forEach(([x,y],i)=>{
+      const seuil=i/3;
+      if(q>seuil){
+        const f=Math.min(1,(q-seuil)*3);
+        ctx.strokeStyle=['#4ade80','#fbbf24','#38bdf8'][i]; ctx.lineWidth=2;
+        ctx.setLineDash([6,6]);
+        ctx.beginPath(); ctx.arc(x,y,rayons[i]*f,0,Math.PI*2); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.beginPath(); ctx.moveTo(x,y+14); ctx.lineTo(x+(410-x)*f,y+14+(308-y)*f); ctx.lineWidth=1.5; ctx.stroke();
+      }
+    });
+    if(q>0.92) etiquette(ctx,'📍 3 distances croisées = TA position',410,365,'#4ade80',15); }},
+ {dur:5000,caption:'PROPRIÉTÉ — Avec au moins 3-4 satellites captés, la position tombe au mètre près (le 4ème corrige l\u2019horloge du téléphone). Moins de 3 satellites — dans un tunnel, un canyon urbain — et le GPS DIVAGUE. Détail vertigineux : les horloges des satellites sont si précises qu\u2019on doit corriger… les effets de la relativité d\u2019Einstein !',
+  draw(ctx,p){ etoiles(ctx);
+    etiquette(ctx,'✅ 3-4 satellites captés → position au mètre près',410,120,'#4ade80',16);
+    etiquette(ctx,'❌ moins de 3 (tunnel, immeubles) → le GPS divague',410,180,'#f87171',15);
+    etiquette(ctx,'le signal file à 300 000 km/s : chaque milliardième de seconde compte',410,260,'#94a3b8',13.5);
+    etiquette(ctx,'⏱️ horloges atomiques corrigées de la relativité — merci Einstein !',410,310,'#fbbf24',13.5); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s3:'fusee',s5:'orbite',s6:'gps'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

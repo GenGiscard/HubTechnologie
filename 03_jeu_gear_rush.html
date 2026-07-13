@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Gear Rush — Technologie 4ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#a78bfa; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:480px;min-height:390px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#commande{background:#1e293b;border:2px solid var(--neon);border-radius:14px;padding:16px;text-align:center;margin-bottom:12px}
+#commande .type{font-size:13px;letter-spacing:2px;color:#94a3b8;font-weight:800;text-transform:uppercase}
+#commande .txt{font-size:21px;font-weight:900;color:#fff;margin-top:6px;line-height:1.4}
+#choix{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:16px 6px;font-size:16px;font-weight:900;cursor:pointer;transition:.1s}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#choix button small{display:block;font-size:11px;color:#94a3b8;font-weight:600;margin-top:4px}
+#flash{min-height:26px;text-align:center;font-weight:800;font-size:14.5px;margin-top:10px}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:390px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.overlay button:hover{filter:brightness(1.1)}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23a78bfa'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>⚙️ GEAR RUSH</h1>
+<div class="sous">Les commandes de l'atelier défilent : choisis la bonne roue avant la fin du chrono !</div>
+
+<div class="hud">
+  <div>Série : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div id="commande"><div class="type" id="cType"></div><div class="txt" id="cTxt"></div></div>
+  <div id="choix"></div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Atelier verrouillé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP L'atelier des engrenages</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Les règles du rush</h2>
+    <p>Le moteur tourne à <b>120 tr/min</b> avec une roue menante Z₁ affichée.<br>
+    Une commande tombe : choisis la roue MENÉE (Z₂) qui livre la bonne vitesse — ou le bon SENS de rotation.<br>
+    Rappel : <b>N₂ = N₁ × Z₁ ÷ Z₂</b>.<br>
+    Erreur ou chrono écoulé = une vie. Ça accélère à chaque livraison ! 🏁</p>
+    <button id="btnGo">🚀 Lancer la production</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Atelier à l'arrêt !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence Transmissions de mouvement · 4ème</footer>
+
+<script>
+const CODE='PIGNON42';
+function dejaOuvert(){ try{ return localStorage.getItem('gearrush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('gearrush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const N1=120;
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('gearrush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:9,reste:9,fini:false,bonIndex:-1,explication:''};
+  majHUD(); nouvelleCommande();
+  dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function melanger(a){ return a.slice().sort(()=>0.5-Math.random()); }
+function nouvelleCommande(){
+  const choix=document.getElementById('choix'); choix.innerHTML='';
+  document.getElementById('flash').textContent='';
+  J.reste=J.duree;
+  if(Math.random()<0.3){
+    /* ----- commande de SENS ----- */
+    const cas=[
+      {txt:'2 roues dentées en contact. La menante tourne ⟳ horaire. La menée tourne… ?', bonne:'⟲ anti-horaire', autres:['⟳ horaire','elle ne tourne pas'],
+       exp:'engrenages en contact = sens INVERSÉ.'},
+      {txt:'2 poulies reliées par une courroie. La menante tourne ⟳ horaire. La menée tourne… ?', bonne:'⟳ horaire', autres:['⟲ anti-horaire','elle glisse toujours'],
+       exp:'la courroie CONSERVE le sens de rotation.'},
+      {txt:'3 engrenages en série. Le premier tourne ⟳ horaire. Le troisième tourne… ?', bonne:'⟳ horaire', autres:['⟲ anti-horaire','impossible à savoir'],
+       exp:'chaque contact inverse : 2 inversions = retour au sens de départ.'},
+    ][Math.floor(Math.random()*3)];
+    document.getElementById('cType').textContent='🧭 Commande de SENS';
+    document.getElementById('cTxt').textContent=cas.txt;
+    const reponses=melanger([cas.bonne,...cas.autres]);
+    J.explication=cas.exp;
+    reponses.forEach(r=>{
+      const b=document.createElement('button'); b.textContent=r;
+      b.onclick=()=>repondre(r===cas.bonne);
+      choix.appendChild(b);
+    });
+  } else {
+    /* ----- commande de RAPPORT ----- */
+    const modes=[
+      {lbl:'RALENTIR ÷2 (treuil)', cible:N1/2, f:z1=>z1*2},
+      {lbl:'RALENTIR ÷3 (essuie-glace)', cible:N1/3, f:z1=>z1*3},
+      {lbl:'ACCÉLÉRER ×2 (batteur)', cible:N1*2, f:z1=>z1/2},
+      {lbl:'GARDER LA MÊME VITESSE (renvoi)', cible:N1, f:z1=>z1},
+    ];
+    const m=modes[Math.floor(Math.random()*modes.length)];
+    const z1Choix=[10,12,16,20,24].filter(z=>Number.isInteger(m.f(z)) && m.f(z)>=5 && m.f(z)<=48);
+    const Z1=z1Choix[Math.floor(Math.random()*z1Choix.length)];
+    const bonZ2=m.f(Z1);
+    document.getElementById('cType').textContent='⚙️ Commande de VITESSE · moteur 120 tr/min · menante Z₁ = '+Z1;
+    document.getElementById('cTxt').textContent='🎯 '+m.lbl+' → N₂ = '+Math.round(m.cible)+' tr/min. Quelle roue menée Z₂ ?';
+    J.explication='N₂ = 120 × '+Z1+' ÷ Z₂ → Z₂ = '+bonZ2+' dents.';
+    // distracteurs : le piège inversé + un aléatoire
+    const piege= m.lbl.includes('MÊME')? bonZ2*2 : Math.round(Z1*Z1/bonZ2);
+    let alea=bonZ2;
+    while(alea===bonZ2||alea===piege) alea=bonZ2+[-6,-4,4,6,8][Math.floor(Math.random()*5)];
+    const reponses=melanger([bonZ2,piege,alea]);
+    reponses.forEach(z2=>{
+      const b=document.createElement('button');
+      b.innerHTML='Z₂ = '+z2+'<small>'+z2+' dents</small>';
+      b.onclick=()=>repondre(z2===bonZ2);
+      choix.appendChild(b);
+    });
+  }
+}
+function repondre(ok){
+  if(J.fini) return;
+  const flash=document.getElementById('flash');
+  if(ok){
+    J.serie++; J.score+=20+Math.round(J.reste*4);
+    flash.textContent='✅ Livré ! +'+(20+Math.round(J.reste*4));
+    flash.style.color='#4ade80';
+    J.duree=Math.max(3.4,J.duree-0.35);
+    majHUD(); nouvelleCommande();
+  } else {
+    J.vies--;
+    flash.textContent='❌ Raté — '+J.explication;
+    flash.style.color='#f87171';
+    majHUD();
+    if(J.vies<=0) return finPartie('Trop d\u2019erreurs de calcul : les clients annulent leurs commandes.');
+    nouvelleCommande();
+    document.getElementById('flash').textContent='❌ Raté — '+J.explication;
+    document.getElementById('flash').style.color='#f87171';
+  }
+}
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('gearrush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=12 ? '🏆 Chef d\u2019atelier légendaire !' : '💥 Atelier à l\u2019arrêt !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Livraisons : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini) { dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').textContent='⏰ Trop tard ! '+J.explication;
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('Le chrono a eu ta peau : en production, la cadence est reine !');
+    nouvelleCommande();
+    document.getElementById('flash').textContent='⏰ Trop tard ! Nouvelle commande…';
+    document.getElementById('flash').style.color='#f87171';
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

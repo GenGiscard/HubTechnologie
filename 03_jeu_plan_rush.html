@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Plan Rush — Technologie 4ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#a3e635; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:520px;min-height:400px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#element{background:#1e293b;border:2px solid var(--neon);border-radius:14px;padding:18px;text-align:center;margin-bottom:12px}
+#element .em{font-size:36px}
+#element .txt{font-size:18px;font-weight:900;color:#fff;margin-top:6px;min-height:56px;line-height:1.5}
+#choix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:13px 6px;font-size:14px;font-weight:900;cursor:pointer;transition:.1s;line-height:1.4}
+#choix button small{display:block;font-size:10.5px;color:#94a3b8;font-weight:600}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:40px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:430px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23a3e635'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>📏 PLAN RUSH</h1>
+<div class="sous">Un élément de plan s'affiche : vue & traits, cote, échelle ou cartouche ? Classe-le avant la fin du chrono !</div>
+
+<div class="hud">
+  <div>Classés : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div id="element"><div class="em" id="eEm">📋</div><div class="txt" id="eTxt"></div></div>
+  <div id="choix">
+    <button data-f="vue">👁️ VUES & TRAITS<small>face, dessus, pointillés, axes…</small></button>
+    <button data-f="cote">📏 COTE<small>une dimension en millimètres</small></button>
+    <button data-f="echelle">🔢 ÉCHELLE<small>rapport dessin / réel</small></button>
+    <button data-f="cartouche">🪪 CARTOUCHE<small>l'identité du plan</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Table à dessin verrouillée</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Le bureau des méthodes</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Les règles du tri de plan</h2>
+    <p>Un élément du plan s'affiche… à toi de trouver sa famille :<br>
+    👁️ VUES & TRAITS = ce qu'on dessine (face, dessus, pointillés, axes) · 📏 COTE = une dimension en mm ·
+    🔢 ÉCHELLE = le rapport dessin/réel (1:50, 2:1…) · 🪪 CARTOUCHE = l'identité du plan.<br>
+    Erreur ou chrono écoulé = une vie. Ça accélère ! 🏁</p>
+    <button id="btnGo">📏 Trier le plan</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Plan illisible !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence Dessin technique · 4ème</footer>
+
+<script>
+const CODE='CROQUIS4';
+function dejaOuvert(){ try{ return localStorage.getItem('planrush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('planrush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const NOMS_F={vue:'👁️ les VUES & TRAITS',cote:'📏 une COTE',echelle:'🔢 l\u2019ÉCHELLE',cartouche:'🪪 le CARTOUCHE'};
+const ELEMENTS=[
+ {t:'Ce qu\u2019on voit en regardant l\u2019objet depuis le dessus',f:'vue',exp:'la vue de dessus, l\u2019une des trois vues normées.'},
+ {t:'Les petits POINTILLÉS qui traversent la pièce sur la vue de face',f:'vue',exp:'pointillés = arêtes CACHÉES derrière la matière (un perçage, par exemple).'},
+ {t:'Le trait mixte fin —·—·— au centre du trou',f:'vue',exp:'le trait mixte fin marque un AXE de symétrie ou de révolution.'},
+ {t:'La disposition normée : le dessus SOUS la face, le côté à sa droite',f:'vue',exp:'la position des vues est normalisée : le monde entier lit le plan pareil.'},
+ {t:'« 45 » écrit entre deux flèches au-dessus de la pièce',f:'cote',exp:'une dimension : 45 millimètres — l\u2019unité ne s\u2019écrit jamais.'},
+ {t:'La seule information à LIRE pour connaître une dimension (jamais le réglet !)',f:'cote',exp:'le papier se déforme, les copies changent de taille : seule la COTE dit vrai.'},
+ {t:'Ø12 inscrit à côté du perçage',f:'cote',exp:'une cote de diamètre : le trou fait 12 mm — le symbole Ø signale un diamètre.'},
+ {t:'Les lignes de rappel et les flèches qui encadrent la valeur « 80 »',f:'cote',exp:'l\u2019attirail complet d\u2019une COTE : lignes de rappel, ligne de cote, flèches, valeur.'},
+ {t:'« 1:50 » : tout est dessiné cinquante fois plus petit',f:'echelle',exp:'une échelle de RÉDUCTION : réel = dessin × 50.'},
+ {t:'« 2:1 » : la petite vis est dessinée deux fois plus grande',f:'echelle',exp:'une échelle d\u2019AGRANDISSEMENT : réel = dessin ÷ 2.'},
+ {t:'« 1:1 » : le dessin est en vraie grandeur',f:'echelle',exp:'échelle 1:1 = taille réelle, ni réduit ni agrandi.'},
+ {t:'Le rapport entre la taille du dessin et la taille réelle',f:'echelle',exp:'la définition même de l\u2019ÉCHELLE.'},
+ {t:'Le nom du dessinateur et la date, en bas à droite du plan',f:'cartouche',exp:'la carte d\u2019identité du plan : c\u2019est le CARTOUCHE.'},
+ {t:'La case où l\u2019on trouve le NOM de la pièce et le format du papier',f:'cartouche',exp:'toutes les infos d\u2019identification vivent dans le CARTOUCHE.'},
+ {t:'L\u2019endroit où l\u2019on vérifie l\u2019échelle AVANT de lire le plan',f:'cartouche',exp:'premier réflexe du pro : lire le CARTOUCHE (et son échelle) avant tout.'},
+ {t:'Ce qui manque à un plan « anonyme » que l\u2019atelier refuse',f:'cartouche',exp:'sans CARTOUCHE : pas de nom, pas de version, pas d\u2019échelle → plan refusé.'},
+];
+
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('planrush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:10,reste:10,fini:false,pioche:[],element:null};
+  window.J_DEBUG=J;
+  majHUD(); nouvelElement(); dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function nouvelElement(){
+  if(J.pioche.length===0) J.pioche=ELEMENTS.map((_,i)=>i).sort(()=>0.5-Math.random());
+  J.element=ELEMENTS[J.pioche.pop()];
+  J.reste=J.duree;
+  document.getElementById('eTxt').textContent=J.element.t;
+}
+function repondre(f){
+  if(!J||J.fini) return;
+  const flash=document.getElementById('flash');
+  if(f===J.element.f){
+    J.serie++; J.score+=15+Math.round(J.reste*3);
+    flash.textContent='✅ Oui : '+J.element.exp;
+    flash.style.color='#4ade80';
+    J.duree=Math.max(4.2,J.duree-0.35);
+    majHUD(); nouvelElement();
+  } else {
+    J.vies--;
+    flash.textContent='❌ Non, c\u2019était '+NOMS_F[J.element.f]+' : '+J.element.exp;
+    flash.style.color='#f87171';
+    majHUD();
+    if(J.vies<=0) return finPartie('Le tri s\u2019arrête ! Retiens : les VUES dessinent, la COTE mesure, l\u2019ÉCHELLE convertit, le CARTOUCHE identifie.');
+    nouvelElement();
+  }
+}
+document.querySelectorAll('#choix button').forEach(b=>b.onclick=()=>repondre(b.dataset.f));
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('planrush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=15 ? '🏆 Dessinateur senior !' : '💥 Plan illisible !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Éléments classés : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').textContent='⏰ Trop lent ! C\u2019était '+NOMS_F[J.element.f]+' : '+J.element.exp;
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('Le chrono a gagné : un bon dessinateur reconnaît chaque élément du plan d\u2019un coup d\u2019œil !');
+    nouvelElement();
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

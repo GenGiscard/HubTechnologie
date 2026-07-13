@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 3ème — Éco-conception & cycle de vie · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#0d9488; --niv-fonce:#0f766e; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#f0fdfa;color:var(--niv-fonce)}
+nav.side a.actif{background:#ccfbf1;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:18px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:32px}
+.carte h3{font-size:16px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:13.5px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#f0fdfa;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.plus{color:var(--vert);font-weight:700}.moins{color:var(--rouge);font-weight:700}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%230d9488'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>La vie cachée des objets</a>
+  <a href="#s2"><span class="dot"></span>Les 5 étapes du cycle</a>
+  <a href="#s3"><span class="dot"></span>Le cycle du smartphone (animation)</a>
+  <a href="#s4"><span class="dot"></span>Où se cache l'impact ?</a>
+  <a href="#s5"><span class="dot"></span>Linéaire vs circulaire (animation)</a>
+  <a href="#s6"><span class="dot"></span>Éco-concevoir (animation)</a>
+  <a href="#s7"><span class="dot"></span>Les leviers de l'éco-conception</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 3ème · Séquence Éco-conception & cycle de vie</div>
+  <h1>♻️ Ton smartphone a déjà fait<br>4 fois le tour du monde</h1>
+  <p class="sous" style="margin-top:16px">Avant d'arriver dans ta poche, il a été <b>mine</b> au Congo, <b>usine</b> en Asie, <b>cargo</b> sur les océans.
+  Et il émettra l'essentiel de son CO₂… <b>avant même que tu l'allumes</b>. Pour comprendre — et réduire — l'impact d'un objet,
+  les ingénieurs analysent toute sa vie : c'est l'<b>Analyse du Cycle de Vie</b> (ACV).</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Les 5 étapes du cycle de vie</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#78350f"><div class="ic">⛏️</div><h3>1. Extraction</h3><p>Prélever les matières premières : minerais, pétrole, bois, eau…</p><span class="ex">mines de lithium, de cuivre</span></div>
+    <div class="carte" style="--accent:#0f766e"><div class="ic">🏭</div><h3>2. Fabrication</h3><p>Transformer les matières en composants, puis assembler.</p><span class="ex">usines d'écrans, de puces</span></div>
+    <div class="carte" style="--accent:#1d4ed8"><div class="ic">🚢</div><h3>3. Distribution</h3><p>Transporter et vendre : cargos, camions, entrepôts, magasins.</p><span class="ex">porte-conteneurs, livraison</span></div>
+    <div class="carte" style="--accent:#7c3aed"><div class="ic">📱</div><h3>4. Utilisation</h3><p>La vie chez toi : énergie consommée, recharges, entretien, réparations.</p><span class="ex">recharger chaque nuit</span></div>
+    <div class="carte" style="--accent:#16a34a"><div class="ic">♻️</div><h3>5. Fin de vie</h3><p>Réemploi, recyclage, valorisation… ou décharge.</p><span class="ex">borne DEEE, reconditionnement</span></div>
+  </div>
+</section>
+
+<section class="slide" id="s3">
+  <h2>Le cycle de vie du smartphone</h2>
+  <div class="animbox">
+    <canvas id="cvCycle" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capCycle"></div><button data-anim="cycle">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsCycle"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>Où se cache l'impact ?</h2>
+  <p class="sous">Surprise : l'étape la plus polluante n'est pas la même selon les objets !</p>
+  <table class="mat">
+    <tr><th>Objet</th><th>Étape la plus impactante</th><th>Pourquoi ?</th></tr>
+    <tr><td>📱 Smartphone</td><td class="moins">FABRICATION (~80 % du CO₂)</td><td>des dizaines de métaux, des usines très gourmandes</td></tr>
+    <tr><td>💡 Ampoule LED</td><td class="moins">UTILISATION</td><td>elle consomme de l'électricité pendant 15 000 h</td></tr>
+    <tr><td>👕 T-shirt en coton</td><td class="moins">EXTRACTION (culture)</td><td>~2 500 L d'eau pour le coton d'UN t-shirt</td></tr>
+    <tr><td>🚗 Voiture thermique</td><td class="moins">UTILISATION</td><td>le carburant brûlé pendant des années</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">Conclusion d'ingénieur : pour réduire l'impact, il faut d'abord savoir <b>OÙ il se trouve</b> — c'est exactement le rôle de l'ACV.</p>
+</section>
+
+<section class="slide" id="s5">
+  <h2>Ligne droite ou boucle ?</h2>
+  <div class="animbox">
+    <canvas id="cvBoucle" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capBoucle"></div><button data-anim="boucle">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsBoucle"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>Éco-concevoir : agir dès le bureau d'études</h2>
+  <div class="animbox">
+    <canvas id="cvEco" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capEco"></div><button data-anim="eco">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsEco"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>Les leviers de l'éco-conception</h2>
+  <table class="mat">
+    <tr><th>Levier</th><th>Exemple concret</th></tr>
+    <tr><td>🪶 <b>Alléger</b> (moins de matière)</td><td>bouteille passée de 30 g à 20 g de plastique</td></tr>
+    <tr><td>♻️ <b>Matériaux recyclés et recyclables</b></td><td>cadre en aluminium recyclé, mono-matériau facile à trier</td></tr>
+    <tr><td>🔧 <b>Durabilité & réparabilité</b></td><td>batterie remplaçable, pièces détachées dispo 10 ans, indice de réparabilité</td></tr>
+    <tr><td>🔋 <b>Sobriété d'usage</b></td><td>mode veille efficace, moteur à haut rendement</td></tr>
+    <tr><td>🚆 <b>Transport et emballage réduits</b></td><td>production locale, emballage carton minimal</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">➡️ Au <b>TP</b>, c'est toi le bureau d'études : éco-concevoir une trottinette avec un budget de leviers !</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>Le <b>cycle de vie</b> d'un objet compte 5 étapes : <b>extraction → fabrication → distribution → utilisation → fin de vie</b>. Chacune a un impact.</li>
+      <li>L'<b>ACV</b> (Analyse du Cycle de Vie) mesure ces impacts pour savoir OÙ agir : pour un smartphone, ~80 % du CO₂ vient de la <b>fabrication</b>.</li>
+      <li>L'économie <b>linéaire</b> (extraire → jeter) épuise les ressources ; l'économie <b>circulaire</b> reboucle la fin de vie vers la matière (recycler, réparer, réemployer).</li>
+      <li>L'<b>éco-conception</b> réduit l'impact dès le bureau d'études : alléger, matériaux recyclés, réparabilité, sobriété.</li>
+      <li>Le geste le plus efficace pour un smartphone : le <b>garder plus longtemps</b> — son impact de fabrication se répartit alors sur plus d'années.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function frame(ts){
+    if(etat.t0===null)etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){ if(etat.i<phases.length-1){etat.i++;etat.t0=ts;cap.textContent=phases[etat.i].caption;majPts();} else return; }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){cancelAnimationFrame(etat.raf);etat.i=0;etat.t0=null;
+    cap.textContent=phases[0].caption;majPts();etat.raf=requestAnimationFrame(frame);}
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption;majPts();phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#0f766e',taille=15){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+function etape(ctx,x,y,emoji,nom,coul,actif=false){
+  ctx.fillStyle=actif?'#f0fdfa':'#fff'; ctx.strokeStyle=coul; ctx.lineWidth=actif?4.5:3;
+  ctx.beginPath(); ctx.roundRect(x-52,y-34,104,68,13); ctx.fill(); ctx.stroke();
+  ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+  ctx.fillText(emoji,x,y+2);
+  etiquette(ctx,nom,x,y+24,coul,12.5);
+}
+function fleche(ctx,x1,y1,x2,y2,coul='#94a3b8'){
+  ctx.strokeStyle=coul; ctx.lineWidth=3.5;
+  const dx=x2-x1, dy=y2-y1, L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L;
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2-ux*12,y2-uy*12); ctx.stroke();
+  ctx.fillStyle=coul; ctx.save(); ctx.translate(x2,y2); ctx.rotate(Math.atan2(dy,dx));
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-13,-7); ctx.lineTo(-13,7); ctx.closePath(); ctx.fill(); ctx.restore();
+}
+
+/* ====== ANIM 1 : LE CYCLE DU SMARTPHONE ====== */
+const ETAPES_S=[
+ {x:110,y:110,e:'⛏️',n:'extraction',c:'#78350f',imp:'💨 mines, énergie'},
+ {x:310,y:110,e:'🏭',n:'fabrication',c:'#0f766e',imp:'💨💨💨 ~80 % du CO₂ !'},
+ {x:510,y:110,e:'🚢',n:'distribution',c:'#1d4ed8',imp:'💨 cargos, camions'},
+ {x:710,y:110,e:'📱',n:'utilisation',c:'#7c3aed',imp:'⚡ recharges'},
+ {x:410,y:280,e:'♻️',n:'fin de vie',c:'#16a34a',imp:'❓ recycler… ou jeter ?'},
+];
+function decorCycleS(ctx,actifs){
+  fleche(ctx,162,110,258,110); fleche(ctx,362,110,458,110); fleche(ctx,562,110,658,110);
+  fleche(ctx,690,144,470,262);
+  ETAPES_S.forEach((e,i)=>etape(ctx,e.x,e.y,e.e,e.n,e.c,actifs>i));
+}
+creerAnim('cycle','cvCycle','capCycle','ptsCycle',[
+ {dur:2800,caption:'STRUCTURE — Les 5 étapes de la vie d\u2019un smartphone, de la mine à la borne de recyclage.',
+  draw(ctx,p){ decorCycleS(ctx,0); }},
+ {dur:6000,caption:'ACTION — Suivons-le : à CHAQUE étape, des impacts s\u2019ajoutent (CO₂, eau, énergie). Regarde surtout la fabrication…',
+  draw(ctx,p){ const q=lisse(p)*5;
+    decorCycleS(ctx,Math.ceil(q));
+    ETAPES_S.forEach((e,i)=>{ if(q>i+0.4) etiquette(ctx,e.imp,e.x,e.y+58,'#dc2626',13); }); }},
+ {dur:4200,caption:'PROPRIÉTÉ — Pour un smartphone, l\u2019essentiel de l\u2019impact est émis AVANT le premier allumage : ~80 % à la fabrication. Le geste le plus écologique ? Le GARDER longtemps.',
+  draw(ctx,p){ decorCycleS(ctx,5);
+    ETAPES_S.forEach(e=>etiquette(ctx,e.imp,e.x,e.y+58,'#dc2626',13));
+    ctx.font='bold 19px Segoe UI'; ctx.fillStyle='#0f766e'; ctx.textAlign='center';
+    ctx.fillText('80 % du CO₂ émis avant même que tu l\u2019allumes',410,360); }},
+]);
+
+/* ====== ANIM 2 : LINÉAIRE vs CIRCULAIRE ====== */
+function decorLineaire(ctx,q){
+  etiquette(ctx,'ÉCONOMIE LINÉAIRE',200,40,'#dc2626',16);
+  etape(ctx,90,120,'⛏️','extraire','#78350f');
+  etape(ctx,220,120,'🏭','fabriquer','#0f766e');
+  etape(ctx,350,120,'📱','utiliser','#7c3aed');
+  fleche(ctx,142,120,166,120); fleche(ctx,272,120,296,120);
+  fleche(ctx,350,156,350,220);
+  // poubelle qui déborde
+  ctx.font='40px Segoe UI'; ctx.textAlign='center'; ctx.fillText('🗑️',350,280);
+  const n=Math.floor(q*6);
+  for(let k=0;k<n;k++){ ctx.font='18px Segoe UI'; ctx.fillText('🗑️',300+((k*53)%110),305+((k*29)%40)); }
+  etiquette(ctx,'ressources épuisées, déchets accumulés',220,368,'#dc2626',13.5);
+}
+function decorCirculaire(ctx,ang){
+  etiquette(ctx,'ÉCONOMIE CIRCULAIRE',610,40,'#16a34a',16);
+  const cx=610,cy=190,r=105;
+  ctx.strokeStyle='#16a34a'; ctx.lineWidth=4;
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,7); ctx.stroke();
+  const pos=[[cx,cy-r],[cx+r,cy],[cx,cy+r],[cx-r,cy]];
+  const noms=[['🏭','fabriquer'],['📱','utiliser'],['♻️','recycler'],['🔩','matière']];
+  pos.forEach(([x,y],i)=>{
+    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(x,y,32,0,7); ctx.fill();
+    ctx.strokeStyle='#16a34a'; ctx.lineWidth=3; ctx.stroke();
+    ctx.font='22px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000'; ctx.fillText(noms[i][0],x,y+7);
+    etiquette(ctx,noms[i][1],x,y+50,'#0f766e',12.5);
+  });
+  // point qui tourne
+  ctx.fillStyle='#ea580c';
+  ctx.beginPath(); ctx.arc(cx+r*Math.cos(ang),cy+r*Math.sin(ang),8,0,7); ctx.fill();
+}
+creerAnim('boucle','cvBoucle','capBoucle','ptsBoucle',[
+ {dur:2800,caption:'STRUCTURE — Deux modèles face à face : à gauche la ligne droite (extraire → jeter), à droite la boucle.',
+  draw(ctx,p){ decorLineaire(ctx,0); decorCirculaire(ctx,-Math.PI/2); }},
+ {dur:5200,caption:'ACTION — À gauche, chaque objet finit à la poubelle : les déchets s\u2019empilent et il faut TOUJOURS re-extraire. À droite, le point orange boucle : la fin de vie redevient MATIÈRE.',
+  draw(ctx,p){ const q=lisse(p);
+    decorLineaire(ctx,q); decorCirculaire(ctx,-Math.PI/2+q*Math.PI*3); }},
+ {dur:4200,caption:'PROPRIÉTÉ — L\u2019économie CIRCULAIRE réduit l\u2019extraction ET les déchets : recycler, réparer, réemployer, c\u2019est refermer la boucle. (Mais attention : recycler consomme aussi de l\u2019énergie — le mieux reste de consommer moins !)',
+  draw(ctx,p){ decorLineaire(ctx,1); decorCirculaire(ctx,-Math.PI/2+p*Math.PI*2); }},
+]);
+
+/* ====== ANIM 3 : ÉCO-CONCEPTION D'UNE BOUTEILLE ====== */
+const CRIT=[
+ {n:'matière utilisée',a:100,b:65},
+ {n:'CO₂ fabrication',a:100,b:55},
+ {n:'déchets générés',a:100,b:30},
+];
+function barresEco(ctx,q){
+  CRIT.forEach((c,i)=>{
+    const y=110+i*80;
+    etiquette(ctx,c.n,410,y-8,'#475569',14);
+    // bouteille classique
+    ctx.fillStyle='#fecaca'; ctx.fillRect(180,y,c.a*2*Math.min(1,q*1.4),22);
+    ctx.strokeStyle='#dc2626'; ctx.strokeRect(180,y,200,22);
+    if(q>0.5) etiquette(ctx,c.a+' %',180+c.a*2+30,y+16,'#dc2626',13);
+    // bouteille éco-conçue
+    ctx.fillStyle='#bbf7d0'; ctx.fillRect(440,y,c.b*2*Math.max(0,Math.min(1,(q-0.3)*1.4)),22);
+    ctx.strokeStyle='#16a34a'; ctx.strokeRect(440,y,200,22);
+    if(q>0.8) etiquette(ctx,c.b+' %',440+c.b*2+30,y+16,'#16a34a',13);
+  });
+  ctx.font='30px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText('🍾',255,70); ctx.fillText('🍃',540,70);
+  etiquette(ctx,'bouteille classique (30 g, plastique vierge)',255,86,'#dc2626',13.5);
+  etiquette(ctx,'éco-conçue (20 g, 50 % recyclé, consignée)',540,86,'#16a34a',13.5);
+}
+creerAnim('eco','cvEco','capEco','ptsEco',[
+ {dur:2800,caption:'STRUCTURE — Même besoin (contenir 1 L d\u2019eau), deux conceptions : la bouteille classique et sa version éco-conçue au bureau d\u2019études.',
+  draw(ctx,p){ barresEco(ctx,0); }},
+ {dur:5200,caption:'ACTION — Les barres d\u2019impact se remplissent : alléger (−33 % de matière), intégrer du plastique recyclé, prévoir la consigne… chaque choix de CONCEPTION fait baisser une barre.',
+  draw(ctx,p){ barresEco(ctx,lisse(p)); }},
+ {dur:4200,caption:'PROPRIÉTÉ — L\u2019éco-conception agit AVANT la fabrication : c\u2019est au bureau d\u2019études que 80 % de l\u2019impact d\u2019un produit se décide. Concevoir léger, recyclé, réparable = tout le cycle en profite.',
+  draw(ctx,p){ barresEco(ctx,1);
+    ctx.font='bold 19px Segoe UI'; ctx.fillStyle='#0f766e'; ctx.textAlign='center';
+    ctx.fillText('80 % de l\u2019impact d\u2019un produit se décide à sa conception',410,368); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s3:'cycle',s5:'boucle',s6:'eco'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

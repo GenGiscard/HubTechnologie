@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP 5ème — Alimente ta ville · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --cyan:#0e7490; --niv:#d97706; --niv-fonce:#b45309; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.tp{max-width:980px;margin:26px auto 6px;padding:0 20px}
+header.tp h1{font-size:32px;color:var(--cyan)}
+header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
+.progression{max-width:980px;margin:16px auto;padding:0 20px;display:flex;gap:8px;align-items:center}
+.progression .seg{flex:1;height:10px;border-radius:6px;background:#e2e8f0;transition:.3s}
+.progression .seg.ok{background:var(--vert)}
+.progression .seg.encours{background:var(--orange)}
+.progression .score{font-weight:800;color:var(--niv-fonce);font-size:15px;white-space:nowrap}
+.acti{max-width:980px;margin:22px auto;padding:0 20px;position:relative}
+.boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:24px;border-top:5px solid var(--cyan);position:relative}
+.boite h2{font-size:21px;color:var(--cyan);display:flex;align-items:center;gap:10px}
+.boite h2 .badge{background:var(--cyan);color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
+.verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
+.verrou .cadenas{font-size:42px}
+.tri{display:flex;flex-wrap:wrap;gap:10px}
+.tri .item{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px 14px;font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:10px}
+.tri .item .choix button{border:1.5px solid #cbd5e1;background:#fff;border-radius:8px;padding:5px 10px;font-size:12.5px;font-weight:700;cursor:pointer;margin-left:4px}
+.tri .item .choix button:hover{border-color:var(--vert)}
+.tri .item.bon{border-color:var(--vert);background:#f0fdf4}
+.tri .item.faux{border-color:var(--rouge);background:#fef2f2}
+.ordre{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.ordre button{border:2.5px solid var(--niv);background:#fff;border-radius:12px;padding:14px 16px;font-size:14.5px;font-weight:700;color:var(--niv-fonce);cursor:pointer;min-width:180px;text-align:left}
+.ordre button small{display:block;font-weight:500;color:var(--gris);margin-top:4px}
+.ordre button.pris{opacity:.35;cursor:default}
+.slots{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.slots .slot{min-width:150px;min-height:52px;border:2px dashed #cbd5e1;border-radius:12px;padding:8px 10px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--gris);text-align:center}
+.slots .slot.rempli{border-style:solid;border-color:var(--niv);color:var(--niv-fonce);background:#fffbeb}
+.slots .fl{font-size:20px;color:var(--orange);font-weight:800}
+.simu{display:grid;grid-template-columns:320px 1fr;gap:18px;margin-top:10px}
+.commandes{background:#f8fafc;border-radius:12px;padding:16px}
+.commandes h3{font-size:13px;color:var(--niv-fonce);text-transform:uppercase;letter-spacing:1px;margin:0 0 8px}
+.commandes label{display:block;font-size:13.5px;font-weight:700;margin:10px 0 3px}
+.commandes input[type=range]{width:100%}
+.commandes .val{color:var(--orange);font-weight:800}
+.meteo{background:#fffbeb;border:2px dashed var(--niv);border-radius:10px;padding:10px;font-size:14px;font-weight:800;color:var(--niv-fonce);text-align:center;margin-bottom:6px}
+canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;border-radius:12px;display:block}
+.btn{border:none;border-radius:10px;padding:11px 18px;font-size:15px;font-weight:800;cursor:pointer;color:#fff;background:var(--cyan)}
+.btn:hover{filter:brightness(1.08)}
+.btnrow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.verdict{margin-top:12px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:14.5px;display:none;line-height:1.55}
+.verdict.ok{display:block;background:#dcfce7;color:#14532d;border-left:5px solid var(--vert)}
+.verdict.ko{display:block;background:#fee2e2;color:#7f1d1d;border-left:5px solid var(--rouge)}
+.question{margin:14px 0;padding:14px;background:#f8fafc;border-radius:12px}
+.question .q{font-weight:700;margin-bottom:10px;font-size:15px}
+.rep{display:flex;flex-wrap:wrap;gap:8px}
+.rep button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 16px;font-size:14.5px;cursor:pointer;font-weight:600}
+.rep button:hover{border-color:var(--cyan)}
+.rep button.bon{background:#dcfce7;border-color:var(--vert)}
+.rep button.faux{background:#fee2e2;border-color:var(--rouge)}
+.codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#b45309,#0e7490);border-radius:14px;padding:22px;color:#fff}
+.codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
+.codefinal a{color:#fde68a;font-weight:800}
+@media (max-width:820px){.simu{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%230e7490'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="tp">
+  <h1>🏙️ TP — Alimente ta ville</h1>
+  <p>Tu diriges la production électrique de la ville d'Esticville. 5 missions progressives — à la fin : le code du jeu <b>Énergie Panic</b> !</p>
+</header>
+
+<div class="progression" id="prog">
+  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+</div>
+
+<!-- ============ A1 : TRI ============ -->
+<div class="acti" id="a1">
+ <div class="boite">
+  <h2><span class="badge">1</span>Renouvelable ou non ?</h2>
+  <div class="consigne">Avant de piloter la centrale, vérifions tes bases : pour chaque source, clique sur la bonne famille. Rappel : renouvelable = un flux qui revient ; non renouvelable = un stock qui s'épuise. (1 pt par bonne réponse du premier coup)</div>
+  <div class="tri" id="tri1"></div>
+ </div>
+</div>
+
+<!-- ============ A2 : CHAÎNE DU BARRAGE ============ -->
+<div class="acti" id="a2">
+ <div class="boite">
+  <h2><span class="badge">2</span>La chaîne du barrage</h2>
+  <div class="consigne">Le barrage d'Esticville vient d'être remis en route. Clique les 4 blocs <b>dans l'ordre</b> de la conversion d'énergie.</div>
+  <div class="ordre" id="blocs2"></div>
+  <div class="slots" id="slots2">
+    <div class="slot" data-i="0">1er</div><span class="fl">→</span>
+    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+    <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
+    <div class="slot" data-i="3">4ème</div>
+  </div>
+  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+  <div class="verdict" id="verd2"></div>
+ </div>
+</div>
+
+<!-- ============ A3 : MIX DE JOUR ============ -->
+<div class="acti" id="a3">
+ <div class="boite">
+  <h2><span class="badge">3</span>Mission 1 — Un mardi ensoleillé</h2>
+  <div class="consigne">🎯 <b>Cahier des charges :</b> couvrir la demande de la ville (<b>100 MW, à ±5 MW près</b>) avec <b>ZÉRO gaz</b> (0 g de CO₂).
+  Règle les curseurs : la production s'affiche en direct sur le tableau de bord. Météo du jour : grand soleil, vent moyen.</div>
+  <div class="simu">
+    <div class="commandes">
+      <div class="meteo" id="meteo3">☀️ Soleil 80 % · 💨 Vent 40 % · Demande : 100 MW</div>
+      <h3>⚙️ Ton parc de production</h3>
+      <label>💨 Éoliennes (3 MW chacune, selon le vent) : <span class="val" id="vEol">0</span></label>
+      <input type="range" id="sEol" min="0" max="20" value="0">
+      <label>☀️ Champs solaires (5 MW chacun, selon le soleil) : <span class="val" id="vSol">0</span></label>
+      <input type="range" id="sSol" min="0" max="15" value="0">
+      <label>💧 Barrage (pilotable) : <span class="val" id="vBar">0 MW</span></label>
+      <input type="range" id="sBar" min="0" max="30" value="0">
+      <label>⛽ Centrale à gaz (pilotable, mais CO₂ !) : <span class="val" id="vGaz">0 MW</span></label>
+      <input type="range" id="sGaz" min="0" max="80" value="0">
+      <div class="btnrow"><button class="btn" id="test3">✔ Valider mon mix — Mission 1</button></div>
+    </div>
+    <div>
+      <canvas class="simcv" id="cvVille" width="620" height="400"></canvas>
+      <div class="verdict" id="verd3"></div>
+    </div>
+  </div>
+ </div>
+</div>
+
+<!-- ============ A4 : NUIT SANS VENT ============ -->
+<div class="acti" id="a4">
+ <div class="boite">
+  <h2><span class="badge">4</span>Mission 2 — La nuit sans vent</h2>
+  <div class="consigne">⚠️ Alerte : il est 23 h, le vent est tombé. <b>Clique sur « Passer en scénario nuit »</b> : le tableau de bord ci-dessus bascule
+  (☀️ 0 % · 💨 10 % · demande <b>80 MW</b>). Couvre la demande à ±5 MW près… tu vas devoir faire des choix ! Puis valide.</div>
+  <div class="btnrow">
+    <button class="btn" style="background:#1e3a5f" id="nuit4">🌙 Passer en scénario nuit</button>
+    <button class="btn" id="test4">✔ Valider mon mix — Mission 2</button>
+  </div>
+  <div class="verdict" id="verd4"></div>
+ </div>
+</div>
+
+<!-- ============ A5 : BILAN ============ -->
+<div class="acti" id="a5">
+ <div class="boite">
+  <h2><span class="badge">5</span>Bilan d'ingénieur de l'énergie</h2>
+  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code du jeu.</div>
+  <div id="quiz5"></div>
+  <div class="codefinal" id="codefinal">
+    🏆 Esticville n'a jamais manqué d'électricité !
+    <div class="code">SOLEIL75</div>
+    <div>Entre ce code dans les jeux <a href="03_jeu_energie_panic.html">🎮 Énergie Panic</a> et <a href="03b_jeu_gardien_reseau.html">🕹️ Gardien du Réseau</a> pour les déverrouiller.</div>
+  </div>
+ </div>
+</div>
+
+<script>
+/* ================= ÉTAT & PROGRESSION ================= */
+const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
+function sauver(){ try{ localStorage.setItem('tp_energies_5e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_energies_5e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function majProgression(){
+  document.querySelectorAll('.progression .seg').forEach(seg=>{
+    const n=+seg.dataset.a;
+    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+  });
+  document.getElementById('scoreTot').textContent=etat.score;
+  for(let n=2;n<=5;n++){
+    const acti=document.getElementById('a'+n);
+    let v=acti.querySelector('.verrou');
+    if(n>etat.debloque){
+      if(!v){ v=document.createElement('div'); v.className='verrou';
+        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
+        acti.querySelector('.boite').appendChild(v); }
+    } else if(v) v.remove();
+  }
+}
+function reussir(n,pts){
+  etat.score+=pts;
+  if(etat.debloque===n) etat.debloque=n+1;
+  sauver(); majProgression();
+  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+}
+
+/* ================= A1 : TRI ================= */
+const ITEMS1=[
+ {n:'☀️ Le rayonnement du Soleil',t:'R'},{n:'🛢️ Le pétrole',t:'N'},
+ {n:'💨 Le vent',t:'R'},{n:'🪨 Le charbon',t:'N'},
+ {n:'💧 L\u2019eau des barrages',t:'R'},{n:'⚛️ L\u2019uranium',t:'N'},
+ {n:'🌊 Les marées',t:'R'},{n:'⛽ Le gaz naturel',t:'N'},
+];
+(function initA1(){
+  const zone=document.getElementById('tri1');
+  ITEMS1.forEach(it=>{
+    const d=document.createElement('div'); d.className='item';
+    d.innerHTML='<span>'+it.n+'</span><span class="choix"></span>';
+    const ch=d.querySelector('.choix');
+    let premier=true;
+    [['🌱 Renouvelable','R'],['⬇️ Non renouvelable','N']].forEach(([lbl,code])=>{
+      const b=document.createElement('button'); b.textContent=lbl;
+      b.onclick=()=>{
+        if(code===it.t){
+          d.classList.remove('faux'); d.classList.add('bon');
+          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+          etat.q1ok++;
+          if(etat.q1ok===ITEMS1.length) reussir(1,2);
+        } else { d.classList.add('faux'); premier=false; }
+      };
+      ch.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+/* ================= A2 : CHAÎNE DU BARRAGE ================= */
+const BLOCS2=[
+ {id:1,t:'💧 Eau en hauteur',s:'énergie mécanique stockée'},
+ {id:0,t:'🌀 Turbine',s:'l\u2019eau la fait tourner'},
+ {id:2,t:'🧲 Alternateur',s:'mécanique → électrique'},
+ {id:3,t:'🏙️ Ville alimentée',s:'l\u2019électricité arrive'},
+];
+const BON2=[1,0,2,3];
+let choix2=[], a2fait=false;
+function initA2(){
+  choix2=[];
+  const zone=document.getElementById('blocs2'); zone.innerHTML='';
+  BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
+    const btn=document.createElement('button');
+    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+    btn.onclick=()=>{
+      if(btn.classList.contains('pris')||choix2.length>=4) return;
+      btn.classList.add('pris'); choix2.push(b.id);
+      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+      slot.textContent=b.t; slot.classList.add('rempli');
+    };
+    zone.appendChild(btn);
+  });
+  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1er','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
+  document.getElementById('verd2').className='verdict';
+}
+document.getElementById('reset2').onclick=initA2;
+document.getElementById('verif2').onclick=()=>{
+  const verd=document.getElementById('verd2');
+  if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 blocs avant de vérifier !'; return; }
+  if(choix2.join()===BON2.join()){
+    verd.className='verdict ok';
+    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : mécanique (eau en hauteur) → turbine → alternateur → électricité pour la ville. (+3 pts)'; reussir(2,3); }
+    else verd.textContent='✅ Bon ordre !';
+  } else {
+    verd.className='verdict ko';
+    verd.textContent='❌ Ce n\u2019est pas le bon ordre. Souviens-toi de l\u2019animation du cours : tout part de l\u2019eau stockée en hauteur. Recommence !';
+  }
+};
+initA2();
+
+/* ================= SIMULATEUR DE MIX (A3 + A4) ================= */
+const scen={soleil:0.8, vent:0.4, demande:100, nom:'☀️ Soleil 80 % · 💨 Vent 40 % · Demande : 100 MW', nuit:false};
+const parc={eol:0,sol:0,bar:0,gaz:0};
+function production(){
+  return { eol:parc.eol*3*scen.vent, sol:parc.sol*5*scen.soleil, bar:parc.bar, gaz:parc.gaz };
+}
+function totalProd(){ const p=production(); return p.eol+p.sol+p.bar+p.gaz; }
+const cvV=document.getElementById('cvVille'), cV=cvV.getContext('2d');
+function dessinerVille(){
+  const W=cvV.width,H=cvV.height;
+  cV.clearRect(0,0,W,H);
+  // ciel
+  cV.fillStyle= scen.nuit? '#1e293b' : '#bfdbfe';
+  cV.fillRect(0,0,W,H-70);
+  cV.font='30px Segoe UI'; cV.textAlign='center';
+  cV.fillText(scen.nuit?'🌙':'☀️',50,50);
+  // sol
+  cV.fillStyle='#a3b18a'; cV.fillRect(0,H-70,W,70);
+  // éoliennes (max 5 dessinées, x nb)
+  const nEolDess=Math.min(5,parc.eol);
+  for(let k=0;k<nEolDess;k++){
+    const x=90+k*38;
+    cV.strokeStyle='#94a3b8'; cV.lineWidth=4;
+    cV.beginPath(); cV.moveTo(x,H-70); cV.lineTo(x,H-140); cV.stroke();
+    cV.save(); cV.translate(x,H-140);
+    cV.rotate(Date.now()/1000*scen.vent*4 + k);
+    cV.strokeStyle='#e2e8f0'; cV.lineWidth=3;
+    for(let j=0;j<3;j++){ cV.rotate(Math.PI*2/3); cV.beginPath(); cV.moveTo(0,0); cV.lineTo(0,-22); cV.stroke(); }
+    cV.restore();
+  }
+  if(parc.eol>0){ cV.font='bold 12px Segoe UI'; cV.fillStyle= scen.nuit?'#e2e8f0':'#334155'; cV.fillText('×'+parc.eol,160,H-150); }
+  // panneaux solaires
+  for(let k=0;k<Math.min(4,parc.sol);k++){
+    cV.fillStyle='#1e40af';
+    cV.save(); cV.translate(300+k*40,H-84); cV.transform(1,0,-0.4,1,0,0);
+    cV.fillRect(0,-22,32,22); cV.restore();
+  }
+  if(parc.sol>0){ cV.font='bold 12px Segoe UI'; cV.fillStyle= scen.nuit?'#e2e8f0':'#334155'; cV.fillText('×'+parc.sol,340,H-116); }
+  // barrage
+  if(parc.bar>0){
+    cV.fillStyle='#78716c'; cV.beginPath();
+    cV.moveTo(20,H-70); cV.lineTo(30,H-160); cV.lineTo(56,H-160); cV.lineTo(76,H-70); cV.closePath(); cV.fill();
+    cV.fillStyle='#38bdf8'; cV.fillRect(56,H-108,20,38);
+  }
+  // centrale gaz
+  if(parc.gaz>0){
+    cV.fillStyle='#57534e'; cV.fillRect(470,H-130,60,60);
+    cV.fillRect(485,H-160,14,32);
+    cV.fillStyle='rgba(120,113,108,.6)';
+    for(let k=0;k<3;k++) { const t=(Date.now()/900+k/3)%1;
+      cV.beginPath(); cV.arc(492+t*16,H-166-t*36,7+t*8,0,7); cV.fill(); }
+    cV.font='bold 12px Segoe UI'; cV.fillStyle= scen.nuit?'#fca5a5':'#7f1d1d'; cV.fillText('CO₂ !',540,H-150);
+  }
+  // ville : immeubles avec fenêtres selon couverture
+  const prod=totalProd(), couverture=Math.max(0,Math.min(1,prod/scen.demande));
+  const imm=[[560,H-190,34,120],[600,H-160,30,90],[636,H-210,36,140],[678,H-150,28,80]];
+  cV.fillStyle='#475569';
+  imm.forEach(([x,y,w,h])=>cV.fillRect(x,y,w,h));
+  let fen=0, fenTot=0;
+  imm.forEach(([x,y,w,h])=>{
+    for(let fy=y+8; fy<y+h-10; fy+=18) for(let fx=x+5; fx<x+w-8; fx+=13){
+      fenTot++;
+    }
+  });
+  let allumees=Math.round(fenTot*couverture);
+  imm.forEach(([x,y,w,h])=>{
+    for(let fy=y+8; fy<y+h-10; fy+=18) for(let fx=x+5; fx<x+w-8; fx+=13){
+      cV.fillStyle= (fen<allumees)? '#fde047' : '#1e293b'; fen++;
+      cV.fillRect(fx,fy,8,10);
+    }
+  });
+  // tableau de bord
+  const p=production();
+  cV.fillStyle='rgba(255,255,255,.94)'; cV.fillRect(12,10,270,138);
+  cV.strokeStyle='#cbd5e1'; cV.strokeRect(12,10,270,138);
+  cV.font='bold 13px Segoe UI'; cV.textAlign='left'; cV.fillStyle='#1e3a5f';
+  cV.fillText('TABLEAU DE BORD',24,30);
+  const lignes=[['💨 éolien',p.eol,'#0ea5e9'],['☀️ solaire',p.sol,'#d97706'],['💧 barrage',p.bar,'#1d4ed8'],['⛽ gaz',p.gaz,'#57534e']];
+  lignes.forEach(([n,v,c],i)=>{
+    cV.fillStyle='#334155'; cV.font='12px Segoe UI';
+    cV.fillText(n,24,52+i*19);
+    cV.fillStyle=c; cV.fillRect(100,43+i*19,Math.min(150,v*1.4),10);
+    cV.fillStyle='#334155'; cV.fillText(Math.round(v)+' MW',258-cV.measureText(Math.round(v)+' MW').width+0,52+i*19);
+  });
+  const ecart=prod-scen.demande;
+  cV.font='bold 14px Segoe UI';
+  cV.fillStyle= Math.abs(ecart)<=5 ? '#16a34a' : '#dc2626';
+  cV.fillText('TOTAL : '+Math.round(prod)+' / '+scen.demande+' MW '+(Math.abs(ecart)<=5?'✔':(ecart<0?'⚠ manque':'⚠ trop')),24,140);
+  // CO2
+  cV.font='bold 13px Segoe UI';
+  cV.fillStyle= p.gaz>0? '#dc2626':'#16a34a'; cV.textAlign='left';
+  cV.fillText('CO₂ : '+(p.gaz>0? Math.round(p.gaz*0.5)+' t/h 🏭' : '0 t/h 🌱'), 24, 164);
+}
+function boucleVille(){ dessinerVille(); requestAnimationFrame(boucleVille); }
+[['sEol','eol','vEol',v=>v],['sSol','sol','vSol',v=>v],['sBar','bar','vBar',v=>v+' MW'],['sGaz','gaz','vGaz',v=>v+' MW']].forEach(([id,cle,vid,fmt])=>{
+  document.getElementById(id).addEventListener('input',e=>{
+    parc[cle]=+e.target.value;
+    document.getElementById(vid).textContent=fmt(e.target.value);
+  });
+});
+let a3fait=false, a4fait=false;
+document.getElementById('test3').onclick=()=>{
+  const verd=document.getElementById('verd3');
+  if(scen.nuit){ verd.className='verdict ko'; verd.textContent='La mission 1 se joue en scénario JOUR : recharge la page pour y revenir.'; return; }
+  const prod=totalProd(), ecart=prod-scen.demande;
+  if(Math.abs(ecart)>5){
+    verd.className='verdict ko';
+    verd.innerHTML= ecart<0 ? '⚠️ Il manque '+Math.round(-ecart)+' MW : des quartiers sont dans le noir ! Augmente ta production.' :
+      '⚠️ Tu produis '+Math.round(ecart)+' MW de trop : de l\u2019énergie gaspillée (l\u2019électricité se stocke très mal). Réduis un curseur.';
+    return;
+  }
+  if(parc.gaz>0){
+    verd.className='verdict ko';
+    verd.innerHTML='🏭 La demande est couverte… mais ta centrale à gaz émet du CO₂ alors qu\u2019il y a du soleil et du vent GRATUITS dehors. Mets le gaz à zéro et compense !';
+    return;
+  }
+  verd.className='verdict ok';
+  verd.innerHTML='✅ 100 MW propres, 0 g de CO₂ : Esticville applaudit son ingénieur ! Retiens ce mix — il ne marchera pas toujours…'+(a3fait?'':' (+4 pts)');
+  if(!a3fait){ a3fait=true; reussir(3,4); }
+};
+document.getElementById('nuit4').onclick=()=>{
+  scen.soleil=0; scen.vent=0.1; scen.demande=80; scen.nuit=true;
+  scen.nom='🌙 Soleil 0 % · 💨 Vent 10 % · Demande : 80 MW';
+  document.getElementById('meteo3').textContent=scen.nom;
+};
+document.getElementById('test4').onclick=()=>{
+  const verd=document.getElementById('verd4');
+  if(!scen.nuit){ verd.className='verdict ko'; verd.textContent='Passe d\u2019abord en scénario nuit avec le bouton 🌙 !'; return; }
+  const p=production(), prod=totalProd(), ecart=prod-scen.demande;
+  if(Math.abs(ecart)>5){
+    verd.className='verdict ko';
+    verd.innerHTML= ecart<0 ? '⚠️ Il manque '+Math.round(-ecart)+' MW. Constate : tes panneaux produisent '+Math.round(p.sol)+' MW et tes éoliennes '+Math.round(p.eol)+' MW… La nuit sans vent, il faut des sources PILOTABLES.' :
+      '⚠️ '+Math.round(ecart)+' MW de trop : réduis un curseur.';
+    return;
+  }
+  verd.className='verdict ok';
+  verd.innerHTML='✅ 80 MW couverts en pleine nuit ! Tu as constaté le problème : solaire ≈ 0, éolien presque rien → ce sont le barrage'+(p.gaz>0?' et le gaz (avec son CO₂…)':'')+' qui ont sauvé la ville. C\u2019est ça, l\u2019INTERMITTENCE — et voilà pourquoi le mix énergétique et le stockage sont les grands défis de ton siècle.'+(a4fait?'':' (+4 pts)');
+  if(!a4fait){ a4fait=true; reussir(4,4); }
+};
+boucleVille();
+
+/* ================= A5 : BILAN ================= */
+const Q5=[
+ {q:"L'électricité est difficile à…", r:["transporter","stocker","mesurer"], b:1},
+ {q:"Dans le barrage, l'alternateur convertit l'énergie…", r:["mécanique en électrique","thermique en chimique","électrique en lumineuse"], b:0},
+ {q:"« Intermittent » signifie que la production…", r:["est constante jour et nuit","varie et peut tomber à zéro","est illimitée"], b:1},
+ {q:"La nuit sans vent, quelle source peut couvrir la demande ?", r:["les panneaux solaires","les éoliennes","le barrage (pilotable)"], b:2},
+];
+(function initQ5(){
+  const zone=document.getElementById('quiz5');
+  Q5.forEach((item,i)=>{
+    const d=document.createElement('div'); d.className='question';
+    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
+    const rep=d.querySelector('.rep');
+    item.r.forEach((r,k)=>{
+      const b=document.createElement('button'); b.textContent=r;
+      b.onclick=()=>{
+        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
+        etat.q5rep++;
+        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
+        if(etat.q5rep===Q5.length){
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          else{
+            const verd=document.createElement('div'); verd.className='verdict ko';
+            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
+            zone.appendChild(verd);
+          }
+        }
+      };
+      rep.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+charger(); majProgression();
+</script>
+</body>
+</html>

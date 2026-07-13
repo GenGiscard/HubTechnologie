@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Signal Rush — Technologie 4ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#a78bfa; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+#scene{position:relative}
+canvas{background:linear-gradient(#312e81 0%,#0f172a 65%);border:3px solid #334155;border-radius:14px;display:block}
+.hud{display:flex;gap:22px;margin:10px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+.actionneurs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:460px;margin-top:10px}
+.actionneurs button{border:2px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:12px;padding:12px 6px;font-size:14px;font-weight:800;cursor:pointer;transition:.1s}
+.actionneurs button:hover{border-color:var(--neon)}
+.actionneurs button:active{transform:scale(.95)}
+.actionneurs button .k{display:block;font-size:11px;color:#64748b;margin-top:3px}
+.actionneurs button .ic{font-size:24px;display:block}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.93);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center}
+.overlay h2{color:var(--neon);font-size:26px}
+.overlay p{color:#cbd5e1;font-size:15px;max-width:380px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.overlay button:hover{filter:brightness(1.1)}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+.qbox{background:#1e293b;border:2px solid var(--or);border-radius:14px;padding:18px;max-width:400px}
+.qbox .q{font-weight:800;color:#fff;margin-bottom:12px;font-size:15.5px}
+.qbox button{display:block;width:100%;margin:7px 0;padding:11px;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:14.5px;font-weight:700;cursor:pointer}
+.qbox button:hover{border-color:var(--neon)}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23a78bfa'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>⚡ SIGNAL RUSH</h1>
+<div class="sous">Les capteurs envoient leurs signaux : déclenche le BON actionneur avant l'impact !</div>
+
+<div class="hud">
+  <div>Vague : <span class="v" id="hVague">1</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <canvas id="cv" width="460" height="430"></canvas>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Centrale verrouillée</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Maison connectée</b> pour activer la centrale domotique.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Prêt, domoticien ?</h2>
+    <p>Des <b>signaux de capteurs</b> tombent du haut de l'écran.<br>
+    Clique sur le bon <b>actionneur</b> (ou touches <b>1-2-3-4</b>) avant que le signal ne touche le bas.<br>
+    Mauvais actionneur ou signal manqué = une vie en moins !<br>
+    Entre les vagues : question bonus pour regagner une vie. 🧠</p>
+    <button id="btnGo">🚀 Démarrer</button>
+  </div>
+
+  <div class="overlay cache" id="ovQuestion">
+    <div class="qbox" id="qbox"></div>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Centrale HS !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<div class="actionneurs">
+  <button data-a="lampe"><span class="ic">💡</span>LAMPE<span class="k">touche 1</span></button>
+  <button data-a="chauffage"><span class="ic">🔥</span>CHAUFFAGE<span class="k">touche 2</span></button>
+  <button data-a="volet"><span class="ic">🪟</span>VOLET<span class="k">touche 3</span></button>
+  <button data-a="alarme"><span class="ic">🔔</span>ALARME<span class="k">touche 4</span></button>
+</div>
+
+<footer>Jeu de révision · Séquence Domotique & Objets connectés · 4ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='MAISON24';
+function dejaOuvert(){ try{ return localStorage.getItem('signalrush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('signalrush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ================== SIGNAUX (capteur → actionneur attendu) ================== */
+const SIGNAUX=[
+ {t:'🌙 La nuit tombe (lum. 12 %)', a:'lampe'},
+ {t:'🌑 Luminosité < 30 %', a:'lampe'},
+ {t:'🥶 Température : 14 °C', a:'chauffage'},
+ {t:'🌡️ Temp. sous la consigne (17 °C)', a:'chauffage'},
+ {t:'☀️ Soleil brûlant sur la baie vitrée', a:'volet'},
+ {t:'🌙 Nuit : il faut occulter la chambre', a:'volet'},
+ {t:'🚪 Porte ouverte… maison vide !', a:'alarme'},
+ {t:'🚶 Mouvement détecté à 3 h du matin', a:'alarme'},
+ {t:'💨 Vent violent annoncé sur la véranda', a:'volet'},
+ {t:'🔦 Coupure de courant, il fait noir', a:'lampe'},
+];
+const QUESTIONS=[
+ {q:"Le capteur assure la fonction…", r:["AGIR","ACQUÉRIR","CONVERTIR"], b:1},
+ {q:"Dans la chaîne d'énergie, le moteur…", r:["convertit l'énergie","acquiert l'information","traite le programme"], b:0},
+ {q:"SI lum < 30 ALORS lampe ON. À 50 % de luminosité :", r:["la lampe s'allume","la condition est fausse","le capteur casse"], b:1},
+ {q:"Le Bluetooth a une portée d'environ…", r:["10 m","10 km","1 000 km"], b:0},
+ {q:"La carte programmable est le… de la maison", r:["muscle","cerveau","squelette"], b:1},
+ {q:"Un détecteur de fumée est…", r:["un actionneur","un capteur","une énergie"], b:1},
+];
+
+/* ================== JEU ================== */
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+const W=cv.width, H=cv.height;
+let J=null, record=0;
+try{ record=+localStorage.getItem('signalrush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={vague:1,score:0,vies:3,actifs:[],aTomber:0,vitesse:0.65,restants:6,combo:0,fini:false,enQuestion:false,qUtil:[]};
+  majHUD(); planifierVague();
+}
+function majHUD(){
+  document.getElementById('hVague').textContent=J.vague;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function planifierVague(){ J.restants=5+J.vague; J.aTomber=40; }
+
+function apparaitre(){
+  const s=SIGNAUX[Math.floor(Math.random()*SIGNAUX.length)];
+  J.actifs.push({t:s.t,a:s.a,y:-20,x:W/2});
+  J.restants--;
+}
+function toucher(act){
+  if(!J||J.fini||J.enQuestion||J.actifs.length===0) return;
+  // le signal le plus bas est la cible
+  const cible=J.actifs.reduce((m,s)=>s.y>m.y?s:m,J.actifs[0]);
+  if(cible.a===act){
+    J.combo++; J.score+=10+J.combo*2;
+    flash={t:'✅ +'+(10+J.combo*2)+(J.combo>2?' (combo x'+J.combo+')':''),c:'#4ade80',n:50};
+    J.actifs.splice(J.actifs.indexOf(cible),1);
+  } else {
+    J.combo=0; J.vies--; flash={t:'❌ Mauvais actionneur !',c:'#f87171',n:60};
+    J.actifs.splice(J.actifs.indexOf(cible),1);
+    if(J.vies<=0) return finPartie('Trop d\u2019erreurs : la maison a pris le contrôle… 🤖');
+  }
+  majHUD();
+  verifVague();
+}
+function verifVague(){
+  if(J.restants<=0 && J.actifs.length===0 && !J.fini){
+    J.vague++; J.vitesse+=0.22;
+    majHUD(); poserQuestion();
+  }
+}
+document.querySelectorAll('.actionneurs button').forEach(b=>b.addEventListener('click',()=>toucher(b.dataset.a)));
+document.addEventListener('keydown',e=>{
+  const map={'1':'lampe','2':'chauffage','3':'volet','4':'alarme'};
+  if(map[e.key]) toucher(map[e.key]);
+});
+
+function poserQuestion(){
+  J.enQuestion=true;
+  let dispo=QUESTIONS.map((_,i)=>i).filter(i=>!J.qUtil.includes(i));
+  if(dispo.length===0){ J.qUtil=[]; dispo=QUESTIONS.map((_,i)=>i); }
+  const qi=dispo[Math.floor(Math.random()*dispo.length)]; J.qUtil.push(qi);
+  const q=QUESTIONS[qi], box=document.getElementById('qbox');
+  box.innerHTML='<div class="q">🧠 VAGUE '+J.vague+' — '+q.q+'</div>';
+  q.r.forEach((rep,k)=>{
+    const b=document.createElement('button'); b.textContent=rep;
+    b.onclick=()=>{
+      document.getElementById('ovQuestion').classList.add('cache');
+      J.enQuestion=false;
+      if(k===q.b){ J.score+=30; if(J.vies<3) J.vies++;
+        flash={t:'✅ +30 pts, vie récupérée !',c:'#4ade80',n:70}; }
+      else flash={t:'❌ Réponse : '+q.r[q.b],c:'#f87171',n:80};
+      majHUD(); planifierVague();
+    };
+    box.appendChild(b);
+  });
+  document.getElementById('ovQuestion').classList.remove('cache');
+}
+
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('signalrush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent = J.vague>=5 ? '🏆 Domoticien d\u2019élite !' : '💥 Centrale HS !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Vague atteinte : <b>'+J.vague+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+
+let flash=null;
+function boucle(){
+  requestAnimationFrame(boucle);
+  if(!J) return;
+  ctx.clearRect(0,0,W,H);
+  // circuit imprimé décoratif
+  ctx.strokeStyle='rgba(167,139,250,.15)'; ctx.lineWidth=2;
+  for(let k=0;k<6;k++){ ctx.beginPath(); ctx.moveTo(0,70*k+20); ctx.lineTo(W,70*k+20); ctx.stroke(); }
+  // ligne d'impact
+  ctx.strokeStyle='#f87171'; ctx.setLineDash([8,6]);
+  ctx.beginPath(); ctx.moveTo(0,H-26); ctx.lineTo(W,H-26); ctx.stroke(); ctx.setLineDash([]);
+  ctx.font='11px Segoe UI'; ctx.fillStyle='#f87171'; ctx.textAlign='left';
+  ctx.fillText('ZONE D\u2019IMPACT',8,H-8);
+  if(!J.fini && !J.enQuestion){
+    if(J.restants>0){ J.aTomber--; if(J.aTomber<=0){ apparaitre(); J.aTomber=Math.max(55, 120-J.vague*8); } }
+    for(const s of [...J.actifs]){
+      s.y+=J.vitesse;
+      if(s.y>=H-30){
+        J.actifs.splice(J.actifs.indexOf(s),1);
+        J.combo=0; J.vies--; flash={t:'💥 Signal manqué !',c:'#f87171',n:60}; majHUD();
+        if(J.vies<=0){ finPartie('Un signal capté mais jamais traité, la maison est restée dans le noir…'); break; }
+        verifVague();
+      }
+    }
+  }
+  // dessiner signaux (carte la plus basse = cible surlignée)
+  let plusBas=null; J.actifs.forEach(s=>{ if(!plusBas||s.y>plusBas.y) plusBas=s; });
+  J.actifs.forEach(s=>{
+    const cible=(s===plusBas);
+    ctx.fillStyle= cible?'#312e81':'#1e293b';
+    ctx.strokeStyle= cible?'#a78bfa':'#475569'; ctx.lineWidth= cible?3:2;
+    const w=330,h=40,x=s.x-w/2;
+    ctx.beginPath(); ctx.roundRect(x,s.y,w,h,10); ctx.fill(); ctx.stroke();
+    ctx.font='bold 14px Segoe UI'; ctx.fillStyle='#e2e8f0'; ctx.textAlign='center';
+    ctx.fillText(s.t, s.x, s.y+25);
+  });
+  if(flash&&flash.n>0){ flash.n--;
+    ctx.font='bold 17px Segoe UI'; ctx.fillStyle=flash.c; ctx.textAlign='center';
+    ctx.fillText(flash.t, W/2, 40); }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+boucle();
+</script>
+</body>
+</html>

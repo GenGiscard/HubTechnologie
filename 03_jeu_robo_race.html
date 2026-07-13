@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Robo Race — Technologie 3ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#2dd4bf; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+#scene{position:relative}
+canvas{background:linear-gradient(#134e4a 0%,#0f172a 70%);border:3px solid #334155;border-radius:14px;display:block;touch-action:none}
+.hud{display:flex;gap:22px;margin:10px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.93);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center}
+.overlay h2{color:var(--neon);font-size:26px}
+.overlay p{color:#cbd5e1;font-size:15px;max-width:380px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.overlay button:hover{filter:brightness(1.1)}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+.qbox{background:#1e293b;border:2px solid var(--or);border-radius:14px;padding:18px;max-width:400px}
+.qbox .q{font-weight:800;color:#fff;margin-bottom:12px;font-size:15.5px}
+.qbox button{display:block;width:100%;margin:7px 0;padding:11px;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:14.5px;font-weight:700;cursor:pointer}
+.qbox button:hover{border-color:var(--neon)}
+.touches{display:flex;gap:10px;margin-top:10px}
+.touches button{border:2px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:12px;padding:12px 34px;font-size:22px;font-weight:900;cursor:pointer}
+.touches button:active{transform:scale(.94);border-color:var(--neon)}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%232dd4bf'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🤖 ROBO RACE</h1>
+<div class="sous">Esquive les caisses · ramasse les boulons · révise le brevet entre deux niveaux !</div>
+
+<div class="hud">
+  <div>Niveau : <span class="v" id="hNiv">1</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <canvas id="cv" width="420" height="520"></canvas>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Piste verrouillée</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Pilote ton robot</b> pour accéder à la piste d'assemblage.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Moteurs chauds ?</h2>
+    <p>Ton robot avance tout seul (comme un vrai : il exécute !).<br>
+    Change de voie avec <b>← →</b> ou les boutons.<br>
+    🔩 Boulon = +15 pts · 📦 Caisse = une vie en moins.<br>
+    Tous les 400 m : question de révision brevet, bonne réponse = vie récupérée ! 🧠</p>
+    <button id="btnGo">🏁 Départ</button>
+  </div>
+
+  <div class="overlay cache" id="ovQuestion">
+    <div class="qbox" id="qbox"></div>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Robot en panne !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<div class="touches">
+  <button id="tG">←</button>
+  <button id="tD">→</button>
+</div>
+
+<footer>Jeu de révision brevet · Séquence Robotique & Projet · 3ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='ROBOT26';
+function dejaOuvert(){ try{ return localStorage.getItem('roborace_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('roborace_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ================== QUESTIONS RÉVISION BREVET (cycle 4) ================== */
+const QUESTIONS=[
+ {q:"La boucle « répéter 5 fois » sert à…", r:["éviter de recopier le code","accélérer le robot","charger la batterie"], b:0},
+ {q:"SI obstacle ALORS tourner : c'est…", r:["une séquence","une condition","une boucle"], b:1},
+ {q:"Le capteur ultrason d'un robot mesure…", r:["une distance","une couleur","un poids"], b:0},
+ {q:"« Autonomie ≥ 4 h » dans un cahier des charges est…", r:["une fonction d'usage","un critère chiffré","un croquis"], b:1},
+ {q:"Dans la chaîne d'information : acquérir, traiter…", r:["communiquer","convertir","alimenter"], b:0},
+ {q:"Le moteur d'un robot est…", r:["un capteur","un actionneur","un algorithme"], b:1},
+ {q:"Un algorithme est…", r:["une suite d'instructions ordonnées","un composant électronique","un type de moteur"], b:0},
+ {q:"Le triangle est une figure…", r:["déformable","indéformable","élastique"], b:1},
+ {q:"Dans le béton armé, l'acier résiste à…", r:["la traction","la compression","la lumière"], b:0},
+ {q:"Un objet connecté communique le plus souvent…", r:["par ondes radio (sans fil)","par câble en cuivre uniquement","par la poste"], b:0},
+ {q:"Le prototype sert à…", r:["tester les solutions avant la série","décorer l'atelier","remplacer le cahier des charges"], b:0},
+ {q:"Après un test raté, on doit…", r:["abandonner le projet","améliorer et retester","cacher le résultat"], b:1},
+];
+
+/* ================== JEU ================== */
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+const W=cv.width, H=cv.height;
+const VOIES=[W/2-120,W/2,W/2+120];
+let J=null, record=0;
+try{ record=+localStorage.getItem('roborace_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={voie:1, x:VOIES[1], niveau:1, score:0, vies:3, dist:0, prochainQuiz:400,
+     objets:[], aTomber:30, vitesse:2.6, fini:false, enQuestion:false, qUtil:[], defil:0};
+  majHUD();
+}
+function majHUD(){
+  document.getElementById('hNiv').textContent=J.niveau;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function bouger(dir){ if(!J||J.fini||J.enQuestion) return; J.voie=Math.max(0,Math.min(2,J.voie+dir)); }
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'){e.preventDefault();bouger(-1);}
+  if(e.key==='ArrowRight'){e.preventDefault();bouger(1);}
+});
+document.getElementById('tG').onclick=()=>bouger(-1);
+document.getElementById('tD').onclick=()=>bouger(1);
+cv.addEventListener('pointerdown',e=>{
+  const r=cv.getBoundingClientRect();
+  bouger((e.clientX-r.left)<r.width/2?-1:1);
+});
+
+function apparaitre(){
+  const voie=Math.floor(Math.random()*3);
+  const boulon=Math.random()<0.42;
+  J.objets.push({voie, y:-40, boulon});
+  // parfois une 2ème caisse sur une autre voie (jamais les 3 !)
+  if(!boulon && Math.random()<0.35+J.niveau*0.04){
+    let v2=(voie+1+Math.floor(Math.random()*2))%3;
+    J.objets.push({voie:v2, y:-40, boulon:false});
+  }
+}
+function poserQuestion(){
+  J.enQuestion=true;
+  let dispo=QUESTIONS.map((_,i)=>i).filter(i=>!J.qUtil.includes(i));
+  if(dispo.length===0){ J.qUtil=[]; dispo=QUESTIONS.map((_,i)=>i); }
+  const qi=dispo[Math.floor(Math.random()*dispo.length)]; J.qUtil.push(qi);
+  const q=QUESTIONS[qi], box=document.getElementById('qbox');
+  box.innerHTML='<div class="q">🧠 STAND DE RÉVISION — '+q.q+'</div>';
+  q.r.forEach((rep,k)=>{
+    const b=document.createElement('button'); b.textContent=rep;
+    b.onclick=()=>{
+      document.getElementById('ovQuestion').classList.add('cache');
+      J.enQuestion=false;
+      if(k===q.b){ J.score+=40; if(J.vies<3) J.vies++;
+        flash={t:'✅ +40 pts, vie récupérée !',c:'#4ade80',n:70}; }
+      else flash={t:'❌ Réponse : '+q.r[q.b],c:'#f87171',n:80};
+      majHUD();
+    };
+    box.appendChild(b);
+  });
+  document.getElementById('ovQuestion').classList.remove('cache');
+}
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('roborace_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent = J.niveau>=5 ? '🏆 Pilote d\u2019usine !' : '💥 Robot en panne !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Niveau : <b>'+J.niveau+'</b> · Distance : <b>'+Math.floor(J.dist)+' m</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+
+let flash=null;
+function boucle(){
+  requestAnimationFrame(boucle);
+  if(!J) return;
+  ctx.clearRect(0,0,W,H);
+  // piste
+  ctx.fillStyle='#1e293b'; ctx.fillRect(W/2-180,0,360,H);
+  ctx.strokeStyle='#334155'; ctx.lineWidth=3;
+  [W/2-60,W/2+60].forEach(x=>{
+    ctx.setLineDash([18,16]); ctx.lineDashOffset=-J.defil;
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); ctx.setLineDash([]);
+  });
+  ctx.strokeStyle='#2dd4bf'; ctx.lineWidth=4;
+  ctx.beginPath(); ctx.moveTo(W/2-180,0); ctx.lineTo(W/2-180,H); ctx.moveTo(W/2+180,0); ctx.lineTo(W/2+180,H); ctx.stroke();
+
+  if(!J.fini && !J.enQuestion){
+    J.defil=(J.defil+J.vitesse)%34;
+    J.dist+=J.vitesse*0.28;
+    // niveaux
+    const niv=1+Math.floor(J.dist/500);
+    if(niv!==J.niveau){ J.niveau=niv; J.vitesse+=0.5; majHUD();
+      flash={t:'⚙️ NIVEAU '+niv+' — la chaîne accélère !',c:'#2dd4bf',n:70}; }
+    // quiz tous les 400 m
+    if(J.dist>=J.prochainQuiz){ J.prochainQuiz+=400; poserQuestion(); }
+    // apparitions
+    J.aTomber--;
+    if(J.aTomber<=0){ apparaitre(); J.aTomber=Math.max(34, 78-J.niveau*6); }
+    // déplacement objets + collisions
+    for(const o of [...J.objets]){
+      o.y+=J.vitesse;
+      if(o.y>H+40){ J.objets.splice(J.objets.indexOf(o),1); continue; }
+      if(o.voie===J.voie && o.y>H-118 && o.y<H-52){
+        J.objets.splice(J.objets.indexOf(o),1);
+        if(o.boulon){ J.score+=15; flash={t:'🔩 +15',c:'#4ade80',n:30}; }
+        else { J.vies--; flash={t:'💥 Caisse percutée !',c:'#f87171',n:60};
+          if(J.vies<=0){ majHUD(); finPartie('Trop de collisions : le robot n\u2019exécutait pourtant que TES ordres… 😉'); }
+        }
+        majHUD();
+      }
+    }
+  }
+  // robot (lissage latéral)
+  J.x += (VOIES[J.voie]-J.x)*0.25;
+  const ry=H-84;
+  ctx.save(); ctx.translate(J.x,ry);
+  ctx.fillStyle='#0f766e'; ctx.beginPath(); ctx.roundRect(-26,-30,52,60,10); ctx.fill();
+  ctx.fillStyle='#fbbf24'; ctx.beginPath(); ctx.moveTo(-14,-30); ctx.lineTo(0,-46); ctx.lineTo(14,-30); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(-9,-12,5,0,7); ctx.arc(9,-12,5,0,7); ctx.fill();
+  ctx.fillStyle='#134e4a'; ctx.fillRect(-30,-18,6,36); ctx.fillRect(24,-18,6,36);
+  ctx.restore();
+  // objets
+  J.objets.forEach(o=>{
+    const x=VOIES[o.voie];
+    if(o.boulon){ ctx.font='30px Segoe UI'; ctx.textAlign='center'; ctx.fillText('🔩',x,o.y); }
+    else {
+      ctx.fillStyle='#92400e'; ctx.fillRect(x-26,o.y-26,52,52);
+      ctx.strokeStyle='#78350f'; ctx.lineWidth=3; ctx.strokeRect(x-26,o.y-26,52,52);
+      ctx.beginPath(); ctx.moveTo(x-26,o.y-26); ctx.lineTo(x+26,o.y+26);
+      ctx.moveTo(x+26,o.y-26); ctx.lineTo(x-26,o.y+26); ctx.stroke();
+    }
+  });
+  // distance
+  ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#94a3b8'; ctx.textAlign='left';
+  ctx.fillText(Math.floor(J.dist)+' m', 12, 22);
+  if(flash&&flash.n>0){ flash.n--;
+    ctx.font='bold 17px Segoe UI'; ctx.fillStyle=flash.c; ctx.textAlign='center';
+    ctx.fillText(flash.t, W/2, 52); }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+boucle();
+</script>
+</body>
+</html>

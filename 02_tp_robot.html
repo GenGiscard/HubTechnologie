@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP 3ème — Pilote ton robot · ESTIC</title>
+<style>
+:root{
+  --ink:#1e3a5f; --teal:#0f766e; --teal-fonce:#115e59; --bleu:#1d4ed8; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
+  --ombre:0 4px 14px rgba(30,58,95,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--bleu);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--teal-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.tp{max-width:980px;margin:26px auto 6px;padding:0 20px}
+header.tp h1{font-size:32px;color:var(--bleu)}
+header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
+.progression{max-width:980px;margin:16px auto;padding:0 20px;display:flex;gap:8px;align-items:center}
+.progression .seg{flex:1;height:10px;border-radius:6px;background:#e2e8f0;transition:.3s}
+.progression .seg.ok{background:var(--vert)}
+.progression .seg.encours{background:var(--orange)}
+.progression .score{font-weight:800;color:var(--teal-fonce);font-size:15px;white-space:nowrap}
+.acti{max-width:980px;margin:22px auto;padding:0 20px;position:relative}
+.boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:24px;border-top:5px solid var(--bleu);position:relative}
+.boite h2{font-size:21px;color:var(--bleu);display:flex;align-items:center;gap:10px}
+.boite h2 .badge{background:var(--bleu);color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.boite .consigne{margin:10px 0 16px;font-size:15px;background:#eff6ff;border-left:4px solid var(--bleu);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
+.verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
+.verrou .cadenas{font-size:42px}
+/* A1 tri 3 familles */
+.cdc .item{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px 14px;font-size:14.5px;font-weight:600;margin:8px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cdc .item .choix{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.cdc .item .choix button{border:1.5px solid #cbd5e1;background:#fff;border-radius:8px;padding:5px 10px;font-size:12.5px;font-weight:700;cursor:pointer}
+.cdc .item .choix button:hover{border-color:var(--teal)}
+.cdc .item.bon{border-color:var(--vert);background:#f0fdf4}
+.cdc .item.faux{border-color:var(--rouge);background:#fef2f2}
+/* Simulateur */
+.simu{display:grid;grid-template-columns:300px 1fr;gap:18px;margin-top:10px}
+.commandes{background:#f8fafc;border-radius:12px;padding:16px}
+.commandes h3{font-size:13px;color:var(--teal-fonce);text-transform:uppercase;letter-spacing:1px;margin:0 0 8px}
+.palette{display:flex;gap:8px;flex-wrap:wrap}
+.palette button{border:2px solid var(--teal);background:#fff;color:var(--teal-fonce);border-radius:10px;padding:9px 12px;font-size:14px;font-weight:800;cursor:pointer}
+.palette button:hover{background:#f0fdfa}
+.prog{margin-top:12px;background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:10px;min-height:64px;max-height:220px;overflow:auto}
+.prog .ligne{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--teal-fonce);padding:4px 6px;border-radius:7px}
+.prog .ligne.exec{background:#fef3c7}
+.prog .ligne .n{color:#94a3b8;width:20px;text-align:right}
+.prog .vide{color:#94a3b8;font-size:13px;font-weight:600}
+.boucleN{display:flex;align-items:center;gap:8px;margin:10px 0 4px;font-weight:800;color:var(--orange);font-size:14px}
+.boucleN select{padding:5px;border-radius:8px;border:1.5px solid #cbd5e1;font-weight:700}
+.policy{margin-top:10px;font-size:14px;font-weight:800;color:var(--teal-fonce);line-height:2.1}
+.policy select{padding:6px;border-radius:8px;border:2px solid var(--teal);font-weight:700;font-size:13.5px;font-family:inherit}
+.btn{border:none;border-radius:10px;padding:11px 18px;font-size:15px;font-weight:800;cursor:pointer;color:#fff;background:var(--bleu)}
+.btn:hover{filter:brightness(1.08)}
+.btn.gris{background:#64748b}.btn.vert{background:var(--vert)}
+.btnrow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;border-radius:12px;display:block}
+.verdict{margin-top:12px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:14.5px;display:none;line-height:1.5}
+.verdict.ok{display:block;background:#dcfce7;color:#14532d;border-left:5px solid var(--vert)}
+.verdict.ko{display:block;background:#fee2e2;color:#7f1d1d;border-left:5px solid var(--rouge)}
+/* QCM */
+.question{margin:14px 0;padding:14px;background:#f8fafc;border-radius:12px}
+.question .q{font-weight:700;margin-bottom:10px;font-size:15px}
+.rep{display:flex;flex-wrap:wrap;gap:8px}
+.rep button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 16px;font-size:14.5px;cursor:pointer;font-weight:600}
+.rep button:hover{border-color:var(--bleu)}
+.rep button.bon{background:#dcfce7;border-color:var(--vert)}
+.rep button.faux{background:#fee2e2;border-color:var(--rouge)}
+.codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#115e59,#1d4ed8);border-radius:14px;padding:22px;color:#fff}
+.codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
+.codefinal a{color:#fde68a;font-weight:800}
+@media (max-width:820px){.simu{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%231d4ed8'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="tp">
+  <h1>🤖 TP — Pilote ton robot</h1>
+  <p>5 missions progressives sur le simulateur. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Robo Race</b> !</p>
+</header>
+
+<div class="progression" id="prog">
+  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+</div>
+
+<!-- ============ A1 : CAHIER DES CHARGES ============ -->
+<div class="acti" id="a1">
+ <div class="boite">
+  <h2><span class="badge">1</span>Décoder le cahier des charges</h2>
+  <div class="consigne">Voici des extraits du cahier des charges d'un <b>robot livreur de plateaux pour la cantine</b>.
+  Classe chaque phrase : <b>fonction d'usage</b>, <b>contrainte</b> ou <b>critère chiffré</b>. (1 pt par bonne réponse du premier coup)</div>
+  <div class="cdc" id="cdc1"></div>
+ </div>
+</div>
+
+<!-- ============ A2 : MISSION SÉQUENCE ============ -->
+<div class="acti" id="a2">
+ <div class="boite">
+  <h2><span class="badge">2</span>Mission séquence — Livraison simple</h2>
+  <div class="consigne">🎯 Le robot doit rejoindre l'⭐ en évitant les caisses. Construis ton programme avec les instructions, puis exécute-le.
+  ⚠️ Toucher une caisse ou sortir du terrain = crash !</div>
+  <div class="simu">
+    <div class="commandes">
+      <h3>Instructions</h3>
+      <div class="palette">
+        <button data-i="A">⬆ Avancer</button>
+        <button data-i="G">↰ Tourner à gauche</button>
+        <button data-i="D">↱ Tourner à droite</button>
+      </div>
+      <div class="prog" id="prog2"><div class="vide">Programme vide — clique sur les instructions.</div></div>
+      <div class="btnrow">
+        <button class="btn" id="run2">▶ Exécuter</button>
+        <button class="btn gris" id="undo2">⌫</button>
+        <button class="btn gris" id="clear2">🗑 Tout effacer</button>
+      </div>
+    </div>
+    <div>
+      <canvas class="simcv" id="cv2" width="560" height="470"></canvas>
+      <div class="verdict" id="verd2"></div>
+    </div>
+  </div>
+ </div>
+</div>
+
+<!-- ============ A3 : MISSION BOUCLE ============ -->
+<div class="acti" id="a3">
+ <div class="boite">
+  <h2><span class="badge">3</span>Mission boucle — L'escalier</h2>
+  <div class="consigne">🎯 Rejoindre l'⭐ en gravissant l'escalier… mais cette fois ton programme est une <b>boucle</b> :
+  choisis le nombre de répétitions et un corps de <b>5 instructions maximum</b>. Le motif se répète : à toi de le trouver !</div>
+  <div class="simu">
+    <div class="commandes">
+      <div class="boucleN">🔁 Répéter <select id="n3"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select> fois :</div>
+      <h3>Corps de la boucle (max 5)</h3>
+      <div class="palette">
+        <button data-i="A">⬆ Avancer</button>
+        <button data-i="G">↰ Gauche</button>
+        <button data-i="D">↱ Droite</button>
+      </div>
+      <div class="prog" id="prog3"><div class="vide">Corps vide.</div></div>
+      <div class="btnrow">
+        <button class="btn" id="run3">▶ Exécuter</button>
+        <button class="btn gris" id="undo3">⌫</button>
+        <button class="btn gris" id="clear3">🗑</button>
+      </div>
+    </div>
+    <div>
+      <canvas class="simcv" id="cv3" width="620" height="480"></canvas>
+      <div class="verdict" id="verd3"></div>
+    </div>
+  </div>
+ </div>
+</div>
+
+<!-- ============ A4 : MISSION CONDITION ============ -->
+<div class="acti" id="a4">
+ <div class="boite">
+  <h2><span class="badge">4</span>Mission condition — Terrain inconnu</h2>
+  <div class="consigne">🎯 Cette fois <b>impossible d'écrire le chemin à l'avance</b> : le robot doit se débrouiller seul grâce à son
+  <b>capteur d'obstacle</b> (les bords du terrain comptent comme des obstacles). Complète sa règle de conduite, puis lance-le : il a droit à 40 pas maximum.</div>
+  <div class="simu">
+    <div class="commandes">
+      <h3>Règle de conduite du robot</h3>
+      <div class="policy">
+        🔁 Répéter toujours :<br>
+        &nbsp;&nbsp;SI obstacle devant<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;ALORS <select id="pAlors">
+          <option value="A">⬆ avancer</option>
+          <option value="G">↰ tourner à gauche</option>
+          <option value="D">↱ tourner à droite</option></select><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;SINON <select id="pSinon">
+          <option value="A">⬆ avancer</option>
+          <option value="G">↰ tourner à gauche</option>
+          <option value="D">↱ tourner à droite</option></select>
+      </div>
+      <div class="btnrow"><button class="btn" id="run4">▶ Lâcher le robot</button></div>
+      <div class="consigne" style="margin-top:14px;font-size:13px">💡 Réfléchis : que doit-il faire quand la voie est LIBRE ? Et face à un MUR ?</div>
+    </div>
+    <div>
+      <canvas class="simcv" id="cv4" width="560" height="470"></canvas>
+      <div class="verdict" id="verd4"></div>
+    </div>
+  </div>
+ </div>
+</div>
+
+<!-- ============ A5 : BILAN ============ -->
+<div class="acti" id="a5">
+ <div class="boite">
+  <h2><span class="badge">5</span>Bilan de roboticien</h2>
+  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code du jeu.</div>
+  <div id="quiz5"></div>
+  <div class="codefinal" id="codefinal">
+    🏆 Robot parfaitement maîtrisé !
+    <div class="code">ROBOT26</div>
+    <div>Entre ce code dans les jeux <a href="03_jeu_robo_race.html">🎮 Robo Race</a> et <a href="03b_jeu_entrepot.html">📦 Entrepôt 4.0</a> pour les déverrouiller.</div>
+  </div>
+ </div>
+</div>
+
+<script>
+/* ================= ÉTAT & PROGRESSION ================= */
+const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
+function sauver(){ try{ localStorage.setItem('tp_robot_3e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_robot_3e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function majProgression(){
+  document.querySelectorAll('.progression .seg').forEach(seg=>{
+    const n=+seg.dataset.a;
+    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+  });
+  document.getElementById('scoreTot').textContent=etat.score;
+  for(let n=2;n<=5;n++){
+    const acti=document.getElementById('a'+n);
+    let v=acti.querySelector('.verrou');
+    if(n>etat.debloque){
+      if(!v){ v=document.createElement('div'); v.className='verrou';
+        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
+        acti.querySelector('.boite').appendChild(v); }
+    } else if(v) v.remove();
+  }
+}
+function reussir(n,pts){
+  etat.score+=pts;
+  if(etat.debloque===n) etat.debloque=n+1;
+  sauver(); majProgression();
+  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+}
+
+/* ================= A1 : CAHIER DES CHARGES ================= */
+const CDC=[
+ {t:'« Transporter un plateau-repas de la cuisine aux tables. »', f:'FU'},
+ {t:'« Coûter moins de 2 000 € à la fabrication. »', f:'CR'},
+ {t:'« Ne présenter aucun danger pour les élèves (sécurité). »', f:'CT'},
+ {t:'« Autonomie de la batterie : au moins 4 heures. »', f:'CR'},
+ {t:'« Respecter les normes d\u2019hygiène alimentaire. »', f:'CT'},
+ {t:'« Vitesse maximale : 1,2 m/s dans les couloirs. »', f:'CR'},
+];
+const FAMILLES=[['🎯 Fonction d\u2019usage','FU'],['⛓️ Contrainte','CT'],['📏 Critère chiffré','CR']];
+(function initA1(){
+  const zone=document.getElementById('cdc1');
+  CDC.forEach(it=>{
+    const d=document.createElement('div'); d.className='item';
+    d.innerHTML='<span>'+it.t+'</span><span class="choix"></span>';
+    const ch=d.querySelector('.choix');
+    let premier=true;
+    FAMILLES.forEach(([lbl,code])=>{
+      const b=document.createElement('button'); b.textContent=lbl;
+      b.onclick=()=>{
+        if(code===it.f){
+          d.classList.remove('faux'); d.classList.add('bon');
+          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+          etat.q1ok++;
+          if(etat.q1ok===CDC.length) reussir(1,2);
+        } else { d.classList.add('faux'); premier=false; }
+      };
+      ch.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+/* ================= MOTEUR ROBOT (partagé) ================= */
+const CASE=76;
+const NOMS={A:'⬆ Avancer',G:'↰ Tourner à gauche',D:'↱ Tourner à droite'};
+function dessinerMonde(ctx,m,rob,crash=false,trace=[]){
+  const W=ctx.canvas.width,H=ctx.canvas.height;
+  ctx.clearRect(0,0,W,H);
+  const ox=(W-m.cols*CASE)/2, oy=(H-m.ligs*CASE)/2;
+  // trace
+  if(trace.length>1){
+    ctx.strokeStyle='#bae6fd'; ctx.lineWidth=8; ctx.lineCap='round'; ctx.beginPath();
+    trace.forEach(([c,l],i)=>{ const x=ox+c*CASE+CASE/2,y=oy+l*CASE+CASE/2; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.stroke();
+  }
+  // grille
+  ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=1.5;
+  for(let c=0;c<=m.cols;c++){ctx.beginPath();ctx.moveTo(ox+c*CASE,oy);ctx.lineTo(ox+c*CASE,oy+m.ligs*CASE);ctx.stroke();}
+  for(let l=0;l<=m.ligs;l++){ctx.beginPath();ctx.moveTo(ox,oy+l*CASE);ctx.lineTo(ox+m.cols*CASE,oy+l*CASE);ctx.stroke();}
+  // murs (caisses)
+  m.murs.forEach(([c,l])=>{
+    ctx.fillStyle='#92400e'; ctx.fillRect(ox+c*CASE+5,oy+l*CASE+5,CASE-10,CASE-10);
+    ctx.strokeStyle='#78350f'; ctx.lineWidth=2; ctx.strokeRect(ox+c*CASE+5,oy+l*CASE+5,CASE-10,CASE-10);
+    ctx.beginPath(); ctx.moveTo(ox+c*CASE+5,oy+l*CASE+5); ctx.lineTo(ox+c*CASE+CASE-5,oy+l*CASE+CASE-5);
+    ctx.moveTo(ox+c*CASE+CASE-5,oy+l*CASE+5); ctx.lineTo(ox+c*CASE+5,oy+l*CASE+CASE-5); ctx.stroke();
+  });
+  // cible
+  ctx.font='34px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText('⭐',ox+m.cible[0]*CASE+CASE/2,oy+m.cible[1]*CASE+CASE/2+12);
+  // robot
+  const x=ox+rob.c*CASE+CASE/2,y=oy+rob.l*CASE+CASE/2;
+  ctx.save(); ctx.translate(x,y); ctx.rotate(rob.d*Math.PI/2);
+  ctx.fillStyle= crash?'#dc2626':'#0f766e';
+  ctx.beginPath(); ctx.roundRect(-24,-19,40,38,8); ctx.fill();
+  ctx.fillStyle='#fbbf24';
+  ctx.beginPath(); ctx.moveTo(16,-12); ctx.lineTo(30,0); ctx.lineTo(16,12); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(2,-8,4,0,7); ctx.arc(2,8,4,0,7); ctx.fill();
+  ctx.restore();
+  if(crash){ ctx.font='30px Segoe UI'; ctx.fillText('💥',x,y-34); }
+}
+const DELTA=[[1,0],[0,1],[-1,0],[0,-1]]; // est, sud, ouest, nord
+function caseDevant(m,rob){ return [rob.c+DELTA[rob.d][0], rob.l+DELTA[rob.d][1]]; }
+function estObstacle(m,c,l){
+  if(c<0||l<0||c>=m.cols||l>=m.ligs) return true;
+  return m.murs.some(([mc,ml])=>mc===c&&ml===l);
+}
+function executer(m, pas, ctx, apresFini){
+  // pas : tableau d'instructions 'A'/'G'/'D' déjà déplié ; retourne via apresFini(resultat)
+  let rob={...m.depart}, i=0, trace=[[rob.c,rob.l]];
+  dessinerMonde(ctx,m,rob,false,trace);
+  const timer=setInterval(()=>{
+    if(i>=pas.length){
+      clearInterval(timer);
+      const gagne = rob.c===m.cible[0] && rob.l===m.cible[1];
+      apresFini({gagne, crash:false, rob, pasFaits:i}); return;
+    }
+    const instr=pas[i].instr||pas[i];
+    if(instr==='G') rob.d=(rob.d+3)%4;
+    else if(instr==='D') rob.d=(rob.d+1)%4;
+    else { // avancer
+      const [nc,nl]=caseDevant(m,rob);
+      if(estObstacle(m,nc,nl)){
+        clearInterval(timer);
+        dessinerMonde(ctx,m,rob,true,trace);
+        apresFini({gagne:false, crash:true, rob, pasFaits:i, ligne:pas[i].ligne}); return;
+      }
+      rob.c=nc; rob.l=nl; trace.push([nc,nl]);
+    }
+    if(pas[i].surligner) pas[i].surligner();
+    dessinerMonde(ctx,m,rob,false,trace);
+    // arrivée anticipée sur la cible : on continue jusqu'au bout du programme (fidèle à la réalité)
+    i++;
+  }, 340);
+  return timer;
+}
+
+/* ================= A2 : SÉQUENCE ================= */
+const M2={cols:6, ligs:5, depart:{c:0,l:4,d:0}, cible:[4,1],
+  murs:[[3,4],[3,3],[1,2],[1,1],[5,2],[4,3]]};
+const cv2=document.getElementById('cv2').getContext('2d');
+let prog2=[], enCours2=false, a2fait=false;
+function majProg2(){
+  const zone=document.getElementById('prog2');
+  zone.innerHTML= prog2.length? '' : '<div class="vide">Programme vide — clique sur les instructions.</div>';
+  prog2.forEach((ins,i)=>{
+    const d=document.createElement('div'); d.className='ligne'; d.dataset.i=i;
+    d.innerHTML='<span class="n">'+(i+1)+'.</span>'+NOMS[ins];
+    zone.appendChild(d);
+  });
+}
+document.querySelectorAll('#a2 .palette button').forEach(b=>b.onclick=()=>{
+  if(enCours2||prog2.length>=20) return; prog2.push(b.dataset.i); majProg2();
+});
+document.getElementById('undo2').onclick=()=>{ if(!enCours2){ prog2.pop(); majProg2(); } };
+document.getElementById('clear2').onclick=()=>{ if(!enCours2){ prog2=[]; majProg2(); dessinerMonde(cv2,M2,{...M2.depart}); document.getElementById('verd2').className='verdict'; } };
+document.getElementById('run2').onclick=()=>{
+  if(enCours2||prog2.length===0) return;
+  enCours2=true;
+  const verd=document.getElementById('verd2'); verd.className='verdict';
+  const pas=prog2.map((ins,i)=>({instr:ins, surligner(){ 
+    document.querySelectorAll('#prog2 .ligne').forEach(l=>l.classList.toggle('exec',+l.dataset.i===i)); }}));
+  executer(M2,pas,cv2,res=>{
+    enCours2=false;
+    document.querySelectorAll('#prog2 .ligne').forEach(l=>l.classList.remove('exec'));
+    if(res.crash){ verd.className='verdict ko';
+      verd.innerHTML='💥 Crash à l\u2019instruction n°'+(res.pasFaits+1)+' ! Le robot a foncé dans un obstacle (ou hors du terrain). Corrige ton programme : lui n\u2019improvisera pas.'; }
+    else if(res.gagne){ verd.className='verdict ok';
+      verd.innerHTML='✅ Livraison réussie en '+prog2.length+' instructions !'+(a2fait?'':' (+3 pts)');
+      if(!a2fait){ a2fait=true; reussir(2,3); } }
+    else { verd.className='verdict ko';
+      verd.innerHTML='🤔 Le programme s\u2019est terminé… mais le robot n\u2019est pas sur l\u2019⭐. Il manque des instructions !'; }
+  });
+};
+dessinerMonde(cv2,M2,{...M2.depart});
+majProg2();
+
+/* ================= A3 : BOUCLE ================= */
+const M3={cols:7, ligs:6, depart:{c:0,l:5,d:0}, cible:[6,2],
+  murs:[[1,4],[3,3],[5,2],[0,3],[2,2],[4,1]]};
+const cv3=document.getElementById('cv3').getContext('2d');
+let corps3=[], enCours3=false, a3fait=false;
+function majProg3(){
+  const zone=document.getElementById('prog3');
+  zone.innerHTML= corps3.length? '' : '<div class="vide">Corps vide.</div>';
+  corps3.forEach((ins,i)=>{
+    const d=document.createElement('div'); d.className='ligne'; d.dataset.i=i;
+    d.innerHTML='<span class="n">'+(i+1)+'.</span>'+NOMS[ins];
+    zone.appendChild(d);
+  });
+}
+document.querySelectorAll('#a3 .palette button').forEach(b=>b.onclick=()=>{
+  if(enCours3||corps3.length>=5) return; corps3.push(b.dataset.i); majProg3();
+});
+document.getElementById('undo3').onclick=()=>{ if(!enCours3){ corps3.pop(); majProg3(); } };
+document.getElementById('clear3').onclick=()=>{ if(!enCours3){ corps3=[]; majProg3(); dessinerMonde(cv3,M3,{...M3.depart}); document.getElementById('verd3').className='verdict'; } };
+document.getElementById('run3').onclick=()=>{
+  if(enCours3||corps3.length===0) return;
+  enCours3=true;
+  const N=+document.getElementById('n3').value;
+  const verd=document.getElementById('verd3'); verd.className='verdict';
+  const pas=[];
+  for(let t=0;t<N;t++) corps3.forEach((ins,i)=>pas.push({instr:ins, surligner(){
+    document.querySelectorAll('#prog3 .ligne').forEach(l=>l.classList.toggle('exec',+l.dataset.i===i)); }}));
+  executer(M3,pas,cv3,res=>{
+    enCours3=false;
+    document.querySelectorAll('#prog3 .ligne').forEach(l=>l.classList.remove('exec'));
+    if(res.crash){ verd.className='verdict ko';
+      verd.innerHTML='💥 Crash pendant le tour n°'+(Math.floor(res.pasFaits/corps3.length)+1)+' de la boucle ! Le motif n\u2019est pas le bon : observe la forme de l\u2019escalier.'; }
+    else if(res.gagne){ verd.className='verdict ok';
+      verd.innerHTML='✅ Escalier gravi : '+corps3.length+' instructions × '+N+' tours = '+(corps3.length*N)+' actions, écrites en '+corps3.length+' lignes seulement. C\u2019est ça, la puissance de la boucle !'+(a3fait?'':' (+4 pts)');
+      if(!a3fait){ a3fait=true; reussir(3,4); } }
+    else { verd.className='verdict ko';
+      verd.innerHTML='🤔 Fin de la boucle… mais pas d\u2019⭐. Ajuste le motif ou le nombre de répétitions.'; }
+  });
+};
+dessinerMonde(cv3,M3,{...M3.depart});
+majProg3();
+
+/* ================= A4 : CONDITION ================= */
+const M4={cols:6, ligs:6, depart:{c:0,l:0,d:0}, cible:[2,2], murs:[[0,1]]};
+const cv4=document.getElementById('cv4').getContext('2d');
+let enCours4=false, a4fait=false;
+document.getElementById('run4').onclick=()=>{
+  if(enCours4) return;
+  enCours4=true;
+  const alors=document.getElementById('pAlors').value, sinon=document.getElementById('pSinon').value;
+  const verd=document.getElementById('verd4'); verd.className='verdict';
+  let rob={...M4.depart}, pas=0, trace=[[rob.c,rob.l]];
+  dessinerMonde(cv4,M4,rob,false,trace);
+  const timer=setInterval(()=>{
+    if(rob.c===M4.cible[0]&&rob.l===M4.cible[1]){
+      clearInterval(timer); enCours4=false;
+      verd.className='verdict ok';
+      verd.innerHTML='✅ Terrain inconnu maîtrisé en '+pas+' pas : le robot a longé les murs tout seul. Sa règle SI…ALORS…SINON le rend AUTONOME.'+(a4fait?'':' (+4 pts)');
+      if(!a4fait){ a4fait=true; reussir(4,4); }
+      return;
+    }
+    if(pas>=40){
+      clearInterval(timer); enCours4=false;
+      verd.className='verdict ko';
+      verd.innerHTML='⏱️ 40 pas écoulés, batterie vide : le robot tourne en rond sans atteindre l\u2019⭐. Repense sa règle : quand la voie est libre, il devrait plutôt… avancer, non ?';
+      return;
+    }
+    const [dc,dl]=caseDevant(M4,rob);
+    const obstacle=estObstacle(M4,dc,dl);
+    const instr= obstacle? alors : sinon;
+    if(instr==='G') rob.d=(rob.d+3)%4;
+    else if(instr==='D') rob.d=(rob.d+1)%4;
+    else {
+      if(obstacle){ // avancer dans un obstacle = crash
+        clearInterval(timer); enCours4=false;
+        dessinerMonde(cv4,M4,rob,true,trace);
+        verd.className='verdict ko';
+        verd.innerHTML='💥 Crash ! Ta règle dit d\u2019AVANCER quand il y a un obstacle devant… c\u2019est exactement l\u2019inverse de ce qu\u2019il faut faire !';
+        return;
+      }
+      rob.c=dc; rob.l=dl; trace.push([dc,dl]);
+    }
+    pas++;
+    dessinerMonde(cv4,M4,rob,false,trace);
+  }, 300);
+};
+dessinerMonde(cv4,M4,{...M4.depart});
+
+/* ================= A5 : BILAN ================= */
+const Q5=[
+ {q:"« Prix de vente ≤ 250 € » est…", r:["une fonction d'usage","un critère chiffré (contrainte de coût)","un actionneur"], b:1},
+ {q:"Quelle brique de programmation évite de recopier 10 fois le même code ?", r:["la séquence","la boucle","la condition"], b:1},
+ {q:"Quelle brique permet au robot de réagir à un obstacle imprévu ?", r:["la condition (SI…ALORS…SINON)","la boucle","le cahier des charges"], b:0},
+ {q:"Le robot n'atteint pas la cible : le problème vient…", r:["du robot qui a mal deviné","du programme, qu'il faut corriger et retester","de la météo"], b:1},
+];
+(function initQ5(){
+  const zone=document.getElementById('quiz5');
+  Q5.forEach((item,i)=>{
+    const d=document.createElement('div'); d.className='question';
+    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
+    const rep=d.querySelector('.rep');
+    item.r.forEach((r,k)=>{
+      const b=document.createElement('button'); b.textContent=r;
+      b.onclick=()=>{
+        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
+        etat.q5rep++;
+        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
+        if(etat.q5rep===Q5.length){
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          else{
+            const verd=document.createElement('div'); verd.className='verdict ko';
+            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
+            zone.appendChild(verd);
+          }
+        }
+      };
+      rep.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+charger(); majProgression();
+</script>
+</body>
+</html>

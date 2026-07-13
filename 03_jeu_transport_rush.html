@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Transport Rush — Technologie 5ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#fca5a5; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:520px;min-height:400px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#action{background:#1e293b;border:2px solid var(--neon);border-radius:14px;padding:18px;text-align:center;margin-bottom:12px}
+#action .em{font-size:36px}
+#action .txt{font-size:18px;font-weight:900;color:#fff;margin-top:6px;min-height:56px;line-height:1.5}
+#choix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:13px 6px;font-size:14px;font-weight:900;cursor:pointer;transition:.1s;line-height:1.4}
+#choix button small{display:block;font-size:10.5px;color:#94a3b8;font-weight:600}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:40px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:430px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23fb7185'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🚦 TRANSPORT RUSH</h1>
+<div class="sous">Un moyen de transport s'affiche : routier, ferroviaire, maritime ou aérien ? Classe la famille avant la fin du chrono !</div>
+
+<div class="hud">
+  <div>Classées : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div id="action"><div class="em" id="eEm">🚦</div><div class="txt" id="eTxt"></div></div>
+  <div id="choix">
+    <button data-f="routier">🚗 ROUTIER<small>sur la route, porte-à-porte</small></button>
+    <button data-f="ferroviaire">🚆 FERROVIAIRE<small>sur des rails</small></button>
+    <button data-f="maritime">🚢 MARITIME / FLUVIAL<small>sur l'eau, énormes charges</small></button>
+    <button data-f="aerien">✈️ AÉRIEN<small>dans le ciel, longues distances</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Réseau fermé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Le PC mobilité</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Les règles du tri de transports</h2>
+    <p>Un moyen de transport s'affiche… à toi de trouver sa famille :<br>
+    🚗 ROUTIER = sur la route · 🚆 FERROVIAIRE = sur des rails ·
+    🚢 MARITIME/FLUVIAL = sur l'eau · ✈️ AÉRIEN = dans le ciel.<br>
+    Erreur ou chrono écoulé = une vie. Ça accélère ! 🏁</p>
+    <button id="btnGo">🚦 Trier les transports</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Embouteillage général !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence Transports & mobilité · 5ème</footer>
+
+<script>
+const CODE='TRAJET21';
+function dejaOuvert(){ try{ return localStorage.getItem('transportrush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('transportrush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const NOMS_F={routier:'🚗 le ROUTIER',ferroviaire:'🚆 le FERROVIAIRE',maritime:'🚢 le MARITIME/FLUVIAL',aerien:'✈️ l\u2019AÉRIEN'};
+const ACTIONS=[
+ {t:'Le car scolaire qui te dépose devant le collège',f:'routier',exp:'le car roule sur la ROUTE : famille du transport ROUTIER.'},
+ {t:'Le semi-remorque chargé de yaourts sur l\u2019autoroute A31',f:'routier',exp:'un camion sur autoroute : du fret ROUTIER.'},
+ {t:'Le vélo cargo du livreur qui se faufile en centre-ville',f:'routier',exp:'même sans moteur, le vélo circule sur la voirie : mobilité douce… ROUTIÈRE.'},
+ {t:'La camionnette de livraison qui fait du porte-à-porte',f:'routier',exp:'le porte-à-porte, c\u2019est LA force du ROUTIER : il va partout où il y a une route.'},
+ {t:'Le tramway qui traverse la ville toutes les 6 minutes',f:'ferroviaire',exp:'le tram roule sur des RAILS : famille du FERROVIAIRE.'},
+ {t:'Le TGV lancé à 320 km/h entre Paris et Strasbourg',f:'ferroviaire',exp:'grande vitesse sur rails : le FERROVIAIRE en vedette.'},
+ {t:'Le train de fret de 2 000 tonnes qui file dans la nuit',f:'ferroviaire',exp:'2 000 tonnes d\u2019un coup sur des rails : le fret FERROVIAIRE.'},
+ {t:'Le métro bondé de 8 h du matin',f:'ferroviaire',exp:'le métro est un train urbain souterrain : FERROVIAIRE.'},
+ {t:'Le porte-conteneurs chargé de 20 000 « boîtes »',f:'maritime',exp:'20 000 conteneurs sur l\u2019eau : le géant du MARITIME.'},
+ {t:'La péniche chargée de céréales qui descend le canal',f:'maritime',exp:'la péniche navigue sur les fleuves et canaux : transport FLUVIAL.'},
+ {t:'Le ferry qui embarque voitures et passagers pour la Corse',f:'maritime',exp:'un navire qui traverse la mer : MARITIME.'},
+ {t:'Le mode capable de porter des charges énormes avec très peu d\u2019énergie par tonne',f:'maritime',exp:'le point fort du MARITIME/FLUVIAL : des masses colossales pour peu d\u2019énergie.'},
+ {t:'L\u2019A320 qui relie Paris à Lisbonne en 2 h 30',f:'aerien',exp:'un avion de ligne : famille de l\u2019AÉRIEN.'},
+ {t:'L\u2019hélicoptère du SAMU qui se pose sur l\u2019hôpital',f:'aerien',exp:'l\u2019hélicoptère vole : AÉRIEN — imbattable en urgence.'},
+ {t:'L\u2019avion-cargo qui livre des médicaments à l\u2019autre bout du monde en 24 h',f:'aerien',exp:'du fret express intercontinental : l\u2019AÉRIEN, rapide mais coûteux et émetteur.'},
+ {t:'Le mode le plus rapide… mais le plus gros émetteur de CO\u2082 par passager',f:'aerien',exp:'vitesse record, bilan carbone record : l\u2019AÉRIEN.'},
+];
+
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('transportrush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:10,reste:10,fini:false,pioche:[],action:null};
+  window.J_DEBUG=J;
+  majHUD(); nouvelElement(); dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function nouvelElement(){
+  if(J.pioche.length===0) J.pioche=ACTIONS.map((_,i)=>i).sort(()=>0.5-Math.random());
+  J.element=ACTIONS[J.pioche.pop()];
+  J.reste=J.duree;
+  document.getElementById('eTxt').textContent=J.element.t;
+}
+function repondre(f){
+  if(!J||J.fini) return;
+  const flash=document.getElementById('flash');
+  if(f===J.element.f){
+    J.serie++; J.score+=15+Math.round(J.reste*3);
+    flash.textContent='✅ Oui : '+J.element.exp;
+    flash.style.color='#4ade80';
+    J.duree=Math.max(4.2,J.duree-0.35);
+    majHUD(); nouvelElement();
+  } else {
+    J.vies--;
+    flash.textContent='❌ Non, c\u2019était '+NOMS_F[J.element.f]+' : '+J.element.exp;
+    flash.style.color='#f87171';
+    majHUD();
+    if(J.vies<=0) return finPartie('Le tri s\u2019arrête ! Retiens : ROUTIER = la route, FERROVIAIRE = les rails, MARITIME = l\u2019eau, AÉRIEN = le ciel — chacun son infrastructure.');
+    nouvelElement();
+  }
+}
+document.querySelectorAll('#choix button').forEach(b=>b.onclick=()=>repondre(b.dataset.f));
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('transportrush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=15 ? '🏆 Agent mobilité senior !' : '💥 Embouteillage général !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Éléments classés : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').textContent='⏰ Trop lent ! C\u2019était '+NOMS_F[J.element.f]+' : '+J.element.exp;
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('Le chrono a gagné : un bon agent reconnaît chaque famille de transport d\u2019un coup d\u2019œil !');
+    nouvelElement();
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

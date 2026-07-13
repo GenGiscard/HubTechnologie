@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Chrono Rush — Technologie 5ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#fbbf24; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:480px;min-height:400px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+.duel{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px;align-items:stretch;margin-bottom:12px}
+.objcarte{background:#1e293b;border:2px solid #475569;border-radius:14px;padding:14px 10px;text-align:center}
+.objcarte.ref{border-color:var(--neon)}
+.objcarte .em{font-size:42px}
+.objcarte .nom{font-size:14.5px;font-weight:900;margin-top:6px;min-height:40px}
+.objcarte .date{font-size:20px;font-weight:900;color:var(--neon);margin-top:4px}
+.objcarte .date.mystere{color:#94a3b8}
+.vs{display:flex;align-items:center;justify-content:center;font-weight:900;color:#64748b;font-size:17px}
+#choix{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:15px;font-size:15.5px;font-weight:900;cursor:pointer;transition:.1s}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:40px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:390px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23fbbf24'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🕰️ CHRONO RUSH</h1>
+<div class="sous">Le nouvel objet est-il apparu AVANT ou APRÈS celui de gauche ? Fais chauffer ta frise mentale !</div>
+
+<div class="hud">
+  <div>Série : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div class="duel">
+    <div class="objcarte ref">
+      <div class="em" id="rEm"></div><div class="nom" id="rNom"></div><div class="date" id="rDate"></div>
+    </div>
+    <div class="vs">VS</div>
+    <div class="objcarte">
+      <div class="em" id="nEm"></div><div class="nom" id="nNom"></div><div class="date mystere" id="nDate">❓</div>
+    </div>
+  </div>
+  <div id="choix">
+    <button id="btnAvant">⬅️ AVANT</button>
+    <button id="btnApres">APRÈS ➡️</button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Musée verrouillé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP La machine à remonter le temps</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Les règles du chrono</h2>
+    <p>À gauche : un objet daté. À droite : un nouvel objet mystère.<br>
+    Est-il apparu <b>AVANT</b> ou <b>APRÈS</b> ? Réponds avant la fin du chrono !<br>
+    Bonne réponse : le mystère devient ta nouvelle référence. Erreur ou trop lent = une vie. Ça accélère ! 🏁</p>
+    <button id="btnGo">⏳ Remonter le temps</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">⌛ Perdu dans le temps !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence L'évolution des objets techniques · 5ème</footer>
+
+<script>
+const CODE='LIGNEE18';
+function dejaOuvert(){ try{ return localStorage.getItem('chronorush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('chronorush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const OBJETS=[
+ {e:'🛞',n:'La roue',d:-3500},
+ {e:'🖨️',n:'L\u2019imprimerie de Gutenberg',d:1450},
+ {e:'🚂',n:'La locomotive à vapeur',d:1804},
+ {e:'🛴',n:'La draisienne (vélo sans pédales)',d:1817},
+ {e:'📷',n:'La photographie',d:1826},
+ {e:'📠',n:'Le téléphone',d:1876},
+ {e:'💡',n:'L\u2019ampoule à incandescence',d:1879},
+ {e:'🚗',n:'L\u2019automobile à essence',d:1886},
+ {e:'🚲',n:'La bicyclette à chaîne',d:1885},
+ {e:'📻',n:'La radio',d:1895},
+ {e:'✈️',n:'L\u2019avion des frères Wright',d:1903},
+ {e:'📺',n:'La télévision',d:1926},
+ {e:'🔬',n:'Le transistor',d:1947},
+ {e:'🛰️',n:'Le premier satellite (Spoutnik)',d:1957},
+ {e:'🕹️',n:'Le jeu vidéo (Pong)',d:1972},
+ {e:'💻',n:'L\u2019ordinateur personnel',d:1977},
+ {e:'📱',n:'Le téléphone mobile grand public',d:1992},
+ {e:'🌐',n:'Le Web ouvert au public',d:1993},
+ {e:'📲',n:'Le smartphone tactile',d:2007},
+ {e:'🔆',n:'La LED d\u2019éclairage grand public',d:2010},
+ {e:'🛴',n:'La trottinette électrique en libre-service',d:2018},
+ {e:'🤖',n:'Le robot aspirateur',d:2002},
+];
+function libDate(d){ return d<0 ? Math.abs(d)+' av. J.-C.' : String(d); }
+
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('chronorush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:10,reste:10,fini:false,courant:null,nouveau:null,pioche:[]};
+  window.J_DEBUG=J;
+  J.courant=OBJETS[Math.floor(Math.random()*OBJETS.length)];
+  majHUD(); nouveauDuel(); dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function nouveauDuel(){
+  if(J.pioche.length===0) J.pioche=OBJETS.map((_,i)=>i).sort(()=>0.5-Math.random());
+  let cand;
+  do{ cand=OBJETS[J.pioche.pop()];
+      if(J.pioche.length===0) J.pioche=OBJETS.map((_,i)=>i).sort(()=>0.5-Math.random());
+  } while(cand.d===J.courant.d || cand.n===J.courant.n);
+  J.nouveau=cand;
+  J.reste=J.duree;
+  document.getElementById('rEm').textContent=J.courant.e;
+  document.getElementById('rNom').textContent=J.courant.n;
+  document.getElementById('rDate').textContent=libDate(J.courant.d);
+  document.getElementById('nEm').textContent=J.nouveau.e;
+  document.getElementById('nNom').textContent=J.nouveau.n;
+  document.getElementById('nDate').textContent='❓';
+}
+function repondre(ditAvant){
+  if(!J||J.fini) return;
+  const flash=document.getElementById('flash');
+  const estAvant=J.nouveau.d<J.courant.d;
+  const ok=(ditAvant===estAvant);
+  document.getElementById('nDate').textContent=libDate(J.nouveau.d);
+  if(ok){
+    J.serie++; J.score+=15+Math.round(J.reste*3);
+    flash.textContent='✅ Oui : '+J.nouveau.n+' → '+libDate(J.nouveau.d);
+    flash.style.color='#4ade80';
+    J.duree=Math.max(4,J.duree-0.35);
+    J.courant=J.nouveau;
+    majHUD(); nouveauDuel();
+  } else {
+    J.vies--;
+    flash.textContent='❌ Non : '+J.nouveau.n+' date de '+libDate(J.nouveau.d)+' ('+(estAvant?'AVANT':'APRÈS')+' '+libDate(J.courant.d)+').';
+    flash.style.color='#f87171';
+    majHUD();
+    if(J.vies<=0) return finPartie('La frise s\u2019est emmêlée… Retiens les grands repères : vapeur 1800, électricité 1880, électronique 1950, numérique 2000 !');
+    J.courant=J.nouveau;
+    nouveauDuel();
+  }
+}
+document.getElementById('btnAvant').onclick=()=>repondre(true);
+document.getElementById('btnApres').onclick=()=>repondre(false);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft') repondre(true);
+  if(e.key==='ArrowRight') repondre(false);
+});
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('chronorush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=15 ? '🏆 Historien des techniques !' : '⌛ Perdu dans le temps !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Duels gagnés : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').textContent='⏰ Trop lent ! '+J.nouveau.n+' date de '+libDate(J.nouveau.d)+'.';
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('Le temps t\u2019a rattrapé — ironique, non ?');
+    J.courant=J.nouveau;
+    nouveauDuel();
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

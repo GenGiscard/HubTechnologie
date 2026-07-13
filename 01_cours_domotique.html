@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 4ème — Domotique & Objets connectés · ESTIC</title>
+<style>
+:root{
+  --ink:#1e3a5f; --violet:#7c3aed; --violet-fonce:#6d28d9; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--violet);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--violet-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#f5f3ff;color:var(--violet-fonce)}
+nav.side a.actif{background:#ede9fe;color:var(--violet-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--violet-fonce)}
+h2{font-size:36px;color:var(--violet-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:720px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:20px;border-top:4px solid var(--accent,var(--violet))}
+.carte .ic{font-size:34px}
+.carte h3{font-size:18px;margin:8px 0 6px;color:var(--accent,var(--violet))}
+.carte p{font-size:14px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12.5px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--violet-fonce);background:#f5f3ff;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--violet);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--violet-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--violet-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:820px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--violet-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%237c3aed'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>La maison qui pense</a>
+  <a href="#s2"><span class="dot"></span>Objet connecté ?</a>
+  <a href="#s3"><span class="dot"></span>Capteurs & actionneurs</a>
+  <a href="#s4"><span class="dot"></span>Chaîne d'information (anim.)</a>
+  <a href="#s5"><span class="dot"></span>Chaîne d'énergie (anim.)</a>
+  <a href="#s6"><span class="dot"></span>SI… ALORS… SINON (anim.)</a>
+  <a href="#s7"><span class="dot"></span>Communiquer sans fil (anim.)</a>
+  <a href="#s8"><span class="dot"></span>Les capteurs courants</a>
+  <a href="#s9"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 4ème · Séquence Domotique</div>
+  <h1>🏠 La maison<br>qui pense</h1>
+  <p class="sous" style="margin-top:16px">Il est 19 h 42. La nuit tombe : les volets se ferment seuls, la lampe du salon s'allume,
+  le chauffage monte à 20 °C avant ton retour. Personne n'a appuyé sur un bouton.
+  <b>Qui décide ?</b> C'est toute la question de cette séquence.</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Objet technique… ou objet connecté ?</h2>
+  <p class="sous">Un <b>objet connecté</b> est un objet technique capable de <b>capter des informations</b>, de les <b>traiter</b> avec un programme et de <b>communiquer</b> (souvent sans fil).</p>
+  <div class="cartes" style="max-width:880px">
+    <div class="carte" style="--accent:#94a3b8"><div class="ic">💡</div><h3>Lampe classique</h3><p>Un interrupteur, une ampoule. C'est l'humain qui décide de tout.</p><span class="ex">Objet technique simple</span></div>
+    <div class="carte" style="--accent:#7c3aed"><div class="ic">🌐</div><h3>Lampe connectée</h3><p>Capte la luminosité, suit un programme, obéit au smartphone… même depuis les vacances !</p><span class="ex">Objet connecté</span></div>
+    <div class="carte" style="--accent:#ea580c"><div class="ic">🏠</div><h3>La domotique</h3><p>L'ensemble des techniques qui automatisent la maison : confort, sécurité, économies d'énergie.</p><span class="ex">domus (maison) + automatique</span></div>
+  </div>
+</section>
+
+<section class="slide" id="s3">
+  <h2>Les sens et les muscles de la maison</h2>
+  <div class="cartes" style="max-width:880px">
+    <div class="carte" style="--accent:#1d4ed8"><div class="ic">👁️</div><h3>Le CAPTEUR</h3><p>Il <b>acquiert une information</b> sur l'environnement et la transforme en signal électrique. Ce sont les <b>sens</b> de la maison.</p><span class="ex">thermomètre, détecteur de mouvement</span></div>
+    <div class="carte" style="--accent:#dc2626"><div class="ic">💪</div><h3>L'ACTIONNEUR</h3><p>Il <b>agit</b> : il convertit l'énergie reçue en action physique. Ce sont les <b>muscles</b> de la maison.</p><span class="ex">moteur de volet, lampe, sirène</span></div>
+    <div class="carte" style="--accent:#7c3aed"><div class="ic">🧠</div><h3>L'UNITÉ DE TRAITEMENT</h3><p>La carte programmable qui <b>décide</b> grâce à son programme. C'est le <b>cerveau</b>.</p><span class="ex">micro:bit, Arduino, box domotique</span></div>
+  </div>
+  <p class="sous" style="margin-top:20px">💡 Astuce pour ne pas confondre : le capteur <b>observe</b>, l'actionneur <b>bouge</b>.</p>
+</section>
+
+<section class="slide" id="s4">
+  <h2>La chaîne d'information</h2>
+  <div class="animbox">
+    <canvas id="cvInfo" width="820" height="360"></canvas>
+    <div class="legende"><div class="caption" id="capInfo"></div><button data-anim="info">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsInfo"></div>
+  </div>
+</section>
+
+<section class="slide" id="s5">
+  <h2>La chaîne d'énergie</h2>
+  <div class="animbox">
+    <canvas id="cvNrj" width="820" height="360"></canvas>
+    <div class="legende"><div class="caption" id="capNrj"></div><button data-anim="nrj">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsNrj"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>Le programme décide : SI… ALORS… SINON</h2>
+  <div class="animbox">
+    <canvas id="cvAlgo" width="820" height="360"></canvas>
+    <div class="legende"><div class="caption" id="capAlgo"></div><button data-anim="algo">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsAlgo"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>Communiquer sans fil</h2>
+  <div class="animbox">
+    <canvas id="cvCom" width="820" height="360"></canvas>
+    <div class="legende"><div class="caption" id="capCom"></div><button data-anim="com">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsCom"></div>
+  </div>
+</section>
+
+<section class="slide" id="s8">
+  <h2>Les capteurs à connaître</h2>
+  <table class="mat">
+    <tr><th>Capteur</th><th>Grandeur mesurée</th><th>Exemple d'usage domotique</th></tr>
+    <tr><td>🌡️ Capteur de température</td><td>Température (°C)</td><td>Réguler le chauffage (thermostat)</td></tr>
+    <tr><td>☀️ Capteur de luminosité</td><td>Éclairement (lux)</td><td>Fermer les volets à la nuit tombée</td></tr>
+    <tr><td>🚶 Détecteur de mouvement</td><td>Présence (infrarouge)</td><td>Allumer une lampe, déclencher l'alarme</td></tr>
+    <tr><td>🚪 Capteur d'ouverture</td><td>Ouvert / fermé (aimant)</td><td>Surveiller portes et fenêtres</td></tr>
+    <tr><td>💧 Capteur d'humidité</td><td>Humidité (%)</td><td>Déclencher la VMC de la salle de bain</td></tr>
+    <tr><td>🔥 Détecteur de fumée</td><td>Particules de fumée</td><td>Alerter en cas d'incendie (obligatoire !)</td></tr>
+  </table>
+</section>
+
+<section class="slide" id="s9">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>Un <b>objet connecté</b> capte des informations, les traite avec un programme et communique, souvent sans fil.</li>
+      <li>La <b>chaîne d'information</b> : <b>ACQUÉRIR</b> (capteur) → <b>TRAITER</b> (programme) → <b>COMMUNIQUER</b> (ordre envoyé).</li>
+      <li>La <b>chaîne d'énergie</b> : <b>ALIMENTER</b> → <b>DISTRIBUER</b> → <b>CONVERTIR</b> (actionneur) → <b>TRANSMETTRE</b>.</li>
+      <li>Le <b>capteur observe</b>, l'<b>actionneur agit</b>, la <b>carte programmable décide</b>.</li>
+      <li>Le programme utilise des instructions conditionnelles : <b>SI</b> condition <b>ALORS</b> action <b>SINON</b> autre action.</li>
+      <li>Le <b>Wi-Fi</b> (portée ≈ 30 m, débit élevé) et le <b>Bluetooth</b> (portée ≈ 10 m, économe) relient les objets à la box et au smartphone.</li>
+    </ul>
+  </div>
+  <p class="sous" style="margin-top:22px">➡️ Prochaine étape : le <b>TP Maison connectée</b> — à toi de programmer la maison !</p>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases (structure → action → propriété) ====== */
+const ANIMS = {};
+function creerAnim(nom, canvasId, capId, ptsId, phases){
+  const cv=document.getElementById(canvasId), ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId), pts=document.getElementById(ptsId);
+  phases.forEach(()=>{ const s=document.createElement('span'); pts.appendChild(s); });
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){ [...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i)); }
+  function frame(ts){
+    if(etat.t0===null) etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){
+      if(etat.i<phases.length-1){ etat.i++; etat.t0=ts; cap.textContent=phases[etat.i].caption; majPts(); }
+      else return;
+    }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){ cancelAnimationFrame(etat.raf); etat.i=0; etat.t0=null;
+    cap.textContent=phases[0].caption; majPts(); etat.raf=requestAnimationFrame(frame); }
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption; majPts(); phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function fleche(ctx,x1,y1,x2,y2,coul,ep=4){
+  ctx.strokeStyle=coul;ctx.fillStyle=coul;ctx.lineWidth=ep;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  const a=Math.atan2(y2-y1,x2-x1),L=11;
+  ctx.beginPath();ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-L*Math.cos(a-0.45),y2-L*Math.sin(a-0.45));
+  ctx.lineTo(x2-L*Math.cos(a+0.45),y2-L*Math.sin(a+0.45));
+  ctx.closePath();ctx.fill();
+}
+function etiquette(ctx,txt,x,y,coul='#6d28d9',taille=16){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+function bloc(ctx,x,y,w,h,titre,sousTitre,coul,actif=false){
+  ctx.fillStyle=actif?coul:'#fff'; ctx.strokeStyle=coul; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.roundRect(x,y,w,h,12); ctx.fill(); ctx.stroke();
+  ctx.font='bold 15px Segoe UI'; ctx.fillStyle=actif?'#fff':coul; ctx.textAlign='center';
+  ctx.fillText(titre,x+w/2,y+h/2-6);
+  ctx.font='13px Segoe UI'; ctx.fillStyle=actif?'rgba(255,255,255,.85)':'#64748b';
+  ctx.fillText(sousTitre,x+w/2,y+h/2+16);
+}
+function pointSignal(ctx,x,y,coul='#ea580c'){
+  ctx.fillStyle=coul; ctx.beginPath(); ctx.arc(x,y,8,0,7); ctx.fill();
+  ctx.strokeStyle=coul; ctx.globalAlpha=.35; ctx.beginPath(); ctx.arc(x,y,14,0,7); ctx.stroke(); ctx.globalAlpha=1;
+}
+
+/* ====== ANIM 1 : CHAÎNE D'INFORMATION ====== */
+function decorInfo(ctx,W,H,actifs=[false,false,false]){
+  const y=140,h=90,w=190;
+  bloc(ctx,60,y,w,h,'ACQUÉRIR','détecteur de mouvement','#1d4ed8',actifs[0]);
+  bloc(ctx,315,y,w,h,'TRAITER','carte programmable','#7c3aed',actifs[1]);
+  bloc(ctx,570,y,w,h,'COMMUNIQUER','ordre : « allume ! »','#ea580c',actifs[2]);
+  fleche(ctx,255,y+h/2,310,y+h/2,'#94a3b8');
+  fleche(ctx,510,y+h/2,565,y+h/2,'#94a3b8');
+  etiquette(ctx,'CHAÎNE D\u2019INFORMATION',W/2,60,'#6d28d9',20);
+}
+creerAnim('info','cvInfo','capInfo','ptsInfo',[
+ { dur:2600, caption:'STRUCTURE — Trois fonctions s\u2019enchaînent : ACQUÉRIR, TRAITER, COMMUNIQUER.',
+   draw(ctx,p,W,H){ decorInfo(ctx,W,H); } },
+ { dur:3200, caption:'ACTION — Quelqu\u2019un passe : le CAPTEUR acquiert l\u2019information « présence détectée ».',
+   draw(ctx,p,W,H){ decorInfo(ctx,W,H,[true,false,false]);
+     const e=lisse(p);
+     etiquette(ctx,'🚶',80+40*e,300,'#1e3a5f',34);
+     if(p>0.5) pointSignal(ctx,155,280);
+     fleche(ctx,155,268,155,238,'#1d4ed8',4); } },
+ { dur:3200, caption:'ACTION — Le signal file vers la carte : le PROGRAMME le traite et prend une décision.',
+   draw(ctx,p,W,H){ decorInfo(ctx,W,H,[true,true,false]);
+     const e=lisse(p); pointSignal(ctx,255+(310-255)*e,185);
+     if(p>0.7) etiquette(ctx,'SI présence ALORS…',410,300,'#7c3aed',15); } },
+ { dur:3200, caption:'ACTION — La carte COMMUNIQUE l\u2019ordre à l\u2019actionneur : « allume la lampe ! ».',
+   draw(ctx,p,W,H){ decorInfo(ctx,W,H,[true,true,true]);
+     const e=lisse(p); pointSignal(ctx,510+(565-510)*e,185);
+     if(p>0.6){ etiquette(ctx,'💡',740,120,'#f59e0b',40); } } },
+ { dur:3600, caption:'PROPRIÉTÉ — La chaîne d\u2019information transporte des SIGNAUX, pas de l\u2019énergie : elle observe et décide.',
+   draw(ctx,p,W,H){ decorInfo(ctx,W,H,[true,true,true]);
+     etiquette(ctx,'💡',740,120,'#f59e0b',40);
+     ctx.font='bold 19px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
+     ctx.fillText('ACQUÉRIR → TRAITER → COMMUNIQUER', W/2, 330); } },
+]);
+
+/* ====== ANIM 2 : CHAÎNE D'ÉNERGIE ====== */
+function decorNrj(ctx,W,H,actifs=[false,false,false,false]){
+  const y=140,h=90,w=150;
+  bloc(ctx,40,y,w,h,'ALIMENTER','secteur 230 V','#16a34a',actifs[0]);
+  bloc(ctx,235,y,w,h,'DISTRIBUER','relais commandé','#0e7490',actifs[1]);
+  bloc(ctx,430,y,w,h,'CONVERTIR','moteur du volet','#dc2626',actifs[2]);
+  bloc(ctx,625,y,w,h,'TRANSMETTRE','axe + volet','#ea580c',actifs[3]);
+  fleche(ctx,192,y+h/2,232,y+h/2,'#94a3b8');
+  fleche(ctx,387,y+h/2,427,y+h/2,'#94a3b8');
+  fleche(ctx,582,y+h/2,622,y+h/2,'#94a3b8');
+  etiquette(ctx,'CHAÎNE D\u2019ÉNERGIE',W/2,60,'#6d28d9',20);
+}
+creerAnim('nrj','cvNrj','capNrj','ptsNrj',[
+ { dur:2600, caption:'STRUCTURE — Quatre fonctions : ALIMENTER, DISTRIBUER, CONVERTIR, TRANSMETTRE.',
+   draw(ctx,p,W,H){ decorNrj(ctx,W,H); } },
+ { dur:3000, caption:'ACTION — L\u2019énergie électrique arrive (ALIMENTER)… mais le relais est fermé : rien ne passe.',
+   draw(ctx,p,W,H){ decorNrj(ctx,W,H,[true,false,false,false]);
+     pointSignal(ctx,115,300,'#16a34a'); etiquette(ctx,'⚡',115,270,'#16a34a',26); } },
+ { dur:3000, caption:'ACTION — La chaîne d\u2019information donne l\u2019ordre : le relais DISTRIBUE l\u2019énergie au moteur.',
+   draw(ctx,p,W,H){ decorNrj(ctx,W,H,[true,true,false,false]);
+     fleche(ctx,310,60,310,132,'#7c3aed',4);
+     etiquette(ctx,'ordre du programme',310,50,'#7c3aed',13);
+     const e=lisse(p); pointSignal(ctx,192+(232-192)*e,185,'#16a34a'); } },
+ { dur:3200, caption:'ACTION — Le moteur CONVERTIT l\u2019énergie électrique en énergie mécanique (rotation)…',
+   draw(ctx,p,W,H){ decorNrj(ctx,W,H,[true,true,true,false]);
+     const a=p*12;
+     ctx.save(); ctx.translate(505,290); ctx.rotate(a);
+     ctx.strokeStyle='#dc2626'; ctx.lineWidth=5;
+     ctx.beginPath(); ctx.moveTo(-18,0); ctx.lineTo(18,0); ctx.moveTo(0,-18); ctx.lineTo(0,18); ctx.stroke(); ctx.restore();
+     etiquette(ctx,'rotation ⟳',505,330,'#dc2626',14); } },
+ { dur:3600, caption:'PROPRIÉTÉ — L\u2019axe TRANSMET le mouvement : le volet descend. La chaîne d\u2019énergie transporte de la PUISSANCE.',
+   draw(ctx,p,W,H){ decorNrj(ctx,W,H,[true,true,true,true]);
+     const e=lisse(p);
+     ctx.strokeStyle='#ea580c'; ctx.lineWidth=3; ctx.strokeRect(700,250,70,90);
+     ctx.fillStyle='#ea580c'; ctx.fillRect(700,250,70,20+70*e);
+     etiquette(ctx,'le volet descend',735,360,'#ea580c',13); } },
+]);
+
+/* ====== ANIM 3 : SI… ALORS… SINON ====== */
+function decorAlgo(ctx,W,H,temp){
+  // thermomètre
+  ctx.strokeStyle='#64748b'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.roundRect(80,80,34,200,17); ctx.stroke();
+  ctx.beginPath(); ctx.arc(97,300,26,0,7); ctx.stroke();
+  const niveau=Math.max(0,Math.min(1,(temp-10)/20));
+  ctx.fillStyle= temp<19 ? '#1d4ed8' : '#dc2626';
+  ctx.fillRect(89,270-176*niveau,16,176*niveau+10);
+  ctx.beginPath(); ctx.arc(97,300,18,0,7); ctx.fill();
+  etiquette(ctx,temp.toFixed(0)+' °C',97,52,temp<19?'#1d4ed8':'#dc2626',22);
+  // losange décision
+  ctx.strokeStyle='#7c3aed'; ctx.lineWidth=3; ctx.fillStyle='#f5f3ff';
+  ctx.beginPath(); ctx.moveTo(410,110); ctx.lineTo(530,180); ctx.lineTo(410,250); ctx.lineTo(290,180); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  etiquette(ctx,'SI température',410,172,'#7c3aed',16);
+  etiquette(ctx,'< 19 °C ?',410,196,'#7c3aed',16);
+  // branches
+  fleche(ctx,530,180,620,180,'#16a34a',4); etiquette(ctx,'OUI (ALORS)',575,162,'#16a34a',14);
+  fleche(ctx,410,250,410,320,'#dc2626',4); etiquette(ctx,'NON (SINON)',480,300,'#dc2626',14);
+  return {temp};
+}
+creerAnim('algo','cvAlgo','capAlgo','ptsAlgo',[
+ { dur:2600, caption:'STRUCTURE — Le programme du thermostat pose une QUESTION : la température est-elle sous 19 °C ?',
+   draw(ctx,p,W,H){ decorAlgo(ctx,W,H,21);
+     bloc(ctx,630,140,160,80,'CHAUFFAGE ON','radiateur chauffe','#16a34a',false);
+     bloc(ctx,330,330,160,60,'CHAUFFAGE OFF','on économise','#dc2626',false); } },
+ { dur:3400, caption:'ACTION — Il fait 15 °C : la condition est VRAIE → branche ALORS → le chauffage s\u2019allume. 🔥',
+   draw(ctx,p,W,H){ const e=lisse(p); decorAlgo(ctx,W,H,21-6*e);
+     const on=p>0.6;
+     bloc(ctx,630,140,160,80,'CHAUFFAGE ON','radiateur chauffe','#16a34a',on);
+     bloc(ctx,330,330,160,60,'CHAUFFAGE OFF','on économise','#dc2626',false);
+     if(on) etiquette(ctx,'🔥',710,120,'#ea580c',30); } },
+ { dur:3400, caption:'ACTION — La pièce se réchauffe… 20 °C : la condition devient FAUSSE → branche SINON → chauffage coupé.',
+   draw(ctx,p,W,H){ const e=lisse(p); decorAlgo(ctx,W,H,15+5*e);
+     const off=p>0.6;
+     bloc(ctx,630,140,160,80,'CHAUFFAGE ON','radiateur chauffe','#16a34a',!off);
+     bloc(ctx,330,330,160,60,'CHAUFFAGE OFF','on économise','#dc2626',off); } },
+ { dur:3600, caption:'PROPRIÉTÉ — SI…ALORS…SINON permet à la machine de DÉCIDER seule, en boucle, jour et nuit.',
+   draw(ctx,p,W,H){ decorAlgo(ctx,W,H,19);
+     bloc(ctx,630,140,160,80,'CHAUFFAGE ON','radiateur chauffe','#16a34a',false);
+     bloc(ctx,330,330,160,60,'CHAUFFAGE OFF','on économise','#dc2626',false);
+     ctx.font='bold 18px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
+     ctx.fillText('SI condition ALORS action SINON autre action — répété en boucle ⟳', W/2, 40); } },
+]);
+
+/* ====== ANIM 4 : COMMUNIQUER SANS FIL ====== */
+function decorCom(ctx,W,H){
+  etiquette(ctx,'🌡️',120,200,'#1d4ed8',40); etiquette(ctx,'capteur connecté',120,240,'#1d4ed8',13);
+  etiquette(ctx,'📡',400,200,'#7c3aed',40); etiquette(ctx,'box domotique',400,240,'#7c3aed',13);
+  etiquette(ctx,'☁️',560,110,'#0e7490',36); etiquette(ctx,'Internet',560,145,'#0e7490',13);
+  etiquette(ctx,'📱',700,200,'#ea580c',40); etiquette(ctx,'smartphone (en vacances !)',700,240,'#ea580c',13);
+}
+function ondes(ctx,x,y,r0,n,coul,p){
+  ctx.strokeStyle=coul; ctx.lineWidth=3;
+  for(let k=0;k<n;k++){
+    const r=r0+((p*70+k*26)%(26*n));
+    ctx.globalAlpha=1-(r-r0)/(26*n);
+    ctx.beginPath(); ctx.arc(x,y,r,-0.7,0.7); ctx.stroke();
+  }
+  ctx.globalAlpha=1;
+}
+creerAnim('com','cvCom','capCom','ptsCom',[
+ { dur:2600, caption:'STRUCTURE — Un capteur, la box de la maison, Internet, et un smartphone à 800 km.',
+   draw(ctx,p,W,H){ decorCom(ctx,W,H); } },
+ { dur:3400, caption:'ACTION — Le capteur émet ses mesures par ONDES RADIO (Wi-Fi ≈ 30 m, Bluetooth ≈ 10 m) : aucun fil !',
+   draw(ctx,p,W,H){ decorCom(ctx,W,H); ondes(ctx,150,195,26,4,'#1d4ed8',p);
+     etiquette(ctx,'23 °C',265,180,'#1d4ed8',15); } },
+ { dur:3400, caption:'ACTION — La box relaie l\u2019information vers Internet : elle devient accessible partout dans le monde.',
+   draw(ctx,p,W,H){ decorCom(ctx,W,H); ondes(ctx,150,195,26,4,'#1d4ed8',p);
+     const e=lisse(p);
+     fleche(ctx,430,180,430+(530-430)*e,180-(65)*e,'#0e7490',4); } },
+ { dur:3600, caption:'PROPRIÉTÉ — L\u2019objet est CONNECTÉ : on consulte et on commande la maison à distance… mais attention à la sécurité des données ! 🔒',
+   draw(ctx,p,W,H){ decorCom(ctx,W,H);
+     fleche(ctx,430,180,530,115,'#0e7490',4);
+     fleche(ctx,595,120,675,175,'#0e7490',4);
+     etiquette(ctx,'« il fait 23 °C au salon »',700,290,'#ea580c',14);
+     ctx.font='bold 17px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
+     ctx.fillText('SANS FIL = ONDES RADIO + INTERNET = MAISON PILOTABLE À DISTANCE', W/2, 40); } },
+]);
+
+/* ---------- Boutons + démarrage auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s4:'info',s5:'nrj',s6:'algo',s7:'com'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{ if(en.isIntersecting&&slideAnim[en.target.id]) ANIMS[slideAnim[en.target.id]].demarrer(); });},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{ if(en.isIntersecting) liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id)); });},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){ const y=window.scrollY+window.innerHeight/2; let best=0; slides.forEach((s,i)=>{ if(s.offsetTop<y) best=i; }); return best; }
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

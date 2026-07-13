@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 4ème — Modélisation & impression 3D · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#7c3aed; --niv-fonce:#6d28d9; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#f5f3ff;color:var(--niv-fonce)}
+nav.side a.actif{background:#ede9fe;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:18px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:32px}
+.carte h3{font-size:16px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:13.5px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#f5f3ff;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%237c3aed'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>De l'idée à l'objet</a>
+  <a href="#s2"><span class="dot"></span>Enlever ou ajouter ?</a>
+  <a href="#s3"><span class="dot"></span>Additif vs soustractif (animation)</a>
+  <a href="#s4"><span class="dot"></span>La chaîne numérique</a>
+  <a href="#s5"><span class="dot"></span>Modéliser par volumes (animation)</a>
+  <a href="#s6"><span class="dot"></span>Le tranchage (animation)</a>
+  <a href="#s7"><span class="dot"></span>Les réglages qui changent tout</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 4ème · Séquence Modélisation & impression 3D</div>
+  <h1>🖨️ Ce matin une idée,<br>ce soir un objet</h1>
+  <p class="sous" style="margin-top:16px">Une pièce cassée sur ton vélo, un support de téléphone introuvable en magasin, un prototype pour le concours robotique…
+  Avec la <b>chaîne numérique</b> — modéliser, trancher, imprimer — le fab lab transforme un fichier en objet réel.
+  Mais attention : entre l'écran et le plateau, il y a des règles à connaître !</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Deux grandes familles de fabrication</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#dc2626"><div class="ic">🪚</div><h3>Fabrication SOUSTRACTIVE</h3><p>On part d'un bloc de matière et on en ENLÈVE : usiner, fraiser, percer, découper.</p><span class="ex">une clé usinée dans un bloc d'acier</span></div>
+    <div class="carte" style="--accent:#16a34a"><div class="ic">🧱</div><h3>Fabrication ADDITIVE</h3><p>On part de RIEN et on AJOUTE la matière couche par couche : c'est l'impression 3D.</p><span class="ex">un support imprimé en PLA</span></div>
+    <div class="carte" style="--accent:#1d4ed8"><div class="ic">🫙</div><h3>Et aussi : le moulage</h3><p>On donne une forme à de la matière fondue dans un moule (formage).</p><span class="ex">un jouet en plastique injecté</span></div>
+  </div>
+  <p class="sous" style="margin-top:22px">L'impression 3D est parfaite pour le <b>prototypage</b> : une pièce unique, vite, sans moule ni gros outillage.</p>
+</section>
+
+<section class="slide" id="s3">
+  <h2>Additif contre soustractif : le match</h2>
+  <div class="animbox">
+    <canvas id="cvMatch" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capMatch"></div><button data-anim="match">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsMatch"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>La chaîne numérique : du fichier à l'objet</h2>
+  <table class="mat">
+    <tr><th>Étape</th><th>Outil</th><th>Résultat</th></tr>
+    <tr><td>1️⃣ <b>Modéliser</b> en 3D</td><td>logiciel de CAO (Tinkercad, SketchUp, Onshape…)</td><td>le modèle 3D de la pièce</td></tr>
+    <tr><td>2️⃣ <b>Exporter</b></td><td>format d'échange <b>STL</b></td><td>la surface de la pièce en petits triangles</td></tr>
+    <tr><td>3️⃣ <b>Trancher</b> (slicer)</td><td>logiciel de tranchage (Cura, PrusaSlicer…)</td><td>le parcours de la buse, couche par couche (G-code)</td></tr>
+    <tr><td>4️⃣ <b>Imprimer</b></td><td>l'imprimante 3D (dépôt de fil fondu)</td><td>l'objet réel, couche après couche</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">Chaque étape parle à la suivante par un <b>fichier</b> : c'est ça, une chaîne « numérique ».</p>
+</section>
+
+<section class="slide" id="s5">
+  <h2>Modéliser : assembler des volumes simples</h2>
+  <div class="animbox">
+    <canvas id="cvVol" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capVol"></div><button data-anim="vol">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsVol"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>Le tranchage : penser en couches</h2>
+  <div class="animbox">
+    <canvas id="cvSlice" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capSlice"></div><button data-anim="slice">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsSlice"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>Les réglages qui changent tout</h2>
+  <table class="mat">
+    <tr><th>Réglage</th><th>Effet</th><th>À retenir</th></tr>
+    <tr><td>📏 <b>Hauteur de couche</b></td><td>fine = belle surface mais LENT ; épaisse = rapide mais strié</td><td>0,2 mm : le bon compromis</td></tr>
+    <tr><td>🕸️ <b>Remplissage (infill)</b></td><td>plus de % = plus solide, mais plus long et plus de matière</td><td>déco 10 % · usage 20 % · pièce chargée 50 %+</td></tr>
+    <tr><td>🏗️ <b>Supports</b></td><td>indispensables sous les surplombs de plus de 45°</td><td>« au-delà de 45°, ça pend dans le vide ! »</td></tr>
+    <tr><td>🌡️ <b>Températures</b></td><td>buse trop froide = couches décollées ; plateau froid = warping</td><td>PLA : buse ~200 °C, plateau ~60 °C</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">➡️ Au <b>TP</b>, tu seras technicien de fab lab : diagnostiquer des impressions ratées à partir de leurs symptômes !</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>L'impression 3D est une fabrication <b>ADDITIVE</b> : on ajoute la matière couche par couche, au lieu d'en enlever (soustractif) ou de la mouler.</li>
+      <li>La <b>chaîne numérique</b> : modéliser (CAO) → exporter (STL) → trancher (slicer/G-code) → imprimer.</li>
+      <li>On modélise en combinant des <b>volumes simples</b> : ajouter un cube, un cylindre… et en SOUSTRAIRE pour creuser un perçage.</li>
+      <li>Le <b>tranchage</b> découpe le modèle en couches et calcule le trajet de la buse ; les surplombs de plus de <b>45°</b> exigent des supports.</li>
+      <li>Les réglages sont des <b>compromis</b> : finesse ↔ vitesse, remplissage ↔ solidité ↔ coût matière. Un bon technicien choisit selon l'usage de la pièce.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function frame(ts){
+    if(etat.t0===null)etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){ if(etat.i<phases.length-1){etat.i++;etat.t0=ts;cap.textContent=phases[etat.i].caption;majPts();} else return; }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){cancelAnimationFrame(etat.raf);etat.i=0;etat.t0=null;
+    cap.textContent=phases[0].caption;majPts();etat.raf=requestAnimationFrame(frame);}
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption;majPts();phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#6d28d9',taille=15){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+
+/* ====== ANIM 1 : ADDITIF vs SOUSTRACTIF ====== */
+function decorMatch(ctx,qS,qA){
+  // --- côté soustractif : un bloc qu'on creuse
+  etiquette(ctx,'SOUSTRACTIF : on ENLÈVE',210,44,'#dc2626',16);
+  ctx.fillStyle='#e2e8f0'; ctx.fillRect(110,110,200,150);
+  ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5; ctx.strokeRect(110,110,200,150);
+  // encoche qui se creuse (en L)
+  const prof=70*qS;
+  ctx.fillStyle='#fdfdfd';
+  ctx.fillRect(310-90,110,90,prof);
+  ctx.strokeStyle='#dc2626'; ctx.strokeRect(310-90,110,90,prof);
+  // fraise
+  if(qS>0 && qS<1){
+    ctx.fillStyle='#475569'; ctx.fillRect(258,60,14,50+prof-8);
+    ctx.beginPath(); ctx.moveTo(255,102+prof); ctx.lineTo(275,102+prof); ctx.lineTo(265,116+prof); ctx.closePath(); ctx.fill();
+  }
+  // copeaux perdus
+  const nCop=Math.floor(qS*7);
+  ctx.font='13px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+  for(let k=0;k<nCop;k++) ctx.fillText('💨',330+(k%3)*26,150+Math.floor(k/3)*30);
+  if(qS>0.6) etiquette(ctx,'copeaux = matière PERDUE',255,320,'#dc2626',13.5);
+
+  // --- côté additif : des couches qui s'empilent
+  etiquette(ctx,'ADDITIF : on AJOUTE',610,44,'#16a34a',16);
+  ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(490,262); ctx.lineTo(730,262); ctx.stroke();
+  etiquette(ctx,'plateau',610,282,'#94a3b8',12);
+  const nCouches=Math.floor(qA*10);
+  for(let k=0;k<nCouches;k++){
+    const w=170-Math.max(0,k-5)*16; // pyramide vers le haut
+    ctx.fillStyle=k%2?'#bbf7d0':'#86efac';
+    ctx.fillRect(610-w/2,262-14-(k*14),w,13);
+  }
+  // buse
+  if(qA>0 && qA<1){
+    const y=262-14-(nCouches*14);
+    ctx.fillStyle='#475569';
+    ctx.beginPath(); ctx.moveTo(610-12,y-34); ctx.lineTo(610+12,y-34); ctx.lineTo(610+4,y-8); ctx.lineTo(610-4,y-8); ctx.closePath(); ctx.fill();
+  }
+  if(qA>0.6) etiquette(ctx,'juste la matière qu\u2019il faut',610,320,'#16a34a',13.5);
+}
+creerAnim('match','cvMatch','capMatch','ptsMatch',[
+ {dur:2800,caption:'STRUCTURE — À gauche, un bloc plein face à la fraiseuse. À droite, un plateau vide sous la buse de l\u2019imprimante 3D.',
+  draw(ctx,p){ decorMatch(ctx,0,0); }},
+ {dur:5600,caption:'ACTION — La fraise CREUSE le bloc : les copeaux volent (matière perdue !). Pendant ce temps, la buse EMPILE ses couches : la pièce grandit à partir de rien.',
+  draw(ctx,p){ const q=lisse(p); decorMatch(ctx,q,q); }},
+ {dur:4200,caption:'PROPRIÉTÉ — Deux chemins vers la pièce : le soustractif retire (précis, mais outillage lourd et copeaux), l\u2019additif dépose couche par couche (idéal pour une pièce unique : le PROTOTYPAGE).',
+  draw(ctx,p){ decorMatch(ctx,1,1);
+    etiquette(ctx,'l\u2019impression 3D = fabrication ADDITIVE',410,362,'#6d28d9',16); }},
+]);
+
+/* ====== ANIM 2 : MODÉLISER PAR VOLUMES ====== */
+function boiteIso(ctx,x,y,w,h,prof,coul,alpha=1){
+  // pseudo-3D isométrique simple
+  ctx.globalAlpha=alpha;
+  const dx=prof*0.6, dy=prof*0.35;
+  ctx.fillStyle=coul; ctx.fillRect(x,y,w,h);
+  ctx.fillStyle='rgba(0,0,0,0.15)';
+  ctx.beginPath(); ctx.moveTo(x+w,y); ctx.lineTo(x+w+dx,y-dy); ctx.lineTo(x+w+dx,y+h-dy); ctx.lineTo(x+w,y+h); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.35)';
+  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+dx,y-dy); ctx.lineTo(x+w+dx,y-dy); ctx.lineTo(x+w,y); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='#475569'; ctx.lineWidth=2; ctx.strokeRect(x,y,w,h);
+  ctx.globalAlpha=1;
+}
+function cylIso(ctx,cx,cy,r,h,coul,alpha=1){
+  ctx.globalAlpha=alpha;
+  ctx.fillStyle=coul;
+  ctx.fillRect(cx-r,cy-h,2*r,h);
+  ctx.beginPath(); ctx.ellipse(cx,cy,r,r*0.35,0,0,7); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.4)';
+  ctx.beginPath(); ctx.ellipse(cx,cy-h,r,r*0.35,0,0,7); ctx.fill();
+  ctx.strokeStyle='#475569'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.ellipse(cx,cy-h,r,r*0.35,0,0,7); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx-r,cy-h); ctx.lineTo(cx-r,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx+r,cy-h); ctx.lineTo(cx+r,cy); ctx.stroke();
+  ctx.globalAlpha=1;
+}
+function decorVol(ctx,phase,q){
+  etiquette(ctx,'objectif : un support de téléphone',410,36,'#64748b',14);
+  // base : le socle (cube écrasé)
+  boiteIso(ctx,280,220,260,60,50,'#c4b5fd', phase>=0?1:0);
+  etiquette(ctx,'① socle : un pavé',180,255,'#6d28d9',13.5);
+  if(phase>=1){
+    // dossier incliné = 2e pavé, glisse en place
+    const yy=220-90*(phase===1?q:1);
+    boiteIso(ctx,300,Math.max(130,yy+90-90),40,150,50,'#a78bfa',phase===1?0.4+0.6*q:1);
+    etiquette(ctx,'② dossier : un 2ème pavé  (opération : AJOUTER)',560,150,'#7c3aed',13.5);
+  }
+  if(phase>=2){
+    // perçage : cylindre soustrait dans le socle
+    const a=phase===2?q:1;
+    cylIso(ctx,470,268,20,55,'rgba(220,38,38,'+(0.55*a)+')');
+    etiquette(ctx,'③ passage du câble : un cylindre  (opération : SOUSTRAIRE)',480,340,'#dc2626',13.5);
+  }
+}
+creerAnim('vol','cvVol','capVol','ptsVol',[
+ {dur:3000,caption:'STRUCTURE — En CAO, on ne « sculpte » pas : on assemble des VOLUMES SIMPLES. Ici, le socle du support = un simple pavé.',
+  draw(ctx,p){ decorVol(ctx,0,lisse(p)); }},
+ {dur:4600,caption:'ACTION — On AJOUTE un deuxième pavé pour le dossier… puis on SOUSTRAIT un cylindre pour percer le passage du câble : ajouter et enlever des volumes, c\u2019est tout l\u2019art de la CAO.',
+  draw(ctx,p){ const q=lisse(p);
+    if(q<0.5) decorVol(ctx,1,q*2); else decorVol(ctx,2,(q-0.5)*2); }},
+ {dur:4200,caption:'PROPRIÉTÉ — Pavé + pavé − cylindre = un support de téléphone ! Toute pièce, même complexe, se décompose en volumes élémentaires combinés par AJOUT ou SOUSTRACTION.',
+  draw(ctx,p){ decorVol(ctx,2,1);
+    etiquette(ctx,'modèle 3D terminé → prochaine étape : exporter en STL',410,375,'#6d28d9',15); }},
+]);
+
+/* ====== ANIM 3 : LE TRANCHAGE ====== */
+function profilArche(x){ // demi-arche avec surplomb : hauteur selon x (0..1)
+  return 1; // non utilisé
+}
+function decorSlice(ctx,mode,q){
+  // pièce : une arche (pont) => surplomb au centre
+  const x0=180,y0=300,w=300,h=190;
+  function dessinArche(alpha){
+    ctx.globalAlpha=alpha;
+    ctx.fillStyle='#ddd6fe';
+    ctx.beginPath();
+    ctx.moveTo(x0,y0); ctx.lineTo(x0,y0-h); ctx.lineTo(x0+w,y0-h); ctx.lineTo(x0+w,y0);
+    ctx.lineTo(x0+w-70,y0); ctx.lineTo(x0+w-70,y0-h+70); ctx.lineTo(x0+70,y0-h+70); ctx.lineTo(x0+70,y0);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5; ctx.stroke();
+    ctx.globalAlpha=1;
+  }
+  ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(120,y0); ctx.lineTo(540,y0); ctx.stroke();
+  etiquette(ctx,'plateau',330,322,'#94a3b8',12);
+  const nMax=13, hC=h/nMax;
+  if(mode==='contour'){ dessinArche(1); }
+  if(mode==='lignes'){
+    dessinArche(0.25);
+    const n=Math.floor(q*nMax);
+    ctx.strokeStyle='#7c3aed'; ctx.lineWidth=1.5;
+    for(let k=1;k<=n;k++){
+      const y=y0-k*hC;
+      ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x0+w,y); ctx.stroke();
+    }
+    etiquette(ctx,'le slicer découpe le modèle en '+nMax+' couches',330,60,'#6d28d9',14.5);
+  }
+  if(mode==='impression'){
+    const n=Math.floor(q*nMax);
+    for(let k=0;k<n;k++){
+      const y=y0-(k+1)*hC;
+      ctx.fillStyle=k%2?'#c4b5fd':'#a78bfa';
+      // couche : pleine en bas, deux piliers au milieu, pleine en haut
+      if(y> y0-h+70-1){ // zone piliers
+        ctx.fillRect(x0,y,70,hC-1);
+        ctx.fillRect(x0+w-70,y,70,hC-1);
+      } else {
+        ctx.fillRect(x0,y,w,hC-1);
+      }
+    }
+    // surplomb : le toit de l'arche
+    if(n*hC>=h-70+hC){
+      etiquette(ctx,'⚠️ ce toit « pend dans le vide » pendant l\u2019impression !',330,60,'#dc2626',14.5);
+      // supports en pointillés
+      ctx.strokeStyle='#f59e0b'; ctx.lineWidth=2; ctx.setLineDash([4,4]);
+      for(let sx=x0+82;sx<x0+w-70;sx+=22){
+        ctx.beginPath(); ctx.moveTo(sx,y0); ctx.lineTo(sx,y0-h+70); ctx.stroke();
+      }
+      ctx.setLineDash([]);
+      etiquette(ctx,'supports (retirés après impression)',330,y0-40,'#b45309',12.5);
+    }
+    // buse
+    if(q<1){
+      const y=y0-(n+1)*hC;
+      ctx.fillStyle='#475569';
+      const bx=x0+40+((q*7)%1)*(w-80);
+      ctx.beginPath(); ctx.moveTo(bx-11,y-30); ctx.lineTo(bx+11,y-30); ctx.lineTo(bx+3,y-4); ctx.lineTo(bx-3,y-4); ctx.closePath(); ctx.fill();
+    }
+  }
+  // panneau infos à droite
+  etiquette(ctx,'hauteur de couche',680,120,'#475569',13);
+  etiquette(ctx,'fine = joli mais lent',680,140,'#94a3b8',12);
+  etiquette(ctx,'épaisse = rapide mais strié',680,158,'#94a3b8',12);
+  etiquette(ctx,'règle des 45°',680,220,'#475569',13);
+  etiquette(ctx,'surplomb > 45°',680,240,'#94a3b8',12);
+  etiquette(ctx,'→ SUPPORTS obligatoires',680,258,'#b45309',12);
+}
+creerAnim('slice','cvSlice','capSlice','ptsSlice',[
+ {dur:2800,caption:'STRUCTURE — Le modèle 3D d\u2019une arche arrive du logiciel de CAO. Problème : l\u2019imprimante, elle, ne sait faire QU\u2019UNE chose… des couches !',
+  draw(ctx,p){ decorSlice(ctx,'contour',0); }},
+ {dur:4200,caption:'ACTION 1/2 — Le SLICER découpe le modèle en tranches horizontales et calcule le trajet de la buse pour chacune : c\u2019est le fichier G-code.',
+  draw(ctx,p){ decorSlice(ctx,'lignes',lisse(p)); }},
+ {dur:6000,caption:'ACTION 2/2 — L\u2019impression monte couche par couche… mais le toit de l\u2019arche surplombe le vide : sans SUPPORTS (piliers sacrificiels), il s\u2019effondrerait !',
+  draw(ctx,p){ decorSlice(ctx,'impression',lisse(p)); }},
+ {dur:4200,caption:'PROPRIÉTÉ — Penser « en couches », c\u2019est le secret du technicien 3D : orienter la pièce, ajouter des supports au-delà de 45°, choisir la hauteur de couche. Le slicer transforme la géométrie en STRATÉGIE d\u2019impression.',
+  draw(ctx,p){ decorSlice(ctx,'impression',1); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s3:'match',s5:'vol',s6:'slice'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

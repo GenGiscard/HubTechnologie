@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP 3ème — Mission ACV · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --cyan:#0e7490; --niv:#0d9488; --niv-fonce:#0f766e; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.tp{max-width:980px;margin:26px auto 6px;padding:0 20px}
+header.tp h1{font-size:32px;color:var(--cyan)}
+header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
+.progression{max-width:980px;margin:16px auto;padding:0 20px;display:flex;gap:8px;align-items:center}
+.progression .seg{flex:1;height:10px;border-radius:6px;background:#e2e8f0;transition:.3s}
+.progression .seg.ok{background:var(--vert)}
+.progression .seg.encours{background:var(--orange)}
+.progression .score{font-weight:800;color:var(--niv-fonce);font-size:15px;white-space:nowrap}
+.acti{max-width:980px;margin:22px auto;padding:0 20px;position:relative}
+.boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:24px;border-top:5px solid var(--cyan);position:relative}
+.boite h2{font-size:21px;color:var(--cyan);display:flex;align-items:center;gap:10px}
+.boite h2 .badge{background:var(--cyan);color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
+.verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
+.verrou .cadenas{font-size:42px}
+.minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
+.minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
+.minicas .cas.faux{border-color:var(--rouge);background:#fef2f2}
+.minicas .cas .devinette{font-size:13.5px;font-weight:700;min-height:58px;line-height:1.45}
+.minicas .cas .choix{display:flex;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.minicas .cas button{border:1.5px solid #cbd5e1;background:#fff;border-radius:8px;padding:6px 10px;font-size:12.5px;font-weight:700;cursor:pointer}
+.minicas .cas button:hover{border-color:var(--cyan)}
+.ordre{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.ordre button{border:2.5px solid var(--niv);background:#fff;border-radius:12px;padding:14px 16px;font-size:14.5px;font-weight:700;color:var(--niv-fonce);cursor:pointer;min-width:180px;text-align:left}
+.ordre button small{display:block;font-weight:500;color:var(--gris);margin-top:4px}
+.ordre button.pris{opacity:.35;cursor:default}
+.slots{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.slots .slot{min-width:150px;min-height:52px;border:2px dashed #cbd5e1;border-radius:12px;padding:8px 10px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--gris);text-align:center}
+.slots .slot.rempli{border-style:solid;border-color:var(--niv);color:var(--niv-fonce);background:#f0fdfa}
+.slots .fl{font-size:20px;color:var(--orange);font-weight:800}
+.jauge{max-width:520px;margin:6px 0 14px}
+.jauge .barre{height:26px;background:#e2e8f0;border-radius:14px;overflow:hidden;border:1.5px solid #cbd5e1;position:relative}
+.jauge .barre div{height:100%;background:var(--rouge);transition:width .4s;border-radius:14px}
+.jauge .cible{position:absolute;top:-6px;bottom:-6px;width:3px;background:var(--vert)}
+.jauge .lbl{font-size:13px;font-weight:800;color:var(--niv-fonce);margin-top:5px}
+.leviers{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.leviers button{border:2.5px solid #cbd5e1;background:#fff;border-radius:12px;padding:12px 14px;font-size:13.5px;font-weight:700;cursor:pointer;text-align:left;line-height:1.45}
+.leviers button small{display:block;font-weight:600;color:var(--gris);font-size:12px}
+.leviers button:hover{border-color:var(--cyan)}
+.leviers button.sel{border-color:var(--niv);background:#f0fdfa}
+.btn{border:none;border-radius:10px;padding:11px 18px;font-size:15px;font-weight:800;cursor:pointer;color:#fff;background:var(--cyan)}
+.btn:hover{filter:brightness(1.08)}
+.btnrow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.verdict{margin-top:12px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:14.5px;display:none;line-height:1.55}
+.verdict.ok{display:block;background:#dcfce7;color:#14532d;border-left:5px solid var(--vert)}
+.verdict.ko{display:block;background:#fee2e2;color:#7f1d1d;border-left:5px solid var(--rouge)}
+.calczone{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.calczone input{width:130px;padding:11px;font-size:17px;font-weight:800;text-align:center;border:2px solid #cbd5e1;border-radius:10px}
+.calczone .unite{font-weight:800;color:var(--gris)}
+.rappel{display:inline-block;background:#f0fdfa;border:1.5px dashed var(--niv);border-radius:10px;padding:8px 14px;font-weight:800;color:var(--niv-fonce);font-size:14px;margin-bottom:10px}
+.question{margin:14px 0;padding:14px;background:#f8fafc;border-radius:12px}
+.question .q{font-weight:700;margin-bottom:10px;font-size:15px}
+.rep{display:flex;flex-wrap:wrap;gap:8px}
+.rep button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 16px;font-size:14.5px;cursor:pointer;font-weight:600}
+.rep button:hover{border-color:var(--cyan)}
+.rep button.bon{background:#dcfce7;border-color:var(--vert)}
+.rep button.faux{background:#fee2e2;border-color:var(--rouge)}
+.codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#0f766e,#0e7490);border-radius:14px;padding:22px;color:#fff}
+.codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
+.codefinal a{color:#fde68a;font-weight:800}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%230e7490'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="tp">
+  <h1>🔧 TP — Mission ACV</h1>
+  <p>Le bureau d'études d'Esticville t'a recruté comme éco-concepteur junior. 5 missions — à la fin : le code des jeux !</p>
+</header>
+
+<div class="progression" id="prog">
+  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+</div>
+
+<!-- ============ A1 : QUI SUIS-JE ============ -->
+<div class="acti" id="a1">
+ <div class="boite">
+  <h2><span class="badge">1</span>Le vocabulaire de l'éco-concepteur</h2>
+  <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! (1 pt par bonne réponse du premier coup)</div>
+  <div class="minicas" id="cas1"></div>
+ </div>
+</div>
+
+<!-- ============ A2 : ORDRE DU CYCLE ============ -->
+<div class="acti" id="a2">
+ <div class="boite">
+  <h2><span class="badge">2</span>Remonte le cycle de vie</h2>
+  <div class="consigne">De la mine à la borne de recyclage : clique les 4 grandes étapes <b>dans l'ordre</b> de la vie d'un objet.</div>
+  <div class="ordre" id="blocs2"></div>
+  <div class="slots" id="slots2">
+    <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
+    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+    <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
+    <div class="slot" data-i="3">4ème</div>
+  </div>
+  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+  <div class="verdict" id="verd2"></div>
+ </div>
+</div>
+
+<!-- ============ A3 : ÉCO-CONCEPTION ============ -->
+<div class="acti" id="a3">
+ <div class="boite">
+  <h2><span class="badge">3</span>Éco-conçois la trottinette ESTIC-Glide !</h2>
+  <div class="consigne">🛴 L'ACV de la trottinette actuelle affiche un impact de <b>100 points</b>. Le cahier des charges impose de descendre à <b>60 points ou moins</b> en choisissant <b>exactement 3 modifications</b>. Attention : certaines propositions du service marketing n'aident pas du tout…</div>
+  <div class="jauge">
+    <div class="barre"><div id="jaugeImpact" style="width:100%"></div><div class="cible" style="left:60%"></div></div>
+    <div class="lbl">Impact : <span id="impactVal">100</span> / 100 — 🎯 objectif ≤ 60 (trait vert) · sélection : <span id="nbSel">0</span>/3</div>
+  </div>
+  <div class="leviers" id="leviers3"></div>
+  <div class="btnrow"><button class="btn" id="verif3">✔ Présenter au bureau d'études</button><button class="btn" id="reset3" style="background:#64748b">↺ Tout désélectionner</button></div>
+  <div class="verdict" id="verd3"></div>
+ </div>
+</div>
+
+<!-- ============ A4 : BILAN CARBONE ============ -->
+<div class="acti" id="a4">
+ <div class="boite">
+  <h2><span class="badge">4</span>Le bilan carbone du smartphone</h2>
+  <div class="consigne">📱 L'ACV d'un smartphone affiche <b>50 kg de CO₂</b> sur toute sa vie, dont <b>80 %</b> émis à la FABRICATION. Combien de kg de CO₂ la fabrication représente-t-elle ?</div>
+  <div class="rappel">📐 Rappel : part = total × pourcentage ÷ 100</div>
+  <div class="calczone">
+    <span>fabrication =</span>
+    <input type="number" id="rep4" step="any" placeholder="?">
+    <span class="unite">kg de CO₂</span>
+    <button class="btn" id="verif4">✔ Vérifier</button>
+  </div>
+  <div class="verdict" id="verd4"></div>
+ </div>
+</div>
+
+<!-- ============ A5 : BILAN ============ -->
+<div class="acti" id="a5">
+ <div class="boite">
+  <h2><span class="badge">5</span>Bilan de l'éco-concepteur</h2>
+  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
+  <div id="quiz5"></div>
+  <div class="codefinal" id="codefinal">
+    🏆 La trottinette ESTIC-Glide part en production !
+    <div class="code">CYCLE360</div>
+    <div>Entre ce code dans les jeux <a href="03_jeu_tri_rush.html">🎮 Tri Rush</a> et <a href="03b_jeu_centre_valorisation.html">🏭 Centre de valorisation</a> pour les déverrouiller.</div>
+  </div>
+ </div>
+</div>
+
+<script>
+/* ================= ÉTAT & PROGRESSION ================= */
+const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
+function sauver(){ try{ localStorage.setItem('tp_cycle_3e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_cycle_3e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function majProgression(){
+  document.querySelectorAll('.progression .seg').forEach(seg=>{
+    const n=+seg.dataset.a;
+    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+  });
+  document.getElementById('scoreTot').textContent=etat.score;
+  for(let n=2;n<=5;n++){
+    const acti=document.getElementById('a'+n);
+    let v=acti.querySelector('.verrou');
+    if(n>etat.debloque){
+      if(!v){ v=document.createElement('div'); v.className='verrou';
+        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
+        acti.querySelector('.boite').appendChild(v); }
+    } else if(v) v.remove();
+  }
+}
+function reussir(n,pts){
+  etat.score+=pts;
+  if(etat.debloque===n) etat.debloque=n+1;
+  sauver(); majProgression();
+  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+}
+
+/* ================= A1 : QUI SUIS-JE ================= */
+const CAS1=[
+ {devinette:'« Je mesure TOUS les impacts d\u2019un objet, de la mine à la benne, pour savoir où agir. »', bonne:'l\u2019ACV', autres:['l\u2019économie linéaire']},
+ {devinette:'« Chez moi, la fin de vie d\u2019un objet redevient de la MATIÈRE pour en fabriquer d\u2019autres : la boucle est bouclée. »', bonne:'l\u2019économie circulaire', autres:['l\u2019économie linéaire']},
+ {devinette:'« Je réduis l\u2019impact d\u2019un produit AVANT même sa fabrication : alléger, choisir du recyclé, prévoir la réparation. »', bonne:'l\u2019éco-conception', autres:['le recyclage']},
+ {devinette:'« Affiché sur les appareils en magasin, je note de 0 à 10 la facilité à RÉPARER un produit. »', bonne:'l\u2019indice de réparabilité', autres:['le bilan carbone']},
+];
+(function initA1(){
+  const zone=document.getElementById('cas1');
+  CAS1.forEach(cas=>{
+    const d=document.createElement('div'); d.className='cas';
+    d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
+    const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
+    let premier=true, fait=false;
+    [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
+      const b=document.createElement('button'); b.textContent=rep;
+      b.onclick=()=>{
+        if(fait) return;
+        if(rep===cas.bonne){
+          fait=true; d.classList.remove('faux'); d.classList.add('bon');
+          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+          etat.q1ok++;
+          if(etat.q1ok===CAS1.length) reussir(1,2);
+        } else { d.classList.add('faux'); premier=false; }
+      };
+      ch.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+/* ================= A2 : ORDRE DU CYCLE ================= */
+const BLOCS2=[
+ {id:1,t:'⛏️ Extraction',s:'prélever les matières premières'},
+ {id:0,t:'🏭 Fabrication',s:'transformer et assembler'},
+ {id:2,t:'📱 Utilisation',s:'la vie de l\u2019objet chez toi'},
+ {id:3,t:'♻️ Fin de vie',s:'recycler, réemployer… ou jeter'},
+];
+const BON2=[1,0,2,3];
+let choix2=[], a2fait=false;
+function initA2(){
+  choix2=[];
+  const zone=document.getElementById('blocs2'); zone.innerHTML='';
+  BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
+    const btn=document.createElement('button');
+    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+    btn.onclick=()=>{
+      if(btn.classList.contains('pris')||choix2.length>=4) return;
+      btn.classList.add('pris'); choix2.push(b.id);
+      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+      slot.textContent=b.t; slot.classList.add('rempli');
+    };
+    zone.appendChild(btn);
+  });
+  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
+  document.getElementById('verd2').className='verdict';
+}
+document.getElementById('reset2').onclick=initA2;
+document.getElementById('verif2').onclick=()=>{
+  const verd=document.getElementById('verd2');
+  if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
+  if(choix2.join()===BON2.join()){
+    verd.className='verdict ok';
+    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : extraction → fabrication → utilisation → fin de vie (avec la distribution entre fabrication et utilisation : cargos et camions comptent aussi !). (+3 pts)'; reussir(2,3); }
+    else verd.textContent='✅ Bon ordre !';
+  } else {
+    verd.className='verdict ko';
+    verd.textContent='❌ Le cycle est emmêlé. Pars de la mine : peut-on fabriquer sans matière ? Utiliser sans avoir fabriqué ? Recommence !';
+  }
+};
+initA2();
+
+/* ================= A3 : ÉCO-CONCEPTION ================= */
+const LEVIERS=[
+ {id:'alu', t:'♻️ Cadre en aluminium 100 % recyclé', s:'même solidité, beaucoup moins d\u2019extraction', d:-18},
+ {id:'alleger', t:'🪶 Alléger le cadre de 1,2 kg', s:'moins de matière = moins d\u2019impact partout', d:-15},
+ {id:'batterie', t:'🔋 Batterie remplaçable sans outil', s:'la trottinette vit deux fois plus longtemps', d:-14},
+ {id:'repar', t:'🔧 Pièces détachées garanties 10 ans', s:'réparable = jetée moins vite', d:-10},
+ {id:'chrome', t:'✨ Finition chromée brillante (marketing)', s:'« ça fera vendre ! »', d:+5},
+ {id:'avion', t:'✈️ Livraison express par avion (marketing)', s:'« le client adore recevoir vite ! »', d:+12},
+];
+let sel3=[], a3fait=false;
+function majJauge(){
+  const total=100+sel3.reduce((s,id)=>s+LEVIERS.find(l=>l.id===id).d,0);
+  document.getElementById('impactVal').textContent=total;
+  document.getElementById('nbSel').textContent=sel3.length;
+  const j=document.getElementById('jaugeImpact');
+  j.style.width=Math.max(0,Math.min(100,total))+'%';
+  j.style.background= total<=60?'#16a34a':(total<=80?'#f59e0b':'#dc2626');
+  return total;
+}
+(function initA3(){
+  const zone=document.getElementById('leviers3');
+  LEVIERS.slice().sort(()=>0.5-Math.random()).forEach(l=>{
+    const b=document.createElement('button');
+    b.innerHTML=l.t+' <b>('+(l.d>0?'+':'')+l.d+' pts d\u2019impact)</b><small>'+l.s+'</small>';
+    b.dataset.id=l.id;
+    b.onclick=()=>{
+      if(a3fait) return;
+      if(sel3.includes(l.id)){ sel3=sel3.filter(x=>x!==l.id); b.classList.remove('sel'); }
+      else if(sel3.length<3){ sel3.push(l.id); b.classList.add('sel'); }
+      majJauge();
+    };
+    zone.appendChild(b);
+  });
+})();
+document.getElementById('reset3').onclick=()=>{
+  if(a3fait) return;
+  sel3=[]; document.querySelectorAll('#leviers3 button').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('verd3').className='verdict'; majJauge();
+};
+document.getElementById('verif3').onclick=()=>{
+  const verd=document.getElementById('verd3');
+  if(sel3.length!==3){ verd.className='verdict ko'; verd.textContent='Choisis exactement 3 modifications !'; return; }
+  const total=majJauge();
+  if(total<=60){
+    verd.className='verdict ok';
+    verd.innerHTML='✅ Impact : '+total+'/100 — cahier des charges respecté ! Tu as fait comme un vrai bureau d\u2019études : chiffrer chaque option et ignorer les fausses bonnes idées du marketing (le chrome et l\u2019avion AUGMENTENT l\u2019impact !).'+(a3fait?'':' (+4 pts)');
+    if(!a3fait){ a3fait=true; reussir(3,4); }
+  } else {
+    verd.className='verdict ko';
+    verd.textContent='❌ Impact : '+total+'/100, encore trop haut (objectif ≤ 60). Regarde bien les chiffres : certaines propositions AJOUTENT de l\u2019impact au lieu d\u2019en retirer…';
+  }
+};
+majJauge();
+
+/* ================= A4 : BILAN CARBONE ================= */
+let a4fait=false;
+document.getElementById('verif4').onclick=()=>{
+  const verd=document.getElementById('verd4');
+  const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
+  if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
+  if(Math.abs(v-40)<=0.5){
+    verd.className='verdict ok';
+    verd.innerHTML='✅ 50 × 80 ÷ 100 = 40 kg de CO₂ rien que pour la fabrication ! Conclusion d\u2019ACV : changer de téléphone tous les 2 ans coûte bien plus cher à la planète que de recharger le tien. Le garder longtemps, c\u2019est le geste n°1.'+(a4fait?'':' (+4 pts)');
+    if(!a4fait){ a4fait=true; reussir(4,4); }
+  } else {
+    verd.className='verdict ko';
+    verd.textContent='❌ Pas ça. 80 % de 50 kg : calcule 50 × 80 ÷ 100 (ou 50 × 0,8).';
+  }
+};
+
+/* ================= A5 : BILAN ================= */
+const Q5=[
+ {q:"L'étape la plus émettrice de CO₂ d'un smartphone est…", r:["l'utilisation","la fabrication","la distribution"], b:1},
+ {q:"L'économie circulaire consiste à…", r:["jeter plus vite","reboucler la fin de vie vers la matière","produire plus loin"], b:1},
+ {q:"L'éco-conception agit surtout…", r:["au moment de jeter","dès le bureau d'études","au magasin"], b:1},
+ {q:"Le geste le plus efficace pour réduire l'impact de ton téléphone :", r:["le recharger moins","le garder plus longtemps","le mettre en mode avion"], b:1},
+];
+(function initQ5(){
+  const zone=document.getElementById('quiz5');
+  Q5.forEach((item,i)=>{
+    const d=document.createElement('div'); d.className='question';
+    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
+    const rep=d.querySelector('.rep');
+    item.r.forEach((r,k)=>{
+      const b=document.createElement('button'); b.textContent=r;
+      b.onclick=()=>{
+        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
+        etat.q5rep++;
+        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
+        if(etat.q5rep===Q5.length){
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          else{
+            const verd=document.createElement('div'); verd.className='verdict ko';
+            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
+            zone.appendChild(verd);
+          }
+        }
+      };
+      rep.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+charger(); majProgression();
+</script>
+</body>
+</html>

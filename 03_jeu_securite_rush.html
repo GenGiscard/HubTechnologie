@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Sécurité Rush — Technologie 4ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#fdba74; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:520px;min-height:400px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#action{background:#1e293b;border:2px solid var(--neon);border-radius:14px;padding:18px;text-align:center;margin-bottom:12px}
+#action .em{font-size:36px}
+#action .txt{font-size:18px;font-weight:900;color:#fff;margin-top:6px;min-height:56px;line-height:1.5}
+#choix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:13px 6px;font-size:14px;font-weight:900;cursor:pointer;transition:.1s;line-height:1.4}
+#choix button small{display:block;font-size:10.5px;color:#94a3b8;font-weight:600}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:40px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:430px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23fb7185'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🚗 SÉCURITÉ RUSH</h1>
+<div class="sous">Un équipement ou une situation s'affiche : sécurité active, passive, comportement ou entretien ? Classe avant la fin du chrono !</div>
+
+<div class="hud">
+  <div>Classées : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div id="action"><div class="em" id="eEm">🚗</div><div class="txt" id="eTxt"></div></div>
+  <div id="choix">
+    <button data-f="active">🛡️ SÉCURITÉ ACTIVE<small>éviter l'accident</small></button>
+    <button data-f="passive">🎗️ SÉCURITÉ PASSIVE<small>protéger pendant le choc</small></button>
+    <button data-f="comportement">🧠 COMPORTEMENT<small>le facteur humain</small></button>
+    <button data-f="entretien">🔧 ENTRETIEN<small>garder les équipements efficaces</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Centre fermé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Le centre de sécurité routière</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Les règles du tri sécurité</h2>
+    <p>Un équipement ou une situation s'affiche… à toi de trouver sa famille :<br>
+    🛡️ ACTIVE = éviter l'accident · 🎗️ PASSIVE = protéger pendant le choc ·
+    🧠 COMPORTEMENT = le facteur humain · 🔧 ENTRETIEN = garder tout efficace.<br>
+    Erreur ou chrono écoulé = une vie. Ça accélère ! 🏁</p>
+    <button id="btnGo">🚗 Trier la sécurité</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Sortie de route !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence Automobile & sécurité · 4ème</footer>
+
+<script>
+const CODE='CEINTURE';
+function dejaOuvert(){ try{ return localStorage.getItem('securiterush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('securiterush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const NOMS_F={active:'🛡️ la SÉCURITÉ ACTIVE',passive:'🎗️ la SÉCURITÉ PASSIVE',comportement:'🧠 le COMPORTEMENT',entretien:'🔧 l\u2019ENTRETIEN'};
+const ACTIONS=[
+ {t:'L\u2019ABS qui empêche les roues de se bloquer au freinage',f:'active',exp:'freiner ET diriger en même temps : la sécurité ACTIVE évite l\u2019accident.'},
+ {t:'Les feux stop qui préviennent la voiture de derrière',f:'active',exp:'être vu quand on freine : sécurité ACTIVE.'},
+ {t:'Le freinage d\u2019urgence automatique déclenché par les capteurs',f:'active',exp:'les capteurs freinent avant l\u2019humain : sécurité ACTIVE assistée.'},
+ {t:'Des pneus neufs qui évacuent bien l\u2019eau de pluie',f:'active',exp:'adhérence maximale = accident évité : sécurité ACTIVE.'},
+ {t:'La ceinture qui retient le corps au moment du choc',f:'passive',exp:'elle protège PENDANT le choc : sécurité PASSIVE — risque mortel divisé par 3.'},
+ {t:'L\u2019airbag qui se gonfle en 30 millisecondes',f:'passive',exp:'amortir la tête pendant le choc : sécurité PASSIVE.'},
+ {t:'L\u2019avant de la voiture qui s\u2019écrase EXPRÈS lors du choc',f:'passive',exp:'la zone déformable absorbe l\u2019énergie à la place des passagers : PASSIVE.'},
+ {t:'L\u2019appuie-tête qui retient la nuque en cas de choc arrière',f:'passive',exp:'protéger les cervicales pendant le choc : sécurité PASSIVE.'},
+ {t:'Lire une notification au volant : « juste une seconde »',f:'comportement',exp:'1 seconde à 90 km/h = 25 m en aveugle : le COMPORTEMENT, maillon décisif.'},
+ {t:'Laisser 2 secondes d\u2019écart avec le véhicule de devant',f:'comportement',exp:'les distances de sécurité : un choix de COMPORTEMENT qui sauve.'},
+ {t:'Adapter sa vitesse sous la pluie battante',f:'comportement',exp:'la distance de freinage explose sur sol mouillé : COMPORTEMENT responsable.'},
+ {t:'Refuser de monter avec un conducteur qui a bu',f:'comportement',exp:'l\u2019alcool ruine le temps de réaction : le COMPORTEMENT concerne aussi les passagers.'},
+ {t:'Remplacer des plaquettes de frein usées',f:'entretien',exp:'des freins efficaces se préparent au garage : ENTRETIEN.'},
+ {t:'Vérifier la profondeur des sculptures des pneus',f:'entretien',exp:'sous 1,6 mm, le pneu n\u2019évacue plus l\u2019eau : ENTRETIEN vital.'},
+ {t:'Changer une ampoule de phare grillée',f:'entretien',exp:'voir et être vu suppose des feux qui marchent : ENTRETIEN.'},
+ {t:'Contrôler la pression des pneus chaque mois',f:'entretien',exp:'un pneu sous-gonflé adhère mal et chauffe : ENTRETIEN régulier.'},
+];
+
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('securiterush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:10,reste:10,fini:false,pioche:[],action:null};
+  window.J_DEBUG=J;
+  majHUD(); nouvelElement(); dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function nouvelElement(){
+  if(J.pioche.length===0) J.pioche=ACTIONS.map((_,i)=>i).sort(()=>0.5-Math.random());
+  J.element=ACTIONS[J.pioche.pop()];
+  J.reste=J.duree;
+  document.getElementById('eTxt').textContent=J.element.t;
+}
+function repondre(f){
+  if(!J||J.fini) return;
+  const flash=document.getElementById('flash');
+  if(f===J.element.f){
+    J.serie++; J.score+=15+Math.round(J.reste*3);
+    flash.textContent='✅ Oui : '+J.element.exp;
+    flash.style.color='#4ade80';
+    J.duree=Math.max(4.2,J.duree-0.35);
+    majHUD(); nouvelElement();
+  } else {
+    J.vies--;
+    flash.textContent='❌ Non, c\u2019était '+NOMS_F[J.element.f]+' : '+J.element.exp;
+    flash.style.color='#f87171';
+    majHUD();
+    if(J.vies<=0) return finPartie('Le tri s\u2019arrête ! Retiens : ACTIVE = éviter l\u2019accident, PASSIVE = protéger pendant le choc, et le COMPORTEMENT + l\u2019ENTRETIEN rendent tout le reste possible.');
+    nouvelElement();
+  }
+}
+document.querySelectorAll('#choix button').forEach(b=>b.onclick=()=>repondre(b.dataset.f));
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('securiterush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=15 ? '🏆 Expert sécurité senior !' : '💥 Sortie de route !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Éléments classés : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').textContent='⏰ Trop lent ! C\u2019était '+NOMS_F[J.element.f]+' : '+J.element.exp;
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('Le chrono a gagné : un bon expert classe chaque équipement dans sa famille d\u2019un coup d\u2019œil !');
+    nouvelElement();
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

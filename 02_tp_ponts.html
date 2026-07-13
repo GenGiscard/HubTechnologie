@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP 5ème — Simulateur de pont · ESTIC</title>
+<style>
+:root{
+  --ink:#1e3a5f; --bleu:#1d4ed8; --bleu-fonce:#1e40af; --cyan:#0e7490; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
+  --ombre:0 4px 14px rgba(30,58,95,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--bleu-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.tp{max-width:960px;margin:26px auto 6px;padding:0 20px}
+header.tp h1{font-size:32px;color:var(--cyan)}
+header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
+/* Barre de progression */
+.progression{max-width:960px;margin:16px auto;padding:0 20px;display:flex;gap:8px;align-items:center}
+.progression .seg{flex:1;height:10px;border-radius:6px;background:#e2e8f0;position:relative;transition:.3s}
+.progression .seg.ok{background:var(--vert)}
+.progression .seg.encours{background:var(--orange)}
+.progression .score{font-weight:800;color:var(--bleu-fonce);font-size:15px;white-space:nowrap}
+/* Activités */
+.acti{max-width:960px;margin:22px auto;padding:0 20px;position:relative}
+.boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:24px;border-top:5px solid var(--cyan);position:relative;overflow:hidden}
+.boite h2{font-size:21px;color:var(--cyan);display:flex;align-items:center;gap:10px}
+.boite h2 .badge{background:var(--cyan);color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.boite .consigne{margin:10px 0 16px;font-size:15px;color:var(--ink);background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.5}
+.verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
+.verrou .cadenas{font-size:42px}
+/* QCM */
+.question{margin:14px 0;padding:14px;background:#f8fafc;border-radius:12px}
+.question .q{font-weight:700;margin-bottom:10px;font-size:15px}
+.question svg{display:block;margin:6px 0 12px;background:#fff;border-radius:8px;border:1px solid #eef2f7}
+.rep{display:flex;flex-wrap:wrap;gap:8px}
+.rep button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 16px;font-size:14.5px;cursor:pointer;font-weight:600;color:var(--ink);transition:.15s}
+.rep button:hover{border-color:var(--cyan)}
+.rep button.bon{background:#dcfce7;border-color:var(--vert);color:#14532d}
+.rep button.faux{background:#fee2e2;border-color:var(--rouge);color:#7f1d1d}
+.rep button:disabled{cursor:default;opacity:.85}
+/* Simulateurs */
+.simu{display:grid;grid-template-columns:280px 1fr;gap:18px;margin-top:10px}
+.commandes{background:#f8fafc;border-radius:12px;padding:16px}
+.commandes label{display:block;font-size:13.5px;font-weight:700;color:var(--bleu-fonce);margin:12px 0 4px}
+.commandes input[type=range]{width:100%}
+.commandes .val{font-size:13px;color:var(--orange);font-weight:800}
+.commandes select{width:100%;padding:8px;border-radius:8px;border:2px solid #cbd5e1;font-size:14px;font-family:inherit}
+.commandes .info{font-size:12px;color:var(--gris);margin-top:4px;line-height:1.4}
+canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;border-radius:12px;display:block}
+.btnrow{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.btn{border:none;border-radius:10px;padding:11px 20px;font-size:15px;font-weight:800;cursor:pointer;color:#fff;background:var(--cyan)}
+.btn:hover{filter:brightness(1.08)}
+.btn.orange{background:var(--orange)}
+.btn.vert{background:var(--vert)}
+.btn:disabled{background:#cbd5e1;cursor:default}
+.verdict{margin-top:12px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:15px;display:none}
+.verdict.ok{display:block;background:#dcfce7;color:#14532d;border-left:5px solid var(--vert)}
+.verdict.ko{display:block;background:#fee2e2;color:#7f1d1d;border-left:5px solid var(--rouge)}
+.jauge{height:14px;border-radius:8px;background:#e2e8f0;overflow:hidden;margin-top:8px}
+.jauge div{height:100%;width:0%;background:var(--vert);transition:width .3s}
+.mission{display:inline-block;background:#fff7ed;border:1.5px dashed var(--orange);border-radius:10px;padding:8px 12px;font-size:13.5px;margin-top:8px}
+/* Code final */
+.codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#0e7490,#1d4ed8);border-radius:14px;padding:22px;color:#fff}
+.codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
+.codefinal a{color:#fde68a;font-weight:800}
+@media (max-width:760px){.simu{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%230e7490'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="tp">
+  <h1>🌉 TP — Ingénieur des ponts</h1>
+  <p>5 missions progressives. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Bâtisseur Fou</b> !</p>
+</header>
+
+<div class="progression" id="prog">
+  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+</div>
+
+<!-- ======================= A1 : QUIZ EFFORTS ======================= -->
+<div class="acti" id="a1">
+ <div class="boite">
+  <h2><span class="badge">1</span>Reconnaître les efforts</h2>
+  <div class="consigne">Pour chaque situation, indique quel effort subit la pièce <b>en rouge</b>. (1 pt par bonne réponse du premier coup)</div>
+  <div id="quiz1"></div>
+ </div>
+</div>
+
+<!-- ======================= A2 : SIMULATEUR POUTRE ======================= -->
+<div class="acti" id="a2">
+ <div class="boite">
+  <h2><span class="badge">2</span>Simulateur de poutre</h2>
+  <div class="consigne">Un camion de 40 t doit traverser. Règle la <b>portée</b>, le <b>matériau</b> et la <b>hauteur de poutre</b> pour que la flèche (déformation) reste sous la limite.
+  <span class="mission">🎯 Mission : réussir une traversée avec une portée d'<b>au moins 30 m</b>.</span></div>
+  <div class="simu">
+    <div class="commandes">
+      <label>Portée (longueur) : <span class="val" id="v2L">20 m</span></label>
+      <input type="range" id="s2L" min="10" max="40" value="20" step="1">
+      <label>Matériau du tablier</label>
+      <select id="s2M">
+        <option value="1">🪵 Bois (souple)</option>
+        <option value="10">🏗️ Béton armé (rigide)</option>
+        <option value="20">⛓️ Acier (très rigide)</option>
+      </select>
+      <label>Hauteur de la poutre : <span class="val" id="v2H">1,0 m</span></label>
+      <input type="range" id="s2H" min="0.3" max="2" value="1" step="0.1">
+      <div class="info">Flèche maximale autorisée = portée ÷ 200.<br>Astuce d'ingénieur : doubler la hauteur divise la flèche par 8 !</div>
+      <div class="btnrow"><button class="btn" id="btn2">🚚 Lancer le camion</button></div>
+      <div class="jauge"><div id="jauge2"></div></div>
+    </div>
+    <div>
+      <canvas class="simcv" id="cv2" width="640" height="330"></canvas>
+      <div class="verdict" id="verd2"></div>
+    </div>
+  </div>
+ </div>
+</div>
+
+<!-- ======================= A3 : TRIANGULATION ======================= -->
+<div class="acti" id="a3">
+ <div class="boite">
+  <h2><span class="badge">3</span>Rigidifier la tour de grue</h2>
+  <div class="consigne">Cette tour de grue est faite de 3 caissons carrés articulés : au moindre coup de vent, elle se déforme !
+  <b>Clique sur un caisson</b> pour y ajouter une barre diagonale (3 barres disponibles), puis lance le test du vent.</div>
+  <div class="simu">
+    <div class="commandes">
+      <div class="info" style="font-size:13.5px">Barres diagonales posées : <b id="nbDiag">0</b> / 3</div>
+      <div class="btnrow">
+        <button class="btn orange" id="btn3">🌬️ Tester le vent</button>
+        <button class="btn" id="reset3" style="background:#64748b">↺ Retirer les barres</button>
+      </div>
+      <div class="info" style="margin-top:12px">Rappel du cours : la seule figure indéformable est le <b>triangle</b>.</div>
+    </div>
+    <div>
+      <canvas class="simcv" id="cv3" width="640" height="360"></canvas>
+      <div class="verdict" id="verd3"></div>
+    </div>
+  </div>
+ </div>
+</div>
+
+<!-- ======================= A4 : PONT COMPLET ======================= -->
+<div class="acti" id="a4">
+ <div class="boite">
+  <h2><span class="badge">4</span>Franchir la gorge du Diable</h2>
+  <div class="consigne">Une gorge de <b>120 m</b> de large, très profonde (les piles coûtent cher !). Budget : <b>100 k€</b>.
+  Choisis le type de pont, le matériau et le nombre de piles, puis teste. <span class="mission">🎯 Il existe plusieurs solutions… trouve la plus économique pour gagner 3 étoiles !</span></div>
+  <div class="simu">
+    <div class="commandes">
+      <label>Type de pont</label>
+      <select id="s4T">
+        <option value="poutre">Pont poutre (20 k€)</option>
+        <option value="arc">Pont en arc (35 k€)</option>
+        <option value="suspendu">Pont suspendu (55 k€)</option>
+      </select>
+      <label>Matériau principal</label>
+      <select id="s4M">
+        <option value="bois">🪵 Bois (coût ×0,8)</option>
+        <option value="ba">🏗️ Béton armé (coût ×1)</option>
+        <option value="acier">⛓️ Acier (coût ×1,3)</option>
+      </select>
+      <label>Nombre de piles : <span class="val" id="v4P">0</span> (25 k€ / pile)</label>
+      <input type="range" id="s4P" min="0" max="2" value="0" step="1">
+      <div class="info">Coût total : <b id="cout4">16 k€</b> / 100 k€</div>
+      <div class="btnrow"><button class="btn" id="btn4">🚚 Tester le pont</button></div>
+    </div>
+    <div>
+      <canvas class="simcv" id="cv4" width="640" height="340"></canvas>
+      <div class="verdict" id="verd4"></div>
+    </div>
+  </div>
+ </div>
+</div>
+
+<!-- ======================= A5 : BILAN ======================= -->
+<div class="acti" id="a5">
+ <div class="boite">
+  <h2><span class="badge">5</span>Bilan d'ingénieur</h2>
+  <div class="consigne">Dernière ligne droite : au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code du jeu.</div>
+  <div id="quiz5"></div>
+  <div class="codefinal" id="codefinal">
+    🏆 Mission accomplie, ingénieur !
+    <div class="code">PONT343</div>
+    <div>Entre ce code dans les jeux <a href="03_jeu_batisseur.html">🎮 Bâtisseur Fou</a> et <a href="03b_jeu_inspecteur.html">🕵️ Inspecteur des Ouvrages</a> pour les déverrouiller.</div>
+  </div>
+ </div>
+</div>
+
+<script>
+/* ================= ÉTAT & PROGRESSION ================= */
+const etat = { debloque:1, score:0, diag:[false,false,false], q1ok:0, q5ok:0, q5rep:0 };
+function sauver(){ try{ localStorage.setItem('tp_ponts_5e', JSON.stringify({d:etat.debloque, s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_ponts_5e')); if(d){ etat.debloque=d.d; etat.score=d.s; } }catch(e){} }
+function majProgression(){
+  document.querySelectorAll('.progression .seg').forEach(seg=>{
+    const n=+seg.dataset.a;
+    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+  });
+  document.getElementById('scoreTot').textContent = etat.score;
+  for(let n=2;n<=5;n++){
+    const acti=document.getElementById('a'+n);
+    let v=acti.querySelector('.verrou');
+    if(n>etat.debloque){
+      if(!v){ v=document.createElement('div'); v.className='verrou';
+        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
+        acti.querySelector('.boite').appendChild(v); }
+    } else if(v){ v.remove(); }
+  }
+}
+function reussir(n, pts, message){
+  etat.score += pts;
+  if(etat.debloque === n) etat.debloque = n+1;
+  sauver(); majProgression();
+  if(n<5) setTimeout(()=> document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}), 900);
+}
+
+/* ================= A1 : QUIZ EFFORTS ================= */
+const Q1 = [
+ { q:"Le câble qui retient le tablier d'un pont suspendu :", svg:
+   `<svg width="300" height="90" viewBox="0 0 300 90"><rect x="20" y="66" width="260" height="10" fill="#94a3b8"/><rect x="60" y="10" width="8" height="66" fill="#64748b"/><line x1="64" y1="14" x2="200" y2="66" stroke="#dc2626" stroke-width="4"/><text x="150" y="34" font-size="12" fill="#dc2626" font-family="Segoe UI">câble</text></svg>`,
+   reps:["Compression","Traction","Flexion"], bon:1 },
+ { q:"La pile (le pilier) qui porte un pont poutre :", svg:
+   `<svg width="300" height="90" viewBox="0 0 300 90"><rect x="20" y="14" width="260" height="12" fill="#64748b"/><rect x="140" y="26" width="20" height="54" fill="#dc2626"/><path d="M120 6 L150 16 L180 6" fill="none" stroke="#1d4ed8" stroke-width="3"/></svg>`,
+   reps:["Compression","Traction","Flexion"], bon:0 },
+ { q:"La planche du plongeoir quand on saute au bout :", svg:
+   `<svg width="300" height="90" viewBox="0 0 300 90"><rect x="20" y="30" width="40" height="50" fill="#64748b"/><path d="M60 36 Q180 36 265 70" stroke="#dc2626" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="262" cy="50" r="9" fill="#1e3a5f"/></svg>`,
+   reps:["Compression","Traction","Flexion"], bon:2 },
+ { q:"La corde pendant un tir à la corde :", svg:
+   `<svg width="300" height="90" viewBox="0 0 300 90"><line x1="40" y1="45" x2="260" y2="45" stroke="#dc2626" stroke-width="6"/><path d="M60 45 l-25 -12 M60 45 l-25 12" stroke="#1e3a5f" stroke-width="4" fill="none"/><path d="M240 45 l25 -12 M240 45 l25 12" stroke="#1e3a5f" stroke-width="4" fill="none"/></svg>`,
+   reps:["Compression","Traction","Flexion"], bon:1 },
+];
+(function initQ1(){
+  const zone=document.getElementById('quiz1');
+  Q1.forEach((item,i)=>{
+    const d=document.createElement('div'); d.className='question';
+    d.innerHTML = `<div class="q">${i+1}. ${item.q}</div>${item.svg}<div class="rep"></div>`;
+    const rep=d.querySelector('.rep');
+    let premier=true;
+    item.reps.forEach((r,k)=>{
+      const b=document.createElement('button'); b.textContent=r;
+      b.onclick=()=>{
+        if(k===item.bon){
+          b.classList.add('bon');
+          rep.querySelectorAll('button').forEach(x=>x.disabled=true);
+          if(premier) etat.score++;
+          etat.q1ok++;
+          document.getElementById('scoreTot').textContent=etat.score;
+          if(etat.q1ok===Q1.length) reussir(1,2);
+        } else { b.classList.add('faux'); b.disabled=true; premier=false; }
+      };
+      rep.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+/* ================= A2 : SIMULATEUR POUTRE ================= */
+const cv2=document.getElementById('cv2'), c2=cv2.getContext('2d');
+const s2L=document.getElementById('s2L'), s2M=document.getElementById('s2M'), s2H=document.getElementById('s2H');
+let camionX2=-1, anim2=null, a2fait=false;
+function params2(){ return { L:+s2L.value, E:+s2M.value, h:+s2H.value }; }
+function fleche2(p){ return 0.0001 * Math.pow(p.L,3) / (p.E * Math.pow(p.h,3)); } // en m
+function limite2(p){ return p.L/200; }
+function dessiner2(fl=0, cx=-1, casse=false){
+  const W=cv2.width,H=cv2.height,p=params2();
+  c2.clearRect(0,0,W,H);
+  const y=190, marge=70, xg=marge, xd=W-marge;
+  // appuis
+  c2.fillStyle='#94a3b8';
+  [[xg,y+12],[xd,y+12]].forEach(([x,yy])=>{ c2.beginPath(); c2.moveTo(x,yy); c2.lineTo(x-16,yy+26); c2.lineTo(x+16,yy+26); c2.closePath(); c2.fill(); });
+  // poutre (épaisseur ∝ h)
+  const ep=8+p.h*14;
+  const amp = Math.min(90, fl*260); // amplification visuelle
+  c2.strokeStyle = casse ? '#dc2626' : '#475569'; c2.lineWidth=ep; c2.lineCap='round';
+  if(casse){
+    c2.beginPath(); c2.moveTo(xg,y); c2.quadraticCurveTo(W/2-30, y+amp+40, W/2-10, y+amp+70); c2.stroke();
+    c2.beginPath(); c2.moveTo(xd,y); c2.quadraticCurveTo(W/2+30, y+amp+40, W/2+10, y+amp+70); c2.stroke();
+    c2.font='bold 22px Segoe UI'; c2.fillStyle='#dc2626'; c2.textAlign='center'; c2.fillText('💥 RUPTURE !', W/2, 70);
+  } else {
+    c2.beginPath(); c2.moveTo(xg,y);
+    c2.quadraticCurveTo(W/2, y+amp*2, xd, y); c2.stroke();
+  }
+  // camion
+  if(cx>=0 && !casse){
+    const t=cx, px=xg+(xd-xg)*t;
+    const py = y + 2*amp*t*(1-t) - ep/2 - 4;
+    c2.fillStyle='#f59e0b'; c2.fillRect(px-26,py-24,40,20);
+    c2.fillStyle='#1e3a5f'; c2.fillRect(px+12,py-18,18,14);
+    c2.fillStyle='#334155'; c2.beginPath(); c2.arc(px-14,py-2,6,0,7); c2.arc(px+18,py-2,6,0,7); c2.fill();
+  }
+  // infos
+  c2.font='bold 15px Segoe UI'; c2.fillStyle='#1e40af'; c2.textAlign='left';
+  c2.fillText(`Portée : ${p.L} m`, 16, 26);
+  c2.fillText(`Flèche : ${(fl*100).toFixed(0)} cm`, 16, 48);
+  c2.fillStyle = fl<=limite2(p) ? '#16a34a' : '#dc2626';
+  c2.fillText(`Limite : ${(limite2(p)*100).toFixed(0)} cm`, 16, 70);
+  // cotation
+  c2.strokeStyle='#94a3b8'; c2.lineWidth=1.5; c2.beginPath(); c2.moveTo(xg,y+70); c2.lineTo(xd,y+70); c2.stroke();
+  c2.font='13px Segoe UI'; c2.fillStyle='#64748b'; c2.textAlign='center'; c2.fillText(p.L+' m', W/2, y+88);
+}
+function majUI2(){
+  document.getElementById('v2L').textContent=s2L.value+' m';
+  document.getElementById('v2H').textContent=(+s2H.value).toFixed(1).replace('.',',')+' m';
+  const p=params2(), r=Math.min(1, limite2(p)/fleche2(p));
+  const j=document.getElementById('jauge2');
+  j.style.width=(r*100)+'%';
+  j.style.background = r>=1 ? '#16a34a' : (r>0.6 ? '#f59e0b' : '#dc2626');
+  dessiner2(fleche2(p));
+}
+[s2L,s2M,s2H].forEach(el=>el.addEventListener('input',majUI2));
+document.getElementById('btn2').onclick=()=>{
+  cancelAnimationFrame(anim2);
+  const p=params2(), fl=fleche2(p), ok=fl<=limite2(p);
+  const verd=document.getElementById('verd2');
+  verd.className='verdict';
+  let t=0;
+  function boucle(){
+    t+=0.008;
+    if(!ok && t>0.5){ dessiner2(fl,-1,true);
+      verd.className='verdict ko';
+      verd.innerHTML='💥 Rupture ! La flèche ('+(fl*100).toFixed(0)+' cm) dépasse la limite. Essaie un matériau plus rigide ou une poutre plus haute.';
+      return;
+    }
+    if(t>=1){ dessiner2(fl,1);
+      verd.className='verdict ok';
+      if(p.L>=30 && !a2fait){ a2fait=true;
+        verd.innerHTML='✅ Traversée réussie sur '+p.L+' m : mission accomplie ! (+3 pts)';
+        reussir(2,3);
+      } else if(p.L>=30){ verd.innerHTML='✅ Traversée réussie sur '+p.L+' m !'; }
+      else { verd.innerHTML='✅ Ça passe… mais la mission demande une portée d\u2019au moins 30 m. Allonge le pont !'; }
+      return;
+    }
+    dessiner2(fl,t); anim2=requestAnimationFrame(boucle);
+  }
+  boucle();
+};
+majUI2();
+
+/* ================= A3 : TRIANGULATION ================= */
+const cv3=document.getElementById('cv3'), c3=cv3.getContext('2d');
+let a3fait=false;
+function geo3(){ const W=cv3.width; return { x:W/2-70, larg:140, haut:90, y0:320 }; }
+function dessiner3(skews=[0,0,0], vent=0){
+  const W=cv3.width,H=cv3.height,g=geo3();
+  c3.clearRect(0,0,W,H);
+  // sol
+  c3.fillStyle='#e7e5e4'; c3.fillRect(0,g.y0,W,H-g.y0);
+  // vent
+  if(vent>0){ c3.strokeStyle='#0ea5e9'; c3.lineWidth=3;
+    for(let k=0;k<3;k++){ const yy=90+k*70;
+      c3.beginPath(); c3.moveTo(30,yy); c3.lineTo(30+50*vent,yy); c3.stroke();
+      c3.beginPath(); c3.moveTo(30+50*vent,yy); c3.lineTo(30+50*vent-10,yy-6); c3.moveTo(30+50*vent,yy); c3.lineTo(30+50*vent-10,yy+6); c3.stroke(); }
+    c3.font='bold 15px Segoe UI'; c3.fillStyle='#0ea5e9'; c3.fillText('VENT',26,64);
+  }
+  // 3 caissons empilés, décalage cumulé
+  let dxBas=0;
+  for(let i=0;i<3;i++){
+    const yb=g.y0-i*g.haut, yh=yb-g.haut;
+    const dxHaut=dxBas+skews[i];
+    const pts=[[g.x+dxHaut,yh],[g.x+g.larg+dxHaut,yh],[g.x+g.larg+dxBas,yb],[g.x+dxBas,yb]];
+    c3.strokeStyle = skews[i]!==0 ? '#dc2626' : '#475569';
+    c3.lineWidth=9; c3.lineJoin='round';
+    c3.beginPath(); c3.moveTo(...pts[0]); pts.slice(1).forEach(pt=>c3.lineTo(...pt)); c3.closePath(); c3.stroke();
+    if(etat.diag[i]){
+      c3.strokeStyle='#16a34a'; c3.beginPath(); c3.moveTo(...pts[3]); c3.lineTo(...pts[1]); c3.stroke();
+    }
+    c3.fillStyle='#1e3a5f'; pts.forEach(pt=>{c3.beginPath();c3.arc(pt[0],pt[1],6,0,7);c3.fill();});
+    dxBas=dxHaut;
+  }
+  // flèche de grue
+  c3.strokeStyle='#f59e0b'; c3.lineWidth=8;
+  c3.beginPath(); c3.moveTo(g.x+dxBas+g.larg/2, g.y0-3*g.haut); c3.lineTo(g.x+dxBas+g.larg/2+130, g.y0-3*g.haut-24); c3.stroke();
+  c3.font='13px Segoe UI'; c3.fillStyle='#64748b'; c3.textAlign='center';
+  c3.fillText('clique sur un caisson pour ajouter une diagonale', W/2, H-8);
+}
+cv3.addEventListener('click',e=>{
+  const r=cv3.getBoundingClientRect(), g=geo3();
+  const mx=(e.clientX-r.left)*cv3.width/r.width, my=(e.clientY-r.top)*cv3.height/r.height;
+  for(let i=0;i<3;i++){
+    const yb=g.y0-i*g.haut, yh=yb-g.haut;
+    if(mx>g.x-20 && mx<g.x+g.larg+20 && my>yh && my<yb){
+      etat.diag[i]=!etat.diag[i];
+      document.getElementById('nbDiag').textContent=etat.diag.filter(Boolean).length;
+      dessiner3();
+    }
+  }
+});
+document.getElementById('reset3').onclick=()=>{ etat.diag=[false,false,false]; document.getElementById('nbDiag').textContent=0; dessiner3(); document.getElementById('verd3').className='verdict'; };
+document.getElementById('btn3').onclick=()=>{
+  let t=0; const verd=document.getElementById('verd3'); verd.className='verdict';
+  function boucle(){
+    t+=0.02;
+    const force=Math.min(1,t);
+    const skews=etat.diag.map(d=> d?0: 34*force*Math.abs(Math.sin(t*3)));
+    dessiner3(skews, force);
+    if(t<2){ requestAnimationFrame(boucle); return; }
+    const ok=etat.diag.every(Boolean);
+    if(ok){ dessiner3([0,0,0],1);
+      verd.className='verdict ok';
+      if(!a3fait){ a3fait=true; verd.innerHTML='✅ Tour parfaitement rigide : chaque caisson est devenu deux triangles ! (+3 pts)'; reussir(3,3); }
+      else verd.innerHTML='✅ Tour parfaitement rigide !';
+    } else {
+      verd.className='verdict ko';
+      verd.innerHTML='🌪️ La tour se déforme : les caissons <b>sans diagonale</b> (en rouge) se tordent. Triangule-les tous !';
+    }
+  }
+  boucle();
+};
+dessiner3();
+
+/* ================= A4 : PONT COMPLET ================= */
+const cv4=document.getElementById('cv4'), c4=cv4.getContext('2d');
+const s4T=document.getElementById('s4T'), s4M=document.getElementById('s4M'), s4P=document.getElementById('s4P');
+let a4fait=false;
+const COUTS={poutre:20,arc:35,suspendu:55}, MULT={bois:0.8,ba:1,acier:1.3};
+function cout4(){ return Math.round(COUTS[s4T.value]*MULT[s4M.value] + 25*(+s4P.value)); }
+function majUI4(){
+  document.getElementById('v4P').textContent=s4P.value;
+  const c=cout4(), el=document.getElementById('cout4');
+  el.textContent=c+' k€'; el.style.color = c>100 ? '#dc2626' : '#16a34a';
+  dessiner4(-1);
+}
+function analyse4(){
+  const type=s4T.value, mat=s4M.value, piles=+s4P.value, c=cout4();
+  if(c>100) return {ok:false, msg:'💸 Budget dépassé ('+c+' k€ > 100 k€) ! Trouve une solution plus économique.'};
+  if(type==='poutre'){
+    const portee=120/(piles+1);
+    const maxi={bois:20, ba:45, acier:60}[mat];
+    if(portee>maxi) return {ok:false, msg:'💥 Effondrement en flexion ! Chaque travée fait '+portee.toFixed(0)+' m, mais une poutre en '+({bois:'bois',ba:'béton armé',acier:'acier'}[mat])+' ne franchit que '+maxi+' m maximum. Ajoute des piles ou change de matériau.'};
+    return {ok:true, msg:'Le tablier fléchit un peu, les piles renvoient tout au sol en compression.'};
+  }
+  if(type==='arc'){
+    if(mat==='bois') return {ok:false, msg:'💥 Un arc en bois de 120 m, c\u2019est trop : l\u2019arc s\u2019écrase en compression. Il faut un matériau champion de la compression (béton armé) ou très résistant (acier).'};
+    if(piles>0) return {ok:false, msg:'🤔 L\u2019arc tient tout seul… mais tu as payé '+(25*piles)+' k€ de piles inutiles dans une gorge très profonde. Retire-les !'};
+    return {ok:true, msg:'L\u2019arc transmet toute la charge en compression vers les flancs de la gorge : aucune pile nécessaire !'};
+  }
+  // suspendu
+  if(mat!=='acier') return {ok:false, msg:'💥 Les câbles cassent ! Un pont suspendu travaille en traction : seul l\u2019acier des câbles peut résister. Choisis l\u2019acier.'};
+  if(piles>0) return {ok:false, msg:'🤔 Les pylônes du pont suspendu suffisent : les piles supplémentaires ('+(25*piles)+' k€) sont de l\u2019argent jeté dans la gorge !'};
+  return {ok:true, msg:'Le tablier pend aux câbles d\u2019acier tendus en traction : parfait pour les grandes portées !'};
+}
+function dessiner4(camT, casse=false){
+  const W=cv4.width,H=cv4.height, type=s4T.value, piles=+s4P.value;
+  c4.clearRect(0,0,W,H);
+  // gorge
+  c4.fillStyle='#e7e5e4';
+  c4.beginPath(); c4.moveTo(0,150); c4.lineTo(90,150); c4.lineTo(150,H); c4.lineTo(0,H); c4.closePath(); c4.fill();
+  c4.beginPath(); c4.moveTo(W,150); c4.lineTo(W-90,150); c4.lineTo(W-150,H); c4.lineTo(W,H); c4.closePath(); c4.fill();
+  c4.font='12px Segoe UI'; c4.fillStyle='#64748b'; c4.textAlign='center'; c4.fillText('⬅ 120 m ➡', W/2, H-12);
+  const y=150, xg=90, xd=W-90;
+  // piles
+  c4.fillStyle='#64748b';
+  for(let k=1;k<=piles;k++){ const px=xg+(xd-xg)*k/(piles+1); c4.fillRect(px-9,y,18,H-y); }
+  // tablier + structure
+  c4.strokeStyle= casse ? '#dc2626' : '#475569'; c4.lineWidth=11; c4.lineCap='round';
+  if(casse){
+    c4.beginPath(); c4.moveTo(xg,y); c4.quadraticCurveTo(W/2-40,y+70,W/2-15,y+110); c4.stroke();
+    c4.beginPath(); c4.moveTo(xd,y); c4.quadraticCurveTo(W/2+40,y+70,W/2+15,y+110); c4.stroke();
+    c4.font='bold 22px Segoe UI'; c4.fillStyle='#dc2626'; c4.fillText('💥 ÉCHEC !', W/2, 60);
+  } else {
+    c4.beginPath(); c4.moveTo(xg,y); c4.lineTo(xd,y); c4.stroke();
+    if(type==='arc'){ c4.strokeStyle='#78716c'; c4.lineWidth=12;
+      c4.beginPath(); c4.moveTo(xg+10,H-40); c4.quadraticCurveTo(W/2,y-70,xd-10,H-40); c4.stroke(); }
+    if(type==='suspendu'){
+      const t1=W*0.32,t2=W*0.68,ht=44;
+      c4.fillStyle='#64748b'; [t1,t2].forEach(px=>c4.fillRect(px-8,ht,16,y-ht+6));
+      c4.strokeStyle='#1d4ed8'; c4.lineWidth=4;
+      c4.beginPath(); c4.moveTo(xg,y-5);
+      c4.quadraticCurveTo((xg+t1)/2,ht+6,t1,ht);
+      c4.quadraticCurveTo(W/2,y-22,t2,ht);
+      c4.quadraticCurveTo((t2+xd)/2,ht+6,xd,y-5); c4.stroke();
+      c4.lineWidth=2;
+      for(let k=1;k<7;k++){ const sx=t1+(t2-t1)*k/7, sy=y-22-(y-22-ht)*Math.pow(Math.abs(k/7-0.5)*2,2);
+        c4.beginPath(); c4.moveTo(sx,sy); c4.lineTo(sx,y-6); c4.stroke(); }
+    }
+  }
+  if(camT>=0 && !casse){
+    const px=xg+(xd-xg)*camT;
+    c4.fillStyle='#f59e0b'; c4.fillRect(px-24,y-28,38,19);
+    c4.fillStyle='#1e3a5f'; c4.fillRect(px+12,y-22,16,13);
+    c4.fillStyle='#334155'; c4.beginPath(); c4.arc(px-12,y-6,6,0,7); c4.arc(px+18,y-6,6,0,7); c4.fill();
+  }
+}
+[s4T,s4M,s4P].forEach(el=>el.addEventListener('input',majUI4));
+document.getElementById('btn4').onclick=()=>{
+  const res=analyse4(), verd=document.getElementById('verd4');
+  verd.className='verdict';
+  let t=0;
+  function boucle(){
+    t+=0.009;
+    if(!res.ok && t>0.45){ dessiner4(-1,true);
+      verd.className='verdict ko'; verd.innerHTML=res.msg; return; }
+    if(t>=1){ dessiner4(1);
+      const reste=100-cout4();
+      const etoiles = reste>=60 ? '⭐⭐⭐' : reste>=30 ? '⭐⭐' : '⭐';
+      verd.className='verdict ok';
+      verd.innerHTML='✅ Le camion est passé ! '+res.msg+'<br>Coût : '+cout4()+' k€ — il te reste '+reste+' k€ → '+etoiles;
+      if(!a4fait){ a4fait=true; reussir(4, reste>=60?4:3); }
+      return; }
+    dessiner4(t); requestAnimationFrame(boucle);
+  }
+  boucle();
+};
+majUI4();
+
+/* ================= A5 : BILAN ================= */
+const Q5=[
+ { q:"Quelle figure géométrique est indéformable ?", reps:["Le carré","Le triangle","Le cercle"], bon:1 },
+ { q:"Dans un pont suspendu, les câbles travaillent en :", reps:["Compression","Flexion","Traction"], bon:2 },
+ { q:"Le béton armé associe le béton (compression) et…", reps:["le bois pour la légèreté","l'acier pour la traction","le verre pour la lumière"], bon:1 },
+ { q:"Une poutre chargée fléchit. Sa partie basse est :", reps:["étirée (traction)","écrasée (compression)","au repos"], bon:0 },
+];
+(function initQ5(){
+  const zone=document.getElementById('quiz5');
+  Q5.forEach((item,i)=>{
+    const d=document.createElement('div'); d.className='question';
+    d.innerHTML=`<div class="q">${i+1}. ${item.q}</div><div class="rep"></div>`;
+    const rep=d.querySelector('.rep');
+    item.reps.forEach((r,k)=>{
+      const b=document.createElement('button'); b.textContent=r;
+      b.onclick=()=>{
+        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
+        etat.q5rep++;
+        if(k===item.bon){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+        else { b.classList.add('faux'); rep.children[item.bon].classList.add('bon'); }
+        if(etat.q5rep===Q5.length){
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          else {
+            const verd=document.createElement('div'); verd.className='verdict ko';
+            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
+            zone.appendChild(verd);
+          }
+        }
+      };
+      rep.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+charger(); majProgression();
+</script>
+</body>
+</html>

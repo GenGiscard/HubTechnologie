@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 5ème — Le besoin & le cahier des charges · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#db2777; --niv-fonce:#be185d; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#fdf2f8;color:var(--niv-fonce)}
+nav.side a.actif{background:#fce7f3;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:20px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:34px}
+.carte h3{font-size:17px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:14px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12.5px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#fdf2f8;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23db2777'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>Pourquoi cet objet existe ?</a>
+  <a href="#s2"><span class="dot"></span>Formuler le besoin</a>
+  <a href="#s3"><span class="dot"></span>La bête à cornes (animation)</a>
+  <a href="#s4"><span class="dot"></span>Les fonctions d'un objet</a>
+  <a href="#s5"><span class="dot"></span>Usage vs estime (animation)</a>
+  <a href="#s6"><span class="dot"></span>Le cahier des charges (animation)</a>
+  <a href="#s7"><span class="dot"></span>La démarche de projet</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 5ème · Séquence Le besoin & le cahier des charges</div>
+  <h1>🎯 Aucun objet<br>n'existe par hasard</h1>
+  <p class="sous" style="margin-top:16px">Une gourde, un cartable, un vélo : chacun a été inventé pour répondre à un <b>BESOIN</b> —
+  quelque chose de nécessaire ou de désiré par quelqu'un. Avant de fabriquer quoi que ce soit,
+  l'ingénieur commence TOUJOURS par la même question : <b>« à quoi ça sert, pour qui, et pour agir sur quoi ? »</b></p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Formuler le besoin : 3 questions magiques</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#db2777"><div class="ic">🙋</div><h3>À QUI rend-il service ?</h3><p>L'utilisateur : celui pour qui l'objet existe.</p><span class="ex">gourde → au randonneur</span></div>
+    <div class="carte" style="--accent:#1d4ed8"><div class="ic">💧</div><h3>Sur QUOI agit-il ?</h3><p>La matière d'œuvre : ce que l'objet transporte, transforme, protège…</p><span class="ex">gourde → sur l'eau</span></div>
+    <div class="carte" style="--accent:#16a34a"><div class="ic">🎯</div><h3>Dans quel BUT ?</h3><p>Le besoin lui-même, formulé en une phrase.</p><span class="ex">→ boire pendant l'effort</span></div>
+  </div>
+  <p class="sous" style="margin-top:22px">Les ingénieurs rangent ces 3 réponses dans un schéma célèbre… qui ressemble à une tête de vache : la <b>bête à cornes</b> ! 🐮</p>
+</section>
+
+<section class="slide" id="s3">
+  <h2>La bête à cornes de la gourde</h2>
+  <div class="animbox">
+    <canvas id="cvBete" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capBete"></div><button data-anim="bete">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsBete"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>Les fonctions d'un objet</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#db2777"><div class="ic">🛠️</div><h3>Fonction d'USAGE</h3><p>Ce que l'objet FAIT. La même pour tout le monde.</p><span class="ex">gourde → contenir et transporter une boisson</span></div>
+    <div class="carte" style="--accent:#7c3aed"><div class="ic">✨</div><h3>Fonction d'ESTIME</h3><p>Ce qui donne ENVIE de l'objet. Dépend des goûts de chacun.</p><span class="ex">gourde → couleur, marque, style</span></div>
+    <div class="carte" style="--accent:#0e7490"><div class="ic">⚙️</div><h3>Fonctions TECHNIQUES</h3><p>Ce que l'objet doit savoir faire à l'intérieur pour assurer l'usage.</p><span class="ex">rester étanche, garder au frais, s'ouvrir d'une main</span></div>
+  </div>
+</section>
+
+<section class="slide" id="s5">
+  <h2>Usage ou estime ? Le duel des gourdes</h2>
+  <div class="animbox">
+    <canvas id="cvDuel" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capDuel"></div><button data-anim="duel">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsDuel"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>Le cahier des charges : le contrat de l'objet</h2>
+  <div class="animbox">
+    <canvas id="cvCdc" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capCdc"></div><button data-anim="cdc">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsCdc"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>La démarche de projet</h2>
+  <table class="mat">
+    <tr><th>Étape</th><th>Question</th><th>Résultat</th></tr>
+    <tr><td>1️⃣ Identifier le <b>besoin</b></td><td>à qui ? sur quoi ? dans quel but ?</td><td>la bête à cornes</td></tr>
+    <tr><td>2️⃣ Rédiger le <b>cahier des charges</b></td><td>quelles fonctions, quels critères, quels niveaux ?</td><td>le « contrat » du futur objet</td></tr>
+    <tr><td>3️⃣ Rechercher des <b>solutions</b></td><td>comment satisfaire chaque fonction ?</td><td>croquis, comparaisons, choix</td></tr>
+    <tr><td>4️⃣ Réaliser et <b>tester un prototype</b></td><td>respecte-t-il le cahier des charges ?</td><td>mesures, verdict, améliorations</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">➡️ Au <b>TP</b>, tu seras le contrôleur qualité : vérifier un prototype de gourde ESTIC critère par critère !</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>Tout objet répond à un <b>besoin</b>, que l'on formule avec 3 questions : <b>à qui rend-il service ? sur quoi agit-il ? dans quel but ?</b> (la bête à cornes).</li>
+      <li>La <b>fonction d'usage</b> dit ce que l'objet FAIT (la même pour tous) ; la <b>fonction d'estime</b> dit ce qui donne ENVIE (question de goûts).</li>
+      <li>Le <b>cahier des charges</b> est le contrat de l'objet : pour chaque fonction, un <b>critère</b> (ce qu'on mesure) et un <b>niveau</b> (la valeur à atteindre).</li>
+      <li>Un prototype est jugé <b>conforme</b> ou <b>non conforme</b> en comparant ses mesures aux niveaux du cahier des charges — pas aux goûts du testeur !</li>
+      <li>La démarche de projet : <b>besoin → cahier des charges → solutions → prototype testé</b>. On ne fabrique jamais avant d'avoir écrit le contrat.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function frame(ts){
+    if(etat.t0===null)etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){ if(etat.i<phases.length-1){etat.i++;etat.t0=ts;cap.textContent=phases[etat.i].caption;majPts();} else return; }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){cancelAnimationFrame(etat.raf);etat.i=0;etat.t0=null;
+    cap.textContent=phases[0].caption;majPts();etat.raf=requestAnimationFrame(frame);}
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption;majPts();phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#be185d',taille=15){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+function bulle(ctx,x,y,rx,ry,coul,rempli=false){
+  ctx.fillStyle=rempli?'#fdf2f8':'#fff'; ctx.strokeStyle=coul; ctx.lineWidth=3.5;
+  ctx.beginPath(); ctx.ellipse(x,y,rx,ry,0,0,7); ctx.fill(); ctx.stroke();
+}
+function traitB(ctx,x1,y1,x2,y2,coul='#94a3b8'){
+  ctx.strokeStyle=coul; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+}
+
+/* ====== ANIM 1 : LA BÊTE À CORNES ====== */
+function decorBete(ctx,niveau){
+  // les deux "cornes" + la bulle du bas
+  bulle(ctx,200,90,150,52,'#db2777',niveau>0);
+  bulle(ctx,620,90,150,52,'#1d4ed8',niveau>1);
+  bulle(ctx,410,300,190,58,'#16a34a',niveau>2);
+  traitB(ctx,270,133,380,250); traitB(ctx,550,133,440,250);
+  etiquette(ctx,'À QUI rend-il service ?',200,50,'#db2777',15);
+  etiquette(ctx,'Sur QUOI agit-il ?',620,50,'#1d4ed8',15);
+  etiquette(ctx,'Dans quel BUT ?',410,378,'#16a34a',15);
+  // la gourde au centre
+  ctx.font='34px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+  ctx.fillText('🧴',410,190);
+  etiquette(ctx,'la gourde',410,214,'#64748b',13);
+  if(niveau>0){ ctx.font='26px Segoe UI'; ctx.fillText('🥾',200,84); etiquette(ctx,'au randonneur',200,112,'#db2777',14.5); }
+  if(niveau>1){ ctx.font='26px Segoe UI'; ctx.fillText('💧',620,84); etiquette(ctx,'sur l\u2019eau',620,112,'#1d4ed8',14.5); }
+  if(niveau>2){ etiquette(ctx,'« lui permettre de boire pendant l\u2019effort »',410,306,'#16a34a',15); }
+}
+creerAnim('bete','cvBete','capBete','ptsBete',[
+ {dur:2800,caption:'STRUCTURE — Le schéma de la bête à cornes : deux « cornes » en haut, une bulle en bas, et l\u2019objet étudié au centre.',
+  draw(ctx,p){ decorBete(ctx,0); }},
+ {dur:5600,caption:'ACTION — On répond aux 3 questions pour la gourde : elle rend service au RANDONNEUR… elle agit sur L\u2019EAU… dans le but de BOIRE pendant l\u2019effort.',
+  draw(ctx,p){ decorBete(ctx,Math.ceil(lisse(p)*3)); }},
+ {dur:4200,caption:'PROPRIÉTÉ — La bulle du bas EST le besoin. Si le besoin disparaît (plus de randonneurs assoiffés ?), l\u2019objet n\u2019a plus de raison d\u2019exister. C\u2019est toujours la 1ère étape d\u2019un projet.',
+  draw(ctx,p){ decorBete(ctx,3);
+    ctx.strokeStyle='#ea580c'; ctx.lineWidth=3.5; ctx.setLineDash([7,5]);
+    ctx.beginPath(); ctx.ellipse(410,300,205,70,0,0,7); ctx.stroke(); ctx.setLineDash([]); }},
+]);
+
+/* ====== ANIM 2 : USAGE vs ESTIME ====== */
+function gourdeDuel(ctx,x,emoji,nom,coulNom){
+  ctx.font='46px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+  ctx.fillText(emoji,x,86);
+  etiquette(ctx,nom,x,116,coulNom,14);
+}
+function jaugeDuel(ctx,x,y,valeur,q,coul,label){
+  const w=180;
+  ctx.fillStyle='#e2e8f0'; ctx.fillRect(x-w/2,y,w,20);
+  ctx.fillStyle=coul; ctx.fillRect(x-w/2,y,w*valeur*q,20);
+  ctx.strokeStyle='#94a3b8'; ctx.strokeRect(x-w/2,y,w,20);
+  etiquette(ctx,label,x,y-8,'#475569',13);
+}
+creerAnim('duel','cvDuel','capDuel','ptsDuel',[
+ {dur:3000,caption:'STRUCTURE — Deux gourdes en rayon : la sobre à 8 € et l\u2019édition licorne pailletée à 25 €. Testons leurs fonctions.',
+  draw(ctx,p){ gourdeDuel(ctx,240,'🧴','gourde sobre — 8 €','#64748b');
+    gourdeDuel(ctx,580,'🦄','édition licorne — 25 €','#7c3aed'); }},
+ {dur:5200,caption:'ACTION — Fonction d\u2019USAGE (contenir 0,5 L, être étanche) : jauges IDENTIQUES, les deux font parfaitement le travail. Fonction d\u2019ESTIME : là, tout dépend… de TOI !',
+  draw(ctx,p){ const q=lisse(p);
+    gourdeDuel(ctx,240,'🧴','gourde sobre — 8 €','#64748b');
+    gourdeDuel(ctx,580,'🦄','édition licorne — 25 €','#7c3aed');
+    jaugeDuel(ctx,240,170,1,q,'#db2777','USAGE : contenir, transporter');
+    jaugeDuel(ctx,580,170,1,q,'#db2777','USAGE : contenir, transporter');
+    if(q>0.5){
+      jaugeDuel(ctx,240,250,0.3,Math.min(1,(q-0.5)*2),'#7c3aed','ESTIME (selon Zoé)');
+      jaugeDuel(ctx,580,250,0.95,Math.min(1,(q-0.5)*2),'#7c3aed','ESTIME (selon Zoé)');
+    } }},
+ {dur:4400,caption:'PROPRIÉTÉ — L\u2019usage est OBJECTIF (mesurable, identique pour tous) ; l\u2019estime est SUBJECTIVE (Zoé craque pour la licorne, Nino préfère la sobre). Les marques vendent souvent… l\u2019estime !',
+  draw(ctx,p){ gourdeDuel(ctx,240,'🧴','gourde sobre — 8 €','#64748b');
+    gourdeDuel(ctx,580,'🦄','édition licorne — 25 €','#7c3aed');
+    jaugeDuel(ctx,240,170,1,1,'#db2777','USAGE : contenir, transporter');
+    jaugeDuel(ctx,580,170,1,1,'#db2777','USAGE : contenir, transporter');
+    jaugeDuel(ctx,240,250,0.3,1,'#7c3aed','ESTIME (selon Zoé)');
+    jaugeDuel(ctx,580,250,0.95,1,'#7c3aed','ESTIME (selon Zoé)');
+    jaugeDuel(ctx,240,320,0.9,1,'#0e7490','ESTIME (selon Nino)');
+    jaugeDuel(ctx,580,320,0.25,1,'#0e7490','ESTIME (selon Nino)');
+    etiquette(ctx,'même usage, estimes opposées : 17 € d\u2019écart !',410,368,'#be185d',15); }},
+]);
+
+/* ====== ANIM 3 : LE CAHIER DES CHARGES ====== */
+const LIGNES_CDC=[
+ {f:'contenir la boisson',c:'contenance',n:'0,5 L minimum',mes:'0,52 L',ok:true},
+ {f:'être légère',c:'masse',n:'150 g maximum',mes:'180 g',ok:false},
+ {f:'ne pas fuir',c:'étanchéité (test 1 h retournée)',n:'0 goutte',mes:'0 goutte',ok:true},
+ {f:'rester abordable',c:'prix de revient',n:'8 € maximum',mes:'7,50 €',ok:true},
+];
+function tableCdc(ctx,nLignes,avecMesures,qMes=1){
+  const x0=40,y0=60,w=740,hL=62;
+  ctx.fillStyle='#be185d'; ctx.fillRect(x0,y0-34,w,34);
+  ctx.font='bold 13.5px Segoe UI'; ctx.fillStyle='#fff'; ctx.textAlign='left';
+  ctx.fillText('FONCTION',x0+12,y0-12);
+  ctx.fillText('CRITÈRE (on mesure quoi ?)',x0+230,y0-12);
+  ctx.fillText('NIVEAU (valeur exigée)',x0+470,y0-12);
+  if(avecMesures) ctx.fillText('PROTO',x0+650,y0-12);
+  for(let i=0;i<nLignes;i++){
+    const L=LIGNES_CDC[i], y=y0+i*hL;
+    ctx.fillStyle=i%2?'#fdf2f8':'#fff'; ctx.fillRect(x0,y,w,hL);
+    ctx.strokeStyle='#f3cede'; ctx.strokeRect(x0,y,w,hL);
+    ctx.font='13.5px Segoe UI'; ctx.fillStyle='#1e3a5f'; ctx.textAlign='left';
+    ctx.fillText(L.f,x0+12,y+36);
+    ctx.fillText(L.c,x0+230,y+36);
+    ctx.font='bold 13.5px Segoe UI'; ctx.fillStyle='#be185d';
+    ctx.fillText(L.n,x0+470,y+36);
+    if(avecMesures && qMes*4>i+0.5){
+      ctx.font='bold 14px Segoe UI'; ctx.fillStyle=L.ok?'#16a34a':'#dc2626';
+      ctx.fillText(L.mes+(L.ok?' ✓':' ✗'),x0+640,y+36);
+    }
+  }
+}
+creerAnim('cdc','cvCdc','capCdc','ptsCdc',[
+ {dur:5200,caption:'STRUCTURE — Le cahier des charges de la gourde s\u2019écrit ligne par ligne : pour chaque FONCTION, un CRITÈRE (ce qu\u2019on mesurera) et un NIVEAU (la valeur exigée, chiffrée !).',
+  draw(ctx,p){ tableCdc(ctx,Math.max(1,Math.ceil(lisse(p)*4)),false); }},
+ {dur:5200,caption:'ACTION — Le prototype arrive du labo : on MESURE, et on compare chaque valeur au niveau exigé. Contenance ✓… masse ✗ (180 g > 150 g !)… étanchéité ✓… prix ✓.',
+  draw(ctx,p){ tableCdc(ctx,4,true,lisse(p)); }},
+ {dur:4400,caption:'PROPRIÉTÉ — Verdict : NON CONFORME à cause d\u2019un seul critère. Le cahier des charges est un CONTRAT : on ne discute pas avec lui, on améliore le prototype (alléger !) et on re-teste.',
+  draw(ctx,p){ tableCdc(ctx,4,true,1);
+    ctx.strokeStyle='#dc2626'; ctx.lineWidth=3.5; ctx.setLineDash([7,5]);
+    ctx.strokeRect(36,118,748,64); ctx.setLineDash([]);
+    etiquette(ctx,'1 critère raté = prototype NON CONFORME → retour au labo',410,360,'#dc2626',15.5); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s3:'bete',s5:'duel',s6:'cdc'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

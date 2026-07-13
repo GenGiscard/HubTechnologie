@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP 3ème — Mission routeur · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --cyan:#0e7490; --niv:#1d4ed8; --niv-fonce:#1e40af; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.tp{max-width:980px;margin:26px auto 6px;padding:0 20px}
+header.tp h1{font-size:32px;color:var(--cyan)}
+header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
+.progression{max-width:980px;margin:16px auto;padding:0 20px;display:flex;gap:8px;align-items:center}
+.progression .seg{flex:1;height:10px;border-radius:6px;background:#e2e8f0;transition:.3s}
+.progression .seg.ok{background:var(--vert)}
+.progression .seg.encours{background:var(--orange)}
+.progression .score{font-weight:800;color:var(--niv-fonce);font-size:15px;white-space:nowrap}
+.acti{max-width:980px;margin:22px auto;padding:0 20px;position:relative}
+.boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:24px;border-top:5px solid var(--cyan);position:relative}
+.boite h2{font-size:21px;color:var(--cyan);display:flex;align-items:center;gap:10px}
+.boite h2 .badge{background:var(--cyan);color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
+.verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
+.verrou .cadenas{font-size:42px}
+.minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
+.minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
+.minicas .cas.faux{border-color:var(--rouge);background:#fef2f2}
+.minicas .cas .devinette{font-size:13.5px;font-weight:700;min-height:58px;line-height:1.45}
+.minicas .cas .choix{display:flex;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.minicas .cas button{border:1.5px solid #cbd5e1;background:#fff;border-radius:8px;padding:6px 10px;font-size:12.5px;font-weight:700;cursor:pointer}
+.minicas .cas button:hover{border-color:var(--cyan)}
+.ordre{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.ordre button{border:2.5px solid var(--niv);background:#fff;border-radius:12px;padding:14px 16px;font-size:14.5px;font-weight:700;color:var(--niv-fonce);cursor:pointer;min-width:190px;text-align:left}
+.ordre button small{display:block;font-weight:500;color:var(--gris);margin-top:4px}
+.ordre button.pris{opacity:.35;cursor:default}
+.slots{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.slots .slot{min-width:150px;min-height:52px;border:2px dashed #cbd5e1;border-radius:12px;padding:8px 10px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--gris);text-align:center}
+.slots .slot.rempli{border-style:solid;border-color:var(--niv);color:var(--niv-fonce);background:#eff6ff}
+.slots .fl{font-size:20px;color:var(--orange);font-weight:800}
+canvas.net{width:100%;max-width:640px;height:auto;background:#fdfdfd;border:1px solid #eef2f7;border-radius:12px;display:block;cursor:pointer}
+.btn{border:none;border-radius:10px;padding:11px 18px;font-size:15px;font-weight:800;cursor:pointer;color:#fff;background:var(--cyan)}
+.btn:hover{filter:brightness(1.08)}
+.btnrow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.verdict{margin-top:12px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:14.5px;display:none;line-height:1.55}
+.verdict.ok{display:block;background:#dcfce7;color:#14532d;border-left:5px solid var(--vert)}
+.verdict.ko{display:block;background:#fee2e2;color:#7f1d1d;border-left:5px solid var(--rouge)}
+.calczone{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.calczone input{width:130px;padding:11px;font-size:17px;font-weight:800;text-align:center;border:2px solid #cbd5e1;border-radius:10px}
+.calczone .unite{font-weight:800;color:var(--gris)}
+.rappel{display:inline-block;background:#eff6ff;border:1.5px dashed var(--niv);border-radius:10px;padding:8px 14px;font-weight:800;color:var(--niv-fonce);font-size:14px;margin-bottom:10px}
+.question{margin:14px 0;padding:14px;background:#f8fafc;border-radius:12px}
+.question .q{font-weight:700;margin-bottom:10px;font-size:15px}
+.rep{display:flex;flex-wrap:wrap;gap:8px}
+.rep button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 16px;font-size:14.5px;cursor:pointer;font-weight:600}
+.rep button:hover{border-color:var(--cyan)}
+.rep button.bon{background:#dcfce7;border-color:var(--vert)}
+.rep button.faux{background:#fee2e2;border-color:var(--rouge)}
+.codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#1e40af,#0e7490);border-radius:14px;padding:22px;color:#fff}
+.codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
+.codefinal a{color:#fde68a;font-weight:800}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%230e7490'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="tp">
+  <h1>🛰️ TP — Mission routeur</h1>
+  <p>Le centre de contrôle du réseau t'a recruté. 5 missions pour devenir maître de l'aiguillage — à la fin : le code des jeux !</p>
+</header>
+
+<div class="progression" id="prog">
+  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+</div>
+
+<!-- ============ A1 : QUI SUIS-JE ? ============ -->
+<div class="acti" id="a1">
+ <div class="boite">
+  <h2><span class="badge">1</span>Qui suis-je sur le réseau ?</h2>
+  <div class="consigne">Quatre machines et notions se présentent. Démasque chacune ! (1 pt par bonne réponse du premier coup)</div>
+  <div class="minicas" id="cas1"></div>
+ </div>
+</div>
+
+<!-- ============ A2 : L'ORDRE DU DNS ============ -->
+<div class="acti" id="a2">
+ <div class="boite">
+  <h2><span class="badge">2</span>Tu tapes « estic.fr »… et ensuite ?</h2>
+  <div class="consigne">Entre le moment où tu valides l'adresse et celui où la page s'affiche, 4 étapes s'enchaînent. Clique-les <b>dans l'ordre</b>.</div>
+  <div class="ordre" id="blocs2"></div>
+  <div class="slots" id="slots2">
+    <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
+    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+    <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
+    <div class="slot" data-i="3">4ème</div>
+  </div>
+  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+  <div class="verdict" id="verd2"></div>
+ </div>
+</div>
+
+<!-- ============ A3 : ROUTAGE ============ -->
+<div class="acti" id="a3">
+ <div class="boite">
+  <h2><span class="badge">3</span>Route le paquet malgré la panne !</h2>
+  <div class="consigne">🚨 Une liaison est en <b>PANNE</b> (✂️ en rouge). Trace le chemin du paquet : clique le CLIENT 💻, puis les routeurs 📡 de proche en proche (reliés par un trait), jusqu'au SERVEUR 🗄️. Puis envoie !</div>
+  <canvas class="net" id="cvNet" width="640" height="330"></canvas>
+  <div class="btnrow">
+    <button class="btn" id="envoyer3">📨 Envoyer le paquet</button>
+    <button class="btn" id="effacer3" style="background:#64748b">↺ Effacer le chemin</button>
+    <button class="btn" id="panne3" style="background:#ea580c">🎲 Autre panne</button>
+  </div>
+  <div class="verdict" id="verd3"></div>
+ </div>
+</div>
+
+<!-- ============ A4 : DÉBIT ============ -->
+<div class="acti" id="a4">
+ <div class="boite">
+  <h2><span class="badge">4</span>Le calcul du centre de contrôle</h2>
+  <div class="consigne">📦 Une mise à jour de jeu pèse <b>4 000 Mo</b>. La fibre du collège offre un débit de <b>80 Mo/s</b>. Combien de temps durera le téléchargement ?</div>
+  <div class="rappel">📐 Rappel : temps = taille ÷ débit</div>
+  <div class="calczone">
+    <span>temps =</span>
+    <input type="number" id="rep4" step="any" placeholder="?">
+    <span class="unite">secondes</span>
+    <button class="btn" id="verif4">✔ Vérifier</button>
+  </div>
+  <div class="verdict" id="verd4"></div>
+ </div>
+</div>
+
+<!-- ============ A5 : BILAN ============ -->
+<div class="acti" id="a5">
+ <div class="boite">
+  <h2><span class="badge">5</span>Bilan de l'agent réseau</h2>
+  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
+  <div id="quiz5"></div>
+  <div class="codefinal" id="codefinal">
+    🏆 Le centre de contrôle te félicite, agent !
+    <div class="code">PAQUET77</div>
+    <div>Entre ce code dans les jeux <a href="03_jeu_phishing_hunter.html">🎣 Phishing Hunter</a> et <a href="03b_jeu_cyberdefense.html">🛡️ Cyberdéfense ESTIC</a> pour les déverrouiller.</div>
+  </div>
+ </div>
+</div>
+
+<script>
+/* ================= ÉTAT & PROGRESSION ================= */
+const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
+function sauver(){ try{ localStorage.setItem('tp_net_3e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_net_3e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function majProgression(){
+  document.querySelectorAll('.progression .seg').forEach(seg=>{
+    const n=+seg.dataset.a;
+    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+  });
+  document.getElementById('scoreTot').textContent=etat.score;
+  for(let n=2;n<=5;n++){
+    const acti=document.getElementById('a'+n);
+    let v=acti.querySelector('.verrou');
+    if(n>etat.debloque){
+      if(!v){ v=document.createElement('div'); v.className='verrou';
+        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
+        acti.querySelector('.boite').appendChild(v); }
+    } else if(v) v.remove();
+  }
+}
+function reussir(n,pts){
+  etat.score+=pts;
+  if(etat.debloque===n) etat.debloque=n+1;
+  sauver(); majProgression();
+  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+}
+
+/* ================= A1 : QUI SUIS-JE ================= */
+const CAS1=[
+ {devinette:'« Je stocke les vidéos, les pages, les messages… et je les fournis à toute heure à qui les demande. »', bonne:'le serveur', autres:['le client']},
+ {devinette:'« Je lis l\u2019adresse de destination de CHAQUE paquet et je l\u2019aiguille vers la bonne direction. »', bonne:'le routeur', autres:['le serveur DNS']},
+ {devinette:'« Tu me donnes un nom comme estic.fr, je te réponds avec son numéro : 92.243.16.108. »', bonne:'le serveur DNS', autres:['le routeur']},
+ {devinette:'« 172.217.20.78 » — je suis…', bonne:'une adresse IP', autres:['un nom de domaine']},
+];
+(function initA1(){
+  const zone=document.getElementById('cas1');
+  CAS1.forEach(cas=>{
+    const d=document.createElement('div'); d.className='cas';
+    d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
+    const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
+    let premier=true, fait=false;
+    [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
+      const b=document.createElement('button'); b.textContent=rep;
+      b.onclick=()=>{
+        if(fait) return;
+        if(rep===cas.bonne){
+          fait=true; d.classList.remove('faux'); d.classList.add('bon');
+          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+          etat.q1ok++;
+          if(etat.q1ok===CAS1.length) reussir(1,2);
+        } else { d.classList.add('faux'); premier=false; }
+      };
+      ch.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+/* ================= A2 : ORDRE DNS ================= */
+const BLOCS2=[
+ {id:1,t:'📖 Demande au serveur DNS',s:'« estic.fr, quelle est ton IP ? »'},
+ {id:0,t:'📬 Réception de l\u2019adresse IP',s:'« c\u2019est 92.243.16.108 ! »'},
+ {id:2,t:'📨 Requête au serveur du site',s:'envoyée à cette adresse IP'},
+ {id:3,t:'📄 La page arrive en paquets',s:'et s\u2019affiche à l\u2019écran'},
+];
+const BON2=[1,0,2,3];
+let choix2=[], a2fait=false;
+function initA2(){
+  choix2=[];
+  const zone=document.getElementById('blocs2'); zone.innerHTML='';
+  BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
+    const btn=document.createElement('button');
+    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+    btn.onclick=()=>{
+      if(btn.classList.contains('pris')||choix2.length>=4) return;
+      btn.classList.add('pris'); choix2.push(b.id);
+      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+      slot.textContent=b.t; slot.classList.add('rempli');
+    };
+    zone.appendChild(btn);
+  });
+  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
+  document.getElementById('verd2').className='verdict';
+}
+document.getElementById('reset2').onclick=initA2;
+document.getElementById('verif2').onclick=()=>{
+  const verd=document.getElementById('verd2');
+  if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
+  if(choix2.join()===BON2.join()){
+    verd.className='verdict ok';
+    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : d\u2019abord l\u2019annuaire (DNS), ensuite seulement la vraie connexion. Tout ça en quelques millisecondes ! (+3 pts)'; reussir(2,3); }
+    else verd.textContent='✅ Bon ordre !';
+  } else {
+    verd.className='verdict ko';
+    verd.textContent='❌ Pas tout à fait. Réfléchis : peut-on contacter le serveur du site AVANT de connaître son adresse IP ? Recommence !';
+  }
+};
+initA2();
+
+/* ================= A3 : ROUTAGE ================= */
+const NOEUDS={PC:{x:70,y:165,e:'💻',n:'CLIENT',c:'#1d4ed8'},
+  R1:{x:220,y:80,e:'📡',n:'routeur 1',c:'#ea580c'}, R2:{x:220,y:250,e:'📡',n:'routeur 2',c:'#ea580c'},
+  R3:{x:390,y:80,e:'📡',n:'routeur 3',c:'#ea580c'}, R4:{x:390,y:250,e:'📡',n:'routeur 4',c:'#ea580c'},
+  SRV:{x:540,y:165,e:'🗄️',n:'SERVEUR',c:'#16a34a'}};
+const LIENS=[['PC','R1'],['PC','R2'],['R1','R2'],['R1','R3'],['R2','R4'],['R3','R4'],['R3','SRV'],['R4','SRV']];
+const PANNES_POSSIBLES=['R1-R3','R2-R4','R3-SRV','R4-SRV'];
+let cassee=PANNES_POSSIBLES[Math.floor(Math.random()*PANNES_POSSIBLES.length)];
+window.TP_DEBUG={get cassee(){return cassee;}};
+let chemin=['PC'], paquetAnim=null, a3fait=false;
+const cvN=document.getElementById('cvNet'), cN=cvN.getContext('2d');
+function estLien(a,b){ return LIENS.some(([x,y])=>(x===a&&y===b)||(x===b&&y===a)); }
+function estCassee(a,b){ const k1=a+'-'+b,k2=b+'-'+a; return cassee===k1||cassee===k2; }
+function dessinerNet(){
+  cN.clearRect(0,0,cvN.width,cvN.height);
+  LIENS.forEach(([a,b])=>{
+    const A=NOEUDS[a],B=NOEUDS[b];
+    const kc=estCassee(a,b);
+    cN.strokeStyle=kc?'#fca5a5':'#cbd5e1'; cN.lineWidth=kc?3:4;
+    cN.setLineDash(kc?[7,6]:[]);
+    cN.beginPath(); cN.moveTo(A.x,A.y); cN.lineTo(B.x,B.y); cN.stroke();
+    cN.setLineDash([]);
+    if(kc){ cN.font='20px Segoe UI'; cN.textAlign='center'; cN.fillText('✂️',(A.x+B.x)/2,(A.y+B.y)/2+7);
+      cN.font='bold 11px Segoe UI'; cN.fillStyle='#dc2626'; cN.fillText('PANNE',(A.x+B.x)/2,(A.y+B.y)/2+24); }
+  });
+  // chemin choisi
+  cN.strokeStyle='#16a34a'; cN.lineWidth=6;
+  for(let i=0;i<chemin.length-1;i++){
+    const A=NOEUDS[chemin[i]],B=NOEUDS[chemin[i+1]];
+    cN.beginPath(); cN.moveTo(A.x,A.y); cN.lineTo(B.x,B.y); cN.stroke();
+  }
+  Object.entries(NOEUDS).forEach(([id,N])=>{
+    const dans=chemin.includes(id);
+    cN.fillStyle='#fff'; cN.strokeStyle=dans?'#16a34a':N.c; cN.lineWidth=dans?4:3;
+    cN.beginPath(); cN.roundRect(N.x-32,N.y-27,64,54,11); cN.fill(); cN.stroke();
+    cN.font='24px Segoe UI'; cN.textAlign='center'; cN.fillStyle='#000'; cN.fillText(N.e,N.x,N.y+9);
+    cN.font='bold 11.5px Segoe UI'; cN.fillStyle=N.c; cN.fillText(N.n,N.x,N.y+45);
+  });
+  if(paquetAnim){
+    const {A,B,p}=paquetAnim;
+    const x=A.x+(B.x-A.x)*p, y=A.y+(B.y-A.y)*p;
+    cN.fillStyle='#1d4ed8'; cN.beginPath(); cN.roundRect(x-14,y-11,28,22,6); cN.fill();
+    cN.fillStyle='#fff'; cN.font='bold 12px Segoe UI'; cN.fillText('📦',x,y+5);
+  }
+}
+cvN.addEventListener('click',e=>{
+  if(paquetAnim) return;
+  const r=cvN.getBoundingClientRect();
+  const mx=(e.clientX-r.left)*cvN.width/r.width, my=(e.clientY-r.top)*cvN.height/r.height;
+  for(const [id,N] of Object.entries(NOEUDS)){
+    if(Math.hypot(mx-N.x,my-N.y)<36){
+      const dernier=chemin[chemin.length-1];
+      if(id===dernier) return;
+      if(chemin.includes(id)) return;
+      if(chemin.length===0){ if(id==='PC') chemin.push(id); }
+      else if(estLien(dernier,id)) chemin.push(id);
+      dessinerNet();
+      return;
+    }
+  }
+});
+document.getElementById('effacer3').onclick=()=>{ chemin=['PC']; document.getElementById('verd3').className='verdict'; dessinerNet(); };
+document.getElementById('panne3').onclick=()=>{
+  let n=cassee;
+  while(n===cassee) n=PANNES_POSSIBLES[Math.floor(Math.random()*PANNES_POSSIBLES.length)];
+  cassee=n; chemin=['PC']; document.getElementById('verd3').className='verdict'; dessinerNet();
+};
+document.getElementById('envoyer3').onclick=()=>{
+  const verd=document.getElementById('verd3');
+  if(chemin[chemin.length-1]!=='SRV'){
+    verd.className='verdict ko'; verd.textContent='Le chemin doit aller jusqu\u2019au SERVEUR 🗄️ ! Continue de cliquer les routeurs voisins.'; return;
+  }
+  for(let i=0;i<chemin.length-1;i++){
+    if(estCassee(chemin[i],chemin[i+1])){
+      verd.className='verdict ko'; verd.textContent='❌ Ton chemin passe par la liaison EN PANNE ✂️ : le paquet est perdu ! Efface et contourne la panne — c\u2019est toute la force du réseau maillé.';
+      return;
+    }
+  }
+  // animation du paquet le long du chemin
+  let seg=0, p=0;
+  verd.className='verdict';
+  function anim(){
+    p+=0.035;
+    if(p>=1){ p=0; seg++; }
+    if(seg>=chemin.length-1){
+      paquetAnim=null; dessinerNet();
+      verd.className='verdict ok';
+      verd.innerHTML='✅ Paquet livré via '+chemin.join(' → ')+' ! La panne n\u2019a rien empêché : les routeurs trouvent toujours un autre chemin. C\u2019est pour ça qu\u2019Internet, conçu pour résister aux pannes, ne s\u2019arrête (presque) jamais.'+(a3fait?'':' (+4 pts)');
+      if(!a3fait){ a3fait=true; reussir(3,4); }
+      return;
+    }
+    paquetAnim={A:NOEUDS[chemin[seg]],B:NOEUDS[chemin[seg+1]],p};
+    dessinerNet();
+    requestAnimationFrame(anim);
+  }
+  anim();
+};
+dessinerNet();
+
+/* ================= A4 : DÉBIT ================= */
+let a4fait=false;
+document.getElementById('verif4').onclick=()=>{
+  const verd=document.getElementById('verd4');
+  const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
+  if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
+  if(Math.abs(v-50)<=0.5){
+    verd.className='verdict ok';
+    verd.innerHTML='✅ temps = 4 000 ÷ 80 = 50 secondes. Moins d\u2019une minute pour 4 Go : merci la fibre ! (En ADSL à 2 Mo/s, il aurait fallu 2 000 s ≈ 33 minutes…)'+(a4fait?'':' (+4 pts)');
+    if(!a4fait){ a4fait=true; reussir(4,4); }
+  } else {
+    verd.className='verdict ko';
+    verd.textContent='❌ Pas ça. Applique la formule : temps = taille ÷ débit = 4 000 Mo ÷ 80 Mo/s. Les Mo s\u2019annulent, il reste des secondes.';
+  }
+};
+
+/* ================= A5 : BILAN ================= */
+const Q5=[
+ {q:"Sur Internet, un message voyage…", r:["d'un seul bloc","découpé en paquets","par la poste"], b:1},
+ {q:"Si une liaison tombe en panne, les paquets…", r:["sont perdus pour toujours","attendent la réparation","passent par un autre chemin"], b:2},
+ {q:"Le serveur DNS sert à…", r:["traduire un nom de domaine en adresse IP","bloquer les virus","accélérer le Wi-Fi"], b:0},
+ {q:"Le meilleur mot de passe est…", r:["azerty123","le prénom de ton chien","une phrase longue, unique par site"], b:2},
+];
+(function initQ5(){
+  const zone=document.getElementById('quiz5');
+  Q5.forEach((item,i)=>{
+    const d=document.createElement('div'); d.className='question';
+    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
+    const rep=d.querySelector('.rep');
+    item.r.forEach((r,k)=>{
+      const b=document.createElement('button'); b.textContent=r;
+      b.onclick=()=>{
+        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
+        etat.q5rep++;
+        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
+        if(etat.q5rep===Q5.length){
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          else{
+            const verd=document.createElement('div'); verd.className='verdict ko';
+            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
+            zone.appendChild(verd);
+          }
+        }
+      };
+      rep.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+charger(); majProgression();
+</script>
+</body>
+</html>

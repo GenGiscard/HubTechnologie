@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 3ème — Les objets connectés · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#c026d3; --niv-fonce:#a21caf; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#fdf4ff;color:var(--niv-fonce)}
+nav.side a.actif{background:#fae8ff;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:18px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:32px}
+.carte h3{font-size:16px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:13.5px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#fdf4ff;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23c026d3'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>Des objets qui bavardent</a>
+  <a href="#s2"><span class="dot"></span>L'anatomie d'un objet connecté</a>
+  <a href="#s3"><span class="dot"></span>Dans la montre (animation)</a>
+  <a href="#s4"><span class="dot"></span>Capteurs & actionneurs</a>
+  <a href="#s5"><span class="dot"></span>Le voyage de la donnée (animation)</a>
+  <a href="#s6"><span class="dot"></span>La boucle qui décide (animation)</a>
+  <a href="#s7"><span class="dot"></span>Tes données, ta vie privée</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 3ème · Séquence Les objets connectés</div>
+  <h1>📲 Ta montre sait que<br>tu as mal dormi.</h1>
+  <p class="sous" style="margin-top:16px">Elle sait aussi combien de pas tu as faits, où tu étais à 17h43, et ton rythme cardiaque pendant le contrôle de maths.
+  Comment un objet de 30 grammes fait-il tout ça ? Où partent ces informations ? Et qui les lit ?
+  Cette séquence dissèque les <b>objets connectés</b> — pour les comprendre… et garder le contrôle.</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Objet connecté = objet + 4 super-pouvoirs</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#c026d3"><div class="ic">🌡️</div><h3>MESURER</h3><p>Des capteurs transforment le monde réel en nombres : température, pouls, mouvement, lumière…</p><span class="ex">capteur cardiaque, GPS</span></div>
+    <div class="carte" style="--accent:#0e7490"><div class="ic">🧠</div><h3>TRAITER</h3><p>Un micro-ordinateur analyse les mesures et prend des décisions à partir d'un programme.</p><span class="ex">microcontrôleur</span></div>
+    <div class="carte" style="--accent:#ea580c"><div class="ic">📡</div><h3>COMMUNIQUER</h3><p>Une antenne envoie les données sans fil : Bluetooth, wifi, 4G/5G…</p><span class="ex">vers le smartphone, le cloud</span></div>
+    <div class="carte" style="--accent:#16a34a"><div class="ic">⚙️</div><h3>AGIR</h3><p>Des actionneurs passent à l'action : vibrer, chauffer, ouvrir, éclairer…</p><span class="ex">vibreur, radiateur, moteur</span></div>
+  </div>
+  <p class="sous" style="margin-top:22px">Enlève « communiquer » et il reste un objet <i>programmable</i>. Ajoute-le… et l'objet rejoint l'<b>internet des objets</b> (IoT) !</p>
+</section>
+
+<section class="slide" id="s3">
+  <h2>On ouvre la montre connectée</h2>
+  <div class="animbox">
+    <canvas id="cvAnat" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capAnat"></div><button data-anim="anat">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsAnat"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>Capteur ou actionneur ? Le test infaillible</h2>
+  <table class="mat">
+    <tr><th>Composant</th><th>Famille</th><th>Pourquoi</th></tr>
+    <tr><td>🌡️ Sonde de température du thermostat</td><td><b>CAPTEUR</b></td><td>il MESURE : le monde réel → un nombre</td></tr>
+    <tr><td>❤️ Cellule cardiaque de la montre</td><td><b>CAPTEUR</b></td><td>il MESURE le pouls à travers la peau</td></tr>
+    <tr><td>🔥 Résistance du radiateur connecté</td><td><b>ACTIONNEUR</b></td><td>il AGIT : un ordre → une action physique</td></tr>
+    <tr><td>🚪 Moteur du volet roulant</td><td><b>ACTIONNEUR</b></td><td>il AGIT : il ouvre et ferme pour de vrai</td></tr>
+    <tr><td>📳 Vibreur de la montre</td><td><b>ACTIONNEUR</b></td><td>il AGIT sur ton poignet pour te prévenir</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">Le test : <b>ça mesure → capteur. Ça bouge, chauffe, éclaire ou sonne → actionneur.</b> Entre les deux : le micro-ordinateur qui décide.</p>
+</section>
+
+<section class="slide" id="s5">
+  <h2>Le voyage d'un battement de cœur</h2>
+  <div class="animbox">
+    <canvas id="cvVoyage" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capVoyage"></div><button data-anim="voyage">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsVoyage"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>La boucle qui décide toute seule</h2>
+  <div class="animbox">
+    <canvas id="cvBoucle" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capBoucle"></div><button data-anim="boucle">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsBoucle"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>Tes données valent de l'or : garde le contrôle</h2>
+  <table class="mat">
+    <tr><th>Réflexe</th><th>Pourquoi</th></tr>
+    <tr><td>🔍 Se demander : « quelles données part-il, et chez qui ? »</td><td>une montre = pouls, sommeil, position… stockés sur les serveurs d'une entreprise</td></tr>
+    <tr><td>⚙️ Régler les paramètres de confidentialité dès le premier jour</td><td>par défaut, beaucoup d'objets partagent un maximum</td></tr>
+    <tr><td>🎤 Couper micro / caméra quand on ne s'en sert pas</td><td>une enceinte connectée ÉCOUTE en permanence son mot d'activation</td></tr>
+    <tr><td>🔄 Faire les mises à jour</td><td>un objet connecté non mis à jour est une porte d'entrée pour les pirates (cf. séquence cybersécurité !)</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">➡️ Au <b>TP</b>, tu deviens expert du laboratoire : trois objets connectés qui déraillent t'attendent sur la table de dissection !</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>Un <b>objet connecté</b> = un objet + des <b>capteurs</b> (mesurer) + un <b>micro-ordinateur</b> (traiter) + une <b>antenne</b> (communiquer) + souvent des <b>actionneurs</b> (agir) — le tout alimenté par une <b>batterie</b>.</li>
+      <li><b>Capteur</b> : transforme une grandeur réelle en nombre. <b>Actionneur</b> : transforme un ordre en action physique. Le test : ça mesure → capteur ; ça bouge/chauffe/sonne → actionneur.</li>
+      <li>La donnée voyage : objet → smartphone (Bluetooth) → box (wifi) → internet → <b>le cloud</b> = les serveurs d'une entreprise, souvent à l'autre bout du monde.</li>
+      <li>Beaucoup d'objets fonctionnent en <b>boucle</b> : mesurer → comparer à la consigne → agir → re-mesurer. C'est ainsi qu'un thermostat maintient 19 °C tout seul.</li>
+      <li>Ces objets collectent des <b>données personnelles</b> : on règle la confidentialité, on coupe micros et caméras inutiles, on met à jour. L'<b>autonomie</b> se calcule : batterie (mAh) ÷ consommation (mAh/jour).</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function frame(ts){
+    if(etat.t0===null)etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){ if(etat.i<phases.length-1){etat.i++;etat.t0=ts;cap.textContent=phases[etat.i].caption;majPts();} else return; }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){cancelAnimationFrame(etat.raf);etat.i=0;etat.t0=null;
+    cap.textContent=phases[0].caption;majPts();etat.raf=requestAnimationFrame(frame);}
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption;majPts();phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#a21caf',taille=15){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+function boite(ctx,x,y,w,h,txt,coul,actif){
+  ctx.fillStyle=actif?'#fae8ff':'#fff';
+  ctx.strokeStyle=actif?coul:'#94a3b8'; ctx.lineWidth=actif?3.5:2;
+  ctx.beginPath(); ctx.roundRect(x-w/2,y-h/2,w,h,10); ctx.fill(); ctx.stroke();
+  ctx.font='14.5px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e3a5f';
+  const lignes=txt.split('\n');
+  lignes.forEach((l,i)=>ctx.fillText(l,x,y+5+(i-(lignes.length-1)/2)*17));
+}
+
+/* ====== ANIM 1 : L'ANATOMIE DE LA MONTRE ====== */
+const ORGANES=[
+ {x:220,y:105,t:'🌡️❤️ CAPTEURS\npouls, mouvement',c:'#c026d3'},
+ {x:220,y:255,t:'🔋 BATTERIE\nl\u2019énergie de tout',c:'#16a34a'},
+ {x:600,y:105,t:'🧠 MICRO-ORDINATEUR\nil traite et décide',c:'#0e7490'},
+ {x:600,y:255,t:'📡 ANTENNE\nBluetooth / wifi',c:'#ea580c'},
+];
+function decorAnat(ctx,nVisibles,actifs,pulse){
+  // la montre au centre
+  ctx.fillStyle='#fff'; ctx.strokeStyle='#a21caf'; ctx.lineWidth=3.5;
+  ctx.beginPath(); ctx.roundRect(355,120,110,130,22); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle='#cbd5e1'; ctx.lineWidth=10;
+  ctx.beginPath(); ctx.moveTo(410,120); ctx.lineTo(410,70); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(410,250); ctx.lineTo(410,300); ctx.stroke();
+  ctx.font='34px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+  ctx.fillText(pulse?'❤️':'⌚',410,196);
+  if(pulse) etiquette(ctx,pulse+' bpm',410,225,'#c026d3',15);
+  for(let i=0;i<nVisibles;i++){
+    const o=ORGANES[i];
+    ctx.strokeStyle=actifs.includes(i)?o.c:'#cbd5e1';
+    ctx.lineWidth=actifs.includes(i)?3.5:2;
+    ctx.setLineDash([6,5]);
+    ctx.beginPath(); ctx.moveTo(o.x+(o.x<400?92:-92),o.y); ctx.lineTo(o.x<400?355:465,185); ctx.stroke();
+    ctx.setLineDash([]);
+    boite(ctx,o.x,o.y,184,58,o.t,o.c,actifs.includes(i));
+  }
+}
+creerAnim('anat','cvAnat','capAnat','ptsAnat',[
+ {dur:4600,caption:'STRUCTURE — On ouvre la montre : quatre organes. Les CAPTEURS qui mesurent, la BATTERIE qui alimente, le MICRO-ORDINATEUR qui réfléchit, l\u2019ANTENNE qui communique.',
+  draw(ctx,p){ decorAnat(ctx,Math.max(1,Math.ceil(lisse(p)*4)),[],null); }},
+ {dur:5200,caption:'ACTION — Un battement de cœur ! Le CAPTEUR le mesure à travers la peau (72 bpm), le MICRO-ORDINATEUR le compare à ton historique… et l\u2019ANTENNE l\u2019envoie au smartphone.',
+  draw(ctx,p){ const q=lisse(p);
+    const actifs=q<0.33?[0]:(q<0.66?[0,2]:[0,2,3]);
+    decorAnat(ctx,4,actifs,72); }},
+ {dur:4200,caption:'PROPRIÉTÉ — Objet connecté = mesurer + traiter + communiquer (+ agir), le tout au bout d\u2019une BATTERIE. Retire un seul organe… et la magie s\u2019arrête. D\u2019où les deux pannes classiques : capteur qui délire, batterie à plat !',
+  draw(ctx,p){ decorAnat(ctx,4,[0,1,2,3],72);
+    etiquette(ctx,'4 organes indispensables — et une autonomie limitée par la batterie',410,360,'#a21caf',15); }},
+]);
+
+/* ====== ANIM 2 : LE VOYAGE DE LA DONNÉE ====== */
+const RELAIS=[
+ {x:90,y:280,t:'⌚ montre'},
+ {x:250,y:280,t:'📱 smartphone'},
+ {x:410,y:280,t:'📡 box wifi'},
+ {x:570,y:280,t:'🌍 internet'},
+ {x:720,y:280,t:'🗄️ cloud'},
+];
+const LIAISONS=['Bluetooth','wifi','fibre / 4G',''];
+function decorVoyage(ctx,q,fin){
+  RELAIS.forEach((r,i)=>{
+    boite(ctx,r.x,r.y,120,46,r.t,'#c026d3', q!==null && q>=i/(RELAIS.length-1)-0.01);
+    if(i<4){
+      ctx.strokeStyle='#cbd5e1'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(r.x+60,280); ctx.lineTo(RELAIS[i+1].x-60,280); ctx.stroke();
+      etiquette(ctx,LIAISONS[i],(r.x+RELAIS[i+1].x)/2,265,'#94a3b8',11.5);
+    }
+  });
+  etiquette(ctx,'le cloud = les SERVEURS d\u2019une entreprise, souvent à des milliers de km',720,330,'#94a3b8',11.5);
+  if(q!==null){
+    const x=90+(720-90)*q;
+    ctx.font='22px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+    ctx.fillText('💓',x,240);
+    etiquette(ctx,'72 bpm — 23h04',x,218,'#c026d3',12);
+  }
+  if(fin){
+    ctx.font='20px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('📊',250,120);
+    etiquette(ctx,'l\u2019appli te montre TES données… stockées CHEZ EUX',410,95,'#ea580c',15.5);
+    ctx.strokeStyle='#ea580c'; ctx.setLineDash([6,5]); ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(700,255); ctx.lineTo(270,130); ctx.stroke(); ctx.setLineDash([]);
+  }
+}
+creerAnim('voyage','cvVoyage','capVoyage','ptsVoyage',[
+ {dur:3000,caption:'STRUCTURE — Cinq relais entre ton poignet et le bout du monde : la montre, le smartphone, la box, internet… et le CLOUD, les serveurs de l\u2019entreprise.',
+  draw(ctx,p){ decorVoyage(ctx,null,false); }},
+ {dur:5600,caption:'ACTION — 23h04 : ton cœur bat à 72. La mesure saute en Bluetooth vers le smartphone, en wifi vers la box, file sur internet… et atterrit sur un serveur, peut-être en Californie.',
+  draw(ctx,p){ decorVoyage(ctx,lisse(p),false); }},
+ {dur:4600,caption:'PROPRIÉTÉ — Le lendemain, l\u2019appli t\u2019affiche ton sommeil : elle REDESCEND tes données du cloud. Pratique… mais tes mesures les plus intimes vivent chez une entreprise : d\u2019où les réglages de confidentialité !',
+  draw(ctx,p){ decorVoyage(ctx,1,true); }},
+]);
+
+/* ====== ANIM 3 : LA BOUCLE DU THERMOSTAT ====== */
+function decorBoucle(ctx,temp,chauffe,fleche,verdict){
+  // pièce
+  ctx.fillStyle='#f8fafc'; ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.roundRect(70,70,300,240,14); ctx.fill(); ctx.stroke();
+  etiquette(ctx,'le salon',220,60,'#94a3b8',13);
+  ctx.font='44px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText('🛋️',160,220);
+  // radiateur
+  ctx.fillStyle=chauffe?'#fee2e2':'#e2e8f0';
+  ctx.strokeStyle=chauffe?'#dc2626':'#94a3b8'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.roundRect(280,160,60,110,8); ctx.fill(); ctx.stroke();
+  ctx.font='24px Segoe UI'; ctx.fillStyle='#000';
+  ctx.fillText(chauffe?'🔥':'🔥',310,225);
+  ctx.globalAlpha=chauffe?1:0.25;
+  etiquette(ctx,'ACTIONNEUR',310,290,'#dc2626',11.5);
+  ctx.globalAlpha=1;
+  // thermostat
+  boite(ctx,560,120,200,74,'🌡️ CAPTEUR : '+temp.toFixed(1)+' °C\n🧠 consigne : 19,0 °C','#c026d3',true);
+  // décision
+  const decision = temp<19 ? 'trop froid → CHAUFFER' : 'consigne atteinte → STOP';
+  boite(ctx,560,250,200,50,'décision :\n'+decision, chauffe?'#dc2626':'#16a34a', true);
+  // flèches de boucle
+  ctx.strokeStyle='#ea580c'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(370,140); ctx.lineTo(455,125); ctx.stroke(); // pièce -> capteur
+  ctx.beginPath(); ctx.moveTo(560,157); ctx.lineTo(560,225); ctx.stroke(); // capteur -> décision
+  ctx.beginPath(); ctx.moveTo(455,255); ctx.lineTo(345,225); ctx.stroke(); // décision -> radiateur
+  etiquette(ctx,'mesure →',412,120,'#ea580c',12);
+  etiquette(ctx,'← ordre',400,255,'#ea580c',12);
+  if(verdict) etiquette(ctx,'mesurer → comparer → agir → re-mesurer : la BOUCLE, sans aucun humain',410,360,'#a21caf',15.5);
+}
+creerAnim('boucle','cvBoucle','capBoucle','ptsBoucle',[
+ {dur:3400,caption:'STRUCTURE — Le thermostat connecté : un CAPTEUR mesure la pièce (17,0 °C), le micro-ordinateur garde la CONSIGNE (19,0 °C), le radiateur attend les ordres.',
+  draw(ctx,p){ decorBoucle(ctx,17,false,false,false); }},
+ {dur:5200,caption:'ACTION — 17,0 < 19,0 : « trop froid ». Ordre au radiateur : CHAUFFER. Le capteur continue de mesurer… 17,8… 18,4… la température grimpe vers la consigne.',
+  draw(ctx,p){ decorBoucle(ctx,17+lisse(p)*1.9,true,true,false); }},
+ {dur:4200,caption:'ACTION (suite) — 19,0 °C atteints : le micro-ordinateur coupe le radiateur. Et si la pièce se refroidit cette nuit ? La boucle recommencera, toute seule.',
+  draw(ctx,p){ decorBoucle(ctx,19,false,true,false); }},
+ {dur:4200,caption:'PROPRIÉTÉ — MESURER → COMPARER à la consigne → AGIR → re-mesurer : cette boucle est le cœur de presque tous les objets connectés — thermostat, arrosage, montre qui te dit de bouger…',
+  draw(ctx,p){ decorBoucle(ctx,19,false,false,true); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s3:'anat',s5:'voyage',s6:'boucle'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

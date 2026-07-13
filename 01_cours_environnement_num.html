@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 5ème — L'environnement numérique · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#0284c7; --niv-fonce:#0369a1; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#f0f9ff;color:var(--niv-fonce)}
+nav.side a.actif{background:#e0f2fe;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:18px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:32px}
+.carte h3{font-size:16px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:13.5px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink);font-family:Consolas,monospace}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#f0f9ff;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+table.mat code{font-family:Consolas,monospace;background:#e0f2fe;border-radius:6px;padding:2px 7px;font-size:13px;color:#0369a1}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%230284c7'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>L'exposé disparu</a>
+  <a href="#s2"><span class="dot"></span>Fichiers & dossiers</a>
+  <a href="#s3"><span class="dot"></span>L'arborescence (animation)</a>
+  <a href="#s4"><span class="dot"></span>Le réseau du collège</a>
+  <a href="#s5"><span class="dot"></span>Le voyage du fichier (animation)</a>
+  <a href="#s6"><span class="dot"></span>Ko, Mo, Go (animation)</a>
+  <a href="#s7"><span class="dot"></span>Les bons réflexes</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 5ème · Séquence L'environnement numérique</div>
+  <h1>💾 « Monsieur, mon exposé<br>a disparu !! »</h1>
+  <p class="sous" style="margin-top:16px">Zoé avait travaillé une heure sur son exposé… enregistré « quelque part », sur « un ordinateur de la salle info ».
+  Aujourd'hui : introuvable. Cette séquence t'apprend comment les fichiers sont <b>nommés</b>, <b>rangés</b> et <b>stockés</b>
+  sur le réseau du collège — pour que ça ne t'arrive plus jamais.</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Fichier, dossier, extension</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#0284c7"><div class="ic">📄</div><h3>Le FICHIER</h3><p>Un document numérique avec un nom : texte, photo, son, vidéo, programme…</p><span class="ex">expose_volcans.odt</span></div>
+    <div class="carte" style="--accent:#ea580c"><div class="ic">🏷️</div><h3>L'EXTENSION</h3><p>La fin du nom, après le point : elle indique le TYPE du fichier et le logiciel qui l'ouvre.</p><span class="ex">.odt .jpg .mp3 .mp4</span></div>
+    <div class="carte" style="--accent:#16a34a"><div class="ic">📁</div><h3>Le DOSSIER</h3><p>Une boîte qui range fichiers… et autres dossiers : c'est l'ARBORESCENCE.</p><span class="ex">Travail ▸ 5B ▸ zoe</span></div>
+  </div>
+  <p class="sous" style="margin-top:22px">Un bon nom de fichier dit tout : <b>quoi</b>, <b>qui</b>, <b>quand</b> — <code style="font-family:Consolas,monospace">expose_volcans_zoe_v2.odt</code> vaut mieux que <code style="font-family:Consolas,monospace">truc.odt</code> !</p>
+</section>
+
+<section class="slide" id="s3">
+  <h2>L'arborescence : ranger pour retrouver</h2>
+  <div class="animbox">
+    <canvas id="cvArbo" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capArbo"></div><button data-anim="arbo">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsArbo"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>Le réseau du collège : qui fait quoi ?</h2>
+  <table class="mat">
+    <tr><th>Élément</th><th>Son rôle</th></tr>
+    <tr><td>💻 <b>Le poste de travail</b></td><td>l'ordinateur où TU travailles — il y en a plein, tu changes souvent !</td></tr>
+    <tr><td>🗄️ <b>Le serveur</b></td><td>l'ordinateur central, toujours allumé : il stocke les fichiers et les comptes de TOUT le collège</td></tr>
+    <tr><td>🔀 <b>Le switch</b></td><td>la multiprise du réseau : il relie tous les câbles entre eux</td></tr>
+    <tr><td>📶 <b>La borne wifi</b></td><td>le même réseau… sans câble, par ondes radio</td></tr>
+    <tr><td>🔑 <b>Ta session</b></td><td>identifiant + mot de passe : le réseau te reconnaît et ouvre TON dossier personnel</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">La règle d'or : un fichier enregistré <b>sur le serveur</b> te suit sur n'importe quel poste. Un fichier laissé <b>sur le poste</b> y reste… et s'y perd !</p>
+</section>
+
+<section class="slide" id="s5">
+  <h2>Le voyage du fichier</h2>
+  <div class="animbox">
+    <canvas id="cvVoyage" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capVoyage"></div><button data-anim="voyage">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsVoyage"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>Ko, Mo, Go : le poids des fichiers</h2>
+  <div class="animbox">
+    <canvas id="cvOctets" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capOctets"></div><button data-anim="octets">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsOctets"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>Les bons réflexes de la salle info</h2>
+  <table class="mat">
+    <tr><th>Réflexe</th><th>Pourquoi</th></tr>
+    <tr><td>🔑 Fermer sa session en partant</td><td>session ouverte = n'importe qui peut fouiller (ou saboter !) tes dossiers</td></tr>
+    <tr><td>🗄️ Enregistrer sur le SERVEUR, dans SON dossier</td><td>tes fichiers te suivent sur tous les postes — et le serveur est sauvegardé</td></tr>
+    <tr><td>🏷️ Nommer clairement : quoi_qui_version</td><td>« expose_volcans_zoe_v2.odt » se retrouve en 3 secondes</td></tr>
+    <tr><td>🤫 Ne JAMAIS prêter son mot de passe</td><td>tout ce qui est fait sur ta session… c'est TOI le responsable</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">➡️ Au <b>TP</b>, tu deviens dépanneur officiel de la salle info : trois élèves en panique t'attendent !</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>Un <b>fichier</b> a un nom et une <b>extension</b> (.odt, .jpg, .mp3, .mp4…) qui indique son type ; il se range dans des <b>dossiers</b> organisés en arborescence.</li>
+      <li>Le <b>chemin</b> décrit où il se trouve : <b>Travail ▸ 5B ▸ zoe ▸ techno ▸ expose.odt</b>.</li>
+      <li>Sur le réseau du collège, le <b>serveur</b> stocke les fichiers de tous : un fichier enregistré sur le serveur se retrouve depuis <b>n'importe quel poste</b>.</li>
+      <li>Ta <b>session</b> (identifiant + mot de passe) est personnelle : on la ferme en partant, on ne la prête jamais.</li>
+      <li>Les tailles se mesurent en octets : <b>1 Go = 1 000 Mo = 1 000 000 Ko</b> — un texte pèse des Ko, une photo des Mo, un film des Go.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function frame(ts){
+    if(etat.t0===null)etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){ if(etat.i<phases.length-1){etat.i++;etat.t0=ts;cap.textContent=phases[etat.i].caption;majPts();} else return; }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){cancelAnimationFrame(etat.raf);etat.i=0;etat.t0=null;
+    cap.textContent=phases[0].caption;majPts();etat.raf=requestAnimationFrame(frame);}
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption;majPts();phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#0369a1',taille=15){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+function noeud(ctx,x,y,txt,emoji,actif){
+  ctx.fillStyle=actif?'#e0f2fe':'#fff';
+  ctx.strokeStyle=actif?'#0284c7':'#94a3b8'; ctx.lineWidth=actif?3.5:2;
+  ctx.beginPath(); ctx.roundRect(x-62,y-20,124,40,10); ctx.fill(); ctx.stroke();
+  ctx.font='15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e3a5f';
+  ctx.fillText(emoji+' '+txt,x,y+5);
+}
+
+/* ====== ANIM 1 : L'ARBORESCENCE ====== */
+const ARBRE=[
+ {x:410,y:60,t:'Travail',e:'🗄️',parent:null},
+ {x:220,y:150,t:'5A',e:'📁',parent:0},
+ {x:410,y:150,t:'5B',e:'📁',parent:0},
+ {x:600,y:150,t:'5C',e:'📁',parent:0},
+ {x:300,y:240,t:'nino',e:'📁',parent:2},
+ {x:520,y:240,t:'zoe',e:'📁',parent:2},
+ {x:520,y:325,t:'techno',e:'📁',parent:5},
+];
+const CHEMIN=[0,2,5,6];
+function decorArbo(ctx,nVisibles,actifs,fichierPos){
+  for(let i=0;i<nVisibles;i++){
+    const n=ARBRE[i];
+    if(n.parent!==null && n.parent<nVisibles){
+      const p=ARBRE[n.parent];
+      ctx.strokeStyle=actifs.includes(i)&&actifs.includes(n.parent)?'#ea580c':'#cbd5e1';
+      ctx.lineWidth=actifs.includes(i)&&actifs.includes(n.parent)?3.5:2;
+      ctx.beginPath(); ctx.moveTo(p.x,p.y+20); ctx.lineTo(n.x,n.y-20); ctx.stroke();
+    }
+  }
+  for(let i=0;i<nVisibles;i++) noeud(ctx,ARBRE[i].x,ARBRE[i].y,ARBRE[i].t,ARBRE[i].e,actifs.includes(i));
+  if(fichierPos){
+    ctx.font='22px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+    ctx.fillText('📄',fichierPos.x,fichierPos.y);
+    etiquette(ctx,'expose.odt',fichierPos.x,fichierPos.y+22,'#ea580c',12.5);
+  }
+}
+creerAnim('arbo','cvArbo','capArbo','ptsArbo',[
+ {dur:4200,caption:'STRUCTURE — Sur le serveur, les dossiers s\u2019emboîtent comme des poupées russes : la racine « Travail », puis un dossier par classe, puis un dossier par élève : c\u2019est l\u2019ARBORESCENCE.',
+  draw(ctx,p){ const n=Math.max(1,Math.ceil(lisse(p)*ARBRE.length)); decorArbo(ctx,n,[],null); }},
+ {dur:5200,caption:'ACTION — L\u2019exposé de Zoé descend l\u2019arbre : Travail → 5B → zoe → techno. À chaque étage, on choisit UNE branche : impossible de se perdre.',
+  draw(ctx,p){ const q=lisse(p)*(CHEMIN.length-1);
+    const seg=Math.min(CHEMIN.length-2,Math.floor(q)), f=q-seg;
+    const a=ARBRE[CHEMIN[seg]], b=ARBRE[CHEMIN[seg+1]];
+    decorArbo(ctx,ARBRE.length,CHEMIN.slice(0,seg+2),{x:a.x+(b.x-a.x)*f+80,y:a.y+(b.y-a.y)*f});
+  }},
+ {dur:4600,caption:'PROPRIÉTÉ — L\u2019adresse complète du fichier s\u2019appelle son CHEMIN : Travail ▸ 5B ▸ zoe ▸ techno ▸ expose.odt. Qui connaît le chemin retrouve le fichier en 3 secondes — sur n\u2019importe quel poste.',
+  draw(ctx,p){ decorArbo(ctx,ARBRE.length,CHEMIN,{x:600,y:325});
+    etiquette(ctx,'chemin : Travail ▸ 5B ▸ zoe ▸ techno ▸ expose.odt',410,368,'#0369a1',15.5); }},
+]);
+
+/* ====== ANIM 2 : LE VOYAGE DU FICHIER ====== */
+function decorVoyage(ctx,phase,q){
+  // serveur au centre-haut, deux postes en bas
+  noeud(ctx,410,80,'SERVEUR','🗄️',phase>=1);
+  etiquette(ctx,'toujours allumé, sauvegardé',410,125,'#94a3b8',12);
+  noeud(ctx,170,290,'poste 12','💻',phase===1);
+  etiquette(ctx,'salle info · lundi',170,335,'#94a3b8',12);
+  noeud(ctx,650,290,'poste 3','💻',phase===2);
+  etiquette(ctx,'CDI · mardi',650,335,'#94a3b8',12);
+  // câbles via switch
+  ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.moveTo(170,270); ctx.lineTo(410,190); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(650,270); ctx.lineTo(410,190); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(410,190); ctx.lineTo(410,100); ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.strokeStyle='#0284c7'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.roundRect(378,175,64,30,8); ctx.fill(); ctx.stroke();
+  ctx.font='13px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e3a5f';
+  ctx.fillText('🔀 switch',410,195);
+  // fichier en mouvement
+  let fx=null,fy=null;
+  if(phase===1){ // poste12 -> serveur
+    if(q<0.5){ const f=q*2; fx=170+(410-170)*f; fy=270+(190-270)*f; }
+    else { const f=(q-0.5)*2; fx=410; fy=190+(100-190)*f; }
+  }
+  if(phase===2){ // serveur -> poste3
+    if(q<0.5){ const f=q*2; fx=410; fy=100+(190-100)*f; }
+    else { const f=(q-0.5)*2; fx=410+(650-410)*f; fy=190+(270-190)*f; }
+  }
+  if(fx!==null){
+    ctx.font='22px Segoe UI'; ctx.fillStyle='#000'; ctx.textAlign='center';
+    ctx.fillText('📄',fx,fy);
+  }
+  if(phase>=1&&(phase>1||q>=1)){ /* fichier rangé au serveur */ }
+}
+creerAnim('voyage','cvVoyage','capVoyage','ptsVoyage',[
+ {dur:3000,caption:'STRUCTURE — Le réseau du collège : des postes partout (salle info, CDI…), reliés par le switch au SERVEUR, l\u2019ordinateur central toujours allumé.',
+  draw(ctx,p){ decorVoyage(ctx,0,0); }},
+ {dur:4600,caption:'ACTION 1/2 — Lundi, salle info, poste 12 : Zoé clique « Enregistrer » DANS SON DOSSIER RÉSEAU. Le fichier file par le câble, passe le switch… et se range sur le serveur.',
+  draw(ctx,p){ decorVoyage(ctx,1,lisse(p)); }},
+ {dur:4600,caption:'ACTION 2/2 — Mardi, CDI, poste 3 : Zoé ouvre sa session. Son dossier apparaît, elle double-clique… le serveur renvoie le fichier. Même exposé, autre poste !',
+  draw(ctx,p){ decorVoyage(ctx,2,lisse(p)); }},
+ {dur:4200,caption:'PROPRIÉTÉ — Enregistré sur le SERVEUR, ton fichier te suit sur n\u2019importe quel poste du collège (et il est sauvegardé chaque nuit). Laissé sur le bureau du poste 12… il y serait resté, invisible depuis le CDI !',
+  draw(ctx,p){ decorVoyage(ctx,0,0);
+    etiquette(ctx,'la règle d\u2019or : toujours enregistrer sur le serveur, dans SON dossier',410,368,'#0369a1',15); }},
+]);
+
+/* ====== ANIM 3 : KO, MO, GO ====== */
+const FICHIERS_O=[
+ {e:'📄',n:'un exposé texte',taille:'50 Ko',barre:0.006},
+ {e:'📷',n:'une photo',taille:'4 Mo',barre:0.12},
+ {e:'🎵',n:'une chanson',taille:'8 Mo',barre:0.24},
+ {e:'🎬',n:'un film HD',taille:'4 Go',barre:1},
+];
+function decorOctets(ctx,nVisibles,q,cle){
+  etiquette(ctx,'1 Go = 1 000 Mo = 1 000 000 Ko',410,42,'#ea580c',16);
+  for(let i=0;i<nVisibles;i++){
+    const F=FICHIERS_O[i], y=90+i*62;
+    ctx.font='24px Segoe UI'; ctx.textAlign='left'; ctx.fillStyle='#000';
+    ctx.fillText(F.e,70,y+22);
+    ctx.font='bold 14.5px Segoe UI'; ctx.fillStyle='#1e3a5f';
+    ctx.fillText(F.n,110,y+10);
+    ctx.fillStyle='#64748b'; ctx.font='13px Segoe UI';
+    ctx.fillText(F.taille,110,y+28);
+    const w=560*F.barre*(i===nVisibles-1?q:1);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(230,y,560,26);
+    ctx.fillStyle=['#38bdf8','#0284c7','#0369a1','#ea580c'][i];
+    ctx.fillRect(230,y,Math.max(2,w),26);
+  }
+  if(cle) etiquette(ctx,'💾 clé USB 32 Go = 8 000 photos… ou 8 films !',410,360,'#0369a1',15.5);
+}
+creerAnim('octets','cvOctets','capOctets','ptsOctets',[
+ {dur:3000,caption:'STRUCTURE — Chaque fichier « pèse » un certain nombre d\u2019octets. Petit poids : le texte (des Ko, kilo-octets). Regarde son échelle : minuscule !',
+  draw(ctx,p){ decorOctets(ctx,1,lisse(p),false); }},
+ {dur:5600,caption:'ACTION — La photo pèse des Mo (méga-octets) : 80 fois l\u2019exposé ! La chanson, le double. Et le film HD explose l\u2019échelle : des Go (giga-octets), MILLE fois la photo.',
+  draw(ctx,p){ const q=lisse(p)*3;
+    const n=Math.min(3,Math.floor(q));
+    decorOctets(ctx,n+2>4?4:n+2,q-n,false); }},
+ {dur:4200,caption:'PROPRIÉTÉ — Texte = Ko, photo/musique = Mo, vidéo = Go : connaître les ordres de grandeur permet de prévoir : une clé de 32 Go emporte 8 000 photos de 4 Mo (32 000 ÷ 4)… mais seulement 8 films !',
+  draw(ctx,p){ decorOctets(ctx,4,1,true); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s3:'arbo',s5:'voyage',s6:'octets'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

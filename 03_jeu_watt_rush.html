@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Watt Rush — Technologie 4ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#34d399; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:500px;min-height:400px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#composant{background:#1e293b;border:2px solid var(--neon);border-radius:14px;padding:18px;text-align:center;margin-bottom:12px}
+#composant .em{font-size:46px}
+#composant .nom{font-size:19px;font-weight:900;color:#fff;margin-top:4px}
+#composant .desc{font-size:13px;color:#94a3b8;margin-top:4px;min-height:34px;line-height:1.45}
+#choix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:14px 6px;font-size:14.5px;font-weight:900;cursor:pointer;transition:.1s;line-height:1.4}
+#choix button small{display:block;font-size:11px;color:#94a3b8;font-weight:600}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:40px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:400px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%2334d399'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>⚡ WATT RUSH</h1>
+<div class="sous">Les composants arrivent sur le tapis : range chacun dans la bonne fonction de la chaîne d'énergie !</div>
+
+<div class="hud">
+  <div>Triés : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div id="composant"><div class="em" id="cEm"></div><div class="nom" id="cNom"></div><div class="desc" id="cDesc"></div></div>
+  <div id="choix">
+    <button data-f="alimenter">🔋 ALIMENTER<small>fournir l'énergie</small></button>
+    <button data-f="distribuer">🎛️ DISTRIBUER<small>le robinet</small></button>
+    <button data-f="convertir">⚙️ CONVERTIR<small>changer la forme</small></button>
+    <button data-f="transmettre">🔗 TRANSMETTRE<small>amener au bon endroit</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Tapis à l'arrêt</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Le garage à VAE</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Les règles du tri</h2>
+    <p>Un composant arrive : à quelle fonction de la chaîne d'énergie appartient-il ?<br>
+    🔋 ALIMENTER · 🎛️ DISTRIBUER · ⚙️ CONVERTIR · 🔗 TRANSMETTRE<br>
+    Erreur ou chrono écoulé = une vie. Le tapis accélère ! 🏁</p>
+    <button id="btnGo">🏭 Lancer le tapis</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Tapis saturé !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence La chaîne d'énergie · 4ème</footer>
+
+<script>
+const CODE='MOTEUR80';
+function dejaOuvert(){ try{ return localStorage.getItem('wattrush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('wattrush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const NOMS_F={alimenter:'🔋 ALIMENTER',distribuer:'🎛️ DISTRIBUER',convertir:'⚙️ CONVERTIR',transmettre:'🔗 TRANSMETTRE'};
+const COMPOSANTS=[
+ {e:'🔋',n:'Batterie lithium',d:'stocke et fournit l\u2019énergie du VAE',f:'alimenter',exp:'elle FOURNIT l\u2019énergie : alimenter.'},
+ {e:'🔌',n:'Prise secteur + câble',d:'apporte le 230 V du réseau à l\u2019objet',f:'alimenter',exp:'source d\u2019énergie de l\u2019objet : alimenter.'},
+ {e:'⛽',n:'Réservoir d\u2019essence',d:'contient le carburant de la voiture',f:'alimenter',exp:'il stocke l\u2019énergie chimique : alimenter.'},
+ {e:'🔆',n:'Panneau solaire',d:'fournit l\u2019électricité de la calculatrice',f:'alimenter',exp:'il fournit l\u2019énergie à l\u2019objet : alimenter.'},
+ {e:'🎚️',n:'Variateur',d:'dose le courant selon la poignée',f:'distribuer',exp:'il laisse passer plus ou moins : distribuer.'},
+ {e:'🔘',n:'Interrupteur',d:'laisse passer le courant… ou pas',f:'distribuer',exp:'tout ou rien = le robinet : distribuer.'},
+ {e:'🫳',n:'Gâchette de perceuse',d:'plus tu appuies, plus ça tourne vite',f:'distribuer',exp:'elle module l\u2019énergie qui passe : distribuer.'},
+ {e:'📡',n:'Relais commandé',d:'un petit signal ouvre/ferme le circuit de puissance',f:'distribuer',exp:'il ouvre et ferme le passage : distribuer.'},
+ {e:'⚙️',n:'Moteur électrique',d:'reçoit de l\u2019électricité, produit du mouvement',f:'convertir',exp:'électrique → mécanique : convertir.'},
+ {e:'💡',n:'Lampe LED',d:'reçoit de l\u2019électricité, produit de la lumière',f:'convertir',exp:'électrique → lumineuse : convertir.'},
+ {e:'♨️',n:'Résistance chauffante',d:'reçoit de l\u2019électricité, produit de la chaleur',f:'convertir',exp:'électrique → thermique : convertir.'},
+ {e:'🛢️',n:'Moteur à explosion',d:'brûle l\u2019essence pour produire du mouvement',f:'convertir',exp:'chimique → mécanique : convertir.'},
+ {e:'🔗',n:'Chaîne de vélo',d:'relie le pédalier au pignon arrière',f:'transmettre',exp:'elle transporte le mouvement : transmettre.'},
+ {e:'➰',n:'Courroie',d:'relie le moteur au tambour du lave-linge',f:'transmettre',exp:'elle amène le mouvement au tambour : transmettre.'},
+ {e:'⚙️',n:'Train d\u2019engrenages',d:'relie l\u2019arbre moteur au mandrin de la perceuse',f:'transmettre',exp:'il transporte (et adapte) le mouvement : transmettre.'},
+ {e:'🛞',n:'Roue motrice',d:'transforme la rotation en avancement sur la route',f:'transmettre',exp:'dernier maillon vers le bitume : transmettre.'},
+];
+
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('wattrush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:9,reste:9,fini:false,pioche:[],comp:null};
+  window.J_DEBUG=J;
+  majHUD(); nouveauComposant(); dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function nouveauComposant(){
+  if(J.pioche.length===0) J.pioche=COMPOSANTS.map((_,i)=>i).sort(()=>0.5-Math.random());
+  J.comp=COMPOSANTS[J.pioche.pop()];
+  J.reste=J.duree;
+  document.getElementById('cEm').textContent=J.comp.e;
+  document.getElementById('cNom').textContent=J.comp.n;
+  document.getElementById('cDesc').textContent=J.comp.d;
+}
+function repondre(f){
+  if(!J||J.fini) return;
+  const flash=document.getElementById('flash');
+  if(f===J.comp.f){
+    J.serie++; J.score+=15+Math.round(J.reste*3);
+    flash.textContent='✅ Oui : '+J.comp.exp;
+    flash.style.color='#4ade80';
+    J.duree=Math.max(3.8,J.duree-0.35);
+    majHUD(); nouveauComposant();
+  } else {
+    J.vies--;
+    flash.textContent='❌ Non, c\u2019était '+NOMS_F[J.comp.f]+' : '+J.comp.exp;
+    flash.style.color='#f87171';
+    majHUD();
+    if(J.vies<=0) return finPartie('Le tapis a débordé ! Retiens le fil : la source ALIMENTE, le robinet DISTRIBUE, la forme change au CONVERTISSEUR, le mouvement voyage par la TRANSMISSION.');
+    nouveauComposant();
+  }
+}
+document.querySelectorAll('#choix button').forEach(b=>b.onclick=()=>repondre(b.dataset.f));
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('wattrush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=15 ? '🏆 Maître de la chaîne !' : '💥 Tapis saturé !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Composants triés : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').textContent='⏰ Trop lent ! C\u2019était '+NOMS_F[J.comp.f]+' : '+J.comp.exp;
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('Le chrono a gagné : sur un tapis de production, on trie vite ET juste !');
+    nouveauComposant();
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

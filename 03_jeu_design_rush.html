@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Design Rush — Technologie 5ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#fbbf24; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:520px;min-height:400px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#plainte{background:#1e293b;border:2px solid var(--neon);border-radius:14px;padding:18px;text-align:center;margin-bottom:12px}
+#plainte .em{font-size:36px}
+#plainte .txt{font-size:18px;font-weight:900;color:#fff;margin-top:6px;min-height:56px;line-height:1.5}
+#choix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:13px 6px;font-size:14px;font-weight:900;cursor:pointer;transition:.1s;line-height:1.4}
+#choix button small{display:block;font-size:10.5px;color:#94a3b8;font-weight:600}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:40px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:430px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23fbbf24'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🎨 DESIGN RUSH</h1>
+<div class="sous">Une plainte d'utilisateur s'affiche : forme, signal, effort ou sécurité ? Identifie le défaut de conception avant la fin du chrono !</div>
+
+<div class="hud">
+  <div>Expertises : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div id="plainte"><div class="em" id="pEm">📋</div><div class="txt" id="pTxt"></div></div>
+  <div id="choix">
+    <button data-f="forme">🤚 LA FORME<small>ça fait mal, ça ne tient pas en main</small></button>
+    <button data-f="signal">👁️ LE SIGNAL<small>on ne comprend pas comment l'utiliser</small></button>
+    <button data-f="effort">💪 L'EFFORT<small>trop lourd, trop dur, trop fatigant</small></button>
+    <button data-f="securite">🛡️ LA SÉCURITÉ<small>on peut se couper, se pincer, se brûler</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Bureau design fermé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Le bureau design</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Les règles de l'expertise</h2>
+    <p>Un utilisateur se plaint d'un objet… à toi de trouver le défaut :<br>
+    🤚 FORME = ça fait mal, ça glisse, ça ne va pas à la main · 👁️ SIGNAL = on se trompe d'usage, on cherche le bouton ·
+    💪 EFFORT = trop lourd, trop dur, fatigant · 🛡️ SÉCURITÉ = ça coupe, ça pince, ça brûle.<br>
+    Erreur ou chrono écoulé = une vie. Ça accélère ! 🏁</p>
+    <button id="btnGo">🎨 Expertiser les objets</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Bureau débordé !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence Design & ergonomie · 5ème</footer>
+
+<script>
+const CODE='CONFORT5';
+function dejaOuvert(){ try{ return localStorage.getItem('designrush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('designrush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const NOMS_F={forme:'🤚 la FORME',signal:'👁️ le SIGNAL',effort:'💪 l\u2019EFFORT',securite:'🛡️ la SÉCURITÉ'};
+const PLAINTES=[
+ {t:'« Les anneaux des ciseaux me font mal au pouce après 5 minutes. »',f:'forme',exp:'l\u2019objet blesse la main : la FORME est à retravailler.'},
+ {t:'« Cette souris d\u2019ordinateur est trop grosse pour ma main, je n\u2019atteins pas les boutons. »',f:'forme',exp:'pas aux mesures de la main : défaut de FORME (et de taille).'},
+ {t:'« Le manche de la casserole tourne dans la main, elle a failli me glisser. »',f:'forme',exp:'un manche qui n\u2019offre aucune prise : la FORME doit épouser la main.'},
+ {t:'« Ce stylo triangulaire est génial… sauf pour moi qui suis gaucher : l\u2019encre me tache la main. »',f:'forme',exp:'penser aux gauchers, c\u2019est aussi la FORME : un objet doit convenir à TOUS ses utilisateurs.'},
+ {t:'« Tout le monde POUSSE la porte du hall… alors qu\u2019elle se tire ! »',f:'signal',exp:'la poignée envoie le mauvais message : défaut de SIGNAL — la fameuse porte de Norman !'},
+ {t:'« Impossible de savoir quel bouton allume ce four : ils sont tous identiques. »',f:'signal',exp:'des commandes indifférenciées : l\u2019objet ne se comprend pas — SIGNAL à clarifier.'},
+ {t:'« Sur ce robinet design tout lisse, personne ne trouve comment faire couler l\u2019eau. »',f:'signal',exp:'joli mais muet : un bon design ANNONCE son usage — défaut de SIGNAL.'},
+ {t:'« La télécommande a 52 boutons et il en faut un seul pour changer de chaîne. »',f:'signal',exp:'trop de commandes noient l\u2019essentiel : SIGNAL illisible.'},
+ {t:'« Les bretelles fines de ce cartable me scient les épaules dès qu\u2019il est chargé. »',f:'effort',exp:'le poids se concentre sur 2 cm : répartir l\u2019EFFORT avec des bretelles larges.'},
+ {t:'« Le couvercle de ce bocal est impossible à ouvrir sans demander à un adulte. »',f:'effort',exp:'trop de force demandée : l\u2019EFFORT d\u2019ouverture doit être limité au cahier des charges.'},
+ {t:'« Cet arrosoir plein pèse une tonne et n\u2019a qu\u2019une toute petite poignée. »',f:'effort',exp:'masse + prise minuscule = EFFORT excessif : grande anse, deux prises.'},
+ {t:'« Après 10 minutes, cette manette me fait des crampes aux pouces. »',f:'effort',exp:'fatigue à l\u2019usage prolongé : l\u2019EFFORT (et la posture des pouces) est mal pensé.'},
+ {t:'« Le tiroir de ce bureau se referme tout seul… sur les doigts ! »',f:'securite',exp:'risque de pincement : la SÉCURITÉ exige un amortisseur ou une butée.'},
+ {t:'« La poignée métallique de cette poêle devient brûlante sur le feu. »',f:'securite',exp:'risque de brûlure : la SÉCURITÉ impose un manche isolant.'},
+ {t:'« L\u2019angle de cette table basse est pile à hauteur de tête des petits frères. »',f:'securite',exp:'angle vif + enfants = danger : arrondir, c\u2019est la SÉCURITÉ.'},
+ {t:'« Le capot de ce taille-crayon électrique s\u2019ouvre même quand la lame tourne. »',f:'securite',exp:'accès aux pièces dangereuses en marche : verrouillage de SÉCURITÉ obligatoire.'},
+];
+
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('designrush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:10,reste:10,fini:false,pioche:[],plainte:null};
+  window.J_DEBUG=J;
+  majHUD(); nouvellePlainte(); dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function nouvellePlainte(){
+  if(J.pioche.length===0) J.pioche=PLAINTES.map((_,i)=>i).sort(()=>0.5-Math.random());
+  J.plainte=PLAINTES[J.pioche.pop()];
+  J.reste=J.duree;
+  document.getElementById('pTxt').textContent=J.plainte.t;
+}
+function repondre(f){
+  if(!J||J.fini) return;
+  const flash=document.getElementById('flash');
+  if(f===J.plainte.f){
+    J.serie++; J.score+=15+Math.round(J.reste*3);
+    flash.textContent='✅ Oui : '+J.plainte.exp;
+    flash.style.color='#4ade80';
+    J.duree=Math.max(4.2,J.duree-0.35);
+    majHUD(); nouvellePlainte();
+  } else {
+    J.vies--;
+    flash.textContent='❌ Non, le défaut était '+NOMS_F[J.plainte.f]+' : '+J.plainte.exp;
+    flash.style.color='#f87171';
+    majHUD();
+    if(J.vies<=0) return finPartie('L\u2019expertise s\u2019arrête ! Retiens : ça fait MAL (forme), on se TROMPE (signal), ça FATIGUE (effort), c\u2019est DANGEREUX (sécurité).');
+    nouvellePlainte();
+  }
+}
+document.querySelectorAll('#choix button').forEach(b=>b.onclick=()=>repondre(b.dataset.f));
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('designrush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=15 ? '🏆 Designer senior !' : '💥 Bureau débordé !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Objets expertisés : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').textContent='⏰ Trop lent ! Le défaut était '+NOMS_F[J.plainte.f]+' : '+J.plainte.exp;
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('Le chrono a gagné : un bon designer repère le défaut d\u2019un coup d\u2019œil !');
+    nouvellePlainte();
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

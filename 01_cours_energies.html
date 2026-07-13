@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 5ème — Les Énergies · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#d97706; --niv-fonce:#b45309; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#fffbeb;color:var(--niv-fonce)}
+nav.side a.actif{background:#fef3c7;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:720px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:20px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:34px}
+.carte h3{font-size:17px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:14px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12.5px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#fffbeb;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.plus{color:var(--vert);font-weight:700}.moins{color:var(--rouge);font-weight:700}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:820px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23d97706'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>L'énergie partout</a>
+  <a href="#s2"><span class="dot"></span>Les formes d'énergie</a>
+  <a href="#s3"><span class="dot"></span>Le barrage (animation)</a>
+  <a href="#s4"><span class="dot"></span>Renouvelable ou pas ?</a>
+  <a href="#s5"><span class="dot"></span>Stock ou flux (animation)</a>
+  <a href="#s6"><span class="dot"></span>L'éolienne (animation)</a>
+  <a href="#s7"><span class="dot"></span>Le casse-tête du mix</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 5ème · Séquence Les Énergies</div>
+  <h1>⚡ Rien ne marche<br>sans énergie</h1>
+  <p class="sous" style="margin-top:16px">Ton réveil, le bus, la lumière de la classe, ce cours projeté au tableau : tout consomme de l'énergie,
+  en permanence. Mais un pays ne se branche pas sur une prise magique — <b>quelqu'un doit produire chaque watt</b>. La question de ce chapitre :
+  d'où vient l'énergie, et comment choisir ses sources ?</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Les formes d'énergie</h2>
+  <p class="sous">L'énergie change de forme, mais ne disparaît jamais : elle se <b>convertit</b>.</p>
+  <div class="cartes">
+    <div class="carte" style="--accent:#1d4ed8"><div class="ic">🌀</div><h3>Mécanique</h3><p>Un objet qui bouge ou qui est en hauteur.</p><span class="ex">eau du barrage, vent, roue</span></div>
+    <div class="carte" style="--accent:#d97706"><div class="ic">⚡</div><h3>Électrique</h3><p>Facile à transporter par câbles… mais difficile à stocker !</p><span class="ex">prises, batteries</span></div>
+    <div class="carte" style="--accent:#dc2626"><div class="ic">🔥</div><h3>Thermique</h3><p>La chaleur.</p><span class="ex">radiateur, moteur qui chauffe</span></div>
+    <div class="carte" style="--accent:#16a34a"><div class="ic">🧪</div><h3>Chimique</h3><p>Stockée dans la matière, libérée en brûlant ou en réagissant.</p><span class="ex">essence, pile, aliments</span></div>
+    <div class="carte" style="--accent:#7c3aed"><div class="ic">💡</div><h3>Lumineuse</h3><p>Transportée par la lumière.</p><span class="ex">Soleil, ampoule</span></div>
+  </div>
+</section>
+
+<section class="slide" id="s3">
+  <h2>La chaîne de conversion : le barrage</h2>
+  <div class="animbox">
+    <canvas id="cvBarrage" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capBarrage"></div><button data-anim="barrage">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsBarrage"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>Renouvelable… ou pas ?</h2>
+  <table class="mat">
+    <tr><th>Source</th><th>Famille</th><th>Atout</th><th>Limite</th></tr>
+    <tr><td>☀️ Soleil</td><td><span class="plus">Renouvelable</span></td><td>Gratuit, inépuisable</td><td>Rien la nuit, moins l'hiver</td></tr>
+    <tr><td>💨 Vent</td><td><span class="plus">Renouvelable</span></td><td>Puissant, propre</td><td>Imprévisible</td></tr>
+    <tr><td>💧 Eau (barrages)</td><td><span class="plus">Renouvelable</span></td><td>Pilotable à la demande !</td><td>Peu de sites disponibles</td></tr>
+    <tr><td>🛢️ Pétrole</td><td><span class="moins">Non renouvelable</span></td><td>Très concentré en énergie</td><td>Stock limité, CO₂</td></tr>
+    <tr><td>⛽ Gaz / 🪨 Charbon</td><td><span class="moins">Non renouvelable</span></td><td>Centrale rapide à démarrer</td><td>CO₂, stock limité</td></tr>
+    <tr><td>⚛️ Uranium (nucléaire)</td><td><span class="moins">Non renouvelable</span></td><td>Énorme énergie, sans CO₂</td><td>Déchets radioactifs, stock limité</td></tr>
+  </table>
+</section>
+
+<section class="slide" id="s5">
+  <h2>Stock ou flux : toute la différence</h2>
+  <div class="animbox">
+    <canvas id="cvStock" width="820" height="360"></canvas>
+    <div class="legende"><div class="caption" id="capStock"></div><button data-anim="stock">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsStock"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>L'éolienne et son talon d'Achille</h2>
+  <div class="animbox">
+    <canvas id="cvEol" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capEol"></div><button data-anim="eol">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsEol"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>Le casse-tête de l'ingénieur : le mix énergétique</h2>
+  <p class="sous">Aucune source n'est parfaite. Un pays combine donc plusieurs sources — son <b>mix énergétique</b> —
+  pour produire <b>exactement</b> ce qui est consommé, à chaque seconde, même la nuit sans vent.</p>
+  <div class="cartes" style="max-width:880px">
+    <div class="carte" style="--accent:#16a34a"><div class="ic">🌱</div><h3>Objectif climat</h3><p>Le maximum de renouvelable pour limiter le CO₂.</p></div>
+    <div class="carte" style="--accent:#1d4ed8"><div class="ic">🔌</div><h3>Objectif fiabilité</h3><p>Des sources <b>pilotables</b> (barrages, centrales) pour compenser les creux du soleil et du vent.</p></div>
+    <div class="carte" style="--accent:#ea580c"><div class="ic">💶</div><h3>Objectif coût</h3><p>Produire au meilleur prix… sans hypothéquer l'avenir.</p></div>
+  </div>
+  <p class="sous" style="margin-top:20px">➡️ C'est exactement le métier que tu vas exercer au <b>TP « Alimente ta ville »</b> !</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>L'énergie existe sous plusieurs <b>formes</b> (mécanique, électrique, thermique, chimique, lumineuse) et se <b>convertit</b> de l'une à l'autre.</li>
+      <li>Un barrage convertit : eau en hauteur (<b>mécanique</b>) → turbine → alternateur → <b>électricité</b>.</li>
+      <li>Source <b>renouvelable</b> = un FLUX qui revient (soleil, vent, eau). Source <b>non renouvelable</b> = un STOCK qui s'épuise (pétrole, gaz, charbon, uranium).</li>
+      <li>Le soleil et le vent sont <b>intermittents</b> : leur production varie et peut tomber à zéro.</li>
+      <li>Le <b>mix énergétique</b> combine plusieurs sources pour couvrir la demande à chaque instant, en limitant le CO₂.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function frame(ts){
+    if(etat.t0===null)etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){ if(etat.i<phases.length-1){etat.i++;etat.t0=ts;cap.textContent=phases[etat.i].caption;majPts();} else return; }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){cancelAnimationFrame(etat.raf);etat.i=0;etat.t0=null;
+    cap.textContent=phases[0].caption;majPts();etat.raf=requestAnimationFrame(frame);}
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption;majPts();phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function fleche(ctx,x1,y1,x2,y2,coul,ep=4){
+  ctx.strokeStyle=coul;ctx.fillStyle=coul;ctx.lineWidth=ep;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  const a=Math.atan2(y2-y1,x2-x1),L=11;
+  ctx.beginPath();ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-L*Math.cos(a-0.45),y2-L*Math.sin(a-0.45));
+  ctx.lineTo(x2-L*Math.cos(a+0.45),y2-L*Math.sin(a+0.45));
+  ctx.closePath();ctx.fill();
+}
+function etiquette(ctx,txt,x,y,coul='#b45309',taille=16){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+
+/* ====== ANIM 1 : LE BARRAGE ====== */
+function decorBarrage(ctx,W,H,niveau=1){
+  // montagne + lac
+  ctx.fillStyle='#e7e5e4'; ctx.beginPath();
+  ctx.moveTo(0,H); ctx.lineTo(0,120); ctx.lineTo(220,90); ctx.lineTo(300,H); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#7dd3fc';
+  ctx.fillRect(10,130+(1-niveau)*40,200,80*niveau+20);
+  // mur du barrage
+  ctx.fillStyle='#78716c';
+  ctx.beginPath(); ctx.moveTo(210,120); ctx.lineTo(260,120); ctx.lineTo(300,H-40); ctx.lineTo(210,H-40); ctx.closePath(); ctx.fill();
+  // conduite
+  ctx.strokeStyle='#57534e'; ctx.lineWidth=14;
+  ctx.beginPath(); ctx.moveTo(230,200); ctx.lineTo(360,300); ctx.stroke();
+  // turbine
+  ctx.fillStyle='#1d4ed8'; ctx.beginPath(); ctx.arc(390,310,30,0,7); ctx.fill();
+  // alternateur
+  ctx.fillStyle='#d97706'; ctx.fillRect(440,285,80,50);
+  etiquette(ctx,'alternateur',480,352,'#b45309',13);
+  etiquette(ctx,'turbine',390,352,'#1d4ed8',13);
+  etiquette(ctx,'lac de retenue',105,110,'#0369a1',13);
+  // ville
+  ctx.fillStyle='#94a3b8';
+  [[640,270,30,70],[680,250,26,90],[716,285,30,55]].forEach(([x,y,w,h])=>ctx.fillRect(x,y,w,h));
+  etiquette(ctx,'ville',690,362,'#64748b',13);
+}
+creerAnim('barrage','cvBarrage','capBarrage','ptsBarrage',[
+ {dur:2600,caption:'STRUCTURE — L\u2019eau du lac est stockée EN HAUTEUR : elle possède de l\u2019énergie MÉCANIQUE.',
+  draw(ctx,p,W,H){ decorBarrage(ctx,W,H); }},
+ {dur:3200,caption:'ACTION — On ouvre la vanne : l\u2019eau dévale la conduite et fait TOURNER la turbine.',
+  draw(ctx,p,W,H){ decorBarrage(ctx,W,H);
+    const e=lisse(p);
+    // eau dans la conduite
+    ctx.strokeStyle='#38bdf8'; ctx.lineWidth=8;
+    ctx.beginPath(); ctx.moveTo(230,200); ctx.lineTo(230+(360-230)*e,200+(300-200)*e); ctx.stroke();
+    // rotation turbine
+    ctx.save(); ctx.translate(390,310); ctx.rotate(-p*14);
+    ctx.strokeStyle='#fff'; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.moveTo(-20,0); ctx.lineTo(20,0); ctx.moveTo(0,-20); ctx.lineTo(0,20); ctx.stroke(); ctx.restore(); }},
+ {dur:3200,caption:'ACTION — La turbine entraîne l\u2019ALTERNATEUR : l\u2019énergie mécanique devient ÉLECTRIQUE.',
+  draw(ctx,p,W,H){ decorBarrage(ctx,W,H);
+    ctx.save(); ctx.translate(390,310); ctx.rotate(-p*14);
+    ctx.strokeStyle='#fff'; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.moveTo(-20,0); ctx.lineTo(20,0); ctx.moveTo(0,-20); ctx.lineTo(0,20); ctx.stroke(); ctx.restore();
+    const e=lisse(p);
+    for(let k=0;k<3;k++){ const t=(e+k/3)%1;
+      etiquette(ctx,'⚡',530+t*100,300-8*Math.sin(t*9),'#d97706',20); } }},
+ {dur:3600,caption:'PROPRIÉTÉ — Chaîne complète : eau en hauteur (mécanique) → turbine → alternateur → électricité pour la ville. Et le barrage est PILOTABLE : on ouvre quand on veut !',
+  draw(ctx,p,W,H){ decorBarrage(ctx,W,H);
+    for(let k=0;k<3;k++) etiquette(ctx,'⚡',540+k*40,296,'#d97706',20);
+    // fenêtres allumées
+    ctx.fillStyle='#fde047';
+    [[646,280],[688,262],[722,292],[646,310],[688,300]].forEach(([x,y])=>ctx.fillRect(x,y,10,10));
+    ctx.font='bold 18px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
+    ctx.fillText('MÉCANIQUE → ÉLECTRIQUE : c\u2019est une CONVERSION', W/2, 40); }},
+]);
+
+/* ====== ANIM 2 : STOCK OU FLUX ====== */
+function decorStock(ctx,W,H,baril,soleilJour){
+  // gauche : baril de pétrole
+  etiquette(ctx,'NON RENOUVELABLE = un STOCK',210,44,'#dc2626',17);
+  ctx.strokeStyle='#57534e'; ctx.lineWidth=5;
+  ctx.strokeRect(140,90,140,190);
+  ctx.fillStyle='#292524';
+  const h=170*baril;
+  ctx.fillRect(145,95+ (170-h),130,h);
+  etiquette(ctx,'🛢️ pétrole',210,310,'#57534e',15);
+  // droite : soleil qui se lève chaque jour
+  etiquette(ctx,'RENOUVELABLE = un FLUX',610,44,'#16a34a',17);
+  ctx.strokeStyle='#e2e8f0'; ctx.strokeRect(480,90,260,190);
+  const sx=500+soleilJour*220, sy=270-170*Math.sin(soleilJour*Math.PI);
+  etiquette(ctx,'☀️',sx,sy,'#d97706',34);
+  ctx.fillStyle='#a3b18a'; ctx.fillRect(482,262,256,16);
+  etiquette(ctx,'le Soleil, chaque jour',610,310,'#16a34a',15);
+}
+creerAnim('stock','cvStock','capStock','ptsStock',[
+ {dur:2600,caption:'STRUCTURE — À gauche un baril de pétrole plein. À droite, le Soleil au matin.',
+  draw(ctx,p,W,H){ decorStock(ctx,W,H,1,0.1); }},
+ {dur:4200,caption:'ACTION — On consomme : le baril SE VIDE… pendant que le Soleil fait sa journée.',
+  draw(ctx,p,W,H){ const e=lisse(p); decorStock(ctx,W,H,1-0.7*e,0.1+0.8*e); }},
+ {dur:3600,caption:'ACTION — Le lendemain : le Soleil REVIENT, identique. Le baril, lui, ne se remplira jamais (il a fallu des millions d\u2019années pour le former).',
+  draw(ctx,p,W,H){ decorStock(ctx,W,H,0.3,(p*1)%1);
+    etiquette(ctx,'niveau bloqué ⬇',210,80,'#dc2626',14); }},
+ {dur:3600,caption:'PROPRIÉTÉ — Renouvelable = la source SE RECONSTITUE à notre échelle de temps. Non renouvelable = le stock diminue à chaque utilisation.',
+  draw(ctx,p,W,H){ decorStock(ctx,W,H,0.3,0.5);
+    ctx.font='bold 17px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
+    ctx.fillText('FLUX ⟳ inépuisable · STOCK ⬇ épuisable', W/2, H-18); }},
+]);
+
+/* ====== ANIM 3 : L'ÉOLIENNE ET L'INTERMITTENCE ====== */
+let angleEol=0;
+function decorEol(ctx,W,H,vent,rotVitesse){
+  angleEol+=rotVitesse;
+  // sol
+  ctx.fillStyle='#a3b18a'; ctx.fillRect(0,H-50,W,50);
+  // vent : flèches
+  ctx.strokeStyle='#0ea5e9'; ctx.lineWidth=3;
+  for(let k=0;k<3;k++){ const y=90+k*60;
+    ctx.globalAlpha=vent;
+    fleche(ctx,40,y,40+90*vent,y,'#0ea5e9',3);
+    ctx.globalAlpha=1;
+  }
+  etiquette(ctx,'vent '+Math.round(vent*100)+' %',95,60,'#0ea5e9',15);
+  // mât + nacelle
+  ctx.fillStyle='#94a3b8'; ctx.fillRect(300,120,14,H-170);
+  ctx.fillStyle='#64748b'; ctx.fillRect(288,108,44,24);
+  // pales
+  ctx.save(); ctx.translate(307,120);
+  ctx.rotate(angleEol);
+  ctx.fillStyle='#e2e8f0'; ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2;
+  for(let k=0;k<3;k++){ ctx.rotate(Math.PI*2/3);
+    ctx.beginPath(); ctx.ellipse(0,-48,10,50,0,0,7); ctx.fill(); ctx.stroke(); }
+  ctx.restore();
+  // câble vers maison
+  ctx.strokeStyle='#d97706'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(314,H-60); ctx.quadraticCurveTo(450,H-30,560,H-90); ctx.stroke();
+  // maison
+  ctx.fillStyle='#fef3c7'; ctx.fillRect(560,H-140,120,90);
+  ctx.fillStyle='#b91c1c'; ctx.beginPath(); ctx.moveTo(550,H-140); ctx.lineTo(620,H-180); ctx.lineTo(690,H-140); ctx.closePath(); ctx.fill();
+  return {maisonX:620,maisonY:H-100};
+}
+creerAnim('eol','cvEol','capEol','ptsEol',[
+ {dur:2600,caption:'STRUCTURE — Une éolienne : des pales, une nacelle (avec l\u2019alternateur), un mât. Et une maison à alimenter.',
+  draw(ctx,p,W,H){ decorEol(ctx,W,H,0,0); }},
+ {dur:3600,caption:'ACTION — Le vent souffle fort : les pales tournent, l\u2019alternateur produit, la maison s\u2019éclaire. 💡',
+  draw(ctx,p,W,H){ const m=decorEol(ctx,W,H,0.9,0.12);
+    ctx.fillStyle='#fde047'; ctx.fillRect(m.maisonX-30,m.maisonY-14,22,22); ctx.fillRect(m.maisonX+10,m.maisonY-14,22,22);
+    etiquette(ctx,'⚡ production : 100 %',450,70,'#16a34a',16); }},
+ {dur:3600,caption:'ACTION — Le vent TOMBE… les pales ralentissent, la production s\u2019effondre : la maison s\u2019éteint !',
+  draw(ctx,p,W,H){ const e=lisse(p);
+    const m=decorEol(ctx,W,H,0.9-0.85*e,0.12*(1-e));
+    if(e<0.5){ ctx.fillStyle='#fde047'; ctx.globalAlpha=1-e*2; ctx.fillRect(m.maisonX-30,m.maisonY-14,22,22); ctx.globalAlpha=1; }
+    etiquette(ctx,'⚡ production : '+Math.round(100*(1-e))+' %',450,70,e>0.5?'#dc2626':'#16a34a',16); }},
+ {dur:3800,caption:'PROPRIÉTÉ — Le vent est INTERMITTENT : on ne le commande pas. Il faut donc d\u2019autres sources PILOTABLES (barrage, centrale) en secours : c\u2019est le rôle du MIX énergétique.',
+  draw(ctx,p,W,H){ decorEol(ctx,W,H,0.05,0.004);
+    ctx.font='bold 17px Segoe UI'; ctx.fillStyle='#b45309'; ctx.textAlign='center';
+    ctx.fillText('INTERMITTENT ≠ PILOTABLE → il faut un MIX', W/2, 40); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s3:'barrage',s5:'stock',s6:'eol'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

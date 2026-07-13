@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 4ème — Automobile & sécurité routière · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#92400e; --niv-fonce:#78350f; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#fffbeb;color:var(--niv-fonce)}
+nav.side a.actif{background:#fef3c7;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:18px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:32px}
+.carte h3{font-size:16px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:13.5px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#fffbeb;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%2392400e'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>1 seconde = 25 mètres</a>
+  <a href="#s2"><span class="dot"></span>Actif, passif, comportement</a>
+  <a href="#s3"><span class="dot"></span>La distance d'arrêt (animation)</a>
+  <a href="#s4"><span class="dot"></span>L'arsenal de la voiture</a>
+  <a href="#s5"><span class="dot"></span>Éviter ou protéger (animation)</a>
+  <a href="#s6"><span class="dot"></span>La ceinture & l'inertie (animation)</a>
+  <a href="#s7"><span class="dot"></span>Toi aussi, tu es un système</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 4ème · Séquence Automobile & sécurité</div>
+  <h1>⏱️ 1 seconde d'inattention<br>= 25 mètres parcourus.</h1>
+  <p class="sous" style="margin-top:16px">À 90 km/h, pendant la simple seconde où le cerveau réagit, la voiture parcourt <b>25 mètres</b> — la longueur de deux bus.
+  Une notification sur un téléphone, et ces 25 mètres deviennent 50…<br><br>
+  L'automobile est un concentré de technologie pensé pour UNE mission au-dessus des autres : <b>garder ses occupants en vie</b>.
+  ABS, ceinture, airbag, zones déformables : décodons cet arsenal.</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Trois piliers de la sécurité routière</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#0e7490"><div class="ic">🛡️</div><h3>SÉCURITÉ ACTIVE</h3><p>Tout ce qui aide à ÉVITER l'accident : freins ABS, pneus en bon état, éclairage, direction précise, aides à la conduite.</p><span class="ex">avant le choc</span></div>
+    <div class="carte" style="--accent:#92400e"><div class="ic">🎗️</div><h3>SÉCURITÉ PASSIVE</h3><p>Tout ce qui PROTÈGE quand le choc arrive : ceinture, airbags, zones déformables, appuie-tête.</p><span class="ex">pendant le choc</span></div>
+    <div class="carte" style="--accent:#16a34a"><div class="ic">🧠</div><h3>LE COMPORTEMENT</h3><p>Le maillon le plus important : vitesse adaptée, distances de sécurité, zéro téléphone, zéro alcool.</p><span class="ex">le conducteur… et le passager !</span></div>
+  </div>
+  <p class="sous" style="margin-top:22px">La meilleure voiture du monde ne compense pas un mauvais comportement : plus de 90 % des accidents impliquent un <b>facteur humain</b>.</p>
+</section>
+
+<section class="slide" id="s3">
+  <h2>La distance d'arrêt : réagir + freiner</h2>
+  <div class="animbox">
+    <canvas id="cvDistance" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capDistance"></div><button data-anim="distance">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsDistance"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>L'arsenal de la voiture moderne</h2>
+  <table class="mat">
+    <tr><th>Équipement</th><th>Famille</th><th>Ce qu'il fait</th></tr>
+    <tr><td>🛞 ABS (antiblocage)</td><td>🛡️ active</td><td>empêche les roues de se bloquer : on peut freiner ET diriger en même temps</td></tr>
+    <tr><td>💡 Éclairage & feux stop</td><td>🛡️ active</td><td>voir et être vu : prévenir les autres qu'on freine</td></tr>
+    <tr><td>🎗️ Ceinture de sécurité</td><td>🎗️ passive</td><td>retient le corps : divise par 3 le risque d'être tué</td></tr>
+    <tr><td>🎈 Airbags</td><td>🎗️ passive</td><td>coussin qui se gonfle en 30 millisecondes pour amortir la tête</td></tr>
+    <tr><td>📦 Zones déformables</td><td>🎗️ passive</td><td>l'avant s'écrase EXPRÈS pour absorber l'énergie du choc à la place des passagers</td></tr>
+    <tr><td>📵 Régulateur, freinage d'urgence auto</td><td>🛡️ active</td><td>des capteurs (tes objets connectés !) surveillent la route et freinent avant l'humain</td></tr>
+  </table>
+</section>
+
+<section class="slide" id="s5">
+  <h2>Éviter l'accident… ou protéger pendant</h2>
+  <div class="animbox">
+    <canvas id="cvActifPassif" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capActifPassif"></div><button data-anim="actifpassif">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsActifPassif"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>La ceinture : dompter l'inertie</h2>
+  <div class="animbox">
+    <canvas id="cvCeinture" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capCeinture"></div><button data-anim="ceinture">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsCeinture"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>Toi aussi, tu es un système de sécurité</h2>
+  <table class="mat">
+    <tr><th>Situation</th><th>Le bon réflexe</th><th>Pourquoi</th></tr>
+    <tr><td>🚗 Passager en voiture</td><td>ceinture TOUJOURS, même à l'arrière</td><td>à 50 km/h, un passager arrière non attaché devient un projectile de plusieurs tonnes de force</td></tr>
+    <tr><td>🚲 À vélo / trottinette</td><td>casque, éclairage, gilet la nuit</td><td>voir et être vu : ta « sécurité active » à toi</td></tr>
+    <tr><td>🚶 Piéton</td><td>traverser SANS téléphone ni écouteurs</td><td>ton temps de réaction aussi compte : 1 s d'inattention = l'accident</td></tr>
+    <tr><td>🛣️ Sur la route</td><td>respecter les distances (2 secondes minimum)</td><td>la distance d'arrêt explose avec la vitesse : elle QUADRUPLE quand la vitesse double</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">➡️ Au <b>TP</b>, le centre de sécurité routière t'embauche : trois accidents évités de justesse à analyser, et un calcul qui fait réfléchir.</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li><b>Distance d'arrêt = distance de RÉACTION + distance de FREINAGE.</b> Pendant la réaction (≈ 1 s), la voiture ne ralentit pas du tout : à 90 km/h, elle parcourt 25 m (90 ÷ 3,6).</li>
+      <li>La distance de freinage <b>quadruple</b> quand la vitesse double : à 50 km/h ≈ 14 m, à 100 km/h ≈ 55 m. D'où les limitations et les distances de sécurité.</li>
+      <li>Sécurité <b>ACTIVE</b> = éviter l'accident (ABS, pneus, éclairage, aides à la conduite). Sécurité <b>PASSIVE</b> = protéger pendant le choc (ceinture, airbags, zones déformables).</li>
+      <li>La <b>ceinture</b> combat l'inertie : sans elle, le corps continue à la vitesse de la voiture. Elle divise par 3 le risque d'être tué — à toutes les places.</li>
+      <li>Le maillon décisif reste le <b>comportement</b> : vitesse adaptée, zéro téléphone, distances de sécurité. La technologie assiste, elle ne remplace pas.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function frame(ts){
+    if(etat.t0===null)etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){ if(etat.i<phases.length-1){etat.i++;etat.t0=ts;cap.textContent=phases[etat.i].caption;majPts();} else return; }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){cancelAnimationFrame(etat.raf);etat.i=0;etat.t0=null;
+    cap.textContent=phases[0].caption;majPts();etat.raf=requestAnimationFrame(frame);}
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption;majPts();phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#78350f',taille=15){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+function voiture(ctx,x,y,coul,s){
+  s=s||1;
+  ctx.save(); ctx.translate(x,y);
+  ctx.fillStyle=coul||'#92400e'; ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(-38*s,-16*s,76*s,18*s,6*s); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.roundRect(-20*s,-30*s,38*s,16*s,6*s); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#1e293b';
+  ctx.beginPath(); ctx.arc(-22*s,4*s,8*s,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(22*s,4*s,8*s,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+}
+/* ====== ANIM 1 : LA DISTANCE D'ARRÊT ====== */
+creerAnim('distance','cvDistance','capDistance','ptsDistance',[
+ {dur:3600,caption:'STRUCTURE — Un enfant surgit derrière le ballon 🎾. La voiture roule à 50 km/h. Deux étapes AVANT l\u2019arrêt : le cerveau doit RÉAGIR (≈ 1 seconde), puis les freins doivent FREINER. Chaque étape mange des mètres.',
+  draw(ctx,p){
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(20,240); ctx.lineTo(800,240); ctx.stroke();
+    voiture(ctx,110,222,'#92400e');
+    ctx.font='30px Segoe UI'; ctx.textAlign='center'; ctx.fillText('🎾',640,232);
+    etiquette(ctx,'50 km/h',110,160,'#78350f',15);
+    etiquette(ctx,'⚠️ obstacle',640,170,'#dc2626',14); }},
+ {dur:6600,caption:'ACTION — Pendant la RÉACTION (segment rouge), la voiture NE RALENTIT PAS : 14 m avalés à pleine vitesse. Puis le FREINAGE (segment orange) : encore 14 m. Total à 50 km/h : 28 mètres pour s\u2019arrêter.',
+  draw(ctx,p){ const q=lisse(p);
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(20,240); ctx.lineTo(800,240); ctx.stroke();
+    ctx.font='30px Segoe UI'; ctx.textAlign='center'; ctx.fillText('🎾',640,232);
+    const x=110+q*470;
+    voiture(ctx,x,222,q<0.5?'#92400e':'#b45309');
+    // segments
+    ctx.lineWidth=9; ctx.lineCap='round';
+    if(q>0){ ctx.strokeStyle='#dc2626';
+      ctx.beginPath(); ctx.moveTo(110,282); ctx.lineTo(Math.min(x,345),282); ctx.stroke(); }
+    if(q>0.5){ ctx.strokeStyle='#ea580c';
+      ctx.beginPath(); ctx.moveTo(345,282); ctx.lineTo(x,282); ctx.stroke(); }
+    etiquette(ctx,'RÉACTION : 14 m (vitesse pleine !)',225,318,'#dc2626',13.5);
+    if(q>0.5) etiquette(ctx,'FREINAGE : 14 m',460,318,'#ea580c',13.5);
+    if(q>0.95) etiquette(ctx,'✅ arrêté à 28 m — juste avant le ballon',410,120,'#16a34a',15.5); }},
+ {dur:5400,caption:'PROPRIÉTÉ — Distance d\u2019arrêt = réaction + freinage. Et attention : le freinage QUADRUPLE quand la vitesse double ! À 50 km/h : 28 m. À 100 km/h : 83 m. Une seconde au téléphone ajoute 25 m de plus. Les limitations de vitesse, c\u2019est de la géométrie, pas de la décoration.',
+  draw(ctx,p){
+    const barres=[['50 km/h',14,14],['90 km/h',25,45],['130 km/h',36,93]];
+    barres.forEach((b,i)=>{
+      const y=90+i*80;
+      etiquette(ctx,b[0],75,y+22,'#78350f',14);
+      ctx.fillStyle='#dc2626'; ctx.fillRect(130,y,b[1]*4.4,30);
+      ctx.fillStyle='#ea580c'; ctx.fillRect(130+b[1]*4.4,y,b[2]*4.4,30);
+      etiquette(ctx,(b[1]+b[2])+' m',160+ (b[1]+b[2])*4.4,y+21,'#1e3a5f',14);
+    });
+    etiquette(ctx,'🟥 réaction   🟧 freinage — le freinage quadruple quand la vitesse double',410,350,'#78350f',14.5); }},
+]);
+
+/* ====== ANIM 2 : ACTIF vs PASSIF ====== */
+creerAnim('actifpassif','cvActifPassif','capActifPassif','ptsActifPassif',[
+ {dur:3600,caption:'STRUCTURE — Même scénario, deux destins. En haut : une voiture avec ABS et pneus neufs. En bas : freins fatigués, pneus lisses. Devant chacune : le même obstacle.',
+  draw(ctx,p){
+    [130,290].forEach(y=>{ ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(20,y); ctx.lineTo(800,y); ctx.stroke();
+      ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillText('🚧',700,y-8); });
+    voiture(ctx,110,112,'#0e7490');
+    voiture(ctx,110,272,'#64748b');
+    etiquette(ctx,'🛡️ ABS + pneus neufs',110,50,'#0e7490',13.5);
+    etiquette(ctx,'⚠️ pneus lisses',110,205,'#dc2626',13.5); }},
+ {dur:6600,caption:'ACTION — Freinage d\u2019urgence ! La sécurité ACTIVE fait son travail : la voiture du haut s\u2019arrête avant l\u2019obstacle — accident ÉVITÉ. Celle du bas glisse trop loin… c\u2019est alors la sécurité PASSIVE qui prend le relais : ceinture, airbag, zone déformable absorbent le choc.',
+  draw(ctx,p){ const q=lisse(p);
+    [130,290].forEach(y=>{ ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(20,y); ctx.lineTo(800,y); ctx.stroke();
+      ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillText('🚧',700,y-8); });
+    voiture(ctx,110+Math.min(q*1.25,1)*440,112,'#0e7490');
+    if(q>0.8) etiquette(ctx,'✅ arrêtée AVANT : accident évité (sécurité ACTIVE)',380,50,'#16a34a',14);
+    const x2=110+q*555;
+    voiture(ctx,Math.min(x2,660),272,'#64748b');
+    if(x2>=660){ ctx.font='30px Segoe UI'; ctx.fillText('💥',678,262);
+      etiquette(ctx,'🎈 airbag + 🎗️ ceinture + 📦 zone déformable : le choc est absorbé (sécurité PASSIVE)',400,352,'#92400e',13.5); } }},
+ {dur:5000,caption:'PROPRIÉTÉ — Deux lignes de défense complémentaires : la sécurité ACTIVE évite l\u2019accident (freins, pneus, éclairage, aides), la sécurité PASSIVE protège quand il arrive quand même (ceinture, airbags, zones déformables). Et la première défense de toutes reste… le comportement du conducteur.',
+  draw(ctx,p){
+    etiquette(ctx,'🛡️ ACTIVE',230,110,'#0e7490',20);
+    etiquette(ctx,'ÉVITER l\u2019accident',230,145,'#0e7490',14);
+    etiquette(ctx,'ABS · pneus · éclairage · aides',230,172,'#64748b',12.5);
+    etiquette(ctx,'🎗️ PASSIVE',580,110,'#92400e',20);
+    etiquette(ctx,'PROTÉGER pendant le choc',580,145,'#92400e',14);
+    etiquette(ctx,'ceinture · airbags · zones déformables',580,172,'#64748b',12.5);
+    etiquette(ctx,'🧠 + le COMPORTEMENT : la défense numéro un',410,290,'#16a34a',16); }},
+]);
+
+/* ====== ANIM 3 : LA CEINTURE & L'INERTIE ====== */
+function passager(ctx,x,y,coul){
+  ctx.fillStyle=coul; ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.arc(x,y-26,10,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.roundRect(x-9,y-14,18,26,6); ctx.fill(); ctx.stroke();
+}
+creerAnim('ceinture','cvCeinture','capCeinture','ptsCeinture',[
+ {dur:3600,caption:'STRUCTURE — Deux voitures à 50 km/h, deux passagers. En haut : ceinture bouclée 🎗️. En bas : passager NON attaché. Tout va bien… jusqu\u2019au choc contre le mur.',
+  draw(ctx,p){
+    [140,300].forEach((y,i)=>{
+      ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(20,y); ctx.lineTo(800,y); ctx.stroke();
+      ctx.fillStyle='#334155'; ctx.fillRect(690,y-90,14,90);
+      voiture(ctx,150,y-18,'#92400e',1.15);
+      passager(ctx,150,y-30,i===0?'#16a34a':'#dc2626');
+    });
+    etiquette(ctx,'🎗️ attaché',60,60,'#16a34a',14);
+    etiquette(ctx,'❌ non attaché',66,222,'#dc2626',14); }},
+ {dur:6600,caption:'ACTION — CHOC ! La voiture s\u2019arrête net… mais les CORPS, eux, continuent à 50 km/h : c\u2019est l\u2019INERTIE. En haut, la ceinture retient le passager et répartit l\u2019effort. En bas, le passager est projeté vers le pare-brise.',
+  draw(ctx,p){ const q=lisse(p);
+    [140,300].forEach((y,i)=>{
+      ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(20,y); ctx.lineTo(800,y); ctx.stroke();
+      ctx.fillStyle='#334155'; ctx.fillRect(690,y-90,14,90);
+      const xv=150+Math.min(q*2,1)*490;
+      voiture(ctx,xv,y-18,'#92400e',1.15);
+      if(q>=0.5){ ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillText('💥',682,y-70); }
+      let xp=xv;
+      if(q>=0.5 && i===1){ xp=640+Math.min((q-0.5)*2,1)*46; }   // projeté
+      if(q>=0.5 && i===0){ xp=640; }                              // retenu
+      passager(ctx,Math.min(xp,686),y-30-(i===1&&q>0.7?14:0),i===0?'#16a34a':'#dc2626');
+    });
+    if(q>0.75){ etiquette(ctx,'la ceinture RETIENT : l\u2019effort est réparti sur le bassin et le thorax',330,60,'#16a34a',13.5);
+      etiquette(ctx,'l\u2019inertie PROJETTE le corps qui continue à 50 km/h…',330,222,'#dc2626',13.5); } }},
+ {dur:5000,caption:'PROPRIÉTÉ — Un corps en mouvement CONTINUE en mouvement : l\u2019inertie ne se négocie pas. La ceinture (+ l\u2019airbag + la zone déformable qui s\u2019écrase exprès) étale le choc dans le temps et divise par 3 le risque d\u2019être tué — à l\u2019avant COMME à l\u2019arrière.',
+  draw(ctx,p){
+    etiquette(ctx,'sans ceinture : le choc dure 0,01 s — tout d\u2019un coup',410,110,'#dc2626',15);
+    ctx.fillStyle='#dc2626'; ctx.fillRect(330,130,14,44);
+    etiquette(ctx,'avec ceinture + airbag + zone déformable : le choc s\u2019étale',410,230,'#16a34a',15);
+    ctx.fillStyle='#16a34a'; ctx.fillRect(240,250,340,16);
+    etiquette(ctx,'même énergie, mais répartie dans le temps = corps protégé',410,330,'#78350f',15.5); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s3:'distance',s5:'actifpassif',s6:'ceinture'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

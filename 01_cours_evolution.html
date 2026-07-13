@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 5ème — L'évolution des objets techniques · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#b45309; --niv-fonce:#92400e; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#fffbeb;color:var(--niv-fonce)}
+nav.side a.actif{background:#fef3c7;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:20px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:34px}
+.carte h3{font-size:17px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:14px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12.5px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#fffbeb;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.plus{color:var(--vert);font-weight:700}.moins{color:var(--rouge);font-weight:700}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%23b45309'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>Les objets ont une histoire</a>
+  <a href="#s2"><span class="dot"></span>Besoin & fonctions</a>
+  <a href="#s3"><span class="dot"></span>La lignée du téléphone (animation)</a>
+  <a href="#s4"><span class="dot"></span>Invention ou innovation ?</a>
+  <a href="#s5"><span class="dot"></span>Le progrès se mesure (animation)</a>
+  <a href="#s6"><span class="dot"></span>L'invention clé du vélo (animation)</a>
+  <a href="#s7"><span class="dot"></span>Les moteurs de l'évolution</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 5ème · Séquence L'évolution des objets techniques</div>
+  <h1>🕰️ Ton smartphone a des<br>arrière-grands-parents</h1>
+  <p class="sous" style="margin-top:16px">En 1876, pour téléphoner, il fallait tourner une manivelle sur une boîte en bois accrochée au mur.
+  Aujourd'hui, le téléphone tient dans ta poche et fait mille autres choses. Entre les deux : une <b>lignée</b> d'objets,
+  chacun un peu meilleur que le précédent. Pourquoi ? Comment ? C'est ce qu'on va remonter.</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Tout part d'un besoin</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#b45309"><div class="ic">🎯</div><h3>Le besoin</h3><p>Ce que l'humain cherche à satisfaire. Il ne change presque jamais !</p><span class="ex">communiquer, se déplacer, s'éclairer</span></div>
+    <div class="carte" style="--accent:#0e7490"><div class="ic">🔧</div><h3>La fonction d'usage</h3><p>Ce que l'objet FAIT concrètement pour répondre au besoin. La même pour tous.</p><span class="ex">le vélo sert à se déplacer</span></div>
+    <div class="carte" style="--accent:#7c3aed"><div class="ic">✨</div><h3>La fonction d'estime</h3><p>Ce qui PLAÎT : le look, la marque, la couleur. Différente pour chacun !</p><span class="ex">un vélo rouge « stylé »</span></div>
+    <div class="carte" style="--accent:#16a34a"><div class="ic">🧬</div><h3>La lignée</h3><p>La famille d'objets qui, au fil du temps, répondent au MÊME besoin.</p><span class="ex">bougie → ampoule → LED</span></div>
+  </div>
+</section>
+
+<section class="slide" id="s3">
+  <h2>La lignée du téléphone</h2>
+  <div class="animbox">
+    <canvas id="cvTel" width="820" height="360"></canvas>
+    <div class="legende"><div class="caption" id="capTel"></div><button data-anim="tel">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsTel"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>Invention ou innovation ?</h2>
+  <table class="mat">
+    <tr><th></th><th>💡 INVENTION</th><th>🚀 INNOVATION</th></tr>
+    <tr><td><b>C'est quoi ?</b></td><td>Une idée ou une technique TOTALEMENT nouvelle</td><td>Une amélioration qui se DIFFUSE dans la société</td></tr>
+    <tr><td><b>Exemple</b></td><td>le moteur électrique, le transistor, la roue</td><td>le vélo à assistance électrique, le smartphone</td></tr>
+    <tr><td><b>Ce que ça change</b></td><td>ouvre des possibilités inconnues</td><td>rend un objet plus performant, plus pratique, moins cher</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">Une <b>rupture</b>, c'est quand une invention fait bifurquer toute la lignée : la voiture à moteur n'est pas un « meilleur cheval » — c'est une autre branche !</p>
+</section>
+
+<section class="slide" id="s5">
+  <h2>Le progrès, ça se mesure</h2>
+  <div class="animbox">
+    <canvas id="cvLum" width="820" height="360"></canvas>
+    <div class="legende"><div class="caption" id="capLum"></div><button data-anim="lum">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsLum"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>Le vélo : une invention qui change tout</h2>
+  <div class="animbox">
+    <canvas id="cvVelo" width="820" height="360"></canvas>
+    <div class="legende"><div class="caption" id="capVelo"></div><button data-anim="velo">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsVelo"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>Qu'est-ce qui fait évoluer les objets ?</h2>
+  <table class="mat">
+    <tr><th>Moteur d'évolution</th><th>Exemple</th></tr>
+    <tr><td>💡 Les <b>découvertes scientifiques et techniques</b></td><td>l'électricité → la lampe ; le transistor → l'électronique miniature</td></tr>
+    <tr><td>🧱 Les <b>nouveaux matériaux</b></td><td>l'aluminium et le carbone → vélos ultra-légers</td></tr>
+    <tr><td>🌍 Les <b>évolutions de la société</b></td><td>villes embouteillées → trottinettes et vélos électriques</td></tr>
+    <tr><td>⚡ Les <b>contraintes d'énergie et d'environnement</b></td><td>économiser l'électricité → la LED remplace l'incandescence</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">➡️ Au <b>TP</b>, tu remonteras les lignées sur la frise interactive !</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>Un objet technique répond à un <b>besoin</b> : sa <b>fonction d'usage</b> (la même pour tous) le dit ; sa <b>fonction d'estime</b> (le goût de chacun) le rend désirable.</li>
+      <li>Une <b>lignée</b> regroupe les objets qui, au fil du temps, répondent au même besoin : le besoin ne change pas, les <b>solutions techniques</b> évoluent.</li>
+      <li>Une <b>invention</b> est une idée totalement nouvelle ; une <b>innovation</b> est une amélioration qui se diffuse dans la société.</li>
+      <li>Les objets évoluent grâce aux découvertes, aux matériaux, aux besoins de la société et aux contraintes d'énergie.</li>
+      <li>Le progrès se <b>mesure</b> : une LED éclaire autant qu'une ampoule à incandescence en consommant environ <b>7 fois moins</b>.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function frame(ts){
+    if(etat.t0===null)etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){ if(etat.i<phases.length-1){etat.i++;etat.t0=ts;cap.textContent=phases[etat.i].caption;majPts();} else return; }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){cancelAnimationFrame(etat.raf);etat.i=0;etat.t0=null;
+    cap.textContent=phases[0].caption;majPts();etat.raf=requestAnimationFrame(frame);}
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption;majPts();phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#92400e',taille=15){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+function frise(ctx,y,x0,x1,dates){
+  ctx.strokeStyle='#94a3b8'; ctx.lineWidth=4;
+  ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
+  ctx.fillStyle='#94a3b8';
+  ctx.beginPath(); ctx.moveTo(x1+14,y); ctx.lineTo(x1-2,y-8); ctx.lineTo(x1-2,y+8); ctx.closePath(); ctx.fill();
+  dates.forEach(d=>{
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(d.x,y-8); ctx.lineTo(d.x,y+8); ctx.stroke();
+    etiquette(ctx,d.t,d.x,y+30,'#64748b',14);
+  });
+}
+function objet(ctx,x,y,emoji,nom,alpha=1,taille=44){
+  ctx.save(); ctx.globalAlpha=alpha;
+  ctx.font=taille+'px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+  ctx.fillText(emoji,x,y);
+  etiquette(ctx,nom,x,y+26,'#92400e',13.5);
+  ctx.restore();
+}
+
+/* ====== ANIM 1 : LA LIGNÉE DU TÉLÉPHONE ====== */
+const TEL=[
+ {x:150,e:'📠',n:'téléphone mural (1876)',d:'1876'},
+ {x:340,e:'☎️',n:'téléphone à cadran (1930)',d:'1930'},
+ {x:530,e:'📟',n:'mobile à touches (1995)',d:'1995'},
+ {x:720,e:'📱',n:'smartphone (2007)',d:'2007'},
+];
+creerAnim('tel','cvTel','capTel','ptsTel',[
+ {dur:2600,caption:'STRUCTURE — Une frise du temps, de 1876 à aujourd\u2019hui. Le besoin est déjà là : PARLER À DISTANCE.',
+  draw(ctx,p,W,H){ frise(ctx,220,70,770,TEL.map(t=>({x:t.x,t:t.d})));
+    etiquette(ctx,'🎯 besoin : communiquer à distance',W/2,60,'#ea580c',18); }},
+ {dur:5200,caption:'ACTION — Les objets de la lignée apparaissent l\u2019un après l\u2019autre : chacun répond au MÊME besoin… avec la technique de son époque.',
+  draw(ctx,p,W,H){ frise(ctx,220,70,770,TEL.map(t=>({x:t.x,t:t.d})));
+    etiquette(ctx,'🎯 besoin : communiquer à distance',W/2,60,'#ea580c',18);
+    const q=lisse(p)*TEL.length;
+    TEL.forEach((t,i)=>{ const a=Math.max(0,Math.min(1,q-i)); if(a>0) objet(ctx,t.x,190,t.e,t.n,a); }); }},
+ {dur:4200,caption:'ACTION — Compare le premier et le dernier : plus PETIT, SANS FIL, et il fait mille choses en plus. Chaque étape améliore la précédente.',
+  draw(ctx,p,W,H){ frise(ctx,220,70,770,TEL.map(t=>({x:t.x,t:t.d})));
+    TEL.forEach(t=>objet(ctx,t.x,190,t.e,t.n));
+    ctx.strokeStyle='#16a34a'; ctx.lineWidth=3; ctx.setLineDash([8,6]);
+    const q=lisse(p);
+    ctx.beginPath(); ctx.moveTo(150,120); ctx.lineTo(150+(720-150)*q,120); ctx.stroke(); ctx.setLineDash([]);
+    etiquette(ctx,'plus petit · sans fil · multifonction',150+(720-150)*q/2,105,'#16a34a',15); }},
+ {dur:3800,caption:'PROPRIÉTÉ — Le BESOIN ne change pas, les SOLUTIONS évoluent : c\u2019est ça, une lignée. Et ton smartphone aura lui aussi des descendants !',
+  draw(ctx,p,W,H){ frise(ctx,220,70,770,TEL.map(t=>({x:t.x,t:t.d})));
+    TEL.forEach(t=>objet(ctx,t.x,190,t.e,t.n));
+    ctx.font='bold 20px Segoe UI'; ctx.fillStyle='#92400e'; ctx.textAlign='center';
+    ctx.fillText('besoin constant + solutions qui évoluent = LIGNÉE',W/2,320); }},
+]);
+
+/* ====== ANIM 2 : LE PROGRÈS SE MESURE (éclairage) ====== */
+const LUM=[
+ {x:170,e:'🕯️',n:'bougie',eff:0.3},
+ {x:410,e:'💡',n:'incandescence (1879)',eff:13},
+ {x:650,e:'🔆',n:'LED (2010)',eff:100},
+];
+function jaugeEff(ctx,x,val,max,coul){
+  const h=140, y0=250;
+  ctx.fillStyle='#e2e8f0'; ctx.fillRect(x-26,y0-h,52,h);
+  const hh=h*val/max;
+  ctx.fillStyle=coul; ctx.fillRect(x-26,y0-hh,52,hh);
+  ctx.strokeStyle='#94a3b8'; ctx.strokeRect(x-26,y0-h,52,h);
+  etiquette(ctx,Math.round(val)+' lm/W',x,y0-h-12,coul,15);
+}
+creerAnim('lum','cvLum','capLum','ptsLum',[
+ {dur:2600,caption:'STRUCTURE — Trois générations d\u2019éclairage. Pour les comparer, une jauge : la lumière produite par watt consommé (lumens/W).',
+  draw(ctx,p,W,H){ LUM.forEach(l=>{ objet(ctx,l.x,300,l.e,l.n); }); }},
+ {dur:5000,caption:'ACTION — Les jauges se remplissent… La bougie éclaire à peine. L\u2019ampoule de 1879 : mieux, mais 95 % de l\u2019énergie part en CHALEUR. La LED : record !',
+  draw(ctx,p,W,H){ const q=lisse(p);
+    LUM.forEach((l,i)=>{ objet(ctx,l.x,300,l.e,l.n);
+      const a=Math.max(0,Math.min(1,q*3-i));
+      if(a>0) jaugeEff(ctx,l.x,l.eff*a,100,['#a16207','#ea580c','#16a34a'][i]); }); }},
+ {dur:4200,caption:'PROPRIÉTÉ — De 13 à 100 lm/W : à lumière égale, la LED consomme environ 7 FOIS MOINS que l\u2019incandescence. Le progrès n\u2019est pas une impression : il se CALCULE.',
+  draw(ctx,p,W,H){ LUM.forEach((l,i)=>{ objet(ctx,l.x,300,l.e,l.n); jaugeEff(ctx,l.x,l.eff,100,['#a16207','#ea580c','#16a34a'][i]); });
+    ctx.font='bold 20px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
+    ctx.fillText('même lumière ÷ 7 fois moins d\u2019énergie',W/2,50); }},
+]);
+
+/* ====== ANIM 3 : L'INVENTION CLÉ DU VÉLO ====== */
+function grandBi(ctx,x,y,a){
+  ctx.strokeStyle='#475569'; ctx.lineWidth=5;
+  ctx.beginPath(); ctx.arc(x,y,64,0,7); ctx.stroke();           // grande roue
+  ctx.beginPath(); ctx.arc(x+96,y+34,26,0,7); ctx.stroke();     // petite roue
+  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+64,y-52); ctx.lineTo(x+96,y+34); ctx.stroke();
+  ctx.save(); ctx.translate(x,y); ctx.rotate(a);
+  ctx.strokeStyle='#ea580c'; ctx.lineWidth=6;
+  ctx.beginPath(); ctx.moveTo(0,-16); ctx.lineTo(0,16); ctx.stroke(); ctx.restore(); // pédales sur le moyeu !
+}
+function veloChaine(ctx,x,y,a){
+  ctx.strokeStyle='#475569'; ctx.lineWidth=5;
+  ctx.beginPath(); ctx.arc(x,y,34,0,7); ctx.stroke();
+  ctx.beginPath(); ctx.arc(x+120,y,34,0,7); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+62,y-2); ctx.lineTo(x+120,y); ctx.moveTo(x+62,y-2); ctx.lineTo(x+40,y-46); ctx.lineTo(x+100,y-46); ctx.lineTo(x+120,y); ctx.stroke();
+  // plateau + chaîne
+  ctx.strokeStyle='#b45309'; ctx.lineWidth=4;
+  ctx.beginPath(); ctx.arc(x+62,y,15,0,7); ctx.stroke();
+  ctx.beginPath(); ctx.arc(x,y,9,0,7); ctx.stroke();
+  ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(x+62,y-15); ctx.lineTo(x,y-9); ctx.moveTo(x+62,y+15); ctx.lineTo(x,y+9); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.save(); ctx.translate(x+62,y); ctx.rotate(a);
+  ctx.strokeStyle='#ea580c'; ctx.lineWidth=6;
+  ctx.beginPath(); ctx.moveTo(0,-14); ctx.lineTo(0,14); ctx.stroke(); ctx.restore();
+}
+creerAnim('velo','cvVelo','capVelo','ptsVelo',[
+ {dur:3000,caption:'STRUCTURE — Vers 1870, le « grand-bi » : les pédales sont FIXÉES à la roue avant. Un tour de pédale = un tour de roue. Pour aller vite… il faut une roue GÉANTE (et un escabeau pour monter !).',
+  draw(ctx,p,W,H){ grandBi(ctx,220,190,0);
+    etiquette(ctx,'grand-bi (~1870)',260,320,'#475569',15);
+    etiquette(ctx,'pédales sur la roue !',220,90,'#ea580c',14); }},
+ {dur:4400,caption:'ACTION — 1885 : l\u2019INVENTION clé — la transmission par CHAÎNE. Les pédales entraînent un grand plateau, la chaîne un petit pignon : la roue tourne PLUS VITE que les pédales.',
+  draw(ctx,p,W,H){ const a=lisse(p)*Math.PI*3;
+    grandBi(ctx,150,190,a);
+    veloChaine(ctx,480,210,a);
+    etiquette(ctx,'grand-bi',190,320,'#475569',14);
+    etiquette(ctx,'bicyclette « de sécurité » (1885)',545,320,'#b45309',15);
+    etiquette(ctx,'⚙️ chaîne + plateau/pignon',545,110,'#ea580c',15); }},
+ {dur:4000,caption:'PROPRIÉTÉ — Grâce à cette invention, plus besoin de roue géante : le vélo devient sûr, rapide et POUR TOUT LE MONDE. Une seule invention peut relancer toute une lignée — jusqu\u2019au VTT et au vélo électrique d\u2019aujourd\u2019hui !',
+  draw(ctx,p,W,H){ veloChaine(ctx,340,200,p*4);
+    ctx.font='bold 19px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
+    ctx.fillText('1 invention (la chaîne) → toute la lignée redémarre 🚵',W/2,70); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s3:'tel',s5:'lum',s6:'velo'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

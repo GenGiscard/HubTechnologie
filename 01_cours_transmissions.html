@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 4ème — Transmissions de mouvement · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#7c3aed; --niv-fonce:#6d28d9; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#f5f3ff;color:var(--niv-fonce)}
+nav.side a.actif{background:#ede9fe;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:20px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:34px}
+.carte h3{font-size:17px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:14px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12.5px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#f5f3ff;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+.formule{background:#fff;border-radius:16px;box-shadow:var(--ombre);border-left:6px solid var(--niv);padding:22px 26px;max-width:760px;margin-top:20px}
+.formule .f{font-size:30px;font-weight:900;color:var(--niv-fonce);text-align:center;margin:8px 0}
+.formule .f small{font-size:16px;color:var(--gris);font-weight:600}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.plus{color:var(--vert);font-weight:700}.moins{color:var(--rouge);font-weight:700}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%237c3aed'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>Le problème du moteur</a>
+  <a href="#s2"><span class="dot"></span>Les solutions techniques</a>
+  <a href="#s3"><span class="dot"></span>L'engrenage (animation)</a>
+  <a href="#s4"><span class="dot"></span>Le rapport de transmission</a>
+  <a href="#s5"><span class="dot"></span>Courroie vs engrenage (animation)</a>
+  <a href="#s6"><span class="dot"></span>Pignon-crémaillère (animation)</a>
+  <a href="#s7"><span class="dot"></span>Tableau des transmissions</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 4ème · Séquence Transmissions de mouvement</div>
+  <h1>⚙️ Le moteur tourne trop vite<br>(et pas au bon endroit)</h1>
+  <p class="sous" style="margin-top:16px">Le moteur d'une perceuse tourne à <b>20 000 tr/min</b> : la vis, elle, en voudrait 600. Le pédalier de ton vélo est au milieu du cadre : la roue est derrière.
+  Entre celui qui PRODUIT le mouvement et celui qui l'UTILISE, il faut le <b>transmettre</b> — et souvent le <b>transformer</b>. C'est le travail des transmissions.</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Les solutions techniques de transmission</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#7c3aed"><div class="ic">⚙️</div><h3>Engrenages</h3><p>Des roues dentées en contact direct. Précis, robuste, sans glissement.</p><span class="ex">boîte de vitesses, montre</span></div>
+    <div class="carte" style="--accent:#0e7490"><div class="ic">🔗</div><h3>Chaîne</h3><p>Relie deux roues dentées éloignées, sans glissement.</p><span class="ex">vélo, moto</span></div>
+    <div class="carte" style="--accent:#ea580c"><div class="ic">➰</div><h3>Poulies-courroie</h3><p>Deux poulies reliées par une courroie souple. Silencieux… mais ça peut glisser.</p><span class="ex">machine à laver, moteur de voiture</span></div>
+    <div class="carte" style="--accent:#16a34a"><div class="ic">📏</div><h3>Pignon-crémaillère</h3><p>Transforme une rotation en translation (ligne droite).</p><span class="ex">direction de voiture, portail</span></div>
+  </div>
+</section>
+
+<section class="slide" id="s3">
+  <h2>L'engrenage sous la loupe</h2>
+  <div class="animbox">
+    <canvas id="cvEng" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capEng"></div><button data-anim="eng">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsEng"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>Le rapport de transmission</h2>
+  <p class="sous">Combien de tours fait la roue de SORTIE quand celle d'ENTRÉE en fait un ? Tout est dans le nombre de dents (Z).</p>
+  <div class="formule">
+    <div class="f">N<small>sortie</small> = N<small>entrée</small> × Z<small>entrée</small> ÷ Z<small>sortie</small></div>
+    <div class="f" style="font-size:20px;color:var(--gris)">N en tours/minute (tr/min) · Z en nombre de dents</div>
+  </div>
+  <table class="mat">
+    <tr><th>Z entrée</th><th>Z sortie</th><th>Effet</th><th>Exemple d'usage</th></tr>
+    <tr><td>10 dents</td><td>30 dents</td><td class="moins">RÉDUCTEUR ÷3 : sortie 3× plus lente (mais 3× plus de force !)</td><td>treuil, essuie-glace</td></tr>
+    <tr><td>30 dents</td><td>10 dents</td><td class="plus">MULTIPLICATEUR ×3 : sortie 3× plus rapide</td><td>batteur de cuisine</td></tr>
+    <tr><td>20 dents</td><td>20 dents</td><td>Même vitesse, sens inversé</td><td>renvoi de mouvement</td></tr>
+  </table>
+</section>
+
+<section class="slide" id="s5">
+  <h2>Courroie ou engrenage : le match du sens</h2>
+  <div class="animbox">
+    <canvas id="cvSens" width="820" height="360"></canvas>
+    <div class="legende"><div class="caption" id="capSens"></div><button data-anim="sens">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsSens"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>Pignon-crémaillère : tourner pour glisser</h2>
+  <div class="animbox">
+    <canvas id="cvCrem" width="820" height="340"></canvas>
+    <div class="legende"><div class="caption" id="capCrem"></div><button data-anim="crem">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsCrem"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>Le tableau de l'ingénieur</h2>
+  <table class="mat">
+    <tr><th>Solution</th><th>Sens de rotation</th><th>Glissement ?</th><th>Distance entre axes</th></tr>
+    <tr><td>⚙️ Engrenages</td><td class="moins">INVERSÉ</td><td class="plus">impossible</td><td>proches (contact)</td></tr>
+    <tr><td>🔗 Chaîne</td><td class="plus">CONSERVÉ</td><td class="plus">impossible</td><td>éloignés</td></tr>
+    <tr><td>➰ Poulies-courroie</td><td class="plus">CONSERVÉ</td><td class="moins">possible !</td><td>éloignés</td></tr>
+    <tr><td>📏 Pignon-crémaillère</td><td>rotation → translation</td><td class="plus">impossible</td><td>—</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">➡️ Au <b>TP</b>, tu règleras un vrai train d'engrenages pour livrer les vitesses commandées !</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>Une <b>transmission</b> transporte le mouvement du moteur vers l'organe utile, en le modifiant si besoin.</li>
+      <li>Deux engrenages en contact tournent en <b>sens INVERSÉS</b> ; deux poulies reliées par une courroie tournent dans le <b>MÊME sens</b>.</li>
+      <li><b>N<sub>sortie</sub> = N<sub>entrée</sub> × Z<sub>entrée</sub> ÷ Z<sub>sortie</sub></b> : grande roue menée = sortie plus LENTE (réducteur), petite roue menée = plus RAPIDE (multiplicateur).</li>
+      <li>Réduire la vitesse <b>augmente la force</b> transmise (et inversement) : rien n'est gratuit en mécanique !</li>
+      <li>Le <b>pignon-crémaillère</b> transforme la rotation en translation.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function frame(ts){
+    if(etat.t0===null)etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){ if(etat.i<phases.length-1){etat.i++;etat.t0=ts;cap.textContent=phases[etat.i].caption;majPts();} else return; }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){cancelAnimationFrame(etat.raf);etat.i=0;etat.t0=null;
+    cap.textContent=phases[0].caption;majPts();etat.raf=requestAnimationFrame(frame);}
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption;majPts();phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#6d28d9',taille=16){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+function flecheArc(ctx,x,y,r,horaire,coul){
+  ctx.strokeStyle=coul; ctx.fillStyle=coul; ctx.lineWidth=4;
+  const a0=horaire? -1.2 : Math.PI+1.2, a1=horaire? 0.5 : Math.PI-0.5;
+  ctx.beginPath(); ctx.arc(x,y,r,a0,a1,!horaire); ctx.stroke();
+  const fin=a1, dir=horaire?1:-1;
+  const fx=x+r*Math.cos(fin), fy=y+r*Math.sin(fin);
+  ctx.save(); ctx.translate(fx,fy); ctx.rotate(fin+dir*Math.PI/2);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-6,-11); ctx.lineTo(6,-11); ctx.closePath(); ctx.fill(); ctx.restore();
+}
+/* roue dentée : rayon ∝ nombre de dents, marqueur rouge pour suivre la rotation */
+function roueDentee(ctx,x,y,dents,ang,coul){
+  const r=dents*3.4;
+  ctx.save(); ctx.translate(x,y); ctx.rotate(ang);
+  ctx.fillStyle=coul;
+  for(let k=0;k<dents;k++){
+    ctx.save(); ctx.rotate(k*Math.PI*2/dents);
+    ctx.fillRect(r-3,-4,10,8); ctx.restore();
+  }
+  ctx.beginPath(); ctx.arc(0,0,r,0,7); ctx.fill();
+  ctx.fillStyle='#f8fafc'; ctx.beginPath(); ctx.arc(0,0,7,0,7); ctx.fill();
+  ctx.fillStyle='#dc2626'; ctx.beginPath(); ctx.arc(r*0.62,0,6,0,7); ctx.fill();
+  ctx.restore();
+  return r;
+}
+
+/* ====== ANIM 1 : L'ENGRENAGE (sens + rapport) ====== */
+const ENG={Z1:12,Z2:24,x1:280,x2:280+12*3.4+24*3.4+7,y:200};
+function decorEng(ctx,a1){
+  const a2=-a1*ENG.Z1/ENG.Z2 + Math.PI/ENG.Z2; // engrènement
+  roueDentee(ctx,ENG.x1,ENG.y,ENG.Z1,a1,'#7c3aed');
+  roueDentee(ctx,ENG.x2,ENG.y,ENG.Z2,a2,'#0e7490');
+  etiquette(ctx,'MENANTE · Z₁ = 12 dents',ENG.x1,ENG.y+70,'#6d28d9',15);
+  etiquette(ctx,'MENÉE · Z₂ = 24 dents',ENG.x2,ENG.y+108,'#0e7490',15);
+  return a2;
+}
+creerAnim('eng','cvEng','capEng','ptsEng',[
+ {dur:2600,caption:'STRUCTURE — Deux roues dentées en contact : la MENANTE (reliée au moteur, 12 dents) engrène la MENÉE (24 dents). Suis les points rouges !',
+  draw(ctx,p,W,H){ decorEng(ctx,0); }},
+ {dur:4200,caption:'ACTION — Le moteur tourne : dent contre dent, la menante ENTRAÎNE la menée… qui tourne en SENS INVERSE.',
+  draw(ctx,p,W,H){ const a1=lisse(p)*Math.PI*2.5;
+    decorEng(ctx,a1);
+    flecheArc(ctx,ENG.x1,ENG.y,ENG.Z1*3.4+22,true,'#6d28d9');
+    flecheArc(ctx,ENG.x2,ENG.y,ENG.Z2*3.4+22,false,'#0e7490'); }},
+ {dur:5200,caption:'ACTION — Comptons : quand la petite (12 dents) fait 2 TOURS complets… la grande (24 dents) n\u2019en fait qu\u2019UN. Deux fois plus de dents = deux fois plus lente.',
+  draw(ctx,p,W,H){ const a1=lisse(p)*Math.PI*4;
+    decorEng(ctx,a1);
+    etiquette(ctx,'tours : '+(a1/(Math.PI*2)).toFixed(1),ENG.x1,80,'#6d28d9',18);
+    etiquette(ctx,'tours : '+(a1*ENG.Z1/ENG.Z2/(Math.PI*2)).toFixed(1),ENG.x2,80,'#0e7490',18); }},
+ {dur:3800,caption:'PROPRIÉTÉ — Sens INVERSÉ, et N₂ = N₁ × Z₁ ÷ Z₂ : ici la sortie tourne 2× plus lentement (réducteur ÷2)… mais avec 2× plus de force !',
+  draw(ctx,p,W,H){ decorEng(ctx,p*2);
+    ctx.font='bold 20px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
+    ctx.fillText('N₂ = N₁ × 12 ÷ 24 = N₁ ÷ 2', W/2, 52); }},
+]);
+
+/* ====== ANIM 2 : COURROIE vs ENGRENAGE ====== */
+function decorSens(ctx,a){
+  // gauche : engrenages
+  etiquette(ctx,'⚙️ ENGRENAGES',210,44,'#6d28d9',17);
+  roueDentee(ctx,150,190,14,a,'#7c3aed');
+  roueDentee(ctx,150+14*3.4+14*3.4+7,190,14,-a+Math.PI/14,'#7c3aed');
+  // droite : poulies + courroie
+  etiquette(ctx,'➰ POULIES-COURROIE',600,44,'#ea580c',17);
+  const p1x=520,p2x=690,py=190,r=42;
+  ctx.strokeStyle='#57534e'; ctx.lineWidth=7;
+  ctx.beginPath(); ctx.moveTo(p1x,py-r); ctx.lineTo(p2x,py-r); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(p1x,py+r); ctx.lineTo(p2x,py+r); ctx.stroke();
+  ctx.beginPath(); ctx.arc(p1x,py,r,Math.PI/2,-Math.PI/2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(p2x,py,r,-Math.PI/2,Math.PI/2); ctx.stroke();
+  [[p1x,py],[p2x,py]].forEach(([x,y])=>{
+    ctx.fillStyle='#ea580c'; ctx.beginPath(); ctx.arc(x,y,r-6,0,7); ctx.fill();
+    ctx.fillStyle='#f8fafc'; ctx.beginPath(); ctx.arc(x,y,6,0,7); ctx.fill();
+    ctx.save(); ctx.translate(x,y); ctx.rotate(a);
+    ctx.fillStyle='#dc2626'; ctx.beginPath(); ctx.arc((r-6)*0.6,0,6,0,7); ctx.fill(); ctx.restore();
+  });
+}
+creerAnim('sens','cvSens','capSens','ptsSens',[
+ {dur:2600,caption:'STRUCTURE — À gauche, deux roues dentées en CONTACT. À droite, deux poulies reliées par une COURROIE.',
+  draw(ctx,p,W,H){ decorSens(ctx,0); }},
+ {dur:4600,caption:'ACTION — Tout tourne ! Compare les points rouges : les engrenages tournent en sens OPPOSÉS… les poulies dans le MÊME sens (la courroie les entraîne pareil).',
+  draw(ctx,p,W,H){ const a=lisse(p)*Math.PI*3; decorSens(ctx,a);
+    flecheArc(ctx,150,190,70,true,'#6d28d9'); flecheArc(ctx,150+14*3.4*2+7,190,70,false,'#6d28d9');
+    flecheArc(ctx,520,190,58,true,'#ea580c'); flecheArc(ctx,690,190,58,true,'#ea580c'); }},
+ {dur:4000,caption:'PROPRIÉTÉ — Engrenages : sens INVERSÉ, jamais de glissement. Courroie : MÊME sens, axes éloignés possibles… mais la courroie peut GLISSER ou casser (pense à la machine à laver !).',
+  draw(ctx,p,W,H){ decorSens(ctx,p*3);
+    etiquette(ctx,'sens INVERSÉ · sans glissement',210,330,'#6d28d9',15);
+    etiquette(ctx,'MÊME sens · glissement possible',600,330,'#ea580c',15); }},
+]);
+
+/* ====== ANIM 3 : PIGNON-CRÉMAILLÈRE ====== */
+function decorCrem(ctx,a,W){
+  const Z=14, r=Z*3.4, cx=330, cy=160;
+  // crémaillère : barre + dents, position liée à l'angle
+  const depl=a*r;
+  ctx.fillStyle='#94a3b8';
+  ctx.fillRect(60,cy+r+2,700,20);
+  ctx.fillStyle='#64748b';
+  const pas=2*Math.PI*r/Z;
+  for(let k=-2;k<40;k++){
+    const x=60+((k*pas - depl)%740+740)%740;
+    ctx.fillRect(x,cy+r-8,10,12);
+  }
+  roueDentee(ctx,cx,cy,Z,a,'#16a34a');
+  etiquette(ctx,'pignon (rotation)',cx,cy-r-18,'#15803d',15);
+  etiquette(ctx,'crémaillère (translation)',cx+230,cy+r+52,'#475569',15);
+  return {cx,cy,r,depl};
+}
+creerAnim('crem','cvCrem','capCrem','ptsCrem',[
+ {dur:2600,caption:'STRUCTURE — Un PIGNON (roue dentée) posé sur une CRÉMAILLÈRE (barre dentée droite).',
+  draw(ctx,p,W,H){ decorCrem(ctx,0,W); }},
+ {dur:4600,caption:'ACTION — Le pignon TOURNE… et pousse la crémaillère dent après dent : la barre GLISSE en ligne droite.',
+  draw(ctx,p,W,H){ const g=decorCrem(ctx,lisse(p)*Math.PI*2.2,W);
+    flecheArc(ctx,g.cx,g.cy,g.r+20,true,'#15803d');
+    ctx.strokeStyle='#ea580c'; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.moveTo(g.cx+90,g.cy+g.r+34); ctx.lineTo(g.cx+170,g.cy+g.r+34); ctx.stroke();
+    ctx.fillStyle='#ea580c'; ctx.beginPath();
+    ctx.moveTo(g.cx+180,g.cy+g.r+34); ctx.lineTo(g.cx+164,g.cy+g.r+26); ctx.lineTo(g.cx+164,g.cy+g.r+42); ctx.closePath(); ctx.fill(); }},
+ {dur:3800,caption:'PROPRIÉTÉ — La ROTATION est transformée en TRANSLATION. C\u2019est exactement ce qui oriente les roues quand tu tournes un volant de voiture !',
+  draw(ctx,p,W,H){ decorCrem(ctx,p*2,W);
+    ctx.font='bold 19px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
+    ctx.fillText('ROTATION ⟳ → TRANSLATION ⟶', W/2, 46); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s3:'eng',s5:'sens',s6:'crem'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

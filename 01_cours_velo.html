@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 5ème — Le vélo, objet technique · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#15803d; --niv-fonce:#166534; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#f0fdf4;color:var(--niv-fonce)}
+nav.side a.actif{background:#dcfce7;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:18px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:32px}
+.carte h3{font-size:16px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:13.5px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#f0fdf4;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%2315803d'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>200 pièces sous tes fesses</a>
+  <a href="#s2"><span class="dot"></span>Fonction d'usage & fonctions techniques</a>
+  <a href="#s3"><span class="dot"></span>De la fonction à la solution (animation)</a>
+  <a href="#s4"><span class="dot"></span>Le tableau du vélo</a>
+  <a href="#s5"><span class="dot"></span>La transmission (animation)</a>
+  <a href="#s6"><span class="dot"></span>Le freinage (animation)</a>
+  <a href="#s7"><span class="dot"></span>Un objet qui évolue encore</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 5ème · Séquence Le vélo, objet technique</div>
+  <h1>🚲 200 pièces<br>sous tes fesses.</h1>
+  <p class="sous" style="margin-top:16px">Tu montes dessus sans y penser… mais ton vélo est une petite merveille : environ <b>200 pièces</b>,
+  un rendement supérieur à la plupart des machines jamais inventées, et 2 siècles d'améliorations.
+  C'est l'objet parfait pour apprendre à <b>analyser</b> n'importe quel objet technique : à quoi il sert, ce qu'il doit savoir faire… et comment il le fait.</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Trois questions pour décoder un objet</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#15803d"><div class="ic">🎯</div><h3>LA FONCTION D'USAGE</h3><p>À quoi SERT l'objet ? Une seule phrase : « le vélo sert à se déplacer grâce à l'énergie musculaire ».</p><span class="ex">le POURQUOI de l'objet</span></div>
+    <div class="carte" style="--accent:#0e7490"><div class="ic">🧩</div><h3>LES FONCTIONS TECHNIQUES</h3><p>Que doit-il SAVOIR FAIRE pour y arriver ? Se propulser, freiner, se diriger, porter le cycliste…</p><span class="ex">les verbes de l'objet</span></div>
+    <div class="carte" style="--accent:#ea580c"><div class="ic">🔧</div><h3>LES SOLUTIONS TECHNIQUES</h3><p>COMMENT chaque fonction est réalisée, concrètement : pédalier + chaîne, patins de frein, guidon…</p><span class="ex">les pièces qui répondent</span></div>
+  </div>
+  <p class="sous" style="margin-top:22px">Une même fonction peut avoir <b>plusieurs</b> solutions : freiner ? Patins sur la jante, disque, rétropédalage… C'est là que les ingénieurs s'amusent.</p>
+</section>
+
+<section class="slide" id="s3">
+  <h2>De la fonction à la solution</h2>
+  <div class="animbox">
+    <canvas id="cvFonctions" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capFonctions"></div><button data-anim="fonctions">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsFonctions"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>Le tableau d'analyse du vélo</h2>
+  <table class="mat">
+    <tr><th>Fonction technique</th><th>Solution technique</th><th>Pièces</th></tr>
+    <tr><td>⚙️ <b>Se propulser</b></td><td>transmission par chaîne</td><td>pédales, pédalier (plateau), chaîne, pignon, roue arrière</td></tr>
+    <tr><td>🛑 <b>Freiner</b></td><td>friction de patins sur la jante (ou disque)</td><td>leviers, câbles, étriers, patins</td></tr>
+    <tr><td>🧭 <b>Se diriger</b></td><td>pivot de direction</td><td>guidon, potence, fourche, roue avant</td></tr>
+    <tr><td>🛋️ <b>Porter & sécuriser</b></td><td>cadre rigide + équipements</td><td>cadre, selle réglable, éclairage, sonnette, catadioptres</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">Ce tableau fonctionne pour <b>N'IMPORTE QUEL objet</b> : une trottinette, un stylo, un lave-linge. Fonction d'usage → fonctions techniques → solutions techniques : le réflexe du technologue.</p>
+</section>
+
+<section class="slide" id="s5">
+  <h2>La transmission : tes jambes jusqu'à la roue</h2>
+  <div class="animbox">
+    <canvas id="cvTransmission" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capTransmission"></div><button data-anim="transmission">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsTransmission"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>Le freinage : transformer la vitesse en chaleur</h2>
+  <div class="animbox">
+    <canvas id="cvFreinage" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capFreinage"></div><button data-anim="freinage">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsFreinage"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>Un objet qui évolue encore</h2>
+  <table class="mat">
+    <tr><th>Évolution</th><th>Fonction améliorée</th><th>Solution nouvelle</th></tr>
+    <tr><td>🔋 Vélo à assistance électrique</td><td>se propulser (avec moins d'effort)</td><td>moteur + batterie + capteur de pédalage</td></tr>
+    <tr><td>🛑 Freins à disque</td><td>freiner (même sous la pluie)</td><td>disque + étrier hydraulique</td></tr>
+    <tr><td>🪶 Cadre carbone</td><td>porter (en pesant 3 fois moins)</td><td>matériaux composites</td></tr>
+    <tr><td>📡 Compteur GPS connecté</td><td>informer le cycliste</td><td>capteurs + satellite + application</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">Les fonctions ne changent presque jamais… ce sont les <b>solutions</b> qui évoluent (tu reconnais ta séquence Évolution des objets !). ➡️ Au <b>TP</b>, l'atelier vélo t'embauche : trois pannes à diagnostiquer !</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>Pour analyser un objet : la <b>fonction d'usage</b> (à quoi il sert), les <b>fonctions techniques</b> (ce qu'il doit savoir faire), les <b>solutions techniques</b> (comment c'est réalisé).</li>
+      <li>Le vélo se propulse par une <b>transmission</b> : pédalier (plateau) → chaîne → pignon → roue. Elle <b>transmet</b> le mouvement des jambes et le <b>transforme</b>.</li>
+      <li>Le rapport plateau/pignon : avec un plateau de 40 dents et un pignon de 20 dents, la roue fait <b>40 ÷ 20 = 2 tours</b> par tour de pédale. Grand plateau + petit pignon = on va plus vite, mais c'est plus dur.</li>
+      <li>Le <b>freinage</b> fonctionne par friction : les patins frottent la jante et transforment la vitesse en chaleur. La friction USE les pièces : les patins s'entretiennent !</li>
+      <li>Une même fonction peut avoir plusieurs solutions, et les solutions <b>évoluent</b> (assistance électrique, freins à disque, cadre carbone) alors que les fonctions restent.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function frame(ts){
+    if(etat.t0===null)etat.t0=ts;
+    const ph=phases[etat.i];
+    let p=Math.min(1,(ts-etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx,p,cv.width,cv.height);
+    if(p>=1){ if(etat.i<phases.length-1){etat.i++;etat.t0=ts;cap.textContent=phases[etat.i].caption;majPts();} else return; }
+    etat.raf=requestAnimationFrame(frame);
+  }
+  function demarrer(){cancelAnimationFrame(etat.raf);etat.i=0;etat.t0=null;
+    cap.textContent=phases[0].caption;majPts();etat.raf=requestAnimationFrame(frame);}
+  ANIMS[nom]={demarrer};
+  cap.textContent=phases[0].caption;majPts();phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#166534',taille=15){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+function roue(ctx,cx,cy,r,angle,coul){
+  ctx.strokeStyle=coul||'#166534'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
+  for(let i=0;i<6;i++){
+    const a=angle+i*Math.PI/3;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a)); ctx.lineWidth=1.5; ctx.stroke();
+  }
+  ctx.lineWidth=3;
+}
+function veloSchema(ctx,ox,oy,s,angleRoues){
+  // roues
+  roue(ctx,ox,oy,46*s,angleRoues,'#334155');
+  roue(ctx,ox+150*s,oy,46*s,angleRoues,'#334155');
+  // cadre
+  ctx.strokeStyle='#15803d'; ctx.lineWidth=4;
+  ctx.beginPath();
+  ctx.moveTo(ox,oy); ctx.lineTo(ox+58*s,oy-4*s); ctx.lineTo(ox+96*s,oy);   // triangle arrière -> pédalier
+  ctx.moveTo(ox+58*s,oy-4*s); ctx.lineTo(ox+52*s,oy-56*s);                 // tube de selle
+  ctx.moveTo(ox+96*s,oy); ctx.lineTo(ox+52*s,oy-56*s);
+  ctx.moveTo(ox+96*s,oy); ctx.lineTo(ox+138*s,oy-58*s);                    // tube oblique -> direction
+  ctx.moveTo(ox+52*s,oy-56*s); ctx.lineTo(ox+138*s,oy-58*s);               // tube horizontal
+  ctx.moveTo(ox+138*s,oy-58*s); ctx.lineTo(ox+150*s,oy);                   // fourche
+  ctx.stroke();
+  // selle & guidon
+  ctx.lineWidth=5; ctx.strokeStyle='#334155';
+  ctx.beginPath(); ctx.moveTo(ox+42*s,oy-64*s); ctx.lineTo(ox+62*s,oy-64*s); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox+132*s,oy-70*s); ctx.lineTo(ox+148*s,oy-66*s); ctx.stroke();
+  ctx.lineWidth=3;
+}
+/* ====== ANIM 1 : FONCTION → SOLUTION ====== */
+creerAnim('fonctions','cvFonctions','capFonctions','ptsFonctions',[
+ {dur:3600,caption:'STRUCTURE — Tout part d\u2019UNE phrase, la fonction d\u2019usage : « se déplacer grâce à l\u2019énergie musculaire ». Pour y arriver, l\u2019objet doit savoir faire plusieurs choses : les FONCTIONS TECHNIQUES arrivent…',
+  draw(ctx,p){
+    ctx.fillStyle='#f0fdf4'; ctx.strokeStyle='#15803d'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.roundRect(210,60,400,60,14); ctx.fill(); ctx.stroke();
+    etiquette(ctx,'🎯 FONCTION D\u2019USAGE : se déplacer grâce aux muscles',410,96,'#166534',15); }},
+ {dur:6000,caption:'ACTION — La fonction d\u2019usage se DÉCOMPOSE : se propulser, freiner, se diriger, porter le cycliste. Puis chaque fonction reçoit sa SOLUTION technique : la chaîne, les patins, le guidon, le cadre.',
+  draw(ctx,p){ const q=lisse(p);
+    ctx.fillStyle='#f0fdf4'; ctx.strokeStyle='#15803d'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(260,26,300,44,12); ctx.fill(); ctx.stroke();
+    etiquette(ctx,'🎯 se déplacer',410,54,'#166534',14);
+    const fcts=[['⚙️ se propulser','→ pédalier + chaîne'],['🛑 freiner','→ patins sur jante'],['🧭 se diriger','→ guidon + fourche'],['🛋️ porter','→ cadre + selle']];
+    fcts.forEach((f,i)=>{
+      const seuil=(i+1)/5;
+      if(q>seuil){
+        const x=115+i*198;
+        ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.moveTo(410,70); ctx.lineTo(x,140); ctx.stroke();
+        ctx.fillStyle='#fff'; ctx.strokeStyle='#0e7490'; ctx.lineWidth=2.5;
+        ctx.beginPath(); ctx.roundRect(x-88,140,176,48,12); ctx.fill(); ctx.stroke();
+        etiquette(ctx,f[0],x,170,'#0e7490',13.5);
+        if(q>seuil+0.12) etiquette(ctx,f[1],x,225,'#ea580c',12.5);
+      }
+    }); }},
+ {dur:4800,caption:'PROPRIÉTÉ — Fonction d\u2019usage → fonctions techniques → solutions techniques : cette pyramide décode N\u2019IMPORTE QUEL objet. Et une même fonction accepte plusieurs solutions : freiner = patins OU disque OU rétropédalage !',
+  draw(ctx,p){
+    etiquette(ctx,'🛑 FREINER (la fonction)',410,80,'#0e7490',17);
+    ['patins sur la jante','frein à disque','rétropédalage'].forEach((sol,i)=>{
+      const x=180+i*230;
+      ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(410,95); ctx.lineTo(x,155); ctx.stroke();
+      ctx.fillStyle='#fff'; ctx.strokeStyle='#ea580c'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.roundRect(x-90,155,180,46,12); ctx.fill(); ctx.stroke();
+      etiquette(ctx,sol,x,184,'#ea580c',13.5);
+    });
+    etiquette(ctx,'une fonction, PLUSIEURS solutions possibles : le choix de l\u2019ingénieur',410,300,'#166534',15.5); }},
+]);
+
+/* ====== ANIM 2 : LA TRANSMISSION ====== */
+function plateau(ctx,cx,cy,r,angle,dents,coul){
+  ctx.strokeStyle=coul; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
+  for(let i=0;i<dents;i++){
+    const a=angle+i*2*Math.PI/dents;
+    ctx.beginPath(); ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+    ctx.lineTo(cx+(r+6)*Math.cos(a),cy+(r+6)*Math.sin(a)); ctx.lineWidth=2; ctx.stroke();
+  }
+  ctx.lineWidth=3;
+  // repère
+  ctx.fillStyle='#dc2626';
+  ctx.beginPath(); ctx.arc(cx+(r-8)*Math.cos(angle),cy+(r-8)*Math.sin(angle),5,0,Math.PI*2); ctx.fill();
+}
+function chaine(ctx,x1,y1,r1,x2,y2,r2){
+  ctx.strokeStyle='#64748b'; ctx.lineWidth=4; ctx.setLineDash([7,5]);
+  ctx.beginPath(); ctx.moveTo(x1,y1-r1); ctx.lineTo(x2,y2-r2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x1,y1+r1); ctx.lineTo(x2,y2+r2); ctx.stroke();
+  ctx.setLineDash([]);
+}
+creerAnim('transmission','cvTransmission','capTransmission','ptsTransmission',[
+ {dur:3600,caption:'STRUCTURE — La chaîne cinématique de la propulsion : le PÉDALIER (grand plateau, 40 dents), la CHAÎNE, et le PIGNON de la roue arrière (20 dents). Compte les dents : 40 contre 20…',
+  draw(ctx,p){
+    plateau(ctx,300,210,80,0,20,'#15803d');
+    plateau(ctx,600,210,40,0,10,'#0e7490');
+    chaine(ctx,300,210,80,600,210,40);
+    etiquette(ctx,'PÉDALIER : plateau 40 dents',300,330,'#15803d',14);
+    etiquette(ctx,'PIGNON : 20 dents',600,290,'#0e7490',14);
+    etiquette(ctx,'la CHAÎNE relie les deux',450,120,'#64748b',13.5); }},
+ {dur:6400,caption:'ACTION — Pédale ! La chaîne TRANSMET le mouvement… et le TRANSFORME : suis les points rouges — quand le plateau fait UN tour, le petit pignon (et la roue !) en fait DEUX. 40 ÷ 20 = 2.',
+  draw(ctx,p){ const q=p;
+    const a1=q*2*Math.PI*2;         // 2 tours de pédalier sur la phase
+    plateau(ctx,300,210,80,a1,20,'#15803d');
+    plateau(ctx,600,210,40,a1*2,10,'#0e7490');
+    chaine(ctx,300,210,80,600,210,40);
+    etiquette(ctx,'tours de pédalier : '+(q*2).toFixed(1),300,330,'#15803d',14.5);
+    etiquette(ctx,'tours de roue : '+(q*4).toFixed(1),600,290,'#0e7490',14.5);
+    etiquette(ctx,'la roue tourne 2 fois plus vite que les pédales !',450,80,'#ea580c',15); }},
+ {dur:5000,caption:'PROPRIÉTÉ — Le rapport plateau ÷ pignon règle tout : 40 ÷ 20 = la roue fait 2 tours par tour de pédale. Grand plateau + petit pignon = on va VITE mais c\u2019est DUR (le braquet de descente). Petit plateau + grand pignon = facile mais lent (le braquet de côte). Changer de vitesse = changer ce rapport !',
+  draw(ctx,p){
+    plateau(ctx,220,180,74,0,20,'#15803d'); plateau(ctx,400,180,30,0,8,'#0e7490');
+    etiquette(ctx,'40/13 : rapide mais dur 🏁',310,300,'#166534',14);
+    plateau(ctx,560,180,44,0,12,'#15803d'); plateau(ctx,710,180,58,0,15,'#0e7490');
+    etiquette(ctx,'28/28 : facile en côte ⛰️',635,300,'#166534',14);
+    etiquette(ctx,'rapport = dents du plateau ÷ dents du pignon',410,352,'#166534',15.5); }},
+]);
+
+/* ====== ANIM 3 : LE FREINAGE ====== */
+creerAnim('freinage','cvFreinage','capFreinage','ptsFreinage',[
+ {dur:3600,caption:'STRUCTURE — La chaîne du freinage : le LEVIER au guidon, le CÂBLE qui court le long du cadre, l\u2019ÉTRIER et ses deux PATINS de chaque côté de la jante. Pour l\u2019instant, tout est au repos : la roue file.',
+  draw(ctx,p){
+    roue(ctx,410,220,90,0,'#334155');
+    // étrier ouvert
+    ctx.strokeStyle='#ea580c'; ctx.lineWidth=6;
+    ctx.beginPath(); ctx.moveTo(374,116); ctx.lineTo(362,150); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(446,116); ctx.lineTo(458,150); ctx.stroke();
+    // câble + levier
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(410,104); ctx.quadraticCurveTo(560,40,660,70); ctx.stroke();
+    etiquette(ctx,'✊ levier',690,66,'#166534',13.5);
+    etiquette(ctx,'câble',560,44,'#64748b',12.5);
+    etiquette(ctx,'patins ouverts',410,90,'#ea580c',13); }},
+ {dur:6000,caption:'ACTION — On serre le levier : le câble TIRE, l\u2019étrier se referme, les patins PINCENT la jante. La FRICTION transforme la vitesse en CHALEUR — regarde la roue ralentir et les patins chauffer.',
+  draw(ctx,p){ const q=lisse(p);
+    const vitesse=1-q;
+    roue(ctx,410,220,90,(performance.now()/200)*vitesse,'#334155');
+    const serrage=q*14;
+    ctx.strokeStyle=q>0.5?'#dc2626':'#ea580c'; ctx.lineWidth=6;
+    ctx.beginPath(); ctx.moveTo(374+serrage,116); ctx.lineTo(366+serrage,150); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(446-serrage,116); ctx.lineTo(454-serrage,150); ctx.stroke();
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(410,104); ctx.quadraticCurveTo(560,40,660,70); ctx.stroke();
+    etiquette(ctx,'✊ levier SERRÉ',690,66,'#dc2626',13.5);
+    if(q>0.4) etiquette(ctx,'🔥 friction = chaleur',410,80,'#dc2626',14.5);
+    etiquette(ctx,'vitesse : '+Math.round(vitesse*20)+' km/h',410,350,'#166534',15); }},
+ {dur:5000,caption:'PROPRIÉTÉ — Le freinage par FRICTION marche… en usant les pièces : les patins s\u2019amincissent, le câble se détend. Un frein s\u2019ENTRETIENT ! Et sous la pluie, la jante mouillée freine moins — d\u2019où l\u2019invention du frein à disque : même fonction, nouvelle solution.',
+  draw(ctx,p){
+    etiquette(ctx,'patins neufs',220,110,'#166534',14);
+    ctx.fillStyle='#15803d'; ctx.fillRect(190,130,60,26);
+    etiquette(ctx,'patins usés ⚠️',220,220,'#dc2626',14);
+    ctx.fillStyle='#dc2626'; ctx.fillRect(190,240,60,9);
+    roue(ctx,560,190,64,0,'#334155');
+    ctx.fillStyle='#94a3b8'; ctx.beginPath(); ctx.arc(560,190,26,0,Math.PI*2); ctx.fill();
+    etiquette(ctx,'le frein à DISQUE : la solution moderne',560,290,'#0e7490',14);
+    etiquette(ctx,'la friction use les pièces : vérifier patins et câbles régulièrement !',410,350,'#166534',15); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].demarrer()));
+const slideAnim={s3:'fonctions',s5:'transmission',s6:'freinage'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>

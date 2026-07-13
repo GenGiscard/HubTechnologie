@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 5ème — Habitat & Ouvrages · ESTIC</title>
+<style>
+:root{
+  --ink:#1e3a5f; --bleu:#1d4ed8; --bleu-fonce:#1e40af; --orange:#ea580c;
+  --papier:#f8fafc; --carte:#ffffff; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
+  --ombre:0 4px 14px rgba(30,58,95,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+/* ===== Bandeau ESTIC ===== */
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--bleu);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id{line-height:1.2}
+.estic-bar .id b{color:var(--bleu-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+/* ===== Layout : sidebar + slides ===== */
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#eff6ff;color:var(--bleu-fonce)}
+nav.side a.actif{background:#dbeafe;color:var(--bleu-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+/* ===== Slides ===== */
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--bleu-fonce)}
+h2{font-size:36px;color:var(--bleu-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:720px;line-height:1.5}
+/* Cartes fonctions / efforts / matériaux */
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-top:26px}
+.carte{background:var(--carte);border-radius:14px;box-shadow:var(--ombre);padding:20px;border-top:4px solid var(--accent,var(--bleu))}
+.carte .ic{font-size:34px}
+.carte h3{font-size:18px;margin:8px 0 6px;color:var(--accent,var(--bleu))}
+.carte p{font-size:14px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12.5px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+/* Bloc animation canvas */
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--bleu-fonce);background:#eff6ff;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center;transition:.2s}
+.legende button{border:none;background:var(--bleu);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--bleu-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+/* Tableau matériaux */
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--bleu-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.plus{color:var(--vert);font-weight:700}.moins{color:var(--rouge);font-weight:700}
+/* Schéma béton armé */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin-top:20px;align-items:start}
+.encart{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:20px}
+.encart h3{color:var(--bleu-fonce);font-size:18px;margin-bottom:8px}
+.encart p{font-size:14.5px;color:var(--gris);line-height:1.55}
+/* À retenir */
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:820px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--bleu-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}.duo{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%231d4ed8'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>Habitat & Ouvrages</a>
+  <a href="#s2"><span class="dot"></span>C'est quoi un ouvrage ?</a>
+  <a href="#s3"><span class="dot"></span>Les efforts (animation)</a>
+  <a href="#s4"><span class="dot"></span>Les 3 efforts à connaître</a>
+  <a href="#s5"><span class="dot"></span>La triangulation (animation)</a>
+  <a href="#s6"><span class="dot"></span>Les types de ponts (animation)</a>
+  <a href="#s7"><span class="dot"></span>Les matériaux</a>
+  <a href="#s8"><span class="dot"></span>Le béton armé</a>
+  <a href="#s9"><span class="dot"></span>L'isolation (animation)</a>
+  <a href="#s10"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 5ème · Séquence Habitat & Ouvrages</div>
+  <h1>🏗️ Comment un pont<br>tient-il debout ?</h1>
+  <p class="sous" style="margin-top:16px">Le viaduc de Millau mesure 2 460 m et ses piles culminent à 343 m — plus haut que la tour Eiffel.
+  Pourtant il tient depuis 2004, chargé de milliers de véhicules. Dans cette séquence, on découvre <b>pourquoi les structures tiennent</b>… ou s'effondrent.</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>C'est quoi, un ouvrage ?</h2>
+  <p class="sous">Un <b>ouvrage</b> est une construction fixe réalisée par l'Homme. Chaque ouvrage répond à une <b>fonction d'usage</b> : à quoi sert-il ?</p>
+  <div class="cartes">
+    <div class="carte" style="--accent:#1d4ed8"><div class="ic">🌉</div><h3>Franchir</h3><p>Passer au-dessus d'un obstacle : fleuve, vallée, route.</p><span class="ex">Ponts, viaducs, tunnels</span></div>
+    <div class="carte" style="--accent:#0e7490"><div class="ic">🏠</div><h3>Abriter</h3><p>Protéger des personnes ou des activités du milieu extérieur.</p><span class="ex">Maisons, gymnases, usines</span></div>
+    <div class="carte" style="--accent:#ea580c"><div class="ic">🛡️</div><h3>Protéger / Retenir</h3><p>Retenir de l'eau, de la terre, ou protéger un territoire.</p><span class="ex">Barrages, digues, murs de soutènement</span></div>
+    <div class="carte" style="--accent:#16a34a"><div class="ic">📡</div><h3>Communiquer</h3><p>Transporter l'énergie ou l'information.</p><span class="ex">Pylônes, châteaux d'eau, antennes</span></div>
+  </div>
+</section>
+
+<section class="slide" id="s3">
+  <h2>Que subit une structure ? Les efforts</h2>
+  <div class="animbox">
+    <canvas id="cvEfforts" width="820" height="360"></canvas>
+    <div class="legende"><div class="caption" id="capEfforts"></div><button data-anim="efforts">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsEfforts"></div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>Les 3 efforts à connaître</h2>
+  <div class="cartes" style="max-width:900px">
+    <div class="carte" style="--accent:#dc2626"><div class="ic">↦↤</div><h3>Compression</h3><p>La matière est <b>écrasée</b> : les forces se rapprochent.</p><span class="ex">Pile de pont, mur porteur</span></div>
+    <div class="carte" style="--accent:#1d4ed8"><div class="ic">↤↦</div><h3>Traction</h3><p>La matière est <b>étirée</b> : les forces s'éloignent.</p><span class="ex">Câble de pont suspendu</span></div>
+    <div class="carte" style="--accent:#ea580c"><div class="ic">⤵</div><h3>Flexion</h3><p>La matière est <b>pliée</b> : compression en haut, traction en bas.</p><span class="ex">Poutre chargée, planche de plongeoir</span></div>
+  </div>
+  <p class="sous" style="margin-top:20px">💡 Une structure s'effondre quand un effort dépasse la <b>résistance</b> de son matériau.</p>
+</section>
+
+<section class="slide" id="s5">
+  <h2>Le secret des structures : la triangulation</h2>
+  <div class="animbox">
+    <canvas id="cvTriang" width="820" height="360"></canvas>
+    <div class="legende"><div class="caption" id="capTriang"></div><button data-anim="triang">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsTriang"></div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>Trois familles de ponts, trois idées</h2>
+  <div class="animbox">
+    <canvas id="cvPonts" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capPonts"></div><button data-anim="ponts">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsPonts"></div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>Quel matériau pour construire ?</h2>
+  <table class="mat">
+    <tr><th>Matériau</th><th>Points forts</th><th>Points faibles</th><th>Exemple</th></tr>
+    <tr><td>🪨 Pierre</td><td><span class="plus">Excellente en compression</span>, durable</td><td><span class="moins">Fragile en traction</span>, lourde</td><td>Pont du Gard (Ier siècle !)</td></tr>
+    <tr><td>🪵 Bois</td><td>Léger, <span class="plus">renouvelable</span>, facile à travailler</td><td><span class="moins">Craint l'eau et le feu</span></td><td>Charpentes, passerelles</td></tr>
+    <tr><td>⛓️ Acier</td><td><span class="plus">Très résistant en traction</span></td><td><span class="moins">Rouille</span>, cher, énergivore</td><td>Câbles, tour Eiffel</td></tr>
+    <tr><td>🧱 Béton</td><td><span class="plus">Résistant en compression</span>, se moule</td><td><span class="moins">Fragile en traction</span></td><td>Fondations, barrages</td></tr>
+    <tr><td>🏗️ Béton armé</td><td><span class="plus">Compression ET traction</span></td><td>Fabrication polluante (CO₂)</td><td>Viaduc de Millau, immeubles</td></tr>
+  </table>
+</section>
+
+<section class="slide" id="s8">
+  <h2>Le béton armé : l'alliance parfaite</h2>
+  <div class="duo">
+    <div class="encart">
+      <svg viewBox="0 0 380 190" style="width:100%">
+        <rect x="30" y="55" width="320" height="70" rx="6" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
+        <line x1="50" y1="108" x2="330" y2="108" stroke="#b91c1c" stroke-width="6" stroke-linecap="round"/>
+        <line x1="50" y1="96" x2="330" y2="96" stroke="#b91c1c" stroke-width="6" stroke-linecap="round" opacity=".55"/>
+        <text x="190" y="80" text-anchor="middle" font-size="15" fill="#57534e" font-family="Segoe UI">BÉTON → résiste à la compression</text>
+        <text x="190" y="150" text-anchor="middle" font-size="15" fill="#b91c1c" font-family="Segoe UI">ACIER (armatures) → résiste à la traction</text>
+        <path d="M150 30 L190 48 L230 30" fill="none" stroke="#1d4ed8" stroke-width="3"/>
+        <text x="190" y="22" text-anchor="middle" font-size="13" fill="#1d4ed8" font-family="Segoe UI">charge ⤓</text>
+      </svg>
+    </div>
+    <div class="encart">
+      <h3>Pourquoi ce duo ?</h3>
+      <p>Quand une poutre fléchit, le <b>haut est comprimé</b> (le béton adore) et le <b>bas est étiré</b> (l'acier adore).
+      On place donc des <b>armatures d'acier dans la partie basse</b> du béton : chacun travaille là où il est le plus fort.</p>
+      <p style="margin-top:10px">C'est le matériau roi du BTP depuis plus d'un siècle — mais sa fabrication émet beaucoup de CO₂, d'où le retour du bois et des matériaux biosourcés. 🌱</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s9">
+  <h2>Habiter, c'est aussi garder la chaleur</h2>
+  <div class="animbox">
+    <canvas id="cvIso" width="820" height="360"></canvas>
+    <div class="legende"><div class="caption" id="capIso"></div><button data-anim="iso">⟳ Rejouer</button></div>
+    <div class="phasepts" id="ptsIso"></div>
+  </div>
+</section>
+
+<section class="slide" id="s10">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>Un <b>ouvrage</b> répond à une fonction d'usage : franchir, abriter, protéger, communiquer.</li>
+      <li>Trois efforts principaux : <b>compression</b> (écraser), <b>traction</b> (étirer), <b>flexion</b> (plier = compression + traction).</li>
+      <li>Le <b>triangle est indéformable</b> : la triangulation rigidifie les structures.</li>
+      <li>Chaque type de pont (<b>poutre, arc, suspendu</b>) dirige les efforts différemment vers le sol.</li>
+      <li>On choisit un <b>matériau</b> selon les efforts qu'il subit ; le <b>béton armé</b> combine béton (compression) et acier (traction).</li>
+      <li>Un <b>isolant</b> ralentit le transfert de chaleur : il garde la maison chaude l'hiver, fraîche l'été.</li>
+    </ul>
+  </div>
+  <p class="sous" style="margin-top:22px">➡️ Prochaine étape : le <b>TP simulateur de pont</b> — à toi de construire une structure qui résiste !</p>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ============================================================
+   MOTEUR D'ANIMATIONS PÉDAGOGIQUES EN PHASES
+   Chaque animation = phases successives {dur, caption, draw(ctx,p,W,H)}
+   avec légende synchronisée (structure → action → propriété)
+   ============================================================ */
+const ANIMS = {};
+function creerAnim(nom, canvasId, capId, ptsId, phases){
+  const cv = document.getElementById(canvasId);
+  const ctx = cv.getContext('2d');
+  const cap = document.getElementById(capId);
+  const pts = document.getElementById(ptsId);
+  phases.forEach(()=>{ const s=document.createElement('span'); pts.appendChild(s); });
+  const etat = { i:0, t0:null, raf:null, fini:false };
+  function majPts(){ [...pts.children].forEach((s,k)=> s.classList.toggle('on', k<=etat.i)); }
+  function frame(ts){
+    if(etat.t0===null) etat.t0 = ts;
+    const ph = phases[etat.i];
+    let p = Math.min(1, (ts - etat.t0)/ph.dur);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ph.draw(ctx, p, cv.width, cv.height);
+    if(p>=1){
+      if(etat.i < phases.length-1){ etat.i++; etat.t0 = ts; cap.textContent = phases[etat.i].caption; majPts(); }
+      else { etat.fini = true; return; }
+    }
+    etat.raf = requestAnimationFrame(frame);
+  }
+  function demarrer(){
+    cancelAnimationFrame(etat.raf);
+    etat.i = 0; etat.t0 = null; etat.fini = false;
+    cap.textContent = phases[0].caption; majPts();
+    etat.raf = requestAnimationFrame(frame);
+  }
+  ANIMS[nom] = { demarrer, etat };
+  // premier rendu statique
+  cap.textContent = phases[0].caption; majPts();
+  phases[0].draw(ctx, 0, cv.width, cv.height);
+}
+const lisse = p => p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2; // easing
+
+/* ---------- Helpers dessin ---------- */
+function fleche(ctx,x1,y1,x2,y2,coul,ep=4){
+  ctx.strokeStyle=coul; ctx.fillStyle=coul; ctx.lineWidth=ep;
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  const a=Math.atan2(y2-y1,x2-x1), L=11;
+  ctx.beginPath(); ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-L*Math.cos(a-0.45), y2-L*Math.sin(a-0.45));
+  ctx.lineTo(x2-L*Math.cos(a+0.45), y2-L*Math.sin(a+0.45));
+  ctx.closePath(); ctx.fill();
+}
+function etiquette(ctx,txt,x,y,coul='#1e40af',taille=16){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`; ctx.fillStyle=coul; ctx.textAlign='center';
+  ctx.fillText(txt,x,y);
+}
+function appui(ctx,x,y){
+  ctx.fillStyle='#94a3b8';
+  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x-18,y+30); ctx.lineTo(x+18,y+30); ctx.closePath(); ctx.fill();
+  ctx.fillRect(x-26,y+30,52,8);
+}
+
+/* ============ ANIM 1 : LES EFFORTS (poutre en flexion) ============ */
+function dessinerPoutre(ctx,W,H,flechis,charge){
+  const y=200, xg=160, xd=W-160;
+  appui(ctx,xg,y+14); appui(ctx,xd,y+14);
+  // poutre courbée
+  const cy = y + 90*flechis;
+  ctx.strokeStyle='#475569'; ctx.lineWidth=26; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(xg,y); ctx.quadraticCurveTo((xg+xd)/2, cy, xd, y); ctx.stroke();
+  // charge
+  if(charge>0){
+    const cx=(xg+xd)/2, haut=60, ybas=y-16+ (cy-y)/2;
+    fleche(ctx,cx,haut, cx, haut+50*charge, '#dc2626',6);
+    etiquette(ctx,'CHARGE',cx,haut-12,'#dc2626',17);
+    // caisse
+    ctx.fillStyle='#dc2626'; ctx.globalAlpha=.15+.25*charge;
+    ctx.fillRect(cx-34, ybas-46, 68, 34); ctx.globalAlpha=1;
+  }
+  return {xg,xd,y,cy};
+}
+creerAnim('efforts','cvEfforts','capEfforts','ptsEfforts',[
+ { dur:2600, caption:'STRUCTURE — Une poutre repose sur deux appuis. Au repos, elle est parfaitement droite.',
+   draw(ctx,p,W,H){ dessinerPoutre(ctx,W,H,0,0);
+     etiquette(ctx,'poutre',(W)/2,175,'#475569'); etiquette(ctx,'appui',160,275,'#64748b',13); etiquette(ctx,'appui',W-160,275,'#64748b',13); } },
+ { dur:3200, caption:'ACTION — Une charge appuie au centre : la poutre se déforme, elle FLÉCHIT.',
+   draw(ctx,p,W,H){ const e=lisse(p); dessinerPoutre(ctx,W,H,e,e); } },
+ { dur:4200, caption:'ZOOM — En haut, la matière est ÉCRASÉE (compression). En bas, elle est ÉTIRÉE (traction).',
+   draw(ctx,p,W,H){ const g=dessinerPoutre(ctx,W,H,1,1); const e=lisse(p);
+     const cx=(g.xg+g.xd)/2, ym=(g.y+g.cy)/2;
+     ctx.globalAlpha=e;
+     // compression (haut) : flèches convergentes rouges
+     fleche(ctx,cx-120,ym-28,cx-58,ym-28,'#dc2626',5); fleche(ctx,cx+120,ym-28,cx+58,ym-28,'#dc2626',5);
+     etiquette(ctx,'COMPRESSION',cx,ym-46,'#dc2626',17);
+     // traction (bas) : flèches divergentes bleues
+     fleche(ctx,cx-58,ym+42,cx-120,ym+42,'#1d4ed8',5); fleche(ctx,cx+58,ym+42,cx+120,ym+42,'#1d4ed8',5);
+     etiquette(ctx,'TRACTION',cx,ym+72,'#1d4ed8',17);
+     ctx.globalAlpha=1; } },
+ { dur:3600, caption:'PROPRIÉTÉ — La flexion combine compression (dessus) et traction (dessous). Si l\u2019effort dépasse la résistance du matériau : rupture !',
+   draw(ctx,p,W,H){ const g=dessinerPoutre(ctx,W,H,1,1); const cx=(g.xg+g.xd)/2, ym=(g.y+g.cy)/2;
+     fleche(ctx,cx-120,ym-28,cx-58,ym-28,'#dc2626',5); fleche(ctx,cx+120,ym-28,cx+58,ym-28,'#dc2626',5);
+     etiquette(ctx,'COMPRESSION',cx,ym-46,'#dc2626',17);
+     fleche(ctx,cx-58,ym+42,cx-120,ym+42,'#1d4ed8',5); fleche(ctx,cx+58,ym+42,cx+120,ym+42,'#1d4ed8',5);
+     etiquette(ctx,'TRACTION',cx,ym+72,'#1d4ed8',17);
+     ctx.font='bold 20px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
+     ctx.fillText('FLEXION = COMPRESSION + TRACTION', W/2, 52); } },
+]);
+
+/* ============ ANIM 2 : LA TRIANGULATION ============ */
+function cadre(ctx,pts,coul='#475569'){
+  ctx.strokeStyle=coul; ctx.lineWidth=12; ctx.lineJoin='round'; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(...pts[0]);
+  for(let i=1;i<pts.length;i++) ctx.lineTo(...pts[i]);
+  ctx.closePath(); ctx.stroke();
+  ctx.fillStyle='#1e3a5f';
+  pts.forEach(pt=>{ ctx.beginPath(); ctx.arc(pt[0],pt[1],9,0,7); ctx.fill(); });
+}
+function carrePts(cx,cy,c,skew){ // skew = décalage horizontal du haut
+  return [[cx-c/2+skew,cy-c/2],[cx+c/2+skew,cy-c/2],[cx+c/2,cy+c/2],[cx-c/2,cy+c/2]];
+}
+creerAnim('triang','cvTriang','capTriang','ptsTriang',[
+ { dur:2600, caption:'STRUCTURE — Un cadre carré fait de 4 barres articulées (les liaisons pivotent).',
+   draw(ctx,p,W,H){ cadre(ctx,carrePts(W/2,H/2+10,170,0)); etiquette(ctx,'articulations (pivots)',W/2,H/2+130,'#64748b',14);} },
+ { dur:3400, caption:'ACTION — On pousse horizontalement… le carré se déforme en parallélogramme : il n\u2019est PAS rigide !',
+   draw(ctx,p,W,H){ const e=lisse(p), sk=70*e;
+     cadre(ctx,carrePts(W/2,H/2+10,170,sk),'#dc2626');
+     fleche(ctx, W/2-210, H/2-75, W/2-135+sk*0.7, H/2-75, '#dc2626',6);
+     etiquette(ctx,'POUSSÉE',W/2-215,H/2-95,'#dc2626',16); } },
+ { dur:3400, caption:'SOLUTION — On ajoute une barre en DIAGONALE : le carré devient deux triangles.',
+   draw(ctx,p,W,H){ const e=lisse(p); const pts=carrePts(W/2,H/2+10,170,0);
+     cadre(ctx,pts);
+     // diagonale qui apparaît
+     ctx.strokeStyle='#16a34a'; ctx.lineWidth=12; ctx.lineCap='round';
+     ctx.beginPath(); ctx.moveTo(...pts[3]);
+     ctx.lineTo(pts[3][0]+(pts[1][0]-pts[3][0])*e, pts[3][1]+(pts[1][1]-pts[3][1])*e); ctx.stroke();
+     if(p>0.6) etiquette(ctx,'diagonale',W/2+95,H/2+15,'#16a34a',15); } },
+ { dur:3600, caption:'PROPRIÉTÉ — On repousse : rien ne bouge ! Le TRIANGLE est la seule figure INDÉFORMABLE.',
+   draw(ctx,p,W,H){ const tremble = p<0.5 ? Math.sin(p*40)*2*(0.5-p) : 0;
+     const pts=carrePts(W/2+tremble,H/2+10,170,0);
+     cadre(ctx,pts);
+     ctx.strokeStyle='#16a34a'; ctx.lineWidth=12; ctx.lineCap='round';
+     ctx.beginPath(); ctx.moveTo(...pts[3]); ctx.lineTo(...pts[1]); ctx.stroke();
+     fleche(ctx, W/2-210, H/2-75, W/2-135, H/2-75, '#dc2626',6);
+     ctx.font='bold 20px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
+     ctx.fillText('△ TRIANGULATION = RIGIDITÉ', W/2, 46); } },
+]);
+
+/* ============ ANIM 3 : LES TYPES DE PONTS ============ */
+function sol(ctx,W,H){ ctx.fillStyle='#e7e5e4'; ctx.fillRect(0,H-52,W,52); ctx.strokeStyle='#a8a29e'; ctx.beginPath(); ctx.moveTo(0,H-52); ctx.lineTo(W,H-52); ctx.stroke(); }
+function camion(ctx,x,y){
+  ctx.fillStyle='#f59e0b'; ctx.fillRect(x-30,y-26,44,22);
+  ctx.fillStyle='#1e3a5f'; ctx.fillRect(x+14,y-20,20,16);
+  ctx.fillStyle='#334155';
+  ctx.beginPath(); ctx.arc(x-18,y-2,7,0,7); ctx.arc(x+20,y-2,7,0,7); ctx.fill();
+}
+creerAnim('ponts','cvPonts','capPonts','ptsPonts',[
+ { dur:4600, caption:'PONT POUTRE — Le tablier travaille en FLEXION ; les piles renvoient la charge au sol en COMPRESSION.',
+   draw(ctx,p,W,H){ sol(ctx,W,H); const y=170;
+     ctx.strokeStyle='#475569'; ctx.lineWidth=16; ctx.beginPath(); ctx.moveTo(90,y); ctx.lineTo(W-90,y); ctx.stroke();
+     [W*0.32,W*0.68].forEach(px=>{ ctx.fillStyle='#64748b'; ctx.fillRect(px-11,y,22,H-52-y); });
+     const cx = 110 + (W-220)*lisse(p);
+     camion(ctx,cx,y-6);
+     [W*0.32,W*0.68].forEach(px=> fleche(ctx,px,y+34,px,H-66,'#dc2626',5));
+     etiquette(ctx,'compression ⤓',W*0.32,y+30+(H-52-y)/2,'#dc2626',14);
+     etiquette(ctx,'PONT POUTRE',W/2,60,'#1e40af',20); } },
+ { dur:4600, caption:'PONT EN ARC — L\u2019arc transmet toute la charge en COMPRESSION vers ses appuis. Idéal pour la pierre !',
+   draw(ctx,p,W,H){ sol(ctx,W,H); const y=150, xg=120, xd=W-120;
+     ctx.strokeStyle='#475569'; ctx.lineWidth=14; ctx.beginPath(); ctx.moveTo(xg,y); ctx.lineTo(xd,y); ctx.stroke();
+     ctx.strokeStyle='#78716c'; ctx.lineWidth=18;
+     ctx.beginPath(); ctx.moveTo(xg,H-52); ctx.quadraticCurveTo(W/2, y-40, xd, H-52); ctx.stroke();
+     const cx = xg+20 + (xd-xg-40)*lisse(p);
+     camion(ctx,cx,y-6);
+     // flèches de compression le long de l'arc
+     const e=lisse(p);
+     [[0.25,-0.5],[0.75,0.5]].forEach(([t,s])=>{
+       const ax=xg+(xd-xg)*t, ay=H-52-(H-52-(y-18))*Math.sin(Math.PI*t);
+       fleche(ctx,ax,ay, ax+40*s, ay+34, '#dc2626',5);
+     });
+     etiquette(ctx,'l\u2019arc pousse sur les appuis',W/2,H-70,'#dc2626',14);
+     etiquette(ctx,'PONT EN ARC',W/2,52,'#1e40af',20); } },
+ { dur:4600, caption:'PONT SUSPENDU — Le tablier PEND à des câbles tendus : ils travaillent en TRACTION. Champion des grandes portées !',
+   draw(ctx,p,W,H){ sol(ctx,W,H); const y=210, xg=90, xd=W-90, t1=W*0.3, t2=W*0.7, ht=70;
+     // pylônes
+     ctx.fillStyle='#64748b'; [t1,t2].forEach(px=> ctx.fillRect(px-9,ht,18,H-52-ht));
+     // tablier
+     ctx.strokeStyle='#475569'; ctx.lineWidth=14; ctx.beginPath(); ctx.moveTo(xg,y); ctx.lineTo(xd,y); ctx.stroke();
+     // câble porteur
+     ctx.strokeStyle='#1d4ed8'; ctx.lineWidth=6;
+     ctx.beginPath(); ctx.moveTo(xg,y-6);
+     ctx.quadraticCurveTo((xg+t1)/2, ht+8, t1, ht);
+     ctx.quadraticCurveTo(W/2, y-24, t2, ht);
+     ctx.quadraticCurveTo((t2+xd)/2, ht+8, xd, y-6); ctx.stroke();
+     // suspentes
+     ctx.lineWidth=3;
+     for(let k=1;k<8;k++){ const sx=t1+(t2-t1)*k/8;
+       const sy = y-24 - (y-24-ht)*Math.pow(Math.abs(k/8-0.5)*2,2);
+       ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(sx,y-7); ctx.stroke(); }
+     const cx = xg+20 + (xd-xg-40)*lisse(p);
+     camion(ctx,cx,y-6);
+     fleche(ctx,W/2-30,y-40,W/2-30,y-78,'#1d4ed8',5);
+     etiquette(ctx,'traction ⤒',W/2+40,y-58,'#1d4ed8',15);
+     etiquette(ctx,'PONT SUSPENDU',W/2,40,'#1e40af',20); } },
+ { dur:3800, caption:'PROPRIÉTÉ — Chaque type de pont dirige les efforts différemment : poutre → flexion, arc → compression, suspendu → traction.',
+   draw(ctx,p,W,H){ const e=lisse(p);
+     ctx.globalAlpha=e; const y=H/2;
+     const items=[['PONT POUTRE','FLEXION','#ea580c'],['PONT EN ARC','COMPRESSION','#dc2626'],['PONT SUSPENDU','TRACTION','#1d4ed8']];
+     items.forEach((it,k)=>{ const x=W*(0.2+0.3*k);
+       ctx.fillStyle='#fff'; ctx.strokeStyle=it[2]; ctx.lineWidth=3;
+       ctx.beginPath(); ctx.roundRect(x-105,y-60,210,120,14); ctx.fill(); ctx.stroke();
+       etiquette(ctx,it[0],x,y-18,'#1e3a5f',16); etiquette(ctx,'→ '+it[1],x,y+22,it[2],18); });
+     ctx.globalAlpha=1; } },
+]);
+
+/* ============ ANIM 4 : L'ISOLATION THERMIQUE ============ */
+function scèneIso(ctx,W,H,avecIsolant,tInt){
+  // intérieur / extérieur
+  ctx.fillStyle='#fff7ed'; ctx.fillRect(0,0,W/2-30,H);
+  ctx.fillStyle='#eff6ff'; ctx.fillRect(W/2+30,0,W/2-30,H);
+  etiquette(ctx,'INTÉRIEUR',W/4,40,'#ea580c',18);
+  etiquette(ctx,'🔥 '+tInt.toFixed(0)+' °C',W/4,80,'#ea580c',26);
+  etiquette(ctx,'EXTÉRIEUR',W*3/4,40,'#1d4ed8',18);
+  etiquette(ctx,'❄️ 5 °C',W*3/4,80,'#1d4ed8',26);
+  // mur
+  ctx.fillStyle='#a8a29e'; ctx.fillRect(W/2-30,0,60,H);
+  etiquette(ctx,'mur',W/2,H-16,'#57534e',13);
+  if(avecIsolant){
+    ctx.fillStyle='#fbbf24'; ctx.fillRect(W/2-58,0,28,H);
+    ctx.save(); ctx.translate(W/2-44,H/2); ctx.rotate(-Math.PI/2);
+    ctx.font='bold 15px Segoe UI'; ctx.fillStyle='#78350f'; ctx.textAlign='center';
+    ctx.fillText('ISOLANT',0,5); ctx.restore();
+  }
+}
+const partIso = Array.from({length:26},(_,i)=>({x:Math.random()*0.35, y:60+Math.random()*260, v:0.6+Math.random()*0.8}));
+creerAnim('iso','cvIso','capIso','ptsIso',[
+ { dur:2600, caption:'STRUCTURE — Un mur sépare l\u2019intérieur chauffé (20 °C) de l\u2019extérieur froid (5 °C).',
+   draw(ctx,p,W,H){ scèneIso(ctx,W,H,false,20); } },
+ { dur:4200, caption:'ACTION — Sans isolant, la chaleur TRAVERSE le mur : l\u2019intérieur se refroidit vite (et la facture grimpe 💸).',
+   draw(ctx,p,W,H){ const e=lisse(p); scèneIso(ctx,W,H,false,20-8*e);
+     ctx.fillStyle='#ef4444';
+     partIso.forEach(pt=>{ const px=(W*0.15)+ (W*0.75)*((pt.x+e*pt.v)%1);
+       ctx.globalAlpha = px>W/2+30 ? .45 : .85;
+       ctx.beginPath(); ctx.arc(px,pt.y,6,0,7); ctx.fill(); });
+     ctx.globalAlpha=1; etiquette(ctx,'fuite de chaleur →',W/2,120,'#dc2626',15); } },
+ { dur:4200, caption:'SOLUTION — On ajoute un ISOLANT (laine de verre, bois, chanvre…) : la chaleur est fortement ralentie.',
+   draw(ctx,p,W,H){ const e=lisse(p); scèneIso(ctx,W,H,true,20);
+     ctx.fillStyle='#ef4444';
+     partIso.forEach(pt=>{ let px=(W*0.15)+ (W*0.75)*((pt.x+e*pt.v)%1);
+       if(px>W/2-58) px=W/2-58-Math.random()*6; // bloquées par l'isolant
+       ctx.beginPath(); ctx.arc(px,pt.y,6,0,7); ctx.fill(); });
+     etiquette(ctx,'la chaleur reste dedans ✋',W/4,120,'#16a34a',15); } },
+ { dur:3600, caption:'PROPRIÉTÉ — Un isolant RALENTIT le transfert de chaleur : maison chaude l\u2019hiver, fraîche l\u2019été, moins d\u2019énergie consommée. 🌍',
+   draw(ctx,p,W,H){ scèneIso(ctx,W,H,true,20);
+     ctx.font='bold 19px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
+     ctx.fillText('ISOLER = MOINS CHAUFFER = ÉCONOMIES + PLANÈTE 🌍', W/2, H-40); } },
+]);
+
+/* ---------- Boutons rejouer ---------- */
+document.querySelectorAll('button[data-anim]').forEach(b=>{
+  b.addEventListener('click',()=> ANIMS[b.dataset.anim].demarrer());
+});
+
+/* ---------- Démarrage auto quand la slide devient visible ---------- */
+const slideAnim = { s3:'efforts', s5:'triang', s6:'ponts', s9:'iso' };
+const obsAnim = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting && slideAnim[en.target.id]) ANIMS[slideAnim[en.target.id]].demarrer();
+  });
+},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=> obsAnim.observe(document.getElementById(id)));
+
+/* ---------- Menu latéral actif (IntersectionObserver) ---------- */
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      liens.forEach(a=>a.classList.toggle('actif', a.getAttribute('href')==='#'+en.target.id));
+    }
+  });
+},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+
+/* ---------- Navigation clavier ↑ ↓ ---------- */
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){
+  const y=window.scrollY+window.innerHeight/2;
+  let best=0; slides.forEach((s,i)=>{ if(s.offsetTop < y) best=i; });
+  return best;
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){ e.preventDefault(); slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'}); }
+  if(e.key==='ArrowUp'||e.key==='PageUp'){ e.preventDefault(); slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'}); }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP 4ème — L'atelier des engrenages · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --cyan:#0e7490; --niv:#7c3aed; --niv-fonce:#6d28d9; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.tp{max-width:980px;margin:26px auto 6px;padding:0 20px}
+header.tp h1{font-size:32px;color:var(--cyan)}
+header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
+.progression{max-width:980px;margin:16px auto;padding:0 20px;display:flex;gap:8px;align-items:center}
+.progression .seg{flex:1;height:10px;border-radius:6px;background:#e2e8f0;transition:.3s}
+.progression .seg.ok{background:var(--vert)}
+.progression .seg.encours{background:var(--orange)}
+.progression .score{font-weight:800;color:var(--niv-fonce);font-size:15px;white-space:nowrap}
+.acti{max-width:980px;margin:22px auto;padding:0 20px;position:relative}
+.boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:24px;border-top:5px solid var(--cyan);position:relative}
+.boite h2{font-size:21px;color:var(--cyan);display:flex;align-items:center;gap:10px}
+.boite h2 .badge{background:var(--cyan);color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
+.verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
+.verrou .cadenas{font-size:42px}
+.minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:10px;text-align:center}
+.minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
+.minicas .cas.faux{border-color:var(--rouge);background:#fef2f2}
+.minicas .cas svg{display:block;margin:0 auto}
+.minicas .cas .choix{display:flex;gap:6px;justify-content:center;margin-top:8px}
+.minicas .cas button{border:1.5px solid #cbd5e1;background:#fff;border-radius:8px;padding:6px 10px;font-size:12.5px;font-weight:700;cursor:pointer}
+.minicas .cas button:hover{border-color:var(--cyan)}
+.ordre{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.ordre button{border:2.5px solid var(--niv);background:#fff;border-radius:12px;padding:14px 16px;font-size:14.5px;font-weight:700;color:var(--niv-fonce);cursor:pointer;min-width:170px;text-align:left}
+.ordre button small{display:block;font-weight:500;color:var(--gris);margin-top:4px}
+.ordre button.pris{opacity:.35;cursor:default}
+.slots{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.slots .slot{min-width:140px;min-height:52px;border:2px dashed #cbd5e1;border-radius:12px;padding:8px 10px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--gris);text-align:center}
+.slots .slot.rempli{border-style:solid;border-color:var(--niv);color:var(--niv-fonce);background:#f5f3ff}
+.slots .fl{font-size:20px;color:var(--orange);font-weight:800}
+.simu{display:grid;grid-template-columns:300px 1fr;gap:18px;margin-top:10px}
+.commandes{background:#f8fafc;border-radius:12px;padding:16px}
+.commandes h3{font-size:13px;color:var(--niv-fonce);text-transform:uppercase;letter-spacing:1px;margin:0 0 8px}
+.commandes label{display:block;font-size:13.5px;font-weight:700;margin:10px 0 3px}
+.commandes input[type=range]{width:100%}
+.commandes .val{color:var(--orange);font-weight:800}
+.mission{background:#f5f3ff;border:2px dashed var(--niv);border-radius:10px;padding:10px;font-size:14px;font-weight:800;color:var(--niv-fonce);text-align:center;margin-bottom:6px}
+canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;border-radius:12px;display:block}
+.btn{border:none;border-radius:10px;padding:11px 18px;font-size:15px;font-weight:800;cursor:pointer;color:#fff;background:var(--cyan)}
+.btn:hover{filter:brightness(1.08)}
+.btnrow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.verdict{margin-top:12px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:14.5px;display:none;line-height:1.55}
+.verdict.ok{display:block;background:#dcfce7;color:#14532d;border-left:5px solid var(--vert)}
+.verdict.ko{display:block;background:#fee2e2;color:#7f1d1d;border-left:5px solid var(--rouge)}
+.question{margin:14px 0;padding:14px;background:#f8fafc;border-radius:12px}
+.question .q{font-weight:700;margin-bottom:10px;font-size:15px}
+.rep{display:flex;flex-wrap:wrap;gap:8px}
+.rep button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 16px;font-size:14.5px;cursor:pointer;font-weight:600}
+.rep button:hover{border-color:var(--cyan)}
+.rep button.bon{background:#dcfce7;border-color:var(--vert)}
+.rep button.faux{background:#fee2e2;border-color:var(--rouge)}
+.codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#6d28d9,#0e7490);border-radius:14px;padding:22px;color:#fff}
+.codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
+.codefinal a{color:#fde68a;font-weight:800}
+@media (max-width:820px){.simu{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%230e7490'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="tp">
+  <h1>🔧 TP — L'atelier des engrenages</h1>
+  <p>L'atelier Méca d'Esticville a reçu des commandes. 5 missions pour devenir chef d'atelier — à la fin : le code des jeux !</p>
+</header>
+
+<div class="progression" id="prog">
+  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+</div>
+
+<!-- ============ A1 : SENS DE ROTATION ============ -->
+<div class="acti" id="a1">
+ <div class="boite">
+  <h2><span class="badge">1</span>Dans quel sens ça tourne ?</h2>
+  <div class="consigne">La roue VIOLETTE est motrice et tourne dans le sens ⟳ (horaire). Pour chaque montage, prédis le sens de la roue de SORTIE (en orange). Rappel du cours : engrenages en contact = sens inversé ; courroie = même sens. (1 pt par bonne réponse du premier coup)</div>
+  <div class="minicas" id="cas1"></div>
+ </div>
+</div>
+
+<!-- ============ A2 : CHAÎNE DU VÉLO ============ -->
+<div class="acti" id="a2">
+ <div class="boite">
+  <h2><span class="badge">2</span>La transmission du vélo</h2>
+  <div class="consigne">Du coup de pédale jusqu'à la route : clique les 4 éléments <b>dans l'ordre</b> où le mouvement les traverse.</div>
+  <div class="ordre" id="blocs2"></div>
+  <div class="slots" id="slots2">
+    <div class="slot" data-i="0">1er</div><span class="fl">→</span>
+    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+    <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
+    <div class="slot" data-i="3">4ème</div>
+  </div>
+  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+  <div class="verdict" id="verd2"></div>
+ </div>
+</div>
+
+<!-- ============ A3 : MISSION TREUIL ============ -->
+<div class="acti" id="a3">
+ <div class="boite">
+  <h2><span class="badge">3</span>Commande n°1 — Le treuil du chantier</h2>
+  <div class="consigne">🎯 <b>Cahier des charges :</b> le moteur tourne à <b>120 tr/min</b>. Le treuil doit soulever LENTEMENT et FORT :
+  vitesse de sortie exigée = <b>40 tr/min</b> (± 1). Choisis les nombres de dents Z₁ (menante) et Z₂ (menée) avec les curseurs — le train tourne en direct. Rappel : N₂ = N₁ × Z₁ ÷ Z₂.</div>
+  <div class="simu">
+    <div class="commandes">
+      <div class="mission" id="mission3">🎯 Objectif : N₂ = 40 tr/min (±1)</div>
+      <h3>⚙️ Ton train d'engrenages</h3>
+      <label>Roue MENANTE — Z₁ = <span class="val" id="vZ1">12</span> dents</label>
+      <input type="range" id="sZ1" min="8" max="40" value="12">
+      <label>Roue MENÉE — Z₂ = <span class="val" id="vZ2">12</span> dents</label>
+      <input type="range" id="sZ2" min="8" max="40" value="12">
+      <div class="btnrow"><button class="btn" id="test3">✔ Livrer — Commande n°1</button></div>
+    </div>
+    <div>
+      <canvas class="simcv" id="cvTrain" width="620" height="330"></canvas>
+      <div class="verdict" id="verd3"></div>
+    </div>
+  </div>
+ </div>
+</div>
+
+<!-- ============ A4 : MISSION VENTILATEUR ============ -->
+<div class="acti" id="a4">
+ <div class="boite">
+  <h2><span class="badge">4</span>Commande n°2 — Le ventilateur géant</h2>
+  <div class="consigne">⚠️ Nouvelle commande : cette fois il faut de la VITESSE ! Toujours 120 tr/min au moteur, mais le ventilateur exige
+  <b>300 tr/min</b> (± 5) en sortie. Règle les curseurs du simulateur ci-dessus, puis livre ici. Indice : pour ACCÉLÉRER, la roue menée doit être plus… ?</div>
+  <div class="btnrow"><button class="btn" id="test4">✔ Livrer — Commande n°2</button></div>
+  <div class="verdict" id="verd4"></div>
+ </div>
+</div>
+
+<!-- ============ A5 : BILAN ============ -->
+<div class="acti" id="a5">
+ <div class="boite">
+  <h2><span class="badge">5</span>Bilan de chef d'atelier</h2>
+  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
+  <div id="quiz5"></div>
+  <div class="codefinal" id="codefinal">
+    🏆 L'atelier n'a jamais livré en retard !
+    <div class="code">PIGNON42</div>
+    <div>Entre ce code dans les jeux <a href="03_jeu_gear_rush.html">🎮 Gear Rush</a> et <a href="03b_jeu_atelier_meca.html">🏭 Atelier Méca</a> pour les déverrouiller.</div>
+  </div>
+ </div>
+</div>
+
+<script>
+/* ================= ÉTAT & PROGRESSION ================= */
+const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
+function sauver(){ try{ localStorage.setItem('tp_trans_4e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_trans_4e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function majProgression(){
+  document.querySelectorAll('.progression .seg').forEach(seg=>{
+    const n=+seg.dataset.a;
+    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+  });
+  document.getElementById('scoreTot').textContent=etat.score;
+  for(let n=2;n<=5;n++){
+    const acti=document.getElementById('a'+n);
+    let v=acti.querySelector('.verrou');
+    if(n>etat.debloque){
+      if(!v){ v=document.createElement('div'); v.className='verrou';
+        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
+        acti.querySelector('.boite').appendChild(v); }
+    } else if(v) v.remove();
+  }
+}
+function reussir(n,pts){
+  etat.score+=pts;
+  if(etat.debloque===n) etat.debloque=n+1;
+  sauver(); majProgression();
+  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+}
+
+/* ============ dessin d'une roue dentée ============ */
+function roueDentee(ctx,x,y,dents,ang,coul,echelle=3.2){
+  const r=dents*echelle;
+  ctx.save(); ctx.translate(x,y); ctx.rotate(ang);
+  ctx.fillStyle=coul;
+  for(let k=0;k<dents;k++){ ctx.save(); ctx.rotate(k*Math.PI*2/dents);
+    ctx.fillRect(r-3,-3.5,9,7); ctx.restore(); }
+  ctx.beginPath(); ctx.arc(0,0,r,0,7); ctx.fill();
+  ctx.fillStyle='#f8fafc'; ctx.beginPath(); ctx.arc(0,0,6,0,7); ctx.fill();
+  ctx.fillStyle='#dc2626'; ctx.beginPath(); ctx.arc(Math.max(10,r*0.62),0,5,0,7); ctx.fill();
+  ctx.restore();
+  return r;
+}
+
+/* ================= A1 : SENS DE ROTATION ================= */
+const CAS1=[
+ {type:'eng2', txt:'2 engrenages en contact', bonne:'anti'},
+ {type:'eng3', txt:'3 engrenages en série', bonne:'horaire'},
+ {type:'courroie', txt:'2 poulies + courroie', bonne:'horaire'},
+ {type:'eng2b', txt:'2 engrenages (tailles différentes)', bonne:'anti'},
+];
+(function initA1(){
+  const zone=document.getElementById('cas1');
+  CAS1.forEach(cas=>{
+    const d=document.createElement('div'); d.className='cas';
+    const svgNS='http://www.w3.org/2000/svg';
+    const s=document.createElementNS(svgNS,'svg');
+    s.setAttribute('viewBox','0 0 200 90'); s.setAttribute('width','200');
+    function cercle(cx,cy,r,coul){ const c=document.createElementNS(svgNS,'circle');
+      c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',r);
+      c.setAttribute('fill',coul);c.setAttribute('stroke','#475569');c.setAttribute('stroke-width','2');
+      c.setAttribute('stroke-dasharray','4 3'); s.appendChild(c); }
+    function texte(x,y,t,coul){ const e=document.createElementNS(svgNS,'text');
+      e.setAttribute('x',x);e.setAttribute('y',y);e.setAttribute('text-anchor','middle');
+      e.setAttribute('font-size','15');e.setAttribute('font-weight','bold');e.setAttribute('fill',coul);
+      e.textContent=t; s.appendChild(e); }
+    if(cas.type==='eng2'){ cercle(60,45,28,'#ddd6fe'); cercle(116,45,28,'#fed7aa'); texte(60,50,'⟳','#6d28d9'); texte(116,50,'?','#ea580c'); }
+    if(cas.type==='eng2b'){ cercle(52,45,20,'#ddd6fe'); cercle(110,45,38,'#fed7aa'); texte(52,50,'⟳','#6d28d9'); texte(110,50,'?','#ea580c'); }
+    if(cas.type==='eng3'){ cercle(40,45,22,'#ddd6fe'); cercle(96,45,22,'#e2e8f0'); cercle(152,45,22,'#fed7aa'); texte(40,50,'⟳','#6d28d9'); texte(152,50,'?','#ea580c'); }
+    if(cas.type==='courroie'){ cercle(52,45,24,'#ddd6fe'); cercle(148,45,24,'#fed7aa');
+      const l1=document.createElementNS(svgNS,'line'); l1.setAttribute('x1',52);l1.setAttribute('y1',21);l1.setAttribute('x2',148);l1.setAttribute('y2',21);
+      l1.setAttribute('stroke','#57534e');l1.setAttribute('stroke-width','3'); s.appendChild(l1);
+      const l2=document.createElementNS(svgNS,'line'); l2.setAttribute('x1',52);l2.setAttribute('y1',69);l2.setAttribute('x2',148);l2.setAttribute('y2',69);
+      l2.setAttribute('stroke','#57534e');l2.setAttribute('stroke-width','3'); s.appendChild(l2);
+      texte(52,50,'⟳','#6d28d9'); texte(148,50,'?','#ea580c'); }
+    d.appendChild(s);
+    const lbl=document.createElement('div'); lbl.style.cssText='font-size:12.5px;font-weight:700;color:#64748b'; lbl.textContent=cas.txt;
+    d.appendChild(lbl);
+    const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
+    let premier=true, fait=false;
+    [['⟳ horaire','horaire'],['⟲ anti-horaire','anti']].forEach(([t,code])=>{
+      const b=document.createElement('button'); b.textContent=t;
+      b.onclick=()=>{
+        if(fait) return;
+        if(code===cas.bonne){
+          fait=true; d.classList.remove('faux'); d.classList.add('bon');
+          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+          etat.q1ok++;
+          if(etat.q1ok===CAS1.length) reussir(1,2);
+        } else { d.classList.add('faux'); premier=false; }
+      };
+      ch.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+/* ================= A2 : CHAÎNE DU VÉLO ================= */
+const BLOCS2=[
+ {id:1,t:'🦵 Pédalier + plateau',s:'là où tu pousses'},
+ {id:0,t:'🔗 Chaîne',s:'transporte sans glisser'},
+ {id:2,t:'⚙️ Pignon arrière',s:'reçoit le mouvement'},
+ {id:3,t:'🛞 Roue arrière',s:'propulse le vélo'},
+];
+const BON2=[1,0,2,3];
+let choix2=[], a2fait=false;
+function initA2(){
+  choix2=[];
+  const zone=document.getElementById('blocs2'); zone.innerHTML='';
+  BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
+    const btn=document.createElement('button');
+    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+    btn.onclick=()=>{
+      if(btn.classList.contains('pris')||choix2.length>=4) return;
+      btn.classList.add('pris'); choix2.push(b.id);
+      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+      slot.textContent=b.t; slot.classList.add('rempli');
+    };
+    zone.appendChild(btn);
+  });
+  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1er','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
+  document.getElementById('verd2').className='verdict';
+}
+document.getElementById('reset2').onclick=initA2;
+document.getElementById('verif2').onclick=()=>{
+  const verd=document.getElementById('verd2');
+  if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 éléments avant de vérifier !'; return; }
+  if(choix2.join()===BON2.join()){
+    verd.className='verdict ok';
+    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : pédalier → chaîne → pignon → roue. Et bonus : la chaîne CONSERVE le sens de rotation, comme une courroie — mais sans glissement ! (+3 pts)'; reussir(2,3); }
+    else verd.textContent='✅ Bon ordre !';
+  } else {
+    verd.className='verdict ko';
+    verd.textContent='❌ Ce n\u2019est pas le bon chemin du mouvement. Pars de tes jambes et suis l\u2019énergie jusqu\u2019à la route. Recommence !';
+  }
+};
+initA2();
+
+/* ================= SIMULATEUR (A3 + A4) ================= */
+const N1=120;
+const train={Z1:12,Z2:12,a1:0};
+const cvT=document.getElementById('cvTrain'), cT=cvT.getContext('2d');
+let tPrec=null;
+function N2(){ return N1*train.Z1/train.Z2; }
+function dessinerTrain(ts){
+  requestAnimationFrame(dessinerTrain);
+  if(tPrec===null) tPrec=ts;
+  const dt=Math.min(0.05,(ts-tPrec)/1000); tPrec=ts;
+  train.a1 += N1/60*2*Math.PI*dt*0.35; // ralenti visuel ×0,35
+  const W=cvT.width,H=cvT.height;
+  cT.clearRect(0,0,W,H);
+  const e=3.2;
+  const r1=train.Z1*e, r2=train.Z2*e;
+  const x1=W/2-(r1+r2+6)/2, x2=x1+r1+r2+6, y=H/2-16;
+  const a2=-train.a1*train.Z1/train.Z2 + Math.PI/train.Z2;
+  roueDentee(cT,x1,y,train.Z1,train.a1,'#7c3aed',e);
+  roueDentee(cT,x2,y,train.Z2,a2,'#0e7490',e);
+  cT.font='bold 14px Segoe UI'; cT.textAlign='center';
+  cT.fillStyle='#6d28d9'; cT.fillText('MOTEUR · Z₁='+train.Z1+' · '+N1+' tr/min', x1, y+r1+34);
+  cT.fillStyle='#0e7490'; cT.fillText('SORTIE · Z₂='+train.Z2, x2, y+r2+34);
+  // compteur de sortie
+  cT.fillStyle='rgba(255,255,255,.94)'; cT.fillRect(W/2-110,10,220,42);
+  cT.strokeStyle='#cbd5e1'; cT.strokeRect(W/2-110,10,220,42);
+  cT.font='bold 19px Segoe UI'; cT.fillStyle='#1e3a5f';
+  cT.fillText('N₂ = '+(Math.round(N2()*10)/10)+' tr/min', W/2, 38);
+}
+[['sZ1','Z1','vZ1'],['sZ2','Z2','vZ2']].forEach(([id,cle,vid])=>{
+  document.getElementById(id).addEventListener('input',e=>{
+    train[cle]=+e.target.value;
+    document.getElementById(vid).textContent=e.target.value;
+  });
+});
+let a3fait=false, a4fait=false;
+document.getElementById('test3').onclick=()=>{
+  const verd=document.getElementById('verd3');
+  const n2=N2();
+  if(Math.abs(n2-40)>1){
+    verd.className='verdict ko';
+    verd.innerHTML= n2>40 ? '⚠️ N₂ = '+(Math.round(n2*10)/10)+' tr/min : trop RAPIDE pour un treuil ! Pour ralentir, il faut une roue menée avec PLUS de dents que la menante (N₂ = 120 × Z₁ ÷ Z₂).' :
+      '⚠️ N₂ = '+(Math.round(n2*10)/10)+' tr/min : trop lent, le chantier s\u2019impatiente. Ajuste tes dents !';
+    return;
+  }
+  verd.className='verdict ok';
+  verd.innerHTML='✅ 40 tr/min : le treuil soulève lentement… et 3× plus FORT (réduire la vitesse multiplie l\u2019effort). Retiens ton réglage : Z₂ = 3 × Z₁.'+(a3fait?'':' (+4 pts)');
+  if(!a3fait){ a3fait=true; reussir(3,4); }
+};
+document.getElementById('test4').onclick=()=>{
+  const verd=document.getElementById('verd4');
+  const n2=N2();
+  if(Math.abs(n2-300)>5){
+    verd.className='verdict ko';
+    verd.innerHTML= n2<300 ? '⚠️ N₂ = '+(Math.round(n2*10)/10)+' tr/min : le ventilateur brasse à peine l\u2019air. Pour ACCÉLÉRER, la roue MENÉE doit être plus PETITE que la menante (Z₁ ÷ Z₂ = 2,5).' :
+      '⚠️ N₂ = '+(Math.round(n2*10)/10)+' tr/min : trop vite, il va décoller ! Réduis un peu.';
+    return;
+  }
+  verd.className='verdict ok';
+  verd.innerHTML='✅ 300 tr/min : multiplicateur ×2,5 réussi (par exemple Z₁=25 et Z₂=10). Remarque le prix à payer : plus de vitesse = moins de force. En mécanique, on n\u2019a jamais les deux !'+(a4fait?'':' (+4 pts)');
+  if(!a4fait){ a4fait=true; reussir(4,4); }
+};
+requestAnimationFrame(dessinerTrain);
+
+/* ================= A5 : BILAN ================= */
+const Q5=[
+ {q:"Deux engrenages en contact tournent…", r:["dans le même sens","en sens inversés","au hasard"], b:1},
+ {q:"N₂ = N₁ × Z₁ ÷ Z₂. Si Z₂ > Z₁, la sortie est…", r:["plus rapide","plus lente","identique"], b:1},
+ {q:"Réduire la vitesse de sortie…", r:["augmente la force transmise","diminue la force","ne change rien"], b:0},
+ {q:"Le pignon-crémaillère transforme…", r:["une translation en chaleur","une rotation en translation","du courant en lumière"], b:1},
+];
+(function initQ5(){
+  const zone=document.getElementById('quiz5');
+  Q5.forEach((item,i)=>{
+    const d=document.createElement('div'); d.className='question';
+    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
+    const rep=d.querySelector('.rep');
+    item.r.forEach((r,k)=>{
+      const b=document.createElement('button'); b.textContent=r;
+      b.onclick=()=>{
+        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
+        etat.q5rep++;
+        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
+        if(etat.q5rep===Q5.length){
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          else{
+            const verd=document.createElement('div'); verd.className='verdict ko';
+            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
+            zone.appendChild(verd);
+          }
+        }
+      };
+      rep.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+charger(); majProgression();
+</script>
+</body>
+</html>

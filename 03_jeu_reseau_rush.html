@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Réseau Rush — Technologie 4ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#34d399; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:520px;min-height:400px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#indice{background:#1e293b;border:2px solid var(--neon);border-radius:14px;padding:18px;text-align:center;margin-bottom:12px}
+#indice .em{font-size:36px}
+#indice .txt{font-size:18px;font-weight:900;color:#fff;margin-top:6px;min-height:56px;line-height:1.5}
+#choix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:13px 6px;font-size:14px;font-weight:900;cursor:pointer;transition:.1s;line-height:1.4}
+#choix button small{display:block;font-size:10.5px;color:#94a3b8;font-weight:600}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:40px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:430px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%2334d399'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🌐 RÉSEAU RUSH</h1>
+<div class="sous">Un indice s'affiche : switch, box, serveur ou borne wifi ? Identifie l'équipement avant la fin du chrono !</div>
+
+<div class="hud">
+  <div>Identifiés : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div id="indice"><div class="em" id="iEm">🕵️</div><div class="txt" id="iTxt"></div></div>
+  <div id="choix">
+    <button data-f="switch">🔀 SWITCH<small>aiguille en local</small></button>
+    <button data-f="box">📡 BOX (ROUTEUR)<small>la porte vers internet</small></button>
+    <button data-f="serveur">🗄️ SERVEUR<small>stocke fichiers et comptes</small></button>
+    <button data-f="wifi">📶 BORNE WIFI<small>le réseau sans fil</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Local technique fermé</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Admin réseau</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Les règles de l'identification</h2>
+    <p>Un équipement du réseau se décrit… à toi de le reconnaître :<br>
+    🔀 SWITCH = il aiguille les messages EN LOCAL · 📡 BOX = la porte vers internet, elle distribue les IP ·
+    🗄️ SERVEUR = il stocke fichiers et comptes · 📶 WIFI = le réseau par ondes radio.<br>
+    Erreur ou chrono écoulé = une vie. Ça accélère ! 🏁</p>
+    <button id="btnGo">🌐 Identifier les équipements</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Réseau en panne !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence Les réseaux informatiques · 4ème</footer>
+
+<script>
+const CODE='SWITCH19';
+function dejaOuvert(){ try{ return localStorage.getItem('reseaurush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('reseaurush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const NOMS_F={switch:'🔀 le SWITCH',box:'📡 la BOX (routeur)',serveur:'🗄️ le SERVEUR',wifi:'📶 la BORNE WIFI'};
+const INDICES=[
+ {t:'« Je relie tous les câbles de la salle et j\u2019aiguille chaque message vers le bon appareil. »',f:'switch',exp:'aiguiller en LOCAL en lisant les adresses IP, c\u2019est le métier du switch.'},
+ {t:'« Je lis l\u2019adresse IP de destination pour livrer le message… comme un facteur. »',f:'switch',exp:'le facteur du réseau local, c\u2019est le switch.'},
+ {t:'« Sans moi, impossible d\u2019imprimer sur l\u2019imprimante réseau ET de parler au serveur en même temps. »',f:'switch',exp:'c\u2019est lui qui interconnecte tous les appareils du réseau local.'},
+ {t:'« On me compare souvent à une multiprise… mais une multiprise intelligente ! »',f:'switch',exp:'multiprise du réseau = switch : il ne se contente pas de relier, il aiguille.'},
+ {t:'« Je suis la PORTE du réseau local vers internet : tout ce qui sort passe par moi. »',f:'box',exp:'l\u2019unique porte vers internet, c\u2019est la box (le routeur).'},
+ {t:'« C\u2019est moi qui distribue les adresses IP aux appareils qui se connectent. »',f:'box',exp:'la box distribue les adresses (le service DHCP).'},
+ {t:'« Si je plante, le web est coupé partout… mais le serveur du collège répond encore. »',f:'box',exp:'box en panne = trafic internet bloqué, réseau LOCAL intact : le diagnostic classique !'},
+ {t:'« On me redémarre dès que « internet ne marche plus » à la maison. »',f:'box',exp:'le fameux « débranche la box 10 secondes » !'},
+ {t:'« Toujours allumé, je stocke les dossiers personnels de tous les élèves du collège. »',f:'serveur',exp:'l\u2019ordinateur central qui stocke pour tous = le serveur.'},
+ {t:'« Grâce à moi, tu retrouves ton fichier depuis n\u2019importe quel poste. »',f:'serveur',exp:'le fichier te suit partout parce qu\u2019il est stocké sur le serveur.'},
+ {t:'« Je vérifie ton identifiant et ton mot de passe quand tu ouvres ta session. »',f:'serveur',exp:'les comptes du collège vivent sur le serveur.'},
+ {t:'« Je suis sauvegardé chaque nuit : même si un poste meurt, rien n\u2019est perdu. »',f:'serveur',exp:'la sauvegarde centralisée est un des grands atouts du serveur.'},
+ {t:'« Je prolonge le réseau par ondes radio : aucun câble à brancher ! »',f:'wifi',exp:'le réseau sans fil, ce sont les ondes de la borne wifi.'},
+ {t:'« Les tablettes de la classe mobile passent toutes par moi. »',f:'wifi',exp:'appareils mobiles = connexion par la borne wifi.'},
+ {t:'« Trop d\u2019appareils sur mes ondes et tout le monde rame : je suis PARTAGÉE. »',f:'wifi',exp:'le débit wifi se partage entre tous les appareils connectés.'},
+ {t:'« Les murs épais et la distance affaiblissent mon signal. »',f:'wifi',exp:'les ondes radio n\u2019aiment ni les murs ni la distance — contrairement au câble !'},
+];
+
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('reseaurush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:10,reste:10,fini:false,pioche:[],indice:null};
+  window.J_DEBUG=J;
+  majHUD(); nouvelIndice(); dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function nouvelIndice(){
+  if(J.pioche.length===0) J.pioche=INDICES.map((_,i)=>i).sort(()=>0.5-Math.random());
+  J.indice=INDICES[J.pioche.pop()];
+  J.reste=J.duree;
+  document.getElementById('iTxt').textContent=J.indice.t;
+}
+function repondre(f){
+  if(!J||J.fini) return;
+  const flash=document.getElementById('flash');
+  if(f===J.indice.f){
+    J.serie++; J.score+=15+Math.round(J.reste*3);
+    flash.textContent='✅ Oui : '+J.indice.exp;
+    flash.style.color='#4ade80';
+    J.duree=Math.max(4.2,J.duree-0.35);
+    majHUD(); nouvelIndice();
+  } else {
+    J.vies--;
+    flash.textContent='❌ Non, c\u2019était '+NOMS_F[J.indice.f]+' : '+J.indice.exp;
+    flash.style.color='#f87171';
+    majHUD();
+    if(J.vies<=0) return finPartie('Identification ratée ! Retiens : aiguiller en local (switch), sortir vers internet (box), stocker (serveur), sans fil (wifi).');
+    nouvelIndice();
+  }
+}
+document.querySelectorAll('#choix button').forEach(b=>b.onclick=()=>repondre(b.dataset.f));
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('reseaurush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=15 ? '🏆 Admin réseau senior !' : '💥 Réseau en panne !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Équipements identifiés : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').textContent='⏰ Trop lent ! C\u2019était '+NOMS_F[J.indice.f]+' : '+J.indice.exp;
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('Le chrono a gagné : un bon admin identifie son matériel d\u2019un coup d\u2019œil !');
+    nouvelIndice();
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

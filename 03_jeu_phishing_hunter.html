@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎣 Phishing Hunter — Technologie 3ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#60a5fa; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:480px;min-height:400px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#mail{background:#f8fafc;color:#1e293b;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 6px 22px rgba(0,0,0,.4)}
+#mail .de{font-size:12.5px;color:#64748b}
+#mail .de b{color:#1e293b}
+#mail .objet{font-size:16px;font-weight:900;margin:6px 0;border-bottom:1px solid #e2e8f0;padding-bottom:6px}
+#mail .corps{font-size:14px;line-height:1.55;min-height:76px}
+#choix{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:15px;font-size:16px;font-weight:900;cursor:pointer;transition:.1s}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:44px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:390px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%2360a5fa'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='%230f172a' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🎣 PHISHING HUNTER</h1>
+<div class="sous">Ta boîte mail déborde : démasque les arnaques avant qu'elles te croquent !</div>
+
+<div class="hud">
+  <div>Triés : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div id="mail">
+    <div class="de">De : <b id="mDe"></b></div>
+    <div class="objet" id="mObjet"></div>
+    <div class="corps" id="mCorps"></div>
+  </div>
+  <div id="choix">
+    <button id="btnLegit">✅ LÉGITIME</button>
+    <button id="btnPhish">🗑️ PHISHING</button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Boîte mail verrouillée</h2>
+    <p>Entre le code obtenu à la fin du <b>TP Mission routeur</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Le manuel du chasseur</h2>
+    <p>Un message s'affiche : <b>LÉGITIME</b> ou <b>PHISHING</b> ?<br>
+    Cherche les indices : adresse d'expéditeur louche, fautes, URGENCE bidon, demande de mot de passe, lien bizarre, cadeau trop beau.<br>
+    Erreur ou chrono écoulé = une vie. Ça accélère ! 🏁</p>
+    <button id="btnGo">📬 Ouvrir la boîte</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Compte piraté !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence Internet & Cybersécurité · 3ème</footer>
+
+<script>
+const CODE='PAQUET77';
+function dejaOuvert(){ try{ return localStorage.getItem('phishing_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('phishing_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const MAILS=[
+ {de:'ent-support@col1ege-estic.net', objet:'⚠️ URGENT : votre compte ENT expire ce soir !!', corps:'Cher éléve, votre compte sera suprimé dans 2h. Cliquez ici et entrez votre mot de passe pour le conservé : http://ent-secours.xyz', phish:true,
+  ind:'adresse louche (col1ege avec un 1 !), fautes, urgence bidon, demande de mot de passe, lien .xyz'},
+ {de:'vie-scolaire@estic-saintdizier.fr', objet:'Sortie au musée : autorisation à rendre', corps:'Bonjour, merci de rapporter l\u2019autorisation signée pour la sortie du 12 mars avant vendredi. Bonne journée. La vie scolaire.', phish:false,
+  ind:'adresse officielle, aucune demande de données, ton normal'},
+ {de:'no-reply@grattage-gagnant.win', objet:'🎉 FÉLICITATIONS : vous avez gagné un iPhone 17 !', corps:'Vous êtes le 1 000 000ème visiteur ! Pour recevoir votre lot, payez seulement 1,99 € de frais de port avec votre carte bancaire.', phish:true,
+  ind:'cadeau trop beau, domaine .win, demande de carte bancaire'},
+ {de:'noreply@ecoledirecte.com', objet:'Nouvelle note publiée', corps:'Bonjour, une nouvelle note a été publiée dans votre espace. Connectez-vous depuis votre application habituelle pour la consulter.', phish:false,
+  ind:'pas de lien pressant, on t\u2019invite à passer par l\u2019appli officielle'},
+ {de:'support@paypa1-securite.com', objet:'Activité inhabituelle sur votre compte', corps:'Nous avons bloqué votre compte. Vérifiez votre identité immédiatement en saisissant vos identifiants sur www.paypa1-securite.com.', phish:true,
+  ind:'paypa1 avec un 1, urgence, demande d\u2019identifiants'},
+ {de:'mediatheque@saint-dizier.fr', objet:'Rappel : retour de vos livres', corps:'Bonjour, les 2 ouvrages empruntés le 3 février sont à rendre avant le 3 mars. L\u2019équipe de la médiathèque.', phish:false,
+  ind:'adresse cohérente, aucune donnée demandée'},
+ {de:'admin@wifi-gratuit-express.co', objet:'Votre accès Wi-Fi gratuit vous attend', corps:'Téléchargez notre application (fichier .exe ci-joint) pour profiter du Wi-Fi illimité partout et gratuitement !', phish:true,
+  ind:'pièce jointe .exe = programme inconnu à installer : malware probable'},
+ {de:'prof.agostini@estic-saintdizier.fr', objet:'TP de demain : apporter vos écouteurs', corps:'Bonjour à tous, pour le TP réseau de demain, pensez à apporter vos écouteurs. À demain. M. Agostini.', phish:false,
+  ind:'expéditeur connu, demande banale et cohérente'},
+ {de:'banque-alerte@secure-verif.info', objet:'Votre carte a été utilisée à l\u2019étranger', corps:'Une transaction de 480 € a été détectée. Si ce n\u2019est pas vous, ANNULEZ IMMÉDIATEMENT en saisissant votre numéro de carte et le code au dos.', phish:true,
+  ind:'JAMAIS une banque ne demande le code au dos par mail ; domaine générique .info'},
+ {de:'contact@clubrobotique-estic.fr', objet:'Réunion du club jeudi', corps:'Salut ! La réunion du club robotique est déplacée à jeudi 12h30 en salle techno. Amène ta clé USB du projet.', phish:false,
+  ind:'contexte cohérent, aucune donnée sensible demandée'},
+ {de:'jeuxconcours@fortnite-vbucks-free.gg', objet:'10 000 V-Bucks GRATUITS aujourd\u2019hui seulement', corps:'Connecte ton compte Epic (email + mot de passe) sur notre site partenaire et reçois 10 000 V-Bucks instantanément !', phish:true,
+  ind:'trop beau pour être vrai + demande ton mot de passe : vol de compte garanti'},
+ {de:'cdi@estic-saintdizier.fr', objet:'Le CDI ferme à 16h ce vendredi', corps:'Bonjour, exceptionnellement le CDI fermera à 16h vendredi pour inventaire. Merci de votre compréhension.', phish:false,
+  ind:'information simple, adresse officielle, rien à cliquer'},
+];
+
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('phishing_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:11,reste:11,fini:false,pioche:[],mail:null};
+  majHUD(); nouveauMail(); dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function nouveauMail(){
+  if(J.pioche.length===0) J.pioche=MAILS.map((_,i)=>i).sort(()=>0.5-Math.random());
+  J.mail=MAILS[J.pioche.pop()];
+  J.reste=J.duree;
+  document.getElementById('mDe').textContent=J.mail.de;
+  document.getElementById('mObjet').textContent=J.mail.objet;
+  document.getElementById('mCorps').textContent=J.mail.corps;
+}
+function repondre(ditPhish){
+  if(!J||J.fini) return;
+  const flash=document.getElementById('flash');
+  const ok=(ditPhish===J.mail.phish);
+  if(ok){
+    J.serie++; J.score+=15+Math.round(J.reste*3);
+    flash.innerHTML='✅ Bien vu ! Indices : '+J.mail.ind;
+    flash.style.color='#4ade80';
+    J.duree=Math.max(4.5,J.duree-0.4);
+  } else {
+    J.vies--;
+    flash.innerHTML='❌ Raté ! C\u2019était '+(J.mail.phish?'un PHISHING':'un message LÉGITIME')+'. Indices : '+J.mail.ind;
+    flash.style.color='#f87171';
+    if(J.vies<=0){ majHUD(); return finPartie('Tes identifiants sont partis chez les pirates… Relis les indices : adresse, fautes, urgence, demandes de données.'); }
+  }
+  majHUD(); nouveauMail();
+}
+document.getElementById('btnLegit').onclick=()=>repondre(false);
+document.getElementById('btnPhish').onclick=()=>repondre(true);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft') repondre(false);
+  if(e.key==='ArrowRight') repondre(true);
+});
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('phishing_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=15 ? '🏆 Chasseur d\u2019élite !' : '💥 Compte piraté !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Messages triés : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').innerHTML='⏰ Trop lent ! C\u2019était '+(J.mail.phish?'un PHISHING':'du légitime')+' — '+J.mail.ind;
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('L\u2019hésitation aussi se paie : un pirate compte sur la panique OU la lenteur.');
+    nouveauMail();
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>
