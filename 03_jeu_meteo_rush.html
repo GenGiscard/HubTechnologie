@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Météo Rush — Technologie 5ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#fde047; --or:#fbbf24; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(251,191,36,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:520px;min-height:400px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#action{background:#1e293b;border:2px solid var(--neon);border-radius:14px;padding:18px;text-align:center;margin-bottom:12px}
+#action .em{font-size:36px}
+#action .txt{font-size:18px;font-weight:900;color:#fff;margin-top:6px;min-height:56px;line-height:1.5}
+#choix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:13px 6px;font-size:14px;font-weight:900;cursor:pointer;transition:.1s;line-height:1.4}
+#choix button small{display:block;font-size:10.5px;color:#94a3b8;font-weight:600}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:40px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:430px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco (officiel) -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>🌦️ MÉTÉO RUSH</h1>
+<div class="sous">Un instrument ou un indice s'affiche : température, vent, précipitations ou pression ? Classe la grandeur avant la fin du chrono !</div>
+
+<div class="hud">
+  <div>Classées : <span class="v" id="hSerie">0</span></div>
+  <div>Score : <span class="v" id="hScore">0</span></div>
+  <div>Vies : <span class="v" id="hVies">❤️❤️❤️</span></div>
+  <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+  <div id="tempo"><div id="tempofill"></div></div>
+  <div id="action"><div class="em" id="eEm">🌦️</div><div class="txt" id="eTxt"></div></div>
+  <div id="choix">
+    <button data-f="temperature">🌡️ TEMPÉRATURE<small>degrés Celsius, sous abri</small></button>
+    <button data-f="vent">💨 VENT<small>vitesse en km/h + direction</small></button>
+    <button data-f="pluie">🌧️ PRÉCIPITATIONS<small>millimètres = litres par m²</small></button>
+    <button data-f="pression">🎈 PRESSION<small>hectopascals, l'annonceur du temps</small></button>
+  </div>
+  <div id="flash"></div>
+
+  <div class="overlay" id="ovCode">
+    <h2>🔒 Station fermée</h2>
+    <p>Entre le code obtenu à la fin du <b>TP La station météo</b>.</p>
+    <input id="inCode" maxlength="10" placeholder="CODE">
+    <div class="err" id="errCode"></div>
+    <button id="btnCode">Déverrouiller</button>
+  </div>
+
+  <div class="overlay cache" id="ovIntro">
+    <h2>Les règles du tri météo</h2>
+    <p>Un instrument ou un indice s'affiche… à toi de trouver sa grandeur :<br>
+    🌡️ TEMPÉRATURE = degrés Celsius · 💨 VENT = km/h et direction ·
+    🌧️ PRÉCIPITATIONS = millimètres · 🎈 PRESSION = hectopascals.<br>
+    Erreur ou chrono écoulé = une vie. Ça accélère ! 🏁</p>
+    <button id="btnGo">🌦️ Trier les mesures</button>
+  </div>
+
+  <div class="overlay cache" id="ovFin">
+    <h2 id="finTitre">💥 Bulletin raté !</h2>
+    <p id="finTexte"></p>
+    <button id="btnRejouer">↺ Rejouer</button>
+  </div>
+</div>
+
+<footer>Jeu de révision · Séquence Météo & instruments · 5ème</footer>
+
+<script>
+const CODE='STATION7';
+function dejaOuvert(){ try{ return localStorage.getItem('meteorush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+  const v=document.getElementById('inCode').value.trim().toUpperCase();
+  if(v===CODE){ try{ localStorage.setItem('meteorush_ok','1'); }catch(e){}
+    document.getElementById('ovCode').classList.add('cache');
+    document.getElementById('ovIntro').classList.remove('cache');
+  } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+const NOMS_F={temperature:'🌡️ la TEMPÉRATURE',vent:'💨 le VENT',pluie:'🌧️ les PRÉCIPITATIONS',pression:'🎈 la PRESSION'};
+const ACTIONS=[
+ {t:'Le thermomètre dans son abri blanc ventilé',f:'temperature',exp:'les degrés Celsius se mesurent à l\u2019ombre : la TEMPÉRATURE.'},
+ {t:'Les degrés Celsius annoncés au bulletin du matin',f:'temperature',exp:'l\u2019unité °C signe la TEMPÉRATURE.'},
+ {t:'La gelée blanche annoncée pour la nuit prochaine',f:'temperature',exp:'gel = passage sous 0 °C : une affaire de TEMPÉRATURE.'},
+ {t:'Le record de canicule de l\u2019été dernier',f:'temperature',exp:'canicule = TEMPÉRATURE extrême, mesurée sous abri.'},
+ {t:'Les trois coupelles qui tournent de plus en plus vite',f:'vent',exp:'l\u2019anémomètre à coupelles mesure la vitesse du VENT.'},
+ {t:'La girouette qui pivote vers l\u2019ouest',f:'vent',exp:'la girouette donne la direction du VENT.'},
+ {t:'Les rafales à 110 km/h qui déclenchent la vigilance',f:'vent',exp:'les km/h des rafales : c\u2019est le VENT.'},
+ {t:'La manche à air gonflée de l\u2019aérodrome',f:'vent',exp:'la manche à air montre force et direction du VENT.'},
+ {t:'L\u2019entonnoir gradué qui recueille l\u2019averse',f:'pluie',exp:'le pluviomètre mesure les PRÉCIPITATIONS en mm.'},
+ {t:'Les 6 millimètres relevés après l\u2019orage',f:'pluie',exp:'les millimètres (1 mm = 1 L/m²) : PRÉCIPITATIONS.'},
+ {t:'Le cumul de neige mesuré à la station de ski',f:'pluie',exp:'pluie ou neige : ce sont les PRÉCIPITATIONS.'},
+ {t:'La feuille morte qui fausse le relevé en bouchant l\u2019entonnoir',f:'pluie',exp:'l\u2019ennemie jurée du pluviomètre : PRÉCIPITATIONS.'},
+ {t:'L\u2019aiguille qui chute de 1013 à 995 hectopascals',f:'pression',exp:'le baromètre et ses hPa : la PRESSION.'},
+ {t:'La colonne d\u2019air que l\u2019instrument « pèse » au-dessus de nous',f:'pression',exp:'peser l\u2019atmosphère : c\u2019est la PRESSION.'},
+ {t:'La dépression qui apporte les nuages sur la région',f:'pression',exp:'dé-PRESSION : une zone où la PRESSION est basse.'},
+ {t:'L\u2019anticyclone qui promet une semaine de ciel bleu',f:'pression',exp:'l\u2019anticyclone = PRESSION haute et stable = beau temps.'},
+];
+
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('meteorush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function nouveauJeu(){
+  J={serie:0,score:0,vies:3,duree:10,reste:10,fini:false,pioche:[],action:null};
+  window.J_DEBUG=J;
+  majHUD(); nouvelElement(); dernierTs=null;
+}
+function majHUD(){
+  document.getElementById('hSerie').textContent=J.serie;
+  document.getElementById('hScore').textContent=J.score;
+  document.getElementById('hVies').textContent='❤️'.repeat(Math.max(0,J.vies))||'💀';
+}
+function nouvelElement(){
+  if(J.pioche.length===0) J.pioche=ACTIONS.map((_,i)=>i).sort(()=>0.5-Math.random());
+  J.element=ACTIONS[J.pioche.pop()];
+  J.reste=J.duree;
+  document.getElementById('eTxt').textContent=J.element.t;
+}
+function repondre(f){
+  if(!J||J.fini) return;
+  const flash=document.getElementById('flash');
+  if(f===J.element.f){
+    J.serie++; J.score+=15+Math.round(J.reste*3);
+    flash.textContent='✅ Oui : '+J.element.exp;
+    flash.style.color='#4ade80';
+    J.duree=Math.max(4.2,J.duree-0.35);
+    majHUD(); nouvelElement();
+  } else {
+    J.vies--;
+    flash.textContent='❌ Non, c\u2019était '+NOMS_F[J.element.f]+' : '+J.element.exp;
+    flash.style.color='#f87171';
+    majHUD();
+    if(J.vies<=0) return finPartie('Le tri s\u2019arrête ! Retiens : chaque grandeur a SON instrument et SON unité — température (°C), vent (km/h), précipitations (mm), pression (hPa).');
+    nouvelElement();
+  }
+}
+document.querySelectorAll('#choix button').forEach(b=>b.onclick=()=>repondre(b.dataset.f));
+function finPartie(raison){
+  J.fini=true;
+  if(J.score>record){ record=J.score; try{ localStorage.setItem('meteorush_record',record); }catch(e){} }
+  document.getElementById('hRecord').textContent=record;
+  document.getElementById('finTitre').textContent= J.serie>=15 ? '🏆 Observateur senior !' : '💥 Bulletin raté !';
+  document.getElementById('finTexte').innerHTML=raison+'<br><br>Éléments classés : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+  document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+  requestAnimationFrame(boucle);
+  if(!J||J.fini){ dernierTs=null; return; }
+  if(dernierTs===null) dernierTs=ts;
+  const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+  J.reste-=dt;
+  const f=document.getElementById('tempofill');
+  f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+  f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+  if(J.reste<=0){
+    J.vies--; majHUD();
+    document.getElementById('flash').textContent='⏰ Trop lent ! C\u2019était '+NOMS_F[J.element.f]+' : '+J.element.exp;
+    document.getElementById('flash').style.color='#f87171';
+    if(J.vies<=0) return finPartie('Le chrono a gagné : un bon observateur associe chaque instrument à sa grandeur d\u2019un coup d\u2019œil !');
+    nouvelElement();
+  }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

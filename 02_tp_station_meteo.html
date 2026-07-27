@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP 5ème — La station météo · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --cyan:#0e7490; --niv:#ca8a04; --niv-fonce:#a16207; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.tp{max-width:980px;margin:26px auto 6px;padding:0 20px}
+header.tp h1{font-size:32px;color:var(--cyan)}
+header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
+.progression{max-width:980px;margin:16px auto;padding:0 20px;display:flex;gap:8px;align-items:center}
+.progression .seg{flex:1;height:10px;border-radius:6px;background:#e2e8f0;transition:.3s}
+.progression .seg.ok{background:var(--vert)}
+.progression .seg.encours{background:var(--orange)}
+.progression .score{font-weight:800;color:var(--niv-fonce);font-size:15px;white-space:nowrap}
+.acti{max-width:980px;margin:22px auto;padding:0 20px;position:relative}
+.boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:24px;border-top:5px solid var(--cyan);position:relative}
+.boite h2{font-size:21px;color:var(--cyan);display:flex;align-items:center;gap:10px}
+.boite h2 .badge{background:var(--cyan);color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.boite .consigne{margin:10px 0 16px;font-size:15px;background:#fefce8;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
+.verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
+.verrou .cadenas{font-size:42px}
+.minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
+.minicas .cas.bon{border-color:var(--vert);background:#fefce8}
+.minicas .cas.faux{border-color:var(--rouge);background:#fefce8}
+.minicas .cas .devinette{font-size:13.5px;font-weight:700;min-height:58px;line-height:1.45}
+.minicas .cas .choix{display:flex;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.minicas .cas button{border:1.5px solid #cbd5e1;background:#fff;border-radius:8px;padding:6px 10px;font-size:12.5px;font-weight:700;cursor:pointer}
+.minicas .cas button:hover{border-color:var(--cyan)}
+.ordre{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.ordre button{border:2.5px solid var(--niv);background:#fff;border-radius:12px;padding:14px 16px;font-size:14.5px;font-weight:700;color:var(--niv-fonce);cursor:pointer;min-width:180px;text-align:left}
+.ordre button small{display:block;font-weight:500;color:var(--gris);margin-top:4px}
+.ordre button.pris{opacity:.35;cursor:default}
+.slots{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.slots .slot{min-width:150px;min-height:52px;border:2px dashed #cbd5e1;border-radius:12px;padding:8px 10px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--gris);text-align:center}
+.slots .slot.rempli{border-style:solid;border-color:var(--niv);color:var(--niv-fonce);background:#fefce8}
+.slots .fl{font-size:20px;color:var(--orange);font-weight:800}
+.panne{background:#f8fafc;border:2px solid #cbd5e1;border-radius:14px;padding:16px;margin-bottom:12px}
+.panne.resolue{border-color:var(--vert);background:#fefce8}
+.panne .symptome{font-size:15px;font-weight:700;line-height:1.5}
+.panne .symptome .em{font-size:24px;margin-right:6px}
+.blocs-diag{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.blocs-diag button{border:2.5px solid var(--niv);background:#fff;border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:800;color:var(--niv-fonce);cursor:pointer}
+.blocs-diag button:hover{background:#fefce8}
+.blocs-diag button:disabled{opacity:.4;cursor:default}
+.btn{border:none;border-radius:10px;padding:11px 18px;font-size:15px;font-weight:800;cursor:pointer;color:#fff;background:var(--cyan)}
+.btn:hover{filter:brightness(1.08)}
+.btnrow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.verdict{margin-top:12px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:14.5px;display:none;line-height:1.55}
+.verdict.ok{display:block;background:#dcfce7;color:#14532d;border-left:5px solid var(--vert)}
+.verdict.ko{display:block;background:#fee2e2;color:#a16207;border-left:5px solid var(--rouge)}
+.calczone{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.calczone input{width:130px;padding:11px;font-size:17px;font-weight:800;text-align:center;border:2px solid #cbd5e1;border-radius:10px}
+.calczone .unite{font-weight:800;color:var(--gris)}
+.rappel{display:inline-block;background:#fefce8;border:1.5px dashed var(--niv);border-radius:10px;padding:8px 14px;font-weight:800;color:var(--niv-fonce);font-size:14px;margin-bottom:10px}
+.question{margin:14px 0;padding:14px;background:#f8fafc;border-radius:12px}
+.question .q{font-weight:700;margin-bottom:10px;font-size:15px}
+.rep{display:flex;flex-wrap:wrap;gap:8px}
+.rep button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 16px;font-size:14.5px;cursor:pointer;font-weight:600}
+.rep button:hover{border-color:var(--cyan)}
+.rep button.bon{background:#dcfce7;border-color:var(--vert)}
+.rep button.faux{background:#fee2e2;border-color:var(--rouge)}
+.codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#a16207,#0e7490);border-radius:14px;padding:22px;color:#fff}
+.codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
+.codefinal a{color:#fde68a;font-weight:800}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco (officiel) -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="tp">
+  <h1>🔧 TP — La station météo</h1>
+  <p>La station météo départementale t'embauche : des relevés bizarres arrivent au poste d'observation. 5 missions — à la fin : le code des jeux !</p>
+</header>
+
+<div class="progression" id="prog">
+  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+</div>
+
+<!-- ============ A1 : QUI SUIS-JE ============ -->
+<div class="acti" id="a1">
+ <div class="boite">
+  <h2><span class="badge">1</span>Le vocabulaire de l'observateur</h2>
+  <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! (1 pt par bonne réponse du premier coup)</div>
+  <div class="minicas" id="cas1"></div>
+ </div>
+</div>
+
+<!-- ============ A2 : LA DÉMARCHE ============ -->
+<div class="acti" id="a2">
+ <div class="boite">
+  <h2><span class="badge">2</span>Remets la chaîne de la prévision en ordre</h2>
+  <div class="consigne">Du capteur au bulletin télé : clique les 4 étapes de la prévision <b>dans l'ordre</b>.</div>
+  <div class="ordre" id="blocs2"></div>
+  <div class="slots" id="slots2">
+    <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
+    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+    <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
+    <div class="slot" data-i="3">4ème</div>
+  </div>
+  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+  <div class="verdict" id="verd2"></div>
+ </div>
+</div>
+
+<!-- ============ A3 : EXPERTISES ============ -->
+<div class="acti" id="a3">
+ <div class="boite">
+  <h2><span class="badge">3</span>Trois instruments qui racontent n'importe quoi !</h2>
+  <div class="consigne">🌦️ Trois relevés suspects arrivent au poste. Pour chacun, identifie la cause et clique la <b>bonne intervention</b>. (Les erreurs se corrigent, mais chaque expertise juste du premier coup rapporte plus !)</div>
+  <div id="pannes3"></div>
+  <div class="verdict" id="verd3"></div>
+ </div>
+</div>
+
+<!-- ============ A4 : LA PRÉCISION ============ -->
+<div class="acti" id="a4">
+ <div class="boite">
+  <h2><span class="badge">4</span>La pluie du toit</h2>
+  <div class="consigne">🌧️ Le pluviomètre a relevé <b>6 mm</b> de pluie (1 mm = 1 litre par m²). Le toit du collège fait <b>200 m²</b> : combien de litres a-t-il reçus ?</div>
+  <div class="rappel">🌧️ Rappel : litres = millimètres relevés × surface en m²</div>
+  <div class="calczone">
+    <span>litres reçus =</span>
+    <input type="number" id="rep4" step="any" placeholder="?">
+    <span class="unite">L</span>
+    <button class="btn" id="verif4">✔ Vérifier</button>
+  </div>
+  <div class="verdict" id="verd4"></div>
+ </div>
+</div>
+
+<!-- ============ A5 : BILAN ============ -->
+<div class="acti" id="a5">
+ <div class="boite">
+  <h2><span class="badge">5</span>Bilan de l'observateur junior</h2>
+  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
+  <div id="quiz5"></div>
+  <div class="codefinal" id="codefinal">
+    🏆 Aucun capteur menteur ne t'échappe : te voilà observateur météo junior certifié !
+    <div class="code">STATION7</div>
+    <div>Entre ce code dans les jeux <a href="03_jeu_meteo_rush.html">🎮 Météo Rush</a> et <a href="03b_jeu_station_meteo.html">🌡️ Station météo</a> pour les déverrouiller.</div>
+  </div>
+ </div>
+</div>
+
+<script>
+/* ================= ÉTAT & PROGRESSION ================= */
+const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
+function sauver(){ try{ localStorage.setItem('tp_meteo_5e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_meteo_5e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function majProgression(){
+  document.querySelectorAll('.progression .seg').forEach(seg=>{
+    const n=+seg.dataset.a;
+    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+  });
+  document.getElementById('scoreTot').textContent=etat.score;
+  for(let n=2;n<=5;n++){
+    const acti=document.getElementById('a'+n);
+    let v=acti.querySelector('.verrou');
+    if(n>etat.debloque){
+      if(!v){ v=document.createElement('div'); v.className='verrou';
+        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
+        acti.querySelector('.boite').appendChild(v); }
+    } else if(v) v.remove();
+  }
+}
+function reussir(n,pts){
+  etat.score+=pts;
+  if(etat.debloque===n) etat.debloque=n+1;
+  sauver(); majProgression();
+  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+}
+
+/* ================= A1 : QUI SUIS-JE ================= */
+const CAS1=[
+ {devinette:'🌡️ « Je mesure la température en degrés Celsius — mais UNIQUEMENT à l\u2019abri du soleil, dans ma petite maison blanche ventilée, sinon je mens de 10 °C ! »', bonne:'le thermomètre', autres:['le baromètre']},
+ {devinette:'💨 « Mes trois coupelles tournent avec le vent : plus je tourne vite, plus il souffle fort. Je donne sa vitesse en km/h, ma copine la girouette donne sa direction. »', bonne:'l\u2019anémomètre', autres:['le ventilateur']},
+ {devinette:'🌧️ « Je recueille la pluie et je l\u2019annonce en millimètres : 1 mm chez moi = 1 litre tombé sur chaque mètre carré. Mon ennemie jurée : la feuille morte qui me bouche. »', bonne:'le pluviomètre', autres:['l\u2019arrosoir']},
+ {devinette:'🎈 « Je pèse la colonne d\u2019air au-dessus de nous, en hectopascals. Quand je chute, les marins le savent : le mauvais temps approche ! »', bonne:'le baromètre', autres:['le pèse-personne']},
+];
+(function initA1(){
+  const zone=document.getElementById('cas1');
+  CAS1.forEach(cas=>{
+    const d=document.createElement('div'); d.className='cas';
+    d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
+    const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
+    let premier=true, fait=false;
+    [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
+      const b=document.createElement('button'); b.textContent=rep;
+      b.onclick=()=>{
+        if(fait) return;
+        if(rep===cas.bonne){
+          fait=true; d.classList.remove('faux'); d.classList.add('bon');
+          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+          etat.q1ok++;
+          if(etat.q1ok===CAS1.length) reussir(1,2);
+        } else { d.classList.add('faux'); premier=false; }
+      };
+      ch.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+/* ================= A2 : LA DÉMARCHE ================= */
+const BLOCS2=[
+ {id:1,t:'🌡️ Mesurer avec les instruments',s:'stations, ballons-sondes, satellites'},
+ {id:0,t:'📡 Transmettre les relevés',s:'du monde entier, en continu'},
+ {id:2,t:'🖥️ Calculer la prévision',s:'le supercalculateur simule l\u2019atmosphère'},
+ {id:3,t:'📺 Diffuser bulletin et vigilances',s:'cartes, alertes, applications'},
+];
+const BON2=[1,0,2,3];
+let choix2=[], a2fait=false;
+function initA2(){
+  choix2=[];
+  const zone=document.getElementById('blocs2'); zone.innerHTML='';
+  BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
+    const btn=document.createElement('button');
+    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+    btn.onclick=()=>{
+      if(btn.classList.contains('pris')||choix2.length>=4) return;
+      btn.classList.add('pris'); choix2.push(b.id);
+      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+      slot.textContent=b.t; slot.classList.add('rempli');
+    };
+    zone.appendChild(btn);
+  });
+  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
+  document.getElementById('verd2').className='verdict';
+}
+document.getElementById('reset2').onclick=initA2;
+document.getElementById('verif2').onclick=()=>{
+  const verd=document.getElementById('verd2');
+  if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
+  if(choix2.join()===BON2.join()){
+    verd.className='verdict ok';
+    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : mesurer → transmettre → calculer → diffuser. Tu reconnais la chaîne d\u2019information : ACQUÉRIR, TRANSMETTRE, TRAITER, RESTITUER — appliquée au ciel entier ! (+3 pts)'; reussir(2,3); }
+    else verd.textContent='✅ Bon ordre !';
+  } else {
+    verd.className='verdict ko';
+    verd.textContent='❌ La chaîne est emmêlée. Réfléchis : peut-on calculer une prévision… sans avoir reçu les mesures ? Et diffuser un bulletin… avant de l\u2019avoir calculé ? Recommence !';
+  }
+};
+initA2();
+
+/* ================= A3 : EXPERTISES ================= */
+const PANNES=[
+ {em:'🌡️', symptome:'Relevé n°1 — La station affiche 45 °C en plein HIVER, sous la neige. La sonde de température a été déplacée pendant des travaux… et laissée en plein soleil, contre un mur sombre. Un relevé complètement fou.',
+  bon:'abri', exp:'au soleil direct, le thermomètre mesure SA température, pas celle de l\u2019air : jusqu\u2019à +10 °C d\u2019erreur — et contre un mur sombre, bien pire. La sonde retourne sous ABRI normalisé, blanc et ventilé, à 1,50 m du sol.'},
+ {em:'🌧️', symptome:'Relevé n°2 — Le pluviomètre affiche ZÉRO millimètre depuis un mois… alors que trois averses ont trempé la ville cette semaine. Les voisins parlent d\u2019un érable magnifique juste à côté.',
+  bon:'pluvio', exp:'une feuille morte qui bouche l\u2019entonnoir = un mois de « sécheresse » imaginaire dans les relevés. On DÉBOUCHE, on nettoie, et on vérifie l\u2019entretien régulier — un capteur, ça s\u2019entretient.'},
+ {em:'💨', symptome:'Relevé n°3 — L\u2019anémomètre indique un vent NUL toute la journée… pendant que les arbres plient et que les poubelles s\u2019envolent. Ses coupelles n\u2019ont pas bougé d\u2019un millimètre.',
+  bon:'anemo', exp:'roulement grippé, glace ou nid d\u2019oiseau : les coupelles sont BLOQUÉES. On dégrippe, on nettoie, on relance — et on vérifie qu\u2019il est bien dégagé, à 10 m, loin des murs qui font tourbillonner le vent.'},
+];
+const REMEDES=[
+ {id:'abri', t:'🏠 Replacer la sonde sous abri météo normalisé'},
+ {id:'pluvio', t:'🍂 Déboucher et nettoyer le pluviomètre'},
+ {id:'anemo', t:'⚙️ Dégripper et dégager l\u2019anémomètre'},
+ {id:'peinture', t:'🎨 Repeindre la girouette en doré'},
+];
+let diag3=0, a3fait=false;
+(function initA3(){
+  const zone=document.getElementById('pannes3');
+  const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
+  ordre3.forEach(pi=>{
+    const P=PANNES[pi];
+    const d=document.createElement('div'); d.className='panne';
+    d.innerHTML='<div class="symptome"><span class="em">'+P.em+'</span>'+P.symptome+'</div>';
+    const blocs=document.createElement('div'); blocs.className='blocs-diag'; d.appendChild(blocs);
+    const fb=document.createElement('div'); fb.className='verdict'; d.appendChild(fb);
+    let resolu=false, premier=true;
+    REMEDES.slice().sort(()=>0.5-Math.random()).forEach(r=>{
+      const b=document.createElement('button'); b.textContent=r.t; b.dataset.b=r.id;
+      b.onclick=()=>{
+        if(resolu) return;
+        if(r.id===P.bon){
+          resolu=true; d.classList.add('resolue');
+          blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
+          fb.className='verdict ok';
+          fb.textContent='✅ Bien vu'+(premier?' du premier coup (+1 pt bonus)':'')+' : '+P.exp;
+          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+          diag3++;
+          if(diag3===PANNES.length && !a3fait){ a3fait=true;
+            const verd=document.getElementById('verd3');
+            verd.className='verdict ok';
+            verd.textContent='🏆 Trois expertises réussies ! Sonde au soleil = abri, pluviomètre à zéro = bouché, coupelles immobiles = grippées. Un capteur qui ment, c\u2019est une prévision qui déraille : mesurer JUSTE est le premier métier de la météo. (+4 pts)';
+            reussir(3,4);
+          }
+        } else {
+          premier=false;
+          fb.className='verdict ko';
+          fb.textContent='❌ Cette intervention ne colle pas au relevé… Relis : 45 °C en HIVER (soleil direct → abri), pluviomètre à ZÉRO (bouché) ou vent NUL sous la tempête (grippé) ? (La dorure n\u2019a jamais réparé un capteur !)';
+        }
+      };
+      blocs.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+/* ================= A4 : LA PRÉCISION ================= */
+let a4fait=false;
+document.getElementById('verif4').onclick=()=>{
+  const verd=document.getElementById('verd4');
+  const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
+  if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
+  if(Math.abs(v-1200)<=10){
+    verd.className='verdict ok';
+    verd.innerHTML='✅ 6 × 200 = 1 200 litres sur le toit du collège, en une seule averse ! Voilà pourquoi 1 mm de pluie n\u2019est PAS « rien » : le millimètre du pluviomètre cache des tonnes d\u2019eau à l\u2019échelle d\u2019une ville.'+(a4fait?'':' (+4 pts)');
+    if(!a4fait){ a4fait=true; reussir(4,4); }
+  } else {
+    verd.className='verdict ko';
+    verd.textContent='❌ Pas ça. Multiplie les millimètres relevés (6) par la surface du toit (200 m²).';
+  }
+};
+
+/* ================= A5 : BILAN ================= */
+const Q5=[
+ {q:"1 mm de pluie au pluviomètre, c'est…", r:["1 litre par mètre carré","1 litre en tout","1 centimètre d'eau"], b:0},
+ {q:"Le thermomètre météo se place…", r:["sous un abri normalisé, à l'ombre","en plein soleil","dans la maison"], b:0},
+ {q:"Une pression qui chute vite annonce…", r:["une perturbation (pluie, vent)","le beau temps durable","rien du tout"], b:0},
+ {q:"La girouette mesure…", r:["la direction du vent","la vitesse du vent","la température"], b:0},
+];
+(function initQ5(){
+  const zone=document.getElementById('quiz5');
+  Q5.forEach((item,i)=>{
+    const d=document.createElement('div'); d.className='question';
+    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
+    const rep=d.querySelector('.rep');
+    item.r.forEach((r,k)=>{
+      const b=document.createElement('button'); b.textContent=r;
+      b.onclick=()=>{
+        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
+        etat.q5rep++;
+        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
+        if(etat.q5rep===Q5.length){
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          else{
+            const verd=document.createElement('div'); verd.className='verdict ko';
+            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
+            zone.appendChild(verd);
+          }
+        }
+      };
+      rep.appendChild(b);
+    });
+    zone.appendChild(d);
+  });
+})();
+
+charger(); majProgression();
+</script>
+</body>
+</html>
