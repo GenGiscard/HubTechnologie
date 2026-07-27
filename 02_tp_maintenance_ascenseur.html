@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdfa}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — La maintenance ascenseur</h1>
-  <p>L'entreprise d'ascensoristes t'embauche : des signalements arrivent de tous les immeubles. 5 missions — à la fin : le code des jeux !</p>
+  <p>L'entreprise d'ascensoristes t'embauche : des signalements arrivent de tous les immeubles. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHÉMA DE LA GAINE ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de l'ascensoriste junior</h2>
+  <h2><span class="badge">5</span>Le schéma de la gaine</h2>
+  <div class="consigne">🗺️ La gaine vue en coupe — l'installation FONCTIONNE sous tes yeux (regarde ce qui monte et ce qui descend !). Clique une étiquette, puis l'organe correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="360"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : ÉQUILIBRE LE CONTREPOIDS ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Équilibre le contrepoids</h2>
+  <div class="consigne">🎛️ Cabine vide : <b>600 kg</b> · charge maxi : <b>800 kg</b>. Règle la masse du contrepoids avec le curseur et observe la jauge d'effort du moteur en direct. Trouve le réglage qui le soulage le PLUS, puis valide.</div>
+  <canvas class="canvatp" id="cv6" width="860" height="300" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>🏋️ Contrepoids :</span>
+    <input type="range" id="slider6" min="0" max="1600" step="25" value="300">
+    <span class="val"><span id="val6">300</span> kg</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de l'ascensoriste junior</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_ascenseur_4e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_ascenseur_4e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_ascenseur_4e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_ascenseur_4e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,148 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHÉMA DE LA GAINE ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'treuil',  x:330, y:20,  w:200, h:70,  lbl:'LE TREUIL (POULIE MOTRICE)', tx:640, ty:55},
+    {id:'cabine',  x:330, y:120, w:110, h:120, lbl:'LA CABINE',                  tx:250, ty:135},
+    {id:'contrep', x:470, y:110, w:70,  h:110, lbl:'LE CONTREPOIDS',             tx:650, ty:150},
+    {id:'para',    x:330, y:240, w:110, h:55,  lbl:'LE PARACHUTE',               tx:230, ty:280},
+  ];
+  const poses={}; let sel=null, t=0, fini=false;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,360);
+    const q=(Math.sin(t)+1)/2;          // 0..1 va-et-vient
+    const yCab=200-70*q, yCp=120+70*q;  // cabine vs contrepoids opposés
+    // gaine
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(340,90); ctx.lineTo(340,340); ctx.moveTo(530,90); ctx.lineTo(530,340); ctx.stroke();
+    // local machinerie + poulie qui tourne
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
+    ctx.strokeRect(350,25,170,60);
+    ctx.save(); ctx.translate(435,55);
+    ctx.strokeStyle='#0f766e'; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.arc(0,0,26,0,Math.PI*2); ctx.stroke();
+    ctx.rotate(t*1.6);
+    ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(-26,0); ctx.lineTo(26,0); ctx.moveTo(0,-26); ctx.lineTo(0,26); ctx.stroke();
+    ctx.restore();
+    // câbles
+    ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(410,55); ctx.lineTo(410,yCab); ctx.moveTo(500,55); ctx.lineTo(500,yCp); ctx.stroke();
+    // cabine + passager
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#0f766e'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.rect(360,yCab,95,92); ctx.fill(); ctx.stroke();
+    ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+    ctx.fillText('\ud83e\uddcd',408,yCab+62);
+    // parachute (mâchoires rouges sous la cabine)
+    ctx.fillStyle='#dc2626';
+    ctx.fillRect(352,yCab+94,16,12); ctx.fillRect(447,yCab+94,16,12);
+    // contrepoids
+    ctx.fillStyle='#64748b'; ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.rect(478,yCp,44,66); ctx.fill(); ctx.stroke();
+    // flèches de sens
+    ctx.font='bold 15px Segoe UI'; ctx.fillStyle='#0f766e';
+    ctx.fillText(q>0.5?'\u2b06\ufe0f':'\u2b07\ufe0f',408,yCab-12);
+    ctx.fillStyle='#64748b';
+    ctx.fillText(q>0.5?'\u2b07\ufe0f':'\u2b06\ufe0f',500,yCp-8);
+    // étiquettes posées
+    ctx.font='bold 13px Segoe UI';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    if(!fini) requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">\u2705 Schéma complet ! Et tu l\u2019as vu fonctionner : la cabine et le contrepoids bougent toujours en sens OPPOSÉS, suspendus au même câble qui passe sur la poulie motrice du treuil — et le parachute (les mâchoires rouges) voyage sous la cabine, prêt à mordre les rails. (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">\u274c Pas là ! Cette zone correspond à un autre organe. Indice : le treuil est dans le local du HAUT, le parachute voyage SOUS la cabine, le contrepoids est le bloc gris qui descend quand la cabine monte\u2026</div>';
+    }
+  });
+})();
+
+/* ================= A6 : ÉQUILIBRE LE CONTREPOIDS ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const IDEAL=1000;               // 600 + 800/2
+  let t=0, fini=false, valide=false;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,300);
+    const m=+slider.value;
+    const effort=Math.min(1,Math.abs(IDEAL-m)/1000);   // 0 (parfait) .. 1
+    const q=(Math.sin(t)+1)/2, yCab=170-60*q, yCp=110+60*q;
+    // mini-gaine animée
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(120,40); ctx.lineTo(120,280); ctx.moveTo(280,40); ctx.lineTo(280,280); ctx.stroke();
+    ctx.strokeStyle='#0f766e'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.arc(200,45,26,Math.PI,0); ctx.stroke();
+    ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(178,45); ctx.lineTo(178,yCab); ctx.moveTo(246,45); ctx.lineTo(246,yCp); ctx.stroke();
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#0f766e'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.rect(146,yCab,64,64); ctx.fill(); ctx.stroke();
+    ctx.font='bold 11px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#0f766e';
+    ctx.fillText('600 kg',178,yCab+38);
+    // contrepoids proportionnel à m
+    const h=22+m/1600*66;
+    ctx.fillStyle='#64748b'; ctx.strokeStyle='#334155';
+    ctx.beginPath(); ctx.rect(228,yCp,36,h); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#334155'; ctx.fillText(m+' kg',246,yCp-8);
+    // jauge d'effort moteur
+    ctx.font='bold 14px Segoe UI'; ctx.fillStyle='#334155';
+    ctx.fillText('EFFORT DU MOTEUR', 560, 70);
+    ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=26; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(400,110); ctx.lineTo(740,110); ctx.stroke();
+    const coul = effort<=0.03 ? '#16a34a' : (effort<=0.18 ? '#f59e0b' : '#dc2626');
+    ctx.strokeStyle=coul;
+    ctx.beginPath(); ctx.moveTo(400,110); ctx.lineTo(400+Math.max(8,340*effort),110); ctx.stroke();
+    ctx.fillStyle=coul; ctx.font='bold 15px Segoe UI';
+    const msg = effort<=0.03 ? 'presque rien : parfait \ud83d\udcaa' : (effort<=0.18 ? 'le moteur force un peu\u2026' : 'le moteur FORCE \ud83e\udd75');
+    ctx.fillText(msg, 570, 155);
+    ctx.fillStyle='#64748b'; ctx.font='13px Segoe UI';
+    ctx.fillText('rappel : contrepoids idéal = cabine + la moitié de la charge maxi', 570, 195);
+    ctx.fillText('il compense la cabine \u00ab en moyenne \u00bb : \u00e0 vide comme pleine, l\u2019écart reste petit', 570, 218);
+    if(!fini) requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const m=+slider.value, verd=document.getElementById('verd6');
+    if(Math.abs(m-IDEAL)<=25){
+      valide=true;
+      verd.innerHTML='<div class="verdict ok">\u2705 1 000 kg : 600 (cabine) + 400 (la moitié de 800). La jauge est au vert : le moteur ne compense que la petite différence, cabine pleine OU vide. Équilibrer plutôt que forcer — tu viens de dimensionner un vrai contrepoids ! (+4 pts)</div>';
+      reussir(6,4);
+    } else if(m<IDEAL){
+      verd.innerHTML='<div class="verdict ko">\u274c À '+m+' kg le contrepoids est trop LÉGER : regarde la jauge, le moteur force pour soulever la cabine. Ajoute de la masse\u2026 (formule : cabine + charge maxi \u00f7 2)</div>';
+    } else {
+      verd.innerHTML='<div class="verdict ko">\u274c À '+m+' kg le contrepoids est trop LOURD : c\u2019est LUI que le moteur doit retenir maintenant ! Enlève de la masse\u2026 (formule : cabine + charge maxi \u00f7 2)</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"Le contrepoids sert à…", r:["équilibrer la cabine pour soulager le moteur","freiner la cabine","décorer la gaine"], b:0},
  {q:"Si les câbles lâchent…", r:["le parachute mord les rails et bloque la cabine","la cabine tombe en chute libre","les portes s'ouvrent"], b:0},
@@ -353,7 +529,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

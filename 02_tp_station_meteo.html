@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#fefce8;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#fefce8}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — La station météo</h1>
-  <p>La station météo départementale t'embauche : des relevés bizarres arrivent au poste d'observation. 5 missions — à la fin : le code des jeux !</p>
+  <p>La station météo départementale t'embauche : des relevés bizarres arrivent au poste d'observation. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHÉMA DE LA STATION ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de l'observateur junior</h2>
+  <h2><span class="badge">5</span>Le schéma de la station</h2>
+  <div class="consigne">🗺️ Le site de mesure vu de profil (l'anémomètre tourne, regarde bien !). Clique une étiquette, puis l'endroit du schéma où elle va. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="330"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : RÈGLE LE BAROMÈTRE ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Règle le baromètre sur le ciel</h2>
+  <div class="consigne">🎛️ Observe le ciel animé, puis règle l'aiguille du baromètre avec le curseur sur une valeur COHÉRENTE avec ce que tu vois. Deux ciels à régler !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="300" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>🎈 Pression :</span>
+    <input type="range" id="slider6" min="960" max="1050" step="1" value="1013">
+    <span class="val"><span id="val6">1013</span> hPa</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de l'observateur junior</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_meteo_5e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_meteo_5e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_meteo_5e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_meteo_5e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,152 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHÉMA DE LA STATION ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'abri', x:60,  y:120, w:130, h:140, lbl:'L\u2019ABRI + THERMOMÈTRE',  tx:125, ty:105},
+    {id:'anemo',x:270, y:40,  w:130, h:120, lbl:'L\u2019ANÉMOMÈTRE',          tx:335, ty:28},
+    {id:'pluvio',x:470,y:170, w:110, h:100, lbl:'LE PLUVIOMÈTRE',            tx:525, ty:158},
+    {id:'baro', x:640, y:110, w:150, h:150, lbl:'LE BAROMÈTRE',              tx:715, ty:98},
+  ];
+  const poses={}; let sel=null, t=0, fini=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,330);
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(0,290); ctx.lineTo(860,290); ctx.stroke();
+    ctx.font='22px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('\u2601\ufe0f',120+18*Math.sin(t*0.25),44);
+    ctx.fillText('\u2601\ufe0f',600+24*Math.sin(t*0.18+2),58);
+    // abri météo sur pieds
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.rect(90,150,70,64); ctx.fill(); ctx.stroke();
+    for(let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(96,162+i*13); ctx.lineTo(154,162+i*13); ctx.stroke(); }
+    ctx.beginPath(); ctx.moveTo(100,214); ctx.lineTo(100,290); ctx.moveTo(150,214); ctx.lineTo(150,290); ctx.stroke();
+    // mât + anémomètre qui tourne + girouette
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(335,290); ctx.lineTo(335,90); ctx.stroke();
+    ctx.save(); ctx.translate(335,90);
+    for(let i=0;i<3;i++){ const a=t*2+i*2*Math.PI/3;
+      ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(28*Math.cos(a),12*Math.sin(a)); ctx.stroke();
+      ctx.fillStyle='#0e7490'; ctx.beginPath(); ctx.arc(28*Math.cos(a),12*Math.sin(a),6,0,Math.PI*2); ctx.fill(); }
+    ctx.restore();
+    ctx.save(); ctx.translate(335,140); ctx.rotate(0.25*Math.sin(t*0.5));
+    ctx.strokeStyle='#a16207'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(-24,0); ctx.lineTo(24,0); ctx.stroke();
+    ctx.fillStyle='#a16207'; ctx.beginPath(); ctx.moveTo(24,0); ctx.lineTo(14,-6); ctx.lineTo(14,6); ctx.closePath(); ctx.fill();
+    ctx.restore();
+    // pluviomètre
+    ctx.strokeStyle='#1d4ed8'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(500,190); ctx.lineTo(512,240); ctx.lineTo(538,240); ctx.lineTo(550,190); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(512,240); ctx.lineTo(512,290); ctx.moveTo(538,240); ctx.lineTo(538,290); ctx.stroke();
+    // poste + baromètre
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.rect(660,170,110,120); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(650,170); ctx.lineTo(715,130); ctx.lineTo(780,170); ctx.stroke();
+    ctx.strokeStyle='#7c3aed'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.arc(715,225,32,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(715,225); ctx.lineTo(715+22*Math.cos(-0.9+0.1*Math.sin(t*0.4)),225+22*Math.sin(-0.9+0.1*Math.sin(t*0.4))); ctx.stroke();
+    // étiquettes posées
+    ctx.font='bold 13px Segoe UI'; 
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    if(!fini) requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">\u2705 Schéma complet ! Note les EMPLACEMENTS : le thermomètre vit dans son abri ventilé, l\u2019anémomètre se perche en haut du mât (à 10 m, loin des murs), le pluviomètre reste bien dégagé, et le baromètre peut rester à l\u2019intérieur — la pression est la même dedans et dehors ! (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">\u274c Pas là ! Cette zone correspond à un autre instrument. Indice : regarde ce qui BOUGE, la forme en entonnoir, la petite maison à claire-voie\u2026</div>';
+    }
+  });
+})();
+
+/* ================= A6 : RÈGLE LE BAROMÈTRE ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCENARIOS=[
+    {ciel:'orage', titre:'Ciel n\u00b01 — gros nuages noirs, rafales, la pluie commence\u2026', min:960, max:1000,
+     ok:'\u2705 Cohérent ! Un ciel d\u2019orage va avec une pression BASSE (ici sous 1000 hPa) : l\u2019air s\u2019allège, la dépression est sur nous. (+2 pts)',
+     indice:'\u274c Regarde le ciel : orage et rafales\u2026 la colonne d\u2019air s\u2019est ALLÉGÉE. L\u2019aiguille doit être NETTEMENT sous 1013 hPa.'},
+    {ciel:'beau', titre:'Ciel n\u00b02 — grand soleil, pas un nuage, temps stable depuis 3 jours', min:1015, max:1050,
+     ok:'\u2705 Cohérent ! Beau temps durable = anticyclone = pression HAUTE et stable (au-dessus de 1015 hPa). Tu lis le ciel comme un marin ! (+2 pts)',
+     indice:'\u274c Trois jours de grand beau stable, c\u2019est l\u2019anticyclone : l\u2019air appuie FORT. L\u2019aiguille doit monter AU-DESSUS de 1013 hPa.'},
+  ];
+  let etape=0, t=0, fini=false, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,300);
+    const sc=SCENARIOS[Math.min(etape,1)];
+    ctx.fillStyle = sc.ciel==='orage' ? '#cbd5e1' : '#e0f2fe';
+    ctx.fillRect(0,0,560,300);
+    ctx.font='34px Segoe UI'; ctx.textAlign='center';
+    if(sc.ciel==='orage'){
+      ctx.fillText('\ud83c\udf29\ufe0f',150+14*Math.sin(t*0.4),90);
+      ctx.fillText('\u26c8\ufe0f',330+18*Math.sin(t*0.3+1),70);
+      ctx.fillStyle='#1d4ed8'; ctx.font='16px Segoe UI';
+      for(let i=0;i<14;i++){ const yy=(t*60+i*47)%240; ctx.fillText('\u2502', 80+i*34, 90+yy*0.8); }
+      if(Math.sin(t*1.7)>0.96){ ctx.font='40px Segoe UI'; ctx.fillText('\u26a1',240,150); }
+    } else {
+      ctx.fillText('\u2600\ufe0f',280,90);
+      ctx.font='20px Segoe UI'; ctx.fillText('\ud83d\udc26',120+30*Math.sin(t*0.5),140);
+    }
+    ctx.fillStyle='#334155'; ctx.font='bold 14px Segoe UI';
+    ctx.fillText(sc.titre, 280, 280);
+    // baromètre à droite, piloté par le curseur
+    const v=+slider.value;
+    ctx.strokeStyle='#7c3aed'; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.arc(710,140,75,0,Math.PI*2); ctx.stroke();
+    ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#64748b';
+    ctx.fillText('960',655,205); ctx.fillText('1013',710,55); ctx.fillText('1050',768,205);
+    const a=Math.PI*1.5 + (v-1005)/45*(Math.PI*0.75);
+    ctx.strokeStyle = v<1005 ? '#dc2626' : '#16a34a'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(710,140); ctx.lineTo(710+55*Math.cos(a),140+55*Math.sin(a)); ctx.stroke();
+    ctx.fillStyle='#7c3aed'; ctx.font='bold 16px Segoe UI'; ctx.fillText(v+' hPa',710,250);
+    if(!fini) requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide && etape>=SCENARIOS.length) return;
+    const sc=SCENARIOS[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCENARIOS.length){
+        valide=true;
+        verd.innerHTML='<div class="verdict ok">'+sc.ok+' Mission accomplie : tu sais associer le CIEL et la PRESSION dans les deux sens.</div>';
+        reussir(6,4);
+      } else {
+        verd.innerHTML='<div class="verdict ok">'+sc.ok+' \u2192 Nouveau ciel affiché : règle à nouveau !</div>';
+      }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+sc.indice+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"1 mm de pluie au pluviomètre, c'est…", r:["1 litre par mètre carré","1 litre en tout","1 centimètre d'eau"], b:0},
  {q:"Le thermomètre météo se place…", r:["sous un abri normalisé, à l'ombre","en plein soleil","dans la maison"], b:0},
@@ -353,7 +533,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

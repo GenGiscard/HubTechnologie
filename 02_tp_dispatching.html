@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#fffbeb}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — Le dispatching</h1>
-  <p>Le centre de pilotage du réseau électrique t'embauche comme opérateur junior : des alertes s'affichent sur le grand écran. 5 missions — à la fin : le code des jeux !</p>
+  <p>Le centre de pilotage du réseau électrique t'embauche comme opérateur junior : des alertes s'affichent sur le grand écran. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHÉMA DU RÉSEAU ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de l'opérateur junior</h2>
+  <h2><span class="badge">5</span>Le schéma du réseau</h2>
+  <div class="consigne">🗺️ De la centrale à la maison — le courant CIRCULE sous tes yeux (suis les points jaunes !). Clique une étiquette, puis l'élément correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : TIENS LES 50 HZ ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Tiens les 50 Hz !</h2>
+  <div class="consigne">🎛️ Te voilà au pupitre : ajuste la PRODUCTION avec le curseur pour l'aligner sur la consommation affichée — l'aiguille doit revenir sur 50,00 Hz. Trois moments de la journée à tenir !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="300" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>⚡ Production :</span>
+    <input type="range" id="slider6" min="30" max="90" step="1" value="60">
+    <span class="val"><span id="val6">60</span> GW</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de l'opérateur junior</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_energie_3e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_energie_3e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_energie_3e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_energie_3e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,175 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHÉMA DU RÉSEAU ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'centrale',x:35,  y:100, w:150, h:130, lbl:'LA CENTRALE',              tx:110, ty:85},
+    {id:'tht',     x:250, y:60,  w:210, h:150, lbl:'LA LIGNE THT (400 000 V)', tx:355, ty:45},
+    {id:'transfo', x:500, y:130, w:100, h:100, lbl:'LE TRANSFORMATEUR',        tx:550, ty:115},
+    {id:'batterie',x:730, y:180, w:100, h:90,  lbl:'LA BATTERIE DE QUARTIER',  tx:770, ty:165},
+  ];
+  const poses={}; let sel=null, t=0, fini=false;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,320);
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(0,270); ctx.lineTo(860,270); ctx.stroke();
+    // centrale (bâtiment + tour)
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#b45309'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.rect(55,180,90,90); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(85,180); ctx.lineTo(92,120); ctx.lineTo(118,120); ctx.lineTo(125,180); ctx.stroke();
+    ctx.font='16px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('\u2601\ufe0f',105+6*Math.sin(t),108);
+    ctx.font='22px Segoe UI'; ctx.fillText('\u26a1',100,232);
+    // pylônes + fil
+    function pylone(x){ ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(x-16,270); ctx.lineTo(x,110); ctx.lineTo(x+16,270); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x-22,140); ctx.lineTo(x+22,140); ctx.stroke(); }
+    pylone(300); pylone(410);
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(145,200);
+    ctx.quadraticCurveTo(222,150,300,140);
+    ctx.quadraticCurveTo(355,168,410,140);
+    ctx.quadraticCurveTo(465,168,520,175);
+    ctx.stroke();
+    // électrons qui circulent
+    ctx.fillStyle='#f59e0b';
+    for(let i=0;i<5;i++){
+      const p=((t*0.16)+i/5)%1;
+      let px,py;
+      if(p<0.4){ const u=p/0.4;   px=145+u*155; py=200-55*Math.sin(Math.PI*u*0.9); }
+      else if(p<0.7){ const u=(p-0.4)/0.3; px=300+u*110; py=140+22*Math.sin(Math.PI*u); }
+      else { const u=(p-0.7)/0.3; px=410+u*110; py=140+30*u; }
+      ctx.beginPath(); ctx.arc(px,py,4.5,0,Math.PI*2); ctx.fill();
+    }
+    // transformateur (boîte + éclair)
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.rect(520,160,60,70); ctx.fill(); ctx.stroke();
+    ctx.font='20px Segoe UI'; ctx.fillText('\u26a1',550,202);
+    ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#7c3aed';
+    ctx.fillText('400 000 V \u2192 230 V',550,250);
+    // fil basse tension vers maisons
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(580,195); ctx.lineTo(650,210); ctx.stroke();
+    ctx.font='24px Segoe UI'; ctx.fillStyle='#000';
+    ctx.fillText('\ud83c\udfe0',668,235); ctx.fillText('\ud83c\udfe0',700,255);
+    // batterie de quartier
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#16a34a'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.rect(748,200,64,70); ctx.fill(); ctx.stroke();
+    ctx.font='22px Segoe UI'; ctx.fillText('\ud83d\udd0b',780,242);
+    const charge=(Math.sin(t*0.7)+1)/2;
+    ctx.fillStyle='#16a34a'; ctx.fillRect(752,266-charge*60,8,charge*60);
+    // étiquettes posées
+    ctx.font='bold 12.5px Segoe UI';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    if(!fini) requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">\u2705 Schéma complet ! Le trajet du courant : la CENTRALE produit, la ligne THT transporte à 400 000 V (haute tension = moins de pertes sur la distance), le TRANSFORMATEUR abaisse à 230 V avant les maisons\u2026 et la BATTERIE de quartier stocke le surplus (regarde son niveau qui monte et descend !). (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">\u274c Pas là ! Cette zone correspond à un autre élément. Indice : suis les points jaunes depuis le bâtiment qui produit, via les pylônes, jusqu\u2019à la boîte violette qui abaisse la tension\u2026</div>';
+    }
+  });
+})();
+
+/* ================= A6 : TIENS LES 50 HZ ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const MOMENTS=[
+    {nom:'\ud83c\udf19 3 h du matin — le pays dort', conso:40,
+     ok:'\u2705 40 GW produits pour 40 GW consommés : la nuit, on ralentit les centrales — produire trop ferait MONTER la fréquence !'},
+    {nom:'\u2600\ufe0f 13 h — journée ordinaire', conso:57,
+     ok:'\u2705 57 GW : équilibre tenu. En vrai, le solaire aide à cette heure-ci — le dispatching module les pilotables autour.'},
+    {nom:'\ud83c\udf73 19 h — toute la France cuisine', conso:78,
+     ok:'\u2705 78 GW : le pic du soir est tenu ! C\u2019est LE moment des moyens de pointe : barrages turbinés à fond, effacements activés. (+4 pts)'},
+  ];
+  let etape=0, t=0, fini=false, valide=false;
+  function freqActuelle(){
+    const sc=MOMENTS[Math.min(etape,2)];
+    const f=50+(+slider.value - sc.conso)*0.06;
+    return Math.max(48.6,Math.min(51.4,f));
+  }
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,300);
+    const sc=MOMENTS[Math.min(etape,2)];
+    // titre du moment
+    ctx.font='bold 16px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#7c2d12';
+    ctx.fillText(sc.nom+'  ·  réglage '+(Math.min(etape,2)+1)+'/3', 430, 30);
+    // barres production vs consommation
+    function barre(x,val,coul,titre){
+      ctx.fillStyle='#e2e8f0'; ctx.fillRect(x,70,70,170);
+      const h=val/90*170;
+      ctx.fillStyle=coul; ctx.fillRect(x,240-h,70,h);
+      ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+      ctx.fillText(titre,x+35,62); ctx.fillText(val+' GW',x+35,262);
+    }
+    const pulse=1+0.02*Math.sin(t*3);
+    barre(120,+slider.value,'#b45309','PRODUCTION');
+    ctx.save(); ctx.translate(250*0,0);
+    barre(250,Math.round(sc.conso*pulse),'#334155','CONSOMMATION');
+    ctx.restore();
+    // cadran 50 Hz
+    const f=freqActuelle();
+    ctx.strokeStyle='#b45309'; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.arc(600,160,85,Math.PI*0.75,Math.PI*2.25); ctx.stroke();
+    ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#64748b';
+    ctx.fillText('49',536,232); ctx.fillText('50',600,58); ctx.fillText('51',666,232);
+    const ang=Math.PI*1.5+(f-50)*1.5;
+    const okF=Math.abs(f-50)<=0.06;
+    ctx.strokeStyle= okF ? '#16a34a' : '#dc2626'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(600,160); ctx.lineTo(600+62*Math.cos(ang),160+62*Math.sin(ang)); ctx.stroke();
+    ctx.fillStyle= okF ? '#16a34a' : '#dc2626'; ctx.font='bold 20px Segoe UI';
+    ctx.fillText(f.toFixed(2)+' Hz',600,282);
+    if(!okF){ ctx.font='bold 13px Segoe UI';
+      ctx.fillText(f<50?'\u26a0\ufe0f production insuffisante':'\u26a0\ufe0f trop de production !',600,80); }
+    if(!fini) requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=MOMENTS[etape], verd=document.getElementById('verd6');
+    if(Math.abs(+slider.value - sc.conso)<=1){
+      etape++;
+      if(etape>=MOMENTS.length){
+        valide=true;
+        verd.innerHTML='<div class="verdict ok">'+sc.ok+' Tu viens de vivre la règle d\u2019or : production = consommation, \u00c0 CHAQUE INSTANT.</div>';
+        reussir(6,4);
+      } else {
+        verd.innerHTML='<div class="verdict ok">'+sc.ok+' \u2192 Nouveau moment de la journée : la consommation a changé, rattrape-la !</div>';
+      }
+    } else {
+      const f=freqActuelle();
+      verd.innerHTML='<div class="verdict ko">\u274c L\u2019aiguille est à '+f.toFixed(2)+' Hz : '+(f<50?'il MANQUE de la production (la fréquence chute quand on consomme plus qu\u2019on ne produit). Monte le curseur\u2026':'il y a TROP de production (la fréquence monte quand on produit plus qu\u2019on ne consomme). Baisse le curseur\u2026')+' Vise 50,00 Hz avant de valider.</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"La règle d'or du réseau électrique :", r:["production = consommation à chaque instant","produire le maximum tout le temps","consommer d'abord, produire ensuite"], b:0},
  {q:"La fréquence normale du réseau européen est…", r:["50 Hz","500 Hz","5 Hz"], b:0},
@@ -353,7 +556,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
