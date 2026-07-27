@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 4ème — L'ascenseur · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#0f766e; --niv-fonce:#115e59; --orange:#ea580c;
+  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+  --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#f0fdfa;color:var(--niv-fonce)}
+nav.side a.actif{background:#ccfbf1;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:18px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:32px}
+.carte h3{font-size:16px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:13.5px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#f0fdfa;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+.anavig{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px;flex-wrap:wrap}
+.anavig .phasepts{margin-top:0}
+.navbtn{border:none;background:var(--niv);color:#fff;font-size:15px;font-weight:800;border-radius:10px;padding:11px 22px;cursor:pointer;transition:.15s}
+.navbtn:hover:not(:disabled){background:var(--niv-fonce)}
+.navbtn:disabled{background:#e2e8f0;color:#94a3b8;cursor:not-allowed}
+.rejbtn{border:2px solid var(--niv);background:#fff;color:var(--niv-fonce);font-size:13px;font-weight:700;border-radius:10px;padding:9px 15px;cursor:pointer;transition:.15s}
+.rejbtn:hover{background:#f1f5f9}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%230f766e'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+  <a href="#s1"><span class="dot"></span>Le transport le plus sûr du monde</a>
+  <a href="#s2"><span class="dot"></span>Les organes de l'ascenseur</a>
+  <a href="#s3"><span class="dot"></span>Le secret du contrepoids (animation)</a>
+  <a href="#s4"><span class="dot"></span>Le tableau des organes</a>
+  <a href="#s5"><span class="dot"></span>Le parachute d'Otis (animation)</a>
+  <a href="#s6"><span class="dot"></span>Qui décide où va la cabine ? (animation)</a>
+  <a href="#s7"><span class="dot"></span>La maintenance, clé de la sécurité</a>
+  <a href="#s8"><span class="dot"></span>À retenir</a>
+  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+  <div class="eyebrow">Technologie · 4ème · Séquence L'ascenseur</div>
+  <h1>🛗 Le transport<br>le plus sûr du monde.</h1>
+  <p class="sous" style="margin-top:16px">Tu le prends sans y penser : une cabine suspendue à des câbles, qui monte et descend dans le noir d'une gaine.
+  Et pourtant, l'ascenseur transporte l'équivalent de la population mondiale <b>tous les 3 jours</b>… avec moins d'accidents que
+  n'importe quel autre transport. Contrepoids malin, parachute génial, cerveau électronique : on ouvre la gaine.</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>Les grands organes de l'ascenseur</h2>
+  <div class="cartes">
+    <div class="carte" style="--accent:#0f766e"><div class="ic">🏋️</div><h3>LE CONTREPOIDS</h3><p>Une masse qui descend quand la cabine monte : le moteur n'a presque rien à soulever.</p><span class="ex">l'astuce qui économise l'énergie</span></div>
+    <div class="carte" style="--accent:#334155"><div class="ic">⚙️</div><h3>LE TREUIL (POULIE MOTRICE)</h3><p>Le moteur entraîne une poulie ; les câbles y adhèrent et déplacent cabine et contrepoids.</p><span class="ex">la chaîne d'énergie : CONVERTIR & TRANSMETTRE</span></div>
+    <div class="carte" style="--accent:#dc2626"><div class="ic">🪂</div><h3>LE PARACHUTE</h3><p>Si les câbles lâchent ou que la cabine s'emballe : des mâchoires mordent les rails et la bloquent net.</p><span class="ex">inventé par Elisha Otis</span></div>
+    <div class="carte" style="--accent:#7c3aed"><div class="ic">🧠</div><h3>L'ARMOIRE DE COMMANDE</h3><p>Elle reçoit les appels, choisit l'ordre de desserte, pilote moteur et portes.</p><span class="ex">la chaîne d'information : TRAITER</span></div>
+  </div>
+</section>
+
+<section class="slide" id="s3">
+  <h2>Le secret du contrepoids</h2>
+  <div class="animbox">
+    <canvas id="cvContrepoids" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capContrepoids"></div></div>
+    <div class="anavig">
+      <button class="navbtn" data-prev="contrepoids">◀ Précédent</button>
+      <div class="phasepts" id="ptsContrepoids"></div>
+      <button class="navbtn" data-next="contrepoids">Suivant ▶</button>
+      <button class="rejbtn" data-anim="contrepoids">⟳ Rejouer l’étape</button>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>Le tableau des organes</h2>
+  <table class="mat">
+    <tr><th>Organe</th><th>Fonction</th><th>Le détail malin</th></tr>
+    <tr><td>🏋️ Contrepoids</td><td>équilibrer la cabine</td><td>sa masse = cabine vide + la MOITIÉ de la charge maxi : le moteur travaille le moins possible</td></tr>
+    <tr><td>⚙️ Treuil / poulie motrice</td><td>déplacer cabine et contrepoids</td><td>les câbles ne sont pas fixés à la poulie : ils y ADHÈRENT, posés dans ses gorges</td></tr>
+    <tr><td>🪢 Câbles de traction</td><td>porter la cabine</td><td>toujours PLUSIEURS câbles : un seul suffirait à porter le tout — les autres sont la marge de sécurité</td></tr>
+    <tr><td>🪂 Parachute + limiteur de vitesse</td><td>bloquer la cabine en cas d'urgence</td><td>si la vitesse s'emballe, le limiteur déclenche le parachute : des coins mordent les rails</td></tr>
+    <tr><td>🚪 Portes + cellule photoélectrique</td><td>protéger l'accès</td><td>un rideau de faisceaux invisibles : une jambe le coupe → les portes rouvrent aussitôt</td></tr>
+    <tr><td>🧠 Armoire de commande</td><td>gérer les appels</td><td>elle optimise l'ordre de desserte — un vrai petit algorithme dans la gaine</td></tr>
+  </table>
+</section>
+
+<section class="slide" id="s5">
+  <h2>1854 : le coup de théâtre d'Elisha Otis</h2>
+  <div class="animbox">
+    <canvas id="cvParachute" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capParachute"></div></div>
+    <div class="anavig">
+      <button class="navbtn" data-prev="parachute">◀ Précédent</button>
+      <div class="phasepts" id="ptsParachute"></div>
+      <button class="navbtn" data-next="parachute">Suivant ▶</button>
+      <button class="rejbtn" data-anim="parachute">⟳ Rejouer l’étape</button>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <h2>Qui décide où va la cabine ?</h2>
+  <div class="animbox">
+    <canvas id="cvAppels" width="820" height="380"></canvas>
+    <div class="legende"><div class="caption" id="capAppels"></div></div>
+    <div class="anavig">
+      <button class="navbtn" data-prev="appels">◀ Précédent</button>
+      <div class="phasepts" id="ptsAppels"></div>
+      <button class="navbtn" data-next="appels">Suivant ▶</button>
+      <button class="rejbtn" data-anim="appels">⟳ Rejouer l’étape</button>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+  <h2>La maintenance : la clé de la sécurité</h2>
+  <table class="mat">
+    <tr><th>Le geste</th><th>La fréquence</th><th>Pourquoi</th></tr>
+    <tr><td>🛢️ Graisser câbles et guides</td><td>visites régulières (6 semaines en France)</td><td>un grincement qui s'installe = une usure qui s'accélère : on graisse AVANT la panne</td></tr>
+    <tr><td>👁️ Contrôler l'usure des câbles</td><td>à chaque visite</td><td>on les remplace bien avant leur limite — jamais « à la casse »</td></tr>
+    <tr><td>🚪 Nettoyer la cellule photoélectrique</td><td>à chaque visite</td><td>une cellule sale ne « voit » plus les passagers : les portes deviennent brutales</td></tr>
+    <tr><td>🆘 Tester alarme et téléphone de cabine</td><td>à chaque visite</td><td>une personne bloquée doit TOUJOURS pouvoir alerter — et on la libère par une procédure précise, jamais en forçant les portes</td></tr>
+  </table>
+  <p class="sous" style="margin-top:18px">➡️ Au <b>TP</b>, l'entreprise de maintenance t'embauche : trois ascenseurs qui posent problème à expertiser, et un contrepoids à dimensionner.</p>
+</section>
+
+<section class="slide" id="s8">
+  <h2>✅ À retenir</h2>
+  <div class="retenir">
+    <ul>
+      <li>L'ascenseur combine tes deux chaînes : <b>énergie</b> (moteur → treuil → câbles → cabine) et <b>information</b> (boutons → armoire de commande → moteur et portes).</li>
+      <li>Le <b>contrepoids</b> équilibre la cabine : sa masse vaut la cabine vide + la MOITIÉ de la charge maximale. Résultat : le moteur fournit très peu d'effort — une astuce d'économie d'énergie vieille de 150 ans.</li>
+      <li>Le <b>parachute</b> d'Elisha Otis (démonstration spectaculaire en 1854 : il fit couper le câble sous ses pieds !) bloque la cabine sur ses rails si les câbles lâchent — c'est LUI qui a rendu les gratte-ciel possibles.</li>
+      <li>L'<b>armoire de commande</b> gère les appels avec un algorithme : ACQUÉRIR les boutons → TRAITER (choisir l'ordre de desserte) → AGIR (moteur, portes) → RESTITUER (voyants, gong).</li>
+      <li>La sécurité tient à la <b>maintenance préventive</b> : graissage, contrôle des câbles, cellule des portes, alarme — on intervient AVANT la panne, à intervalles réguliers imposés par la loi.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+  const etat={i:0,t0:null,raf:null};
+  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+  function majBtns(){
+    const bp=document.querySelector('button[data-prev="'+nom+'"]');
+    const bn=document.querySelector('button[data-next="'+nom+'"]');
+    if(bp) bp.disabled=(etat.i===0);
+    if(bn) bn.disabled=(etat.i===phases.length-1);
+  }
+  function jouer(){
+    cancelAnimationFrame(etat.raf); etat.t0=null;
+    cap.textContent=phases[etat.i].caption; majPts(); majBtns();
+    etat.raf=requestAnimationFrame(function frame(ts){
+      if(etat.t0===null)etat.t0=ts;
+      const p=Math.min(1,(ts-etat.t0)/phases[etat.i].dur);
+      ctx.clearRect(0,0,cv.width,cv.height);
+      phases[etat.i].draw(ctx,p,cv.width,cv.height);
+      if(p<1) etat.raf=requestAnimationFrame(frame);
+    });
+  }
+  ANIMS[nom]={
+    demarrer(){ etat.i=0; jouer(); },
+    rejouer(){ jouer(); },
+    suivant(){ if(etat.i<phases.length-1){ etat.i++; jouer(); } },
+    precedent(){ if(etat.i>0){ etat.i--; jouer(); } }
+  };
+  cap.textContent=phases[0].caption; majPts(); majBtns();
+  phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#115e59',taille=15){
+  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+function gaine(ctx){
+  ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(250,50); ctx.lineTo(250,350); ctx.moveTo(430,50); ctx.lineTo(430,350); ctx.stroke();
+  ctx.strokeStyle='#0f766e'; ctx.lineWidth=5;
+  ctx.beginPath(); ctx.arc(340,60,34,Math.PI,0); ctx.stroke();
+}
+function cabine(ctx,y,occup){
+  ctx.fillStyle='#fff'; ctx.strokeStyle='#0f766e'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.rect(268,y,80,86); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.moveTo(308,y); ctx.lineTo(308,60); ctx.stroke();
+  if(occup){ ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000'; ctx.fillText('🧍',308,y+58); }
+}
+function contrep(ctx,y){
+  ctx.fillStyle='#64748b'; ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.rect(388,y,42,64); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(409,y); ctx.lineTo(372,60); ctx.stroke();
+}
+/* ====== ANIM 1 : LE CONTREPOIDS ====== */
+creerAnim('contrepoids','cvContrepoids','capContrepoids','ptsContrepoids',[
+ {dur:3800,caption:'STRUCTURE — Dans la gaine : la cabine à gauche, le CONTREPOIDS à droite, reliés par les câbles qui passent sur la poulie motrice du treuil, tout en haut. Le contrepoids pèse : cabine vide + la moitié de la charge maxi.',
+  draw(ctx,p){
+    gaine(ctx);
+    cabine(ctx,180,true);
+    contrep(ctx,150);
+    etiquette(ctx,'⚙️ treuil + poulie motrice',600,70,'#334155',14);
+    etiquette(ctx,'cabine',210,230,'#0f766e',13);
+    etiquette(ctx,'contrepoids',510,185,'#64748b',13);
+    etiquette(ctx,'masse = cabine + 50 % de la charge',600,215,'#64748b',12); }},
+ {dur:6400,caption:'ACTION — La cabine MONTE… et le contrepoids DESCEND, exactement en même temps : sa masse « tire » de l\u2019autre côté de la poulie. Regarde la jauge du moteur : il ne fournit qu\u2019un tout petit effort — l\u2019équilibre fait presque tout le travail.',
+  draw(ctx,p){ const q=lisse(p);
+    gaine(ctx);
+    cabine(ctx,180-q*110,true);
+    contrep(ctx,150+q*110);
+    ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=14; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(560,300); ctx.lineTo(760,300); ctx.stroke();
+    ctx.strokeStyle='#16a34a';
+    ctx.beginPath(); ctx.moveTo(560,300); ctx.lineTo(560+36,300); ctx.stroke();
+    etiquette(ctx,'effort du moteur : FAIBLE 💪',660,270,'#16a34a',14);
+    etiquette(ctx,'⬆️ la cabine monte',190,120,'#0f766e',13.5);
+    etiquette(ctx,'⬇️ le contrepoids descend',560,200,'#64748b',13.5); }},
+ {dur:5200,caption:'PROPRIÉTÉ — Sans contrepoids, le moteur soulèverait TOUT le poids à chaque trajet : moteur géant, facture géante. Avec lui, il ne compense que la différence. C\u2019est pour ça qu\u2019un ascenseur consomme souvent moins qu\u2019un grille-pain en fonctionnement !',
+  draw(ctx,p){
+    etiquette(ctx,'SANS contrepoids',230,110,'#dc2626',17);
+    etiquette(ctx,'le moteur soulève ~1 400 kg',230,148,'#64748b',13.5);
+    etiquette(ctx,'moteur énorme, énergie gaspillée',230,176,'#64748b',13.5);
+    etiquette(ctx,'AVEC contrepoids',580,110,'#16a34a',17);
+    etiquette(ctx,'le moteur compense ~la différence',580,148,'#64748b',13.5);
+    etiquette(ctx,'petit moteur, petite facture',580,176,'#64748b',13.5);
+    etiquette(ctx,'équilibrer plutôt que forcer : un grand principe d\u2019ingénieur',410,300,'#115e59',15.5); }},
+]);
+
+/* ====== ANIM 2 : LE PARACHUTE D'OTIS ====== */
+creerAnim('parachute','cvParachute','capParachute','ptsParachute',[
+ {dur:3800,caption:'STRUCTURE — New York, 1854. Elisha Otis grimpe sur une plateforme suspendue, devant la foule. Sous la plateforme, son invention : des mâchoires à ressort prêtes à MORDRE les rails de guidage. Et au-dessus… un assistant, une hache à la main.',
+  draw(ctx,p){
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(300,60); ctx.lineTo(300,340); ctx.moveTo(520,60); ctx.lineTo(520,340); ctx.stroke();
+    ctx.fillStyle='#a16207'; ctx.fillRect(310,190,200,16);
+    ctx.strokeStyle='#334155'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(410,190); ctx.lineTo(410,70); ctx.stroke();
+    ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillText('🧍',410,186);
+    ctx.font='20px Segoe UI'; ctx.fillText('🪓',446,80);
+    ctx.fillStyle='#dc2626';
+    ctx.fillRect(302,206,14,12); ctx.fillRect(504,206,14,12);
+    etiquette(ctx,'les mâchoires du parachute',650,215,'#dc2626',13);
+    etiquette(ctx,'rails de guidage',210,110,'#64748b',12.5); }},
+ {dur:6400,caption:'ACTION — « Coupez le câble ! » La hache tombe, le câble lâche… la plateforme chute de quelques centimètres — et STOP : le ressort, plus rien pour le retenir, projette les mâchoires dans les rails. Otis lève son chapeau : « Tout est sûr, messieurs ! »',
+  draw(ctx,p){ const q=lisse(p);
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(300,60); ctx.lineTo(300,340); ctx.moveTo(520,60); ctx.lineTo(520,340); ctx.stroke();
+    const chute=Math.min(26,q*90);
+    ctx.fillStyle='#a16207'; ctx.fillRect(310,190+chute,200,16);
+    if(q<0.25){ ctx.strokeStyle='#334155'; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.moveTo(410,190); ctx.lineTo(410,70); ctx.stroke(); }
+    else { ctx.strokeStyle='#334155'; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.moveTo(410,70); ctx.lineTo(400,110); ctx.stroke();
+      etiquette(ctx,'✂️ câble coupé !',480,100,'#dc2626',14); }
+    ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000'; ctx.fillText('🧍',410,186+chute);
+    ctx.fillStyle='#dc2626';
+    const morsure=q>0.3?8:0;
+    ctx.fillRect(302-morsure,206+chute,14+morsure,12); ctx.fillRect(504,206+chute,14+morsure,12);
+    if(q>0.45){ etiquette(ctx,'💥 les mâchoires MORDENT les rails : arrêt net !',410,300,'#16a34a',15);
+      etiquette(ctx,'« Tout est sûr, messieurs ! »',410,330,'#a16207',13.5); } }},
+ {dur:5200,caption:'PROPRIÉTÉ — Le génie du parachute : c\u2019est le câble TENDU qui retient le ressort. Câble cassé = ressort libéré = blocage AUTOMATIQUE, sans électricité, sans réflexe humain. Une sécurité qui fonctionne PARCE QUE la panne a lieu — c\u2019est elle qui a rendu les gratte-ciel habitables.',
+  draw(ctx,p){
+    etiquette(ctx,'câble intact → ressort retenu → mâchoires ouvertes',410,120,'#64748b',15);
+    etiquette(ctx,'câble cassé → ressort libéré → mâchoires serrées',410,170,'#dc2626',15);
+    etiquette(ctx,'la panne DÉCLENCHE la sécurité : rien à décider, rien à alimenter',410,240,'#115e59',15.5);
+    etiquette(ctx,'🏙️ sans Otis, pas d\u2019immeubles de 40 étages',410,300,'#a16207',14); }},
+]);
+
+/* ====== ANIM 3 : LA GESTION DES APPELS ====== */
+creerAnim('appels','cvAppels','capAppels','ptsAppels',[
+ {dur:3800,caption:'STRUCTURE — Un immeuble de 6 niveaux, la cabine au rez-de-chaussée. Trois appels s\u2019allument presque en même temps : niveau 4 pour descendre, niveau 2 pour monter, et un passager en cabine veut le 5. Qui décide de l\u2019ordre ? L\u2019armoire de commande.',
+  draw(ctx,p){
+    for(let n=0;n<6;n++){
+      const y=330-n*50;
+      ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(180,y); ctx.lineTo(420,y); ctx.stroke();
+      etiquette(ctx,'N'+n,160,y-18,'#94a3b8',12);
+    }
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#0f766e'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.rect(270,286,60,42); ctx.fill(); ctx.stroke();
+    etiquette(ctx,'🔴 N4 ⬇️',470,138,'#dc2626',13);
+    etiquette(ctx,'🔴 N2 ⬆️',470,238,'#dc2626',13);
+    etiquette(ctx,'🎛️ cabine → N5',470,300,'#dc2626',13);
+    ctx.fillStyle='#7c3aed'; ctx.beginPath(); ctx.roundRect(620,140,120,80,10); ctx.fill();
+    etiquette(ctx,'ARMOIRE',680,175,'#fff',13);
+    etiquette(ctx,'DE COMMANDE',680,195,'#fff',11); }},
+ {dur:6600,caption:'ACTION — L\u2019armoire TRAITE : « je monte, je sers les appels DANS MON SENS » — arrêt au N2 (montée), puis N4… non ! N4 veut DESCENDRE : je continue au N5 (cabine), et je redescends prendre le N4. Personne ne fait le yoyo, tout le monde gagne du temps.',
+  draw(ctx,p){ const q=lisse(p);
+    for(let n=0;n<6;n++){
+      const y=330-n*50;
+      ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(180,y); ctx.lineTo(420,y); ctx.stroke();
+      etiquette(ctx,'N'+n,160,y-18,'#94a3b8',12);
+    }
+    let yCab;
+    if(q<0.3) yCab=286-(q/0.3)*100;
+    else if(q<0.6) yCab=186-((q-0.3)/0.3)*150;
+    else yCab=36+((q-0.6)/0.4)*50;
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#0f766e'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.rect(270,yCab,60,42); ctx.fill(); ctx.stroke();
+    if(q>0.25&&q<0.38) etiquette(ctx,'✅ arrêt N2 : il monte, comme nous',560,240,'#16a34a',13);
+    if(q>0.55&&q<0.68) etiquette(ctx,'✅ arrêt N5 : le passager descend',560,90,'#16a34a',13);
+    if(q>0.78) etiquette(ctx,'✅ retour N4 : on le prend à la descente',560,140,'#16a34a',13);
+    etiquette(ctx,'règle : servir les appels DANS LE SENS du trajet',410,368,'#7c3aed',13.5); }},
+ {dur:5200,caption:'PROPRIÉTÉ — C\u2019est un ALGORITHME : des règles précises (servir dans le sens de marche, ne pas inverser pour un appel opposé) exécutées des milliers de fois par jour. ACQUÉRIR les boutons → TRAITER l\u2019ordre de desserte → AGIR sur moteur et portes → RESTITUER voyants et gong. L\u2019ascenseur pense — à sa façon.',
+  draw(ctx,p){
+    ['📡 ACQUÉRIR','🧠 TRAITER','⚙️ AGIR','💡 RESTITUER'].forEach((t,i)=>{
+      etiquette(ctx,t,145+i*180,150,['#0e7490','#7c3aed','#16a34a','#ea580c'][i],16);
+      if(i<3){ ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+        ctx.beginPath(); ctx.moveTo(202+i*180,145); ctx.lineTo(255+i*180,145); ctx.stroke(); }
+    });
+    etiquette(ctx,'boutons → armoire (algorithme de desserte) → moteur, portes → voyants, gong',410,230,'#64748b',13.5);
+    etiquette(ctx,'une chaîne d\u2019information complète… dans une gaine d\u2019immeuble',410,290,'#115e59',15); }},
+]);
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-prev]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.prev].precedent()));
+document.querySelectorAll('button[data-next]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.next].suivant()));
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].rejouer()));
+const slideAnim={s3:'contrepoids',s5:'parachute',s6:'appels'};
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting&&slideAnim[en.target.id])ANIMS[slideAnim[en.target.id]].demarrer();});},{threshold:0.55});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liens=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{threshold:0.55});
+document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('section.slide')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+</body>
+</html>
