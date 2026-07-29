@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
@@ -78,12 +86,12 @@ canvas.net{width:100%;max-width:640px;height:auto;background:#fdfdfd;border:1px 
 
 <header class="tp">
   <h1>🛰️ TP — Mission routeur</h1>
-  <p>Le centre de contrôle du réseau t'a recruté. 5 missions pour devenir maître de l'aiguillage — à la fin : le code des jeux !</p>
+  <p>Le centre de contrôle du réseau t'a recruté. 7 missions pour devenir maître de l'aiguillage — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -144,10 +152,37 @@ canvas.net{width:100%;max-width:640px;height:auto;background:#fdfdfd;border:1px 
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de l'agent réseau</h2>
+  <h2><span class="badge">5</span>Le trajet d’une requête web</h2>
+  <div class="consigne">🗺️ Tu tapes une adresse et tu valides — suis la requête orange qui part et la réponse verte qui revient ! Clique une étiquette, puis la machine correspondante. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="300"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Découpe le fichier en paquets</h2>
+  <div class="consigne">🎛️ Un fichier de <b>12 Mo</b> à envoyer… et la ligne perd toujours UN paquet en route ! Règle le découpage : chaque paquet ajoute un en-tête, et tout paquet perdu doit être renvoyé en entier.</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>📦 Nombre de paquets :</span>
+    <input type="range" id="slider6" min="1" max="40" step="1" value="2">
+    <span class="val"><span id="val6">2</span> paquets</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de l'agent réseau</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -161,15 +196,15 @@ canvas.net{width:100%;max-width:640px;height:auto;background:#fdfdfd;border:1px 
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_net_3e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_net_3e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_net_3e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_net_3e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -183,7 +218,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -374,7 +409,171 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'client', x:60,  y:120, w:120, h:120, lbl:'LE NAVIGATEUR (CLIENT)',   tx:120, ty:110},
+    {id:'routeur',x:280, y:140, w:110, h:70,  lbl:'LA BOX / LE ROUTEUR',      tx:335, ty:130},
+    {id:'dns',    x:330, y:30,  w:100, h:80,  lbl:'LE SERVEUR DNS (ANNUAIRE)', tx:270, ty:24},
+    {id:'serveur',x:620, y:120, w:110, h:110, lbl:'LE SERVEUR WEB',           tx:675, ty:110},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,300);
+    // client
+    ctx.fillStyle='#0f172a'; ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(76,130,88,64,6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#e0f2fe'; ctx.fillRect(82,136,76,52);
+    ctx.font='bold 9px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
+    ctx.fillText('www.estic.fr',120,164);
+    ctx.fillStyle='#334155'; ctx.fillRect(104,194,32,10); ctx.fillRect(90,204,60,6);
+    // box/routeur
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(292,152,86,46,10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle= Math.sin(t*4)>0 ? '#22c55e' : '#14532d';
+    ctx.beginPath(); ctx.arc(310,168,4,0,Math.PI*2); ctx.fill();
+    // serveur DNS (annuaire)
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#b45309'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(344,40,72,62,8); ctx.fill(); ctx.stroke();
+    ctx.font='18px Segoe UI'; ctx.fillText('\ud83d\udcd6',380,72);
+    ctx.font='bold 9px Segoe UI'; ctx.fillStyle='#b45309';
+    ctx.fillText('estic.fr = 92.44.\u2026',380,92);
+    // serveur web (tour à LEDs)
+    ctx.fillStyle='#1e293b';
+    ctx.beginPath(); ctx.roundRect(636,128,78,94,8); ctx.fill();
+    for(let r=0;r<3;r++){ ctx.fillStyle= Math.sin(t*3+r)>0 ? '#38bdf8' : '#0c4a6e';
+      ctx.fillRect(648,142+r*24,54,9); }
+    // câbles
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(164,170); ctx.lineTo(292,174); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(348,152); ctx.lineTo(374,102); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(378,174); ctx.lineTo(636,174); ctx.stroke();
+    // requête (orange) aller + réponse (verte) retour
+    for(let i=0;i<2;i++){ const p=((t*0.4)+i/2)%1;
+      ctx.fillStyle='#ea580c';
+      if(p<0.5){ const u=p/0.5; ctx.fillRect(164+u*(335-164)-4,170-4,8,8); }
+      else { const u=(p-0.5)/0.5; ctx.fillRect(378+u*(636-378)-4,168-4,8,8); }
+      ctx.fillStyle='#16a34a';
+      if(p<0.5){ const u=p/0.5; ctx.fillRect(636-u*(636-378)-4,182-4,8,8); }
+      else { const u=(p-0.5)/0.5; ctx.fillRect(335-u*(335-164)-4,184-4,8,8); } }
+    // aller-retour DNS
+    const pd=(t*0.6)%1;
+    ctx.fillStyle='#b45309';
+    ctx.beginPath(); ctx.arc(348+ (pd<0.5?pd*2:(1-pd)*2)*26, 152-(pd<0.5?pd*2:(1-pd)*2)*50, 4,0,Math.PI*2); ctx.fill();
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Trajet décodé ! Le NAVIGATEUR demande, mais d\u2019abord la BOX interroge le DNS — l\u2019annuaire qui traduit « estic.fr » en adresse IP — puis route la requête vers le SERVEUR WEB, qui renvoie la page (les carrés verts). Deux voyages invisibles à chaque clic : la traduction, puis le contenu. Sans DNS, il faudrait retenir des numéros ! (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : le client affiche la page, la box a la LED verte, le DNS est le grand livre orange qui traduit les noms… et le serveur web est la tour bleue qui héberge le site.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:8, max:25,
+     ok:'\u2705 Entre 8 et 25 paquets : un paquet perdu ne coûte qu\u2019une petite retransmission, et les en-têtes restent raisonnables. C\u2019est exactement le pari d\u2019Internet : DÉCOUPER pour que la perte soit banale — le protocole renvoie le manquant et personne ne s\u2019en aperçoit ! (+4 pts)',
+     kobas:'\u274c Paquets énormes : regarde le paquet rouge — perdu, il faut TOUT renvoyer, des mégaoctets entiers ! Découpe davantage : la perte doit coûter peu\u2026',
+     kohaut:'\u274c Confettis ! Des dizaines d\u2019en-têtes gonflent le volume total (regarde la jauge). Découper protège, sur-découper gaspille. Regroupe un peu\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    const taillePaquet=12/v;
+    const overhead=v*0.08;               // Mo d'en-têtes
+    const retrans=taillePaquet;          // 1 paquet perdu
+    const total=12+overhead+retrans;
+    // fichier découpé
+    ctx.font='bold 13px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
+    ctx.fillText('fichier 12 Mo \u2192 '+v+' paquet'+(v>1?'s':'')+' de '+taillePaquet.toFixed(1)+' Mo',430,34);
+    // paquets qui voyagent, l'un rougit (perdu) et repart
+    const y=100, x0=90, x1=770;
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(x0,y+26); ctx.lineTo(x1,y+26); ctx.stroke();
+    ctx.font='22px Segoe UI'; ctx.fillText('\ud83d\udcbb',60,y+16); ctx.fillText('\ud83d\uddc4\ufe0f',800,y+16);
+    const n=Math.min(v,14);
+    const wP=Math.max(10,Math.min(52,300/n));
+    const perdu=Math.floor(n/2);
+    for(let i=0;i<n;i++){
+      const p=((t*0.3)+i/n)%1;
+      const px=x0+p*(x1-x0-wP);
+      if(i===perdu && p>0.45 && p<0.7){
+        ctx.fillStyle='#dc2626';
+        ctx.fillRect(px,y-10+22*((p-0.45)/0.25),wP,18);
+        if(Math.sin(t*8)>0){ ctx.font='13px Segoe UI'; ctx.fillStyle='#dc2626'; ctx.fillText('perdu !',px+wP/2,y+52); }
+      } else {
+        ctx.fillStyle='#0e7490';
+        ctx.fillRect(px,y-10,wP,18);
+        ctx.fillStyle='#f59e0b'; ctx.fillRect(px,y-10,Math.max(2,wP*0.15),18);
+      }
+    }
+    ctx.font='10.5px Segoe UI'; ctx.fillStyle='#f59e0b'; ctx.textAlign='left';
+    ctx.fillText('\u25a0 en-tête',90,y+52);
+    ctx.textAlign='center';
+    // jauges : coût d'une perte + volume total
+    ctx.fillStyle='#334155'; ctx.font='bold 12.5px Segoe UI';
+    ctx.fillText('COÛT D\u2019UN PAQUET PERDU : '+retrans.toFixed(1)+' Mo à renvoyer',300,196);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(140,206,320,15);
+    ctx.fillStyle= v<8 ? '#dc2626' : '#16a34a';
+    ctx.fillRect(140,206,320*Math.min(1,retrans/12),15);
+    ctx.fillStyle='#334155';
+    ctx.fillText('VOLUME TOTAL (données + en-têtes + renvoi) : '+total.toFixed(1)+' Mo',300,246);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(140,256,320,15);
+    ctx.fillStyle= v>25 ? '#dc2626' : '#16a34a';
+    ctx.fillRect(140,256,320*Math.min(1,(total-12)/6),15);
+    ctx.fillStyle='#64748b'; ctx.font='12px Segoe UI'; 
+    ctx.fillText('la robustesse d\u2019Internet :',660,206);
+    ctx.fillText('perdre un paquet est NORMAL,',660,226);
+    ctx.fillText('le renvoyer est automatique',660,246);
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"Sur Internet, un message voyage…", r:["d'un seul bloc","découpé en paquets","par la poste"], b:1},
  {q:"Si une liaison tombe en panne, les paquets…", r:["sont perdus pour toujours","attendent la réparation","passent par un autre chemin"], b:2},
@@ -395,7 +594,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

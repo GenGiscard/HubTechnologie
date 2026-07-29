@@ -32,6 +32,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.5}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 /* A1 tri */
 .tri{display:flex;flex-wrap:wrap;gap:10px}
 .tri .item{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px 14px;font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:10px}
@@ -96,12 +104,12 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 
 <header class="tp">
   <h1>🏡 TP — Programme ta maison connectée</h1>
-  <p>5 missions progressives. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Signal Rush</b> !</p>
+  <p>7 missions progressives. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Signal Rush</b> !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -172,10 +180,37 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de domoticien</h2>
+  <h2><span class="badge">5</span>Le schéma de la maison connectée</h2>
+  <div class="consigne">🗺️ Quelqu'un passe devant la maison : suis le SIGNAL qui circule du capteur jusqu'au volet ! Clique une étiquette, puis l'équipement correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Règle le thermostat</h2>
+  <div class="consigne">🎛️ Nuit d'hiver, –2 °C dehors. Règle la température de consigne : la jauge CONFORT et la jauge FACTURE réagissent en direct. Trouve le réglage du bon domoticien !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>🌡️ Consigne :</span>
+    <input type="range" id="slider6" min="12" max="26" step="1" value="24">
+    <span class="val"><span id="val6">24</span> °C</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de domoticien</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code du jeu.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -189,15 +224,15 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_domotique_4e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_domotique_4e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_domotique_4e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_domotique_4e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -211,7 +246,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}),900);
+  if(n<7) setTimeout(()=>document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}),900);
 }
 
 /* ================= A1 : TRI CAPTEUR / ACTIONNEUR ================= */
@@ -454,7 +489,165 @@ document.getElementById('test4').onclick=()=>lancerTests([
   {libelle:'Plein jour (lum. 85 %) → le volet doit être OUVERT', env:{lum:85,temp:21,pres:false}, attendu:{volet:'ouvert'}},
 ],'verd4',null,4,4,'a4fait');
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'capteur',   x:80,  y:96,  w:90,  h:80,  lbl:'LE CAPTEUR DE MOUVEMENT', tx:125, ty:86},
+    {id:'box',       x:330, y:150, w:110, h:80,  lbl:'LA BOX DOMOTIQUE',        tx:385, ty:140},
+    {id:'actionneur',x:560, y:70,  w:120, h:110, lbl:'LE VOLET MOTORISÉ (ACTIONNEUR)', tx:620, ty:60},
+    {id:'phone',     x:730, y:170, w:80,  h:120, lbl:'LE SMARTPHONE (INTERFACE)', tx:770, ty:160},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,320);
+    // maison
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(0,290); ctx.lineTo(860,290); ctx.stroke();
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+    ctx.strokeRect(300,120,400,170);
+    ctx.beginPath(); ctx.moveTo(280,120); ctx.lineTo(500,50); ctx.lineTo(720,120); ctx.stroke();
+    // passant devant la maison
+    const px=60+30*Math.sin(t*0.8);
+    ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+    ctx.fillText('\ud83d\udeb6',px,270);
+    // capteur PIR sur poteau + cône de détection
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#dc2626'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(100,108,44,34,8); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle='#334155'; ctx.beginPath(); ctx.moveTo(122,142); ctx.lineTo(122,290); ctx.stroke();
+    ctx.fillStyle='rgba(220,38,38,'+(0.10+0.08*Math.sin(t*3))+')';
+    ctx.beginPath(); ctx.moveTo(122,142); ctx.lineTo(40,270); ctx.lineTo(200,270); ctx.closePath(); ctx.fill();
+    // box domotique dans la maison
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(345,168,80,50,10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle= Math.sin(t*4)>0 ? '#22c55e' : '#14532d';
+    ctx.beginPath(); ctx.arc(362,182,4,0,Math.PI*2); ctx.fill();
+    ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#7c3aed'; ctx.fillText('BOX',385,208);
+    // volet motorisé sur fenêtre (monte/descend)
+    ctx.strokeStyle='#334155'; ctx.lineWidth=2.5; ctx.strokeRect(580,90,80,80);
+    const vh=40+30*Math.sin(t*0.9);
+    ctx.fillStyle='#94a3b8'; ctx.fillRect(582,92,76,vh);
+    for(let l=8;l<vh;l+=9){ ctx.strokeStyle='#64748b'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(582,92+l); ctx.lineTo(658,92+l); ctx.stroke(); }
+    ctx.fillStyle='#475569'; ctx.fillRect(596,72,48,16);
+    // smartphone
+    ctx.fillStyle='#0f172a';
+    ctx.beginPath(); ctx.roundRect(742,182,56,100,10); ctx.fill();
+    ctx.fillStyle='#38bdf8'; ctx.fillRect(748,190,44,84);
+    ctx.font='15px Segoe UI'; ctx.fillText('\ud83c\udfe0',770,236);
+    // signal : capteur -> box -> volet, et box <-> phone (wifi)
+    ctx.fillStyle='#ea580c';
+    for(let i=0;i<3;i++){ const p=((t*0.5)+i/3)%1;
+      if(p<0.5){ const u=p/0.5; ctx.beginPath(); ctx.arc(144+u*(345-144),140+u*50,4,0,Math.PI*2); ctx.fill(); }
+      else { const u=(p-0.5)/0.5; ctx.beginPath(); ctx.arc(425+u*(596-425),190-u*100,4,0,Math.PI*2); ctx.fill(); } }
+    const w=(t*0.9)%1;
+    ctx.strokeStyle='rgba(124,58,237,'+(1-w)+')'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.arc(425,193,8+w*30,-0.6,0.6); ctx.stroke();
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Chaîne d\u2019information complète ! Le CAPTEUR détecte (ACQUÉRIR), la BOX décide (TRAITER), le VOLET MOTORISÉ agit (l\u2019actionneur, côté chaîne d\u2019ÉNERGIE), et le SMARTPHONE te tient informé (RESTITUER). Suis les points orange : c\u2019est le trajet de l\u2019information — le même que dans l\u2019ascenseur, le tram ou la station météo ! (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : le capteur voit le passant (cône rouge), la box a la LED verte qui clignote (c\u2019est le cerveau), l\u2019actionneur est ce qui BOUGE (le volet), et l\u2019interface tient dans la main…</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:18, max:20,
+     ok:'\u2705 18-20 °C : le confort est là et la facture reste douce. Chaque degré au-dessus de 19 °C, c\u2019est \u2248 7 % de consommation en plus — le thermostat programmable qui baisse la nuit, c\u2019est LE geste domotique qui rapporte ! (+4 pts)',
+     kobas:'\u274c Brrr\u2026 regarde la jauge confort : à cette consigne on dort avec trois couettes et la maison devient humide. Remonte un peu\u2026',
+     kohaut:'\u274c Tropical ! Regarde la facture s\u2019envoler : chaque degré au-dessus de 19 °C coûte \u2248 7 % de plus. La nuit, on dort MIEUX un peu plus frais\u2026 Redescends.'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    // maison en coupe + radiateur
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+    ctx.strokeRect(90,80,260,150);
+    ctx.beginPath(); ctx.moveTo(70,80); ctx.lineTo(220,26); ctx.lineTo(370,80); ctx.stroke();
+    ctx.font='24px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+    ctx.fillText('\ud83d\udecc',170,180);
+    // radiateur dont l'intensité suit la consigne
+    const chauffe=(v-12)/14;
+    ctx.fillStyle='rgba(234,88,12,'+(0.25+0.6*chauffe)+')';
+    ctx.fillRect(280,150,50,70);
+    ctx.strokeStyle='#ea580c'; ctx.lineWidth=2;
+    for(let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(288+i*12,150); ctx.lineTo(288+i*12,220); ctx.stroke(); }
+    for(let i=0;i<3;i++){ const p=((t*0.5)+i/3)%1;
+      ctx.strokeStyle='rgba(234,88,12,'+(1-p)*(0.3+0.5*chauffe)+')';
+      ctx.beginPath(); ctx.arc(305,140-p*46,7,Math.PI*0.2,Math.PI*0.8); ctx.stroke(); }
+    // dehors
+    ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#0e7490';
+    ctx.fillText('\u2744\ufe0f dehors : \u22122 \u00b0C',170,262);
+    ctx.fillStyle='#334155'; ctx.font='bold 16px Segoe UI';
+    ctx.fillText('consigne : '+v+' \u00b0C',220,60);
+    // jauge confort (cloche autour de 19)
+    const conf=Math.max(0,1-Math.abs(v-19)/6);
+    ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#334155';
+    ctx.fillText('CONFORT',560,70);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(470,80,180,16);
+    ctx.fillStyle= (v>=18&&v<=20) ? '#16a34a' : '#f59e0b';
+    ctx.fillRect(470,80,180*conf,16);
+    if(v<16){ ctx.font='15px Segoe UI'; ctx.fillText('\ud83e\udd76',668,94); }
+    // jauge facture (croît fort au-delà de 19)
+    const fact=Math.min(1,Math.max(0.1,(v-12)/14 + Math.max(0,v-19)*0.08));
+    ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+    ctx.fillText('FACTURE DE CHAUFFAGE',560,140);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(470,150,180,16);
+    ctx.fillStyle= v>20 ? '#dc2626' : '#16a34a';
+    ctx.fillRect(470,150,180*fact,16);
+    if(v>22){ ctx.font='15px Segoe UI'; ctx.fillText('\ud83d\udcb8',668,164); }
+    ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
+    ctx.fillText('+1 \u00b0C au-dessus de 19 \u2248 +7 % de consommation',560,210);
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"Dans la chaîne d'information, le capteur assure la fonction…", r:["TRAITER","ACQUÉRIR","COMMUNIQUER"], b:1},
  {q:"Le moteur du volet roulant qui convertit l'énergie électrique en mouvement est…", r:["un capteur","une carte programmable","un actionneur"], b:2},
@@ -475,7 +668,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

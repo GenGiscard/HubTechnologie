@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — Le bureau design</h1>
-  <p>Le bureau d'étude t'embauche comme designer junior : des objets mal conçus arrivent avec les plaintes de leurs utilisateurs. 5 missions — à la fin : le code des jeux !</p>
+  <p>Le bureau d'étude t'embauche comme designer junior : des objets mal conçus arrivent avec les plaintes de leurs utilisateurs. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan du designer junior</h2>
+  <h2><span class="badge">5</span>Le schéma de la lampe design</h2>
+  <div class="consigne">🗺️ La lampe de bureau du studio, allumée (regarde le halo pulser et le bras osciller !). Chaque partie incarne une dimension du design : clique une étiquette, puis la partie correspondante.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Le pied de chaise parfait</h2>
+  <div class="consigne">🎛️ Le studio dessine une chaise fine et élégante. Règle le diamètre des pieds au curseur : trop fin, ça casse ; trop épais, c'est lourd et cher. Trouve le compromis du designer !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>📏 Diamètre du pied :</span>
+    <input type="range" id="slider6" min="8" max="60" step="1" value="12">
+    <span class="val"><span id="val6">12</span> mm</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan du designer junior</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_design_5e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_design_5e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_design_5e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_design_5e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,150 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'socle',  x:250, y:246, w:180, h:52,  lbl:'LE SOCLE LESTÉ (STABILITÉ)',        tx:340, ty:312},
+    {id:'bras',   x:330, y:130, w:150, h:110, lbl:'LE BRAS ARTICULÉ (ERGONOMIE)',      tx:300, ty:120},
+    {id:'abat',   x:490, y:60,  w:130, h:90,  lbl:'L\u2019ABAT-JOUR ORIENTABLE (FONCTION)', tx:556, ty:50},
+    {id:'palette',x:680, y:80,  w:120, h:110, lbl:'LA LIGNE ET LA COULEUR (ESTHÉTIQUE)', tx:740, ty:68},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,320);
+    const osc=0.06*Math.sin(t*0.7);
+    // bureau
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(120,296); ctx.lineTo(660,296); ctx.stroke();
+    // socle
+    ctx.fillStyle='#334155';
+    ctx.beginPath(); ctx.roundRect(266,270,148,22,10); ctx.fill();
+    // bras articulé (2 segments, oscille)
+    const x1=340, y1=270;
+    const x2=x1+120*Math.cos(-1.05+osc), y2=y1+120*Math.sin(-1.05+osc);
+    const x3=x2+110*Math.cos(-0.25+osc*1.4), y3=y2+110*Math.sin(-0.25+osc*1.4);
+    ctx.strokeStyle='#475569'; ctx.lineWidth=8; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.lineTo(x3,y3); ctx.stroke();
+    ctx.fillStyle='#ea580c';
+    ctx.beginPath(); ctx.arc(x2,y2,7,0,Math.PI*2); ctx.fill();
+    // abat-jour conique + halo pulsant
+    const pul=0.55+0.25*Math.sin(t*1.8);
+    ctx.fillStyle='rgba(251,191,36,'+(pul*0.35)+')';
+    ctx.beginPath(); ctx.moveTo(x3,y3); ctx.lineTo(x3+90,y3+120); ctx.lineTo(x3-60,y3+120); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#f59e0b'; ctx.strokeStyle='#b45309'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(x3-34,y3+10); ctx.lineTo(x3+34,y3+10); ctx.lineTo(x3+18,y3-26); ctx.lineTo(x3-18,y3-26); ctx.closePath(); ctx.fill(); ctx.stroke();
+    // palette esthétique : courbe de style + 3 pastilles
+    ctx.strokeStyle='#ec4899'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(692,176); ctx.quadraticCurveTo(740,120,788,168); ctx.stroke();
+    [['#ec4899',706],['#f59e0b',740],['#0e7490',774]].forEach(([c,px])=>{
+      ctx.fillStyle=c; ctx.beginPath(); ctx.arc(px,110,11,0,Math.PI*2); ctx.fill(); });
+    ctx.font='italic 12px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#64748b';
+    ctx.fillText('nuancier du studio',740,205);
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Lampe décodée ! Le design fait travailler QUATRE dimensions ensemble : la FONCTION (l\u2019abat-jour éclaire où on veut), l\u2019ERGONOMIE (le bras s\u2019articule sans effort), la SÉCURITÉ-STABILITÉ (le socle lesté ne bascule pas) et l\u2019ESTHÉTIQUE (la ligne, la couleur). Retire une dimension, et l\u2019objet rate. (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : la STABILITÉ est en bas (ce qui empêche de basculer), l\u2019ERGONOMIE est ce qui bouge sous ta main, la FONCTION est ce qui éclaire… et l\u2019ESTHÉTIQUE est dans le nuancier du studio.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:22, max:35,
+     ok:'\u2705 Entre 22 et 35 mm : assez solide pour l\u2019usage, assez fin pour rester léger et élégant. Le design n\u2019est ni de l\u2019art pur ni de la mécanique pure : c\u2019est l\u2019art du COMPROMIS solidité-matière-beauté ! (+4 pts)',
+     kobas:'\u274c CRAC ! Regarde le pied plier sous le poids\u2026 La beauté ne suffit pas : un objet doit d\u2019abord RÉSISTER à son usage. Épaissis un peu\u2026',
+     kohaut:'\u274c Solide, très solide\u2026 et massif : jauge matière au rouge, chaise lourde, chère, pataude. Le sur-dimensionnement est AUSSI un défaut de design ! Affine\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    const casse = v<22;
+    const assis = (Math.sin(t*1.2)+1)/2;
+    const py = 96+18*assis;
+    // personnage qui s'assoit
+    ctx.font='30px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+    ctx.fillText('\ud83e\uddcd',300,py);
+    // chaise de profil : assise + dossier + 2 pieds
+    const ep=Math.max(2,v/3.2);
+    ctx.strokeStyle= casse ? '#dc2626' : '#334155';
+    ctx.lineWidth=6;
+    ctx.beginPath(); ctx.moveTo(250,140); ctx.lineTo(352,140); ctx.stroke();   // assise
+    ctx.beginPath(); ctx.moveTo(352,140); ctx.lineTo(352,74); ctx.stroke();    // dossier
+    ctx.lineWidth=ep;
+    if(casse){
+      const plie=10+8*Math.sin(t*7);
+      ctx.beginPath(); ctx.moveTo(262,140); ctx.lineTo(256+plie,190); ctx.lineTo(268,238); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(340,140); ctx.lineTo(346-plie,190); ctx.lineTo(334,238); ctx.stroke();
+      ctx.fillStyle='#dc2626'; ctx.font='bold 17px Segoe UI';
+      ctx.fillText('CRAC !',300,224);
+    } else {
+      ctx.beginPath(); ctx.moveTo(262,140); ctx.lineTo(262,238); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(340,140); ctx.lineTo(340,238); ctx.stroke();
+    }
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(160,238); ctx.lineTo(700,238); ctx.stroke();
+    // jauges solidité + matière
+    ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#334155';
+    ctx.fillText('SOLIDITÉ',600,70);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(520,80,160,16);
+    ctx.fillStyle= casse ? '#dc2626' : '#16a34a';
+    ctx.fillRect(520,80,Math.min(160,v/35*160),16);
+    ctx.fillStyle='#334155'; ctx.fillText('MATIÈRE / POIDS / PRIX',600,130);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(520,140,160,16);
+    ctx.fillStyle= v>35 ? '#dc2626' : '#16a34a';
+    ctx.fillRect(520,140,v/60*160,16);
+    ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
+    ctx.fillText('le pied doit tenir 100 kg\u2026 sans peser une tonne',600,190);
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"Adapter l'objet au corps et à l'usage de l'humain, c'est…", r:["l'esthétique","l'ergonomie","le recyclage"], b:1},
  {q:"Si tout le monde pousse une porte qui se tire, le fautif est…", r:["les gens maladroits","le design de la porte","la météo"], b:1},
@@ -353,7 +531,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

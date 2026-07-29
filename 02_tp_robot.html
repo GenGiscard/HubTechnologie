@@ -32,6 +32,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#eff6ff;border-left:4px solid var(--bleu);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 /* A1 tri 3 familles */
 .cdc .item{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px 14px;font-size:14.5px;font-weight:600;margin:8px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .cdc .item .choix{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
@@ -88,12 +96,12 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 
 <header class="tp">
   <h1>🤖 TP — Pilote ton robot</h1>
-  <p>5 missions progressives sur le simulateur. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Robo Race</b> !</p>
+  <p>7 missions progressives sur le simulateur. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Robo Race</b> !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -198,10 +206,37 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de roboticien</h2>
+  <h2><span class="badge">5</span>Le schéma du robot mobile</h2>
+  <div class="consigne">🗺️ Le robot de l'atelier en patrouille — faisceau ultrason qui pulse, roues qui tournent ! Clique une étiquette, puis l'organe correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="300"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Règle le seuil d’arrêt</h2>
+  <div class="consigne">🎛️ Le robot fonce vers le mur. Programme son seuil : <code>SI distance &lt; seuil ALORS stop</code>. Attention, l'inertie lui fait parcourir <b>12 cm</b> après l'ordre d'arrêt !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>📡 Seuil d’arrêt :</span>
+    <input type="range" id="slider6" min="5" max="80" step="5" value="10">
+    <span class="val"><span id="val6">10</span> cm</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de roboticien</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code du jeu.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -215,15 +250,15 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_robot_3e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_robot_3e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_robot_3e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_robot_3e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -237,7 +272,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : CAHIER DES CHARGES ================= */
@@ -476,7 +511,166 @@ document.getElementById('run4').onclick=()=>{
 };
 dessinerMonde(cv4,M4,{...M4.depart});
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'ultrason',x:530, y:130, w:90,  h:70,  lbl:'LE CAPTEUR ULTRASON',        tx:575, ty:120},
+    {id:'carte',   x:330, y:110, w:120, h:70,  lbl:'LA CARTE PROGRAMMABLE',      tx:390, ty:100},
+    {id:'moteur',  x:300, y:190, w:110, h:80,  lbl:'LE MOTEUR + LA ROUE',        tx:300, ty:288},
+    {id:'batterie',x:460, y:96,  w:60,  h:40,  lbl:'LA BATTERIE',               tx:490, ty:66},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,300);
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(40,270); ctx.lineTo(820,270); ctx.stroke();
+    // châssis (oscille en patrouille)
+    const dx=26*Math.sin(t*0.6);
+    ctx.save(); ctx.translate(dx,0);
+    ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#334155'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.roundRect(310,140,300,90,14); ctx.fill(); ctx.stroke();
+    // carte programmable
+    ctx.fillStyle='#16a34a';
+    ctx.beginPath(); ctx.roundRect(344,120,92,52,6); ctx.fill();
+    ctx.fillStyle='#0f172a';
+    ctx.fillRect(360,134,24,24);
+    for(let i=0;i<5;i++){ ctx.fillStyle= Math.sin(t*4+i)>0.3 ? '#fde68a' : '#713f12';
+      ctx.fillRect(396+i*8,138,5,5); }
+    // batterie
+    ctx.fillStyle='#1e293b';
+    ctx.beginPath(); ctx.roundRect(468,102,46,30,5); ctx.fill();
+    ctx.fillStyle='#22c55e'; ctx.fillRect(514,110,6,14);
+    // capteur ultrason (deux yeux) + faisceau
+    ctx.fillStyle='#e2e8f0'; ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(544,146,60,44,6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#0e7490';
+    ctx.beginPath(); ctx.arc(560,168,10,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(588,168,10,0,Math.PI*2); ctx.fill();
+    const w=(t*1.1)%1;
+    ctx.strokeStyle='rgba(14,116,144,'+(1-w)+')'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.arc(604,168,10+w*80,-0.5,0.5); ctx.stroke();
+    // roues
+    [[350,240],[560,240]].forEach(([wx,wy])=>{
+      ctx.save(); ctx.translate(wx,wy);
+      ctx.fillStyle='#0f172a'; ctx.beginPath(); ctx.arc(0,0,30,0,Math.PI*2); ctx.fill();
+      ctx.rotate(t*2.2*Math.cos(t*0.6));
+      ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(-30,0); ctx.lineTo(30,0); ctx.moveTo(0,-30); ctx.lineTo(0,30); ctx.stroke();
+      ctx.restore(); });
+    ctx.restore();
+    // mur cible à droite
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(780,120,26,150);
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Robot décodé ! La chaîne complète : le CAPTEUR ULTRASON mesure la distance (il chronomètre l\u2019écho, comme la chauve-souris), la CARTE PROGRAMMABLE exécute TON programme et décide, le MOTEUR agit sur la roue, la BATTERIE alimente tout le monde. Acquérir → traiter → agir : ton programme est le cerveau de cette boucle. (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : l\u2019ultrason a deux yeux ronds à l\u2019AVANT (côté mur), la carte est verte à LEDs, la batterie est le petit bloc noir en haut… et le moteur est dans la roue.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:20, max:40,
+     ok:'\u2705 Entre 20 et 40 cm : l\u2019inertie (12 cm) est absorbée avec de la marge, sans arrêter le robot à chaque obstacle lointain. Tu viens d\u2019apprendre LA règle du roboticien : un seuil se règle toujours en comptant l\u2019inertie du système, jamais au ras de l\u2019obstacle ! (+4 pts)',
+     kobas:'\u274c \ud83d\udca5 CRASH ! L\u2019ordre d\u2019arrêt part trop tard : avec 12 cm d\u2019inertie, ton seuil ne laisse aucune marge — regarde l\u2019impact. Augmente le seuil\u2026',
+     kohaut:'\u274c Trop prudent : le robot pile à des dizaines de cm de tout — il n\u2019atteindra jamais la zone de travail. Un robot trop peureux ne finit pas sa mission. Réduis\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    const INERTIE=12;
+    const stopA = v; // distance où l'ordre part
+    const arret = v - INERTIE; // où il s'arrête vraiment
+    const ech=6.4;   // px par cm
+    const murX=740;
+    // sol + mur
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(60,210); ctx.lineTo(820,210); ctx.stroke();
+    ctx.fillStyle='#64748b'; ctx.fillRect(murX,80,20,130);
+    // graduation
+    ctx.font='10.5px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#64748b';
+    for(let d=0;d<=80;d+=20){ const x=murX-d*ech;
+      ctx.beginPath(); ctx.moveTo(x,210); ctx.lineTo(x,218); ctx.strokeStyle='#94a3b8'; ctx.stroke();
+      ctx.fillText(d+' cm',x,232); }
+    // ligne de seuil
+    const sx=murX-v*ech;
+    ctx.strokeStyle='#ea580c'; ctx.lineWidth=2; ctx.setLineDash([6,5]);
+    ctx.beginPath(); ctx.moveTo(sx,90); ctx.lineTo(sx,210); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#ea580c'; ctx.font='bold 11px Segoe UI';
+    ctx.fillText('seuil '+v+' cm',sx,82);
+    // robot animé : avance, freine au seuil, s'arrête (boucle)
+    const cycle=(t*0.35)%1.6;
+    let rx;
+    if(arret<=0){
+      const impact=murX-30;
+      rx=Math.min(impact, 80+cycle*520);
+      if(rx>=impact-2 && Math.sin(t*7)>0){ ctx.font='24px Segoe UI'; ctx.fillText('\ud83d\udca5',murX-8,120); }
+    } else {
+      const cibleX=murX-arret*ech-30;
+      rx=Math.min(cibleX, 80+cycle*520);
+    }
+    ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(rx-34,160,64,34,8); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#0e7490';
+    ctx.beginPath(); ctx.arc(rx+30,177,6,0,Math.PI*2); ctx.fill();
+    [[rx-18,198],[rx+14,198]].forEach(([wx,wy])=>{
+      ctx.fillStyle='#0f172a'; ctx.beginPath(); ctx.arc(wx,wy,10,0,Math.PI*2); ctx.fill(); });
+    // encart inertie
+    ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+    ctx.fillText('ordre \u00e0 '+v+' cm  \u2192  arrêt réel \u00e0 '+Math.max(0,arret)+' cm du mur',430,52);
+    if(arret<=0){ ctx.fillStyle='#dc2626'; ctx.fillText('l\u2019inertie mange tout le seuil\u2026',430,258); }
+    else if(v>40){ ctx.fillStyle='#f59e0b'; ctx.fillText('il s\u2019arrête très loin de la zone de travail\u2026',430,258); }
+    else { ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 arrêt net, marge saine',430,258); }
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"« Prix de vente ≤ 250 € » est…", r:["une fonction d'usage","un critère chiffré (contrainte de coût)","un actionneur"], b:1},
  {q:"Quelle brique de programmation évite de recopier 10 fois le même code ?", r:["la séquence","la boucle","la condition"], b:1},
@@ -497,7 +691,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

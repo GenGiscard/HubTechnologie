@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:10px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
@@ -82,12 +90,12 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 
 <header class="tp">
   <h1>🔧 TP — L'atelier des engrenages</h1>
-  <p>L'atelier Méca d'Esticville a reçu des commandes. 5 missions pour devenir chef d'atelier — à la fin : le code des jeux !</p>
+  <p>L'atelier Méca d'Esticville a reçu des commandes. 7 missions pour devenir chef d'atelier — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -152,10 +160,37 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de chef d'atelier</h2>
+  <h2><span class="badge">5</span>Le schéma du treuil d’atelier</h2>
+  <div class="consigne">🗺️ Le treuil de l'atelier en fonctionnement — engrenages qui tournent, courroie qui défile, charge qui monte ! Clique une étiquette, puis l'organe correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Choisis le rapport de transmission</h2>
+  <div class="consigne">🎛️ Pignon moteur fixe : <b>20 dents</b>. Règle les dents de la roue réceptrice et adapte le rapport à la machine affichée. Deux machines à équiper !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>⚙️ Dents de la roue :</span>
+    <input type="range" id="slider6" min="20" max="80" step="2" value="40">
+    <span class="val"><span id="val6">40</span> dents</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de chef d'atelier</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -169,15 +204,15 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_trans_4e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_trans_4e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_trans_4e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_trans_4e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -191,7 +226,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ============ dessin d'une roue dentée ============ */
@@ -366,7 +401,167 @@ document.getElementById('test4').onclick=()=>{
 };
 requestAnimationFrame(dessinerTrain);
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'pignon',  x:180, y:150, w:60,  h:60,  lbl:'LE PIGNON MOTEUR (MENANT)', tx:210, ty:135},
+    {id:'roue',    x:264, y:110, w:130, h:130, lbl:'LA ROUE DENTÉE (MENÉE)',    tx:330, ty:98},
+    {id:'courroie',x:420, y:150, w:180, h:50,  lbl:'LA COURROIE',               tx:510, ty:140},
+    {id:'tambour', x:620, y:140, w:80,  h:80,  lbl:'LE TAMBOUR DU TREUIL',      tx:660, ty:128},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,320);
+    function roueDentee(x,y,r,vit,coul){
+      ctx.save(); ctx.translate(x,y); ctx.rotate(t*vit);
+      ctx.strokeStyle=coul; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.stroke();
+      for(let i=0;i<10;i++){ ctx.rotate(Math.PI/5);
+        ctx.beginPath(); ctx.moveTo(r,0); ctx.lineTo(r+7,0); ctx.stroke(); }
+      ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(-r*0.6,0); ctx.lineTo(r*0.6,0); ctx.stroke();
+      ctx.restore();
+    }
+    // moteur
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(90,150,80,60,8); ctx.fill(); ctx.stroke();
+    ctx.font='bold 11px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
+    ctx.fillText('MOTEUR',130,184);
+    // pignon menant (rapide) engrené sur roue menée (lente, sens inverse)
+    roueDentee(210,180,24,3,'#b45309');
+    roueDentee(330,180,58,-3*24/58,'#0e7490');
+    // poulie sur l'axe de la roue + courroie vers le tambour
+    ctx.strokeStyle='#475569'; ctx.lineWidth=4; ctx.setLineDash([8,6]);
+    ctx.lineDashOffset=-t*20;
+    ctx.beginPath(); ctx.moveTo(330,158); ctx.lineTo(660,162); ctx.stroke();
+    ctx.lineDashOffset=t*20;
+    ctx.beginPath(); ctx.moveTo(330,202); ctx.lineTo(660,198); ctx.stroke();
+    ctx.setLineDash([]);
+    // tambour + câble + charge qui monte
+    roueDentee(660,180,32,-3*24/58,'#7c3aed');
+    const ch=250-40*((Math.sin(t*0.7)+1)/2);
+    ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(660,212); ctx.lineTo(660,ch); ctx.stroke();
+    ctx.fillStyle='#64748b'; ctx.fillRect(644,ch,32,26);
+    ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#fff'; ctx.fillText('50 kg',660,ch+17);
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(40,290); ctx.lineTo(820,290); ctx.stroke();
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Treuil décodé ! Le PIGNON menant (24 dents, rapide) entraîne la ROUE menée (58 dents, lente mais FORTE) : on échange de la vitesse contre du couple. La COURROIE transmet ensuite au TAMBOUR qui enroule le câble. Regarde les sens de rotation : deux engrenages tournent en sens INVERSES, la courroie conserve le sens ! (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : le menant est la PETITE roue dentée collée au moteur, la menée est la GRANDE qui tourne lentement, la courroie est la double ligne pointillée qui défile… et le tambour enroule le câble de la charge.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:60, max:80, treuil:true,
+     consigne:'\u25b6 MACHINE 1 — le treuil de levage : il faut du COUPLE (rapport \u2265 3)',
+     ok:'\u2705 Avec 60 à 80 dents pour 20 au pignon, le rapport atteint 3 à 4 : la roue tourne 3-4\u00d7 moins vite mais 3-4\u00d7 plus FORT. Pour soulever, on démultiplie !',
+     kobas:'\u274c Rapport trop faible : la roue tourne presque aussi vite que le moteur, sans gain de couple — la charge ne décolle pas ! Il faut une roue BEAUCOUP plus grande que le pignon\u2026',
+     kohaut:''},
+    {min:20, max:28, treuil:false,
+     consigne:'\u25b6 MACHINE 2 — le ventilateur d\u2019atelier : il faut de la VITESSE (rapport \u2248 1)',
+     ok:'\u2705 20 à 28 dents : rapport proche de 1, la roue garde presque toute la vitesse du moteur — parfait pour brasser l\u2019air. Même moteur, deux machines : c\u2019est le rapport qui fait le métier ! (+4 pts)',
+     kobas:'',
+     kohaut:'\u274c Le ventilateur tourne au ralenti : avec une si grande roue, tu as réduit la vitesse\u2026 alors qu\u2019un ventilo veut TOURNER VITE. Réduis le nombre de dents\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    const ratio=v/20;
+    ctx.font='bold 15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#7c2d12';
+    ctx.fillText(sc.consigne+'  ('+(Math.min(etape,SCEN.length-1)+1)+'/2)', 430, 26);
+    function roue(x,y,r,vit,coul){
+      ctx.save(); ctx.translate(x,y); ctx.rotate(t*vit);
+      ctx.strokeStyle=coul; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.stroke();
+      ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(-r,0); ctx.lineTo(r,0); ctx.moveTo(0,-r); ctx.lineTo(0,r); ctx.stroke();
+      ctx.restore();
+    }
+    // pignon 20 dents + roue de v dents
+    const rP=22, rR=22*v/20;
+    roue(200,150,rP,3.2,'#b45309');
+    roue(200+rP+rR+4,150,rR,-3.2*20/v,'#0e7490');
+    ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#334155';
+    ctx.fillText('20 dents',200,150+rP+22);
+    ctx.fillText(v+' dents',200+rP+rR+4,150+rR+22);
+    ctx.fillStyle='#64748b';
+    ctx.fillText('rapport = '+v+' \u00f7 20 = '+ratio.toFixed(1),300,52);
+    // machine cible
+    if(sc.treuil){
+      const monte = ratio>=3 ? 30*((Math.sin(t*0.8)+1)/2) : 4*Math.abs(Math.sin(t*3));
+      ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(640,80); ctx.lineTo(640,200-monte); ctx.stroke();
+      ctx.fillStyle='#64748b'; ctx.fillRect(620,200-monte,40,32);
+      ctx.font='bold 11px Segoe UI'; ctx.fillStyle='#fff'; ctx.fillText('50 kg',640,220-monte);
+      ctx.font='bold 13px Segoe UI';
+      ctx.fillStyle= ratio>=3 ? '#16a34a' : '#dc2626';
+      ctx.fillText(ratio>=3 ? '\u2713 \u00e7a monte !' : '\u2717 la charge vibre sans monter\u2026',640,250);
+      ctx.fillStyle='#334155'; ctx.fillText('COUPLE \u00d7'+ratio.toFixed(1),640,60);
+    } else {
+      ctx.save(); ctx.translate(640,140); ctx.rotate(t*(4.5/ratio));
+      ctx.strokeStyle='#0e7490'; ctx.lineWidth=4;
+      for(let i=0;i<3;i++){ ctx.rotate(Math.PI*2/3);
+        ctx.beginPath(); ctx.ellipse(0,-22,9,20,0,0,Math.PI*2); ctx.stroke(); }
+      ctx.restore();
+      ctx.font='bold 13px Segoe UI';
+      ctx.fillStyle= ratio<=1.4 ? '#16a34a' : '#dc2626';
+      ctx.fillText(ratio<=1.4 ? '\u2713 \u00e7a brasse !' : '\u2717 il tourne au ralenti\u2026',640,220);
+      ctx.fillStyle='#334155'; ctx.fillText('VITESSE \u00f7'+ratio.toFixed(1),640,60);
+    }
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"Deux engrenages en contact tournent…", r:["dans le même sens","en sens inversés","au hasard"], b:1},
  {q:"N₂ = N₁ × Z₁ ÷ Z₂. Si Z₂ > Z₁, la sortie est…", r:["plus rapide","plus lente","identique"], b:1},
@@ -387,7 +582,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

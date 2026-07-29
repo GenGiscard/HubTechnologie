@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — La salle info</h1>
-  <p>Le collège te nomme dépanneur officiel de la salle informatique. 5 missions — à la fin : le code des jeux !</p>
+  <p>Le collège te nomme dépanneur officiel de la salle informatique. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan du dépanneur</h2>
+  <h2><span class="badge">5</span>Le schéma du poste de travail</h2>
+  <div class="consigne">🗺️ Le poste de la salle info, allumé (regarde la LED clignoter et les données filer vers la box !). Clique une étiquette, puis l'équipement correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="300"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Choisis le bon débit</h2>
+  <div class="consigne">🎛️ Deux fichiers à envoyer, deux contraintes différentes. Règle le débit de la connexion et regarde la barre de transfert : à toi de trouver le débit adapté à chaque situation !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>📶 Débit :</span>
+    <input type="range" id="slider6" min="1" max="100" step="1" value="10">
+    <span class="val"><span id="val6">10</span> Mo/s</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan du dépanneur</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_envnum_5e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_envnum_5e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_envnum_5e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_envnum_5e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,156 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'ecran',  x:140, y:70,  w:150, h:120, lbl:'L\u2019ÉCRAN (SORTIE)',      tx:215, ty:58},
+    {id:'uc',     x:330, y:100, w:80,  h:145, lbl:'L\u2019UNITÉ CENTRALE',      tx:370, ty:88},
+    {id:'clavier',x:120, y:206, w:190, h:42,  lbl:'LE CLAVIER (ENTRÉE)',        tx:215, ty:275},
+    {id:'box',    x:610, y:120, w:120, h:80,  lbl:'LA BOX INTERNET',            tx:670, ty:108},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,300);
+    // bureau
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(60,250); ctx.lineTo(800,250); ctx.stroke();
+    // écran avec curseur qui bouge
+    ctx.fillStyle='#0f172a'; ctx.strokeStyle='#334155'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.roundRect(150,78,130,92,8); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#e0f2fe'; ctx.fillRect(158,86,114,76);
+    ctx.fillStyle='#0ea5e9';
+    ctx.fillRect(170+40*(1+Math.sin(t*0.9))/2, 100+24*(1+Math.sin(t*1.3))/2, 8, 12);
+    ctx.fillStyle='#334155'; ctx.fillRect(205,170,20,14); ctx.fillRect(185,184,60,6);
+    // unité centrale + LED
+    ctx.fillStyle='#1e293b';
+    ctx.beginPath(); ctx.roundRect(338,108,64,130,8); ctx.fill();
+    ctx.fillStyle= Math.sin(t*4)>0 ? '#22c55e' : '#14532d';
+    ctx.beginPath(); ctx.arc(354,126,5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#475569'; ctx.fillRect(346,150,48,7); ctx.fillRect(346,164,48,7);
+    // clavier
+    ctx.fillStyle='#e2e8f0'; ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.roundRect(128,214,174,28,6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#94a3b8';
+    for(let c=0;c<10;c++) ctx.fillRect(136+c*17,220,12,7);
+    for(let c=0;c<10;c++) ctx.fillRect(136+c*17,230,12,7);
+    // câble UC -> box + paquets de données
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(402,180); ctx.quadraticCurveTo(510,200,618,168); ctx.stroke();
+    ctx.fillStyle='#ea580c';
+    for(let i=0;i<3;i++){ const p=((t*0.4)+i/3)%1;
+      const px=402+p*216, py=180+16*Math.sin(Math.PI*p)*(1-p*0.4)-p*12;
+      ctx.fillRect(px-4,py-4,8,8); }
+    // box internet + ondes
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.roundRect(618,130,104,60,10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#7c3aed';
+    ctx.beginPath(); ctx.arc(670,160,5,0,Math.PI*2); ctx.fill();
+    const w=(t*0.8)%1;
+    ctx.strokeStyle='rgba(124,58,237,'+(1-w)+')'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.arc(670,160,10+w*26,-2.2,-0.9); ctx.stroke();
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Poste étiqueté ! Le CLAVIER fait ENTRER l\u2019information, l\u2019UNITÉ CENTRALE la traite (c\u2019est elle l\u2019ordinateur — la LED verte, c\u2019est son cœur qui bat), l\u2019ÉCRAN la fait SORTIR, et la BOX l\u2019envoie vers le monde entier. Entrée → traitement → sortie → réseau : ton environnement numérique en une image. (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : suis les carrés orange — ils partent de la tour (qui calcule) vers la boîte violette (qui parle à Internet). Le clavier est plat sur le bureau, l\u2019écran affiche le curseur bleu…</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:40, max:100, fichier:'la vidéo du concours robotique', taille:200, limite:5, prix:false,
+     consigne:'\u25b6 Envoie la VIDÉO (200 Mo) en 5 s maxi : la sonnerie va sonner !',
+     ok:'\u2705 À ce débit, les 200 Mo passent en moins de 5 s : 200 \u00f7 débit = temps. Pour les gros fichiers pressés, il FAUT du débit !',
+     kobas:'\u274c Trop lent : regarde la barre et le chrono — à ce débit, 200 \u00f7 débit dépasse les 5 s. La sonnerie sonnera avant la fin ! Monte le débit\u2026',
+     kohaut:''},
+    {min:2, max:3, fichier:'la photo de la classe', taille:20, limite:10, prix:true,
+     consigne:'\u25b6 La photo (20 Mo) doit partir en 10 s maxi\u2026 au MOINS CHER (1 \u20ac par Mo/s) !',
+     ok:'\u2705 2 Mo/s suffisent : 20 \u00f7 2 = 10 s pile, pour 2 \u20ac. Payer 100 Mo/s pour une photo, c\u2019est le camion de déménagement pour une lettre — le BON débit, c\u2019est le débit SUFFISANT ! (+4 pts)',
+     kobas:'\u274c Trop lent : 20 Mo à ce débit dépassent les 10 s. Il faut au moins 2 Mo/s\u2026',
+     kohaut:'\u274c Ça passe\u2026 mais regarde le prix ! La contrainte dit AU MOINS CHER : cherche le plus PETIT débit qui tient les 10 s (indice : 20 \u00f7 10\u2026)'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    ctx.font='bold 15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#7c2d12';
+    ctx.fillText(sc.consigne+'  ('+(Math.min(etape,SCEN.length-1)+1)+'/2)', 430, 28);
+    const temps=sc.taille/v;
+    // fichier
+    ctx.font='34px Segoe UI'; ctx.fillText(sc.prix?'\ud83d\uddbc\ufe0f':'\ud83c\udfa5',110,120);
+    ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#334155';
+    ctx.fillText(sc.fichier,110,150); ctx.fillText(sc.taille+' Mo',110,170);
+    // barre de transfert animée (progression simulée en boucle sur "temps")
+    const prog=((t*0.8)%Math.max(1.2,temps))/temps;
+    ctx.fillStyle='#e2e8f0'; ctx.beginPath(); ctx.roundRect(210,110,420,26,13); ctx.fill();
+    ctx.fillStyle= temps<=sc.limite ? '#16a34a' : '#dc2626';
+    ctx.beginPath(); ctx.roundRect(210,110,420*Math.min(1,prog),26,13); ctx.fill();
+    ctx.fillStyle='#334155'; ctx.font='bold 14px Segoe UI';
+    ctx.fillText('temps de transfert : '+(temps<60?temps.toFixed(1)+' s':Math.round(temps)+' s'),420,166);
+    // chrono limite
+    ctx.fillStyle= temps<=sc.limite ? '#16a34a' : '#dc2626';
+    ctx.font='bold 15px Segoe UI';
+    ctx.fillText('\u23f1\ufe0f limite : '+sc.limite+' s '+(temps<=sc.limite?'\u2713 tenu':'\u2717 dépassé !'),420,196);
+    // box qui émet
+    ctx.font='30px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\ud83d\udce1',700,126);
+    // prix (étape 2)
+    if(sc.prix){
+      ctx.fillStyle= v>3 ? '#dc2626' : '#16a34a'; ctx.font='bold 16px Segoe UI';
+      ctx.fillText('\ud83d\udcb0 prix de la connexion : '+v+' \u20ac',430,236);
+    } else {
+      ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
+      ctx.fillText('rappel : temps (s) = taille (Mo) \u00f7 débit (Mo/s)',430,236);
+    }
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"Pour retrouver ton fichier depuis N'IMPORTE quel poste, tu l'enregistres…", r:["sur le bureau du poste","sur le serveur, dans ton dossier","sur l'écran"], b:1},
  {q:"L'extension d'une photo est…", r:[".mp3",".jpg",".odt"], b:1},
@@ -353,7 +537,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

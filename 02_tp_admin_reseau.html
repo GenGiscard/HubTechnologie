@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — Admin réseau</h1>
-  <p>Le collège te nomme administrateur réseau stagiaire. 5 missions — à la fin : le code des jeux !</p>
+  <p>Le collège te nomme administrateur réseau stagiaire. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de l'admin réseau</h2>
+  <h2><span class="badge">5</span>Le schéma du réseau du collège</h2>
+  <div class="consigne">🗺️ La baie de brassage vue de l'admin — suis les trames qui circulent du poste jusqu'à Internet ! Clique une étiquette, puis l'équipement correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="300"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Attribue une adresse IP</h2>
+  <div class="consigne">🎛️ Un poste neuf arrive en salle info. Règle le dernier octet de son adresse <b>192.168.1.___</b> — sans conflit avec les adresses déjà prises, et dans la plage réservée aux élèves (DHCP : .100 à .199) !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>🔢 Dernier octet :</span>
+    <input type="range" id="slider6" min="2" max="254" step="1" value="10">
+    <span class="val"><span id="val6">10</span> </span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de l'admin réseau</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_reseau_4e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_reseau_4e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_reseau_4e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_reseau_4e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,162 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'poste',  x:60,  y:130, w:120, h:110, lbl:'LE POSTE ÉLÈVE',          tx:120, ty:120},
+    {id:'switch', x:290, y:150, w:130, h:70,  lbl:'LE SWITCH',               tx:355, ty:140},
+    {id:'serveur',x:330, y:30,  w:90,  h:90,  lbl:'LE SERVEUR',              tx:280, ty:24},
+    {id:'routeur',x:560, y:150, w:120, h:70,  lbl:'LE ROUTEUR (VERS INTERNET)', tx:620, ty:140},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,300);
+    // poste élève
+    ctx.fillStyle='#0f172a'; ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(76,140,88,64,6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#e0f2fe'; ctx.fillRect(82,146,76,52);
+    ctx.fillStyle='#334155'; ctx.fillRect(108,204,24,10); ctx.fillRect(92,214,58,6);
+    ctx.font='bold 10px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#64748b';
+    ctx.fillText('192.168.1.101',120,236);
+    // switch (rangée de ports qui clignotent)
+    ctx.fillStyle='#1e293b';
+    ctx.beginPath(); ctx.roundRect(300,162,110,44,6); ctx.fill();
+    for(let p=0;p<6;p++){
+      ctx.fillStyle= Math.sin(t*5+p*1.7)>0.3 ? '#22c55e' : '#14532d';
+      ctx.fillRect(310+p*17,176,10,8); }
+    // serveur (tour à LEDs)
+    ctx.fillStyle='#1e293b';
+    ctx.beginPath(); ctx.roundRect(346,40,58,80,6); ctx.fill();
+    for(let r=0;r<3;r++){
+      ctx.fillStyle= Math.sin(t*3+r)>0 ? '#38bdf8' : '#0c4a6e';
+      ctx.fillRect(356,52+r*20,38,7); }
+    ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#64748b'; ctx.fillText('.10',425,90);
+    // routeur + nuage Internet
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(576,162,90,44,10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#7c3aed'; ctx.font='bold 10px Segoe UI'; ctx.fillText('.1',621,190);
+    ctx.font='34px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\u2601\ufe0f',770,140);
+    ctx.font='bold 11px Segoe UI'; ctx.fillStyle='#64748b'; ctx.fillText('Internet',770,166);
+    // câbles
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(164,180); ctx.lineTo(300,184); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(375,162); ctx.lineTo(375,120); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(410,184); ctx.lineTo(576,184); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(666,180); ctx.quadraticCurveTo(716,160,746,150); ctx.stroke();
+    // trames qui circulent poste -> switch -> routeur -> internet
+    ctx.fillStyle='#ea580c';
+    for(let i=0;i<3;i++){ const p=((t*0.5)+i/3)%1;
+      if(p<0.34){ const u=p/0.34; ctx.fillRect(164+u*136-4,180-4,8,8); }
+      else if(p<0.72){ const u=(p-0.34)/0.38; ctx.fillRect(410+u*166-4,184-4,8,8); }
+      else { const u=(p-0.72)/0.28; ctx.fillRect(666+u*80-4,180-u*30-4,8,8); } }
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Réseau décodé ! Le POSTE émet des trames, le SWITCH les aiguille à l\u2019intérieur du collège (regarde ses ports clignoter), le SERVEUR héberge dossiers et sessions (.10), et le ROUTEUR (.1) est la porte vers l\u2019extérieur : lui seul parle à Internet. Local d\u2019abord, Internet ensuite — l\u2019aiguillage est la clé. (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : suis les carrés orange — ils partent de l\u2019écran de l\u2019élève, passent par la barrette aux voyants verts qui aiguille, et sortent par la boîte violette vers le nuage. La tour aux LEDs bleues, elle, stocke les dossiers.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:100, max:199,
+     ok:'\u2705 Une adresse libre dans la plage élèves ! Le réseau du collège parle : 192.168.1 = la \u00ab rue \u00bb commune, le dernier octet = le \u00ab numéro de maison \u00bb, unique pour chacun. Plage .100-.199 aux élèves, adresses basses aux équipements : l\u2019ordre de l\u2019admin ! (+4 pts)',
+     kobas:'\u274c Zone interdite : les adresses basses sont réservées aux équipements fixes — .1 le routeur, .10 le serveur, .50 l\u2019imprimante\u2026 Un conflit d\u2019IP, et les DEUX machines perdent le réseau ! Vise la plage élèves : .100 à .199\u2026',
+     kohaut:'\u274c Hors plage : au-delà de .199, l\u2019admin a réservé pour les invités et les tests. Ton poste n\u2019obtiendra rien ici. Reste entre .100 et .199\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    // plan d'adressage visuel
+    ctx.font='bold 15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
+    ctx.fillText('192.168.1.'+v, 430, 40);
+    // barre 0..254 avec zones
+    const x0=110, larg=640;
+    function zx(a){ return x0+a/254*larg; }
+    ctx.fillStyle='#fecaca'; ctx.fillRect(zx(0),70,zx(99)-zx(0),26);
+    ctx.fillStyle='#bbf7d0'; ctx.fillRect(zx(100),70,zx(199)-zx(100),26);
+    ctx.fillStyle='#fde68a'; ctx.fillRect(zx(200),70,zx(254)-zx(200),26);
+    ctx.font='bold 11px Segoe UI'; ctx.fillStyle='#991b1b';
+    ctx.fillText('équipements',zx(50),88);
+    ctx.fillStyle='#166534'; ctx.fillText('élèves (DHCP .100-.199)',zx(150),88);
+    ctx.fillStyle='#92400e'; ctx.fillText('réservé',zx(227),88);
+    // équipements marqués
+    [[1,'routeur'],[10,'serveur'],[50,'imprimante']].forEach(([a,nom])=>{
+      ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(zx(a),70); ctx.lineTo(zx(a),110); ctx.stroke();
+      ctx.font='10.5px Segoe UI'; ctx.fillStyle='#334155';
+      ctx.fillText('.'+a+' '+nom,zx(a)+4,122); });
+    // curseur position
+    ctx.fillStyle='#ea580c';
+    ctx.beginPath(); ctx.moveTo(zx(v),66); ctx.lineTo(zx(v)-7,52); ctx.lineTo(zx(v)+7,52); ctx.closePath(); ctx.fill();
+    // poste + verdict visuel
+    ctx.font='26px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\ud83d\udda5\ufe0f',200,190);
+    const conflit=[1,10,50].includes(v);
+    const okZone= v>=100&&v<=199;
+    if(conflit){
+      if(Math.sin(t*6)>0){ ctx.font='22px Segoe UI'; ctx.fillText('\ud83d\udca5',260,176); }
+      ctx.fillStyle='#dc2626'; ctx.font='bold 13px Segoe UI';
+      ctx.fillText('CONFLIT D\u2019ADRESSE : deux machines au même numéro !',430,196);
+    } else if(okZone){
+      ctx.fillStyle='#16a34a'; ctx.font='bold 13px Segoe UI';
+      ctx.fillText('\u2713 adresse libre, le poste rejoint le réseau',430,196);
+    } else {
+      ctx.fillStyle='#dc2626'; ctx.font='bold 13px Segoe UI';
+      ctx.fillText('\u2717 hors de la plage attribuée aux élèves',430,196);
+    }
+    ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
+    ctx.fillText('même \u00ab rue \u00bb (192.168.1) \u00b7 numéro de maison unique pour chaque machine',430,240);
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"L'équipement qui aiguille les messages DANS le réseau local est…", r:["la box","le switch","l'écran"], b:1},
  {q:"Pour sortir vers internet, un message passe forcément par…", r:["le serveur","la box (routeur)","l'imprimante"], b:1},
@@ -353,7 +543,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

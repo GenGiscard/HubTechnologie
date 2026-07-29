@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .tri{display:flex;flex-wrap:wrap;gap:10px}
 .tri .item{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px 14px;font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:10px}
 .tri .item .choix button{border:1.5px solid #cbd5e1;background:#fff;border-radius:8px;padding:5px 10px;font-size:12.5px;font-weight:700;cursor:pointer;margin-left:4px}
@@ -80,12 +88,12 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 
 <header class="tp">
   <h1>🏙️ TP — Alimente ta ville</h1>
-  <p>Tu diriges la production électrique de la ville d'Esticville. 5 missions progressives — à la fin : le code du jeu <b>Énergie Panic</b> !</p>
+  <p>Tu diriges la production électrique de la ville d'Esticville. 7 missions progressives — à la fin : le code du jeu <b>Énergie Panic</b> !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -157,10 +165,37 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan d'ingénieur de l'énergie</h2>
+  <h2><span class="badge">5</span>Le schéma de la centrale hydraulique</h2>
+  <div class="consigne">🗺️ La centrale du barrage en pleine production — suis l'eau qui circule et la turbine qui tourne ! Clique une étiquette, puis l'élément correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="330"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Ouvre la vanne du barrage</h2>
+  <div class="consigne">🎛️ 19 h : la ville demande <b>12 MW</b>. Règle l'ouverture de la vanne — la turbine et l'aiguille réagissent en direct. Ni délestage, ni eau gaspillée !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>💧 Ouverture de la vanne :</span>
+    <input type="range" id="slider6" min="0" max="100" step="1" value="20">
+    <span class="val"><span id="val6">20</span> %</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan d'ingénieur de l'énergie</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code du jeu.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -174,15 +209,15 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_energies_5e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_energies_5e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_energies_5e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_energies_5e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -196,7 +231,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : TRI ================= */
@@ -412,7 +447,152 @@ document.getElementById('test4').onclick=()=>{
 };
 boucleVille();
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'retenue', x:38,  y:112, w:190, h:72,  lbl:'LA RETENUE D\u2019EAU',   tx:130, ty:100},
+    {id:'conduite',x:292, y:180, w:160, h:82,  lbl:'LA CONDUITE FORCÉE',     tx:352, ty:170},
+    {id:'turbine', x:468, y:230, w:64,  h:64,  lbl:'LA TURBINE',             tx:500, ty:320},
+    {id:'alterno', x:544, y:226, w:92,  h:64,  lbl:'L\u2019ALTERNATEUR',     tx:592, ty:214},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,330);
+    ctx.fillStyle='#bfdbfe'; ctx.fillRect(40,120,200,64);
+    ctx.strokeStyle='#3b82f6'; ctx.lineWidth=2;
+    for(let i=0;i<4;i++){ ctx.beginPath();
+      ctx.moveTo(48,128+2*Math.sin(t*2+i));
+      ctx.quadraticCurveTo(140,124+3*Math.sin(t*2+i+1),232,128+2*Math.sin(t*2+i+2));
+      ctx.stroke(); }
+    ctx.fillStyle='#94a3b8'; ctx.strokeStyle='#475569'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(240,108); ctx.lineTo(276,108); ctx.lineTo(296,284); ctx.lineTo(240,284); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle='#475569'; ctx.lineWidth=13;
+    ctx.beginPath(); ctx.moveTo(286,190); ctx.lineTo(482,258); ctx.stroke();
+    ctx.strokeStyle='#93c5fd'; ctx.lineWidth=7;
+    ctx.beginPath(); ctx.moveTo(286,190); ctx.lineTo(482,258); ctx.stroke();
+    ctx.fillStyle='#1d4ed8';
+    for(let i=0;i<4;i++){ const p=((t*0.5)+i/4)%1;
+      ctx.beginPath(); ctx.arc(286+p*196,190+p*68,3.5,0,Math.PI*2); ctx.fill(); }
+    ctx.save(); ctx.translate(500,262);
+    ctx.strokeStyle='#b45309'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.arc(0,0,24,0,Math.PI*2); ctx.stroke();
+    ctx.rotate(t*2.4); ctx.lineWidth=2.5;
+    for(let i=0;i<3;i++){ ctx.rotate(Math.PI*2/3);
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(20,0); ctx.stroke(); }
+    ctx.restore();
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.rect(550,234,80,50); ctx.fill(); ctx.stroke();
+    ctx.font='20px Segoe UI'; ctx.textAlign='center'; ctx.fillText('\u26a1',590,266);
+    ctx.strokeStyle='#334155'; ctx.lineWidth=1.6;
+    ctx.beginPath(); ctx.moveTo(524,262); ctx.lineTo(550,262); ctx.stroke();
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(630,255); ctx.quadraticCurveTo(700,235,760,250); ctx.stroke();
+    ctx.font='26px Segoe UI'; ctx.fillText('\ud83c\udfd9\ufe0f',790,268);
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(0,284); ctx.lineTo(860,284); ctx.stroke();
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Schéma complet ! Le circuit de l\u2019énergie : la RETENUE stocke l\u2019eau en hauteur (énergie de position), la CONDUITE FORCÉE la fait tomber, la TURBINE transforme la chute en rotation, et l\u2019ALTERNATEUR transforme la rotation en électricité. Stocker → convertir → convertir : une chaîne d\u2019énergie complète ! (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : suis l\u2019eau — elle attend dans le grand lac, dévale le gros tuyau incliné, fait tourner la roue à aubes… et la boîte violette avec l\u2019éclair fabrique le courant.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:57, max:63,
+     ok:'\u2705 \u2248 60 % d\u2019ouverture : 12 MW produits pour 12 MW demandés — la ville brille et pas une goutte de trop. C\u2019est le geste du barragiste : ajuster la production À la demande, en 2 minutes ! (+4 pts)',
+     kobas:'\u274c Pas assez d\u2019eau turbinée : regarde la ville, les fenêtres s\u2019éteignent (délestage !). Ouvre davantage la vanne\u2026',
+     kohaut:'\u274c Trop ouvert : la demande est déjà couverte — le surplus turbine pour RIEN et la retenue se vide (regarde le niveau !). Referme un peu\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    const P=v*0.2;
+    const niveau = v>63 ? 8+4*Math.sin(t*2) : 0;
+    ctx.fillStyle='#bfdbfe'; ctx.fillRect(50,80+niveau,110,60-niveau);
+    ctx.fillStyle='#94a3b8'; ctx.fillRect(160,70,26,130);
+    ctx.strokeStyle='#93c5fd'; ctx.lineWidth=6+v/18;
+    ctx.beginPath(); ctx.moveTo(180,130); ctx.lineTo(300,190); ctx.stroke();
+    ctx.save(); ctx.translate(318,196);
+    ctx.strokeStyle='#b45309'; ctx.lineWidth=3.5;
+    ctx.beginPath(); ctx.arc(0,0,20,0,Math.PI*2); ctx.stroke();
+    ctx.rotate(t*(0.2+v*0.05)); ctx.lineWidth=2.5;
+    for(let i=0;i<3;i++){ ctx.rotate(Math.PI*2/3); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(16,0); ctx.stroke(); }
+    ctx.restore();
+    ctx.strokeStyle='#b45309'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.arc(500,140,62,Math.PI*0.75,Math.PI*2.25); ctx.stroke();
+    ctx.font='bold 11px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#64748b';
+    ctx.fillText('0',455,192); ctx.fillText('10',500,68); ctx.fillText('20',548,192);
+    const ang=Math.PI*0.75+P/20*(Math.PI*1.5);
+    ctx.strokeStyle= Math.abs(P-12)<=0.6 ? '#16a34a' : '#dc2626'; ctx.lineWidth=3.5;
+    ctx.beginPath(); ctx.moveTo(500,140); ctx.lineTo(500+46*Math.cos(ang),140+46*Math.sin(ang)); ctx.stroke();
+    ctx.fillStyle='#7c2d12'; ctx.font='bold 15px Segoe UI';
+    ctx.fillText(P.toFixed(1)+' MW produits',500,232);
+    ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+    ctx.fillText('demande : 12 MW',500,254);
+    const alim=Math.min(1,P/12);
+    for(let bx=0;bx<3;bx++) for(let by=0;by<4;by++){
+      const on = (bx*4+by)/12 < alim;
+      ctx.fillStyle= on ? '#fbbf24' : '#e2e8f0';
+      ctx.fillRect(690+bx*38, 90+by*34, 22, 22);
+    }
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
+    ctx.strokeRect(680,80,120,150);
+    ctx.font='bold 12px Segoe UI';
+    if(P<11.4){ ctx.fillStyle='#dc2626'; ctx.fillText('\u26a0\ufe0f délestage !',740,60); }
+    else if(P>12.6){ ctx.fillStyle='#dc2626'; ctx.fillText('\ud83d\udca7 eau gaspillée !',105,60); }
+    else { ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 ville alimentée',740,60); }
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"L'électricité est difficile à…", r:["transporter","stocker","mesurer"], b:1},
  {q:"Dans le barrage, l'alternateur convertit l'énergie…", r:["mécanique en électrique","thermique en chimique","électrique en lumineuse"], b:0},
@@ -433,7 +613,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

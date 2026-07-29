@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0f9ff}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — Le centre spatial</h1>
-  <p>Le centre spatial t'embauche comme opérateur junior : des rapports de mission qui déraillent arrivent en salle de contrôle. 5 missions — à la fin : le code des jeux !</p>
+  <p>Le centre spatial t'embauche comme opérateur junior : des rapports de mission qui déraillent arrivent en salle de contrôle. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de l'opérateur junior</h2>
+  <h2><span class="badge">5</span>Le satellite en orbite</h2>
+  <div class="consigne">🗺️ Le satellite tourne autour de la Terre, en liaison avec le sol — regarde ses panneaux suivre le Soleil ! Clique une étiquette, puis l'élément correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Choisis l’altitude de l’orbite</h2>
+  <div class="consigne">🎛️ Deux missions, deux orbites ! Règle l'altitude du satellite : plus il est bas, plus il va vite et voit les détails ; à 35 786 km pile, il tourne À LA VITESSE DE LA TERRE et semble immobile.</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>🛰️ Altitude :</span>
+    <input type="range" id="slider6" min="200" max="36000" step="200" value="10000">
+    <span class="val"><span id="val6">10000</span> km</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de l'opérateur junior</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_espace_3e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_espace_3e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_espace_3e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_espace_3e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,177 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'panneaux',x:520, y:60,  w:150, h:60,  lbl:'LES PANNEAUX SOLAIRES',   tx:595, ty:50},
+    {id:'corps',   x:555, y:124, w:80,  h:70,  lbl:'LA CHARGE UTILE (CAMÉRA)', tx:720, ty:150},
+    {id:'antenne', x:495, y:130, w:56,  h:56,  lbl:'L\u2019ANTENNE',           tx:465, ty:118},
+    {id:'station', x:150, y:200, w:120, h:90,  lbl:'LA STATION SOL',          tx:210, ty:190},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,320);
+    // Terre en bas à gauche
+    ctx.fillStyle='#1d4ed8';
+    ctx.beginPath(); ctx.arc(140,320,150,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#16a34a';
+    ctx.beginPath(); ctx.ellipse(90,270,36,20,0.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(190,300,30,16,-0.4,0,Math.PI*2); ctx.fill();
+    // station sol sur la Terre
+    ctx.strokeStyle='#f8fafc'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.arc(216,236,18,Math.PI*1.15,Math.PI*1.85); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(216,236); ctx.lineTo(216,254); ctx.stroke();
+    // soleil en haut à droite
+    ctx.font='30px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('\u2600\ufe0f',806,50);
+    // satellite (corps + antenne parabole + panneaux orientés soleil)
+    const sx=595, sy=158;
+    ctx.save(); ctx.translate(sx,sy);
+    // panneaux (2 ailes) légèrement oscillants vers le soleil
+    ctx.save(); ctx.rotate(-0.35+0.06*Math.sin(t*0.8));
+    ctx.fillStyle='#1e40af';
+    ctx.fillRect(-146,-64,120,44); ctx.fillRect(26,-64,120,44);
+    ctx.strokeStyle='#93c5fd'; ctx.lineWidth=1.4;
+    for(let i=1;i<5;i++){ ctx.beginPath(); ctx.moveTo(-146+i*24,-64); ctx.lineTo(-146+i*24,-20); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(26+i*24,-64); ctx.lineTo(26+i*24,-20); ctx.stroke(); }
+    ctx.restore();
+    // corps
+    ctx.fillStyle='#e2e8f0'; ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.rect(-32,-24,64,54); ctx.fill(); ctx.stroke();
+    // objectif caméra vers la Terre
+    ctx.fillStyle='#0f172a';
+    ctx.beginPath(); ctx.arc(-6,42,10,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+    // antenne parabole côté gauche
+    ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.arc(523,158,16,Math.PI*0.6,Math.PI*1.6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(523,158); ctx.lineTo(537,158); ctx.stroke();
+    // liaison radio pointillée station <-> satellite
+    ctx.strokeStyle='rgba(234,88,12,.85)'; ctx.lineWidth=2; ctx.setLineDash([3,7]);
+    ctx.lineDashOffset=-t*22;
+    ctx.beginPath(); ctx.moveTo(222,232); ctx.lineTo(516,164); ctx.stroke();
+    ctx.setLineDash([]);
+    // étoiles
+    ctx.fillStyle='#f8fafc';
+    [[700,240],[760,110],[420,60],[330,110],[640,280]].forEach(([ex,ey],i)=>{
+      if(Math.sin(t*2+i*2)>0){ ctx.fillRect(ex,ey,3,3); } });
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Satellite décodé ! Les PANNEAUX SOLAIRES fabriquent son électricité (ils suivent le Soleil), la CHARGE UTILE est SA raison d\u2019être — ici la caméra pointée vers la Terre —, l\u2019ANTENNE échange données et commandes avec la STATION SOL (la liaison pointillée orange). Sans la station, un satellite est muet : l\u2019espace se pilote depuis le plancher des vaches ! (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : les panneaux sont les deux ailes bleues quadrillées, la charge utile est le corps avec l\u2019objectif noir vers la Terre, l\u2019antenne est la petite parabole… et la station sol est la grande parabole blanche posée sur la planète.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:400, max:800, geo:false,
+     consigne:'\u25b6 MISSION 1 — cartographier les cultures : il faut voir les DÉTAILS',
+     ok:'\u2705 Orbite basse (400-800 km) : proche du sol, la caméra distingue les parcelles — et le satellite file à 7,5 km/s, faisant le tour du monde en 90 minutes ! C\u2019est l\u2019orbite des satellites d\u2019observation et de l\u2019ISS.',
+     kobas:'\u274c Trop bas : sous 400 km, les restes d\u2019atmosphère freinent le satellite — il retomberait en quelques semaines. Remonte un peu\u2026',
+     kohaut:'\u274c Trop haut pour voir les détails : à cette distance, une parcelle agricole devient un pixel ! Pour cartographier finement, il faut se RAPPROCHER : orbite basse\u2026'},
+    {min:35600, max:36000, geo:true,
+     consigne:'\u25b6 MISSION 2 — la télévision : l\u2019antenne du toit ne doit JAMAIS bouger',
+     ok:'\u2705 35 786 km : l\u2019orbite géostationnaire ! À cette altitude précise, le satellite met exactement 24 h par tour — il reste suspendu au-dessus du MÊME point. Voilà pourquoi les paraboles des toits sont fixes. Une seule altitude au monde fait ça ! (+4 pts)',
+     kobas:'\u274c À cette altitude, le satellite tourne PLUS VITE que la Terre : vu du sol il dérive, et l\u2019antenne du toit devrait le poursuivre\u2026 Il n\u2019existe qu\u2019UNE altitude où il paraît immobile : bien plus haut !',
+     kohaut:''}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    ctx.font='bold 14px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#7c2d12';
+    ctx.fillText(sc.consigne+'  ('+(Math.min(etape,SCEN.length-1)+1)+'/2)', 430, 26);
+    // Terre
+    ctx.fillStyle='#1d4ed8';
+    ctx.beginPath(); ctx.arc(240,160,58,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#16a34a';
+    ctx.beginPath(); ctx.ellipse(222,140,18,10,0.4,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(258,176,14,8,-0.5,0,Math.PI*2); ctx.fill();
+    // orbite : rayon selon altitude (échelle compressée)
+    const r=64+Math.pow(v/36000,0.55)*95;
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=1.5; ctx.setLineDash([4,5]);
+    ctx.beginPath(); ctx.arc(240,160,r,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    // vitesse angulaire : rapide en bas, 1 tour/24h en géo (visuellement lente)
+    const vit=3.2*Math.pow(400/Math.max(v,200),0.6)+0.12;
+    const a=t*vit;
+    const px=240+r*Math.cos(a), py=160+r*Math.sin(a);
+    ctx.font='16px Segoe UI'; ctx.fillStyle='#000';
+    ctx.fillText('\ud83d\udef0\ufe0f',px,py+6);
+    ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#334155';
+    ctx.fillText(v.toLocaleString('fr-FR')+' km',240,258);
+    // ce que voit la caméra (détail selon altitude)
+    ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+    ctx.strokeRect(520,60,150,110);
+    ctx.font='bold 11px Segoe UI'; ctx.fillStyle='#64748b';
+    ctx.fillText('image caméra',595,52);
+    const res=Math.max(2,Math.round(28-24*Math.pow(v/36000,0.4)));
+    for(let i=0;i<res;i++) for(let j=0;j<Math.round(res*0.73);j++){
+      ctx.fillStyle=((i*3+j*5)%7<3)?'#16a34a':'#a3e635';
+      ctx.fillRect(521+i*(148/res),61+j*(108/Math.round(res*0.73)),148/res-0.5,108/Math.round(res*0.73)-0.5);
+    }
+    // durée d'un tour
+    const periode = v>=35600&&v<=36000 ? 24 : (1.4+ (v/36000)*30);
+    ctx.fillStyle='#334155'; ctx.font='bold 12.5px Segoe UI';
+    ctx.fillText('1 tour \u2248 '+(periode<2?Math.round(periode*60)+' min':periode.toFixed(0)+' h'),595,206);
+    if(sc.geo){
+      const fixe = v>=35600&&v<=36000;
+      ctx.fillStyle= fixe ? '#16a34a' : '#dc2626';
+      ctx.fillText(fixe ? '\u2713 immobile dans le ciel !' : '\u2717 il dérive, l\u2019antenne le perd\u2026',595,236);
+    } else {
+      ctx.fillStyle= v<=800 ? '#16a34a' : '#dc2626';
+      ctx.fillText(v<=800 ? '\u2713 parcelles visibles' : '\u2717 trop loin pour les détails',595,236);
+    }
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"Une fusée avance grâce à…", r:["l'action-réaction (gaz éjectés)","l'appui sur l'air","des hélices géantes"], b:0},
  {q:"Un satellite en orbite est…", r:["en chute permanente autour de la Terre","immobile dans le vide","hors de portée de la gravité"], b:0},
@@ -353,7 +558,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

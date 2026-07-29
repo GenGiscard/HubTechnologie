@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — Le bureau de simulation</h1>
-  <p>Le bureau d'ingénierie t'embauche : des simulations qui déraillent arrivent sur ton écran. 5 missions — à la fin : le code des jeux !</p>
+  <p>Le bureau d'ingénierie t'embauche : des simulations qui déraillent arrivent sur ton écran. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de l'ingénieur junior</h2>
+  <h2><span class="badge">5</span>La démarche de simulation</h2>
+  <div class="consigne">🗺️ Avant de construire la passerelle, on la teste dans l'ordinateur ! Suis la démarche : clique une étiquette, puis l'étape correspondante. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="310"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Règle la finesse du maillage</h2>
+  <div class="consigne">🎛️ Découpe la poutre en éléments de calcul : plus le maillage est fin, plus le résultat est précis… et plus le calcul est long. Cahier des charges : erreur ≤ 4 % ET calcul ≤ 25 s !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>🕸️ Éléments du maillage :</span>
+    <input type="range" id="slider6" min="4" max="100" step="2" value="6">
+    <span class="val"><span id="val6">6</span> élém.</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de l'ingénieur junior</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_simulation_3e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_simulation_3e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_simulation_3e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_simulation_3e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,179 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'reel',    x:50,  y:80,  w:150, h:120, lbl:'L\u2019OBJET RÉEL (LA PASSERELLE)', tx:125, ty:70},
+    {id:'modele',  x:260, y:80,  w:160, h:120, lbl:'LE MODÈLE 3D + MAILLAGE',          tx:340, ty:70},
+    {id:'calcul',  x:480, y:80,  w:130, h:120, lbl:'LE CALCULATEUR',                    tx:545, ty:70},
+    {id:'resultat',x:660, y:80,  w:150, h:120, lbl:'LES RÉSULTATS (COURBE)',            tx:735, ty:70},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,310);
+    // objet réel : passerelle + piéton
+    ctx.strokeStyle='#334155'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(62,160); ctx.quadraticCurveTo(125,138,188,160); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(70,160); ctx.lineTo(70,190); ctx.moveTo(180,160); ctx.lineTo(180,190); ctx.stroke();
+    const wx=70+((t*20)%110);
+    ctx.font='18px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('\ud83d\udeb6',wx,152);
+    // modèle : même passerelle maillée en triangles qui pulsent
+    ctx.strokeStyle='rgba(14,116,144,'+(0.5+0.3*Math.sin(t*2))+')'; ctx.lineWidth=1.6;
+    for(let i=0;i<8;i++){
+      const x1=272+i*17, x2=x1+17;
+      const y1=168-14*Math.sin(Math.PI*i/8), y2=168-14*Math.sin(Math.PI*(i+1)/8);
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.lineTo(x1,y1+20); ctx.closePath(); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2,y2+20); ctx.lineTo(x1,y1+20); ctx.stroke();
+    }
+    ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#0e7490';
+    ctx.fillText('découpée en éléments',340,214);
+    // calculateur : barre de progression qui boucle
+    ctx.fillStyle='#1e293b';
+    ctx.beginPath(); ctx.roundRect(494,96,102,88,8); ctx.fill();
+    ctx.fillStyle='#0f172a'; ctx.fillRect(504,106,82,50);
+    const pr=(t*0.4)%1;
+    ctx.fillStyle='#22c55e'; ctx.fillRect(508,140,74*pr,10);
+    ctx.font='9px Segoe UI'; ctx.fillStyle='#94a3b8';
+    ctx.fillText('calcul\u2026 '+Math.round(pr*100)+' %',545,126);
+    // résultats : courbe qui se trace
+    ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(676,190); ctx.lineTo(676,96); ctx.moveTo(676,190); ctx.lineTo(796,190); ctx.stroke();
+    ctx.strokeStyle='#dc2626'; ctx.lineWidth=2.5;
+    ctx.beginPath();
+    const fin=0.3+0.7*((t*0.25)%1);
+    for(let u=0;u<=fin;u+=0.04){
+      const cx2=680+u*110, cy2=186-58*Math.sin(Math.PI*u*0.9)-14*u;
+      if(u===0) ctx.moveTo(cx2,cy2); else ctx.lineTo(cx2,cy2);
+    }
+    ctx.stroke();
+    // flèches de la démarche
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    [[200,140,258,140],[422,140,478,140],[612,140,658,140]].forEach(([x1,y1,x2,y2])=>{
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-10,y2-6); ctx.moveTo(x2,y2); ctx.lineTo(x2-10,y2+6); ctx.stroke(); });
+    ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#64748b';
+    ctx.fillText('modéliser',229,128); ctx.fillText('calculer',450,128); ctx.fillText('analyser',635,128);
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Démarche complète ! L\u2019OBJET RÉEL est traduit en MODÈLE (la géométrie découpée en petits éléments — le maillage), le CALCULATEUR résout les équations sur chaque élément, et les RÉSULTATS sortent en courbes. Tester la passerelle dans l\u2019ordinateur AVANT de couler le béton : moins cher, plus rapide, sans danger — mais un modèle reste une approximation du réel ! (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : le réel a un piéton qui marche, le modèle est le même pont mais en triangles bleus, le calculateur affiche sa barre de progression… et les résultats sont la courbe rouge qui se trace.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:20, max:50,
+     ok:'\u2705 Entre 20 et 50 éléments : l\u2019erreur passe sous les 4 % ET le calcul reste sous 25 s. Affiner ne \u00ab coûte \u00bb pas pareil des deux côtés : la précision converge, le temps explose — l\u2019ingénieur simule toujours au JUSTE maillage, jamais au maximum ! (+4 pts)',
+     kobas:'\u274c Maillage trop grossier : regarde l\u2019écart entre la courbe simulée et la réalité — ton résultat est faux de plus de 4 %. Une décision prise là-dessus serait dangereuse. Affine\u2026',
+     kohaut:'\u274c Précis, oui\u2026 mais regarde le chrono exploser ! Au-delà de 50 éléments, la précision ne gagne presque plus rien et chaque essai devient interminable. Le sur-maillage gaspille : allège\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    const erreur=80/v;
+    const temps=v*v/100;
+    // poutre maillée en v éléments
+    ctx.strokeStyle='#334155'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(100,150); ctx.lineTo(360,150); ctx.stroke();
+    ctx.fillStyle='#e2e8f0';
+    ctx.fillRect(92,150,12,30); ctx.fillRect(356,150,12,30);
+    const n=Math.min(v,40);
+    ctx.strokeStyle='#0e7490'; ctx.lineWidth=1.4;
+    for(let i=0;i<n;i++){
+      const x1=100+i*260/n, x2=100+(i+1)*260/n;
+      ctx.beginPath(); ctx.rect(x1,138,260/n,12); ctx.stroke();
+    }
+    ctx.font='bold 12px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
+    ctx.fillText(v+' éléments',230,190);
+    // courbes réalité vs simulation
+    ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(470,200); ctx.lineTo(470,60); ctx.moveTo(470,200); ctx.lineTo(680,200); ctx.stroke();
+    // réalité (verte, lisse)
+    ctx.strokeStyle='#16a34a'; ctx.lineWidth=2.5;
+    ctx.beginPath();
+    for(let u=0;u<=1;u+=0.04){
+      const cx2=474+u*200, cy2=196-92*Math.sin(Math.PI*u);
+      if(u===0) ctx.moveTo(cx2,cy2); else ctx.lineTo(cx2,cy2);
+    }
+    ctx.stroke();
+    // simulation (rouge, segments selon v, écart selon erreur)
+    ctx.strokeStyle='#dc2626'; ctx.lineWidth=2.5;
+    ctx.beginPath();
+    const seg=Math.min(v,30);
+    for(let i=0;i<=seg;i++){
+      const u=i/seg;
+      const cx2=474+u*200, cy2=196-92*Math.sin(Math.PI*u)*(1-erreur/40);
+      if(i===0) ctx.moveTo(cx2,cy2); else ctx.lineTo(cx2,cy2);
+    }
+    ctx.stroke();
+    ctx.font='10.5px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='left';
+    ctx.fillText('— réalité',690,90);
+    ctx.fillStyle='#dc2626'; ctx.fillText('— simulation',690,108);
+    ctx.textAlign='center';
+    // jauges erreur + temps
+    ctx.fillStyle='#334155'; ctx.font='bold 12.5px Segoe UI';
+    ctx.fillText('ERREUR : '+erreur.toFixed(1)+' % (\u2264 4 exigé)',280,236);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(160,246,240,14);
+    ctx.fillStyle= erreur>4 ? '#dc2626' : '#16a34a';
+    ctx.fillRect(160,246,240*Math.min(1,erreur/20),14);
+    ctx.fillStyle='#334155';
+    ctx.fillText('TEMPS DE CALCUL : '+temps.toFixed(0)+' s (\u2264 25 exigé)',600,236);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(490,246,220,14);
+    ctx.fillStyle= temps>25 ? '#dc2626' : '#16a34a';
+    ctx.fillRect(490,246,220*Math.min(1,temps/100),14);
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"Une représentation simplifiée du réel, construite pour une question, c'est…", r:["un modèle","une photographie","un essai réel"], b:0},
  {q:"Faire vivre le modèle dans l'ordinateur pour prédire, c'est…", r:["l'impression 3D","la simulation","le prototypage"], b:1},
@@ -353,7 +560,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

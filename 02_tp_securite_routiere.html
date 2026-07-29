@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#fffbeb}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — Le centre de sécurité routière</h1>
-  <p>Le centre de sécurité routière t'embauche comme analyste junior : des rapports d'accidents évités de justesse arrivent sur ton bureau. 5 missions — à la fin : le code des jeux !</p>
+  <p>Le centre de sécurité routière t'embauche comme analyste junior : des rapports d'accidents évités de justesse arrivent sur ton bureau. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de l'analyste junior</h2>
+  <h2><span class="badge">5</span>Les anges gardiens de la voiture</h2>
+  <div class="consigne">🗺️ La voiture d'essai en coupe — disque qui tourne, radar qui balaie ! Quatre organes veillent sur les passagers : clique une étiquette, puis l'organe correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="310"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>La pression des pneus</h2>
+  <div class="consigne">🎛️ Contrôle mensuel : règle la pression au manomètre et observe la zone de contact pneu-route, la consommation et l'adhérence. Le constructeur recommande une plage précise… trouve-la !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>⛽ Pression :</span>
+    <input type="range" id="slider6" min="10" max="40" step="1" value="15">
+    <span class="val"><span id="val6">15</span> dixièmes de bar</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de l'analyste junior</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_auto_4e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_auto_4e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_auto_4e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_auto_4e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,173 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'disque', x:150, y:180, w:90,  h:90,  lbl:'LE DISQUE DE FREIN',        tx:195, ty:170},
+    {id:'pneu',   x:560, y:170, w:110, h:110, lbl:'LE PNEUMATIQUE',            tx:615, ty:160},
+    {id:'airbag', x:360, y:100, w:90,  h:70,  lbl:'L\u2019AIRBAG',             tx:405, ty:90},
+    {id:'radar',  x:690, y:110, w:120, h:60,  lbl:'LE RADAR DE FREINAGE D\u2019URGENCE', tx:700, ty:100},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,310);
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(40,280); ctx.lineTo(820,280); ctx.stroke();
+    // carrosserie
+    ctx.strokeStyle='#334155'; ctx.lineWidth=3; ctx.fillStyle='#f8fafc';
+    ctx.beginPath();
+    ctx.moveTo(120,250); ctx.lineTo(140,190); ctx.quadraticCurveTo(240,130,340,124);
+    ctx.quadraticCurveTo(430,70,540,110); ctx.quadraticCurveTo(650,120,700,180);
+    ctx.lineTo(710,250); ctx.closePath(); ctx.fill(); ctx.stroke();
+    // vitres
+    ctx.fillStyle='#dbeafe';
+    ctx.beginPath(); ctx.moveTo(370,126); ctx.quadraticCurveTo(435,84,520,114); ctx.lineTo(500,140); ctx.lineTo(380,142); ctx.closePath(); ctx.fill();
+    // roue avant : disque de frein visible qui tourne
+    ctx.save(); ctx.translate(195,238);
+    ctx.fillStyle='#1e293b'; ctx.beginPath(); ctx.arc(0,0,44,0,Math.PI*2); ctx.fill();
+    ctx.rotate(t*2);
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.arc(0,0,26,0,Math.PI*2); ctx.stroke();
+    for(let i=0;i<6;i++){ ctx.rotate(Math.PI/3);
+      ctx.beginPath(); ctx.arc(16,0,3,0,Math.PI*2); ctx.stroke(); }
+    ctx.restore();
+    ctx.fillStyle='#dc2626'; ctx.fillRect(214,208,12,20);
+    // roue arrière : pneu (bande + flancs)
+    ctx.save(); ctx.translate(615,238);
+    ctx.fillStyle='#0f172a'; ctx.beginPath(); ctx.arc(0,0,46,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#475569'; ctx.beginPath(); ctx.arc(0,0,26,0,Math.PI*2); ctx.fill();
+    ctx.rotate(t*2); ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+    for(let i=0;i<8;i++){ ctx.rotate(Math.PI/4);
+      ctx.beginPath(); ctx.moveTo(38,-6); ctx.lineTo(46,-2); ctx.stroke(); }
+    ctx.restore();
+    // airbag (volant + coussin qui pulse)
+    ctx.strokeStyle='#334155'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(392,150); ctx.lineTo(380,128); ctx.stroke();
+    const ab=1+0.12*Math.sin(t*2.4);
+    ctx.fillStyle='rgba(234,88,12,.75)';
+    ctx.beginPath(); ctx.ellipse(408,136,22*ab,17*ab,0,0,Math.PI*2); ctx.fill();
+    ctx.font='18px Segoe UI'; ctx.textAlign='center'; ctx.fillText('\ud83e\uddcd',450,158);
+    // radar avant : faisceau qui balaie
+    ctx.fillStyle='#7c3aed';
+    ctx.beginPath(); ctx.arc(706,182,7,0,Math.PI*2); ctx.fill();
+    const bal=0.25*Math.sin(t*2);
+    ctx.fillStyle='rgba(124,58,237,.16)';
+    ctx.beginPath(); ctx.moveTo(706,182);
+    ctx.lineTo(706+120*Math.cos(-0.24+bal),182+120*Math.sin(-0.24+bal));
+    ctx.lineTo(706+120*Math.cos(0.24+bal),182+120*Math.sin(0.24+bal));
+    ctx.closePath(); ctx.fill();
+    ctx.font='20px Segoe UI'; ctx.fillText('\ud83d\udeb6',826,262);
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Anges gardiens identifiés ! Deux mondes de sécurité : l\u2019ACTIVE évite l\u2019accident — le DISQUE DE FREIN qui mord, le PNEU qui accroche la route, le RADAR qui freine tout seul si tu ne réagis pas ; la PASSIVE protège quand c\u2019est trop tard — l\u2019AIRBAG se gonfle en 30 millisecondes. Éviter d\u2019abord, protéger ensuite. (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : le disque brillant tourne dans la roue AVANT, le pneu est le boudin noir de la roue ARRIÈRE, l\u2019airbag est le coussin orange au volant… et le radar balaie la route en violet, tout à l\u2019avant.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:22, max:26,
+     ok:'\u2705 2,2 à 2,6 bars : la zone de contact est idéale — adhérence maximale, usure régulière, consommation contenue. Vérifier sa pression chaque mois, à froid : le geste de sécurité le moins cher du monde ! (+4 pts)',
+     kobas:'\u274c Sous-gonflé : regarde le pneu s\u2019écraser — les flancs s\u2019échauffent (risque d\u2019éclatement !), la conso grimpe, et la voiture devient floue en virage. Regonfle\u2026',
+     kohaut:'\u274c Sur-gonflé : le pneu ne touche la route que par une bande étroite au centre — moins d\u2019adhérence, surtout sous la pluie, et usure en plein milieu. Dégonfle un peu\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    const bars=v/10;
+    const sous = v<22, sur = v>26;
+    // pneu en coupe : écrasement selon pression
+    const ecr = sous ? (22-v)*1.6 : 0;
+    ctx.save(); ctx.translate(230,150);
+    ctx.fillStyle='#0f172a';
+    ctx.beginPath(); ctx.ellipse(0,0,64,64-ecr*0.9,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#475569';
+    ctx.beginPath(); ctx.arc(0,-ecr*0.3,30,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+    // sol + zone de contact
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(80,214); ctx.lineTo(420,214); ctx.stroke();
+    const contact = sous ? 96+ecr*2.2 : (sur ? Math.max(18,60-(v-26)*3.4) : 66);
+    ctx.strokeStyle= (sous||sur) ? '#dc2626' : '#16a34a'; ctx.lineWidth=7;
+    ctx.beginPath(); ctx.moveTo(230-contact/2,214); ctx.lineTo(230+contact/2,214); ctx.stroke();
+    ctx.font='bold 12px Segoe UI'; ctx.textAlign='center';
+    ctx.fillStyle= (sous||sur) ? '#dc2626' : '#16a34a';
+    ctx.fillText('zone de contact',230,238);
+    if(sous && Math.sin(t*4)>0){ ctx.font='16px Segoe UI'; ctx.fillText('\ud83d\udd25',176,196); }
+    // manomètre
+    ctx.strokeStyle='#7c3aed'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.arc(560,120,54,Math.PI*0.75,Math.PI*2.25); ctx.stroke();
+    ctx.font='bold 11px Segoe UI'; ctx.fillStyle='#64748b';
+    ctx.fillText('1',522,166); ctx.fillText('2,5',560,58); ctx.fillText('4',600,166);
+    const ang=Math.PI*0.75+(bars-1)/3*(Math.PI*1.5);
+    ctx.strokeStyle= (v>=22&&v<=26) ? '#16a34a' : '#dc2626'; ctx.lineWidth=3.5;
+    ctx.beginPath(); ctx.moveTo(560,120); ctx.lineTo(560+40*Math.cos(ang),120+40*Math.sin(ang)); ctx.stroke();
+    ctx.fillStyle='#7c3aed'; ctx.font='bold 15px Segoe UI';
+    ctx.fillText(bars.toFixed(1)+' bar',560,200);
+    // jauges conso + adhérence
+    const conso = sous ? Math.min(1,0.5+(22-v)*0.06) : 0.42;
+    ctx.fillStyle='#334155'; ctx.font='bold 12px Segoe UI';
+    ctx.fillText('CONSOMMATION',730,66);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(670,76,120,14);
+    ctx.fillStyle= sous ? '#dc2626' : '#16a34a'; ctx.fillRect(670,76,120*conso,14);
+    const adh = (v>=22&&v<=26) ? 1 : (sous ? 0.55 : Math.max(0.25,1-(v-26)*0.07));
+    ctx.fillStyle='#334155'; ctx.fillText('ADHÉRENCE',730,126);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(670,136,120,14);
+    ctx.fillStyle= adh>0.85 ? '#16a34a' : '#dc2626'; ctx.fillRect(670,136,120*adh,14);
+    ctx.fillStyle='#64748b'; ctx.font='12px Segoe UI';
+    ctx.fillText('recommandation constructeur : \u00e0 v\u00e9rifier \u00e0 froid',700,196);
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"La ceinture et l'airbag appartiennent à…", r:["la sécurité passive","la sécurité active","l'entretien"], b:0},
  {q:"Pendant le temps de réaction, la voiture…", r:["ralentit doucement","ne ralentit pas du tout","accélère"], b:1},
@@ -353,7 +554,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

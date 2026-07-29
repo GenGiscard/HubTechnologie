@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
@@ -88,12 +96,12 @@ table.cdc tr.faux td{background:#fef2f2}
 
 <header class="tp">
   <h1>🔧 TP — Le bureau des projets</h1>
-  <p>Le bureau d'études d'Esticville lance sa gourde ESTIC-Aqua. Tu es contrôleur qualité junior : 5 missions — à la fin, le code des jeux !</p>
+  <p>Le bureau d'études d'Esticville lance sa gourde ESTIC-Aqua. Tu es contrôleur qualité junior : 7 missions — à la fin, le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -152,10 +160,37 @@ table.cdc tr.faux td{background:#fef2f2}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan du contrôleur qualité</h2>
+  <h2><span class="badge">5</span>La bête à cornes de la gourde</h2>
+  <div class="consigne">🗺️ Le projet du jour : une gourde isotherme pour le collège. Complète sa bête à cornes : clique une étiquette, puis la bulle du diagramme où elle va. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Règle le cahier des charges</h2>
+  <div class="consigne">🎛️ Le CDC de la gourde impose deux contraintes : tenir TOUTE la journée de sport, ET rentrer dans le sac à dos. Règle la capacité au curseur et observe les deux contraintes réagir !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>🥤 Capacité de la gourde :</span>
+    <input type="range" id="slider6" min="0.2" max="3" step="0.1" value="2">
+    <span class="val"><span id="val6">2</span> L</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan du contrôleur qualité</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -169,15 +204,15 @@ table.cdc tr.faux td{background:#fef2f2}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_besoin_5e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_besoin_5e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_besoin_5e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_besoin_5e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -191,7 +226,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -333,7 +368,140 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'qui',    x:60,  y:44,  w:290, h:96,  lbl:'AU COLLÉGIEN SPORTIF',            tx:205, ty:34},
+    {id:'quoi',   x:512, y:44,  w:290, h:96,  lbl:'SUR LA BOISSON',                  tx:657, ty:34},
+    {id:'produit',x:330, y:140, w:200, h:64,  lbl:'LA GOURDE ISOTHERME',             tx:430, ty:132},
+    {id:'but',    x:216, y:236, w:428, h:58,  lbl:'GARDER LA BOISSON FRAÎCHE 12 H',  tx:430, ty:228},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,320);
+    const pulse=1+0.012*Math.sin(t*1.6);
+    // bulle gauche : à qui rend-il service ?
+    ctx.strokeStyle='#0e7490'; ctx.lineWidth=3; ctx.fillStyle='#fff';
+    ctx.save(); ctx.translate(205,92); ctx.scale(pulse,pulse);
+    ctx.beginPath(); ctx.ellipse(0,0,142,46,0,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.restore();
+    ctx.font='italic 13px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#64748b';
+    ctx.fillText('À qui rend-il service ?',205,97);
+    // bulle droite : sur quoi agit-il ?
+    ctx.strokeStyle='#7c3aed'; ctx.fillStyle='#fff';
+    ctx.save(); ctx.translate(657,92); ctx.scale(pulse,pulse);
+    ctx.beginPath(); ctx.ellipse(0,0,142,46,0,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.restore();
+    ctx.fillStyle='#64748b'; ctx.fillText('Sur quoi agit-il ?',657,97);
+    // boîte produit
+    ctx.strokeStyle='#ea580c'; ctx.lineWidth=3; ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.roundRect(340,146,180,52,10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#64748b'; ctx.fillText('Le produit',430,177);
+    // boîte but
+    ctx.strokeStyle='#16a34a'; ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.roundRect(226,242,408,46,10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#64748b'; ctx.fillText('Dans quel but ?',430,270);
+    // les cornes + la flèche du but
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(300,120); ctx.quadraticCurveTo(340,132,372,146); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(562,120); ctx.quadraticCurveTo(522,132,490,146); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(430,198); ctx.lineTo(430,242); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(430,242); ctx.lineTo(424,232); ctx.moveTo(430,242); ctx.lineTo(436,232); ctx.stroke();
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Bête à cornes complète ! Elle rend service AU COLLÉGIEN SPORTIF, elle agit SUR LA BOISSON, dans le but de LA GARDER FRAÎCHE 12 H. Trois questions, et le besoin est cerné AVANT de dessiner le moindre produit — c\u2019est toujours le point de départ ! (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Relis les questions écrites en gris dans chaque bulle : à QUI rend-il service (une personne), sur QUOI agit-il (une matière), dans quel BUT (un service rendu)… et la boîte centrale, c\u2019est le produit lui-même.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:0.8, max:1.2,
+     ok:'\u2705 Entre 0,8 et 1,2 L : assez pour la journée de sport ET la gourde rentre dans le sac. Un produit réussi ne satisfait pas UNE contrainte, il les satisfait TOUTES — c\u2019est exactement le rôle du cahier des charges ! (+4 pts)',
+     kobas:'\u274c Trop petite : regarde la jauge « journée de sport » dans le rouge — le besoin n\u2019est pas satisfait. Le CDC exige AU MOINS 0,8 L\u2026',
+     kohaut:'\u274c Trop grande : elle ne rentre plus dans le sac (contrainte : 1,2 L maxi) ! Satisfaire le besoin, oui — mais dans les contraintes\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    // gourde qui grandit
+    const gh=40+v*55;
+    const gy=230-gh;
+    ctx.fillStyle='#67e8f9'; ctx.strokeStyle='#0e7490'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.roundRect(150,gy,64,gh,12); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#0e7490'; ctx.fillRect(164,gy-14,36,14);
+    ctx.font='bold 14px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#0e7490';
+    ctx.fillText(v.toFixed(1)+' L',182,252);
+    // sac à dos : hauteur max intérieure = gabarit 1,2 L
+    const smax=40+1.2*55;
+    ctx.strokeStyle= v>1.2 ? '#dc2626' : '#64748b'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.roundRect(280,230-smax-14,120,smax+14,14); ctx.stroke();
+    ctx.font='bold 12px Segoe UI'; ctx.fillStyle= v>1.2 ? '#dc2626' : '#64748b';
+    ctx.fillText('gabarit du sac (1,2 L maxi)',340,252);
+    if(v>1.2){ ctx.fillText('\u26a0\ufe0f ne rentre plus !',340,230-smax-24); }
+    // jauge journée de sport (besoin 0,8 L)
+    ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+    ctx.fillText('JOURNÉE DE SPORT (besoin : 0,8 L mini)',620,80);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(500,92,240,18);
+    const remplir=Math.min(1,v/0.8);
+    ctx.fillStyle= v<0.8 ? '#dc2626' : '#16a34a';
+    ctx.fillRect(500,92,240*remplir,18);
+    if(v<0.8){ ctx.fillStyle='#dc2626'; ctx.font='bold 12px Segoe UI';
+      ctx.fillText('\ud83e\udd75 à sec avant la fin de la journée\u2026',620,132); }
+    else { ctx.fillStyle='#16a34a'; ctx.font='bold 12px Segoe UI';
+      ctx.fillText('\u2713 hydratation assurée',620,132); }
+    // rappel CDC
+    ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
+    ctx.fillText('CDC : contenir \u2265 0,8 L  \u00b7  encombrement \u2264 1,2 L  \u00b7  (et rester fraîche 12 h !)',430,272);
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"La bête à cornes sert à formuler…", r:["le prix","le besoin","la couleur"], b:1},
  {q:"« Existe en 6 coloris au choix » est une fonction…", r:["d'usage","d'estime","technique"], b:1},
@@ -354,7 +522,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

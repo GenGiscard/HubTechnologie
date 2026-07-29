@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
@@ -82,12 +90,12 @@ canvas.frise{width:100%;max-width:680px;height:auto;background:#fdfdfd;border:1p
 
 <header class="tp">
   <h1>🔧 TP — La machine à remonter le temps</h1>
-  <p>Le musée des objets techniques d'Esticville a tout mélangé. 5 missions pour remettre l'histoire en ordre — à la fin : le code des jeux !</p>
+  <p>Le musée des objets techniques d'Esticville a tout mélangé. 7 missions pour remettre l'histoire en ordre — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -145,10 +153,37 @@ canvas.frise{width:100%;max-width:680px;height:auto;background:#fdfdfd;border:1p
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan du conservateur</h2>
+  <h2><span class="badge">5</span>La vitrine des téléphones</h2>
+  <div class="consigne">🗺️ Quatre téléphones dans la vitrine du musée (regarde le cadran tourner et l'écran s'allumer !). Clique une étiquette, puis l'appareil correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="300"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>La frise au curseur</h2>
+  <div class="consigne">🎛️ La lignée « écouter de la musique » : déplace le curseur des années et regarde l'objet changer ! Trois époques à retrouver, l'une après l'autre.</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>📅 Année :</span>
+    <input type="range" id="slider6" min="1900" max="2020" step="5" value="1900">
+    <span class="val"><span id="val6">1900</span> </span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan du conservateur</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -162,15 +197,15 @@ canvas.frise{width:100%;max-width:680px;height:auto;background:#fdfdfd;border:1p
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_evo_5e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_evo_5e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_evo_5e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_evo_5e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -184,7 +219,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -350,7 +385,164 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'cadran', x:80,  y:100, w:110, h:150, lbl:'À CADRAN (1950)',          tx:135, ty:88},
+    {id:'touches',x:290, y:100, w:110, h:150, lbl:'À TOUCHES (1985)',         tx:345, ty:88},
+    {id:'clapet', x:500, y:100, w:110, h:150, lbl:'PORTABLE À CLAPET (2000)', tx:555, ty:88},
+    {id:'smart',  x:706, y:100, w:110, h:150, lbl:'SMARTPHONE (2015)',        tx:760, ty:88},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,300);
+    ctx.fillStyle='#f1f5f9';
+    [95,305,515,720].forEach(x=>ctx.fillRect(x,236,84,16));
+    ctx.fillStyle='#334155';
+    ctx.beginPath(); ctx.roundRect(100,160,74,74,8); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(94,140,86,16,8); ctx.fill();
+    ctx.strokeStyle='#f8fafc'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.arc(137,197,24,0,Math.PI*2); ctx.stroke();
+    const aC=t*0.9;
+    ctx.beginPath(); ctx.arc(137+15*Math.cos(aC),197+15*Math.sin(aC),4,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle='#64748b';
+    ctx.beginPath(); ctx.roundRect(310,140,70,96,8); ctx.fill();
+    ctx.fillStyle='#f8fafc';
+    for(let r=0;r<4;r++) for(let c=0;c<3;c++) ctx.fillRect(320+c*18,152+r*18,12,11);
+    ctx.fillStyle='#475569';
+    ctx.beginPath(); ctx.roundRect(302,120,86,14,7); ctx.fill();
+    ctx.fillStyle='#0e7490';
+    ctx.beginPath(); ctx.roundRect(520,120,64,56,6); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(520,180,64,56,6); ctx.fill();
+    ctx.fillStyle='#a5f3fc'; ctx.fillRect(528,128,48,40);
+    ctx.fillStyle='#e0f2fe';
+    for(let r=0;r<3;r++) for(let c=0;c<3;c++) ctx.fillRect(529+c*16,186+r*15,12,10);
+    ctx.fillStyle='#0f172a';
+    ctx.beginPath(); ctx.roundRect(730,120,62,116,10); ctx.fill();
+    ctx.fillStyle= Math.sin(t*1.4)>0 ? '#38bdf8' : '#0ea5e9';
+    ctx.fillRect(736,128,50,100);
+    ctx.font='16px Segoe UI'; ctx.textAlign='center'; ctx.fillText('\ud83c\udfb5',761,182);
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Vitrine étiquetée ! Quatre générations pour la MÊME fonction d\u2019usage — téléphoner : le cadran à impulsions (1950), les touches électroniques (1985), le portable à clapet (2000), l\u2019écran tactile (2015). La fonction reste, les PRINCIPES TECHNIQUES évoluent — c\u2019est la définition d\u2019une lignée ! (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : le cadran est la roue qui tourne, les touches forment un damier, le clapet se plie en deux… et le smartphone n\u2019est presque QU\u2019un écran.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:1900, max:1935, cible:'\u25b6 Règle la frise sur l\u2019époque du PHONOGRAPHE à pavillon',
+     ok:'\u2705 Début du XX\u1d49 siècle : le phonographe à pavillon, tout mécanique — on remonte le ressort, l\u2019aiguille lit le sillon, le pavillon amplifie. Zéro électricité !',
+     kobas:'', kohaut:'\u274c Trop tard ! Le pavillon mécanique règne au tout DÉBUT du siècle, avant l\u2019électricité domestique. Recule\u2026'},
+    {min:1965, max:1988, cible:'\u25b6 Trouve maintenant l\u2019époque de la CASSETTE audio',
+     ok:'\u2705 Années 60-80 : la cassette rend la musique PORTABLE et enregistrable — le Walkman (1979) la met dans toutes les poches !',
+     kobas:'\u274c Trop tôt : à cette époque on écoute encore disques et radio à lampes. La cassette arrive dans les années 60\u2026',
+     kohaut:'\u274c Trop tard : à cette époque le CD puis le numérique ont déjà remplacé la bande magnétique. Recule un peu\u2026'},
+    {min:2000, max:2012, cible:'\u25b6 Et enfin : l\u2019époque du BALADEUR MP3',
+     ok:'\u2705 Années 2000 : la musique devient un FICHIER — des milliers de titres dans quelques grammes. Prochaine étape de la lignée : le streaming, plus d\u2019objet du tout ! (+4 pts)',
+     kobas:'\u274c Trop tôt : le MP3 a besoin de la mémoire numérique bon marché des années 2000. Avance\u2026',
+     kohaut:''}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    ctx.font='bold 15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#7c2d12';
+    ctx.fillText(sc.cible+'  ('+(Math.min(etape,SCEN.length-1)+1)+'/3)', 430, 28);
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(80,230); ctx.lineTo(780,230); ctx.stroke();
+    for(let a=1900;a<=2020;a+=20){ const x=80+(a-1900)/120*700;
+      ctx.beginPath(); ctx.moveTo(x,224); ctx.lineTo(x,236); ctx.stroke();
+      ctx.font='11px Segoe UI'; ctx.fillStyle='#64748b'; ctx.fillText(String(a),x,252); }
+    const cx=80+(v-1900)/120*700;
+    ctx.fillStyle='#ea580c';
+    ctx.beginPath(); ctx.moveTo(cx,222); ctx.lineTo(cx-7,208); ctx.lineTo(cx+7,208); ctx.closePath(); ctx.fill();
+    ctx.font='bold 14px Segoe UI'; ctx.fillStyle='#ea580c'; ctx.fillText(String(v),cx,200);
+    const ox=430, oy=110;
+    ctx.fillStyle='#334155'; ctx.strokeStyle='#334155';
+    ctx.font='bold 13px Segoe UI';
+    if(v<=1940){
+      ctx.lineWidth=3;
+      ctx.beginPath(); ctx.moveTo(ox-30,oy+40); ctx.lineTo(ox+4,oy+18); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(ox+22,oy+2,26,18,-0.6,0,Math.PI*2); ctx.stroke();
+      ctx.fillRect(ox-52,oy+38,44,16);
+      ctx.fillText('le phonographe à pavillon',ox,oy+82);
+    } else if(v<=1962){
+      ctx.fillRect(ox-44,oy+22,88,14);
+      ctx.beginPath(); ctx.arc(ox,oy+20,26,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(ox,oy+20,3,0,Math.PI*2); ctx.fill();
+      ctx.fillText('le tourne-disque (vinyle)',ox,oy+82);
+    } else if(v<=1990){
+      ctx.strokeRect(ox-36,oy,72,46);
+      ctx.beginPath(); ctx.arc(ox-14,oy+24,8,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(ox+14,oy+24,8,0,Math.PI*2); ctx.stroke();
+      ctx.fillText('la cassette (et le Walkman !)',ox,oy+82);
+    } else if(v<=1999){
+      ctx.beginPath(); ctx.arc(ox,oy+22,26,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(ox,oy+22,6,0,Math.PI*2); ctx.stroke();
+      ctx.fillText('le disque compact (CD)',ox,oy+82);
+    } else if(v<=2012){
+      ctx.beginPath(); ctx.roundRect(ox-20,oy,40,52,8); ctx.stroke();
+      ctx.fillRect(ox-12,oy+8,24,20);
+      ctx.beginPath(); ctx.arc(ox,oy+40,7,0,Math.PI*2); ctx.stroke();
+      ctx.fillText('le baladeur MP3',ox,oy+82);
+    } else {
+      ctx.beginPath(); ctx.roundRect(ox-18,oy,36,62,8); ctx.stroke();
+      ctx.fillText('\u266a streaming sur smartphone',ox,oy+82);
+    }
+    ctx.font='15px Segoe UI'; ctx.fillStyle='#b45309';
+    for(let i=0;i<3;i++){ const p=((t*0.3)+i/3)%1;
+      ctx.fillText('\u266a', ox+60+18*Math.sin(t+i), oy+40-70*p); }
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"Dans une lignée d'objets, ce qui ne change (presque) jamais, c'est…", r:["le besoin","la solution technique","le prix"], b:0},
  {q:"Le vélo à assistance électrique est plutôt…", r:["une invention","une innovation","une rupture"], b:1},
@@ -371,7 +563,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

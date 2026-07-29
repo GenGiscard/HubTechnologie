@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f1f5f9}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — Le labo de démontage</h1>
-  <p>La boutique de réparation t'embauche : des téléphones en panne s'empilent au comptoir. 5 missions — à la fin : le code des jeux !</p>
+  <p>La boutique de réparation t'embauche : des téléphones en panne s'empilent au comptoir. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de l'analyste junior</h2>
+  <h2><span class="badge">5</span>Le smartphone à cœur ouvert</h2>
+  <div class="consigne">🗺️ Le téléphone du labo, capot retiré — le SoC calcule (regarde-le pulser !). Clique une étiquette, puis le composant correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Règle la luminosité de l’écran</h2>
+  <div class="consigne">🎛️ Journée de cours + trajet : le téléphone doit tenir <b>16 h</b>… et rester lisible en plein soleil à la récré (il faut au moins 40 %). Règle la luminosité et surveille l'autonomie !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>🔆 Luminosité :</span>
+    <input type="range" id="slider6" min="10" max="100" step="5" value="90">
+    <span class="val"><span id="val6">90</span> %</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de l'analyste junior</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_smartphone_4e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_smartphone_4e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_smartphone_4e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_smartphone_4e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,162 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'batterie',x:330, y:90,  w:120, h:170, lbl:'LA BATTERIE',                tx:390, ty:80},
+    {id:'soc',     x:520, y:100, w:70,  h:70,  lbl:'LE SoC (PROCESSEUR)',        tx:556, ty:90},
+    {id:'ecran',   x:100, y:80,  w:130, h:200, lbl:'L\u2019ÉCRAN TACTILE',       tx:165, ty:68},
+    {id:'camera',  x:520, y:200, w:70,  h:60,  lbl:'LE MODULE CAMÉRA',           tx:556, ty:290},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,320);
+    // écran (face avant posée à gauche)
+    ctx.fillStyle='#0f172a';
+    ctx.beginPath(); ctx.roundRect(110,88,110,184,14); ctx.fill();
+    ctx.fillStyle='#38bdf8'; ctx.fillRect(118,96,94,168);
+    const tx2=140+40*((Math.sin(t*0.8)+1)/2), ty2=140+60*((Math.sin(t*1.3)+1)/2);
+    ctx.fillStyle='#0ea5e9'; ctx.beginPath(); ctx.arc(tx2,ty2,7,0,Math.PI*2); ctx.fill();
+    // châssis ouvert à droite
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5; ctx.fillStyle='#f1f5f9';
+    ctx.beginPath(); ctx.roundRect(310,80,300,190,14); ctx.fill(); ctx.stroke();
+    // batterie (gros bloc)
+    ctx.fillStyle='#1e293b';
+    ctx.beginPath(); ctx.roundRect(340,98,100,154,8); ctx.fill();
+    ctx.fillStyle='#22c55e'; ctx.font='bold 11px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('3000 mAh',390,180);
+    // SoC qui pulse
+    const pu=0.5+0.5*Math.sin(t*3);
+    ctx.fillStyle='#334155'; ctx.fillRect(528,108,54,54);
+    ctx.strokeStyle='rgba(234,88,12,'+(0.4+0.5*pu)+')'; ctx.lineWidth=3;
+    ctx.strokeRect(524,104,62,62);
+    ctx.fillStyle='#ea580c'; ctx.font='bold 10px Segoe UI'; ctx.fillText('SoC',555,140);
+    // broches
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=1.4;
+    for(let i=0;i<6;i++){ ctx.beginPath(); ctx.moveTo(528+i*10,104); ctx.lineTo(528+i*10,96); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(528+i*10,166); ctx.lineTo(528+i*10,174); ctx.stroke(); }
+    // caméra (double objectif)
+    ctx.fillStyle='#0f172a';
+    ctx.beginPath(); ctx.roundRect(528,208,54,44,8); ctx.fill();
+    ctx.strokeStyle='#38bdf8'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.arc(544,230,9,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(568,230,9,0,Math.PI*2); ctx.stroke();
+    // petits éclairs du SoC vers écran et caméra
+    ctx.fillStyle='#ea580c';
+    for(let i=0;i<2;i++){ const p=((t*0.7)+i/2)%1;
+      ctx.beginPath(); ctx.arc(524-p*(524-220),135+p*30,3.5,0,Math.PI*2); ctx.fill(); }
+    ctx.font='bold 11px Segoe UI'; ctx.fillStyle='#64748b';
+    ctx.fillText('face avant',165,296);
+    ctx.fillText('châssis ouvert',460,296);
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Smartphone décodé ! La BATTERIE occupe la moitié du volume (l\u2019énergie, toujours l\u2019énergie…), le SoC est l\u2019ordinateur complet sur une puce de 1 cm² (processeur + graphique + modem !), l\u2019ÉCRAN est à la fois SORTIE (affichage) et ENTRÉE (tactile), et la CAMÉRA embarque plus d\u2019optique qu\u2019un appareil photo des années 2000. Un labo entier dans la poche. (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : la batterie est le plus GROS bloc (noir, 3000 mAh), le SoC est la petite puce qui pulse orange, l\u2019écran est la dalle bleue avec le point qui glisse… et la caméra a deux objectifs ronds.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:40, max:60,
+     ok:'\u2705 Entre 40 et 60 % : lisible dehors ET plus de 16 h d\u2019autonomie. L\u2019écran est le composant le plus gourmand du téléphone — la luminosité auto qui s\u2019adapte à la lumière ambiante, c\u2019est exactement cet arbitrage, fait 100 fois par jour à ta place ! (+4 pts)',
+     kobas:'\u274c Illisible : à la récré, en plein soleil, l\u2019écran devient un miroir noir (regarde-le !). Il faut au moins 40 % pour lire dehors. Monte\u2026',
+     kohaut:'\u274c Regarde la jauge : à cette luminosité, l\u2019écran dévore la batterie — elle meurt AVANT la fin des 16 h. Le phare de plein jour, ça se paie ! Baisse\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    const autonomie = 3000/(60+v*2.1);   // h : 100%->11.1, 60%->16.2, 40%->20.8
+    // téléphone dont l'écran suit la luminosité
+    ctx.fillStyle='#0f172a';
+    ctx.beginPath(); ctx.roundRect(120,60,110,180,14); ctx.fill();
+    const lum=0.15+0.85*v/100;
+    ctx.fillStyle='rgba(56,189,248,'+lum+')';
+    ctx.fillRect(128,68,94,164);
+    if(v<40){ ctx.fillStyle='rgba(15,23,42,0.55)'; ctx.fillRect(128,68,94,164); }
+    ctx.font='bold 12px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
+    ctx.fillText('luminosité '+v+' %',175,262);
+    // soleil de la récré
+    ctx.font='30px Segoe UI'; ctx.fillText('\u2600\ufe0f',70,60);
+    if(v<40){ ctx.fillStyle='#dc2626'; ctx.font='bold 12px Segoe UI';
+      ctx.fillText('\ud83d\ude35 illisible dehors',175,48); }
+    else { ctx.fillStyle='#16a34a'; ctx.font='bold 12px Segoe UI';
+      ctx.fillText('\u2713 lisible au soleil',175,48); }
+    // frise de la journée 16 h
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(320,180); ctx.lineTo(780,180); ctx.stroke();
+    ctx.font='11px Segoe UI'; ctx.fillStyle='#64748b';
+    ctx.fillText('7 h',320,200); ctx.fillText('23 h (16 h de veille+usage)',700,200);
+    // point de mort de la batterie
+    const px=320+Math.min(1,autonomie/16)*460;
+    if(autonomie<16){
+      ctx.font='18px Segoe UI'; ctx.fillText('\ud83e\udea6',px,166);
+      ctx.fillStyle='#dc2626'; ctx.font='bold 12px Segoe UI';
+      ctx.fillText('à plat à '+(7+Math.floor(autonomie))+' h'+String(Math.round((autonomie%1)*60)).padStart(2,'0'),px,146);
+    } else {
+      ctx.fillStyle='#16a34a'; ctx.font='bold 12px Segoe UI';
+      ctx.fillText('\u2713 tient jusqu\u2019au soir ('+autonomie.toFixed(1)+' h)',560,150);
+    }
+    // jauge batterie restante à 23 h
+    const reste=Math.max(0,1-16/autonomie);
+    ctx.fillStyle='#334155'; ctx.font='bold 12px Segoe UI';
+    ctx.fillText('BATTERIE À 23 H',600,74);
+    ctx.strokeStyle='#334155'; ctx.lineWidth=2; ctx.strokeRect(548,84,104,20);
+    ctx.fillStyle= autonomie<16 ? '#dc2626' : '#16a34a';
+    ctx.fillRect(548,84,104*reste,20);
+    ctx.fillStyle='#64748b'; ctx.font='12px Segoe UI';
+    ctx.fillText('l\u2019écran = le plus gros consommateur du téléphone',560,240);
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"Une batterie qui gonfle…", r:["se remplace sans JAMAIS être percée","se perce pour la dégonfler","se recharge plus fort"], b:0},
  {q:"Avant de toucher un composant, on débranche…", r:["la batterie","l'écran","les antennes"], b:0},
@@ -353,7 +543,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

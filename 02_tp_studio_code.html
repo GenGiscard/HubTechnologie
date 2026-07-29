@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — Le studio de code</h1>
-  <p>Le studio de jeux vidéo d'Esticville t'embauche comme testeur. 5 missions — à la fin : le code des jeux !</p>
+  <p>Le studio de jeux vidéo d'Esticville t'embauche comme testeur. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan du testeur</h2>
+  <h2><span class="badge">5</span>L’organigramme de la serre</h2>
+  <div class="consigne">🗺️ Le programme de la serre automatique tourne en boucle — suis le jeton qui parcourt l'organigramme et choisit sa branche ! Clique une étiquette, puis le bloc correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="330"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Règle le seuil du programme</h2>
+  <div class="consigne">🎛️ <code>SI température &gt; seuil ALORS ouvrir la lucarne</code>. La température de la serre oscille jour/nuit sous tes yeux. Règle le seuil pour que les plantes n'aient ni trop chaud… ni froid !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>🌡️ Seuil :</span>
+    <input type="range" id="slider6" min="15" max="35" step="1" value="18">
+    <span class="val"><span id="val6">18</span> °C</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan du testeur</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_algo_3e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_algo_3e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_algo_3e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_algo_3e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,182 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'debut',    x:355, y:24,  w:150, h:52,  lbl:'LE DÉBUT',                     tx:280, ty:40},
+    {id:'condition',x:330, y:100, w:200, h:80,  lbl:'LA CONDITION (SI\u2026)',      tx:250, ty:120},
+    {id:'action',   x:580, y:112, w:170, h:56,  lbl:'L\u2019ACTION (ALORS\u2026)',  tx:665, ty:100},
+    {id:'boucle',   x:130, y:190, w:180, h:80,  lbl:'LA BOUCLE (RETOUR)',           tx:130, ty:176},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,330);
+    // début (ovale)
+    ctx.fillStyle='#f0fdf4'; ctx.strokeStyle='#16a34a'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.ellipse(430,50,66,24,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.font='bold 12px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#166534';
+    ctx.fillText('DÉBUT',430,55);
+    // condition (losange)
+    ctx.fillStyle='#fff7ed'; ctx.strokeStyle='#ea580c';
+    ctx.beginPath(); ctx.moveTo(430,102); ctx.lineTo(524,140); ctx.lineTo(430,178); ctx.lineTo(336,140); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#9a3412'; ctx.font='bold 11px Segoe UI';
+    ctx.fillText('T > seuil ?',430,144);
+    // action (rectangle)
+    ctx.fillStyle='#eff6ff'; ctx.strokeStyle='#1d4ed8';
+    ctx.beginPath(); ctx.roundRect(592,116,148,48,8); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#1e40af'; ctx.fillText('ouvrir la lucarne',666,144);
+    // liaisons
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(430,74); ctx.lineTo(430,102); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(524,140); ctx.lineTo(592,140); ctx.stroke();
+    ctx.font='10.5px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.fillText('OUI',556,132);
+    ctx.beginPath(); ctx.moveTo(430,178); ctx.lineTo(430,232); ctx.stroke();
+    ctx.fillStyle='#dc2626'; ctx.fillText('NON',446,206);
+    // boucle : retour vers la condition (grand arc gauche)
+    ctx.strokeStyle='#7c3aed'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(430,232);
+    ctx.quadraticCurveTo(220,240,220,140);
+    ctx.quadraticCurveTo(222,96,336,132);
+    ctx.stroke();
+    ctx.fillStyle='#7c3aed';
+    ctx.beginPath(); ctx.moveTo(336,132); ctx.lineTo(320,124); ctx.lineTo(322,140); ctx.closePath(); ctx.fill();
+    ctx.font='bold 10.5px Segoe UI';
+    ctx.fillText('on recommence sans fin',222,262);
+    // retour de l'action vers la boucle
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(666,164); ctx.lineTo(666,232); ctx.lineTo(430,232); ctx.stroke();
+    // jeton qui parcourt (choisit OUI/NON alternativement)
+    const cyc=(t*0.22)%2;
+    let jx=430, jy=60;
+    const oui = cyc<1;
+    const p=cyc%1;
+    if(p<0.2){ jy=60+(p/0.2)*60; }
+    else if(p<0.5){ const u=(p-0.2)/0.3;
+      if(oui){ jx=430+u*236; jy=140; } else { jx=430; jy=140+u*92; } }
+    else if(p<0.8){ const u=(p-0.5)/0.3;
+      if(oui){ jx=666; jy=140+u*92; } else { jx=430-u*208; jy=232; } }
+    else { const u=(p-0.8)/0.2;
+      if(oui){ jx=666-u*236; jy=232; } else { jx=222; jy=232-u*90; } }
+    ctx.fillStyle='#ea580c';
+    ctx.beginPath(); ctx.arc(jx,jy,7,0,Math.PI*2); ctx.fill();
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Organigramme décodé ! Le DÉBUT lance le programme, la CONDITION (le losange) pose la question et choisit la branche OUI/NON, l\u2019ACTION (le rectangle) agit sur le monde, et la BOUCLE violette ramène tout au départ : la serre se re-pose la question À L\u2019INFINI, plusieurs fois par seconde. Un automatisme, c\u2019est ça : tester-agir-recommencer, sans fatigue et sans oubli. (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : l\u2019ovale vert démarre, le LOSANGE pose une question (il a deux sorties !), le rectangle bleu fait quelque chose… et la grande flèche violette qui remonte, c\u2019est la boucle.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:24, max:28,
+     ok:'\u2705 Entre 24 et 28 \u00b0C : la lucarne s\u2019ouvre aux heures chaudes et reste fermée la nuit — les plantes vivent dans la bonne plage. Ton programme n\u2019a que trois lignes, mais LE SEUIL fait toute la qualité de l\u2019automatisme : le code décide, la valeur gouverne ! (+4 pts)',
+     kobas:'\u274c Seuil trop bas : la lucarne est ouverte quasi en permanence, même la nuit — regarde le thermomètre plonger et les plantes grelotter. Relève le seuil\u2026',
+     kohaut:'\u274c Seuil trop haut : la lucarne ne s\u2019ouvre jamais, la serre devient un four l\u2019après-midi (regarde la jauge plantes !). Abaisse le seuil\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    // température qui oscille jour/nuit : 17..33
+    const T=25+8*Math.sin(t*0.7);
+    const ouverte = T>v;
+    // serre
+    ctx.strokeStyle='#334155'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(140,220); ctx.lineTo(140,130); ctx.lineTo(240,70); ctx.lineTo(340,130); ctx.lineTo(340,220); ctx.closePath(); ctx.stroke();
+    ctx.fillStyle='rgba(134,239,172,.35)'; ctx.fill();
+    // lucarne sur le toit
+    ctx.save(); ctx.translate(290,100);
+    ctx.rotate(ouverte ? -0.7 : 0);
+    ctx.strokeStyle= ouverte ? '#16a34a' : '#64748b'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(44,26); ctx.stroke();
+    ctx.restore();
+    ctx.font='bold 11px Segoe UI'; ctx.textAlign='center';
+    ctx.fillStyle= ouverte ? '#16a34a' : '#64748b';
+    ctx.fillText(ouverte?'lucarne OUVERTE':'lucarne fermée',240,52);
+    // plantes
+    ctx.font='22px Segoe UI'; ctx.fillStyle='#000';
+    ctx.fillText('\ud83c\udf31\ud83c\udf3f\ud83c\udf45',240,204);
+    // soleil / lune selon la phase
+    const jour=Math.sin(t*0.7)>0;
+    ctx.font='24px Segoe UI'; ctx.fillText(jour?'\u2600\ufe0f':'\ud83c\udf19',80,66);
+    // thermomètre
+    ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+    ctx.strokeRect(420,60,26,160);
+    const th=(T-15)/20*150;
+    ctx.fillStyle= T>30 ? '#dc2626' : (T<19 ? '#3b82f6' : '#16a34a');
+    ctx.fillRect(424,216-th,18,th);
+    ctx.font='bold 14px Segoe UI'; ctx.fillStyle='#334155';
+    ctx.fillText(T.toFixed(0)+' \u00b0C',433,248);
+    // ligne de seuil sur le thermomètre
+    const sy=216-(v-15)/20*150;
+    ctx.strokeStyle='#ea580c'; ctx.lineWidth=2.5; ctx.setLineDash([5,4]);
+    ctx.beginPath(); ctx.moveTo(408,sy); ctx.lineTo(458,sy); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#ea580c'; ctx.font='bold 11px Segoe UI';
+    ctx.fillText('seuil '+v,480,sy+4);
+    // jauge bien-être des plantes
+    const froid=Math.max(0,(24-v))/9, chaud=Math.max(0,(v-28))/7;
+    const stress=Math.min(1,froid+chaud);
+    ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+    ctx.fillText('BIEN-ÊTRE DES PLANTES',650,90);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(560,100,180,18);
+    ctx.fillStyle= stress>0.05 ? (froid>chaud?'#3b82f6':'#dc2626') : '#16a34a';
+    ctx.fillRect(560,100,180*(1-stress*0.85),18);
+    if(v<24){ ctx.fillStyle='#3b82f6'; ctx.font='bold 12px Segoe UI'; ctx.fillText('\ud83e\udd76 courants d\u2019air froid la nuit\u2026',650,144); }
+    else if(v>28){ ctx.fillStyle='#dc2626'; ctx.font='bold 12px Segoe UI'; ctx.fillText('\ud83e\udd75 fournaise l\u2019après-midi\u2026',650,144); }
+    else { ctx.fillStyle='#16a34a'; ctx.font='bold 12px Segoe UI'; ctx.fillText('\u2713 climat idéal',650,144); }
+    ctx.fillStyle='#64748b'; ctx.font='12px Segoe UI';
+    ctx.fillText('SI T > '+v+' \u00b0C ALORS ouvrir',650,190);
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"Après « n ← 6 » puis « n ← n + 4 », la variable n vaut…", r:["6","10","64"], b:1},
  {q:"Dans « si… alors… sinon… », combien de branches s'exécutent ?", r:["toujours les deux","une seule","aucune"], b:1},
@@ -353,7 +563,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

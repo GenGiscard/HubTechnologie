@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — L'atelier vélo</h1>
-  <p>L'atelier vélo du quartier t'embauche : des vélos en panne s'alignent devant ton établi. 5 missions — à la fin : le code des jeux !</p>
+  <p>L'atelier vélo du quartier t'embauche : des vélos en panne s'alignent devant ton établi. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan du mécano junior</h2>
+  <h2><span class="badge">5</span>Le schéma de la transmission</h2>
+  <div class="consigne">🗺️ Le vélo de l'atelier sur son pied — pédalier et roues tournent, la chaîne défile ! Clique une étiquette, puis la pièce correspondante. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Choisis ton braquet</h2>
+  <div class="consigne">🎛️ Pignon arrière fixe : <b>14 dents</b>. Règle le nombre de dents du PLATEAU au curseur, et adapte-le à la situation affichée. Deux terrains à passer !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>⚙️ Dents du plateau :</span>
+    <input type="range" id="slider6" min="28" max="52" step="1" value="40">
+    <span class="val"><span id="val6">40</span> dents</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan du mécano junior</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_velo_5e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_velo_5e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_velo_5e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_velo_5e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,179 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'plateau',x:366, y:196, w:68,  h:68,  lbl:'LE PLATEAU (PÉDALIER)', tx:400, ty:300},
+    {id:'pignon', x:208, y:208, w:44,  h:44,  lbl:'LE PIGNON ARRIÈRE',     tx:150, ty:180},
+    {id:'chaine', x:262, y:198, w:96,  h:22,  lbl:'LA CHAÎNE',             tx:308, ty:186},
+    {id:'frein',  x:585, y:135, w:50,  h:40,  lbl:'L\u2019ÉTRIER DE FREIN', tx:678, ty:140},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,320);
+    // roues à rayons qui tournent
+    [[230,230],[620,230]].forEach(([wx,wy])=>{
+      ctx.save(); ctx.translate(wx,wy);
+      ctx.strokeStyle='#334155'; ctx.lineWidth=4;
+      ctx.beginPath(); ctx.arc(0,0,66,0,Math.PI*2); ctx.stroke();
+      ctx.rotate(t*1.5); ctx.lineWidth=1.6; ctx.strokeStyle='#64748b';
+      for(let i=0;i<8;i++){ ctx.rotate(Math.PI/4);
+        ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(66,0); ctx.stroke(); }
+      ctx.restore(); });
+    // cadre
+    ctx.strokeStyle='#0e7490'; ctx.lineWidth=5; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(230,230); ctx.lineTo(400,230); ctx.lineTo(470,120); ctx.lineTo(620,230); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(400,230); ctx.lineTo(340,120); ctx.lineTo(470,120); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(340,120); ctx.lineTo(330,102); ctx.stroke();     // selle
+    ctx.beginPath(); ctx.moveTo(470,120); ctx.lineTo(500,96); ctx.stroke();      // guidon
+    ctx.strokeStyle='#334155'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(312,102); ctx.lineTo(348,102); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(492,92); ctx.lineTo(516,104); ctx.stroke();
+    // plateau + manivelles qui tournent
+    ctx.save(); ctx.translate(400,230);
+    ctx.strokeStyle='#b45309'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.arc(0,0,30,0,Math.PI*2); ctx.stroke();
+    ctx.rotate(t*1.9);
+    ctx.lineWidth=3.5;
+    ctx.beginPath(); ctx.moveTo(0,-38); ctx.lineTo(0,38); ctx.stroke();
+    ctx.fillStyle='#334155'; ctx.fillRect(-8,-46,16,8); ctx.fillRect(-8,38,16,8);
+    ctx.restore();
+    // pignon
+    ctx.strokeStyle='#b45309'; ctx.lineWidth=3.5;
+    ctx.beginPath(); ctx.arc(230,230,15,0,Math.PI*2); ctx.stroke();
+    // chaîne (pointillés qui défilent)
+    ctx.strokeStyle='#475569'; ctx.lineWidth=4; ctx.setLineDash([7,5]);
+    ctx.lineDashOffset=-t*26;
+    ctx.beginPath(); ctx.moveTo(230,215); ctx.lineTo(400,200); ctx.stroke();
+    ctx.lineDashOffset=t*26;
+    ctx.beginPath(); ctx.moveTo(230,245); ctx.lineTo(400,260); ctx.stroke();
+    ctx.setLineDash([]);
+    // étrier de frein sur la roue avant
+    ctx.strokeStyle='#dc2626'; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.arc(620,230,72,-2.3,-0.85); ctx.stroke();
+    ctx.fillStyle='#dc2626'; ctx.fillRect(600,148,10,18); ctx.fillRect(632,142,10,18);
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Transmission étiquetée ! Le PLATEAU (entraîné par tes jambes) tire la CHAÎNE, qui fait tourner le PIGNON, donc la roue : c\u2019est la transmission de mouvement. Et l\u2019ÉTRIER DE FREIN pince la jante pour transformer la vitesse en chaleur — transmettre ET freiner, les deux faces de la fonction technique. (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : le plateau est la GRANDE roue dentée aux pédales, le pignon la PETITE au centre de la roue arrière, la chaîne les relie (regarde-la défiler !), et l\u2019étrier rouge serre la roue avant.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:28, max:34, pente:true,
+     consigne:'\u25b6 CÔTE RAIDE à 10 % : choisis un braquet qui permet de MOULINER',
+     ok:'\u2705 Petit plateau (\u226434 dents) : la roue tourne moins vite que tes jambes, mais chaque coup de pédale demande peu d\u2019effort — on \u00ab démultiplie \u00bb. C\u2019est le braquet de montagne !',
+     kobas:'', 
+     kohaut:'\u274c Trop dur ! Avec un grand plateau, chaque tour de pédale fait avancer très loin\u2026 donc demande un effort énorme dans la pente. Regarde la jauge effort : réduis le plateau\u2026'},
+    {min:46, max:52, pente:false,
+     consigne:'\u25b6 SPRINT sur le plat : choisis un braquet de VITESSE',
+     ok:'\u2705 Grand plateau (\u226546 dents) : un tour de jambes = presque 4 tours de roue — idéal pour la vitesse quand l\u2019effort par tour reste possible. Adapter le braquet au terrain, c\u2019est TOUT l\u2019art de la transmission ! (+4 pts)',
+     kobas:'\u274c Tu moulines dans le vide : à ce braquet, tes jambes tournent à toute allure pour une vitesse ridicule. Sur le plat, passe le GRAND plateau\u2026',
+     kohaut:''}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    const ratio=v/14;
+    ctx.font='bold 15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#7c2d12';
+    ctx.fillText(sc.consigne+'  ('+(Math.min(etape,SCEN.length-1)+1)+'/2)', 430, 26);
+    // terrain
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+    if(sc.pente){ ctx.beginPath(); ctx.moveTo(80,240); ctx.lineTo(500,150); ctx.stroke();
+      ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#64748b'; ctx.fillText('10 %',120,220); }
+    else { ctx.beginPath(); ctx.moveTo(80,220); ctx.lineTo(500,220); ctx.stroke(); }
+    // cycliste (cadence des jambes selon braquet)
+    const cad = sc.pente ? (3.4-ratio*0.6) : (1+ratio*0.5);
+    const bx=280, by=sc.pente?188:198;
+    ctx.font='30px Segoe UI'; ctx.fillStyle='#000';
+    ctx.fillText('\ud83d\udeb4',bx,by);
+    // roues symboliques : plateau et pignon avec vitesses relatives
+    ctx.save(); ctx.translate(600,120);
+    ctx.strokeStyle='#b45309'; ctx.lineWidth=3.5;
+    const rP=14+v*0.5;
+    ctx.beginPath(); ctx.arc(0,0,rP,0,Math.PI*2); ctx.stroke();
+    ctx.rotate(t*Math.max(0.3,cad));
+    ctx.beginPath(); ctx.moveTo(0,-rP); ctx.lineTo(0,rP); ctx.stroke();
+    ctx.restore();
+    ctx.save(); ctx.translate(600+rP+38,120);
+    ctx.strokeStyle='#0e7490'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.arc(0,0,10,0,Math.PI*2); ctx.stroke();
+    ctx.rotate(t*Math.max(0.3,cad)*ratio);
+    ctx.beginPath(); ctx.moveTo(0,-10); ctx.lineTo(0,10); ctx.stroke();
+    ctx.restore();
+    ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#334155';
+    ctx.fillText(v+' dents',600,168);
+    ctx.fillText('14 dents',600+rP+38,168);
+    ctx.fillStyle='#64748b';
+    ctx.fillText('1 tour de pédale = '+ratio.toFixed(1)+' tours de roue',640,196);
+    // jauge effort ou vitesse
+    if(sc.pente){
+      const eff=Math.min(1,(ratio-1.6)/1.6);
+      ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+      ctx.fillText('EFFORT DANS LA PENTE',260,84);
+      ctx.fillStyle='#e2e8f0'; ctx.fillRect(160,94,200,16);
+      ctx.fillStyle= v>34 ? '#dc2626' : '#16a34a';
+      ctx.fillRect(160,94,Math.max(12,200*Math.max(0,eff)),16);
+    } else {
+      ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+      ctx.fillText('VITESSE SUR LE PLAT',260,84);
+      ctx.fillStyle='#e2e8f0'; ctx.fillRect(160,94,200,16);
+      ctx.fillStyle= v<46 ? '#f59e0b' : '#16a34a';
+      ctx.fillRect(160,94,200*(ratio/3.8),16);
+    }
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"« Le vélo sert à se déplacer grâce aux muscles », c'est…", r:["la fonction d'usage","une solution technique","la notice"], b:0},
  {q:"Le pédalier, la chaîne et le pignon réalisent la fonction…", r:["se diriger","se propulser","freiner"], b:1},
@@ -353,7 +560,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

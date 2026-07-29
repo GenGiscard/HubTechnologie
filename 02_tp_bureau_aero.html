@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — Le bureau d'études aéro</h1>
-  <p>Le bureau d'études aéronautique t'embauche : des incidents de vol arrivent sur ton pupitre. 5 missions — à la fin : le code des jeux !</p>
+  <p>Le bureau d'études aéronautique t'embauche : des incidents de vol arrivent sur ton pupitre. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan du pilote junior</h2>
+  <h2><span class="badge">5</span>Les 4 forces du vol</h2>
+  <div class="consigne">🗺️ L'avion-école en palier — les quatre flèches pulsent au rythme du vol ! Clique une étiquette, puis la flèche correspondante. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="300"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Règle l’angle d’incidence</h2>
+  <div class="consigne">🎛️ Décollage ! Règle l'angle entre l'aile et l'air : la portance monte avec l'angle… jusqu'au DÉCROCHAGE. Regarde les filets d'air sur le profil et trouve l'angle de montée idéal.</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>📐 Angle d’incidence :</span>
+    <input type="range" id="slider6" min="0" max="20" step="1" value="2">
+    <span class="val"><span id="val6">2</span> °</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan du pilote junior</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_aero_4e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_aero_4e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_aero_4e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_aero_4e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,153 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'portance',x:380, y:30,  w:100, h:90,  lbl:'LA PORTANCE',  tx:430, ty:22},
+    {id:'poids',   x:380, y:180, w:100, h:90,  lbl:'LE POIDS',     tx:430, ty:288},
+    {id:'traction',x:600, y:105, w:130, h:70,  lbl:'LA TRACTION',  tx:665, ty:94},
+    {id:'trainee', x:130, y:105, w:130, h:70,  lbl:'LA TRAÎNÉE',   tx:195, ty:94},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,300);
+    // nuages qui défilent
+    ctx.font='24px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('\u2601\ufe0f',(820-(t*24)%900),60);
+    ctx.fillText('\u2601\ufe0f',(860-(t*16+300)%900),230);
+    // avion au centre (fuselage + aile + dérive + hélice qui tourne)
+    ctx.strokeStyle='#334155'; ctx.lineWidth=3; ctx.fillStyle='#f8fafc';
+    ctx.beginPath(); ctx.ellipse(430,150,88,20,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#0e7490';
+    ctx.beginPath(); ctx.moveTo(414,146); ctx.lineTo(360,178); ctx.lineTo(392,180); ctx.lineTo(446,156); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(352,140); ctx.lineTo(330,112); ctx.lineTo(352,116); ctx.lineTo(368,142); ctx.closePath(); ctx.fill();
+    ctx.save(); ctx.translate(520,150); ctx.rotate(t*7);
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(0,-22); ctx.lineTo(0,22); ctx.stroke(); ctx.restore();
+    // 4 flèches qui pulsent
+    const pu=1+0.1*Math.sin(t*2);
+    function fleche(x1,y1,x2,y2,coul){
+      ctx.strokeStyle=coul; ctx.fillStyle=coul; ctx.lineWidth=6;
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+      const a=Math.atan2(y2-y1,x2-x1);
+      ctx.beginPath(); ctx.moveTo(x2,y2);
+      ctx.lineTo(x2-16*Math.cos(a-0.45),y2-16*Math.sin(a-0.45));
+      ctx.lineTo(x2-16*Math.cos(a+0.45),y2-16*Math.sin(a+0.45));
+      ctx.closePath(); ctx.fill();
+    }
+    fleche(430,118,430,118-64*pu,'#16a34a');
+    fleche(430,182,430,182+64*pu,'#dc2626');
+    fleche(608,150,608+96*pu,150,'#0e7490');
+    fleche(252,150,252-96*pu,150,'#b45309');
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Les 4 forces étiquetées ! La PORTANCE (verte, créée par l\u2019aile) s\u2019oppose au POIDS (rouge, la gravité) ; la TRACTION (bleue, l\u2019hélice) s\u2019oppose à la TRAÎNÉE (orange, la résistance de l\u2019air). Vol en palier = les 4 s\u2019équilibrent deux à deux. Voler, c\u2019est gérer ce bras de fer permanent ! (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : la portance TIRE VERS LE HAUT (sinon rien ne vole), le poids vers le bas, la traction vers l\u2019AVANT (côté hélice)… et la traînée freine vers l\u2019arrière.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:8, max:14,
+     ok:'\u2705 Entre 8 et 14\u00b0 : portance maximale, filets d\u2019air encore collés à l\u2019aile — l\u2019avion grimpe fort SANS décrocher. Au-delà de 15\u00b0, l\u2019air lâche l\u2019extrados et la portance s\u2019effondre d\u2019un coup : le décrochage, hantise n\u00b01 des pilotes ! (+4 pts)',
+     kobas:'\u274c Angle trop faible : la portance suffit à peine à tenir l\u2019air — l\u2019avion rase la piste sans monter. Cabre un peu\u2026',
+     kohaut:'\u274c \u26a0\ufe0f DÉCROCHAGE ! Regarde les filets d\u2019air : ils se détachent de l\u2019aile en tourbillons, la portance s\u2019effondre, l\u2019avion tombe. Réduis l\u2019angle IMMÉDIATEMENT\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    const decro = v>=15;
+    const port = decro ? 0.25 : Math.min(1, 0.15+v*0.062);
+    // profil d'aile incliné
+    ctx.save(); ctx.translate(300,150); ctx.rotate(-v*Math.PI/180);
+    ctx.fillStyle='#0e7490';
+    ctx.beginPath(); ctx.moveTo(-90,6);
+    ctx.quadraticCurveTo(-30,-26,80,-2);
+    ctx.quadraticCurveTo(-10,14,-90,6); ctx.closePath(); ctx.fill();
+    ctx.restore();
+    // filets d'air
+    for(let i=0;i<5;i++){
+      const fy=104+i*24;
+      ctx.strokeStyle='#60a5fa'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(110,fy);
+      if(decro && fy<150){
+        ctx.quadraticCurveTo(250,fy-10,300,fy-24);
+        const wob=10*Math.sin(t*6+i*2);
+        ctx.quadraticCurveTo(370,fy-40+wob,470,fy-20+wob*1.6);
+      } else {
+        const dev = fy<150 ? -v*1.7 : -v*0.7;
+        ctx.quadraticCurveTo(300,fy+dev,490,fy-6);
+      }
+      ctx.stroke();
+    }
+    if(decro && Math.sin(t*5)>0){
+      ctx.font='20px Segoe UI'; ctx.textAlign='center'; ctx.fillText('\ud83c\udf00',400,96);
+    }
+    ctx.font='bold 13px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
+    ctx.fillText('angle : '+v+'\u00b0',300,236);
+    // jauge de portance
+    ctx.fillStyle='#334155'; ctx.fillText('PORTANCE',650,60);
+    ctx.strokeStyle='#334155'; ctx.lineWidth=2; ctx.strokeRect(620,72,60,150);
+    ctx.fillStyle= decro ? '#dc2626' : (v<8?'#f59e0b':'#16a34a');
+    ctx.fillRect(620,222-150*port,60,150*port);
+    if(decro){ ctx.fillStyle='#dc2626'; ctx.font='bold 14px Segoe UI';
+      ctx.fillText('DÉCROCHAGE !',650,250); }
+    else if(v>=8){ ctx.fillStyle='#16a34a'; ctx.font='bold 12px Segoe UI';
+      ctx.fillText('\u2713 \u00e7a grimpe',650,250); }
+    else { ctx.fillStyle='#f59e0b'; ctx.font='bold 12px Segoe UI';
+      ctx.fillText('trop plat\u2026',650,250); }
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"La force qui soulève l'avion, créée par l'air sur les ailes, c'est…", r:["la portance","la traction","la traînée"], b:0},
  {q:"En vol en palier stabilisé…", r:["la portance dépasse le poids","la portance équilibre le poids","le poids dépasse la portance"], b:1},
@@ -353,7 +534,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';

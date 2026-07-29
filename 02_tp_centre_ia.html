@@ -29,6 +29,14 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .boite .consigne{margin:10px 0 16px;font-size:15px;background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.55}
 .verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
 .verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
 .minicas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .minicas .cas{background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center}
 .minicas .cas.bon{border-color:var(--vert);background:#f0fdf4}
@@ -85,12 +93,12 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
   <h1>🔧 TP — Le centre d'entraînement IA</h1>
-  <p>Le centre d'entraînement t'embauche : des IA qui déraillent arrivent sur ton écran. 5 missions — à la fin : le code des jeux !</p>
+  <p>Le centre d'entraînement t'embauche : des IA qui déraillent arrivent sur ton écran. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
   <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div>
+  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
   <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
 </div>
 
@@ -146,10 +154,37 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
  </div>
 </div>
 
-<!-- ============ A5 : BILAN ============ -->
+<!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Bilan de l'entraîneur junior</h2>
+  <h2><span class="badge">5</span>Le système d’apprentissage</h2>
+  <div class="consigne">🗺️ Le détecteur de chats s'entraîne sous tes yeux — données qui entrent, neurones qui pulsent, erreur qui revient corriger ! Clique une étiquette, puis le bloc correspondant. Place les 4 étiquettes.</div>
+  <canvas class="canvatp" id="cv5" width="860" height="310"></canvas>
+  <div class="etiqbar" id="etiq5"></div>
+  <div id="verd5"></div>
+ </div>
+</div>
+
+<!-- ============ A6 : MANIPULATION ============ -->
+<div class="acti" id="a6">
+ <div class="boite">
+  <h2><span class="badge">6</span>Règle le seuil de confiance</h2>
+  <div class="consigne">🎛️ Le modèle donne un score de confiance à chaque image. Règle le seuil au-dessus duquel il crie « CHAT ! » : trop bas, il alerte pour rien ; trop haut, il rate de vrais chats. Trouve l'équilibre !</div>
+  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+  <div class="sliderrow">
+    <span>🎚️ Seuil de confiance :</span>
+    <input type="range" id="slider6" min="50" max="99" step="1" value="55">
+    <span class="val"><span id="val6">55</span> %</span>
+    <button class="btn" id="verif6">✔ Valider ce réglage</button>
+  </div>
+  <div id="verd6"></div>
+ </div>
+</div>
+
+<!-- ============ A7 : BILAN ============ -->
+<div class="acti" id="a7">
+ <div class="boite">
+  <h2><span class="badge">7</span>Bilan de l'entraîneur junior</h2>
   <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
   <div id="quiz5"></div>
   <div class="codefinal" id="codefinal">
@@ -163,15 +198,15 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <script>
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
-function sauver(){ try{ localStorage.setItem('tp_ia_3e',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
-function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_ia_3e')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
+function sauver(){ try{ localStorage.setItem('tp_ia_3e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_ia_3e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
   document.querySelectorAll('.progression .seg').forEach(seg=>{
     const n=+seg.dataset.a;
     seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
   });
   document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=5;n++){
+  for(let n=2;n<=7;n++){
     const acti=document.getElementById('a'+n);
     let v=acti.querySelector('.verrou');
     if(n>etat.debloque){
@@ -185,7 +220,7 @@ function reussir(n,pts){
   etat.score+=pts;
   if(etat.debloque===n) etat.debloque=n+1;
   sauver(); majProgression();
-  if(n<5) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -332,7 +367,172 @@ document.getElementById('verif4').onclick=()=>{
   }
 };
 
-/* ================= A5 : BILAN ================= */
+/* ================= A5 : SCHEMA A LEGENDER ================= */
+(function(){
+  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+  const ZONES=[
+    {id:'donnees',  x:50,  y:80,  w:150, h:130, lbl:'LES DONNÉES D\u2019ENTRAÎNEMENT', tx:125, ty:70},
+    {id:'modele',   x:290, y:70,  w:180, h:150, lbl:'LE MODÈLE (RÉSEAU DE NEURONES)', tx:380, ty:60},
+    {id:'prediction',x:560,y:90,  w:150, h:110, lbl:'LA PRÉDICTION',                  tx:635, ty:80},
+    {id:'boucle',   x:290, y:236, w:280, h:56,  lbl:'LA BOUCLE D\u2019APPRENTISSAGE (L\u2019ERREUR)', tx:430, ty:304},
+  ];
+  const poses={}; let sel=null, t=0;
+  function dessiner(){
+    t+=0.02;
+    ctx.clearRect(0,0,860,310);
+    // données : pile d'images étiquetées
+    for(let i=0;i<3;i++){
+      ctx.fillStyle='#fff'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.roundRect(70+i*10,96+i*12,90,70,6); ctx.fill(); ctx.stroke();
+    }
+    ctx.font='22px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('\ud83d\udc31',132,158);
+    ctx.font='bold 9px Segoe UI'; ctx.fillStyle='#16a34a';
+    ctx.fillText('\u00e9tiquette : \u00ab chat \u00bb',132,184);
+    // modèle : 3 couches de neurones qui pulsent
+    const L=[[320,3],[380,4],[440,2]];
+    ctx.strokeStyle='#cbd5e1'; ctx.lineWidth=1;
+    for(let a=0;a<2;a++){
+      for(let i=0;i<L[a][1];i++) for(let j=0;j<L[a+1][1];j++){
+        ctx.beginPath();
+        ctx.moveTo(L[a][0],105+i*(120/(L[a][1]-0.999)) - (L[a][1]===1?0:0));
+        ctx.lineTo(L[a+1][0],105+j*(120/(L[a+1][1]-0.999)));
+        ctx.stroke(); } }
+    L.forEach(([lx,nb],li)=>{
+      for(let i=0;i<nb;i++){
+        const ny=105+i*(120/(nb-0.999));
+        const pu=0.5+0.5*Math.sin(t*3+li+i*1.3);
+        ctx.fillStyle='rgba(124,58,237,'+(0.35+0.6*pu)+')';
+        ctx.beginPath(); ctx.arc(lx,ny,10,0,Math.PI*2); ctx.fill();
+      } });
+    // prédiction
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#16a34a'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(576,110,120,70,10); ctx.fill(); ctx.stroke();
+    const conf=87+8*Math.sin(t*0.9);
+    ctx.font='bold 14px Segoe UI'; ctx.fillStyle='#166534';
+    ctx.fillText('\u00ab CHAT \u00bb',636,140);
+    ctx.font='bold 11px Segoe UI';
+    ctx.fillText('confiance : '+conf.toFixed(0)+' %',636,162);
+    // boucle de l'erreur (retour rouge vers le modèle)
+    ctx.strokeStyle='#dc2626'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(636,180);
+    ctx.quadraticCurveTo(636,264,430,264);
+    ctx.quadraticCurveTo(300,264,310,224);
+    ctx.stroke();
+    ctx.fillStyle='#dc2626';
+    ctx.beginPath(); ctx.moveTo(310,224); ctx.lineTo(302,240); ctx.lineTo(320,238); ctx.closePath(); ctx.fill();
+    ctx.font='bold 10.5px Segoe UI';
+    ctx.fillText('l\u2019erreur revient ajuster les neurones',470,282);
+    // flux données -> modèle -> prédiction
+    ctx.fillStyle='#ea580c';
+    for(let i=0;i<2;i++){ const p=((t*0.5)+i/2)%1;
+      if(p<0.5){ const u=p/0.5; ctx.beginPath(); ctx.arc(170+u*(310-170),150,4,0,Math.PI*2); ctx.fill(); }
+      else { const u=(p-0.5)/0.5; ctx.beginPath(); ctx.arc(450+u*(576-450),150,4,0,Math.PI*2); ctx.fill(); } }
+    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  const bar=document.getElementById('etiq5');
+  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+    bar.appendChild(b);
+  });
+  cv.addEventListener('click',e=>{
+    if(!sel) return;
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+    const verd=document.getElementById('verd5');
+    if(cible && cible.id===sel){
+      poses[sel]=true;
+      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+      sel=null;
+      if(Object.keys(poses).length===ZONES.length){
+        verd.innerHTML='<div class="verdict ok">✅ Système décodé ! Les DONNÉES étiquetées (des milliers d\u2019images « chat » / « pas chat ») nourrissent le MODÈLE, qui produit une PRÉDICTION avec un score de confiance… et la BOUCLE rouge renvoie l\u2019erreur ajuster les neurones : c\u2019est ça, « apprendre ». Pas de magie — des exemples, des réglages, des millions de fois. La qualité des données fait la qualité de l\u2019IA ! (+3 pts)</div>';
+        reussir(5,3);
+      }
+    } else if(cible){
+      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : les données sont la pile de photos étiquetées, le modèle est le réseau violet qui pulse, la prédiction est la carte verte avec le score… et la boucle est la grande flèche ROUGE qui revient en arrière.</div>';
+    }
+  });
+})();
+
+/* ================= A6 : MANIPULATION AU CURSEUR ================= */
+(function(){
+  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+  const SCEN=[
+    {min:70, max:90,
+     ok:'\u2705 Entre 70 et 90 % : peu de fausses alertes, peu de chats manqués — le meilleur compromis possible. Retiens ceci : une IA ne répond jamais \u00ab oui \u00bb ou \u00ab non \u00bb, elle répond \u00ab probablement \u00bb\u2026 et c\u2019est un HUMAIN qui choisit le seuil selon les conséquences de chaque erreur ! (+4 pts)',
+     kobas:'\u274c Seuil trop bas : le détecteur crie CHAT pour des chiens, des coussins, des ombres\u2026 (regarde les fausses alertes !). À force d\u2019alerter pour rien, plus personne n\u2019écoute. Remonte\u2026',
+     kohaut:'\u274c Seuil trop exigeant : il ne valide que les photos parfaites et RATE de vrais chats (regarde le compteur !). Un détecteur muet ne sert à rien non plus. Redescends\u2026'}
+  ];
+  let etape=0, t=0, valide=false;
+  function dessiner(){
+    t+=0.03;
+    ctx.clearRect(0,0,860,280);
+    const v=+slider.value;
+    const sc=SCEN[Math.min(etape,SCEN.length-1)];
+    const fausses=Math.round(Math.max(0,(70-v))*0.5);
+    const rates=Math.round(Math.max(0,(v-90))*0.7);
+    // défilé d'images jugées
+    const imgs=['\ud83d\udc31','\ud83d\udc36','\ud83d\udc31','\ud83e\uddf8','\ud83d\udc31','\ud83d\udc30'];
+    const scores=[95,62,83,55,74,58];
+    for(let i=0;i<6;i++){
+      const x=100+i*112;
+      ctx.fillStyle='#fff'; ctx.strokeStyle='#cbd5e1'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.roundRect(x-34,60,68,64,8); ctx.fill(); ctx.stroke();
+      ctx.font='24px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+      ctx.fillText(imgs[i],x,100);
+      const estChat=imgs[i]==='\ud83d\udc31';
+      const detecte=scores[i]>=v;
+      ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#64748b';
+      ctx.fillText(scores[i]+' %',x,138);
+      ctx.font='bold 11px Segoe UI';
+      if(detecte && estChat){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 CHAT',x,156); }
+      else if(detecte && !estChat){ ctx.fillStyle='#dc2626'; ctx.fillText('\u2717 fausse alerte',x,156); }
+      else if(!detecte && estChat){ ctx.fillStyle='#f59e0b'; ctx.fillText('\u26a0 raté !',x,156); }
+      else { ctx.fillStyle='#94a3b8'; ctx.fillText('— ignoré',x,156); }
+    }
+    // ligne de seuil visuelle
+    ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#ea580c';
+    ctx.fillText('seuil : \u00ab CHAT \u00bb si confiance \u2265 '+v+' %',430,40);
+    // compteurs
+    ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+    ctx.fillText('FAUSSES ALERTES / JOUR',260,204);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(160,214,200,16);
+    ctx.fillStyle= v<70 ? '#dc2626' : '#16a34a';
+    ctx.fillRect(160,214,200*Math.min(1,fausses/12),16);
+    ctx.fillStyle='#334155'; ctx.fillText(String(fausses),380,228);
+    ctx.fillStyle='#334155';
+    ctx.fillText('VRAIS CHATS MANQUÉS / JOUR',610,204);
+    ctx.fillStyle='#e2e8f0'; ctx.fillRect(510,214,200,16);
+    ctx.fillStyle= v>90 ? '#dc2626' : '#16a34a';
+    ctx.fillRect(510,214,200*Math.min(1,rates/8),16);
+    ctx.fillStyle='#334155'; ctx.fillText(String(rates),730,228);
+    ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
+    ctx.fillText('baisser le seuil \u2192 plus d\u2019alertes \u00b7 monter le seuil \u2192 plus d\u2019oublis',430,262);
+    requestAnimationFrame(dessiner);
+  }
+  dessiner();
+  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+  document.getElementById('verif6').addEventListener('click',()=>{
+    if(valide) return;
+    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+    if(v>=sc.min && v<=sc.max){
+      etape++;
+      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
+      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+    } else {
+      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+    }
+  });
+})();
+
+/* ================= A7 : BILAN ================= */
 const Q5=[
  {q:"Une IA par apprentissage découvre les règles…", r:["toute seule, dans les exemples","dans un livre de règles","en demandant à l'utilisateur"], b:0},
  {q:"On teste la précision du modèle sur des exemples…", r:["déjà utilisés à l'entraînement","jamais vus par le modèle","inventés par le modèle"], b:1},
@@ -353,7 +553,7 @@ const Q5=[
         if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
         else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
         if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(5,2); }
+          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
           else{
             const verd=document.createElement('div'); verd.className='verdict ko';
             verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
