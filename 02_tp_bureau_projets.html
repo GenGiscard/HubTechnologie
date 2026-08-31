@@ -6,7 +6,7 @@
 <title>TP 5ème — Le bureau des projets · ESTIC</title>
 <style>
 :root{ --ink:#1e3a5f; --cyan:#0e7490; --niv:#db2777; --niv-fonce:#be185d; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
 .estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
@@ -84,120 +84,148 @@ table.cdc tr.faux td{background:#fef2f2}
 .codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#be185d,#0e7490);border-radius:14px;padding:22px;color:#fff}
 .codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
 .codefinal a{color:#fde68a;font-weight:800}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:60px;height:60px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:12px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;font-size:19px;letter-spacing:1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+.rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
 </style>
 </head>
 <body>
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
 <header class="tp">
-  <h1>🔧 TP — Le bureau des projets</h1>
-  <p>Le bureau d'études d'Esticville lance sa gourde ESTIC-Aqua. Tu es contrôleur qualité junior : 7 missions — à la fin, le code des jeux !</p>
+ <h1>TP — Le bureau des projets</h1>
+ <p>Le bureau d'études d'Esticville lance sa gourde ESTIC-Aqua. Tu es contrôleur qualité junior : 7 missions — à la fin, le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
-  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
-  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+ <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ============ A1 : QUI SUIS-JE ============ -->
 <div class="acti" id="a1">
  <div class="boite">
-  <h2><span class="badge">1</span>Le vocabulaire du bureau d'études</h2>
-  <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! (1 pt par bonne réponse du premier coup)</div>
-  <div class="minicas" id="cas1"></div>
+ <h2><span class="badge">1</span>Le vocabulaire du bureau d'études</h2>
+ <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! <b>Attention : une seule tentative par question</b> — lis bien avant de cliquer ! (1 pt par bonne réponse)</div>
+ <div class="minicas" id="cas1"></div>
  </div>
 </div>
 
 <!-- ============ A2 : ORDRE DE LA DÉMARCHE ============ -->
 <div class="acti" id="a2">
  <div class="boite">
-  <h2><span class="badge">2</span>Remets la démarche de projet en ordre</h2>
-  <div class="consigne">Du tout début du projet jusqu'aux tests : clique les 4 étapes <b>dans l'ordre</b>.</div>
-  <div class="ordre" id="blocs2"></div>
-  <div class="slots" id="slots2">
-    <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
-    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
-    <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
-    <div class="slot" data-i="3">4ème</div>
-  </div>
-  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
-  <div class="verdict" id="verd2"></div>
+ <h2><span class="badge">2</span>Remets la démarche de projet en ordre</h2>
+ <div class="consigne">Du tout début du projet jusqu'aux tests : clique les 4 étapes <b>dans l'ordre</b>.</div>
+ <div class="ordre" id="blocs2"></div>
+ <div class="slots" id="slots2">
+ <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
+ <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+ <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
+ <div class="slot" data-i="3">4ème</div>
+ </div>
+ <div class="btnrow"><button class="btn" id="verif2">✓ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+ <div class="verdict" id="verd2"></div>
  </div>
 </div>
 
 <!-- ============ A3 : CONTRÔLE QUALITÉ ============ -->
 <div class="acti" id="a3">
  <div class="boite">
-  <h2><span class="badge">3</span>Contrôle le prototype ESTIC-Aqua !</h2>
-  <div class="consigne">🧴 Le prototype n°7 sort du labo avec ses mesures. Compare chaque mesure au NIVEAU exigé par le cahier des charges, et rends ton verdict : CONFORME ou NON CONFORME. Puis valide les 4 lignes d'un coup.</div>
-  <table class="cdc" id="table3">
-    <tr><th>Fonction</th><th>Critère</th><th>Niveau exigé</th><th>Mesure du proto n°7</th><th>Ton verdict</th></tr>
-  </table>
-  <div class="btnrow"><button class="btn" id="verif3">✔ Rendre le rapport qualité</button></div>
-  <div class="verdict" id="verd3"></div>
+ <h2><span class="badge">3</span>Contrôle le prototype ESTIC-Aqua !</h2>
+ <div class="consigne">Le prototype n°7 sort du labo avec ses mesures. Compare chaque mesure au NIVEAU exigé par le cahier des charges, et rends ton verdict : CONFORME ou NON CONFORME. Puis valide les 4 lignes d'un coup.</div>
+ <table class="cdc" id="table3">
+ <tr><th>Fonction</th><th>Critère</th><th>Niveau exigé</th><th>Mesure du proto n°7</th><th>Ton verdict</th></tr>
+ </table>
+ <div class="btnrow"><button class="btn" id="verif3">✓ Rendre le rapport qualité</button></div>
+ <div class="verdict" id="verd3"></div>
  </div>
 </div>
 
 <!-- ============ A4 : COÛT ============ -->
 <div class="acti" id="a4">
  <div class="boite">
-  <h2><span class="badge">4</span>Le prix de revient</h2>
-  <div class="consigne">💶 Le cahier des charges impose un prix de revient de <b>8 € maximum</b>. La gourde coûte : corps en inox <b>4,50 €</b> + bouchon <b>1,20 €</b> + assemblage <b>1,80 €</b>. Calcule le prix de revient total.</div>
-  <div class="rappel">📐 Rappel : prix de revient = somme de tous les coûts</div>
-  <div class="calczone">
-    <span>prix de revient =</span>
-    <input type="number" id="rep4" step="any" placeholder="?">
-    <span class="unite">€</span>
-    <button class="btn" id="verif4">✔ Vérifier</button>
-  </div>
-  <div class="verdict" id="verd4"></div>
+ <h2><span class="badge">4</span>Le prix de revient</h2>
+ <div class="consigne">Le cahier des charges impose un prix de revient de <b>8 € maximum</b>. La gourde coûte : corps en inox <b>4,50 €</b> + bouchon <b>1,20 €</b> + assemblage <b>1,80 €</b>. Calcule le prix de revient total.</div>
+ <div class="rappel">Rappel : prix de revient = somme de tous les coûts</div>
+ <div class="calczone">
+ <span>prix de revient =</span>
+ <input type="number" id="rep4" step="any" placeholder="?">
+ <span class="unite">€</span>
+ <button class="btn" id="verif4">✓ Vérifier</button>
+ </div>
+ <div class="verdict" id="verd4"></div>
  </div>
 </div>
 
 <!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>La bête à cornes de la gourde</h2>
-  <div class="consigne">🗺️ Le projet du jour : une gourde isotherme pour le collège. Complète sa bête à cornes : clique une étiquette, puis la bulle du diagramme où elle va. Place les 4 étiquettes.</div>
-  <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
-  <div class="etiqbar" id="etiq5"></div>
-  <div id="verd5"></div>
+ <h2><span class="badge">5</span>La bête à cornes de la gourde</h2>
+ <div class="consigne"><b>Chaque erreur coûte des points.</b>Le projet du jour : une gourde isotherme pour le collège. Complète sa bête à cornes : clique une étiquette, puis la bulle du diagramme où elle va. Place les 4 étiquettes.</div>
+ <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
+ <div class="etiqbar" id="etiq5"></div>
+ <div id="verd5"></div>
  </div>
 </div>
 
 <!-- ============ A6 : MANIPULATION ============ -->
 <div class="acti" id="a6">
  <div class="boite">
-  <h2><span class="badge">6</span>Règle le cahier des charges</h2>
-  <div class="consigne">🎛️ Le CDC de la gourde impose deux contraintes : tenir TOUTE la journée de sport, ET rentrer dans le sac à dos. Règle la capacité au curseur et observe les deux contraintes réagir !</div>
-  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
-  <div class="sliderrow">
-    <span>🥤 Capacité de la gourde :</span>
-    <input type="range" id="slider6" min="0.2" max="3" step="0.1" value="2">
-    <span class="val"><span id="val6">2</span> L</span>
-    <button class="btn" id="verif6">✔ Valider ce réglage</button>
-  </div>
-  <div id="verd6"></div>
+ <h2><span class="badge">6</span>Règle le cahier des charges</h2>
+ <div class="consigne">Le CDC de la gourde impose deux contraintes : tenir TOUTE la journée de sport, ET rentrer dans le sac à dos. Règle la capacité au curseur et observe les deux contraintes réagir !</div>
+ <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+ <div class="sliderrow">
+ <span>Capacité de la gourde :</span>
+ <input type="range" id="slider6" min="0.2" max="3" step="0.1" value="2">
+ <span class="val"><span id="val6">2</span>L</span>
+ <button class="btn" id="verif6">✓ Valider ce réglage</button>
+ </div>
+ <div id="verd6"></div>
  </div>
 </div>
 
 <!-- ============ A7 : BILAN ============ -->
 <div class="acti" id="a7">
  <div class="boite">
-  <h2><span class="badge">7</span>Bilan du contrôleur qualité</h2>
-  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
-  <div id="quiz5"></div>
-  <div class="codefinal" id="codefinal">
-    🏆 Rapport qualité signé : la gourde ESTIC-Aqua repart en amélioration !
-    <div class="code">CAHIER55</div>
-    <div>Entre ce code dans les jeux <a href="03_jeu_fonction_rush.html">🎮 Fonction Rush</a> et <a href="03b_jeu_bureau_etudes.html">🏢 Bureau d'études</a> pour les déverrouiller.</div>
-  </div>
+ <h2><span class="badge">7</span>Bilan du contrôleur qualité</h2>
+ <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
+ <div id="quiz5"></div>
+ <div class="codefinal" id="codefinal">
+ Rapport qualité signé : la gourde ESTIC-Aqua repart en amélioration !
+ <div class="code">CAHIER55</div>
+ <div>Entre ce code dans les jeux <a href="03_jeu_fonction_rush.html">Fonction Rush</a>et <a href="03b_jeu_bureau_etudes.html">Bureau d'études</a>pour les déverrouiller.</div>
+ </div>
  </div>
 </div>
 
@@ -207,98 +235,105 @@ const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
 function sauver(){ try{ localStorage.setItem('tp_besoin_5e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
 function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_besoin_5e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
-  document.querySelectorAll('.progression .seg').forEach(seg=>{
-    const n=+seg.dataset.a;
-    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
-  });
-  document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=7;n++){
-    const acti=document.getElementById('a'+n);
-    let v=acti.querySelector('.verrou');
-    if(n>etat.debloque){
-      if(!v){ v=document.createElement('div'); v.className='verrou';
-        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
-        acti.querySelector('.boite').appendChild(v); }
-    } else if(v) v.remove();
-  }
+ document.querySelectorAll('.progression .seg').forEach(seg=>{
+ const n=+seg.dataset.a;
+ seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+ });
+ document.getElementById('scoreTot').textContent=etat.score;
+ for(let n=2;n<=7;n++){
+ const acti=document.getElementById('a'+n);
+ let v=acti.querySelector('.verrou');
+ if(n>etat.debloque){
+ if(!v){ v=document.createElement('div'); v.className='verrou';
+ v.innerHTML='<div class="cadenas"></div>Termine la mission '+(n-1)+' pour déverrouiller';
+ acti.querySelector('.boite').appendChild(v); }
+ } else if(v) v.remove();
+ }
 }
 function reussir(n,pts){
-  etat.score+=pts;
-  if(etat.debloque===n) etat.debloque=n+1;
-  sauver(); majProgression();
-  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ etat.score+=pts;
+ if(etat.debloque===n) etat.debloque=n+1;
+ sauver(); majProgression();
+ if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
 const CAS1=[
- {devinette:'🎯 « Je suis ce qui est nécessaire ou désiré par un utilisateur : sans moi, l\u2019objet n\u2019a aucune raison d\u2019exister. »', bonne:'le besoin', autres:['la fonction d\u2019estime']},
- {devinette:'🛠️ « Je dis ce que l\u2019objet FAIT. Je suis la même pour tout le monde et on peut me vérifier. »', bonne:'la fonction d\u2019usage', autres:['la fonction d\u2019estime']},
- {devinette:'✨ « Je donne ENVIE de l\u2019objet : couleur, style, marque… Je change selon les goûts de chacun. »', bonne:'la fonction d\u2019estime', autres:['la fonction d\u2019usage']},
- {devinette:'📋 « Je suis le contrat de l\u2019objet : pour chaque fonction, un critère et un niveau chiffré à respecter. »', bonne:'le cahier des charges', autres:['le prototype']},
+ {devinette:' « Je suis ce qui est nécessaire ou désiré par un utilisateur : sans moi, l\u2019objet n\u2019a aucune raison d\u2019exister. »', bonne:'le besoin', autres:['la fonction d\u2019estime']},
+ {devinette:' « Je dis ce que l\u2019objet FAIT. Je suis la même pour tout le monde et on peut me vérifier. »', bonne:'la fonction d\u2019usage', autres:['la fonction d\u2019estime']},
+ {devinette:' « Je donne ENVIE de l\u2019objet : couleur, style, marque… Je change selon les goûts de chacun. »', bonne:'la fonction d\u2019estime', autres:['la fonction d\u2019usage']},
+ {devinette:' « Je suis le contrat de l\u2019objet : pour chaque fonction, un critère et un niveau chiffré à respecter. »', bonne:'le cahier des charges', autres:['le prototype']},
 ];
 (function initA1(){
-  const zone=document.getElementById('cas1');
-  CAS1.forEach(cas=>{
-    const d=document.createElement('div'); d.className='cas';
-    d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
-    const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
-    let premier=true, fait=false;
-    [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
-      const b=document.createElement('button'); b.textContent=rep;
-      b.onclick=()=>{
-        if(fait) return;
-        if(rep===cas.bonne){
-          fait=true; d.classList.remove('faux'); d.classList.add('bon');
-          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          etat.q1ok++;
-          if(etat.q1ok===CAS1.length) reussir(1,2);
-        } else { d.classList.add('faux'); premier=false; }
-      };
-      ch.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('cas1');
+ CAS1.forEach(cas=>{
+ const d=document.createElement('div'); d.className='cas';
+ d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
+ const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
+ let premier=true, fait=false;
+ [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
+ const b=document.createElement('button'); b.textContent=rep;
+ b.onclick=()=>{
+ if(fait) return;
+ if(rep===cas.bonne){
+ fait=true; d.classList.remove('faux'); d.classList.add('bon');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ } else {
+ fait=true; premier=false;
+ d.classList.add('faux'); b.classList.add('faux');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ }
+ };
+ ch.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A2 : ORDRE DE LA DÉMARCHE ================= */
 const BLOCS2=[
- {id:1,t:'🎯 Identifier le besoin',s:'la bête à cornes : à qui, sur quoi, pourquoi'},
- {id:0,t:'📋 Rédiger le cahier des charges',s:'fonctions, critères, niveaux'},
- {id:2,t:'💡 Rechercher des solutions',s:'croquis, comparaisons, choix'},
- {id:3,t:'🧪 Réaliser et tester un prototype',s:'mesures face au cahier des charges'},
+ {id:1,t:' Identifier le besoin',s:'la bête à cornes : à qui, sur quoi, pourquoi'},
+ {id:0,t:' Rédiger le cahier des charges',s:'fonctions, critères, niveaux'},
+ {id:2,t:' Rechercher des solutions',s:'croquis, comparaisons, choix'},
+ {id:3,t:' Réaliser et tester un prototype',s:'mesures face au cahier des charges'},
 ];
 const BON2=[1,0,2,3];
-let choix2=[], a2fait=false;
+let choix2=[], a2fait=false, essais2=0, err5=0, essais6=0, bons3=0;
 function initA2(){
-  choix2=[];
-  const zone=document.getElementById('blocs2'); zone.innerHTML='';
-  BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
-    const btn=document.createElement('button');
-    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
-    btn.onclick=()=>{
-      if(btn.classList.contains('pris')||choix2.length>=4) return;
-      btn.classList.add('pris'); choix2.push(b.id);
-      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
-      slot.textContent=b.t; slot.classList.add('rempli');
-    };
-    zone.appendChild(btn);
-  });
-  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
-  document.getElementById('verd2').className='verdict';
+ choix2=[];
+ const zone=document.getElementById('blocs2'); zone.innerHTML='';
+ BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
+ const btn=document.createElement('button');
+ btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+ btn.onclick=()=>{
+ if(btn.classList.contains('pris')||choix2.length>=4) return;
+ btn.classList.add('pris'); choix2.push(b.id);
+ const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+ slot.textContent=b.t; slot.classList.add('rempli');
+ };
+ zone.appendChild(btn);
+ });
+ document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
+ document.getElementById('verd2').className='verdict';
 }
 document.getElementById('reset2').onclick=initA2;
 document.getElementById('verif2').onclick=()=>{
-  const verd=document.getElementById('verd2');
-  if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
-  if(choix2.join()===BON2.join()){
-    verd.className='verdict ok';
-    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : besoin → cahier des charges → solutions → prototype testé. On n\u2019achète jamais le bois avant d\u2019avoir dessiné la cabane ! (+3 pts)'; reussir(2,3); }
-    else verd.textContent='✅ Bon ordre !';
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ La démarche est emmêlée. Réfléchis : peut-on écrire le contrat de l\u2019objet AVANT de savoir à quoi il sert ? Tester un prototype qui n\u2019existe pas ? Recommence !';
-  }
+ const verd=document.getElementById('verd2');
+ if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
+ essais2++;
+ if(choix2.join()===BON2.join()){
+ verd.className='verdict ok';
+ if(!a2fait){ a2fait=true; verd.textContent='✓ Parfait : besoin → cahier des charges → solutions → prototype testé. On n\u2019achète jamais le bois avant d\u2019avoir dessiné la cabane ! (+3 pts)'; reussir(2, essais2<=1?3:(essais2===2?2:1)); }
+ else verd.textContent='✓ Bon ordre !';
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ La démarche est emmêlée. Réfléchis : peut-on écrire le contrat de l\u2019objet AVANT de savoir à quoi il sert ? Tester un prototype qui n\u2019existe pas ? Recommence !';
+ }
 };
 initA2();
 
@@ -312,193 +347,195 @@ const LIGNES3=[
 const verdicts3=[null,null,null,null];
 let a3fait=false;
 (function initA3(){
-  const table=document.getElementById('table3');
-  LIGNES3.forEach((L,i)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML='<td>'+L.f+'</td><td>'+L.c+'</td><td><b>'+L.n+'</b></td><td class="mesure">'+L.mes+'</td>';
-    const td=document.createElement('td');
-    const div=document.createElement('div'); div.className='verdbtns';
-    const bC=document.createElement('button'); bC.textContent='✔ CONFORME'; bC.dataset.v='1';
-    const bN=document.createElement('button'); bN.textContent='✘ NON CONF.'; bN.dataset.v='0';
-    [bC,bN].forEach(b=>{
-      b.onclick=()=>{
-        if(a3fait) return;
-        verdicts3[i]= b.dataset.v==='1';
-        bC.classList.toggle('sel',b===bC); bN.classList.toggle('sel',b===bN);
-      };
-    });
-    div.appendChild(bC); div.appendChild(bN); td.appendChild(div); tr.appendChild(td);
-    table.appendChild(tr);
-  });
+ const table=document.getElementById('table3');
+ LIGNES3.forEach((L,i)=>{
+ const tr=document.createElement('tr');
+ tr.innerHTML='<td>'+L.f+'</td><td>'+L.c+'</td><td><b>'+L.n+'</b></td><td class="mesure">'+L.mes+'</td>';
+ const td=document.createElement('td');
+ const div=document.createElement('div'); div.className='verdbtns';
+ const bC=document.createElement('button'); bC.textContent='✓ CONFORME'; bC.dataset.v='1';
+ const bN=document.createElement('button'); bN.textContent=' NON CONF.'; bN.dataset.v='0';
+ [bC,bN].forEach(b=>{
+ b.onclick=()=>{
+ if(a3fait) return;
+ verdicts3[i]= b.dataset.v==='1';
+ bC.classList.toggle('sel',b===bC); bN.classList.toggle('sel',b===bN);
+ };
+ });
+ div.appendChild(bC); div.appendChild(bN); td.appendChild(div); tr.appendChild(td);
+ table.appendChild(tr);
+ });
 })();
 document.getElementById('verif3').onclick=()=>{
-  const verd=document.getElementById('verd3');
-  if(verdicts3.some(v=>v===null)){ verd.className='verdict ko'; verd.textContent='Rends un verdict pour les 4 lignes avant de signer le rapport !'; return; }
-  const lignes=[...document.querySelectorAll('#table3 tr')].slice(1);
-  let bons=0;
-  lignes.forEach((tr,i)=>{
-    const ok=verdicts3[i]===LIGNES3[i].conforme;
-    if(ok) bons++;
-    tr.className= ok?'bon':'faux';
-  });
-  if(bons===4){
-    verd.className='verdict ok';
-    verd.innerHTML='✅ Rapport parfait : contenance ✓ (0,52 ≥ 0,5), étanchéité ✓, mais masse ✗ (180 &gt; 150 g) et hauteur ✗ (27 &gt; 25 cm). Verdict global : prototype NON CONFORME — retour au labo pour alléger et raccourcir. Un contrôleur ne juge pas au feeling : il compare aux NIVEAUX !'+(a3fait?'':' (+4 pts)');
-    if(!a3fait){ a3fait=true; reussir(3,4); }
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ '+(4-bons)+' verdict(s) erroné(s) (lignes en rouge). Relis chaque NIVEAU : « maximum » veut dire que la mesure doit être plus PETITE ou égale ; « minimum », plus GRANDE ou égale. Corrige et re-signe !';
-    if(!a3fait) lignes.forEach(tr=>tr.className='');
-  }
+ const verd=document.getElementById('verd3');
+ if(verdicts3.some(v=>v===null)){ verd.className='verdict ko'; verd.textContent='Rends un verdict pour les 4 lignes avant de signer le rapport !'; return; }
+ const lignes=[...document.querySelectorAll('#table3 tr')].slice(1);
+ let bons=0;
+ lignes.forEach((tr,i)=>{
+ const ok=verdicts3[i]===LIGNES3[i].conforme;
+ if(ok) bons++;
+ tr.className= ok?'bon':'faux';
+ });
+ if(bons===4){
+ verd.className='verdict ok';
+ verd.innerHTML='✓ Rapport parfait : contenance ✓ (0,52 ≥ 0,5), étanchéité ✓, mais masse ✗ (180 &gt; 150 g) et hauteur ✗ (27 &gt; 25 cm). Verdict global : prototype NON CONFORME — retour au labo pour alléger et raccourcir. Un contrôleur ne juge pas au feeling : il compare aux NIVEAUX !'+(a3fait?'':' (+4 pts)');
+ if(!a3fait){ a3fait=true; reussir(3, Math.max(1,bons3+1)); }
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ '+(4-bons)+' verdict(s) erroné(s) (lignes en rouge). Relis chaque NIVEAU : « maximum » veut dire que la mesure doit être plus PETITE ou égale ; « minimum », plus GRANDE ou égale. Corrige et re-signe !';
+ if(!a3fait) lignes.forEach(tr=>tr.className='');
+ }
 };
 
 /* ================= A4 : COÛT ================= */
 let a4fait=false;
 document.getElementById('verif4').onclick=()=>{
-  const verd=document.getElementById('verd4');
-  const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
-  if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
-  if(Math.abs(v-7.5)<=0.05){
-    verd.className='verdict ok';
-    verd.innerHTML='✅ 4,50 + 1,20 + 1,80 = 7,50 € — sous les 8 € exigés : critère prix CONFORME ! Attention au piège classique : « conforme sur le prix » ne veut pas dire « conforme partout » (la masse, elle, dépassait…).'+(a4fait?'':' (+4 pts)');
-    if(!a4fait){ a4fait=true; reussir(4,4); }
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ Pas ça. Additionne simplement les trois coûts : 4,50 + 1,20 + 1,80.';
-  }
+ const verd=document.getElementById('verd4');
+ const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
+ if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
+ if(Math.abs(v-7.5)<=0.05){
+ verd.className='verdict ok';
+ verd.innerHTML='✓ 4,50 + 1,20 + 1,80 = 7,50 € — sous les 8 € exigés : critère prix CONFORME ! Attention au piège classique : « conforme sur le prix » ne veut pas dire « conforme partout » (la masse, elle, dépassait…).'+(a4fait?'':' (+4 pts)');
+ if(!a4fait){ a4fait=true; reussir(4,4); }
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ Pas ça. Additionne simplement les trois coûts : 4,50 + 1,20 + 1,80.';
+ }
 };
 
 /* ================= A5 : SCHEMA A LEGENDER ================= */
 (function(){
-  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
-  const ZONES=[
-    {id:'qui',    x:60,  y:44,  w:290, h:96,  lbl:'AU COLLÉGIEN SPORTIF',            tx:205, ty:34},
-    {id:'quoi',   x:512, y:44,  w:290, h:96,  lbl:'SUR LA BOISSON',                  tx:657, ty:34},
-    {id:'produit',x:330, y:140, w:200, h:64,  lbl:'LA GOURDE ISOTHERME',             tx:430, ty:132},
-    {id:'but',    x:216, y:236, w:428, h:58,  lbl:'GARDER LA BOISSON FRAÎCHE 12 H',  tx:430, ty:228},
-  ];
-  const poses={}; let sel=null, t=0;
-  function dessiner(){
-    t+=0.02;
-    ctx.clearRect(0,0,860,320);
-    const pulse=1+0.012*Math.sin(t*1.6);
-    // bulle gauche : à qui rend-il service ?
-    ctx.strokeStyle='#0e7490'; ctx.lineWidth=3; ctx.fillStyle='#fff';
-    ctx.save(); ctx.translate(205,92); ctx.scale(pulse,pulse);
-    ctx.beginPath(); ctx.ellipse(0,0,142,46,0,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.restore();
-    ctx.font='italic 13px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#64748b';
-    ctx.fillText('À qui rend-il service ?',205,97);
-    // bulle droite : sur quoi agit-il ?
-    ctx.strokeStyle='#7c3aed'; ctx.fillStyle='#fff';
-    ctx.save(); ctx.translate(657,92); ctx.scale(pulse,pulse);
-    ctx.beginPath(); ctx.ellipse(0,0,142,46,0,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.restore();
-    ctx.fillStyle='#64748b'; ctx.fillText('Sur quoi agit-il ?',657,97);
-    // boîte produit
-    ctx.strokeStyle='#ea580c'; ctx.lineWidth=3; ctx.fillStyle='#fff';
-    ctx.beginPath(); ctx.roundRect(340,146,180,52,10); ctx.fill(); ctx.stroke();
-    ctx.fillStyle='#64748b'; ctx.fillText('Le produit',430,177);
-    // boîte but
-    ctx.strokeStyle='#16a34a'; ctx.fillStyle='#fff';
-    ctx.beginPath(); ctx.roundRect(226,242,408,46,10); ctx.fill(); ctx.stroke();
-    ctx.fillStyle='#64748b'; ctx.fillText('Dans quel but ?',430,270);
-    // les cornes + la flèche du but
-    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.moveTo(300,120); ctx.quadraticCurveTo(340,132,372,146); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(562,120); ctx.quadraticCurveTo(522,132,490,146); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(430,198); ctx.lineTo(430,242); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(430,242); ctx.lineTo(424,232); ctx.moveTo(430,242); ctx.lineTo(436,232); ctx.stroke();
-    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
-    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  const bar=document.getElementById('etiq5');
-  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
-    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
-    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
-      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
-    bar.appendChild(b);
-  });
-  cv.addEventListener('click',e=>{
-    if(!sel) return;
-    const r=cv.getBoundingClientRect();
-    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
-    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
-    const verd=document.getElementById('verd5');
-    if(cible && cible.id===sel){
-      poses[sel]=true;
-      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
-      sel=null;
-      if(Object.keys(poses).length===ZONES.length){
-        verd.innerHTML='<div class="verdict ok">✅ Bête à cornes complète ! Elle rend service AU COLLÉGIEN SPORTIF, elle agit SUR LA BOISSON, dans le but de LA GARDER FRAÎCHE 12 H. Trois questions, et le besoin est cerné AVANT de dessiner le moindre produit — c\u2019est toujours le point de départ ! (+3 pts)</div>';
-        reussir(5,3);
-      }
-    } else if(cible){
-      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Relis les questions écrites en gris dans chaque bulle : à QUI rend-il service (une personne), sur QUOI agit-il (une matière), dans quel BUT (un service rendu)… et la boîte centrale, c\u2019est le produit lui-même.</div>';
-    }
-  });
+ const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+ const ZONES=[
+ {id:'qui', x:60, y:44, w:290, h:96, lbl:'AU COLLÉGIEN SPORTIF', tx:205, ty:34},
+ {id:'quoi', x:512, y:44, w:290, h:96, lbl:'SUR LA BOISSON', tx:657, ty:34},
+ {id:'produit',x:330, y:140, w:200, h:64, lbl:'LA GOURDE ISOTHERME', tx:430, ty:132},
+ {id:'but', x:216, y:236, w:428, h:58, lbl:'GARDER LA BOISSON FRAÎCHE 12 H', tx:430, ty:228},
+ ];
+ const poses={}; let sel=null, t=0;
+ function dessiner(){
+ t+=0.02;
+ ctx.clearRect(0,0,860,320);
+ const pulse=1+0.012*Math.sin(t*1.6);
+ // bulle gauche : à qui rend-il service ?
+ ctx.strokeStyle='#0e7490'; ctx.lineWidth=3; ctx.fillStyle='#fff';
+ ctx.save(); ctx.translate(205,92); ctx.scale(pulse,pulse);
+ ctx.beginPath(); ctx.ellipse(0,0,142,46,0,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.restore();
+ ctx.font='italic 13px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#64748b';
+ ctx.fillText('À qui rend-il service ?',205,97);
+ // bulle droite : sur quoi agit-il ?
+ ctx.strokeStyle='#7c3aed'; ctx.fillStyle='#fff';
+ ctx.save(); ctx.translate(657,92); ctx.scale(pulse,pulse);
+ ctx.beginPath(); ctx.ellipse(0,0,142,46,0,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.restore();
+ ctx.fillStyle='#64748b'; ctx.fillText('Sur quoi agit-il ?',657,97);
+ // boîte produit
+ ctx.strokeStyle='#ea580c'; ctx.lineWidth=3; ctx.fillStyle='#fff';
+ ctx.beginPath(); ctx.roundRect(340,146,180,52,10); ctx.fill(); ctx.stroke();
+ ctx.fillStyle='#64748b'; ctx.fillText('Le produit',430,177);
+ // boîte but
+ ctx.strokeStyle='#16a34a'; ctx.fillStyle='#fff';
+ ctx.beginPath(); ctx.roundRect(226,242,408,46,10); ctx.fill(); ctx.stroke();
+ ctx.fillStyle='#64748b'; ctx.fillText('Dans quel but ?',430,270);
+ // les cornes + la flèche du but
+ ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.moveTo(300,120); ctx.quadraticCurveTo(340,132,372,146); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(562,120); ctx.quadraticCurveTo(522,132,490,146); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(430,198); ctx.lineTo(430,242); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(430,242); ctx.lineTo(424,232); ctx.moveTo(430,242); ctx.lineTo(436,232); ctx.stroke();
+ ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+ ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ const bar=document.getElementById('etiq5');
+ ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+ const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+ b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+ bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+ bar.appendChild(b);
+ });
+ cv.addEventListener('click',e=>{
+ if(!sel) return;
+ const r=cv.getBoundingClientRect();
+ const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+ const cible=ZONES.find(z=>x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+ const verd=document.getElementById('verd5');
+ if(cible && cible.id===sel){
+ poses[sel]=true;
+ const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+ sel=null;
+ if(Object.keys(poses).length===ZONES.length){
+ verd.innerHTML='<div class="verdict ok">✓ Bête à cornes complète ! Elle rend service AU COLLÉGIEN SPORTIF, elle agit SUR LA BOISSON, dans le but de LA GARDER FRAÎCHE 12 H. Trois questions, et le besoin est cerné AVANT de dessiner le moindre produit — c\u2019est toujours le point de départ ! (+3 pts)</div>';
+ reussir(5, err5===0?3:(err5<=2?2:1));
+ }
+ } else if(cible){
+ err5++;
+ verd.innerHTML='<div class="verdict ko">✗ Pas là ! Relis les questions écrites en gris dans chaque bulle : à QUI rend-il service (une personne), sur QUOI agit-il (une matière), dans quel BUT (un service rendu)… et la boîte centrale, c\u2019est le produit lui-même.</div>';
+ }
+ });
 })();
 
 /* ================= A6 : MANIPULATION AU CURSEUR ================= */
 (function(){
-  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
-  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
-  const SCEN=[
-    {min:0.8, max:1.2,
-     ok:'\u2705 Entre 0,8 et 1,2 L : assez pour la journée de sport ET la gourde rentre dans le sac. Un produit réussi ne satisfait pas UNE contrainte, il les satisfait TOUTES — c\u2019est exactement le rôle du cahier des charges ! (+4 pts)',
-     kobas:'\u274c Trop petite : regarde la jauge « journée de sport » dans le rouge — le besoin n\u2019est pas satisfait. Le CDC exige AU MOINS 0,8 L\u2026',
-     kohaut:'\u274c Trop grande : elle ne rentre plus dans le sac (contrainte : 1,2 L maxi) ! Satisfaire le besoin, oui — mais dans les contraintes\u2026'}
-  ];
-  let etape=0, t=0, valide=false;
-  function dessiner(){
-    t+=0.03;
-    ctx.clearRect(0,0,860,280);
-    const v=+slider.value;
-    const sc=SCEN[Math.min(etape,SCEN.length-1)];
-    // gourde qui grandit
-    const gh=40+v*55;
-    const gy=230-gh;
-    ctx.fillStyle='#67e8f9'; ctx.strokeStyle='#0e7490'; ctx.lineWidth=3;
-    ctx.beginPath(); ctx.roundRect(150,gy,64,gh,12); ctx.fill(); ctx.stroke();
-    ctx.fillStyle='#0e7490'; ctx.fillRect(164,gy-14,36,14);
-    ctx.font='bold 14px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#0e7490';
-    ctx.fillText(v.toFixed(1)+' L',182,252);
-    // sac à dos : hauteur max intérieure = gabarit 1,2 L
-    const smax=40+1.2*55;
-    ctx.strokeStyle= v>1.2 ? '#dc2626' : '#64748b'; ctx.lineWidth=3;
-    ctx.beginPath(); ctx.roundRect(280,230-smax-14,120,smax+14,14); ctx.stroke();
-    ctx.font='bold 12px Segoe UI'; ctx.fillStyle= v>1.2 ? '#dc2626' : '#64748b';
-    ctx.fillText('gabarit du sac (1,2 L maxi)',340,252);
-    if(v>1.2){ ctx.fillText('\u26a0\ufe0f ne rentre plus !',340,230-smax-24); }
-    // jauge journée de sport (besoin 0,8 L)
-    ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
-    ctx.fillText('JOURNÉE DE SPORT (besoin : 0,8 L mini)',620,80);
-    ctx.fillStyle='#e2e8f0'; ctx.fillRect(500,92,240,18);
-    const remplir=Math.min(1,v/0.8);
-    ctx.fillStyle= v<0.8 ? '#dc2626' : '#16a34a';
-    ctx.fillRect(500,92,240*remplir,18);
-    if(v<0.8){ ctx.fillStyle='#dc2626'; ctx.font='bold 12px Segoe UI';
-      ctx.fillText('\ud83e\udd75 à sec avant la fin de la journée\u2026',620,132); }
-    else { ctx.fillStyle='#16a34a'; ctx.font='bold 12px Segoe UI';
-      ctx.fillText('\u2713 hydratation assurée',620,132); }
-    // rappel CDC
-    ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
-    ctx.fillText('CDC : contenir \u2265 0,8 L  \u00b7  encombrement \u2264 1,2 L  \u00b7  (et rester fraîche 12 h !)',430,272);
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
-  document.getElementById('verif6').addEventListener('click',()=>{
-    if(valide) return;
-    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
-    if(v>=sc.min && v<=sc.max){
-      etape++;
-      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
-      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
-    } else {
-      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
-    }
-  });
+ const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+ const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+ const SCEN=[
+ {min:0.8, max:1.2,
+ ok:'\u2705 Entre 0,8 et 1,2 L : assez pour la journée de sport ET la gourde rentre dans le sac. Un produit réussi ne satisfait pas UNE contrainte, il les satisfait TOUTES — c\u2019est exactement le rôle du cahier des charges ! (+4 pts)',
+ kobas:'\u274c Trop petite : regarde la jauge « journée de sport » dans le rouge — le besoin n\u2019est pas satisfait. Le CDC exige AU MOINS 0,8 L\u2026',
+ kohaut:'\u274c Trop grande : elle ne rentre plus dans le sac (contrainte : 1,2 L maxi) ! Satisfaire le besoin, oui — mais dans les contraintes\u2026'}
+ ];
+ let etape=0, t=0, valide=false;
+ function dessiner(){
+ t+=0.03;
+ ctx.clearRect(0,0,860,280);
+ const v=+slider.value;
+ const sc=SCEN[Math.min(etape,SCEN.length-1)];
+ // gourde qui grandit
+ const gh=40+v*55;
+ const gy=230-gh;
+ ctx.fillStyle='#67e8f9'; ctx.strokeStyle='#0e7490'; ctx.lineWidth=3;
+ ctx.beginPath(); ctx.roundRect(150,gy,64,gh,12); ctx.fill(); ctx.stroke();
+ ctx.fillStyle='#0e7490'; ctx.fillRect(164,gy-14,36,14);
+ ctx.font='bold 14px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#0e7490';
+ ctx.fillText(v.toFixed(1)+' L',182,252);
+ // sac à dos : hauteur max intérieure = gabarit 1,2 L
+ const smax=40+1.2*55;
+ ctx.strokeStyle= v>1.2 ? '#dc2626' : '#64748b'; ctx.lineWidth=3;
+ ctx.beginPath(); ctx.roundRect(280,230-smax-14,120,smax+14,14); ctx.stroke();
+ ctx.font='bold 12px Segoe UI'; ctx.fillStyle= v>1.2 ? '#dc2626' : '#64748b';
+ ctx.fillText('gabarit du sac (1,2 L maxi)',340,252);
+ if(v>1.2){ ctx.fillText('\u26a0\ufe0f ne rentre plus !',340,230-smax-24); }
+ // jauge journée de sport (besoin 0,8 L)
+ ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+ ctx.fillText('JOURNÉE DE SPORT (besoin : 0,8 L mini)',620,80);
+ ctx.fillStyle='#e2e8f0'; ctx.fillRect(500,92,240,18);
+ const remplir=Math.min(1,v/0.8);
+ ctx.fillStyle= v<0.8 ? '#dc2626' : '#16a34a';
+ ctx.fillRect(500,92,240*remplir,18);
+ if(v<0.8){ ctx.fillStyle='#dc2626'; ctx.font='bold 12px Segoe UI';
+ ctx.fillText('\ud83e\udd75 à sec avant la fin de la journée\u2026',620,132); }
+ else { ctx.fillStyle='#16a34a'; ctx.font='bold 12px Segoe UI';
+ ctx.fillText('\u2713 hydratation assurée',620,132); }
+ // rappel CDC
+ ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
+ ctx.fillText('CDC : contenir \u2265 0,8 L  \u00b7  encombrement \u2264 1,2 L  \u00b7  (et rester fraîche 12 h !)',430,272);
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+ document.getElementById('verif6').addEventListener('click',()=>{
+ essais6++;
+ if(valide) return;
+ const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+ if(v>=sc.min && v<=sc.max){
+ etape++;
+ if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6, essais6<=SCEN.length?4:(essais6<=SCEN.length+2?3:2)); }
+ else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+ } else {
+ verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+ }
+ });
 })();
 
 /* ================= A7 : BILAN ================= */
@@ -509,34 +546,142 @@ const Q5=[
  {q:"Un prototype qui rate UN seul critère est…", r:["conforme quand même","non conforme","à moitié conforme"], b:1},
 ];
 (function initQ5(){
-  const zone=document.getElementById('quiz5');
-  Q5.forEach((item,i)=>{
-    const d=document.createElement('div'); d.className='question';
-    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
-    const rep=d.querySelector('.rep');
-    item.r.forEach((r,k)=>{
-      const b=document.createElement('button'); b.textContent=r;
-      b.onclick=()=>{
-        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
-        etat.q5rep++;
-        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
-        if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
-          else{
-            const verd=document.createElement('div'); verd.className='verdict ko';
-            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
-            zone.appendChild(verd);
-          }
-        }
-      };
-      rep.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('quiz5');
+ let tentative=0, reponses={};
+ function melanger(t){ return t.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
+ function construire(){
+ reponses={};
+ zone.innerHTML='';
+ const ordre=melanger(Q5.map((q,i)=>i));
+ ordre.forEach((qi,rang)=>{
+ const item=Q5[qi];
+ const d=document.createElement('div'); d.className='question';
+ d.innerHTML='<div class="q">'+(rang+1)+'. '+item.q+'</div><div class="rep"></div>';
+ const rep=d.querySelector('.rep');
+ melanger(item.r.map((txt,k)=>({txt,k}))).forEach(o=>{
+ const b=document.createElement('button'); b.textContent=o.txt;
+ b.onclick=()=>{
+ rep.querySelectorAll('button').forEach(x=>x.classList.remove('choisi'));
+ b.classList.add('choisi');
+ reponses[qi]=o.k;
+ const n=Object.keys(reponses).length;
+ info.textContent = n<Q5.length
+ ? n+' réponse(s) sur '+Q5.length+' — aucune correction avant la validation.'
+ : 'Toutes les questions sont renseignées : tu peux valider.';
+ btn.disabled = n<Q5.length;
+ };
+ rep.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
+ zone.appendChild(barre);
+ btn.disabled=true;
+ info.textContent='Réponds aux '+Q5.length+' questions, puis valide. Aucune réponse ne sera corrigée avant.';
+ }
+ const barre=document.createElement('div');
+ const info=document.createElement('div'); info.className='verdict'; info.style.marginTop='10px';
+ const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Valider mes 4 réponses';
+ btn.style.marginTop='10px';
+ const sortie=document.createElement('div');
+ barre.appendChild(info); barre.appendChild(btn); barre.appendChild(sortie);
+ btn.onclick=()=>{
+ tentative++;
+ let bons=0;
+ Q5.forEach((item,i)=>{ if(reponses[i]===item.b) bons++; });
+ if(bons>=3){
+ etat.q5ok=bons; etat.score+=bons;
+ document.getElementById('scoreTot').textContent=etat.score;
+ zone.querySelectorAll('button').forEach(x=>x.disabled=true);
+ sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
+ ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
+ document.getElementById('codefinal').style.display='block';
+ reussir(7, tentative===1?2:(tentative===2?1:0));
+ } else {
+ sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
+ ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
+ 'Les questions seront remélangées.</div>';
+ setTimeout(()=>{ construire(); sortie.innerHTML=''; },2600);
+ }
+ };
+ construire();
 })();
 
 charger(); majProgression();
+</script>
+
+<button id="calcBtn" title="Ouvrir la calculatrice"><span class="ic">C</span>calcul</button>
+<div id="calcPan">
+ <div class="tete" id="calcTete"><b>CALCULATRICE</b><button id="calcX" title="Fermer">&times;</button></div>
+ <div id="calcEcr"><div class="op" id="calcOp"></div><div class="val" id="calcVal">0</div></div>
+ <div id="calcGr">
+ <button class="f" data-k="C">C</button><button class="f" data-k="back">&#9003;</button>
+ <button class="f" data-k="pct">%</button><button class="op" data-k="/">&divide;</button>
+ <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+ <button class="op" data-k="*">&times;</button>
+ <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+ <button class="op" data-k="-">&minus;</button>
+ <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+ <button class="op" data-k="+">+</button>
+ <button class="f" data-k="sign">+/&minus;</button><button data-k="0">0</button>
+ <button data-k=".">,</button><button class="eq" data-k="=">=</button>
+ </div>
+</div>
+<script>
+/* ===== Calculatrice (aucun eval, aucune dépendance) ===== */
+(function(){
+ var pan=document.getElementById('calcPan'), btn=document.getElementById('calcBtn');
+ var eVal=document.getElementById('calcVal'), eOp=document.getElementById('calcOp');
+ var cour='0', prec=null, oper=null, neuf=true;
+ function aff(){
+ eVal.textContent=String(cour).replace('.',',');
+ eOp.textContent=(prec!==null?String(prec).replace('.',',')+' '+({'+':'+','-':'\u2212','*':'\u00d7','/':'\u00f7'}[oper]||''):'');
+ }
+ function calcule(a,b,o){
+ a=parseFloat(a); b=parseFloat(b);
+ var r = o==='+'?a+b : o==='-'?a-b : o==='*'?a*b : (b===0?NaN:a/b);
+ if(!isFinite(r)) return 'Erreur';
+ return String(Math.round(r*1e10)/1e10);
+ }
+ function touche(k){
+ if(cour==='Erreur' && k!=='C'){ return; }
+ if(/^[0-9]$/.test(k)){ cour = (neuf||cour==='0') ? k : cour+k; neuf=false; }
+ else if(k==='.'){ if(neuf){ cour='0.'; neuf=false; } else if(cour.indexOf('.')<0) cour+='.'; }
+ else if(k==='C'){ cour='0'; prec=null; oper=null; neuf=true; }
+ else if(k==='back'){ cour = (cour.length>1) ? cour.slice(0,-1) : '0'; if(cour==='-')cour='0'; }
+ else if(k==='sign'){ cour = cour.charAt(0)==='-' ? cour.slice(1) : (cour==='0'?cour:'-'+cour); }
+ else if(k==='pct'){ cour=String(parseFloat(cour)/100); neuf=true; }
+ else if(k==='+'||k==='-'||k==='*'||k==='/'){
+ if(prec!==null && !neuf){ cour=calcule(prec,cour,oper); }
+ prec=cour; oper=k; neuf=true;
+ }
+ else if(k==='='){
+ if(prec!==null && oper){ cour=calcule(prec,cour,oper); prec=null; oper=null; neuf=true; }
+ }
+ aff();
+ }
+ document.getElementById('calcGr').addEventListener('click',function(ev){
+ var b=ev.target.closest('button'); if(!b)return; touche(b.dataset.k);
+ });
+ btn.addEventListener('click',function(){ pan.classList.toggle('on'); });
+ document.getElementById('calcX').addEventListener('click',function(){ pan.classList.remove('on'); });
+ /* déplacement du panneau */
+ var tete=document.getElementById('calcTete'), drag=false, dx=0, dy=0;
+ tete.addEventListener('pointerdown',function(e){
+ if(e.target.id==='calcX')return;
+ drag=true; var r=pan.getBoundingClientRect();
+ dx=e.clientX-r.left; dy=e.clientY-r.top;
+ pan.style.right='auto'; pan.style.bottom='auto';
+ pan.style.left=r.left+'px'; pan.style.top=r.top+'px';
+ try{ tete.setPointerCapture(e.pointerId); }catch(err){}
+ });
+ tete.addEventListener('pointermove',function(e){
+ if(!drag)return;
+ pan.style.left=Math.max(4,Math.min(window.innerWidth-244,e.clientX-dx))+'px';
+ pan.style.top=Math.max(4,Math.min(window.innerHeight-260,e.clientY-dy))+'px';
+ });
+ tete.addEventListener('pointerup',function(){ drag=false; });
+ aff();
+})();
 </script>
 </body>
 </html>

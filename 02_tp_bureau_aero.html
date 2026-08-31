@@ -6,7 +6,7 @@
 <title>TP 4ème — Le bureau d'études aéro · ESTIC</title>
 <style>
 :root{ --ink:#1e3a5f; --cyan:#0e7490; --niv:#0369a1; --niv-fonce:#075985; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
 .estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
@@ -55,6 +55,7 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .slots .fl{font-size:20px;color:var(--orange);font-weight:800}
 .panne{background:#f8fafc;border:2px solid #cbd5e1;border-radius:14px;padding:16px;margin-bottom:12px}
 .panne.resolue{border-color:var(--vert);background:#f0fdf4}
+.panne.ratee{border-color:#dc2626;background:#fef2f2}
 .panne .symptome{font-size:15px;font-weight:700;line-height:1.5}
 .panne .symptome .em{font-size:24px;margin-right:6px}
 .blocs-diag{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
@@ -81,117 +82,145 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#075985,#0e7490);border-radius:14px;padding:22px;color:#fff}
 .codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
 .codefinal a{color:#fde68a;font-weight:800}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:60px;height:60px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:12px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;font-size:19px;letter-spacing:1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+.rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
 </style>
 </head>
 <body>
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
 <header class="tp">
-  <h1>🔧 TP — Le bureau d'études aéro</h1>
-  <p>Le bureau d'études aéronautique t'embauche : des incidents de vol arrivent sur ton pupitre. 7 missions — à la fin : le code des jeux !</p>
+ <h1>TP — Le bureau d'études aéro</h1>
+ <p>Le bureau d'études aéronautique t'embauche : des incidents de vol arrivent sur ton pupitre. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
-  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
-  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+ <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ============ A1 : QUI SUIS-JE ============ -->
 <div class="acti" id="a1">
  <div class="boite">
-  <h2><span class="badge">1</span>Le vocabulaire de l'aviateur</h2>
-  <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! (1 pt par bonne réponse du premier coup)</div>
-  <div class="minicas" id="cas1"></div>
+ <h2><span class="badge">1</span>Le vocabulaire de l'aviateur</h2>
+ <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! <b>Attention : une seule tentative par question</b> — lis bien avant de cliquer ! (1 pt par bonne réponse)</div>
+ <div class="minicas" id="cas1"></div>
  </div>
 </div>
 
 <!-- ============ A2 : LA DÉMARCHE ============ -->
 <div class="acti" id="a2">
  <div class="boite">
-  <h2><span class="badge">2</span>Remets le décollage en ordre</h2>
-  <div class="consigne">Un A320 s'aligne en bout de piste. Clique les 4 étapes du décollage <b>dans l'ordre</b>.</div>
-  <div class="ordre" id="blocs2"></div>
-  <div class="slots" id="slots2">
-    <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
-    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
-    <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
-    <div class="slot" data-i="3">4ème</div>
-  </div>
-  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
-  <div class="verdict" id="verd2"></div>
+ <h2><span class="badge">2</span>Remets le décollage en ordre</h2>
+ <div class="consigne">Un A320 s'aligne en bout de piste. Clique les 4 étapes du décollage <b>dans l'ordre</b>.</div>
+ <div class="ordre" id="blocs2"></div>
+ <div class="slots" id="slots2">
+ <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
+ <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+ <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
+ <div class="slot" data-i="3">4ème</div>
+ </div>
+ <div class="btnrow"><button class="btn" id="verif2">✓ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+ <div class="verdict" id="verd2"></div>
  </div>
 </div>
 
 <!-- ============ A3 : EXPERTISES ============ -->
 <div class="acti" id="a3">
  <div class="boite">
-  <h2><span class="badge">3</span>Trois incidents de vol !</h2>
-  <div class="consigne">✈️ Trois rapports d'incident arrivent au bureau. Pour chacun, identifie la cause et clique la <b>bonne action de pilotage</b>. (Les erreurs se corrigent, mais chaque expertise juste du premier coup rapporte plus !)</div>
-  <div id="pannes3"></div>
-  <div class="verdict" id="verd3"></div>
+ <h2><span class="badge">3</span>Trois incidents de vol !</h2>
+ <div class="consigne">Trois rapports d'incident arrivent au bureau. Pour chacun, identifie la cause et clique la <b>bonne action de pilotage</b>. <b>Une seule tentative par expertise</b> : observe et réfléchis avant de cliquer !</div>
+ <div id="pannes3"></div>
+ <div class="verdict" id="verd3"></div>
  </div>
 </div>
 
 <!-- ============ A4 : LA PRÉCISION ============ -->
 <div class="acti" id="a4">
  <div class="boite">
-  <h2><span class="badge">4</span>Le plané du planeur</h2>
-  <div class="consigne">🪂 Un planeur a une <b>finesse de 40</b> : il parcourt 40 km pour chaque kilomètre d'altitude perdue. Largué à <b>2 km d'altitude</b>, quelle distance peut-il parcourir en plané ?</div>
-  <div class="rappel">🪂 Rappel : distance = finesse × altitude</div>
-  <div class="calczone">
-    <span>distance =</span>
-    <input type="number" id="rep4" step="any" placeholder="?">
-    <span class="unite">km</span>
-    <button class="btn" id="verif4">✔ Vérifier</button>
-  </div>
-  <div class="verdict" id="verd4"></div>
+ <h2><span class="badge">4</span>Le plané du planeur</h2>
+ <div class="consigne">Un planeur a une <b>finesse de 40</b> : il parcourt 40 km pour chaque kilomètre d'altitude perdue. Largué à <b>2 km d'altitude</b>, quelle distance peut-il parcourir en plané ?</div>
+ <div class="rappel">Rappel : distance = finesse × altitude</div>
+ <div class="calczone">
+ <span>distance =</span>
+ <input type="number" id="rep4" step="any" placeholder="?">
+ <span class="unite">km</span>
+ <button class="btn" id="verif4">✓ Vérifier</button>
+ </div>
+ <div class="verdict" id="verd4"></div>
  </div>
 </div>
 
 <!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Les 4 forces du vol</h2>
-  <div class="consigne">🗺️ L'avion-école en palier — les quatre flèches pulsent au rythme du vol ! Clique une étiquette, puis la flèche correspondante. Place les 4 étiquettes.</div>
-  <canvas class="canvatp" id="cv5" width="860" height="300"></canvas>
-  <div class="etiqbar" id="etiq5"></div>
-  <div id="verd5"></div>
+ <h2><span class="badge">5</span>Les 4 forces du vol</h2>
+ <div class="consigne"><b>Chaque erreur coûte des points.</b>L'avion-école en palier — les quatre flèches pulsent au rythme du vol ! Clique une étiquette, puis la flèche correspondante. Place les 4 étiquettes.</div>
+ <canvas class="canvatp" id="cv5" width="860" height="300"></canvas>
+ <div class="etiqbar" id="etiq5"></div>
+ <div id="verd5"></div>
  </div>
 </div>
 
 <!-- ============ A6 : MANIPULATION ============ -->
 <div class="acti" id="a6">
  <div class="boite">
-  <h2><span class="badge">6</span>Règle l’angle d’incidence</h2>
-  <div class="consigne">🎛️ Décollage ! Règle l'angle entre l'aile et l'air : la portance monte avec l'angle… jusqu'au DÉCROCHAGE. Regarde les filets d'air sur le profil et trouve l'angle de montée idéal.</div>
-  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
-  <div class="sliderrow">
-    <span>📐 Angle d’incidence :</span>
-    <input type="range" id="slider6" min="0" max="20" step="1" value="2">
-    <span class="val"><span id="val6">2</span> °</span>
-    <button class="btn" id="verif6">✔ Valider ce réglage</button>
-  </div>
-  <div id="verd6"></div>
+ <h2><span class="badge">6</span>Règle l’angle d’incidence</h2>
+ <div class="consigne">Décollage ! Règle l'angle entre l'aile et l'air : la portance monte avec l'angle… jusqu'au DÉCROCHAGE. Regarde les filets d'air sur le profil et trouve l'angle de montée idéal.</div>
+ <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+ <div class="sliderrow">
+ <span>Angle d’incidence :</span>
+ <input type="range" id="slider6" min="0" max="20" step="1" value="2">
+ <span class="val"><span id="val6">2</span> °</span>
+ <button class="btn" id="verif6">✓ Valider ce réglage</button>
+ </div>
+ <div id="verd6"></div>
  </div>
 </div>
 
 <!-- ============ A7 : BILAN ============ -->
 <div class="acti" id="a7">
  <div class="boite">
-  <h2><span class="badge">7</span>Bilan du pilote junior</h2>
-  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
-  <div id="quiz5"></div>
-  <div class="codefinal" id="codefinal">
-    🏆 Aucun incident de vol ne te résiste : te voilà ingénieur aéro junior certifié !
-    <div class="code">PORTANCE</div>
-    <div>Entre ce code dans les jeux <a href="03_jeu_aero_rush.html">🎮 Aéro Rush</a> et <a href="03b_jeu_tour_controle.html">🗼 Tour de contrôle</a> pour les déverrouiller.</div>
-  </div>
+ <h2><span class="badge">7</span>Bilan du pilote junior</h2>
+ <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
+ <div id="quiz5"></div>
+ <div class="codefinal" id="codefinal">
+ Aucun incident de vol ne te résiste : te voilà ingénieur aéro junior certifié !
+ <div class="code">PORTANCE</div>
+ <div>Entre ce code dans les jeux <a href="03_jeu_aero_rush.html">Aéro Rush</a>et <a href="03b_jeu_tour_controle.html">Tour de contrôle</a>pour les déverrouiller.</div>
+ </div>
  </div>
 </div>
 
@@ -201,316 +230,331 @@ const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
 function sauver(){ try{ localStorage.setItem('tp_aero_4e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
 function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_aero_4e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
-  document.querySelectorAll('.progression .seg').forEach(seg=>{
-    const n=+seg.dataset.a;
-    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
-  });
-  document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=7;n++){
-    const acti=document.getElementById('a'+n);
-    let v=acti.querySelector('.verrou');
-    if(n>etat.debloque){
-      if(!v){ v=document.createElement('div'); v.className='verrou';
-        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
-        acti.querySelector('.boite').appendChild(v); }
-    } else if(v) v.remove();
-  }
+ document.querySelectorAll('.progression .seg').forEach(seg=>{
+ const n=+seg.dataset.a;
+ seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+ });
+ document.getElementById('scoreTot').textContent=etat.score;
+ for(let n=2;n<=7;n++){
+ const acti=document.getElementById('a'+n);
+ let v=acti.querySelector('.verrou');
+ if(n>etat.debloque){
+ if(!v){ v=document.createElement('div'); v.className='verrou';
+ v.innerHTML='<div class="cadenas"></div>Termine la mission '+(n-1)+' pour déverrouiller';
+ acti.querySelector('.boite').appendChild(v); }
+ } else if(v) v.remove();
+ }
 }
 function reussir(n,pts){
-  etat.score+=pts;
-  if(etat.debloque===n) etat.debloque=n+1;
-  sauver(); majProgression();
-  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ etat.score+=pts;
+ if(etat.debloque===n) etat.debloque=n+1;
+ sauver(); majProgression();
+ if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
 const CAS1=[
- {devinette:'⬆️ « Force vers le HAUT, fabriquée par l\u2019air qui s\u2019écoule sur les ailes. Je grandis avec la vitesse — sans moi, 230 tonnes restent au sol. »', bonne:'la portance', autres:['la traction']},
- {devinette:'⬅️ « Résistance de l\u2019air qui FREINE l\u2019avion, comme ta main par la fenêtre de la voiture. Moi aussi je grandis avec la vitesse — on me combat avec des formes profilées. »', bonne:'la traînée', autres:['le poids']},
- {devinette:'🎚️ « Petites surfaces mobiles au BOUT des ailes, braquées en sens opposés : c\u2019est moi qui fais PENCHER l\u2019avion — l\u2019axe de roulis, c\u2019est mon rayon. »', bonne:'les ailerons', autres:['la dérive']},
- {devinette:'↕️ « Sur la queue HORIZONTALE de l\u2019avion : je lève ou je baisse le NEZ. Mon axe à moi, c\u2019est le tangage. »', bonne:'la gouverne de profondeur', autres:['le train d\u2019atterrissage']},
+ {devinette:'⬆ « Force vers le HAUT, fabriquée par l\u2019air qui s\u2019écoule sur les ailes. Je grandis avec la vitesse — sans moi, 230 tonnes restent au sol. »', bonne:'la portance', autres:['la traction']},
+ {devinette:'⬅ « Résistance de l\u2019air qui FREINE l\u2019avion, comme ta main par la fenêtre de la voiture. Moi aussi je grandis avec la vitesse — on me combat avec des formes profilées. »', bonne:'la traînée', autres:['le poids']},
+ {devinette:' « Petites surfaces mobiles au BOUT des ailes, braquées en sens opposés : c\u2019est moi qui fais PENCHER l\u2019avion — l\u2019axe de roulis, c\u2019est mon rayon. »', bonne:'les ailerons', autres:['la dérive']},
+ {devinette:'↕ « Sur la queue HORIZONTALE de l\u2019avion : je lève ou je baisse le NEZ. Mon axe à moi, c\u2019est le tangage. »', bonne:'la gouverne de profondeur', autres:['le train d\u2019atterrissage']},
 ];
 (function initA1(){
-  const zone=document.getElementById('cas1');
-  CAS1.forEach(cas=>{
-    const d=document.createElement('div'); d.className='cas';
-    d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
-    const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
-    let premier=true, fait=false;
-    [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
-      const b=document.createElement('button'); b.textContent=rep;
-      b.onclick=()=>{
-        if(fait) return;
-        if(rep===cas.bonne){
-          fait=true; d.classList.remove('faux'); d.classList.add('bon');
-          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          etat.q1ok++;
-          if(etat.q1ok===CAS1.length) reussir(1,2);
-        } else { d.classList.add('faux'); premier=false; }
-      };
-      ch.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('cas1');
+ CAS1.forEach(cas=>{
+ const d=document.createElement('div'); d.className='cas';
+ d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
+ const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
+ let premier=true, fait=false;
+ [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
+ const b=document.createElement('button'); b.textContent=rep;
+ b.onclick=()=>{
+ if(fait) return;
+ if(rep===cas.bonne){
+ fait=true; d.classList.remove('faux'); d.classList.add('bon');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ } else {
+ fait=true; premier=false;
+ d.classList.add('faux'); b.classList.add('faux');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ }
+ };
+ ch.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A2 : LA DÉMARCHE ================= */
 const BLOCS2=[
- {id:1,t:'🔥 Plein gaz : la traction accélère l\u2019avion',s:'les réacteurs poussent, l\u2019avion s\u2019élance'},
- {id:0,t:'💨 La vitesse monte, la portance grandit',s:'l\u2019air file de plus en plus vite sur les ailes'},
- {id:2,t:'🛫 La portance dépasse le poids : décollage',s:'les roues quittent la piste'},
- {id:3,t:'✈️ Montée puis vol stabilisé',s:'les forces s\u2019équilibrent en palier'},
+ {id:1,t:' Plein gaz : la traction accélère l\u2019avion',s:'les réacteurs poussent, l\u2019avion s\u2019élance'},
+ {id:0,t:' La vitesse monte, la portance grandit',s:'l\u2019air file de plus en plus vite sur les ailes'},
+ {id:2,t:' La portance dépasse le poids : décollage',s:'les roues quittent la piste'},
+ {id:3,t:' Montée puis vol stabilisé',s:'les forces s\u2019équilibrent en palier'},
 ];
 const BON2=[1,0,2,3];
-let choix2=[], a2fait=false;
+let choix2=[], a2fait=false, essais2=0, err5=0, essais6=0, bons3=0;
 function initA2(){
-  choix2=[];
-  const zone=document.getElementById('blocs2'); zone.innerHTML='';
-  BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
-    const btn=document.createElement('button');
-    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
-    btn.onclick=()=>{
-      if(btn.classList.contains('pris')||choix2.length>=4) return;
-      btn.classList.add('pris'); choix2.push(b.id);
-      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
-      slot.textContent=b.t; slot.classList.add('rempli');
-    };
-    zone.appendChild(btn);
-  });
-  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
-  document.getElementById('verd2').className='verdict';
+ choix2=[];
+ const zone=document.getElementById('blocs2'); zone.innerHTML='';
+ BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
+ const btn=document.createElement('button');
+ btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+ btn.onclick=()=>{
+ if(btn.classList.contains('pris')||choix2.length>=4) return;
+ btn.classList.add('pris'); choix2.push(b.id);
+ const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+ slot.textContent=b.t; slot.classList.add('rempli');
+ };
+ zone.appendChild(btn);
+ });
+ document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
+ document.getElementById('verd2').className='verdict';
 }
 document.getElementById('reset2').onclick=initA2;
 document.getElementById('verif2').onclick=()=>{
-  const verd=document.getElementById('verd2');
-  if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
-  if(choix2.join()===BON2.join()){
-    verd.className='verdict ok';
-    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : plein gaz → la vitesse monte et la portance grandit → la portance dépasse le poids → montée puis palier. Toute la course d\u2019élan sert à fabriquer de la portance ! (+3 pts)'; reussir(2,3); }
-    else verd.textContent='✅ Bon ordre !';
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ Le décollage est emmêlé. Réfléchis : la portance peut-elle grandir… sans vitesse ? Et l\u2019avion peut-il quitter le sol avant que la portance dépasse le poids ? Recommence !';
-  }
+ const verd=document.getElementById('verd2');
+ if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
+ essais2++;
+ if(choix2.join()===BON2.join()){
+ verd.className='verdict ok';
+ if(!a2fait){ a2fait=true; verd.textContent='✓ Parfait : plein gaz → la vitesse monte et la portance grandit → la portance dépasse le poids → montée puis palier. Toute la course d\u2019élan sert à fabriquer de la portance ! (+3 pts)'; reussir(2, essais2<=1?3:(essais2===2?2:1)); }
+ else verd.textContent='✓ Bon ordre !';
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ Le décollage est emmêlé. Réfléchis : la portance peut-elle grandir… sans vitesse ? Et l\u2019avion peut-il quitter le sol avant que la portance dépasse le poids ? Recommence !';
+ }
 };
 initA2();
 
 /* ================= A3 : EXPERTISES ================= */
 const PANNES=[
- {em:'🐌', symptome:'Rapport n°1 — L\u2019avion N\u2019ARRIVE PAS À DÉCOLLER et le bout de piste approche : le pilote a réduit les gaz trop tôt, l\u2019avion roulait TROP LENTEMENT.',
-  bon:'vitesse', exp:'pas assez de vitesse = pas assez de PORTANCE : elle n\u2019a jamais dépassé le poids. Remettre plein gaz pour accélérer — la portance grandit avec la vitesse.'},
- {em:'↩️', symptome:'Rapport n°2 — En croisière, l\u2019avion PENCHE doucement à gauche, une aile plus basse que l\u2019autre, sans que personne ne touche aux commandes.',
-  bon:'ailerons', exp:'une aile qui baisse = un mouvement de ROULIS : on le corrige aux AILERONS, braqués en sens opposés pour remettre les ailes à plat.'},
- {em:'📉', symptome:'Rapport n°3 — Le NEZ de l\u2019avion PIQUE vers le sol et l\u2019altitude commence à défiler : l\u2019assiette n\u2019est plus tenue.',
-  bon:'profondeur', exp:'le nez qui monte ou descend = le TANGAGE : on agit sur la GOUVERNE DE PROFONDEUR (queue horizontale) pour relever le nez en douceur.'},
+ {em:'', symptome:'Rapport n°1 — L\u2019avion N\u2019ARRIVE PAS À DÉCOLLER et le bout de piste approche : le pilote a réduit les gaz trop tôt, l\u2019avion roulait TROP LENTEMENT.',
+ bon:'vitesse', exp:'pas assez de vitesse = pas assez de PORTANCE : elle n\u2019a jamais dépassé le poids. Remettre plein gaz pour accélérer — la portance grandit avec la vitesse.'},
+ {em:'↩', symptome:'Rapport n°2 — En croisière, l\u2019avion PENCHE doucement à gauche, une aile plus basse que l\u2019autre, sans que personne ne touche aux commandes.',
+ bon:'ailerons', exp:'une aile qui baisse = un mouvement de ROULIS : on le corrige aux AILERONS, braqués en sens opposés pour remettre les ailes à plat.'},
+ {em:'', symptome:'Rapport n°3 — Le NEZ de l\u2019avion PIQUE vers le sol et l\u2019altitude commence à défiler : l\u2019assiette n\u2019est plus tenue.',
+ bon:'profondeur', exp:'le nez qui monte ou descend = le TANGAGE : on agit sur la GOUVERNE DE PROFONDEUR (queue horizontale) pour relever le nez en douceur.'},
 ];
 const REMEDES=[
- {id:'vitesse', t:'💨 Remettre plein gaz pour regagner de la vitesse'},
- {id:'ailerons', t:'🎚️ Corriger aux ailerons (axe de roulis)'},
- {id:'profondeur', t:'↕️ Agir sur la gouverne de profondeur (tangage)'},
- {id:'peinture', t:'🎨 Repeindre le fuselage en rouge, c\u2019est plus rapide'},
+ {id:'vitesse', t:' Remettre plein gaz pour regagner de la vitesse'},
+ {id:'ailerons', t:' Corriger aux ailerons (axe de roulis)'},
+ {id:'profondeur', t:'↕ Agir sur la gouverne de profondeur (tangage)'},
+ {id:'peinture', t:' Repeindre le fuselage en rouge, c\u2019est plus rapide'},
 ];
 let diag3=0, a3fait=false;
 (function initA3(){
-  const zone=document.getElementById('pannes3');
-  const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
-  ordre3.forEach(pi=>{
-    const P=PANNES[pi];
-    const d=document.createElement('div'); d.className='panne';
-    d.innerHTML='<div class="symptome"><span class="em">'+P.em+'</span>'+P.symptome+'</div>';
-    const blocs=document.createElement('div'); blocs.className='blocs-diag'; d.appendChild(blocs);
-    const fb=document.createElement('div'); fb.className='verdict'; d.appendChild(fb);
-    let resolu=false, premier=true;
-    REMEDES.slice().sort(()=>0.5-Math.random()).forEach(r=>{
-      const b=document.createElement('button'); b.textContent=r.t; b.dataset.b=r.id;
-      b.onclick=()=>{
-        if(resolu) return;
-        if(r.id===P.bon){
-          resolu=true; d.classList.add('resolue');
-          blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
-          fb.className='verdict ok';
-          fb.textContent='✅ Bien vu'+(premier?' du premier coup (+1 pt bonus)':'')+' : '+P.exp;
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          diag3++;
-          if(diag3===PANNES.length && !a3fait){ a3fait=true;
-            const verd=document.getElementById('verd3');
-            verd.className='verdict ok';
-            verd.textContent='🏆 Trois expertises réussies ! Trop lent = pas de portance ; l\u2019avion penche = ailerons (roulis) ; le nez pique = profondeur (tangage). Chaque mouvement a SA gouverne. (+4 pts)';
-            reussir(3,4);
-          }
-        } else {
-          premier=false;
-          fb.className='verdict ko';
-          fb.textContent='❌ Cette action ne colle pas au rapport… Relis : l\u2019avion manque-t-il de VITESSE, PENCHE-t-il (roulis), ou son NEZ pique-t-il (tangage) ? (La couleur du fuselage n\u2019a jamais fait voler personne !)';
-        }
-      };
-      blocs.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('pannes3');
+ const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
+ ordre3.forEach(pi=>{
+ const P=PANNES[pi];
+ const d=document.createElement('div'); d.className='panne';
+ d.innerHTML='<div class="symptome"><span class="em">'+P.em+'</span>'+P.symptome+'</div>';
+ const blocs=document.createElement('div'); blocs.className='blocs-diag'; d.appendChild(blocs);
+ const fb=document.createElement('div'); fb.className='verdict'; d.appendChild(fb);
+ let resolu=false, premier=true;
+ REMEDES.slice().sort(()=>0.5-Math.random()).forEach(r=>{
+ const b=document.createElement('button'); b.textContent=r.t; b.dataset.b=r.id;
+ b.onclick=()=>{
+ if(resolu) return;
+ if(r.id===P.bon){
+ resolu=true; d.classList.add('resolue');
+ bons3++;
+ blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
+ fb.className='verdict ok';
+ fb.textContent='✓ Bien vu'+(premier?' du premier coup (+1 pt bonus)':'')+' : '+P.exp;
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ diag3++;
+ if(diag3===PANNES.length && !a3fait){ a3fait=true;
+ const verd=document.getElementById('verd3');
+ verd.className='verdict ok';
+ verd.textContent=' Trois expertises réussies ! Trop lent = pas de portance ; l\u2019avion penche = ailerons (roulis) ; le nez pique = profondeur (tangage). Chaque mouvement a SA gouverne. (+4 pts)';
+ reussir(3, Math.max(1,bons3+1));
+ }
+ } else {
+ premier=false;
+ fb.className='verdict ko';
+ fb.textContent='✗ Cette action ne colle pas au rapport… Relis : l\u2019avion manque-t-il de VITESSE, PENCHE-t-il (roulis), ou son NEZ pique-t-il (tangage) ? (La couleur du fuselage n\u2019a jamais fait voler personne !)';
+ resolu=true; premier=false;
+ d.classList.add('ratee');
+ blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
+ diag3++;
+ if(diag3===PANNES.length && !a3fait){ a3fait=true; reussir(3, Math.max(1,bons3+1)); }
+ }
+ };
+ blocs.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A4 : LA PRÉCISION ================= */
 let a4fait=false;
 document.getElementById('verif4').onclick=()=>{
-  const verd=document.getElementById('verd4');
-  const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
-  if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
-  if(Math.abs(v-80)<=1){
-    verd.className='verdict ok';
-    verd.innerHTML='✅ 40 × 2 = 80 km de plané, sans un gramme de carburant ! La finesse mesure la qualité aérodynamique : un planeur de compétition dépasse 50, un avion de ligne tourne autour de 18… et une brique vole très mal.'+(a4fait?'':' (+4 pts)');
-    if(!a4fait){ a4fait=true; reussir(4,4); }
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ Pas ça. Multiplie la finesse (40) par l\u2019altitude (2 km).';
-  }
+ const verd=document.getElementById('verd4');
+ const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
+ if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
+ if(Math.abs(v-80)<=1){
+ verd.className='verdict ok';
+ verd.innerHTML='✓ 40 × 2 = 80 km de plané, sans un gramme de carburant ! La finesse mesure la qualité aérodynamique : un planeur de compétition dépasse 50, un avion de ligne tourne autour de 18… et une brique vole très mal.'+(a4fait?'':' (+4 pts)');
+ if(!a4fait){ a4fait=true; reussir(4,4); }
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ Pas ça. Multiplie la finesse (40) par l\u2019altitude (2 km).';
+ }
 };
 
 /* ================= A5 : SCHEMA A LEGENDER ================= */
 (function(){
-  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
-  const ZONES=[
-    {id:'portance',x:380, y:30,  w:100, h:90,  lbl:'LA PORTANCE',  tx:430, ty:22},
-    {id:'poids',   x:380, y:180, w:100, h:90,  lbl:'LE POIDS',     tx:430, ty:288},
-    {id:'traction',x:600, y:105, w:130, h:70,  lbl:'LA TRACTION',  tx:665, ty:94},
-    {id:'trainee', x:130, y:105, w:130, h:70,  lbl:'LA TRAÎNÉE',   tx:195, ty:94},
-  ];
-  const poses={}; let sel=null, t=0;
-  function dessiner(){
-    t+=0.02;
-    ctx.clearRect(0,0,860,300);
-    // nuages qui défilent
-    ctx.font='24px Segoe UI'; ctx.textAlign='center';
-    ctx.fillText('\u2601\ufe0f',(820-(t*24)%900),60);
-    ctx.fillText('\u2601\ufe0f',(860-(t*16+300)%900),230);
-    // avion au centre (fuselage + aile + dérive + hélice qui tourne)
-    ctx.strokeStyle='#334155'; ctx.lineWidth=3; ctx.fillStyle='#f8fafc';
-    ctx.beginPath(); ctx.ellipse(430,150,88,20,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle='#0e7490';
-    ctx.beginPath(); ctx.moveTo(414,146); ctx.lineTo(360,178); ctx.lineTo(392,180); ctx.lineTo(446,156); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(352,140); ctx.lineTo(330,112); ctx.lineTo(352,116); ctx.lineTo(368,142); ctx.closePath(); ctx.fill();
-    ctx.save(); ctx.translate(520,150); ctx.rotate(t*7);
-    ctx.strokeStyle='#64748b'; ctx.lineWidth=3;
-    ctx.beginPath(); ctx.moveTo(0,-22); ctx.lineTo(0,22); ctx.stroke(); ctx.restore();
-    // 4 flèches qui pulsent
-    const pu=1+0.1*Math.sin(t*2);
-    function fleche(x1,y1,x2,y2,coul){
-      ctx.strokeStyle=coul; ctx.fillStyle=coul; ctx.lineWidth=6;
-      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
-      const a=Math.atan2(y2-y1,x2-x1);
-      ctx.beginPath(); ctx.moveTo(x2,y2);
-      ctx.lineTo(x2-16*Math.cos(a-0.45),y2-16*Math.sin(a-0.45));
-      ctx.lineTo(x2-16*Math.cos(a+0.45),y2-16*Math.sin(a+0.45));
-      ctx.closePath(); ctx.fill();
-    }
-    fleche(430,118,430,118-64*pu,'#16a34a');
-    fleche(430,182,430,182+64*pu,'#dc2626');
-    fleche(608,150,608+96*pu,150,'#0e7490');
-    fleche(252,150,252-96*pu,150,'#b45309');
-    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
-    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  const bar=document.getElementById('etiq5');
-  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
-    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
-    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
-      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
-    bar.appendChild(b);
-  });
-  cv.addEventListener('click',e=>{
-    if(!sel) return;
-    const r=cv.getBoundingClientRect();
-    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
-    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
-    const verd=document.getElementById('verd5');
-    if(cible && cible.id===sel){
-      poses[sel]=true;
-      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
-      sel=null;
-      if(Object.keys(poses).length===ZONES.length){
-        verd.innerHTML='<div class="verdict ok">✅ Les 4 forces étiquetées ! La PORTANCE (verte, créée par l\u2019aile) s\u2019oppose au POIDS (rouge, la gravité) ; la TRACTION (bleue, l\u2019hélice) s\u2019oppose à la TRAÎNÉE (orange, la résistance de l\u2019air). Vol en palier = les 4 s\u2019équilibrent deux à deux. Voler, c\u2019est gérer ce bras de fer permanent ! (+3 pts)</div>';
-        reussir(5,3);
-      }
-    } else if(cible){
-      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : la portance TIRE VERS LE HAUT (sinon rien ne vole), le poids vers le bas, la traction vers l\u2019AVANT (côté hélice)… et la traînée freine vers l\u2019arrière.</div>';
-    }
-  });
+ const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+ const ZONES=[
+ {id:'portance',x:380, y:30, w:100, h:90, lbl:'LA PORTANCE', tx:430, ty:22},
+ {id:'poids', x:380, y:180, w:100, h:90, lbl:'LE POIDS', tx:430, ty:288},
+ {id:'traction',x:600, y:105, w:130, h:70, lbl:'LA TRACTION', tx:665, ty:94},
+ {id:'trainee', x:130, y:105, w:130, h:70, lbl:'LA TRAÎNÉE', tx:195, ty:94},
+ ];
+ const poses={}; let sel=null, t=0;
+ function dessiner(){
+ t+=0.02;
+ ctx.clearRect(0,0,860,300);
+ // nuages qui défilent
+ ctx.font='24px Segoe UI'; ctx.textAlign='center';
+ ctx.fillText('\u2601\ufe0f',(820-(t*24)%900),60);
+ ctx.fillText('\u2601\ufe0f',(860-(t*16+300)%900),230);
+ // avion au centre (fuselage + aile + dérive + hélice qui tourne)
+ ctx.strokeStyle='#334155'; ctx.lineWidth=3; ctx.fillStyle='#f8fafc';
+ ctx.beginPath(); ctx.ellipse(430,150,88,20,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+ ctx.fillStyle='#0e7490';
+ ctx.beginPath(); ctx.moveTo(414,146); ctx.lineTo(360,178); ctx.lineTo(392,180); ctx.lineTo(446,156); ctx.closePath(); ctx.fill();
+ ctx.beginPath(); ctx.moveTo(352,140); ctx.lineTo(330,112); ctx.lineTo(352,116); ctx.lineTo(368,142); ctx.closePath(); ctx.fill();
+ ctx.save(); ctx.translate(520,150); ctx.rotate(t*7);
+ ctx.strokeStyle='#64748b'; ctx.lineWidth=3;
+ ctx.beginPath(); ctx.moveTo(0,-22); ctx.lineTo(0,22); ctx.stroke(); ctx.restore();
+ // 4 flèches qui pulsent
+ const pu=1+0.1*Math.sin(t*2);
+ function fleche(x1,y1,x2,y2,coul){
+ ctx.strokeStyle=coul; ctx.fillStyle=coul; ctx.lineWidth=6;
+ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+ const a=Math.atan2(y2-y1,x2-x1);
+ ctx.beginPath(); ctx.moveTo(x2,y2);
+ ctx.lineTo(x2-16*Math.cos(a-0.45),y2-16*Math.sin(a-0.45));
+ ctx.lineTo(x2-16*Math.cos(a+0.45),y2-16*Math.sin(a+0.45));
+ ctx.closePath(); ctx.fill();
+ }
+ fleche(430,118,430,118-64*pu,'#16a34a');
+ fleche(430,182,430,182+64*pu,'#dc2626');
+ fleche(608,150,608+96*pu,150,'#0e7490');
+ fleche(252,150,252-96*pu,150,'#b45309');
+ ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+ ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ const bar=document.getElementById('etiq5');
+ ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+ const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+ b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+ bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+ bar.appendChild(b);
+ });
+ cv.addEventListener('click',e=>{
+ if(!sel) return;
+ const r=cv.getBoundingClientRect();
+ const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+ const cible=ZONES.find(z=>x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+ const verd=document.getElementById('verd5');
+ if(cible && cible.id===sel){
+ poses[sel]=true;
+ const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+ sel=null;
+ if(Object.keys(poses).length===ZONES.length){
+ verd.innerHTML='<div class="verdict ok">✓ Les 4 forces étiquetées ! La PORTANCE (verte, créée par l\u2019aile) s\u2019oppose au POIDS (rouge, la gravité) ; la TRACTION (bleue, l\u2019hélice) s\u2019oppose à la TRAÎNÉE (orange, la résistance de l\u2019air). Vol en palier = les 4 s\u2019équilibrent deux à deux. Voler, c\u2019est gérer ce bras de fer permanent ! (+3 pts)</div>';
+ reussir(5, err5===0?3:(err5<=2?2:1));
+ }
+ } else if(cible){
+ err5++;
+ verd.innerHTML='<div class="verdict ko">✗ Pas là ! Indice : la portance TIRE VERS LE HAUT (sinon rien ne vole), le poids vers le bas, la traction vers l\u2019AVANT (côté hélice)… et la traînée freine vers l\u2019arrière.</div>';
+ }
+ });
 })();
 
 /* ================= A6 : MANIPULATION AU CURSEUR ================= */
 (function(){
-  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
-  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
-  const SCEN=[
-    {min:8, max:14,
-     ok:'\u2705 Entre 8 et 14\u00b0 : portance maximale, filets d\u2019air encore collés à l\u2019aile — l\u2019avion grimpe fort SANS décrocher. Au-delà de 15\u00b0, l\u2019air lâche l\u2019extrados et la portance s\u2019effondre d\u2019un coup : le décrochage, hantise n\u00b01 des pilotes ! (+4 pts)',
-     kobas:'\u274c Angle trop faible : la portance suffit à peine à tenir l\u2019air — l\u2019avion rase la piste sans monter. Cabre un peu\u2026',
-     kohaut:'\u274c \u26a0\ufe0f DÉCROCHAGE ! Regarde les filets d\u2019air : ils se détachent de l\u2019aile en tourbillons, la portance s\u2019effondre, l\u2019avion tombe. Réduis l\u2019angle IMMÉDIATEMENT\u2026'}
-  ];
-  let etape=0, t=0, valide=false;
-  function dessiner(){
-    t+=0.03;
-    ctx.clearRect(0,0,860,280);
-    const v=+slider.value;
-    const sc=SCEN[Math.min(etape,SCEN.length-1)];
-    const decro = v>=15;
-    const port = decro ? 0.25 : Math.min(1, 0.15+v*0.062);
-    // profil d'aile incliné
-    ctx.save(); ctx.translate(300,150); ctx.rotate(-v*Math.PI/180);
-    ctx.fillStyle='#0e7490';
-    ctx.beginPath(); ctx.moveTo(-90,6);
-    ctx.quadraticCurveTo(-30,-26,80,-2);
-    ctx.quadraticCurveTo(-10,14,-90,6); ctx.closePath(); ctx.fill();
-    ctx.restore();
-    // filets d'air
-    for(let i=0;i<5;i++){
-      const fy=104+i*24;
-      ctx.strokeStyle='#60a5fa'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(110,fy);
-      if(decro && fy<150){
-        ctx.quadraticCurveTo(250,fy-10,300,fy-24);
-        const wob=10*Math.sin(t*6+i*2);
-        ctx.quadraticCurveTo(370,fy-40+wob,470,fy-20+wob*1.6);
-      } else {
-        const dev = fy<150 ? -v*1.7 : -v*0.7;
-        ctx.quadraticCurveTo(300,fy+dev,490,fy-6);
-      }
-      ctx.stroke();
-    }
-    if(decro && Math.sin(t*5)>0){
-      ctx.font='20px Segoe UI'; ctx.textAlign='center'; ctx.fillText('\ud83c\udf00',400,96);
-    }
-    ctx.font='bold 13px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
-    ctx.fillText('angle : '+v+'\u00b0',300,236);
-    // jauge de portance
-    ctx.fillStyle='#334155'; ctx.fillText('PORTANCE',650,60);
-    ctx.strokeStyle='#334155'; ctx.lineWidth=2; ctx.strokeRect(620,72,60,150);
-    ctx.fillStyle= decro ? '#dc2626' : (v<8?'#f59e0b':'#16a34a');
-    ctx.fillRect(620,222-150*port,60,150*port);
-    if(decro){ ctx.fillStyle='#dc2626'; ctx.font='bold 14px Segoe UI';
-      ctx.fillText('DÉCROCHAGE !',650,250); }
-    else if(v>=8){ ctx.fillStyle='#16a34a'; ctx.font='bold 12px Segoe UI';
-      ctx.fillText('\u2713 \u00e7a grimpe',650,250); }
-    else { ctx.fillStyle='#f59e0b'; ctx.font='bold 12px Segoe UI';
-      ctx.fillText('trop plat\u2026',650,250); }
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
-  document.getElementById('verif6').addEventListener('click',()=>{
-    if(valide) return;
-    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
-    if(v>=sc.min && v<=sc.max){
-      etape++;
-      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
-      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
-    } else {
-      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
-    }
-  });
+ const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+ const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+ const SCEN=[
+ {min:8, max:14,
+ ok:'\u2705 Entre 8 et 14\u00b0 : portance maximale, filets d\u2019air encore collés à l\u2019aile — l\u2019avion grimpe fort SANS décrocher. Au-delà de 15\u00b0, l\u2019air lâche l\u2019extrados et la portance s\u2019effondre d\u2019un coup : le décrochage, hantise n\u00b01 des pilotes ! (+4 pts)',
+ kobas:'\u274c Angle trop faible : la portance suffit à peine à tenir l\u2019air — l\u2019avion rase la piste sans monter. Cabre un peu\u2026',
+ kohaut:'\u274c \u26a0\ufe0f DÉCROCHAGE ! Regarde les filets d\u2019air : ils se détachent de l\u2019aile en tourbillons, la portance s\u2019effondre, l\u2019avion tombe. Réduis l\u2019angle IMMÉDIATEMENT\u2026'}
+ ];
+ let etape=0, t=0, valide=false;
+ function dessiner(){
+ t+=0.03;
+ ctx.clearRect(0,0,860,280);
+ const v=+slider.value;
+ const sc=SCEN[Math.min(etape,SCEN.length-1)];
+ const decro = v>=15;
+ const port = decro ? 0.25 : Math.min(1, 0.15+v*0.062);
+ // profil d'aile incliné
+ ctx.save(); ctx.translate(300,150); ctx.rotate(-v*Math.PI/180);
+ ctx.fillStyle='#0e7490';
+ ctx.beginPath(); ctx.moveTo(-90,6);
+ ctx.quadraticCurveTo(-30,-26,80,-2);
+ ctx.quadraticCurveTo(-10,14,-90,6); ctx.closePath(); ctx.fill();
+ ctx.restore();
+ // filets d'air
+ for(let i=0;i<5;i++){
+ const fy=104+i*24;
+ ctx.strokeStyle='#60a5fa'; ctx.lineWidth=2;
+ ctx.beginPath(); ctx.moveTo(110,fy);
+ if(decro && fy<150){
+ ctx.quadraticCurveTo(250,fy-10,300,fy-24);
+ const wob=10*Math.sin(t*6+i*2);
+ ctx.quadraticCurveTo(370,fy-40+wob,470,fy-20+wob*1.6);
+ } else {
+ const dev = fy<150 ? -v*1.7 : -v*0.7;
+ ctx.quadraticCurveTo(300,fy+dev,490,fy-6);
+ }
+ ctx.stroke();
+ }
+ if(decro && Math.sin(t*5)>0){
+ ctx.font='20px Segoe UI'; ctx.textAlign='center'; ctx.fillText('\ud83c\udf00',400,96);
+ }
+ ctx.font='bold 13px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
+ ctx.fillText('angle : '+v+'\u00b0',300,236);
+ // jauge de portance
+ ctx.fillStyle='#334155'; ctx.fillText('PORTANCE',650,60);
+ ctx.strokeStyle='#334155'; ctx.lineWidth=2; ctx.strokeRect(620,72,60,150);
+ ctx.fillStyle= decro ? '#dc2626' : (v<8?'#f59e0b':'#16a34a');
+ ctx.fillRect(620,222-150*port,60,150*port);
+ if(decro){ ctx.fillStyle='#dc2626'; ctx.font='bold 14px Segoe UI';
+ ctx.fillText('DÉCROCHAGE !',650,250); }
+ else if(v>=8){ ctx.fillStyle='#16a34a'; ctx.font='bold 12px Segoe UI';
+ ctx.fillText('\u2713 \u00e7a grimpe',650,250); }
+ else { ctx.fillStyle='#f59e0b'; ctx.font='bold 12px Segoe UI';
+ ctx.fillText('trop plat\u2026',650,250); }
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+ document.getElementById('verif6').addEventListener('click',()=>{
+ essais6++;
+ if(valide) return;
+ const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+ if(v>=sc.min && v<=sc.max){
+ etape++;
+ if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6, essais6<=SCEN.length?4:(essais6<=SCEN.length+2?3:2)); }
+ else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+ } else {
+ verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+ }
+ });
 })();
 
 /* ================= A7 : BILAN ================= */
@@ -521,34 +565,142 @@ const Q5=[
  {q:"Un planeur de finesse 30 largué à 2 km d'altitude peut planer sur…", r:["15 km","32 km","60 km"], b:2},
 ];
 (function initQ5(){
-  const zone=document.getElementById('quiz5');
-  Q5.forEach((item,i)=>{
-    const d=document.createElement('div'); d.className='question';
-    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
-    const rep=d.querySelector('.rep');
-    item.r.forEach((r,k)=>{
-      const b=document.createElement('button'); b.textContent=r;
-      b.onclick=()=>{
-        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
-        etat.q5rep++;
-        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
-        if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
-          else{
-            const verd=document.createElement('div'); verd.className='verdict ko';
-            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
-            zone.appendChild(verd);
-          }
-        }
-      };
-      rep.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('quiz5');
+ let tentative=0, reponses={};
+ function melanger(t){ return t.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
+ function construire(){
+ reponses={};
+ zone.innerHTML='';
+ const ordre=melanger(Q5.map((q,i)=>i));
+ ordre.forEach((qi,rang)=>{
+ const item=Q5[qi];
+ const d=document.createElement('div'); d.className='question';
+ d.innerHTML='<div class="q">'+(rang+1)+'. '+item.q+'</div><div class="rep"></div>';
+ const rep=d.querySelector('.rep');
+ melanger(item.r.map((txt,k)=>({txt,k}))).forEach(o=>{
+ const b=document.createElement('button'); b.textContent=o.txt;
+ b.onclick=()=>{
+ rep.querySelectorAll('button').forEach(x=>x.classList.remove('choisi'));
+ b.classList.add('choisi');
+ reponses[qi]=o.k;
+ const n=Object.keys(reponses).length;
+ info.textContent = n<Q5.length
+ ? n+' réponse(s) sur '+Q5.length+' — aucune correction avant la validation.'
+ : 'Toutes les questions sont renseignées : tu peux valider.';
+ btn.disabled = n<Q5.length;
+ };
+ rep.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
+ zone.appendChild(barre);
+ btn.disabled=true;
+ info.textContent='Réponds aux '+Q5.length+' questions, puis valide. Aucune réponse ne sera corrigée avant.';
+ }
+ const barre=document.createElement('div');
+ const info=document.createElement('div'); info.className='verdict'; info.style.marginTop='10px';
+ const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Valider mes 4 réponses';
+ btn.style.marginTop='10px';
+ const sortie=document.createElement('div');
+ barre.appendChild(info); barre.appendChild(btn); barre.appendChild(sortie);
+ btn.onclick=()=>{
+ tentative++;
+ let bons=0;
+ Q5.forEach((item,i)=>{ if(reponses[i]===item.b) bons++; });
+ if(bons>=3){
+ etat.q5ok=bons; etat.score+=bons;
+ document.getElementById('scoreTot').textContent=etat.score;
+ zone.querySelectorAll('button').forEach(x=>x.disabled=true);
+ sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
+ ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
+ document.getElementById('codefinal').style.display='block';
+ reussir(7, tentative===1?2:(tentative===2?1:0));
+ } else {
+ sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
+ ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
+ 'Les questions seront remélangées.</div>';
+ setTimeout(()=>{ construire(); sortie.innerHTML=''; },2600);
+ }
+ };
+ construire();
 })();
 
 charger(); majProgression();
+</script>
+
+<button id="calcBtn" title="Ouvrir la calculatrice"><span class="ic">C</span>calcul</button>
+<div id="calcPan">
+ <div class="tete" id="calcTete"><b>CALCULATRICE</b><button id="calcX" title="Fermer">&times;</button></div>
+ <div id="calcEcr"><div class="op" id="calcOp"></div><div class="val" id="calcVal">0</div></div>
+ <div id="calcGr">
+ <button class="f" data-k="C">C</button><button class="f" data-k="back">&#9003;</button>
+ <button class="f" data-k="pct">%</button><button class="op" data-k="/">&divide;</button>
+ <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+ <button class="op" data-k="*">&times;</button>
+ <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+ <button class="op" data-k="-">&minus;</button>
+ <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+ <button class="op" data-k="+">+</button>
+ <button class="f" data-k="sign">+/&minus;</button><button data-k="0">0</button>
+ <button data-k=".">,</button><button class="eq" data-k="=">=</button>
+ </div>
+</div>
+<script>
+/* ===== Calculatrice (aucun eval, aucune dépendance) ===== */
+(function(){
+ var pan=document.getElementById('calcPan'), btn=document.getElementById('calcBtn');
+ var eVal=document.getElementById('calcVal'), eOp=document.getElementById('calcOp');
+ var cour='0', prec=null, oper=null, neuf=true;
+ function aff(){
+ eVal.textContent=String(cour).replace('.',',');
+ eOp.textContent=(prec!==null?String(prec).replace('.',',')+' '+({'+':'+','-':'\u2212','*':'\u00d7','/':'\u00f7'}[oper]||''):'');
+ }
+ function calcule(a,b,o){
+ a=parseFloat(a); b=parseFloat(b);
+ var r = o==='+'?a+b : o==='-'?a-b : o==='*'?a*b : (b===0?NaN:a/b);
+ if(!isFinite(r)) return 'Erreur';
+ return String(Math.round(r*1e10)/1e10);
+ }
+ function touche(k){
+ if(cour==='Erreur' && k!=='C'){ return; }
+ if(/^[0-9]$/.test(k)){ cour = (neuf||cour==='0') ? k : cour+k; neuf=false; }
+ else if(k==='.'){ if(neuf){ cour='0.'; neuf=false; } else if(cour.indexOf('.')<0) cour+='.'; }
+ else if(k==='C'){ cour='0'; prec=null; oper=null; neuf=true; }
+ else if(k==='back'){ cour = (cour.length>1) ? cour.slice(0,-1) : '0'; if(cour==='-')cour='0'; }
+ else if(k==='sign'){ cour = cour.charAt(0)==='-' ? cour.slice(1) : (cour==='0'?cour:'-'+cour); }
+ else if(k==='pct'){ cour=String(parseFloat(cour)/100); neuf=true; }
+ else if(k==='+'||k==='-'||k==='*'||k==='/'){
+ if(prec!==null && !neuf){ cour=calcule(prec,cour,oper); }
+ prec=cour; oper=k; neuf=true;
+ }
+ else if(k==='='){
+ if(prec!==null && oper){ cour=calcule(prec,cour,oper); prec=null; oper=null; neuf=true; }
+ }
+ aff();
+ }
+ document.getElementById('calcGr').addEventListener('click',function(ev){
+ var b=ev.target.closest('button'); if(!b)return; touche(b.dataset.k);
+ });
+ btn.addEventListener('click',function(){ pan.classList.toggle('on'); });
+ document.getElementById('calcX').addEventListener('click',function(){ pan.classList.remove('on'); });
+ /* déplacement du panneau */
+ var tete=document.getElementById('calcTete'), drag=false, dx=0, dy=0;
+ tete.addEventListener('pointerdown',function(e){
+ if(e.target.id==='calcX')return;
+ drag=true; var r=pan.getBoundingClientRect();
+ dx=e.clientX-r.left; dy=e.clientY-r.top;
+ pan.style.right='auto'; pan.style.bottom='auto';
+ pan.style.left=r.left+'px'; pan.style.top=r.top+'px';
+ try{ tete.setPointerCapture(e.pointerId); }catch(err){}
+ });
+ tete.addEventListener('pointermove',function(e){
+ if(!drag)return;
+ pan.style.left=Math.max(4,Math.min(window.innerWidth-244,e.clientX-dx))+'px';
+ pan.style.top=Math.max(4,Math.min(window.innerHeight-260,e.clientY-dy))+'px';
+ });
+ tete.addEventListener('pointerup',function(){ drag=false; });
+ aff();
+})();
 </script>
 </body>
 </html>

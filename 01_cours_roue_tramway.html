@@ -1,0 +1,428 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — La roue de tramway · ESTIC</title><style>
+:root{--acc:#b45309;--accf:#7c2d12;--fond:#FBF7F0;--carte:#fff;--encre:#3f3a34}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre)}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+.appli{display:flex;max-width:1240px;margin:0 auto}
+nav{position:sticky;top:0;align-self:flex-start;width:210px;padding:16px 10px;height:100vh;overflow:auto;flex:none}
+nav h2{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#8a8378;margin-bottom:8px;padding-left:8px}
+nav a{display:block;padding:9px 12px;border-radius:10px;text-decoration:none;color:var(--encre);font-size:13.5px;font-weight:700;margin-bottom:3px;border-left:4px solid transparent}
+nav a:hover{background:#f1e8d8}nav a.actif{background:#fef3c7;border-left-color:var(--acc);color:var(--accf)}
+main{flex:1;padding:10px 18px 60px;min-width:0}
+h1{font-size:26px;color:var(--accf);text-align:center;margin:12px 0 4px}
+.sous{text-align:center;color:#8a8378;font-size:14px;margin-bottom:18px}
+section{background:var(--carte);border:1px solid #eee4d0;border-radius:18px;padding:22px;margin-bottom:22px;scroll-margin-top:12px}
+section h2{font-size:21px;color:var(--accf);margin-bottom:10px;border-bottom:3px solid #fef3c7;padding-bottom:6px}
+p,li{font-size:15.5px;line-height:1.75}ul,ol{margin-left:20px;margin-top:6px}
+canvas{width:100%;display:block;border-radius:12px;background:#fdfcfa;border:1px solid #e2d9c8;margin-top:8px}
+.cmd{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px;align-items:center}
+.cmd button{border:2px solid #e2d9c8;background:#fff;border-radius:11px;padding:9px 15px;font-size:13.5px;font-weight:800;cursor:pointer;color:var(--encre);font-family:inherit}
+.cmd button.actif,.cmd button:hover{border-color:var(--acc);background:#fef3c7}
+.cmd input[type=range]{width:min(360px,70%)}
+.legende{font-size:13.5px;color:#5b544a;background:#faf6ec;border-left:4px solid var(--acc);border-radius:8px;padding:9px 12px;margin-top:10px;min-height:46px;line-height:1.6}
+.enigme{background:#fff7ed;border:2px dashed #fb923c;border-radius:14px;padding:14px 18px;font-size:16px;line-height:1.75;margin:10px 0}
+.enigme b{color:#c2410c}
+.retenir{background:#fefce8;border:1px solid #fde68a;border-radius:12px;padding:12px 16px;margin-top:12px;font-size:15px;line-height:1.75}
+.retenir b{color:var(--accf)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:8px}
+th,td{border:1px solid #e2d9c8;padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#f3ecdd;color:var(--accf)}td:first-child{font-weight:800}
+.video{margin:12px 0}
+.cartevid{display:flex;gap:16px;align-items:center;text-decoration:none;color:inherit;
+  background:#1e293b;border-radius:14px;padding:16px 18px;transition:transform .12s}
+.cartevid:hover{transform:translateY(-2px);background:#273449}
+.cartevid .play{flex:none;width:62px;height:62px;border-radius:50%;background:#dc2626;
+  display:flex;align-items:center;justify-content:center}
+.cartevid .play svg{width:24px;height:24px;margin-left:4px}
+.cartevid .txt{min-width:0}
+.cartevid .titre{color:#f8fafc;font-size:16.5px;font-weight:800;line-height:1.35;margin-bottom:4px}
+.cartevid .meta{color:#94a3b8;font-size:13px;line-height:1.5}
+.cartevid .ouvrir{color:#fca5a5;font-size:12.5px;font-weight:800;margin-top:5px}
+.video .src{font-size:12.5px;color:#8a8378;margin-top:6px;line-height:1.5}
+.video .src a{color:var(--acc)}
+.horsligne{background:#f1f5f9;border:1px solid #cbd5e1;border-radius:10px;padding:9px 12px;font-size:13px;color:#475569;margin-top:8px;line-height:1.6}
+.liens{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.liens a{font-size:13px;font-weight:800;background:#fef3c7;color:#92400e;border-radius:999px;padding:7px 14px;text-decoration:none}
+.liens a:hover{background:#fde68a}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<div class="appli">
+<nav><h2>Sommaire</h2>
+ <a href="#s1" class="actif">1 · L’énigme</a>
+ <a href="#s2">2 · La roue conique</a>
+ <a href="#s3">3 · Le virage</a>
+ <a href="#s4">4 · L’auto-centrage</a>
+ <a href="#s5">5 · Le boudin</a>
+ <a href="#s6">6 · Ailleurs</a>
+ <a href="#s7">7 · À retenir</a>
+</nav>
+<main>
+<h1>La roue de tramway</h1>
+<div class="sous">Comment un train tient-il sur ses rails sans volant ni capteur ?</div>
+
+<section id="s1"><h2>1 · L’énigme</h2>
+<div class="enigme">Une voiture tourne parce qu’un conducteur braque ses roues. Un tramway, lui, n’a
+<b>ni volant, ni direction, ni capteur</b> : ses roues sont fixées rigidement sur leur essieu, et cet essieu ne pivote pas.
+Et pourtant il prend les virages, ne déraille pas, et revient tout seul au milieu de la voie.
+<br><br><b>Comment est-ce possible ?</b></div>
+<p>Note ton <b>hypothèse</b> sur le cahier avant d’aller plus loin. Les réponses spontanées — le boudin, le glissement,
+la voie inclinée — sont presque toutes fausses.</p>
+<div class="video">
+  <a class="cartevid" href="https://www.youtube.com/watch?v=P1ww1IXRfTA" target="_blank" rel="noopener">
+    <span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M4 2 L22 12 L4 22 Z"/></svg></span>
+    <span class="txt">
+      <span class="titre">Richard Feynman explique pourquoi un train ne déraille pas</span>
+      <span class="meta">Fun to Imagine, BBC (1983) · environ 3 minutes · il pose exactement la même énigme</span>
+      <span class="ouvrir">Ouvrir la vidéo sur YouTube (nouvel onglet)</span>
+    </span>
+  </a>
+  <div class="src">Vidéo hébergée par son auteur : elle s’ouvre dans un onglet séparé, sans être copiée ici.</div>
+</div>
+<div class="horsligne">Les vidéos s’ouvrent sur YouTube dans un onglet séparé — elles ne sont pas intégrées à la page,
+car leurs auteurs en interdisent la lecture embarquée. Si le réseau du collège les bloque, le cours reste complet :
+toutes les démonstrations ci-dessous sont autonomes et fonctionnent hors-ligne.</div>
+<canvas id="cv1" width="880" height="260"></canvas>
+<div class="legende">Un essieu de tramway : deux roues, un axe, aucune pièce mobile entre elles. Tout le secret est dans la forme.</div>
+</section>
+
+<section id="s2"><h2>2 · La roue n’est pas cylindrique : elle est conique</h2>
+<p>Vue de loin, une roue de train paraît cylindrique. En réalité sa table de roulement est <b>conique</b> :
+pente d’environ 1 pour 20, quelques millimètres invisibles à l’œil — et tout est là.</p>
+<canvas id="cv2" width="880" height="270"></canvas>
+<div class="cmd">
+ <button data-c2="0" class="actif">Roue cylindrique</button>
+ <button data-c2="1">Roue conique (la vraie)</button>
+</div>
+<div class="legende" id="l2">Une roue cylindrique : même diamètre partout. C’est ce que tout le monde imagine — et c’est faux.</div>
+<div class="retenir"><b>Le point clé :</b> comme les deux roues sont <b>soudées au même essieu</b>, elles tournent
+forcément à la même vitesse de rotation. Si leurs diamètres de contact diffèrent, elles ne parcourent pas la même distance.</div>
+</section>
+
+<section id="s3"><h2>3 · Ce qui se passe en virage</h2>
+<p>En virage, le rail extérieur est plus long que l’intérieur. Une voiture a un différentiel ; le train n’a rien.
+Décale l’essieu au curseur et observe les deux rayons de contact.</p>
+<canvas id="cv3" width="880" height="300"></canvas>
+<div class="cmd">
+ <span style="font-size:13.5px;font-weight:800">décalage latéral</span>
+ <input type="range" id="sl3" min="-8" max="8" step="0.5" value="0">
+ <span id="v3" style="font-weight:800;min-width:70px">0 mm</span>
+</div>
+<div class="legende" id="l3">Essieu centré : les deux roues touchent le rail au même diamètre, elles parcourent la même distance. Le train va tout droit.</div>
+<div class="video">
+  <a class="cartevid" href="https://www.youtube.com/watch?v=vkzgcJGdUnA" target="_blank" rel="noopener">
+    <span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M4 2 L22 12 L4 22 Z"/></svg></span>
+    <span class="txt">
+      <span class="titre">Démonstration réelle : un essieu conique s’inscrit seul dans la courbe</span>
+      <span class="meta">Maquette à conicité très exagérée · l’effet devient visible à l’œil nu</span>
+      <span class="ouvrir">Ouvrir la vidéo sur YouTube (nouvel onglet)</span>
+    </span>
+  </a>
+  <div class="src">À projeter juste après avoir manipulé le curseur ci-dessus : la maquette confirme la simulation.</div>
+</div>
+<div class="retenir"><b>En virage,</b> la force centrifuge décale légèrement l’essieu vers l’extérieur.
+La roue extérieure roule alors sur un <b>plus grand diamètre</b>, la roue intérieure sur un plus petit :
+à vitesse de rotation identique, l’extérieure parcourt naturellement plus de chemin. Le train <b>s’inscrit tout seul dans la courbe</b>.</div>
+</section>
+
+<section id="s4"><h2>4 · L’auto-centrage : une régulation sans électronique</h2>
+<p>Second effet, encore plus élégant : en ligne droite, un essieu décalé se remet seul au centre —
+il dépasse, revient, oscille, se stabilise. Teste-le ci-dessous.</p>
+<canvas id="cv4" width="880" height="290"></canvas>
+<div class="cmd">
+ <button id="perturber">Décaler l’essieu</button>
+ <button data-c4="conique" class="actif">Roues coniques</button>
+ <button data-c4="cyl">Roues cylindriques</button>
+</div>
+<div class="legende" id="l4">Appuie sur « décaler l’essieu » et observe : avec des roues coniques, l’essieu revient tout seul au milieu.</div>
+<div class="retenir"><b>C’est une boucle de régulation entièrement mécanique.</b> L’écart au centre est l’erreur,
+la différence de diamètre est la correction, et le retour au centre est le résultat. Aucun capteur, aucun calculateur,
+aucune énergie supplémentaire : la <b>forme de la pièce</b> fait le travail. Ce mouvement d’oscillation porte un nom :
+le <b>mouvement de lacet</b>.</div>
+</section>
+
+<section id="s5"><h2>5 · Alors, à quoi sert le boudin ?</h2>
+<p>Le rebord saillant côté intérieur du rail. On croit qu’il guide le train :
+en réalité <b>il ne touche presque jamais le rail</b>.</p>
+<canvas id="cv5" width="880" height="240"></canvas>
+<div class="legende">En fonctionnement normal, un jeu de plusieurs millimètres sépare le boudin du rail. Il n’entre en contact
+qu’en cas de virage très serré ou de défaut — et ce contact s’entend : c’est le crissement caractéristique des tramways en ville.</div>
+<div class="retenir"><b>Deux fonctions, deux organes :</b> la conicité assure le <b>guidage normal</b>,
+le boudin assure la <b>sécurité en cas de défaillance</b>. Confondre les deux, c’est confondre le volant et la glissière de sécurité.</div>
+</section>
+
+<section id="s6"><h2>6 · Le même concept, ailleurs</h2>
+<p>Le même principe partout : un système qui <b>se corrige par sa forme</b>, sans capteur ni commande.</p>
+<table>
+ <tr><th>Objet</th><th>Ce qui se régule tout seul</th></tr>
+ <tr><td>Roue de tramway</td><td>la position latérale, par la conicité</td></tr>
+ <tr><td>Fourche de vélo</td><td>la direction : l’angle de chasse ramène la roue dans l’axe quand on lâche le guidon</td></tr>
+ <tr><td>Flèche d’une girouette</td><td>l’orientation : l’empennage arrière la place face au vent</td></tr>
+ <tr><td>Quille d’un voilier</td><td>le redressement : le lest ramène le bateau à la verticale</td></tr>
+ <tr><td>Chasse d’eau</td><td>le niveau : le flotteur ferme l’arrivée d’eau au bon moment</td></tr>
+</table>
+<div class="retenir"><b>Question à se poser devant tout mécanisme :</b> qui corrige les écarts ?
+Si la réponse n’est ni un capteur, ni un calculateur, ni un humain, alors c’est la <b>géométrie de la pièce</b> —
+et c’est presque toujours la solution la plus robuste, parce qu’elle ne tombe jamais en panne.</div>
+<div class="liens">
+  <a href="https://commons.wikimedia.org/wiki/Category:Railway_wheelsets" target="_blank" rel="noopener">Photos libres d’essieux (Wikimedia Commons)</a>
+  <a href="https://commons.wikimedia.org/wiki/Category:Rail_profiles" target="_blank" rel="noopener">Profils de rails et de roues</a>
+  <a href="https://fr.wikipedia.org/wiki/Mouvement_de_lacet" target="_blank" rel="noopener">Le mouvement de lacet</a>
+</div>
+</section>
+
+<section id="s7"><h2>7 · À retenir</h2>
+<table>
+ <tr><th>Question</th><th>Réponse</th></tr>
+ <tr><td>Forme de la table de roulement</td><td><b>conique</b>, pente d’environ 1/20</td></tr>
+ <tr><td>Liaison roue-essieu</td><td><b>encastrement</b> : les deux roues tournent à la même vitesse</td></tr>
+ <tr><td>Comment le train s’inscrit en courbe</td><td>l’essieu se décale, la roue extérieure roule sur un plus grand diamètre et parcourt plus de chemin</td></tr>
+ <tr><td>Comment il revient au centre</td><td>le même effet, en sens inverse : c’est l’<b>auto-centrage</b></td></tr>
+ <tr><td>Nom de l’oscillation</td><td>le <b>mouvement de lacet</b></td></tr>
+ <tr><td>Rôle du boudin</td><td><b>sécurité</b> uniquement, pas guidage</td></tr>
+ <tr><td>Concept général</td><td>une <b>régulation mécanique par la forme</b>, sans capteur ni énergie</td></tr>
+</table>
+</section>
+</main></div>
+<script>
+'use strict';
+const liens=[...document.querySelectorAll('nav a')];
+const secs=liens.map(a=>document.querySelector(a.getAttribute('href')));
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+ const i=secs.indexOf(e.target); liens.forEach((l,k)=>l.classList.toggle('actif',k===i));}});},
+ {rootMargin:'-15% 0px -70% 0px'});
+secs.forEach(s=>io.observe(s));
+function txt(c,s,x,y,t,coul,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=coul||'#3f3a34';c.textAlign=al||'center';c.fillText(s,x,y);}
+function rail(c,x,y,w){ c.fillStyle='#94a3b8'; c.fillRect(x,y,w,7); c.fillRect(x+w/2-4,y+7,8,16); }
+/* ═══ 1 : l'essieu ═══ */
+const c1=document.getElementById('cv1').getContext('2d');
+(function boucle1(){
+ const t=Date.now()/1000;
+ c1.clearRect(0,0,880,260); c1.fillStyle='#fdfcfa'; c1.fillRect(0,0,880,260);
+ c1.strokeStyle='#475569'; c1.lineWidth=13;
+ c1.beginPath(); c1.moveTo(300,130); c1.lineTo(580,130); c1.stroke();
+ [300,580].forEach((x,i)=>{
+  c1.save(); c1.translate(x,130); c1.rotate(t*1.6);
+  c1.fillStyle='#334155'; c1.beginPath(); c1.arc(0,0,66,0,6.284); c1.fill();
+  c1.strokeStyle='#94a3b8'; c1.lineWidth=3;
+  for(let k=0;k<6;k++){c1.rotate(Math.PI/3); c1.beginPath(); c1.moveTo(0,0); c1.lineTo(60,0); c1.stroke();}
+  c1.restore();
+  c1.fillStyle='#64748b'; c1.beginPath(); c1.arc(x,130,14,0,6.284); c1.fill();
+ });
+ txt(c1,'les deux roues sont SOUDÉES sur le même essieu',440,232,15,'#7c2d12');
+ txt(c1,'aucune pièce mobile entre elles',440,252,13,'#8a8378');
+ requestAnimationFrame(boucle1);
+})();
+/* ═══ 2 : cylindrique vs conique ═══ */
+const c2=document.getElementById('cv2').getContext('2d');
+let mode2=0;
+function fleche(c,x1,y1,x2,y2,coul){
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=1.6;
+ c.beginPath(); c.moveTo(x1,y1); c.lineTo(x2,y2); c.stroke();
+ const a=Math.atan2(y2-y1,x2-x1);
+ [[x1,y1,a],[x2,y2,a+Math.PI]].forEach(([x,y,an])=>{
+  c.beginPath(); c.moveTo(x,y);
+  c.lineTo(x-11*Math.cos(an+2.7),y-11*Math.sin(an+2.7));
+  c.lineTo(x-11*Math.cos(an-2.7),y-11*Math.sin(an-2.7));
+  c.closePath(); c.fill(); });
+}
+function flecheS(c,x1,y1,x2,y2,coul){
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=2;
+ c.beginPath(); c.moveTo(x1,y1); c.lineTo(x2,y2); c.stroke();
+ const a=Math.atan2(y2-y1,x2-x1);
+ c.beginPath(); c.moveTo(x2,y2);
+ c.lineTo(x2-13*Math.cos(a-0.42),y2-13*Math.sin(a-0.42));
+ c.lineTo(x2-13*Math.cos(a+0.42),y2-13*Math.sin(a+0.42));
+ c.closePath(); c.fill();
+}
+function dess2(){
+ c2.clearRect(0,0,880,270); c2.fillStyle='#fdfcfa'; c2.fillRect(0,0,880,270);
+ const xg=320, xd=610, yh=86, axe=34;
+ const yG = mode2? 208 : 200, yD = mode2? 192 : 200;   // conique : plus grand rayon côté intérieur
+ // axe de l'essieu
+ c2.strokeStyle='#94a3b8'; c2.lineWidth=1.4; c2.setLineDash([22,4,4,4]);
+ c2.beginPath(); c2.moveTo(180,axe); c2.lineTo(760,axe); c2.stroke(); c2.setLineDash([]);
+ txt(c2,'axe de l’essieu',180,axe-9,12.5,'#8a8378','left');
+ // jante : bloc dont le bas est la table de roulement
+ c2.fillStyle='#475569';
+ c2.beginPath(); c2.moveTo(xg,yh); c2.lineTo(xd,yh); c2.lineTo(xd,yD); c2.lineTo(xg,yG); c2.closePath(); c2.fill();
+ // boudin, côté intérieur de la voie (à gauche)
+ c2.beginPath(); c2.moveTo(xg,yh); c2.lineTo(xg,yG); c2.lineTo(xg-6,240); c2.lineTo(xg-30,238);
+ c2.lineTo(xg-26,yh); c2.closePath(); c2.fill();
+ // rail sous la table
+ c2.fillStyle='#94a3b8';
+ c2.fillRect(xg+16,Math.max(yG,yD)+2,250,10); c2.fillRect(xg+120,Math.max(yG,yD)+12,40,26);
+ // rayons cotés
+ fleche(c2,xg+60,axe,xg+60,yG-((yG-yD)*(60/(xd-xg))),'#dc2626');
+ fleche(c2,xd-60,axe,xd-60,yD+((yG-yD)*(60/(xd-xg))),'#dc2626');
+ txt(c2,'r intérieur',xg+60,axe-16,13,'#dc2626');
+ txt(c2,'r extérieur',xd-60,axe-16,13,'#dc2626');
+ txt(c2, mode2? 'r intérieur > r extérieur' : 'r intérieur = r extérieur', 465, 264, 15, mode2?'#b45309':'#8a8378');
+ txt(c2,'intérieur de la voie',xg-30,72,12.5,'#7c2d12','left');
+ txt(c2,'extérieur',xd,72,12.5,'#7c2d12','right');
+ txt(c2,'boudin',xg-18,255,12,'#8a8378');
+ txt(c2,'rail',xg+240,Math.max(yG,yD)+28,12,'#8a8378');
+}
+document.querySelectorAll('[data-c2]').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('[data-c2]').forEach(x=>x.classList.remove('actif'));
+ b.classList.add('actif'); mode2=+b.dataset.c2;
+ document.getElementById('l2').textContent= mode2
+  ? 'La vraie roue : conique. Le diamètre est plus grand du côté intérieur de la voie, plus petit vers l’extérieur.'
+  : 'Une roue cylindrique : même diamètre partout. C’est ce que tout le monde imagine — et c’est faux.';
+ dess2();
+}));
+dess2();
+/* ═══ 3 : le virage ═══ */
+const c3=document.getElementById('cv3').getContext('2d');
+let dec=0;
+function dess3(){
+ c3.clearRect(0,0,880,300); c3.fillStyle='#fdfcfa'; c3.fillRect(0,0,880,300);
+ const yRail=214, axe=120, demiVoie=170, cx=440, k=2.2;
+ // rails fixes
+ c3.fillStyle='#94a3b8';
+ [cx-demiVoie,cx+demiVoie].forEach(x=>{ c3.fillRect(x-46,yRail,92,11); c3.fillRect(x-9,yRail+11,18,30); });
+ txt(c3,'rail gauche',cx-demiVoie,yRail+62,12.5,'#8a8378');
+ txt(c3,'rail droit',cx+demiVoie,yRail+62,12.5,'#8a8378');
+ // essieu décalé
+ const dx=dec*k;
+ c3.save(); c3.translate(dx,0);
+ // roues : bloc dont le bas est la table conique (plus grand rayon côté intérieur)
+ [[-1,cx-demiVoie],[1,cx+demiVoie]].forEach(([sg,x])=>{
+  const yHaut=128, yInt=yRail+4, yExt=yRail-6;   // pente très légère, exagérée pour être visible
+  c3.fillStyle='#475569';
+  c3.beginPath();
+  c3.moveTo(x-52,yHaut); c3.lineTo(x+52,yHaut);
+  if(sg<0){ c3.lineTo(x+52,yInt); c3.lineTo(x-52,yExt); }   // intérieur = côté droit
+  else    { c3.lineTo(x+52,yExt); c3.lineTo(x-52,yInt); }   // intérieur = côté gauche
+  c3.closePath(); c3.fill();
+  // boudin, côté intérieur, descendant sous la table
+  const bx = sg<0 ? x+42 : x-52;
+  c3.fillRect(bx,yHaut,10,yRail+26-yHaut);
+ });
+ // essieu
+ c3.fillStyle='#475569'; c3.fillRect(cx-demiVoie,axe-6,demiVoie*2,16);
+ c3.restore();
+ // points de contact et rayons
+ const rG=430-dec*3, rD=430+dec*3;
+ [[cx-demiVoie,rG,-1],[cx+demiVoie,rD,1]].forEach(([x,r,sg])=>{
+  const xc=x+dx;
+  c3.fillStyle='#dc2626'; c3.beginPath(); c3.arc(xc,yRail,5,0,6.284); c3.fill();
+  const xf=x+sg*88;
+  fleche(c3,xf,132,xf,yRail,'#dc2626');
+  c3.strokeStyle='#dc2626'; c3.lineWidth=1; c3.setLineDash([4,4]);
+  c3.beginPath(); c3.moveTo(xc,yRail); c3.lineTo(xf,yRail); c3.stroke();
+  c3.beginPath(); c3.moveTo(xc,132); c3.lineTo(xf,132); c3.stroke(); c3.setLineDash([]);
+  txt(c3,(r/1000).toFixed(3).replace('.',',')+' m',xf+sg*38,176,13.5,'#dc2626');
+ });
+ txt(c3,'roue gauche',cx-demiVoie,112,12.5,'#8a8378');
+ txt(c3,'roue droite',cx+demiVoie,112,12.5,'#8a8378');
+ const ecart=Math.abs(rD-rG);
+ txt(c3, ecart<2? 'rayons égaux : les deux roues parcourent la même distance'
+  : 'la roue '+(dec>0?'droite':'gauche')+' parcourt '+(ecart*6.28/1000).toFixed(1).replace('.',',')+' cm de plus par tour',
+  cx,36,15.5,ecart<2?'#16a34a':'#b45309');
+ if(Math.abs(dec)>0.6){
+  const sens = dec>0? 1 : -1;
+  flecheS(c3,cx+sens*70,74,cx-sens*70,74,'#16a34a');
+  txt(c3,'l’essieu pivote vers la '+(dec>0?'gauche':'droite'),cx,64,13,'#16a34a');
+ }
+}
+document.getElementById('sl3').addEventListener('input',function(){
+ dec=+this.value;
+ document.getElementById('v3').textContent=dec.toFixed(1).replace('.',',')+' mm';
+ document.getElementById('l3').textContent = Math.abs(dec)<0.6
+  ? 'Essieu centré : les deux roues touchent le rail au même diamètre, elles parcourent la même distance. Le train va tout droit.'
+  : 'Essieu décalé de '+Math.abs(dec).toFixed(1).replace('.',',')+' mm vers la '+(dec>0?'droite':'gauche')+
+    ' : la roue '+(dec>0?'droite':'gauche')+' roule sur un plus grand diamètre et avance davantage à chaque tour. L’essieu pivote donc vers la '+
+    (dec>0?'gauche':'droite')+' — exactement ce qu’il faut pour prendre un virage.';
+ dess3();
+});
+dess3();
+/* ═══ 4 : auto-centrage ═══ */
+const c4=document.getElementById('cv4').getContext('2d');
+let x4=0, v4=0, conique=true, trace=[];
+document.getElementById('perturber').addEventListener('click',()=>{ x4=7; v4=0; trace=[]; });
+document.querySelectorAll('[data-c4]').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('[data-c4]').forEach(x=>x.classList.remove('actif'));
+ b.classList.add('actif'); conique=b.dataset.c4==='conique'; x4=7; v4=0; trace=[];
+ document.getElementById('l4').textContent= conique
+  ? 'Roues coniques : l’essieu oscille de part et d’autre du centre, puis se stabilise au milieu. C’est le mouvement de lacet.'
+  : 'Roues cylindriques : rien ne ramène l’essieu. Il reste décalé et finit par appuyer sur le boudin — usure et bruit garantis.';
+}));
+(function boucle4(){
+ if(conique){ v4+=-x4*0.012; v4*=0.985; x4+=v4; }
+ trace.push(x4); if(trace.length>430)trace.shift();
+ c4.clearRect(0,0,880,290); c4.fillStyle='#fdfcfa'; c4.fillRect(0,0,880,290);
+ const yG=64, yD=136, cx=440, dy=x4*3.4;
+ // rails vus de dessus
+ c4.fillStyle='#94a3b8'; c4.fillRect(30,yG-5,820,10); c4.fillRect(30,yD-5,820,10);
+ txt(c4,'sens de la marche',760,34,12.5,'#8a8378');
+ flecheS(c4,690,44,762,44,'#94a3b8');
+ // essieu : translation latérale + pivot (lacet)
+ const yaw=-v4*0.06;
+ c4.save(); c4.translate(cx,(yG+yD)/2+dy); c4.rotate(yaw);
+ c4.fillStyle='#475569'; c4.fillRect(-7,-(yD-yG)/2,14,yD-yG);
+ c4.fillStyle='#334155';
+ c4.fillRect(-26,-(yD-yG)/2-13,52,26); c4.fillRect(-26,(yD-yG)/2-13,52,26);
+ c4.restore();
+ txt(c4,'essieu vu de dessus',cx,26,13,'#7c2d12');
+ // écart au centre
+ c4.strokeStyle='#cbd5e1'; c4.setLineDash([5,5]); c4.lineWidth=1.2;
+ c4.beginPath(); c4.moveTo(30,(yG+yD)/2); c4.lineTo(850,(yG+yD)/2); c4.stroke(); c4.setLineDash([]);
+ if(Math.abs(dy)>1.5){
+  fleche(c4,180,(yG+yD)/2,180,(yG+yD)/2+dy,'#dc2626');
+  txt(c4,'écart '+Math.abs(x4).toFixed(1).replace('.',',')+' mm',126,(yG+yD)/2+dy/2+4,12.5,'#dc2626','right');
+ }
+ // courbe position/temps
+ c4.fillStyle='#f8fafc'; c4.fillRect(30,186,820,84);
+ c4.strokeStyle='#cbd5e1'; c4.setLineDash([5,5]); c4.lineWidth=1.2;
+ c4.beginPath(); c4.moveTo(30,228); c4.lineTo(850,228); c4.stroke(); c4.setLineDash([]);
+ c4.strokeStyle='#b45309'; c4.lineWidth=2.2; c4.beginPath();
+ trace.forEach((v,i)=>{ const px=850-(trace.length-i)*1.9, py=228+v*4.2;
+  if(i===0)c4.moveTo(px,py); else c4.lineTo(px,py); });
+ c4.stroke();
+ txt(c4,'position latérale au cours du temps',cx,282,13,'#5b544a');
+ txt(c4,'centre de la voie',36,224,12,'#8a8378','left');
+ requestAnimationFrame(boucle4);
+})();
+/* ═══ 5 : le boudin ═══ */
+const c5=document.getElementById('cv5').getContext('2d');
+(function boucle5(){
+ const t=Date.now()/1000, j=3+2.4*Math.sin(t*0.8);
+ c5.clearRect(0,0,880,240); c5.fillStyle='#fdfcfa'; c5.fillRect(0,0,880,240);
+ const xg=300, xd=650, yh=56, yTG=150, yTD=140;
+ // jante, table de roulement légèrement conique
+ c5.fillStyle='#475569';
+ c5.beginPath(); c5.moveTo(xg,yh); c5.lineTo(xd,yh); c5.lineTo(xd,yTD); c5.lineTo(xg,yTG); c5.closePath(); c5.fill();
+ // boudin : large tab qui descend nettement sous la table
+ c5.beginPath(); c5.moveTo(xg-34,yh); c5.lineTo(xg,yh); c5.lineTo(xg,yTG);
+ c5.lineTo(xg-6,198); c5.lineTo(xg-30,194); c5.closePath(); c5.fill();
+ // rail : sa face intérieure est à distance "jeu" du boudin
+ const xr=xg+j*3.6;
+ c5.fillStyle='#94a3b8';
+ c5.fillRect(xr,yTG,240,13); c5.fillRect(xr+100,yTG+13,44,40);
+ // cote du jeu
+ fleche(c5,xg,176,xr,176,'#dc2626');
+ txt(c5,'jeu : '+j.toFixed(1).replace('.',',')+' mm',(xg+xr)/2,168,13,'#dc2626');
+ // repères
+ txt(c5,'BOUDIN',xg-17,44,13.5,'#7c2d12');
+ txt(c5,'table de roulement (conique)',(xg+xd)/2+30,44,13.5,'#7c2d12');
+ txt(c5,'RAIL',xr+262,yTG+10,13,'#8a8378','left');
+ txt(c5,'intérieur de la voie',xg-40,214,12.5,'#8a8378','right');
+ txt(c5,'en marche normale, le boudin ne touche jamais le rail',480,232,15,'#b45309');
+ requestAnimationFrame(boucle5);
+})();
+</script></body></html>

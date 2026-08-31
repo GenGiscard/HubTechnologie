@@ -6,7 +6,7 @@
 <title>TP 3ème — Le centre d'entraînement IA · ESTIC</title>
 <style>
 :root{ --ink:#1e3a5f; --cyan:#0e7490; --niv:#9333ea; --niv-fonce:#7e22ce; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
 .estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
@@ -55,6 +55,7 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .slots .fl{font-size:20px;color:var(--orange);font-weight:800}
 .panne{background:#f8fafc;border:2px solid #cbd5e1;border-radius:14px;padding:16px;margin-bottom:12px}
 .panne.resolue{border-color:var(--vert);background:#f0fdf4}
+.panne.ratee{border-color:#dc2626;background:#fef2f2}
 .panne .symptome{font-size:15px;font-weight:700;line-height:1.5}
 .panne .symptome .em{font-size:24px;margin-right:6px}
 .blocs-diag{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
@@ -81,117 +82,188 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#7e22ce,#0e7490);border-radius:14px;padding:22px;color:#fff}
 .codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
 .codefinal a{color:#fde68a;font-weight:800}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:60px;height:60px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:12px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;font-size:19px;letter-spacing:1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+.rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
+.cahiernote b{color:#c2410c;letter-spacing:1px;display:block;margin-bottom:4px;font-size:13px}
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
 </style>
 </head>
 <body>
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
 <header class="tp">
-  <h1>🔧 TP — Le centre d'entraînement IA</h1>
-  <p>Le centre d'entraînement t'embauche : des IA qui déraillent arrivent sur ton écran. 7 missions — à la fin : le code des jeux !</p>
+ <h1>TP — Le centre d'entraînement IA</h1>
+ <p>Le centre d'entraînement t'embauche : des IA qui déraillent arrivent sur ton écran. 10 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
-  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
-  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+ <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div><div class="seg" data-a="10"></div>
+ <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ============ A1 : QUI SUIS-JE ============ -->
 <div class="acti" id="a1">
  <div class="boite">
-  <h2><span class="badge">1</span>Le vocabulaire de l'IA</h2>
-  <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! (1 pt par bonne réponse du premier coup)</div>
-  <div class="minicas" id="cas1"></div>
+ <h2><span class="badge">1</span>Le vocabulaire de l'IA</h2>
+ <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! <b>Attention : une seule tentative par question</b> — lis bien avant de cliquer ! (1 pt par bonne réponse)</div>
+ <div class="minicas" id="cas1"></div>
  </div>
 </div>
 
 <!-- ============ A2 : LA DÉMARCHE ============ -->
 <div class="acti" id="a2">
  <div class="boite">
-  <h2><span class="badge">2</span>Remets la démarche de l'IA en ordre</h2>
-  <div class="consigne">Le centre doit créer une IA qui trie les déchets du collège. Clique les 4 étapes <b>dans l'ordre</b>.</div>
-  <div class="ordre" id="blocs2"></div>
-  <div class="slots" id="slots2">
-    <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
-    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
-    <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
-    <div class="slot" data-i="3">4ème</div>
-  </div>
-  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
-  <div class="verdict" id="verd2"></div>
+ <h2><span class="badge">2</span>Remets la démarche de l'IA en ordre</h2>
+ <div class="consigne">Le centre doit créer une IA qui trie les déchets du collège. Clique les 4 étapes <b>dans l'ordre</b>.</div>
+ <div class="ordre" id="blocs2"></div>
+ <div class="slots" id="slots2">
+ <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
+ <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+ <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
+ <div class="slot" data-i="3">4ème</div>
+ </div>
+ <div class="btnrow"><button class="btn" id="verif2">✓ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+ <div class="verdict" id="verd2"></div>
  </div>
 </div>
 
 <!-- ============ A3 : EXPERTISES ============ -->
 <div class="acti" id="a3">
  <div class="boite">
-  <h2><span class="badge">3</span>Trois IA qui déraillent !</h2>
-  <div class="consigne">🤖 Trois dossiers d'IA posent problème. Pour chacun, identifie la faille et clique la <b>bonne intervention</b>. (Les erreurs se corrigent, mais chaque expertise juste du premier coup rapporte plus !)</div>
-  <div id="pannes3"></div>
-  <div class="verdict" id="verd3"></div>
+ <h2><span class="badge">3</span>Trois IA qui déraillent !</h2>
+ <div class="consigne">Trois dossiers d'IA posent problème. Pour chacun, identifie la faille et clique la <b>bonne intervention</b>. <b>Une seule tentative par expertise</b> : observe et réfléchis avant de cliquer !</div>
+ <div id="pannes3"></div>
+ <div class="verdict" id="verd3"></div>
  </div>
 </div>
 
 <!-- ============ A4 : LA PRÉCISION ============ -->
 <div class="acti" id="a4">
  <div class="boite">
-  <h2><span class="badge">4</span>La précision de l'IA de tri</h2>
-  <div class="consigne">🧪 On teste l'IA de tri des déchets sur <b>200 photos jamais vues</b> : elle en classe <b>184 correctement</b>. Quelle est sa précision, en pourcentage ?</div>
-  <div class="rappel">🎯 Rappel : précision = bonnes réponses ÷ total × 100</div>
-  <div class="calczone">
-    <span>précision =</span>
-    <input type="number" id="rep4" step="any" placeholder="?">
-    <span class="unite">%</span>
-    <button class="btn" id="verif4">✔ Vérifier</button>
-  </div>
-  <div class="verdict" id="verd4"></div>
+ <h2><span class="badge">4</span>La précision de l'IA de tri</h2>
+ <div class="consigne">On teste l'IA de tri des déchets sur <b>200 photos jamais vues</b> : elle en classe <b>184 correctement</b>. Quelle est sa précision, en pourcentage ?</div>
+ <div class="rappel">Rappel : précision = bonnes réponses ÷ total × 100</div>
+ <div class="calczone">
+ <span>précision =</span>
+ <input type="number" id="rep4" step="any" placeholder="?">
+ <span class="unite">%</span>
+ <button class="btn" id="verif4">✓ Vérifier</button>
+ </div>
+ <div class="verdict" id="verd4"></div>
  </div>
 </div>
 
 <!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Le système d’apprentissage</h2>
-  <div class="consigne">🗺️ Le détecteur de chats s'entraîne sous tes yeux — données qui entrent, neurones qui pulsent, erreur qui revient corriger ! Clique une étiquette, puis le bloc correspondant. Place les 4 étiquettes.</div>
-  <canvas class="canvatp" id="cv5" width="860" height="310"></canvas>
-  <div class="etiqbar" id="etiq5"></div>
-  <div id="verd5"></div>
+ <h2><span class="badge">5</span>Le système d’apprentissage</h2>
+ <div class="consigne"><b>Chaque erreur coûte des points.</b>Le détecteur de chats s'entraîne sous tes yeux — données qui entrent, neurones qui pulsent, erreur qui revient corriger ! Clique une étiquette, puis le bloc correspondant. Place les 4 étiquettes.</div>
+ <canvas class="canvatp" id="cv5" width="860" height="310"></canvas>
+ <div class="etiqbar" id="etiq5"></div>
+ <div id="verd5"></div>
  </div>
 </div>
 
 <!-- ============ A6 : MANIPULATION ============ -->
 <div class="acti" id="a6">
  <div class="boite">
-  <h2><span class="badge">6</span>Règle le seuil de confiance</h2>
-  <div class="consigne">🎛️ Le modèle donne un score de confiance à chaque image. Règle le seuil au-dessus duquel il crie « CHAT ! » : trop bas, il alerte pour rien ; trop haut, il rate de vrais chats. Trouve l'équilibre !</div>
-  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
-  <div class="sliderrow">
-    <span>🎚️ Seuil de confiance :</span>
-    <input type="range" id="slider6" min="50" max="99" step="1" value="55">
-    <span class="val"><span id="val6">55</span> %</span>
-    <button class="btn" id="verif6">✔ Valider ce réglage</button>
-  </div>
-  <div id="verd6"></div>
+ <h2><span class="badge">6</span>Règle le seuil de confiance</h2>
+ <div class="consigne">Le modèle donne un score de confiance à chaque image. Règle le seuil au-dessus duquel il crie « CHAT ! » : trop bas, il alerte pour rien ; trop haut, il rate de vrais chats. Trouve l'équilibre !</div>
+ <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+ <div class="sliderrow">
+ <span>Seuil de confiance :</span>
+ <input type="range" id="slider6" min="50" max="99" step="1" value="55">
+ <span class="val"><span id="val6">55</span> %</span>
+ <button class="btn" id="verif6">✓ Valider ce réglage</button>
+ </div>
+ <div id="verd6"></div>
  </div>
 </div>
 
-<!-- ============ A7 : BILAN ============ -->
+
+<!-- ============ A7 : EXPLIQUER ============ -->
 <div class="acti" id="a7">
- <div class="boite">
-  <h2><span class="badge">7</span>Bilan de l'entraîneur junior</h2>
-  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
-  <div id="quiz5"></div>
-  <div class="codefinal" id="codefinal">
-    🏆 Aucune IA douteuse ne te trompe : te voilà entraîneur d'IA junior certifié !
-    <div class="code">NEURONE7</div>
-    <div>Entre ce code dans les jeux <a href="03_jeu_ia_rush.html">🎮 IA Rush</a> et <a href="03b_jeu_centre_ia.html">🤖 Centre IA</a> pour les déverrouiller.</div>
+  <div class="boite">
+    <h2><span class="badge">7</span>Expliquer l’apprentissage d’une IA</h2>
+    <div class="consigne">Trois questions de raisonnement. Réponds par une <b>phrase complète</b>.</div>
+    <div class="cahiernote"><b>SUR TON CAHIER</b> — rédige au brouillon avant de recopier.</div>
+    <div id="champs7"></div>
+    <div class="btnrow"><button class="btn" id="verif7">Valider mes explications</button></div>
+    <div id="verd7"></div>
   </div>
+</div>
+<!-- ============ A8 : CALCULER ============ -->
+<div class="acti" id="a8">
+  <div class="boite">
+    <h2><span class="badge">8</span>Calculer la performance du modèle</h2>
+    <div class="consigne">Sur <b>500 images</b> de test, le détecteur signale <b>180 chats</b>. Parmi eux, <b>153 en sont vraiment</b>. Par ailleurs, <b>27 vrais chats</b> n’ont pas été détectés.</div>
+    <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
+    <div id="champs8"></div>
+    <div class="btnrow"><button class="btn" id="verif8">Valider mes calculs</button></div>
+    <div id="verd8"></div>
+  </div>
+</div>
+<!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
+<div class="acti" id="a9">
+  <div class="boite">
+    <h2><span class="badge">9</span>Tracer le système d’apprentissage</h2>
+    <div class="consigne">Reconstruis le schéma que tu as légendé à la mission 5.</div>
+    <div class="cahiernote"><b>SUR TON CAHIER</b> — trace le schéma du système d’apprentissage : les données étiquetées, le modèle, la prédiction, et surtout la flèche de retour de l’erreur. Légende cette flèche par ce qu’elle transporte, et indique par une croix l’endroit où intervient l’humain.</div>
+    <canvas class="canvatp" id="cv9" width="860" height="300" style="cursor:default"></canvas>
+    <div id="champs9"></div>
+    <div class="btnrow"><button class="btn" id="verif9">Valider mon travail</button></div>
+    <div id="verd9"></div>
+  </div>
+</div>
+
+<!-- ============ A10 : BILAN ============ -->
+<div class="acti" id="a10">
+ <div class="boite">
+ <h2><span class="badge">10</span>Bilan de l'entraîneur junior</h2>
+ <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
+ <div id="quiz5"></div>
+ <div class="codefinal" id="codefinal">
+ Aucune IA douteuse ne te trompe : te voilà entraîneur d'IA junior certifié !
+ <div class="code">NEURONE7</div>
+ <div>Entre ce code dans les jeux <a href="03_jeu_ia_rush.html">IA Rush</a>et <a href="03b_jeu_centre_ia.html">Centre IA</a>pour les déverrouiller.</div>
+ </div>
  </div>
 </div>
 
@@ -201,335 +273,350 @@ const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
 function sauver(){ try{ localStorage.setItem('tp_ia_3e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
 function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_ia_3e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
-  document.querySelectorAll('.progression .seg').forEach(seg=>{
-    const n=+seg.dataset.a;
-    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
-  });
-  document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=7;n++){
-    const acti=document.getElementById('a'+n);
-    let v=acti.querySelector('.verrou');
-    if(n>etat.debloque){
-      if(!v){ v=document.createElement('div'); v.className='verrou';
-        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
-        acti.querySelector('.boite').appendChild(v); }
-    } else if(v) v.remove();
-  }
+ document.querySelectorAll('.progression .seg').forEach(seg=>{
+ const n=+seg.dataset.a;
+ seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+ });
+ document.getElementById('scoreTot').textContent=etat.score;
+ for(let n=2;n<=10;n++){
+ const acti=document.getElementById('a'+n);
+ let v=acti.querySelector('.verrou');
+ if(n>etat.debloque){
+ if(!v){ v=document.createElement('div'); v.className='verrou';
+ v.innerHTML='<div class="cadenas"></div>Termine la mission '+(n-1)+' pour déverrouiller';
+ acti.querySelector('.boite').appendChild(v); }
+ } else if(v) v.remove();
+ }
 }
 function reussir(n,pts){
-  etat.score+=pts;
-  if(etat.debloque===n) etat.debloque=n+1;
-  sauver(); majProgression();
-  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ etat.score+=pts;
+ if(etat.debloque===n) etat.debloque=n+1;
+ sauver(); majProgression();
+ if(n<10) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
 const CAS1=[
- {devinette:'📦 « Des milliers d\u2019exemples ÉTIQUETÉS — cette photo → chat, celle-ci → chien. Je suis la nourriture de l\u2019IA : sans moi, elle n\u2019apprend rien. »', bonne:'les données d\u2019entraînement', autres:['le mode d\u2019emploi']},
- {devinette:'🧠 « Programme qui APPREND : à chaque erreur, j\u2019ajuste un tout petit peu mes millions de réglages internes. Personne ne m\u2019a écrit de règles. »', bonne:'le modèle', autres:['la base de règles']},
- {devinette:'🎯 « Réponse du modèle sur un cas NOUVEAU, accompagnée d\u2019un pourcentage de confiance : « chat, à 87 % ». Je ne suis JAMAIS une certitude. »', bonne:'la prédiction', autres:['la preuve']},
- {devinette:'🎭 « Défaut sournois : quand les données ne représentent pas tous les cas (que des chats roux !), je fais dérailler l\u2019IA systématiquement. »', bonne:'le biais', autres:['le bug d\u2019affichage']},
+ {devinette:' « Des milliers d\u2019exemples ÉTIQUETÉS — cette photo → chat, celle-ci → chien. Je suis la nourriture de l\u2019IA : sans moi, elle n\u2019apprend rien. »', bonne:'les données d\u2019entraînement', autres:['le mode d\u2019emploi']},
+ {devinette:' « Programme qui APPREND : à chaque erreur, j\u2019ajuste un tout petit peu mes millions de réglages internes. Personne ne m\u2019a écrit de règles. »', bonne:'le modèle', autres:['la base de règles']},
+ {devinette:' « Réponse du modèle sur un cas NOUVEAU, accompagnée d\u2019un pourcentage de confiance : « chat, à 87 % ». Je ne suis JAMAIS une certitude. »', bonne:'la prédiction', autres:['la preuve']},
+ {devinette:' « Défaut sournois : quand les données ne représentent pas tous les cas (que des chats roux !), je fais dérailler l\u2019IA systématiquement. »', bonne:'le biais', autres:['le bug d\u2019affichage']},
 ];
 (function initA1(){
-  const zone=document.getElementById('cas1');
-  CAS1.forEach(cas=>{
-    const d=document.createElement('div'); d.className='cas';
-    d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
-    const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
-    let premier=true, fait=false;
-    [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
-      const b=document.createElement('button'); b.textContent=rep;
-      b.onclick=()=>{
-        if(fait) return;
-        if(rep===cas.bonne){
-          fait=true; d.classList.remove('faux'); d.classList.add('bon');
-          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          etat.q1ok++;
-          if(etat.q1ok===CAS1.length) reussir(1,2);
-        } else { d.classList.add('faux'); premier=false; }
-      };
-      ch.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('cas1');
+ CAS1.forEach(cas=>{
+ const d=document.createElement('div'); d.className='cas';
+ d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
+ const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
+ let premier=true, fait=false;
+ [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
+ const b=document.createElement('button'); b.textContent=rep;
+ b.onclick=()=>{
+ if(fait) return;
+ if(rep===cas.bonne){
+ fait=true; d.classList.remove('faux'); d.classList.add('bon');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ } else {
+ fait=true; premier=false;
+ d.classList.add('faux'); b.classList.add('faux');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ }
+ };
+ ch.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A2 : LA DÉMARCHE ================= */
 const BLOCS2=[
- {id:1,t:'📦 Collecter les données',s:'des milliers d\u2019exemples étiquetés et VARIÉS'},
- {id:0,t:'🧠 Entraîner le modèle',s:'deviner, se tromper, s\u2019ajuster — des millions de fois'},
- {id:2,t:'🧪 Tester la précision',s:'sur des exemples JAMAIS vus par le modèle'},
- {id:3,t:'🎯 Utiliser pour prédire',s:'sur des cas nouveaux, avec un œil humain'},
+ {id:1,t:' Collecter les données',s:'des milliers d\u2019exemples étiquetés et VARIÉS'},
+ {id:0,t:' Entraîner le modèle',s:'deviner, se tromper, s\u2019ajuster — des millions de fois'},
+ {id:2,t:' Tester la précision',s:'sur des exemples JAMAIS vus par le modèle'},
+ {id:3,t:' Utiliser pour prédire',s:'sur des cas nouveaux, avec un œil humain'},
 ];
 const BON2=[1,0,2,3];
-let choix2=[], a2fait=false;
+let choix2=[], a2fait=false, essais2=0, err5=0, essais6=0, bons3=0;
 function initA2(){
-  choix2=[];
-  const zone=document.getElementById('blocs2'); zone.innerHTML='';
-  BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
-    const btn=document.createElement('button');
-    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
-    btn.onclick=()=>{
-      if(btn.classList.contains('pris')||choix2.length>=4) return;
-      btn.classList.add('pris'); choix2.push(b.id);
-      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
-      slot.textContent=b.t; slot.classList.add('rempli');
-    };
-    zone.appendChild(btn);
-  });
-  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
-  document.getElementById('verd2').className='verdict';
+ choix2=[];
+ const zone=document.getElementById('blocs2'); zone.innerHTML='';
+ BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
+ const btn=document.createElement('button');
+ btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+ btn.onclick=()=>{
+ if(btn.classList.contains('pris')||choix2.length>=4) return;
+ btn.classList.add('pris'); choix2.push(b.id);
+ const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+ slot.textContent=b.t; slot.classList.add('rempli');
+ };
+ zone.appendChild(btn);
+ });
+ document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
+ document.getElementById('verd2').className='verdict';
 }
 document.getElementById('reset2').onclick=initA2;
 document.getElementById('verif2').onclick=()=>{
-  const verd=document.getElementById('verd2');
-  if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
-  if(choix2.join()===BON2.join()){
-    verd.className='verdict ok';
-    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : collecter → entraîner → tester → utiliser. Et on teste toujours sur des exemples JAMAIS vus — sinon c\u2019est réviser avec le sujet du contrôle dans la poche ! (+3 pts)'; reussir(2,3); }
-    else verd.textContent='✅ Bon ordre !';
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ La démarche est emmêlée. Réfléchis : peut-on entraîner… sans données ? Teste-t-on avant ou après l\u2019entraînement ? Et utilise-t-on une IA jamais testée ? Recommence !';
-  }
+ const verd=document.getElementById('verd2');
+ if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
+ essais2++;
+ if(choix2.join()===BON2.join()){
+ verd.className='verdict ok';
+ if(!a2fait){ a2fait=true; verd.textContent='✓ Parfait : collecter → entraîner → tester → utiliser. Et on teste toujours sur des exemples JAMAIS vus — sinon c\u2019est réviser avec le sujet du contrôle dans la poche ! (+3 pts)'; reussir(2, essais2<=1?3:(essais2===2?2:1)); }
+ else verd.textContent='✓ Bon ordre !';
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ La démarche est emmêlée. Réfléchis : peut-on entraîner… sans données ? Teste-t-on avant ou après l\u2019entraînement ? Et utilise-t-on une IA jamais testée ? Recommence !';
+ }
 };
 initA2();
 
 /* ================= A3 : EXPERTISES ================= */
 const PANNES=[
- {em:'🤏', symptome:'Dossier n°1 — L\u2019IA de tri des déchets confond tout : verre classé en carton, plastique en verre… En ouvrant le dossier, tu découvres qu\u2019elle n\u2019a été entraînée qu\u2019avec 20 PHOTOS.',
-  bon:'quantite', exp:'20 exemples, c\u2019est ridicule : un modèle a besoin de MILLIERS d\u2019exemples pour découvrir les règles. Collecter beaucoup plus de données avant de réentraîner.'},
- {em:'🍏', symptome:'Dossier n°2 — L\u2019IA reconnaît parfaitement les pommes rouges… mais classe toutes les pommes VERTES en « poire ». Dans les données d\u2019entraînement : uniquement des pommes rouges.',
-  bon:'biais', exp:'un BIAIS classique : les données n\u2019étaient pas représentatives (que du rouge !). Varier les données — toutes les couleurs, tous les angles — puis réentraîner.'},
- {em:'😴', symptome:'Dossier n°3 — L\u2019IA d\u2019aide au diagnostic annonce « grippe, à 51 % de confiance »… et le stagiaire veut suivre sa réponse LES YEUX FERMÉS, sans rien vérifier.',
-  bon:'critique', exp:'51 %, c\u2019est à peine mieux que pile ou face ! Une prédiction n\u2019est jamais une certitude : pour les décisions importantes, un HUMAIN vérifie. L\u2019IA propose, l\u2019humain dispose.'},
+ {em:'', symptome:'Dossier n°1 — L\u2019IA de tri des déchets confond tout : verre classé en carton, plastique en verre… En ouvrant le dossier, tu découvres qu\u2019elle n\u2019a été entraînée qu\u2019avec 20 PHOTOS.',
+ bon:'quantite', exp:'20 exemples, c\u2019est ridicule : un modèle a besoin de MILLIERS d\u2019exemples pour découvrir les règles. Collecter beaucoup plus de données avant de réentraîner.'},
+ {em:'', symptome:'Dossier n°2 — L\u2019IA reconnaît parfaitement les pommes rouges… mais classe toutes les pommes VERTES en « poire ». Dans les données d\u2019entraînement : uniquement des pommes rouges.',
+ bon:'biais', exp:'un BIAIS classique : les données n\u2019étaient pas représentatives (que du rouge !). Varier les données — toutes les couleurs, tous les angles — puis réentraîner.'},
+ {em:'', symptome:'Dossier n°3 — L\u2019IA d\u2019aide au diagnostic annonce « grippe, à 51 % de confiance »… et le stagiaire veut suivre sa réponse LES YEUX FERMÉS, sans rien vérifier.',
+ bon:'critique', exp:'51 %, c\u2019est à peine mieux que pile ou face ! Une prédiction n\u2019est jamais une certitude : pour les décisions importantes, un HUMAIN vérifie. L\u2019IA propose, l\u2019humain dispose.'},
 ];
 const REMEDES=[
- {id:'quantite', t:'🤏 Collecter beaucoup plus d\u2019exemples'},
- {id:'biais', t:'🍏 Varier les données (représentativité)'},
- {id:'critique', t:'😴 Garder un humain qui vérifie'},
- {id:'ecran', t:'🖥️ Changer l\u2019écran de l\u2019ordinateur'},
+ {id:'quantite', t:' Collecter beaucoup plus d\u2019exemples'},
+ {id:'biais', t:' Varier les données (représentativité)'},
+ {id:'critique', t:' Garder un humain qui vérifie'},
+ {id:'ecran', t:' Changer l\u2019écran de l\u2019ordinateur'},
 ];
 let diag3=0, a3fait=false;
 (function initA3(){
-  const zone=document.getElementById('pannes3');
-  const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
-  ordre3.forEach(pi=>{
-    const P=PANNES[pi];
-    const d=document.createElement('div'); d.className='panne';
-    d.innerHTML='<div class="symptome"><span class="em">'+P.em+'</span>'+P.symptome+'</div>';
-    const blocs=document.createElement('div'); blocs.className='blocs-diag'; d.appendChild(blocs);
-    const fb=document.createElement('div'); fb.className='verdict'; d.appendChild(fb);
-    let resolu=false, premier=true;
-    REMEDES.slice().sort(()=>0.5-Math.random()).forEach(r=>{
-      const b=document.createElement('button'); b.textContent=r.t; b.dataset.b=r.id;
-      b.onclick=()=>{
-        if(resolu) return;
-        if(r.id===P.bon){
-          resolu=true; d.classList.add('resolue');
-          blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
-          fb.className='verdict ok';
-          fb.textContent='✅ Bien vu'+(premier?' du premier coup (+1 pt bonus)':'')+' : '+P.exp;
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          diag3++;
-          if(diag3===PANNES.length && !a3fait){ a3fait=true;
-            const verd=document.getElementById('verd3');
-            verd.className='verdict ok';
-            verd.textContent='🏆 Trois expertises réussies ! Trop peu de données, données biaisées, confiance aveugle : les trois pièges classiques. Une IA vaut ce que valent ses données — et l\u2019esprit critique reste humain. (+4 pts)';
-            reussir(3,4);
-          }
-        } else {
-          premier=false;
-          fb.className='verdict ko';
-          fb.textContent='❌ Cette intervention ne colle pas au dossier… Relis : les exemples sont-ils TROP PEU NOMBREUX, PAS ASSEZ VARIÉS, ou la prédiction est-elle suivie SANS VÉRIFICATION ? (Un bel écran n\u2019a jamais rendu une IA plus juste !)';
-        }
-      };
-      blocs.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('pannes3');
+ const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
+ ordre3.forEach(pi=>{
+ const P=PANNES[pi];
+ const d=document.createElement('div'); d.className='panne';
+ d.innerHTML='<div class="symptome"><span class="em">'+P.em+'</span>'+P.symptome+'</div>';
+ const blocs=document.createElement('div'); blocs.className='blocs-diag'; d.appendChild(blocs);
+ const fb=document.createElement('div'); fb.className='verdict'; d.appendChild(fb);
+ let resolu=false, premier=true;
+ REMEDES.slice().sort(()=>0.5-Math.random()).forEach(r=>{
+ const b=document.createElement('button'); b.textContent=r.t; b.dataset.b=r.id;
+ b.onclick=()=>{
+ if(resolu) return;
+ if(r.id===P.bon){
+ resolu=true; d.classList.add('resolue');
+ bons3++;
+ blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
+ fb.className='verdict ok';
+ fb.textContent='✓ Bien vu'+(premier?' du premier coup (+1 pt bonus)':'')+' : '+P.exp;
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ diag3++;
+ if(diag3===PANNES.length && !a3fait){ a3fait=true;
+ const verd=document.getElementById('verd3');
+ verd.className='verdict ok';
+ verd.textContent=' Trois expertises réussies ! Trop peu de données, données biaisées, confiance aveugle : les trois pièges classiques. Une IA vaut ce que valent ses données — et l\u2019esprit critique reste humain. (+4 pts)';
+ reussir(3, Math.max(1,bons3+1));
+ }
+ } else {
+ premier=false;
+ fb.className='verdict ko';
+ fb.textContent='✗ Cette intervention ne colle pas au dossier… Relis : les exemples sont-ils TROP PEU NOMBREUX, PAS ASSEZ VARIÉS, ou la prédiction est-elle suivie SANS VÉRIFICATION ? (Un bel écran n\u2019a jamais rendu une IA plus juste !)';
+ resolu=true; premier=false;
+ d.classList.add('ratee');
+ blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
+ diag3++;
+ if(diag3===PANNES.length && !a3fait){ a3fait=true; reussir(3, Math.max(1,bons3+1)); }
+ }
+ };
+ blocs.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A4 : LA PRÉCISION ================= */
 let a4fait=false;
 document.getElementById('verif4').onclick=()=>{
-  const verd=document.getElementById('verd4');
-  const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
-  if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
-  if(Math.abs(v-92)<=0.5){
-    verd.className='verdict ok';
-    verd.innerHTML='✅ 184 ÷ 200 × 100 = 92 % ! Et remarque le revers : 8 % d\u2019erreurs, soit 16 déchets mal triés sur 200. Une IA à 92 % est très bonne… mais elle se trompe encore — c\u2019est pour ça qu\u2019on ne la croit jamais les yeux fermés.'+(a4fait?'':' (+4 pts)');
-    if(!a4fait){ a4fait=true; reussir(4,4); }
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ Pas ça. Divise 184 par 200, puis multiplie par 100.';
-  }
+ const verd=document.getElementById('verd4');
+ const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
+ if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
+ if(Math.abs(v-92)<=0.5){
+ verd.className='verdict ok';
+ verd.innerHTML='✓ 184 ÷ 200 × 100 = 92 % ! Et remarque le revers : 8 % d\u2019erreurs, soit 16 déchets mal triés sur 200. Une IA à 92 % est très bonne… mais elle se trompe encore — c\u2019est pour ça qu\u2019on ne la croit jamais les yeux fermés.'+(a4fait?'':' (+4 pts)');
+ if(!a4fait){ a4fait=true; reussir(4,4); }
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ Pas ça. Divise 184 par 200, puis multiplie par 100.';
+ }
 };
 
 /* ================= A5 : SCHEMA A LEGENDER ================= */
 (function(){
-  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
-  const ZONES=[
-    {id:'donnees',  x:50,  y:80,  w:150, h:130, lbl:'LES DONNÉES D\u2019ENTRAÎNEMENT', tx:125, ty:70},
-    {id:'modele',   x:290, y:70,  w:180, h:150, lbl:'LE MODÈLE (RÉSEAU DE NEURONES)', tx:380, ty:60},
-    {id:'prediction',x:560,y:90,  w:150, h:110, lbl:'LA PRÉDICTION',                  tx:635, ty:80},
-    {id:'boucle',   x:290, y:236, w:280, h:56,  lbl:'LA BOUCLE D\u2019APPRENTISSAGE (L\u2019ERREUR)', tx:430, ty:304},
-  ];
-  const poses={}; let sel=null, t=0;
-  function dessiner(){
-    t+=0.02;
-    ctx.clearRect(0,0,860,310);
-    // données : pile d'images étiquetées
-    for(let i=0;i<3;i++){
-      ctx.fillStyle='#fff'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.roundRect(70+i*10,96+i*12,90,70,6); ctx.fill(); ctx.stroke();
-    }
-    ctx.font='22px Segoe UI'; ctx.textAlign='center';
-    ctx.fillText('\ud83d\udc31',132,158);
-    ctx.font='bold 9px Segoe UI'; ctx.fillStyle='#16a34a';
-    ctx.fillText('\u00e9tiquette : \u00ab chat \u00bb',132,184);
-    // modèle : 3 couches de neurones qui pulsent
-    const L=[[320,3],[380,4],[440,2]];
-    ctx.strokeStyle='#cbd5e1'; ctx.lineWidth=1;
-    for(let a=0;a<2;a++){
-      for(let i=0;i<L[a][1];i++) for(let j=0;j<L[a+1][1];j++){
-        ctx.beginPath();
-        ctx.moveTo(L[a][0],105+i*(120/(L[a][1]-0.999)) - (L[a][1]===1?0:0));
-        ctx.lineTo(L[a+1][0],105+j*(120/(L[a+1][1]-0.999)));
-        ctx.stroke(); } }
-    L.forEach(([lx,nb],li)=>{
-      for(let i=0;i<nb;i++){
-        const ny=105+i*(120/(nb-0.999));
-        const pu=0.5+0.5*Math.sin(t*3+li+i*1.3);
-        ctx.fillStyle='rgba(124,58,237,'+(0.35+0.6*pu)+')';
-        ctx.beginPath(); ctx.arc(lx,ny,10,0,Math.PI*2); ctx.fill();
-      } });
-    // prédiction
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#16a34a'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.roundRect(576,110,120,70,10); ctx.fill(); ctx.stroke();
-    const conf=87+8*Math.sin(t*0.9);
-    ctx.font='bold 14px Segoe UI'; ctx.fillStyle='#166534';
-    ctx.fillText('\u00ab CHAT \u00bb',636,140);
-    ctx.font='bold 11px Segoe UI';
-    ctx.fillText('confiance : '+conf.toFixed(0)+' %',636,162);
-    // boucle de l'erreur (retour rouge vers le modèle)
-    ctx.strokeStyle='#dc2626'; ctx.lineWidth=3;
-    ctx.beginPath(); ctx.moveTo(636,180);
-    ctx.quadraticCurveTo(636,264,430,264);
-    ctx.quadraticCurveTo(300,264,310,224);
-    ctx.stroke();
-    ctx.fillStyle='#dc2626';
-    ctx.beginPath(); ctx.moveTo(310,224); ctx.lineTo(302,240); ctx.lineTo(320,238); ctx.closePath(); ctx.fill();
-    ctx.font='bold 10.5px Segoe UI';
-    ctx.fillText('l\u2019erreur revient ajuster les neurones',470,282);
-    // flux données -> modèle -> prédiction
-    ctx.fillStyle='#ea580c';
-    for(let i=0;i<2;i++){ const p=((t*0.5)+i/2)%1;
-      if(p<0.5){ const u=p/0.5; ctx.beginPath(); ctx.arc(170+u*(310-170),150,4,0,Math.PI*2); ctx.fill(); }
-      else { const u=(p-0.5)/0.5; ctx.beginPath(); ctx.arc(450+u*(576-450),150,4,0,Math.PI*2); ctx.fill(); } }
-    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
-    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  const bar=document.getElementById('etiq5');
-  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
-    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
-    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
-      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
-    bar.appendChild(b);
-  });
-  cv.addEventListener('click',e=>{
-    if(!sel) return;
-    const r=cv.getBoundingClientRect();
-    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
-    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
-    const verd=document.getElementById('verd5');
-    if(cible && cible.id===sel){
-      poses[sel]=true;
-      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
-      sel=null;
-      if(Object.keys(poses).length===ZONES.length){
-        verd.innerHTML='<div class="verdict ok">✅ Système décodé ! Les DONNÉES étiquetées (des milliers d\u2019images « chat » / « pas chat ») nourrissent le MODÈLE, qui produit une PRÉDICTION avec un score de confiance… et la BOUCLE rouge renvoie l\u2019erreur ajuster les neurones : c\u2019est ça, « apprendre ». Pas de magie — des exemples, des réglages, des millions de fois. La qualité des données fait la qualité de l\u2019IA ! (+3 pts)</div>';
-        reussir(5,3);
-      }
-    } else if(cible){
-      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : les données sont la pile de photos étiquetées, le modèle est le réseau violet qui pulse, la prédiction est la carte verte avec le score… et la boucle est la grande flèche ROUGE qui revient en arrière.</div>';
-    }
-  });
+ const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+ const ZONES=[
+ {id:'donnees', x:50, y:80, w:150, h:130, lbl:'LES DONNÉES D\u2019ENTRAÎNEMENT', tx:125, ty:70},
+ {id:'modele', x:290, y:70, w:180, h:150, lbl:'LE MODÈLE (RÉSEAU DE NEURONES)', tx:380, ty:60},
+ {id:'prediction',x:560,y:90, w:150, h:110, lbl:'LA PRÉDICTION', tx:635, ty:80},
+ {id:'boucle', x:290, y:236, w:280, h:56, lbl:'LA BOUCLE D\u2019APPRENTISSAGE (L\u2019ERREUR)', tx:430, ty:304},
+ ];
+ const poses={}; let sel=null, t=0;
+ function dessiner(){
+ t+=0.02;
+ ctx.clearRect(0,0,860,310);
+ // données : pile d'images étiquetées
+ for(let i=0;i<3;i++){
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
+ ctx.beginPath(); ctx.roundRect(70+i*10,96+i*12,90,70,6); ctx.fill(); ctx.stroke();
+ }
+ ctx.font='22px Segoe UI'; ctx.textAlign='center';
+ ctx.fillText('\ud83d\udc31',132,158);
+ ctx.font='bold 9px Segoe UI'; ctx.fillStyle='#16a34a';
+ ctx.fillText('\u00e9tiquette : \u00ab chat \u00bb',132,184);
+ // modèle : 3 couches de neurones qui pulsent
+ const L=[[320,3],[380,4],[440,2]];
+ ctx.strokeStyle='#cbd5e1'; ctx.lineWidth=1;
+ for(let a=0;a<2;a++){
+ for(let i=0;i<L[a][1];i++) for(let j=0;j<L[a+1][1];j++){
+ ctx.beginPath();
+ ctx.moveTo(L[a][0],105+i*(120/(L[a][1]-0.999)) - (L[a][1]===1?0:0));
+ ctx.lineTo(L[a+1][0],105+j*(120/(L[a+1][1]-0.999)));
+ ctx.stroke(); } }
+ L.forEach(([lx,nb],li)=>{
+ for(let i=0;i<nb;i++){
+ const ny=105+i*(120/(nb-0.999));
+ const pu=0.5+0.5*Math.sin(t*3+li+i*1.3);
+ ctx.fillStyle='rgba(124,58,237,'+(0.35+0.6*pu)+')';
+ ctx.beginPath(); ctx.arc(lx,ny,10,0,Math.PI*2); ctx.fill();
+ } });
+ // prédiction
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#16a34a'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.roundRect(576,110,120,70,10); ctx.fill(); ctx.stroke();
+ const conf=87+8*Math.sin(t*0.9);
+ ctx.font='bold 14px Segoe UI'; ctx.fillStyle='#166534';
+ ctx.fillText('\u00ab CHAT \u00bb',636,140);
+ ctx.font='bold 11px Segoe UI';
+ ctx.fillText('confiance : '+conf.toFixed(0)+' %',636,162);
+ // boucle de l'erreur (retour rouge vers le modèle)
+ ctx.strokeStyle='#dc2626'; ctx.lineWidth=3;
+ ctx.beginPath(); ctx.moveTo(636,180);
+ ctx.quadraticCurveTo(636,264,430,264);
+ ctx.quadraticCurveTo(300,264,310,224);
+ ctx.stroke();
+ ctx.fillStyle='#dc2626';
+ ctx.beginPath(); ctx.moveTo(310,224); ctx.lineTo(302,240); ctx.lineTo(320,238); ctx.closePath(); ctx.fill();
+ ctx.font='bold 10.5px Segoe UI';
+ ctx.fillText('l\u2019erreur revient ajuster les neurones',470,282);
+ // flux données ->modèle ->prédiction
+ ctx.fillStyle='#ea580c';
+ for(let i=0;i<2;i++){ const p=((t*0.5)+i/2)%1;
+ if(p<0.5){ const u=p/0.5; ctx.beginPath(); ctx.arc(170+u*(310-170),150,4,0,Math.PI*2); ctx.fill(); }
+ else { const u=(p-0.5)/0.5; ctx.beginPath(); ctx.arc(450+u*(576-450),150,4,0,Math.PI*2); ctx.fill(); } }
+ ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+ ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ const bar=document.getElementById('etiq5');
+ ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+ const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+ b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+ bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+ bar.appendChild(b);
+ });
+ cv.addEventListener('click',e=>{
+ if(!sel) return;
+ const r=cv.getBoundingClientRect();
+ const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+ const cible=ZONES.find(z=>x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+ const verd=document.getElementById('verd5');
+ if(cible && cible.id===sel){
+ poses[sel]=true;
+ const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+ sel=null;
+ if(Object.keys(poses).length===ZONES.length){
+ verd.innerHTML='<div class="verdict ok">✓ Système décodé ! Les DONNÉES étiquetées (des milliers d\u2019images « chat » / « pas chat ») nourrissent le MODÈLE, qui produit une PRÉDICTION avec un score de confiance… et la BOUCLE rouge renvoie l\u2019erreur ajuster les neurones : c\u2019est ça, « apprendre ». Pas de magie — des exemples, des réglages, des millions de fois. La qualité des données fait la qualité de l\u2019IA ! (+3 pts)</div>';
+ reussir(5, err5===0?3:(err5<=2?2:1));
+ }
+ } else if(cible){
+ err5++;
+ verd.innerHTML='<div class="verdict ko">✗ Pas là ! Indice : les données sont la pile de photos étiquetées, le modèle est le réseau violet qui pulse, la prédiction est la carte verte avec le score… et la boucle est la grande flèche ROUGE qui revient en arrière.</div>';
+ }
+ });
 })();
 
 /* ================= A6 : MANIPULATION AU CURSEUR ================= */
 (function(){
-  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
-  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
-  const SCEN=[
-    {min:70, max:90,
-     ok:'\u2705 Entre 70 et 90 % : peu de fausses alertes, peu de chats manqués — le meilleur compromis possible. Retiens ceci : une IA ne répond jamais \u00ab oui \u00bb ou \u00ab non \u00bb, elle répond \u00ab probablement \u00bb\u2026 et c\u2019est un HUMAIN qui choisit le seuil selon les conséquences de chaque erreur ! (+4 pts)',
-     kobas:'\u274c Seuil trop bas : le détecteur crie CHAT pour des chiens, des coussins, des ombres\u2026 (regarde les fausses alertes !). À force d\u2019alerter pour rien, plus personne n\u2019écoute. Remonte\u2026',
-     kohaut:'\u274c Seuil trop exigeant : il ne valide que les photos parfaites et RATE de vrais chats (regarde le compteur !). Un détecteur muet ne sert à rien non plus. Redescends\u2026'}
-  ];
-  let etape=0, t=0, valide=false;
-  function dessiner(){
-    t+=0.03;
-    ctx.clearRect(0,0,860,280);
-    const v=+slider.value;
-    const sc=SCEN[Math.min(etape,SCEN.length-1)];
-    const fausses=Math.round(Math.max(0,(70-v))*0.5);
-    const rates=Math.round(Math.max(0,(v-90))*0.7);
-    // défilé d'images jugées
-    const imgs=['\ud83d\udc31','\ud83d\udc36','\ud83d\udc31','\ud83e\uddf8','\ud83d\udc31','\ud83d\udc30'];
-    const scores=[95,62,83,55,74,58];
-    for(let i=0;i<6;i++){
-      const x=100+i*112;
-      ctx.fillStyle='#fff'; ctx.strokeStyle='#cbd5e1'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.roundRect(x-34,60,68,64,8); ctx.fill(); ctx.stroke();
-      ctx.font='24px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
-      ctx.fillText(imgs[i],x,100);
-      const estChat=imgs[i]==='\ud83d\udc31';
-      const detecte=scores[i]>=v;
-      ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#64748b';
-      ctx.fillText(scores[i]+' %',x,138);
-      ctx.font='bold 11px Segoe UI';
-      if(detecte && estChat){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 CHAT',x,156); }
-      else if(detecte && !estChat){ ctx.fillStyle='#dc2626'; ctx.fillText('\u2717 fausse alerte',x,156); }
-      else if(!detecte && estChat){ ctx.fillStyle='#f59e0b'; ctx.fillText('\u26a0 raté !',x,156); }
-      else { ctx.fillStyle='#94a3b8'; ctx.fillText('— ignoré',x,156); }
-    }
-    // ligne de seuil visuelle
-    ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#ea580c';
-    ctx.fillText('seuil : \u00ab CHAT \u00bb si confiance \u2265 '+v+' %',430,40);
-    // compteurs
-    ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
-    ctx.fillText('FAUSSES ALERTES / JOUR',260,204);
-    ctx.fillStyle='#e2e8f0'; ctx.fillRect(160,214,200,16);
-    ctx.fillStyle= v<70 ? '#dc2626' : '#16a34a';
-    ctx.fillRect(160,214,200*Math.min(1,fausses/12),16);
-    ctx.fillStyle='#334155'; ctx.fillText(String(fausses),380,228);
-    ctx.fillStyle='#334155';
-    ctx.fillText('VRAIS CHATS MANQUÉS / JOUR',610,204);
-    ctx.fillStyle='#e2e8f0'; ctx.fillRect(510,214,200,16);
-    ctx.fillStyle= v>90 ? '#dc2626' : '#16a34a';
-    ctx.fillRect(510,214,200*Math.min(1,rates/8),16);
-    ctx.fillStyle='#334155'; ctx.fillText(String(rates),730,228);
-    ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
-    ctx.fillText('baisser le seuil \u2192 plus d\u2019alertes \u00b7 monter le seuil \u2192 plus d\u2019oublis',430,262);
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
-  document.getElementById('verif6').addEventListener('click',()=>{
-    if(valide) return;
-    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
-    if(v>=sc.min && v<=sc.max){
-      etape++;
-      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
-      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
-    } else {
-      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
-    }
-  });
+ const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+ const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+ const SCEN=[
+ {min:70, max:90,
+ ok:'\u2705 Entre 70 et 90 % : peu de fausses alertes, peu de chats manqués — le meilleur compromis possible. Retiens ceci : une IA ne répond jamais \u00ab oui \u00bb ou \u00ab non \u00bb, elle répond \u00ab probablement \u00bb\u2026 et c\u2019est un HUMAIN qui choisit le seuil selon les conséquences de chaque erreur ! (+4 pts)',
+ kobas:'\u274c Seuil trop bas : le détecteur crie CHAT pour des chiens, des coussins, des ombres\u2026 (regarde les fausses alertes !). À force d\u2019alerter pour rien, plus personne n\u2019écoute. Remonte\u2026',
+ kohaut:'\u274c Seuil trop exigeant : il ne valide que les photos parfaites et RATE de vrais chats (regarde le compteur !). Un détecteur muet ne sert à rien non plus. Redescends\u2026'}
+ ];
+ let etape=0, t=0, valide=false;
+ function dessiner(){
+ t+=0.03;
+ ctx.clearRect(0,0,860,280);
+ const v=+slider.value;
+ const sc=SCEN[Math.min(etape,SCEN.length-1)];
+ const fausses=Math.round(Math.max(0,(70-v))*0.5);
+ const rates=Math.round(Math.max(0,(v-90))*0.7);
+ // défilé d'images jugées
+ const imgs=['\ud83d\udc31','\ud83d\udc36','\ud83d\udc31','\ud83e\uddf8','\ud83d\udc31','\ud83d\udc30'];
+ const scores=[95,62,83,55,74,58];
+ for(let i=0;i<6;i++){
+ const x=100+i*112;
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#cbd5e1'; ctx.lineWidth=2;
+ ctx.beginPath(); ctx.roundRect(x-34,60,68,64,8); ctx.fill(); ctx.stroke();
+ ctx.font='24px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+ ctx.fillText(imgs[i],x,100);
+ const estChat=imgs[i]==='\ud83d\udc31';
+ const detecte=scores[i]>=v;
+ ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#64748b';
+ ctx.fillText(scores[i]+' %',x,138);
+ ctx.font='bold 11px Segoe UI';
+ if(detecte && estChat){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 CHAT',x,156); }
+ else if(detecte && !estChat){ ctx.fillStyle='#dc2626'; ctx.fillText('\u2717 fausse alerte',x,156); }
+ else if(!detecte && estChat){ ctx.fillStyle='#f59e0b'; ctx.fillText('\u26a0 raté !',x,156); }
+ else { ctx.fillStyle='#94a3b8'; ctx.fillText('— ignoré',x,156); }
+ }
+ // ligne de seuil visuelle
+ ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#ea580c';
+ ctx.fillText('seuil : \u00ab CHAT \u00bb si confiance \u2265 '+v+' %',430,40);
+ // compteurs
+ ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+ ctx.fillText('FAUSSES ALERTES / JOUR',260,204);
+ ctx.fillStyle='#e2e8f0'; ctx.fillRect(160,214,200,16);
+ ctx.fillStyle= v<70 ? '#dc2626' : '#16a34a';
+ ctx.fillRect(160,214,200*Math.min(1,fausses/12),16);
+ ctx.fillStyle='#334155'; ctx.fillText(String(fausses),380,228);
+ ctx.fillStyle='#334155';
+ ctx.fillText('VRAIS CHATS MANQUÉS / JOUR',610,204);
+ ctx.fillStyle='#e2e8f0'; ctx.fillRect(510,214,200,16);
+ ctx.fillStyle= v>90 ? '#dc2626' : '#16a34a';
+ ctx.fillRect(510,214,200*Math.min(1,rates/8),16);
+ ctx.fillStyle='#334155'; ctx.fillText(String(rates),730,228);
+ ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
+ ctx.fillText('baisser le seuil \u2192 plus d\u2019alertes \u00b7 monter le seuil \u2192 plus d\u2019oublis',430,262);
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+ document.getElementById('verif6').addEventListener('click',()=>{
+ essais6++;
+ if(valide) return;
+ const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+ if(v>=sc.min && v<=sc.max){
+ etape++;
+ if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6, essais6<=SCEN.length?4:(essais6<=SCEN.length+2?3:2)); }
+ else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+ } else {
+ verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+ }
+ });
 })();
 
 /* ================= A7 : BILAN ================= */
@@ -540,34 +627,216 @@ const Q5=[
  {q:"Sur 50 photos de test, l'IA en classe 45 correctement. Sa précision est…", r:["45 %","90 %","95 %"], b:1},
 ];
 (function initQ5(){
-  const zone=document.getElementById('quiz5');
-  Q5.forEach((item,i)=>{
-    const d=document.createElement('div'); d.className='question';
-    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
-    const rep=d.querySelector('.rep');
-    item.r.forEach((r,k)=>{
-      const b=document.createElement('button'); b.textContent=r;
-      b.onclick=()=>{
-        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
-        etat.q5rep++;
-        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
-        if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
-          else{
-            const verd=document.createElement('div'); verd.className='verdict ko';
-            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
-            zone.appendChild(verd);
-          }
-        }
-      };
-      rep.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('quiz5');
+ let tentative=0, reponses={};
+ function melanger(t){ return t.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
+ function construire(){
+ reponses={};
+ zone.innerHTML='';
+ const ordre=melanger(Q5.map((q,i)=>i));
+ ordre.forEach((qi,rang)=>{
+ const item=Q5[qi];
+ const d=document.createElement('div'); d.className='question';
+ d.innerHTML='<div class="q">'+(rang+1)+'. '+item.q+'</div><div class="rep"></div>';
+ const rep=d.querySelector('.rep');
+ melanger(item.r.map((txt,k)=>({txt,k}))).forEach(o=>{
+ const b=document.createElement('button'); b.textContent=o.txt;
+ b.onclick=()=>{
+ rep.querySelectorAll('button').forEach(x=>x.classList.remove('choisi'));
+ b.classList.add('choisi');
+ reponses[qi]=o.k;
+ const n=Object.keys(reponses).length;
+ info.textContent = n<Q5.length
+ ? n+' réponse(s) sur '+Q5.length+' — aucune correction avant la validation.'
+ : 'Toutes les questions sont renseignées : tu peux valider.';
+ btn.disabled = n<Q5.length;
+ };
+ rep.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
+ zone.appendChild(barre);
+ btn.disabled=true;
+ info.textContent='Réponds aux '+Q5.length+' questions, puis valide. Aucune réponse ne sera corrigée avant.';
+ }
+ const barre=document.createElement('div');
+ const info=document.createElement('div'); info.className='verdict'; info.style.marginTop='10px';
+ const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Valider mes 4 réponses';
+ btn.style.marginTop='10px';
+ const sortie=document.createElement('div');
+ barre.appendChild(info); barre.appendChild(btn); barre.appendChild(sortie);
+ btn.onclick=()=>{
+ tentative++;
+ let bons=0;
+ Q5.forEach((item,i)=>{ if(reponses[i]===item.b) bons++; });
+ if(bons>=3){
+ etat.q5ok=bons; etat.score+=bons;
+ document.getElementById('scoreTot').textContent=etat.score;
+ zone.querySelectorAll('button').forEach(x=>x.disabled=true);
+ sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
+ ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
+ document.getElementById('codefinal').style.display='block';
+ reussir(10, tentative===1?2:(tentative===2?1:0));
+ } else {
+ sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
+ ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
+ 'Les questions seront remélangées.</div>';
+ setTimeout(()=>{ construire(); sortie.innerHTML=''; },2600);
+ }
+ };
+ construire();
 })();
 
 charger(); majProgression();
+</script>
+
+<button id="calcBtn" title="Ouvrir la calculatrice"><span class="ic">C</span>calcul</button>
+<div id="calcPan">
+ <div class="tete" id="calcTete"><b>CALCULATRICE</b><button id="calcX" title="Fermer">&times;</button></div>
+ <div id="calcEcr"><div class="op" id="calcOp"></div><div class="val" id="calcVal">0</div></div>
+ <div id="calcGr">
+ <button class="f" data-k="C">C</button><button class="f" data-k="back">&#9003;</button>
+ <button class="f" data-k="pct">%</button><button class="op" data-k="/">&divide;</button>
+ <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+ <button class="op" data-k="*">&times;</button>
+ <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+ <button class="op" data-k="-">&minus;</button>
+ <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+ <button class="op" data-k="+">+</button>
+ <button class="f" data-k="sign">+/&minus;</button><button data-k="0">0</button>
+ <button data-k=".">,</button><button class="eq" data-k="=">=</button>
+ </div>
+</div>
+<script>
+/* ===== Calculatrice (aucun eval, aucune dépendance) ===== */
+(function(){
+ var pan=document.getElementById('calcPan'), btn=document.getElementById('calcBtn');
+ var eVal=document.getElementById('calcVal'), eOp=document.getElementById('calcOp');
+ var cour='0', prec=null, oper=null, neuf=true;
+ function aff(){
+ eVal.textContent=String(cour).replace('.',',');
+ eOp.textContent=(prec!==null?String(prec).replace('.',',')+' '+({'+':'+','-':'\u2212','*':'\u00d7','/':'\u00f7'}[oper]||''):'');
+ }
+ function calcule(a,b,o){
+ a=parseFloat(a); b=parseFloat(b);
+ var r = o==='+'?a+b : o==='-'?a-b : o==='*'?a*b : (b===0?NaN:a/b);
+ if(!isFinite(r)) return 'Erreur';
+ return String(Math.round(r*1e10)/1e10);
+ }
+ function touche(k){
+ if(cour==='Erreur' && k!=='C'){ return; }
+ if(/^[0-9]$/.test(k)){ cour = (neuf||cour==='0') ? k : cour+k; neuf=false; }
+ else if(k==='.'){ if(neuf){ cour='0.'; neuf=false; } else if(cour.indexOf('.')<0) cour+='.'; }
+ else if(k==='C'){ cour='0'; prec=null; oper=null; neuf=true; }
+ else if(k==='back'){ cour = (cour.length>1) ? cour.slice(0,-1) : '0'; if(cour==='-')cour='0'; }
+ else if(k==='sign'){ cour = cour.charAt(0)==='-' ? cour.slice(1) : (cour==='0'?cour:'-'+cour); }
+ else if(k==='pct'){ cour=String(parseFloat(cour)/100); neuf=true; }
+ else if(k==='+'||k==='-'||k==='*'||k==='/'){
+ if(prec!==null && !neuf){ cour=calcule(prec,cour,oper); }
+ prec=cour; oper=k; neuf=true;
+ }
+ else if(k==='='){
+ if(prec!==null && oper){ cour=calcule(prec,cour,oper); prec=null; oper=null; neuf=true; }
+ }
+ aff();
+ }
+ document.getElementById('calcGr').addEventListener('click',function(ev){
+ var b=ev.target.closest('button'); if(!b)return; touche(b.dataset.k);
+ });
+ btn.addEventListener('click',function(){ pan.classList.toggle('on'); });
+ document.getElementById('calcX').addEventListener('click',function(){ pan.classList.remove('on'); });
+ /* déplacement du panneau */
+ var tete=document.getElementById('calcTete'), drag=false, dx=0, dy=0;
+ tete.addEventListener('pointerdown',function(e){
+ if(e.target.id==='calcX')return;
+ drag=true; var r=pan.getBoundingClientRect();
+ dx=e.clientX-r.left; dy=e.clientY-r.top;
+ pan.style.right='auto'; pan.style.bottom='auto';
+ pan.style.left=r.left+'px'; pan.style.top=r.top+'px';
+ try{ tete.setPointerCapture(e.pointerId); }catch(err){}
+ });
+ tete.addEventListener('pointermove',function(e){
+ if(!drag)return;
+ pan.style.left=Math.max(4,Math.min(window.innerWidth-244,e.clientX-dx))+'px';
+ pan.style.top=Math.max(4,Math.min(window.innerHeight-260,e.clientY-dy))+'px';
+ });
+ tete.addEventListener('pointerup',function(){ drag=false; });
+ aff();
+})();
+
+/* ============ A7-A9 : expliquer, calculer, tracer ============ */
+(function(){
+  function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function nbv(v){return parseFloat(String(v||'').replace(',','.'));}
+  function champs(zone,liste,grand){
+    const z=document.getElementById(zone);
+    liste.forEach(c=>{
+      const d=document.createElement('div'); d.className='chp';
+      const l=document.createElement('label'); l.innerHTML=c.lbl; d.appendChild(l);
+      const i=document.createElement('input'); i.id=c.id; i.autocomplete='off';
+      if(grand){ i.className='large'; i.placeholder='rédige une phrase complète'; }
+      d.appendChild(i);
+      if(c.u){ const u=document.createElement('span'); u.className='u'; u.textContent=c.u; d.appendChild(u); }
+      z.appendChild(d);
+    });
+  }
+  const REDAC=[
+  {id:'q71',lbl:'a) On entraîne un détecteur de chats avec 1 000 photos de chats noirs uniquement. Que se passera-t-il ensuite ? Pourquoi ?',
+   cles:['blanc','roux','autre','couleur','reconnait','rate','biais','apprisque','noir','manque','varie']},
+  {id:'q72',lbl:'b) Pourquoi dit-on qu’une IA ne répond jamais « oui » mais « probablement » ?',
+   cles:['probabilit','pourcentage','confiance','score','certitude','sur','estime','proba']},
+  {id:'q73',lbl:'c) Qui décide du seuil à partir duquel l’IA déclenche une alerte, et pourquoi n’est-ce pas la machine ?',
+   cles:['humain','homme','personne','ingenieur','consequence','risque','choix','depend','usage','grave']}], CALC=[
+  {id:'c81',lbl:'a) Nombre de fausses alertes',rep:27,u:'images'},
+  {id:'c82',lbl:'b) Nombre total de vrais chats dans le jeu de test',rep:180,u:'chats'},
+  {id:'c83',lbl:'c) Pourcentage de vrais chats effectivement retrouvés (arrondi à l’unité)',rep:85,tol:1,u:'%'},
+  {id:'c84',lbl:'d) Pourcentage d’erreurs sur l’ensemble des 500 images (arrondi à l’unité)',rep:11,tol:1,u:'%'}], TRACE=[
+  {id:'t91',lbl:'a) Combien de blocs ton schéma comporte-t-il, boucle non comprise ?',rep:'3',num:true},
+  {id:'t92',lbl:'b) Que transporte la flèche de retour ?',rep:['erreur','lerreur','ecart','difference','correction']},
+  {id:'t93',lbl:'c) Où as-tu placé la croix de l’intervention humaine ?',rep:['donnees','etiquet','lesdonnees','etiquetage','seuil']},
+  {id:'t94',lbl:'d) Sans la boucle de retour, le modèle apprend-il ? (oui / non)',rep:['non']}];
+  champs('champs7',REDAC,true); champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  let e7=0,e8=0,e9=0;
+  function verdict(id,html,ok){
+    const v=document.getElementById(id);
+    v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
+  }
+  document.getElementById('verif7').addEventListener('click',()=>{
+    let bons=0;
+    REDAC.forEach(c=>{ const v=norm(document.getElementById(c.id).value);
+      if(v.length>12 && c.cles.some(k=>v.includes(k))) bons++; });
+    if(bons===REDAC.length){
+      verdict('verd7','\u2713 Explications convaincantes. '+'Une IA n’apprend que ce qu’on lui montre : nourrie de chats noirs, elle rate les chats roux — c’est un BIAIS, et il vient des données, pas du programme. Elle ne répond d’ailleurs jamais par oui ou non, mais par un score de confiance : « chat à 87 % ». Et c’est un humain qui choisit le seuil de déclenchement, parce que ce choix dépend des conséquences : rater un chat n’a pas la même gravité que rater une tumeur. La machine calcule, l’humain arbitre.',true);
+      reussir(7, e7===0?3:2);
+    } else { e7++;
+      verdict('verd7','\u2717 Réponse(s) convaincante(s) : '+bons+' sur '+REDAC.length+
+        '. Rédige une phrase complète et nomme précisément la cause ou la fonction.',false); }
+  });
+  document.getElementById('verif8').addEventListener('click',()=>{
+    let faux=0;
+    CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
+      if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
+    if(faux===0){
+      verdict('verd8','\u2713 Tous les calculs sont justes. '+'180 signalés dont 153 justes : 27 fausses alertes. Et 153 retrouvés sur 180 vrais chats, soit 85 % — c’est le taux de détection. Au total 54 erreurs sur 500 images, environ 11 %. Retiens qu’un seul chiffre ne suffit jamais à juger une IA : il faut regarder SÉPARÉMENT ce qu’elle invente et ce qu’elle oublie, car baisser l’un fait toujours monter l’autre.',true);
+      reussir(8, e8===0?3:2);
+    } else { e8++;
+      verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
+        '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
+  });
+  document.getElementById('verif9').addEventListener('click',()=>{
+    let faux=0;
+    TRACE.forEach(c=>{ const v=document.getElementById(c.id).value;
+      const bon = c.num ? String(nbv(v))===String(nbv(c.rep))
+        : (Array.isArray(c.rep)?c.rep:[c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+      if(!bon) faux++; });
+    if(faux===0){
+      verdict('verd9','\u2713 Ton tracé est conforme. '+'Trois blocs et une boucle. La flèche de retour transporte l’erreur — l’écart entre ce que le modèle a prédit et ce qu’il fallait prédire — et c’est elle qui ajuste les neurones. Sans elle, aucun apprentissage : le modèle répéterait indéfiniment les mêmes bêtises. Quant à l’humain, il intervient d’abord dans les données : c’est lui qui étiquette, donc lui qui transmet ses biais.',true);
+      reussir(9, e9===0?3:2);
+    } else { e9++;
+      verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
+  });
+  
+})();
 </script>
 </body>
 </html>

@@ -6,8 +6,8 @@
 <title>Cours 5ème — Météo & instruments de mesure · ESTIC</title>
 <style>
 :root{ --ink:#1e3a5f; --niv:#ca8a04; --niv-fonce:#a16207; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
-  --ombre:0 4px 14px rgba(30,58,95,.10);}
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+ --ombre:0 4px 14px rgba(30,58,95,.10);}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
@@ -66,296 +66,572 @@ table.mat tr:nth-child(even) td{background:#f8fafc}
 <body>
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
 <div class="layout">
 <nav class="side" id="menu">
-  <a href="#s1"><span class="dot"></span>Prédire le ciel, un exploit technique</a>
-  <a href="#s2"><span class="dot"></span>Les quatre grandeurs à mesurer</a>
-  <a href="#s3"><span class="dot"></span>La station météo (animation)</a>
-  <a href="#s4"><span class="dot"></span>Le tableau des instruments</a>
-  <a href="#s5"><span class="dot"></span>De la mesure à la prévision (animation)</a>
-  <a href="#s6"><span class="dot"></span>Le baromètre, la boule de cristal (animation)</a>
-  <a href="#s7"><span class="dot"></span>Mesurer juste : tout un art</a>
-  <a href="#s8"><span class="dot"></span>À retenir</a>
-  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+ <a href="#s1"><span class="dot"></span>Prédire le ciel, un exploit technique</a>
+ <a href="#s2"><span class="dot"></span>Les quatre grandeurs à mesurer</a>
+ <a href="#s3"><span class="dot"></span>La station météo (animation)</a>
+ <a href="#s4"><span class="dot"></span>Le tableau des instruments</a>
+ <a href="#s5"><span class="dot"></span>De la mesure à la prévision (animation)</a>
+ <a href="#s6"><span class="dot"></span>Le baromètre, la boule de cristal (animation)</a>
+ <a href="#s7"><span class="dot"></span>Mesurer juste : tout un art</a>
+ <a href="#s8"><span class="dot"></span>À retenir</a>
+ <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
 </nav>
 
 <main>
 
 <section class="slide" id="s1">
-  <div class="eyebrow">Technologie · 5ème · Séquence Météo & instruments de mesure</div>
-  <h1>🌦️ Prédire le ciel<br>de demain.</h1>
-  <p class="sous" style="margin-top:16px">« Il pleuvra demain à 14 h. » Derrière cette petite phrase du bulletin : des <b>milliers de stations de mesure</b>,
-  des ballons-sondes, des satellites, et l'un des plus gros supercalculateurs de France. La météo est une immense
-  <b>chaîne d'information</b> — et tout commence par des instruments qui mesurent JUSTE. Découvrons-les.</p>
+ <div class="eyebrow">Technologie · 5ème · Séquence Météo & instruments de mesure</div>
+ <h1>Prédire le ciel<br>de demain.</h1>
+ <p class="sous" style="margin-top:16px">« Il pleuvra demain à 14 h. » Derrière cette petite phrase du bulletin : des <b>milliers de stations de mesure</b>,
+ des ballons-sondes, des satellites, et l'un des plus gros supercalculateurs de France. La météo est une immense
+ <b>chaîne d'information</b> — et tout commence par des instruments qui mesurent JUSTE. Découvrons-les.</p>
 </section>
 
 <section class="slide" id="s2">
-  <h2>Quatre grandeurs, quatre instruments</h2>
-  <div class="cartes">
-    <div class="carte" style="--accent:#dc2626"><div class="ic">🌡️</div><h3>LA TEMPÉRATURE</h3><p>Mesurée par le thermomètre, en degrés Celsius (°C) — toujours à l'ombre, sous abri.</p><span class="ex">unité : °C</span></div>
-    <div class="carte" style="--accent:#0e7490"><div class="ic">💨</div><h3>LE VENT</h3><p>L'anémomètre à coupelles mesure sa vitesse (km/h), la girouette donne sa direction.</p><span class="ex">unités : km/h + point cardinal</span></div>
-    <div class="carte" style="--accent:#1d4ed8"><div class="ic">🌧️</div><h3>LES PRÉCIPITATIONS</h3><p>Le pluviomètre recueille la pluie : 1 mm relevé = 1 litre tombé par mètre carré !</p><span class="ex">unité : mm</span></div>
-    <div class="carte" style="--accent:#7c3aed"><div class="ic">🎈</div><h3>LA PRESSION</h3><p>Le baromètre pèse l'air au-dessus de nous, en hectopascals. Elle chute ? Le mauvais temps approche…</p><span class="ex">unité : hPa (≈ 1013 au beau fixe)</span></div>
-  </div>
+ <h2>Quatre grandeurs, quatre instruments</h2>
+ <div class="cartes">
+ <div class="carte" style="--accent:#dc2626"><div class="ic"></div><h3>LA TEMPÉRATURE</h3><p>Mesurée par le thermomètre, en degrés Celsius (°C) — toujours à l'ombre, sous abri.</p><span class="ex">unité : °C</span></div>
+ <div class="carte" style="--accent:#0e7490"><div class="ic"></div><h3>LE VENT</h3><p>L'anémomètre à coupelles mesure sa vitesse (km/h), la girouette donne sa direction.</p><span class="ex">unités : km/h + point cardinal</span></div>
+ <div class="carte" style="--accent:#1d4ed8"><div class="ic"></div><h3>LES PRÉCIPITATIONS</h3><p>Le pluviomètre recueille la pluie : 1 mm relevé = 1 litre tombé par mètre carré !</p><span class="ex">unité : mm</span></div>
+ <div class="carte" style="--accent:#7c3aed"><div class="ic"></div><h3>LA PRESSION</h3><p>Le baromètre pèse l'air au-dessus de nous, en hectopascals. Elle chute ? Le mauvais temps approche…</p><span class="ex">unité : hPa (≈ 1013 au beau fixe)</span></div>
+ </div>
 </section>
 
 <section class="slide" id="s3">
-  <h2>La station météo : quatre capteurs au travail</h2>
-  <div class="animbox">
-    <canvas id="cvStation" width="820" height="380"></canvas>
-    <div class="legende"><div class="caption" id="capStation"></div></div>
-    <div class="anavig">
-      <button class="navbtn" data-prev="station">◀ Précédent</button>
-      <div class="phasepts" id="ptsStation"></div>
-      <button class="navbtn" data-next="station">Suivant ▶</button>
-      <button class="rejbtn" data-anim="station">⟳ Rejouer l’étape</button>
-    </div>
-  </div>
+ <h2>La station météo : quatre capteurs au travail</h2>
+ <div class="animbox">
+ <canvas id="cvStation" width="820" height="380"></canvas>
+ <div class="legende"><div class="caption" id="capStation"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="station">◀ Précédent</button>
+ <div class="phasepts" id="ptsStation"></div>
+ <button class="navbtn" data-next="station">Suivant ▶</button>
+ <button class="rejbtn" data-anim="station">⟳ Rejouer l’étape</button>
+ </div>
+ </div>
 </section>
 
 <section class="slide" id="s4">
-  <h2>Le tableau des instruments</h2>
-  <table class="mat">
-    <tr><th>Instrument</th><th>Grandeur mesurée</th><th>Le détail malin</th></tr>
-    <tr><td>🌡️ Thermomètre</td><td>température (°C)</td><td>sous ABRI normalisé, à 1,50 m du sol : au soleil direct, il mentirait de 10 °C !</td></tr>
-    <tr><td>💨 Anémomètre à coupelles</td><td>vitesse du vent (km/h)</td><td>plus il tourne vite, plus le vent souffle — un capteur compte les tours</td></tr>
-    <tr><td>🧭 Girouette</td><td>direction du vent</td><td>elle pointe D'OÙ vient le vent : un « vent d'ouest » vient de l'ouest</td></tr>
-    <tr><td>🌧️ Pluviomètre</td><td>précipitations (mm)</td><td>1 mm = 1 L/m². Son ennemi juré : la feuille morte qui le bouche</td></tr>
-    <tr><td>🎈 Baromètre</td><td>pression (hPa)</td><td>il « pèse » la colonne d'air : quand elle s'allège, une perturbation approche</td></tr>
-    <tr><td>💧 Hygromètre</td><td>humidité de l'air (%)</td><td>100 % = brouillard garanti ; il aide à prévoir gelées et orages</td></tr>
-  </table>
+ <h2>Le tableau des instruments</h2>
+ <table class="mat">
+ <tr><th>Instrument</th><th>Grandeur mesurée</th><th>Le détail malin</th></tr>
+ <tr><td>Thermomètre</td><td>température (°C)</td><td>sous ABRI normalisé, à 1,50 m du sol : au soleil direct, il mentirait de 10 °C !</td></tr>
+ <tr><td>Anémomètre à coupelles</td><td>vitesse du vent (km/h)</td><td>plus il tourne vite, plus le vent souffle — un capteur compte les tours</td></tr>
+ <tr><td>Girouette</td><td>direction du vent</td><td>elle pointe D'OÙ vient le vent : un « vent d'ouest » vient de l'ouest</td></tr>
+ <tr><td>Pluviomètre</td><td>précipitations (mm)</td><td>1 mm = 1 L/m². Son ennemi juré : la feuille morte qui le bouche</td></tr>
+ <tr><td>Baromètre</td><td>pression (hPa)</td><td>il « pèse » la colonne d'air : quand elle s'allège, une perturbation approche</td></tr>
+ <tr><td>Hygromètre</td><td>humidité de l'air (%)</td><td>100 % = brouillard garanti ; il aide à prévoir gelées et orages</td></tr>
+ </table>
 </section>
 
 <section class="slide" id="s5">
-  <h2>De la mesure au bulletin : la chaîne de la prévision</h2>
-  <div class="animbox">
-    <canvas id="cvPrevision" width="820" height="380"></canvas>
-    <div class="legende"><div class="caption" id="capPrevision"></div></div>
-    <div class="anavig">
-      <button class="navbtn" data-prev="prevision">◀ Précédent</button>
-      <div class="phasepts" id="ptsPrevision"></div>
-      <button class="navbtn" data-next="prevision">Suivant ▶</button>
-      <button class="rejbtn" data-anim="prevision">⟳ Rejouer l’étape</button>
-    </div>
-  </div>
+ <h2>De la mesure au bulletin : la chaîne de la prévision</h2>
+ <div class="animbox">
+ <canvas id="cvPrevision" width="820" height="380"></canvas>
+ <div class="legende"><div class="caption" id="capPrevision"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="prevision">◀ Précédent</button>
+ <div class="phasepts" id="ptsPrevision"></div>
+ <button class="navbtn" data-next="prevision">Suivant ▶</button>
+ <button class="rejbtn" data-anim="prevision">⟳ Rejouer l’étape</button>
+ </div>
+ </div>
 </section>
 
 <section class="slide" id="s6">
-  <h2>Le baromètre : la boule de cristal des marins</h2>
-  <div class="animbox">
-    <canvas id="cvBarometre" width="820" height="380"></canvas>
-    <div class="legende"><div class="caption" id="capBarometre"></div></div>
-    <div class="anavig">
-      <button class="navbtn" data-prev="barometre">◀ Précédent</button>
-      <div class="phasepts" id="ptsBarometre"></div>
-      <button class="navbtn" data-next="barometre">Suivant ▶</button>
-      <button class="rejbtn" data-anim="barometre">⟳ Rejouer l’étape</button>
-    </div>
-  </div>
+ <h2>Le baromètre : la boule de cristal des marins</h2>
+ <div class="animbox">
+ <canvas id="cvBarometre" width="820" height="380"></canvas>
+ <div class="legende"><div class="caption" id="capBarometre"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="barometre">◀ Précédent</button>
+ <div class="phasepts" id="ptsBarometre"></div>
+ <button class="navbtn" data-next="barometre">Suivant ▶</button>
+ <button class="rejbtn" data-anim="barometre">⟳ Rejouer l’étape</button>
+ </div>
+ </div>
 </section>
 
 <section class="slide" id="s7">
-  <h2>Mesurer juste : tout un art</h2>
-  <table class="mat">
-    <tr><th>La règle d'or</th><th>Pourquoi</th></tr>
-    <tr><td>🏠 Le thermomètre vit sous un <b>abri normalisé</b> blanc et ventilé</td><td>au soleil direct, il mesure SA température, pas celle de l'air : jusqu'à +10 °C d'erreur</td></tr>
-    <tr><td>📏 Le pluviomètre se <b>vide et se nettoie</b> régulièrement</td><td>une feuille morte qui le bouche = un mois de « sécheresse » imaginaire dans les relevés</td></tr>
-    <tr><td>🗼 L'anémomètre se perche à <b>10 mètres</b>, loin des murs</td><td>près d'un bâtiment, le vent tourbillonne : la mesure ne vaut rien</td></tr>
-    <tr><td>🔁 Les capteurs s'<b>étalonnent</b> : on les compare à une référence</td><td>un capteur qui dérive ment un peu plus chaque jour — sans que personne ne s'en aperçoive</td></tr>
-  </table>
-  <p class="sous" style="margin-top:18px">➡️ Au <b>TP</b>, la station météo t'embauche : trois instruments qui racontent n'importe quoi à expertiser, et une pluie à convertir en litres.</p>
+ <h2>Mesurer juste : tout un art</h2>
+ <table class="mat">
+ <tr><th>La règle d'or</th><th>Pourquoi</th></tr>
+ <tr><td>Le thermomètre vit sous un <b>abri normalisé</b>blanc et ventilé</td><td>au soleil direct, il mesure SA température, pas celle de l'air : jusqu'à +10 °C d'erreur</td></tr>
+ <tr><td>Le pluviomètre se <b>vide et se nettoie</b>régulièrement</td><td>une feuille morte qui le bouche = un mois de « sécheresse » imaginaire dans les relevés</td></tr>
+ <tr><td>L'anémomètre se perche à <b>10 mètres</b>, loin des murs</td><td>près d'un bâtiment, le vent tourbillonne : la mesure ne vaut rien</td></tr>
+ <tr><td>Les capteurs s'<b>étalonnent</b> : on les compare à une référence</td><td>un capteur qui dérive ment un peu plus chaque jour — sans que personne ne s'en aperçoive</td></tr>
+ </table>
+ <p class="sous" style="margin-top:18px">Au <b>TP</b>, la station météo t'embauche : trois instruments qui racontent n'importe quoi à expertiser, et une pluie à convertir en litres.</p>
 </section>
 
 <section class="slide" id="s8">
-  <h2>✅ À retenir</h2>
-  <div class="retenir">
-    <ul>
-      <li>Chaque grandeur météo a SON instrument et SON unité : <b>température</b> (thermomètre, °C), <b>vent</b> (anémomètre km/h + girouette pour la direction), <b>précipitations</b> (pluviomètre, mm), <b>pression</b> (baromètre, hPa).</li>
-      <li><b>1 mm de pluie = 1 litre par mètre carré</b> : le relevé du pluviomètre se convertit directement en volume d'eau.</li>
-      <li>La prévision est une <b>chaîne d'information</b> : MESURER (milliers de stations, ballons, satellites) → TRANSMETTRE les relevés → CALCULER (supercalculateur) → DIFFUSER le bulletin et les vigilances.</li>
-      <li>Le <b>baromètre</b> annonce le temps : une pression qui CHUTE signale une perturbation qui approche — les marins le savaient bien avant les satellites.</li>
-      <li>Une mesure ne vaut que si elle est <b>juste</b> : abri normalisé pour le thermomètre, pluviomètre débouché, anémomètre dégagé, capteurs étalonnés. Un capteur qui ment, c'est une prévision qui déraille.</li>
-    </ul>
-  </div>
+ <h2>✓ À retenir</h2>
+ <div class="retenir">
+ <ul>
+ <li>Chaque grandeur météo a SON instrument et SON unité : <b>température</b> (thermomètre, °C), <b>vent</b> (anémomètre km/h + girouette pour la direction), <b>précipitations</b> (pluviomètre, mm), <b>pression</b> (baromètre, hPa).</li>
+ <li><b>1 mm de pluie = 1 litre par mètre carré</b> : le relevé du pluviomètre se convertit directement en volume d'eau.</li>
+ <li>La prévision est une <b>chaîne d'information</b> : MESURER (milliers de stations, ballons, satellites) → TRANSMETTRE les relevés → CALCULER (supercalculateur) → DIFFUSER le bulletin et les vigilances.</li>
+ <li>Le <b>baromètre</b>annonce le temps : une pression qui CHUTE signale une perturbation qui approche — les marins le savaient bien avant les satellites.</li>
+ <li>Une mesure ne vaut que si elle est <b>juste</b> : abri normalisé pour le thermomètre, pluviomètre débouché, anémomètre dégagé, capteurs étalonnés. Un capteur qui ment, c'est une prévision qui déraille.</li>
+ </ul>
+ </div>
 </section>
 
 </main>
 </div>
 
 <script>
+
+/* ===== SCHEMAS : dessins vectoriels remplaçant les anciens pictogrammes =====
+   SCHEMA(ctx,'nom',x,y,T) dessine le symbole centré en (x,y), taille T.
+   La couleur courante (ctx.fillStyle) sert de teinte principale.          */
+const SCHEMA=(function(){
+  function P(c,pts,rempli){
+    c.beginPath();
+    pts.forEach((p,i)=> i? c.lineTo(p[0],p[1]) : c.moveTo(p[0],p[1]));
+    c.closePath(); rempli? c.fill() : c.stroke();
+  }
+  const D={
+  maison(c,u,t){ c.fillRect(-.32*u,-.05*u,.64*u,.42*u);
+    P(c,[[-.44*u,-.05*u],[0,-.42*u],[.44*u,-.05*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.1*u,.12*u,.2*u,.25*u); c.restore(); },
+  batiment(c,u){ c.fillRect(-.3*u,-.42*u,.6*u,.84*u);
+    c.save(); c.fillStyle='#fff';
+    for(let i=0;i<4;i++)for(let j=0;j<3;j++) c.fillRect(-.22*u+j*.16*u,-.34*u+i*.19*u,.09*u,.11*u);
+    c.restore(); },
+  usine(c,u){ c.fillRect(-.42*u,0,.84*u,.4*u);
+    P(c,[[-.42*u,0],[-.14*u,-.2*u],[-.14*u,0]],true);
+    P(c,[[-.14*u,0],[.14*u,-.2*u],[.14*u,0]],true);
+    c.fillRect(.22*u,-.44*u,.14*u,.44*u); },
+  ville(c,u){ [[-.42,.5],[-.18,.78],[.08,.42],[.3,.66]].forEach(([bx,bh])=>
+      c.fillRect(bx*u,(.42-bh*.84)*u,.2*u,bh*.84*u)); },
+  soleil(c,u){ c.beginPath(); c.arc(0,0,.24*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.4,.055*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<8;k++){ const a=k*.785;
+      c.beginPath(); c.moveTo(.32*u*Math.cos(a),.32*u*Math.sin(a));
+      c.lineTo(.45*u*Math.cos(a),.45*u*Math.sin(a)); c.stroke(); } c.lineWidth=w; },
+  nuage(c,u){ c.beginPath();
+    c.arc(-.18*u,.04*u,.19*u,0,6.284); c.arc(.03*u,-.1*u,.24*u,0,6.284);
+    c.arc(.26*u,.05*u,.18*u,0,6.284); c.fill();
+    c.fillRect(-.18*u,-.02*u,.44*u,.24*u); },
+  pluie(c,u){ D.nuage(c,u*.85);
+    const w=c.lineWidth; c.lineWidth=Math.max(1.4,.05*u); c.strokeStyle=c.fillStyle;
+    [-.2,0,.2].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,.2*u); c.lineTo(dx*u-.05*u,.44*u); c.stroke(); });
+    c.lineWidth=w; },
+  goutte(c,u){ c.beginPath(); c.moveTo(0,-.42*u);
+    c.quadraticCurveTo(.34*u,.06*u,0,.4*u); c.quadraticCurveTo(-.34*u,.06*u,0,-.42*u); c.fill(); },
+  vent(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.075*u); c.strokeStyle=c.fillStyle;
+    [-.22,0,.22].forEach((dy,i)=>{ c.beginPath(); c.moveTo(-.44*u,dy*u);
+      c.lineTo((.2-i*.12)*u,dy*u); c.quadraticCurveTo(.42*u,dy*u,.3*u,(dy-.14)*u); c.stroke(); });
+    c.lineWidth=w; },
+  flocon(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.4,.055*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ const a=k*1.047;
+      c.beginPath(); c.moveTo(-.42*u*Math.cos(a),-.42*u*Math.sin(a));
+      c.lineTo(.42*u*Math.cos(a),.42*u*Math.sin(a)); c.stroke();
+      [-1,1].forEach(s=>{ c.beginPath();
+        c.moveTo(s*.42*u*Math.cos(a),s*.42*u*Math.sin(a));
+        c.lineTo(s*.26*u*Math.cos(a)+.12*u*Math.cos(a+2.1),s*.26*u*Math.sin(a)+.12*u*Math.sin(a+2.1)); c.stroke(); }); }
+    c.lineWidth=w; },
+  feu(c,u){ c.beginPath(); c.moveTo(0,.42*u);
+    c.quadraticCurveTo(-.4*u,.06*u,-.1*u,-.42*u);
+    c.quadraticCurveTo(-.04*u,-.12*u,.14*u,-.28*u);
+    c.quadraticCurveTo(.1*u,-.02*u,.36*u,.1*u);
+    c.quadraticCurveTo(.4*u,.34*u,0,.42*u); c.fill(); },
+  eclair(c,u){ P(c,[[.06*u,-.44*u],[-.28*u,.06*u],[-.02*u,.06*u],[-.1*u,.44*u],[.28*u,-.08*u],[.02*u,-.08*u]],true); },
+  choc(c,u){ const p=[]; for(let k=0;k<12;k++){ const a=k*.5236, r=(k%2? .2:.46)*u;
+      p.push([r*Math.cos(a),r*Math.sin(a)]); } P(c,p,true); },
+  pile(c,u){ c.fillRect(-.34*u,-.22*u,.6*u,.44*u); c.fillRect(.26*u,-.09*u,.08*u,.18*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.28*u,-.15*u,.12*u,.3*u); c.restore(); },
+  ampoule(c,u){ c.beginPath(); c.arc(0,-.1*u,.27*u,0,6.284); c.fill();
+    c.fillRect(-.11*u,.16*u,.22*u,.16*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.11*u,.21*u,.22*u,.03*u); c.restore(); },
+  engrenage(c,u){ const p=[]; for(let k=0;k<24;k++){ const a=k*.2618, r=(k%2? .3:.44)*u;
+      p.push([r*Math.cos(a),r*Math.sin(a)]); } P(c,p,true);
+    c.save(); c.globalCompositeOperation='destination-out';
+    c.beginPath(); c.arc(0,0,.15*u,0,6.284); c.fill(); c.restore(); },
+  vis(c,u){ c.fillRect(-.1*u,-.12*u,.2*u,.5*u);
+    c.fillRect(-.26*u,-.4*u,.52*u,.28*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.18*u,-.29*u,.36*u,.06*u); c.restore(); },
+  atome(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.3,.05*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ c.save(); c.rotate(k*1.047);
+      c.beginPath(); c.ellipse(0,0,.44*u,.17*u,0,0,6.284); c.stroke(); c.restore(); }
+    c.lineWidth=w; c.beginPath(); c.arc(0,0,.1*u,0,6.284); c.fill(); },
+  thermometre(c,u){ c.fillRect(-.07*u,-.4*u,.14*u,.5*u);
+    c.beginPath(); c.arc(0,.24*u,.17*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1,.03*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<4;k++){ c.beginPath(); c.moveTo(.09*u,(-.3+k*.13)*u); c.lineTo(.2*u,(-.3+k*.13)*u); c.stroke(); }
+    c.lineWidth=w; },
+  coeur(c,u){ c.beginPath(); c.moveTo(0,.4*u);
+    c.bezierCurveTo(-.62*u,-.02*u,-.3*u,-.46*u,0,-.16*u);
+    c.bezierCurveTo(.3*u,-.46*u,.62*u,-.02*u,0,.4*u); c.fill(); },
+  personne(c,u){ c.beginPath(); c.arc(0,-.3*u,.14*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.09*u); c.strokeStyle=c.fillStyle; c.lineCap='round';
+    c.beginPath(); c.moveTo(0,-.15*u); c.lineTo(0,.14*u); c.stroke();
+    c.beginPath(); c.moveTo(-.16*u,0); c.lineTo(.16*u,0); c.stroke();
+    c.beginPath(); c.moveTo(0,.14*u); c.lineTo(-.14*u,.42*u); c.moveTo(0,.14*u); c.lineTo(.14*u,.42*u); c.stroke();
+    c.lineWidth=w; },
+  marcheur(c,u){ c.beginPath(); c.arc(.02*u,-.3*u,.13*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.085*u); c.strokeStyle=c.fillStyle; c.lineCap='round';
+    c.beginPath(); c.moveTo(.02*u,-.16*u); c.lineTo(-.02*u,.12*u); c.stroke();
+    c.beginPath(); c.moveTo(-.02*u,.12*u); c.lineTo(-.2*u,.4*u); c.moveTo(-.02*u,.12*u); c.lineTo(.2*u,.36*u); c.stroke();
+    c.beginPath(); c.moveTo(.02*u,-.08*u); c.lineTo(.22*u,-.16*u); c.stroke();
+    c.lineWidth=w; },
+  main(c,u){ c.fillRect(-.09*u,-.44*u,.18*u,.4*u);
+    c.beginPath(); c.arc(0,.12*u,.24*u,0,6.284); c.fill(); },
+  voiture(c,u){ c.fillRect(-.44*u,-.02*u,.88*u,.24*u);
+    P(c,[[-.28*u,-.02*u],[-.16*u,-.28*u],[.18*u,-.28*u],[.3*u,-.02*u]],true);
+    c.beginPath(); c.arc(-.24*u,.24*u,.12*u,0,6.284); c.arc(.24*u,.24*u,.12*u,0,6.284); c.fill(); },
+  velo(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.28*u,.16*u,.22*u,0,6.284); c.stroke();
+    c.beginPath(); c.arc(.28*u,.16*u,.22*u,0,6.284); c.stroke();
+    c.beginPath(); c.moveTo(-.28*u,.16*u); c.lineTo(0,.16*u); c.lineTo(-.06*u,-.16*u);
+    c.lineTo(.2*u,-.16*u); c.lineTo(.28*u,.16*u); c.moveTo(0,.16*u); c.lineTo(.2*u,-.16*u); c.stroke();
+    c.lineWidth=w; },
+  satellite(c,u){ c.fillRect(-.13*u,-.16*u,.26*u,.32*u);
+    c.fillRect(-.46*u,-.11*u,.28*u,.22*u); c.fillRect(.18*u,-.11*u,.28*u,.22*u);
+    c.save(); c.fillStyle='#fff';
+    [-.4,-.3,.22,.32].forEach(dx=> c.fillRect(dx*u,-.09*u,.04*u,.18*u)); c.restore(); },
+  terre(c,u){ c.beginPath(); c.arc(0,0,.42*u,0,6.284); c.fill();
+    c.save(); c.fillStyle='#fff'; c.globalAlpha=.55;
+    c.beginPath(); c.ellipse(-.12*u,-.1*u,.16*u,.1*u,.4,0,6.284); c.fill();
+    c.beginPath(); c.ellipse(.14*u,.12*u,.13*u,.08*u,-.4,0,6.284); c.fill(); c.restore(); },
+  telephone(c,u){ c.fillRect(-.24*u,-.44*u,.48*u,.88*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.18*u,-.34*u,.36*u,.62*u); c.restore(); },
+  ecran(c,u){ c.fillRect(-.42*u,-.34*u,.84*u,.54*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.36*u,-.28*u,.72*u,.42*u); c.restore();
+    c.fillRect(-.12*u,.2*u,.24*u,.08*u); c.fillRect(-.26*u,.28*u,.52*u,.08*u); },
+  document(c,u){ c.fillRect(-.28*u,-.42*u,.56*u,.84*u);
+    c.save(); c.fillStyle='#fff';
+    for(let k=0;k<4;k++) c.fillRect(-.2*u,(-.3+k*.18)*u,.4*u,.06*u); c.restore(); },
+  colis(c,u){ c.fillRect(-.4*u,-.3*u,.8*u,.6*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.07*u,-.3*u,.14*u,.6*u);
+    c.fillRect(-.4*u,-.05*u,.8*u,.1*u); c.restore(); },
+  enveloppe(c,u){ c.fillRect(-.4*u,-.28*u,.8*u,.56*u);
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.4,.05*u);
+    c.beginPath(); c.moveTo(-.4*u,-.28*u); c.lineTo(0,.04*u); c.lineTo(.4*u,-.28*u); c.stroke(); c.restore(); },
+  antenne(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,.42*u); c.lineTo(0,-.1*u); c.stroke();
+    for(let k=1;k<=3;k++){ c.beginPath(); c.arc(0,-.1*u,k*.13*u,-2.4,-.74); c.stroke(); }
+    c.lineWidth=w; },
+  reseau(c,u){ c.beginPath(); c.arc(0,-.22*u,.1*u,0,6.284);
+    c.arc(-.3*u,.24*u,.1*u,0,6.284); c.arc(.3*u,.24*u,.1*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.2,.045*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,-.22*u); c.lineTo(-.3*u,.24*u); c.lineTo(.3*u,.24*u); c.lineTo(0,-.22*u); c.stroke();
+    c.lineWidth=w; },
+  lien(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.16*u,0,.2*u,-1.1,1.1,true); c.stroke();
+    c.beginPath(); c.arc(.16*u,0,.2*u,2.04,4.24,true); c.stroke();
+    c.beginPath(); c.moveTo(-.12*u,0); c.lineTo(.12*u,0); c.stroke(); c.lineWidth=w; },
+  cadenas(c,u){ c.fillRect(-.28*u,-.06*u,.56*u,.44*u);
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(0,-.08*u,.18*u,Math.PI,0); c.stroke(); c.lineWidth=w; },
+  robot(c,u){ c.fillRect(-.3*u,-.2*u,.6*u,.5*u);
+    c.save(); c.fillStyle='#fff';
+    c.beginPath(); c.arc(-.12*u,-.02*u,.06*u,0,6.284); c.arc(.12*u,-.02*u,.06*u,0,6.284); c.fill();
+    c.fillRect(-.14*u,.12*u,.28*u,.05*u); c.restore();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,-.2*u); c.lineTo(0,-.36*u); c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.arc(0,-.4*u,.07*u,0,6.284); c.fill(); },
+  cerveau(c,u){ c.beginPath();
+    c.arc(-.16*u,-.08*u,.2*u,0,6.284); c.arc(.16*u,-.08*u,.2*u,0,6.284);
+    c.arc(0,.14*u,.2*u,0,6.284); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    c.beginPath(); c.moveTo(0,-.26*u); c.lineTo(0,.3*u); c.stroke(); c.restore(); },
+  poubelle(c,u){ c.fillRect(-.26*u,-.2*u,.52*u,.6*u);
+    c.fillRect(-.34*u,-.3*u,.68*u,.1*u); c.fillRect(-.12*u,-.4*u,.24*u,.1*u);
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    [-.1,0,.1].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,-.1*u); c.lineTo(dx*u,.3*u); c.stroke(); }); c.restore(); },
+  recyclage(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.075*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ c.save(); c.rotate(k*2.094);
+      c.beginPath(); c.arc(0,0,.32*u,-1.9,-.5); c.stroke();
+      c.restore(); } c.lineWidth=w; },
+  feuille(c,u){ c.beginPath(); c.moveTo(-.34*u,.34*u);
+    c.quadraticCurveTo(-.1*u,-.44*u,.36*u,-.3*u);
+    c.quadraticCurveTo(.3*u,.3*u,-.34*u,.34*u); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    c.beginPath(); c.moveTo(-.3*u,.3*u); c.lineTo(.28*u,-.26*u); c.stroke(); c.restore(); },
+  arbre(c,u){ c.fillRect(-.07*u,.06*u,.14*u,.36*u);
+    c.beginPath(); c.arc(0,-.14*u,.3*u,0,6.284); c.fill(); },
+  plot(c,u){ P(c,[[0,-.4*u],[-.3*u,.34*u],[.3*u,.34*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.17*u,-.02*u,.34*u,.09*u); c.restore(); },
+  balle(c,u){ c.beginPath(); c.arc(0,0,.36*u,0,6.284); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.4,.05*u);
+    c.beginPath(); c.arc(-.34*u,0,.3*u,-.9,.9); c.stroke();
+    c.beginPath(); c.arc(.34*u,0,.3*u,2.24,4.04); c.stroke(); c.restore(); },
+  tortue(c,u){ c.beginPath(); c.ellipse(0,0,.34*u,.24*u,0,0,6.284); c.fill();
+    c.beginPath(); c.arc(.36*u,-.04*u,.11*u,0,6.284); c.fill();
+    [-.2,.14].forEach(dx=>{ c.beginPath(); c.ellipse(dx*u,.22*u,.09*u,.06*u,0,0,6.284); c.fill(); }); },
+  escargot(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath();
+    for(let a=0;a<12;a+=.15){ const r=.05*u+a*.028*u;
+      const px=-.05*u+r*Math.cos(a), py=r*Math.sin(a);
+      if(a===0) c.moveTo(px,py); else c.lineTo(px,py); }
+    c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.ellipse(.3*u,.2*u,.16*u,.07*u,0,0,6.284); c.fill(); },
+  oiseau(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.065*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.16*u,.06*u,.2*u,-2.2,-.5); c.stroke();
+    c.beginPath(); c.arc(.16*u,.06*u,.2*u,-2.64,-.94); c.stroke(); c.lineWidth=w; },
+  crane(c,u){ c.beginPath(); c.arc(0,-.08*u,.3*u,0,6.284); c.fill();
+    c.fillRect(-.16*u,.14*u,.32*u,.16*u);
+    c.save(); c.fillStyle='#fff';
+    c.beginPath(); c.arc(-.12*u,-.1*u,.08*u,0,6.284); c.arc(.12*u,-.1*u,.08*u,0,6.284); c.fill(); c.restore(); },
+  loupe(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.075*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.08*u,-.08*u,.26*u,0,6.284); c.stroke();
+    c.beginPath(); c.moveTo(.11*u,.11*u); c.lineTo(.38*u,.38*u); c.stroke(); c.lineWidth=w; },
+  microscope(c,u){ c.fillRect(-.3*u,.3*u,.6*u,.1*u);
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.05*u,.3*u); c.lineTo(-.05*u,-.02*u); c.stroke();
+    c.beginPath(); c.moveTo(-.05*u,-.02*u); c.lineTo(.2*u,-.34*u); c.stroke(); c.lineWidth=w;
+    c.fillRect(-.26*u,.06*u,.42*u,.07*u); },
+  graphique(c,u){ c.fillRect(-.34*u,.02*u,.16*u,.36*u); c.fillRect(-.08*u,-.18*u,.16*u,.56*u);
+    c.fillRect(.18*u,-.34*u,.16*u,.72*u); },
+  baignoire(c,u){ c.beginPath(); c.moveTo(-.4*u,-.06*u); c.lineTo(-.34*u,.28*u);
+    c.lineTo(.34*u,.28*u); c.lineTo(.4*u,-.06*u); c.closePath(); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.28*u,-.06*u); c.lineTo(-.28*u,-.3*u); c.lineTo(-.06*u,-.3*u); c.stroke();
+    c.lineWidth=w; },
+  canape(c,u){ c.fillRect(-.42*u,-.06*u,.84*u,.3*u);
+    c.fillRect(-.42*u,-.28*u,.14*u,.24*u); c.fillRect(.28*u,-.28*u,.14*u,.24*u);
+    c.fillRect(-.3*u,-.22*u,.6*u,.18*u); },
+  flacon(c,u){ c.fillRect(-.16*u,-.16*u,.32*u,.56*u); c.fillRect(-.08*u,-.4*u,.16*u,.24*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.1*u,0,.2*u,.14*u); c.restore(); },
+  bouteille(c,u){ c.beginPath(); c.moveTo(-.16*u,.4*u); c.lineTo(-.16*u,-.06*u);
+    c.lineTo(-.06*u,-.24*u); c.lineTo(-.06*u,-.4*u); c.lineTo(.06*u,-.4*u); c.lineTo(.06*u,-.24*u);
+    c.lineTo(.16*u,-.06*u); c.lineTo(.16*u,.4*u); c.closePath(); c.fill(); },
+  chaussure(c,u){ c.beginPath(); c.moveTo(-.4*u,.3*u); c.lineTo(-.4*u,-.1*u);
+    c.lineTo(-.12*u,-.1*u); c.quadraticCurveTo(.1*u,.06*u,.4*u,.12*u);
+    c.lineTo(.4*u,.3*u); c.closePath(); c.fill(); },
+  hache(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.09*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.28*u,.4*u); c.lineTo(.2*u,-.28*u); c.stroke(); c.lineWidth=w;
+    P(c,[[.06*u,-.18*u],[.34*u,-.42*u],[.44*u,-.16*u],[.2*u,-.02*u]],true); },
+  cloche(c,u){ c.beginPath(); c.moveTo(-.3*u,.2*u);
+    c.quadraticCurveTo(-.3*u,-.34*u,0,-.34*u); c.quadraticCurveTo(.3*u,-.34*u,.3*u,.2*u);
+    c.closePath(); c.fill(); c.fillRect(-.36*u,.2*u,.72*u,.08*u);
+    c.beginPath(); c.arc(0,.34*u,.08*u,0,6.284); c.fill(); },
+  alerte(c,u){ P(c,[[0,-.42*u],[.44*u,.34*u],[-.44*u,.34*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.05*u,-.16*u,.1*u,.3*u);
+    c.beginPath(); c.arc(0,.24*u,.06*u,0,6.284); c.fill(); c.restore(); },
+  chantier(c,u){ P(c,[[0,-.34*u],[.36*u,.3*u],[-.36*u,.3*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.3*u,.06*u,.6*u,.1*u); c.restore(); },
+  ciseaux(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.3*u,-.34*u); c.lineTo(.2*u,.16*u); c.stroke();
+    c.beginPath(); c.moveTo(.3*u,-.34*u); c.lineTo(-.2*u,.16*u); c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.arc(-.24*u,.3*u,.12*u,0,6.284); c.arc(.24*u,.3*u,.12*u,0,6.284); c.fill(); },
+  melange(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.065*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.4*u,-.16*u); c.lineTo(.1*u,-.16*u); c.stroke();
+    c.beginPath(); c.moveTo(-.4*u,.16*u); c.lineTo(.1*u,.16*u); c.stroke(); c.lineWidth=w;
+    P(c,[[.1*u,-.3*u],[.4*u,-.16*u],[.1*u,-.02*u]],true);
+    P(c,[[.1*u,.02*u],[.4*u,.16*u],[.1*u,.3*u]],true); },
+  boucle(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(0,0,.3*u,.5,5.6); c.stroke(); c.lineWidth=w;
+    P(c,[[.16*u,-.34*u],[.38*u,-.1*u],[.08*u,-.06*u]],true); },
+  fleche(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.36*u,0); c.lineTo(.14*u,0); c.stroke(); c.lineWidth=w;
+    P(c,[[.14*u,-.2*u],[.42*u,0],[.14*u,.2*u]],true); },
+  vapeur(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    [-.2,0,.2].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,.36*u);
+      c.bezierCurveTo((dx+.14)*u,.1*u,(dx-.14)*u,-.1*u,dx*u,-.36*u); c.stroke(); });
+    c.lineWidth=w; },
+  sommeil(c,u){ c.font='bold '+(.5*u)+'px Segoe UI'; c.textAlign='center';
+    c.fillText('z',-.14*u,.1*u); c.fillText('z',.14*u,-.16*u); },
+  point(c,u){ c.beginPath(); c.arc(0,0,.3*u,0,6.284); c.fill(); },
+  valide(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.1*u); c.strokeStyle=c.fillStyle;
+    c.lineCap='round'; c.beginPath(); c.moveTo(-.32*u,.02*u); c.lineTo(-.08*u,.28*u);
+    c.lineTo(.34*u,-.26*u); c.stroke(); c.lineWidth=w; },
+  };
+  return function(c,nom,x,y,T){
+    const f=D[nom]; if(!f) return false;
+    c.save(); c.translate(x,y);
+    f(c,T||24,T||24);
+    c.restore(); return true;
+  };
+})();
+
+/* Remplace un ancien pictogramme dessiné : reprend la taille de police et
+   l'alignement courants pour caler le schéma exactement où était le symbole. */
+function SPRITE(c,nom,x,y){
+  const m=/([\d.]+)px/.exec(c.font||''); const T=m?parseFloat(m[1]):24;
+  let cx=x; const al=c.textAlign||'start';
+  if(al==='left'||al==='start') cx=x+T*0.5;
+  else if(al==='right'||al==='end') cx=x-T*0.5;
+  SCHEMA(c,nom,cx,y-T*0.34,T);
+}
+
 /* ====== Moteur d'animations pédagogiques en phases ====== */
 const ANIMS={};
 function creerAnim(nom,canvasId,capId,ptsId,phases){
-  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
-  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
-  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
-  const etat={i:0,t0:null,raf:null};
-  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
-  function majBtns(){
-    const bp=document.querySelector('button[data-prev="'+nom+'"]');
-    const bn=document.querySelector('button[data-next="'+nom+'"]');
-    if(bp) bp.disabled=(etat.i===0);
-    if(bn) bn.disabled=(etat.i===phases.length-1);
-  }
-  function jouer(){
-    cancelAnimationFrame(etat.raf); etat.t0=null;
-    cap.textContent=phases[etat.i].caption; majPts(); majBtns();
-    etat.raf=requestAnimationFrame(function frame(ts){
-      if(etat.t0===null)etat.t0=ts;
-      const p=Math.min(1,(ts-etat.t0)/phases[etat.i].dur);
-      ctx.clearRect(0,0,cv.width,cv.height);
-      phases[etat.i].draw(ctx,p,cv.width,cv.height);
-      if(p<1) etat.raf=requestAnimationFrame(frame);
-    });
-  }
-  ANIMS[nom]={
-    demarrer(){ etat.i=0; jouer(); },
-    rejouer(){ jouer(); },
-    suivant(){ if(etat.i<phases.length-1){ etat.i++; jouer(); } },
-    precedent(){ if(etat.i>0){ etat.i--; jouer(); } }
-  };
-  cap.textContent=phases[0].caption; majPts(); majBtns();
-  phases[0].draw(ctx,0,cv.width,cv.height);
+ const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+ const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+ phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+ const etat={i:0,t0:null,raf:null};
+ function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+ function majBtns(){
+ const bp=document.querySelector('button[data-prev="'+nom+'"]');
+ const bn=document.querySelector('button[data-next="'+nom+'"]');
+ if(bp) bp.disabled=(etat.i===0);
+ if(bn) bn.disabled=(etat.i===phases.length-1);
+ }
+ function jouer(){
+ cancelAnimationFrame(etat.raf); etat.t0=null;
+ cap.textContent=phases[etat.i].caption; majPts(); majBtns();
+ etat.raf=requestAnimationFrame(function frame(ts){
+ if(etat.t0===null)etat.t0=ts;
+ const p=Math.min(1,(ts-etat.t0)/phases[etat.i].dur);
+ ctx.clearRect(0,0,cv.width,cv.height);
+ phases[etat.i].draw(ctx,p,cv.width,cv.height);
+ if(p<1) etat.raf=requestAnimationFrame(frame);
+ });
+ }
+ ANIMS[nom]={
+ demarrer(){ etat.i=0; jouer(); },
+ rejouer(){ jouer(); },
+ suivant(){ if(etat.i<phases.length-1){ etat.i++; jouer(); } },
+ precedent(){ if(etat.i>0){ etat.i--; jouer(); } }
+ };
+ cap.textContent=phases[0].caption; majPts(); majBtns();
+ phases[0].draw(ctx,0,cv.width,cv.height);
 }
 const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
 function etiquette(ctx,txt,x,y,coul='#a16207',taille=15){
-  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+ ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
 }
 function anemo(ctx,x,y,angle){
-  ctx.strokeStyle='#64748b'; ctx.lineWidth=3;
-  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x,y-46); ctx.stroke();
-  ctx.save(); ctx.translate(x,y-46);
-  for(let i=0;i<3;i++){
-    const a=angle+i*2*Math.PI/3;
-    ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(26*Math.cos(a),12*Math.sin(a)); ctx.stroke();
-    ctx.fillStyle='#0e7490';
-    ctx.beginPath(); ctx.arc(26*Math.cos(a),12*Math.sin(a),6,0,Math.PI*2); ctx.fill();
-  }
-  ctx.restore();
+ ctx.strokeStyle='#64748b'; ctx.lineWidth=3;
+ ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x,y-46); ctx.stroke();
+ ctx.save(); ctx.translate(x,y-46);
+ for(let i=0;i<3;i++){
+ const a=angle+i*2*Math.PI/3;
+ ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(26*Math.cos(a),12*Math.sin(a)); ctx.stroke();
+ ctx.fillStyle='#0e7490';
+ ctx.beginPath(); ctx.arc(26*Math.cos(a),12*Math.sin(a),6,0,Math.PI*2); ctx.fill();
+ }
+ ctx.restore();
 }
 /* ====== ANIM 1 : LA STATION MÉTÉO ====== */
 creerAnim('station','cvStation','capStation','ptsStation',[
  {dur:3800,caption:'STRUCTURE — La station météo réunit ses quatre capteurs : le thermomètre dans son abri blanc ventilé, l\u2019anémomètre perché à 10 m, le pluviomètre bien dégagé, le baromètre à l\u2019intérieur. Chacun mesure UNE grandeur.',
-  draw(ctx,p){
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.rect(90,190,70,58); ctx.fill(); ctx.stroke();
-    for(let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(96,200+i*12); ctx.lineTo(154,200+i*12); ctx.stroke(); }
-    etiquette(ctx,'🌡️ abri + thermomètre',125,290,'#dc2626',12.5);
-    anemo(ctx,320,250,0.7);
-    etiquette(ctx,'💨 anémomètre (10 m)',320,290,'#0e7490',12.5);
-    ctx.strokeStyle='#1d4ed8'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.moveTo(500,200); ctx.lineTo(512,250); ctx.lineTo(538,250); ctx.lineTo(550,200); ctx.stroke();
-    etiquette(ctx,'🌧️ pluviomètre',525,290,'#1d4ed8',12.5);
-    ctx.strokeStyle='#7c3aed'; ctx.lineWidth=3;
-    ctx.beginPath(); ctx.arc(700,228,30,0,Math.PI*2); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(700,228); ctx.lineTo(716,210); ctx.stroke();
-    etiquette(ctx,'🎈 baromètre',700,290,'#7c3aed',12.5); }},
+ draw(ctx,p){
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.rect(90,190,70,58); ctx.fill(); ctx.stroke();
+ for(let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(96,200+i*12); ctx.lineTo(154,200+i*12); ctx.stroke(); }
+ etiquette(ctx,' abri + thermomètre',125,290,'#dc2626',12.5);
+ anemo(ctx,320,250,0.7);
+ etiquette(ctx,' anémomètre (10 m)',320,290,'#0e7490',12.5);
+ ctx.strokeStyle='#1d4ed8'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.moveTo(500,200); ctx.lineTo(512,250); ctx.lineTo(538,250); ctx.lineTo(550,200); ctx.stroke();
+ etiquette(ctx,' pluviomètre',525,290,'#1d4ed8',12.5);
+ ctx.strokeStyle='#7c3aed'; ctx.lineWidth=3;
+ ctx.beginPath(); ctx.arc(700,228,30,0,Math.PI*2); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(700,228); ctx.lineTo(716,210); ctx.stroke();
+ etiquette(ctx,' baromètre',700,290,'#7c3aed',12.5); }},
  {dur:6400,caption:'ACTION — Le temps change : le vent forcit, l\u2019anémomètre s\u2019emballe (58 km/h) ; la pluie remplit le pluviomètre (6 mm) ; la température glisse à 12 °C ; la pression chute à 995 hPa. Quatre nombres — c\u2019est TOUT ce que la station raconte.',
-  draw(ctx,p){ const q=lisse(p);
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.rect(90,190,70,58); ctx.fill(); ctx.stroke();
-    for(let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(96,200+i*12); ctx.lineTo(154,200+i*12); ctx.stroke(); }
-    anemo(ctx,320,250,q*24);
-    ctx.strokeStyle='#1d4ed8'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.moveTo(500,200); ctx.lineTo(512,250); ctx.lineTo(538,250); ctx.lineTo(550,200); ctx.stroke();
-    if(q>0.2){ ctx.fillStyle='#60a5fa'; ctx.fillRect(514,250-18*Math.min(1,(q-0.2)/0.6),22,18*Math.min(1,(q-0.2)/0.6)); }
-    ctx.strokeStyle='#7c3aed'; ctx.lineWidth=3;
-    ctx.beginPath(); ctx.arc(700,228,30,0,Math.PI*2); ctx.stroke();
-    const aP=-0.9-q*1.2;
-    ctx.beginPath(); ctx.moveTo(700,228); ctx.lineTo(700+22*Math.cos(aP),228+22*Math.sin(aP)); ctx.stroke();
-    etiquette(ctx,(18-Math.round(q*6))+' °C',125,150,'#dc2626',16);
-    etiquette(ctx,Math.round(q*58)+' km/h',320,150,'#0e7490',16);
-    etiquette(ctx,(q*6).toFixed(1)+' mm',525,150,'#1d4ed8',16);
-    etiquette(ctx,Math.round(1013-q*18)+' hPa',700,150,'#7c3aed',16);
-    etiquette(ctx,'chaque capteur transforme le ciel… en NOMBRES',410,60,'#a16207',15); }},
+ draw(ctx,p){ const q=lisse(p);
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.rect(90,190,70,58); ctx.fill(); ctx.stroke();
+ for(let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(96,200+i*12); ctx.lineTo(154,200+i*12); ctx.stroke(); }
+ anemo(ctx,320,250,q*24);
+ ctx.strokeStyle='#1d4ed8'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.moveTo(500,200); ctx.lineTo(512,250); ctx.lineTo(538,250); ctx.lineTo(550,200); ctx.stroke();
+ if(q>0.2){ ctx.fillStyle='#60a5fa'; ctx.fillRect(514,250-18*Math.min(1,(q-0.2)/0.6),22,18*Math.min(1,(q-0.2)/0.6)); }
+ ctx.strokeStyle='#7c3aed'; ctx.lineWidth=3;
+ ctx.beginPath(); ctx.arc(700,228,30,0,Math.PI*2); ctx.stroke();
+ const aP=-0.9-q*1.2;
+ ctx.beginPath(); ctx.moveTo(700,228); ctx.lineTo(700+22*Math.cos(aP),228+22*Math.sin(aP)); ctx.stroke();
+ etiquette(ctx,(18-Math.round(q*6))+' °C',125,150,'#dc2626',16);
+ etiquette(ctx,Math.round(q*58)+' km/h',320,150,'#0e7490',16);
+ etiquette(ctx,(q*6).toFixed(1)+' mm',525,150,'#1d4ed8',16);
+ etiquette(ctx,Math.round(1013-q*18)+' hPa',700,150,'#7c3aed',16);
+ etiquette(ctx,'chaque capteur transforme le ciel… en NOMBRES',410,60,'#a16207',15); }},
  {dur:5200,caption:'PROPRIÉTÉ — Une mesure = une GRANDEUR + un NOMBRE + une UNITÉ. « 6 mm de pluie » veut dire 6 litres tombés sur chaque mètre carré ! Et sans unité, un nombre ne dit rien : « il fait 30 »… degrés ? km/h ? millimètres ?',
-  draw(ctx,p){
-    etiquette(ctx,'GRANDEUR + NOMBRE + UNITÉ',410,110,'#a16207',20);
-    etiquette(ctx,'🌧️ précipitations = 6 mm → 6 litres par m²',410,180,'#1d4ed8',16);
-    etiquette(ctx,'💨 vent = 58 km/h · 🌡️ température = 12 °C · 🎈 pression = 995 hPa',410,225,'#64748b',14);
-    etiquette(ctx,'« il fait 30 » ne veut RIEN dire sans son unité !',410,300,'#dc2626',15); }},
+ draw(ctx,p){
+ etiquette(ctx,'GRANDEUR + NOMBRE + UNITÉ',410,110,'#a16207',20);
+ etiquette(ctx,' précipitations = 6 mm → 6 litres par m²',410,180,'#1d4ed8',16);
+ etiquette(ctx,' vent = 58 km/h · température = 12 °C · pression = 995 hPa',410,225,'#64748b',14);
+ etiquette(ctx,'« il fait 30 » ne veut RIEN dire sans son unité !',410,300,'#dc2626',15); }},
 ]);
 
 /* ====== ANIM 2 : LA CHAÎNE DE LA PRÉVISION ====== */
 const ETAPES_M=[
- {em:'🌡️',lbl:'1. MESURER',sous:'stations, ballons, satellites',x:130},
- {em:'📡',lbl:'2. TRANSMETTRE',sous:'les relevés du monde entier',x:330},
- {em:'🖥️',lbl:'3. CALCULER',sous:'le supercalculateur simule l\u2019atmosphère',x:530},
- {em:'📺',lbl:'4. DIFFUSER',sous:'bulletin et vigilances',x:710},
+ {em:'',lbl:'1. MESURER',sous:'stations, ballons, satellites',x:130},
+ {em:'',lbl:'2. TRANSMETTRE',sous:'les relevés du monde entier',x:330},
+ {em:'',lbl:'3. CALCULER',sous:'le supercalculateur simule l\u2019atmosphère',x:530},
+ {em:'',lbl:'4. DIFFUSER',sous:'bulletin et vigilances',x:710},
 ];
 creerAnim('prevision','cvPrevision','capPrevision','ptsPrevision',[
  {dur:3800,caption:'STRUCTURE — La prévision est une chaîne d\u2019information à quatre maillons : des milliers de points de MESURE, la TRANSMISSION des relevés, le CALCUL sur supercalculateur, la DIFFUSION du bulletin.',
-  draw(ctx,p){
-    ETAPES_M.forEach(e=>{
-      ctx.font='36px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
-      ctx.fillText(e.em,e.x,170);
-    }); }},
+ draw(ctx,p){
+ ETAPES_M.forEach(e=>{
+ ctx.font='36px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+ ctx.fillText(e.em,e.x,170);
+ }); }},
  {dur:6400,caption:'ACTION — Suis la donnée : ta station mesure 995 hPa, le relevé file par le réseau, le supercalculateur le digère avec des MILLIONS d\u2019autres et simule l\u2019atmosphère de demain… et le bulletin annonce la pluie à 14 h. Des nombres → une carte.',
-  draw(ctx,p){ const q=lisse(p);
-    ETAPES_M.forEach((e,i)=>{
-      const seuil=i/4;
-      ctx.font='36px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
-      ctx.fillText(e.em,e.x,170);
-      if(q>seuil){
-        etiquette(ctx,e.lbl,e.x,224,'#a16207',13);
-        etiquette(ctx,e.sous,e.x,248,'#64748b',11);
-        if(i<3 && q>seuil+0.13){
-          ctx.strokeStyle='#ea580c'; ctx.lineWidth=4; ctx.lineCap='round';
-          ctx.beginPath(); ctx.moveTo(e.x+44,160); ctx.lineTo(ETAPES_M[i+1].x-44,160); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(ETAPES_M[i+1].x-44,160); ctx.lineTo(ETAPES_M[i+1].x-56,152);
-          ctx.moveTo(ETAPES_M[i+1].x-44,160); ctx.lineTo(ETAPES_M[i+1].x-56,168); ctx.stroke();
-        }
-      }
-    });
-    if(q>0.9) etiquette(ctx,'« pluie demain 14 h » : des millions de mesures derrière une phrase',410,320,'#16a34a',14.5); }},
+ draw(ctx,p){ const q=lisse(p);
+ ETAPES_M.forEach((e,i)=>{
+ const seuil=i/4;
+ ctx.font='36px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+ ctx.fillText(e.em,e.x,170);
+ if(q>seuil){
+ etiquette(ctx,e.lbl,e.x,224,'#a16207',13);
+ etiquette(ctx,e.sous,e.x,248,'#64748b',11);
+ if(i<3 && q>seuil+0.13){
+ ctx.strokeStyle='#ea580c'; ctx.lineWidth=4; ctx.lineCap='round';
+ ctx.beginPath(); ctx.moveTo(e.x+44,160); ctx.lineTo(ETAPES_M[i+1].x-44,160); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(ETAPES_M[i+1].x-44,160); ctx.lineTo(ETAPES_M[i+1].x-56,152);
+ ctx.moveTo(ETAPES_M[i+1].x-44,160); ctx.lineTo(ETAPES_M[i+1].x-56,168); ctx.stroke();
+ }
+ }
+ });
+ if(q>0.9) etiquette(ctx,'« pluie demain 14 h » : des millions de mesures derrière une phrase',410,320,'#16a34a',14.5); }},
  {dur:5200,caption:'PROPRIÉTÉ — Tu reconnais la chaîne d\u2019information : ACQUÉRIR → TRANSMETTRE → TRAITER → RESTITUER. Et la qualité de TOUTE la chaîne dépend du premier maillon : si un capteur ment (pluviomètre bouché, sonde au soleil), le supercalculateur calcule juste… à partir de données fausses !',
-  draw(ctx,p){
-    etiquette(ctx,'ACQUÉRIR → TRANSMETTRE → TRAITER → RESTITUER',410,120,'#a16207',17);
-    etiquette(ctx,'la chaîne d\u2019information que tu connais déjà',410,155,'#64748b',13);
-    etiquette(ctx,'⚠️ un capteur qui ment = une prévision qui déraille',410,240,'#dc2626',16);
-    etiquette(ctx,'d\u2019où l\u2019abri normalisé, l\u2019étalonnage, l\u2019entretien…',410,275,'#64748b',13.5); }},
+ draw(ctx,p){
+ etiquette(ctx,'ACQUÉRIR → TRANSMETTRE → TRAITER → RESTITUER',410,120,'#a16207',17);
+ etiquette(ctx,'la chaîne d\u2019information que tu connais déjà',410,155,'#64748b',13);
+ etiquette(ctx,' un capteur qui ment = une prévision qui déraille',410,240,'#dc2626',16);
+ etiquette(ctx,'d\u2019où l\u2019abri normalisé, l\u2019étalonnage, l\u2019entretien…',410,275,'#64748b',13.5); }},
 ]);
 
 /* ====== ANIM 3 : LE BAROMÈTRE ====== */
 creerAnim('barometre','cvBarometre','capBarometre','ptsBarometre',[
  {dur:3800,caption:'STRUCTURE — Le baromètre « pèse » la colonne d\u2019air posée au-dessus de nous — des kilomètres d\u2019atmosphère ! Par beau temps stable, l\u2019aiguille indique environ 1013 hPa. Le ciel est dégagé, la colonne d\u2019air bien lourde.',
-  draw(ctx,p){
-    ctx.font='30px Segoe UI'; ctx.textAlign='center';
-    ctx.fillText('☀️',620,70);
-    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2; ctx.setLineDash([5,5]);
-    for(let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(560+i*40,90); ctx.lineTo(560+i*40,210); ctx.stroke(); }
-    ctx.setLineDash([]);
-    etiquette(ctx,'la colonne d\u2019air appuie ⬇️',640,240,'#64748b',12.5);
-    ctx.strokeStyle='#7c3aed'; ctx.lineWidth=4;
-    ctx.beginPath(); ctx.arc(230,200,80,0,Math.PI*2); ctx.stroke();
-    ctx.lineWidth=3;
-    ctx.beginPath(); ctx.moveTo(230,200); ctx.lineTo(230+58*Math.cos(-0.5),200+58*Math.sin(-0.5)); ctx.stroke();
-    etiquette(ctx,'1013 hPa',230,320,'#7c3aed',16); }},
+ draw(ctx,p){
+ ctx.font='30px Segoe UI'; ctx.textAlign='center';
+ SPRITE(ctx,'soleil',620,70);
+ ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2; ctx.setLineDash([5,5]);
+ for(let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(560+i*40,90); ctx.lineTo(560+i*40,210); ctx.stroke(); }
+ ctx.setLineDash([]);
+ etiquette(ctx,'la colonne d\u2019air appuie ⬇',640,240,'#64748b',12.5);
+ ctx.strokeStyle='#7c3aed'; ctx.lineWidth=4;
+ ctx.beginPath(); ctx.arc(230,200,80,0,Math.PI*2); ctx.stroke();
+ ctx.lineWidth=3;
+ ctx.beginPath(); ctx.moveTo(230,200); ctx.lineTo(230+58*Math.cos(-0.5),200+58*Math.sin(-0.5)); ctx.stroke();
+ etiquette(ctx,'1013 hPa',230,320,'#7c3aed',16); }},
  {dur:6600,caption:'ACTION — Regarde l\u2019aiguille : la pression CHUTE — 1005… 998… 992 hPa. L\u2019air s\u2019allège : une dépression approche, et avec elle les nuages et la pluie. Le ciel est encore bleu… mais le baromètre, lui, sait déjà.',
-  draw(ctx,p){ const q=lisse(p);
-    ctx.font='30px Segoe UI'; ctx.textAlign='center';
-    if(q<0.5) ctx.fillText('☀️',620,70);
-    if(q>0.35) ctx.fillText('☁️',560+((q-0.35)*160),80);
-    if(q>0.6) ctx.fillText('🌧️',700-((q-0.6)*120),90);
-    ctx.strokeStyle='#7c3aed'; ctx.lineWidth=4;
-    ctx.beginPath(); ctx.arc(230,200,80,0,Math.PI*2); ctx.stroke();
-    ctx.lineWidth=3;
-    const a=-0.5+q*1.9;
-    ctx.beginPath(); ctx.moveTo(230,200); ctx.lineTo(230+58*Math.cos(a),200+58*Math.sin(a)); ctx.stroke();
-    etiquette(ctx,Math.round(1013-q*21)+' hPa',230,320,'#7c3aed',16);
-    if(q>0.3) etiquette(ctx,'⬇️ la pression chute…',230,90,'#dc2626',14.5);
-    if(q>0.7) etiquette(ctx,'la perturbation arrive !',620,240,'#dc2626',14); }},
+ draw(ctx,p){ const q=lisse(p);
+ ctx.font='30px Segoe UI'; ctx.textAlign='center';
+ if(q<0.5) SPRITE(ctx,'soleil',620,70);
+ if(q>0.35) SPRITE(ctx,'nuage',560+((q-0.35)*160),80);
+ if(q>0.6) SPRITE(ctx,'pluie',700-((q-0.6)*120),90);
+ ctx.strokeStyle='#7c3aed'; ctx.lineWidth=4;
+ ctx.beginPath(); ctx.arc(230,200,80,0,Math.PI*2); ctx.stroke();
+ ctx.lineWidth=3;
+ const a=-0.5+q*1.9;
+ ctx.beginPath(); ctx.moveTo(230,200); ctx.lineTo(230+58*Math.cos(a),200+58*Math.sin(a)); ctx.stroke();
+ etiquette(ctx,Math.round(1013-q*21)+' hPa',230,320,'#7c3aed',16);
+ if(q>0.3) etiquette(ctx,'⬇ la pression chute…',230,90,'#dc2626',14.5);
+ if(q>0.7) etiquette(ctx,'la perturbation arrive !',620,240,'#dc2626',14); }},
  {dur:5200,caption:'PROPRIÉTÉ — Mesurer AUJOURD\u2019HUI pour prévoir DEMAIN : une pression qui chute vite annonce vent et pluie ; une pression haute et stable promet le beau temps. C\u2019est la plus vieille prévision météo du monde — celle des marins, bien avant les satellites.',
-  draw(ctx,p){
-    etiquette(ctx,'📉 pression qui CHUTE = perturbation en approche',410,130,'#dc2626',16);
-    etiquette(ctx,'📈 pression HAUTE et stable = beau temps durable',410,185,'#16a34a',16);
-    etiquette(ctx,'⛵ les marins lisaient le ciel de demain… dans une aiguille',410,280,'#a16207',15); }},
+ draw(ctx,p){
+ etiquette(ctx,' pression qui CHUTE = perturbation en approche',410,130,'#dc2626',16);
+ etiquette(ctx,' pression HAUTE et stable = beau temps durable',410,185,'#16a34a',16);
+ etiquette(ctx,' les marins lisaient le ciel de demain… dans une aiguille',410,280,'#a16207',15); }},
 ]);
 
 /* ---------- Boutons + auto + menu + clavier ---------- */
@@ -371,8 +647,8 @@ document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
 const slides=[...document.querySelectorAll('section.slide')];
 function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
 document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
-  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+ if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+ if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
 });
 </script>
 </body>

@@ -1,0 +1,374 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — La serrure à goupilles · ESTIC</title><style>
+:root{--acc:#b45309;--accf:#7c2d12;--fond:#FBF7F0;--carte:#fff;--encre:#3f3a34}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre)}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+.appli{display:flex;max-width:1180px;margin:0 auto}
+nav{position:sticky;top:0;align-self:flex-start;width:200px;padding:16px 10px;height:100vh;overflow:auto;flex:none}
+nav h2{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#8a8378;margin-bottom:8px;padding-left:8px}
+nav a{display:block;padding:9px 12px;border-radius:10px;text-decoration:none;color:var(--encre);font-size:13.5px;font-weight:700;margin-bottom:3px;border-left:4px solid transparent}
+nav a:hover{background:#f1e8d8}nav a.actif{background:#fef3c7;border-left-color:var(--acc);color:var(--accf)}
+main{flex:1;padding:10px 18px 60px;min-width:0}
+h1{font-size:26px;color:var(--accf);text-align:center;margin:12px 0 4px}
+.sous{text-align:center;color:#8a8378;font-size:14px;margin-bottom:18px}
+section{background:var(--carte);border:1px solid #eee4d0;border-radius:18px;padding:22px;margin-bottom:22px;scroll-margin-top:12px}
+section h2{font-size:21px;color:var(--accf);margin-bottom:10px;border-bottom:3px solid #fef3c7;padding-bottom:6px}
+p,li{font-size:15.5px;line-height:1.75}ul{margin-left:20px;margin-top:6px}
+canvas{width:100%;display:block;border-radius:12px;background:#fdfcfa;border:1px solid #e2d9c8;margin-top:8px}
+.cmd{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px;align-items:center}
+.cmd button{border:2px solid #e2d9c8;background:#fff;border-radius:11px;padding:9px 15px;font-size:13.5px;font-weight:800;cursor:pointer;color:var(--encre);font-family:inherit}
+.cmd button.actif,.cmd button:hover{border-color:var(--acc);background:#fef3c7}
+.legende{font-size:13.5px;color:#5b544a;background:#faf6ec;border-left:4px solid var(--acc);border-radius:8px;padding:9px 12px;margin-top:10px;min-height:46px;line-height:1.6}
+.enigme{background:#fff7ed;border:2px dashed #fb923c;border-radius:14px;padding:14px 18px;font-size:16px;line-height:1.75;margin:10px 0}
+.enigme b{color:#c2410c}
+.retenir{background:#fefce8;border:1px solid #fde68a;border-radius:12px;padding:12px 16px;margin-top:12px;font-size:15px;line-height:1.75}
+.retenir b{color:var(--accf)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:8px}
+th,td{border:1px solid #e2d9c8;padding:7px 9px;text-align:left}
+th{background:#f3ecdd;color:var(--accf)}td:first-child{font-weight:800}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<div class="appli">
+<nav><h2>Sommaire</h2>
+ <a href="#s0" class="actif">0 · Où ça se passe</a>
+ <a href="#s1">1 · L’énigme</a>
+ <a href="#s2">2 · Dedans</a>
+ <a href="#s3">3 · Essaie les clés</a>
+ <a href="#s4">4 · Le codage</a>
+ <a href="#s5">5 · Ailleurs</a>
+ <a href="#s6">6 · Exercices</a>
+ <a href="#s7">7 · À retenir</a>
+</nav>
+<main>
+<h1>La serrure à goupilles</h1>
+<div class="sous">Pourquoi une clé, et une seule, fait-elle tourner le barillet ?</div>
+
+<section id="s0"><h2>0 · Où ça se passe</h2>
+<p>Avant de regarder les goupilles, il faut savoir <b>où</b> elles se trouvent. Une serrure de porte comporte trois
+ensembles : le <b>cylindre</b> (la partie où l’on insère la clé, souvent appelée « barillet »), le <b>coffre</b> qui
+contient le mécanisme, et le <b>pêne</b>, ce pavé métallique qui sort dans la gâche du montant et bloque la porte.</p>
+<canvas id="cv0" width="860" height="290"></canvas>
+<div class="cmd">
+ <button data-c0="0" class="actif">Porte fermée, clé retirée</button>
+ <button data-c0="1">Clé insérée</button>
+ <button data-c0="2">Clé tournée : le pêne sort</button>
+</div>
+<div class="legende" id="l0">Le pêne est rentré : la porte s’ouvre librement. Tout le mécanisme attend dans le cylindre.</div>
+<div class="retenir"><b>Ce que fait la clé :</b> elle ne pousse pas le pêne elle-même. Elle <b>autorise</b> la rotation du
+barillet, et c’est cette rotation qui entraîne le pêne. Tourner la clé, c’est franchir une <b>autorisation</b> —
+exactement ce que fait un mot de passe avant d’ouvrir une session.</div>
+<div class="retenir" style="background:#f8fafc;border-color:#cbd5e1"><b>Un peu d’histoire :</b> ce mécanisme est breveté
+par l’Américain Linus Yale en 1861. Plus de 160 ans plus tard, il équipe encore l’immense majorité des portes du monde —
+parce qu’il est simple, peu coûteux et qu’il n’a besoin d’aucune énergie.</div>
+</section>
+
+<section id="s1"><h2>1 · L’énigme</h2>
+<div class="enigme">Un trousseau contient dix clés qui se ressemblent. Une seule ouvre ta porte.
+La serrure ne contient <b>ni pile, ni puce, ni ressort électrique</b> — rien qui puisse « lire » la clé.
+<br><br><b>Comment fait-elle la différence ?</b></div>
+<p>Note ton hypothèse sur le cahier avant de continuer.</p>
+</section>
+
+<section id="s2"><h2>2 · Ce qu’il y a dedans</h2>
+<p>Une serrure comporte un <b>cylindre fixe</b> et, à l’intérieur, un <b>barillet</b> qui doit tourner.
+Cinq trous les traversent tous les deux. Dans chaque trou : deux goupilles superposées, poussées vers le bas par un ressort.</p>
+<canvas id="cv1" width="860" height="300"></canvas>
+<div class="legende" id="l1">Au repos, les goupilles du bas dépassent dans le cylindre : elles bloquent le barillet, qui ne peut pas tourner.</div>
+<div class="retenir"><b>La ligne de césure</b> est la frontière entre le barillet et le cylindre. Le barillet ne peut tourner
+que si <b>aucune goupille ne la traverse</b> — donc si les cinq jonctions se trouvent exactement dessus, en même temps.</div>
+</section>
+
+<section id="s3"><h2>3 · Essaie les trois clés</h2>
+<p>Chaque dent de la clé pousse une goupille à une hauteur précise. Choisis une clé et regarde la ligne de césure.</p>
+<canvas id="cv2" width="860" height="320"></canvas>
+<div class="cmd">
+ <button data-k="0" class="actif">Aucune clé</button>
+ <button data-k="1">Clé A</button>
+ <button data-k="2">Clé B (la bonne)</button>
+ <button data-k="3">Clé C</button>
+ <button id="tourner">Essayer de tourner</button>
+</div>
+<div class="legende" id="l2">Sans clé, les cinq goupilles traversent la ligne de césure. Le barillet est bloqué.</div>
+<div class="retenir"><b>Tout ou rien :</b> il suffit qu’<b>une seule</b> goupille dépasse pour que la serrure reste fermée.
+Une clé « presque bonne » n’ouvre pas mieux qu’une clé totalement fausse.</div>
+</section>
+
+<section id="s4"><h2>4 · Le codage : combien de clés différentes ?</h2>
+<p>Chaque goupille peut être taillée à plusieurs hauteurs. Le nombre de clés possibles est le produit
+des possibilités de chaque goupille.</p>
+<canvas id="cv3" width="860" height="230"></canvas>
+<div class="cmd">
+ <span style="font-size:13.5px;font-weight:800">nombre de goupilles</span>
+ <input type="range" id="sl" min="2" max="7" step="1" value="5">
+ <span id="vg" style="font-weight:800;min-width:26px">5</span>
+ <span style="font-size:13.5px;font-weight:800">hauteurs possibles</span>
+ <input type="range" id="sh" min="2" max="8" step="1" value="6">
+ <span id="vh" style="font-weight:800;min-width:26px">6</span>
+</div>
+<div class="legende" id="l3"></div>
+<div class="retenir"><b>C’est un codage mécanique :</b> l’information « bonne clé » n’est écrite nulle part,
+elle est <b>portée par la forme</b> des pièces. Ajouter une goupille multiplie les combinaisons, exactement comme
+ajouter un chiffre à un code.</div>
+</section>
+
+<section id="s5"><h2>5 · Le même principe ailleurs</h2>
+<table>
+<tr><th>Système</th><th>Ce qui code l’information</th></tr>
+<tr><td>Serrure à goupilles</td><td>la hauteur des cinq goupilles</td></tr>
+<tr><td>Code d’un cadenas</td><td>la position de quatre molettes</td></tr>
+<tr><td>Carte bancaire</td><td>un code à quatre chiffres, soit 10 000 combinaisons</td></tr>
+<tr><td>Clé de voiture moderne</td><td>la forme mécanique <b>et</b> une puce à code tournant</td></tr>
+<tr><td>Mot de passe</td><td>la suite de caractères choisis parmi un alphabet</td></tr>
+</table>
+<div class="retenir"><b>Dans tous les cas :</b> la sécurité vient du <b>nombre de combinaisons</b>, pas du secret du mécanisme.
+Tout le monde sait comment fonctionne une serrure à goupilles — cela ne permet pas pour autant de l’ouvrir.</div>
+</section>
+
+<section id="s6"><h2>6 · Exercices</h2>
+<p>Réponds aux quatre questions, puis valide. Rien n’est corrigé avant : pose tes calculs sur le cahier.</p>
+<div id="exos"></div>
+<div class="cmd"><button id="valExo" style="background:#b45309;color:#fff;border-color:#b45309">Valider mes réponses</button></div>
+<div class="legende" id="lex"></div>
+<div id="corrExo"></div>
+</section>
+
+<section id="s7"><h2>7 · À retenir</h2>
+<table>
+<tr><th>Question</th><th>Réponse</th></tr>
+<tr><td>Ce qui bloque le barillet</td><td>les goupilles qui traversent la <b>ligne de césure</b></td></tr>
+<tr><td>Rôle des ressorts</td><td>ramener les goupilles vers le bas quand la clé sort</td></tr>
+<tr><td>Rôle des dents de la clé</td><td>pousser chaque goupille à la <b>hauteur exacte</b></td></tr>
+<tr><td>Condition d’ouverture</td><td>les <b>cinq</b> jonctions alignées sur la césure <b>en même temps</b></td></tr>
+<tr><td>Nombre de combinaisons</td><td>hauteurs <b>puissance</b> nombre de goupilles</td></tr>
+<tr><td>Concept général</td><td>un <b>codage mécanique</b> : l’information est portée par la forme</td></tr>
+</table>
+</section>
+</main></div>
+<script>
+'use strict';
+const liens=[...document.querySelectorAll('nav a')];
+const secs=liens.map(a=>document.querySelector(a.getAttribute('href')));
+new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+ const i=secs.indexOf(e.target); liens.forEach((l,k)=>l.classList.toggle('actif',k===i));}});},
+ {rootMargin:'-15% 0px -70% 0px'}).observe&&secs.forEach(s=>{});
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+ const i=secs.indexOf(e.target); liens.forEach((l,k)=>l.classList.toggle('actif',k===i));}});},
+ {rootMargin:'-15% 0px -70% 0px'});
+secs.forEach(s=>io.observe(s));
+function txt(c,s,x,y,t,coul,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=coul||'#3f3a34';c.textAlign=al||'center';c.fillText(s,x,y);}
+const BON=[3,5,2,6,4];                  // hauteurs de la bonne clé
+const CLES=[null,[3,5,2,4,4],BON,[6,2,5,1,3]];
+const NOM=['aucune clé','clé A','clé B','clé C'];
+/* dessin commun d'une serrure : hauteurs = tableau de 0..7 (0 = pas de clé) */
+function dessineSerrure(c,W,H,haut,angle,montrerCle){
+ c.clearRect(0,0,W,H);
+ c.fillStyle='#fdfcfa'; c.fillRect(0,0,W,H);
+ const x0=180, pas=76, yCes=140, yBas=yCes+78;
+ // cylindre fixe (au-dessus de la césure)
+ c.fillStyle='#cbd5e1'; c.fillRect(120,34,600,yCes-34);
+ // barillet (tourne)
+ c.save(); c.translate(420,yCes+40); c.rotate(angle); c.translate(-420,-(yCes+40));
+ c.fillStyle='#94a3b8'; c.fillRect(120,yCes,600,96);
+ for(let i=0;i<5;i++){ c.fillStyle='#fdfcfa'; c.fillRect(x0+i*pas-10,yCes,20,yBas-yCes); }
+ if(montrerCle){
+  c.fillStyle='#b45309';
+  c.beginPath(); c.moveTo(126,yBas+30);
+  for(let i=0;i<5;i++){ const y=yBas - (haut[i]||0)*4;
+   c.lineTo(x0+i*pas-26,yBas+30); c.lineTo(x0+i*pas-13,y); c.lineTo(x0+i*pas+13,y); c.lineTo(x0+i*pas+26,yBas+30); }
+  c.lineTo(714,yBas+30); c.lineTo(714,yBas+42); c.lineTo(126,yBas+42); c.closePath(); c.fill();
+ }
+ c.restore();
+ // goupilles : la jonction monte quand la clé pousse
+ for(let i=0;i<5;i++){
+  const x=x0+i*pas;
+  const j=yCes+(BON[i]-(haut[i]||0))*10;          // position de la jonction
+  c.fillStyle='#475569'; c.fillRect(x-10,j,20,yBas-j);      // goupille basse
+  c.fillStyle='#7c2d12'; c.fillRect(x-10,j-32,20,32);       // goupille haute
+  c.strokeStyle='#94a3b8'; c.lineWidth=1.6; c.beginPath();  // ressort
+  const h0=42, h1=j-34, n=6;
+  for(let k=0;k<n;k++){ c.moveTo(x-8,h0+k*(h1-h0)/n); c.lineTo(x+8,h0+(k+0.5)*(h1-h0)/n); }
+  c.stroke();
+ }
+ // ligne de césure, tracée par-dessus
+ c.strokeStyle='#dc2626'; c.lineWidth=2.4; c.setLineDash([9,6]);
+ c.beginPath(); c.moveTo(100,yCes); c.lineTo(740,yCes); c.stroke(); c.setLineDash([]);
+ txt(c,'ligne de césure',748,yCes+5,13,'#dc2626','left');
+ txt(c,'cylindre fixe',126,54,13,'#475569','left');
+ txt(c,'barillet',126,yCes+90,13,'#334155','left');
+ return yCes;
+}
+/* ═══ 2 · au repos ═══ */
+const c1=document.getElementById('cv1').getContext('2d');
+dessineSerrure(c1,860,300,[0,0,0,0,0],0,false);
+txt(c1,'ressorts',108,60,12.5,'#94a3b8','right');
+txt(c1,'goupilles hautes (brunes) et basses (grises)',420,290,13.5,'#5b544a');
+txt(c1,'au repos, les jonctions sont SOUS la césure : les goupilles hautes la traversent',420,24,14,'#dc2626');
+/* ═══ 3 · essai des clés ═══ */
+const c2=document.getElementById('cv2').getContext('2d');
+let kSel=0, angle=0, cible=0;
+function ouvre(){ const h=CLES[kSel]; return !!h && h.every((v,i)=>v===BON[i]); }
+function dess2(){
+ const h=CLES[kSel]||[0,0,0,0,0];
+ dessineSerrure(c2,860,320,h,angle,kSel>0);
+ const bloque=!ouvre();
+ for(let i=0;i<5;i++){
+  const x=180+i*76, y=140+(BON[i]-(h[i]||0))*10;
+  const bon = h[i]===BON[i];
+  c2.fillStyle= bon?'#16a34a':'#dc2626';
+  c2.beginPath(); c2.arc(x,y,5,0,6.284); c2.fill();
+ }
+ txt(c2, kSel===0?'aucune clé insérée':NOM[kSel], 420, 300, 15, '#7c2d12');
+ txt(c2, bloque?'au moins une goupille traverse la césure':'les cinq jonctions sont sur la césure',
+  420, 24, 15, bloque?'#dc2626':'#16a34a');
+}
+function anim(){ angle+= (cible-angle)*0.12; dess2(); requestAnimationFrame(anim); }
+document.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('[data-k]').forEach(x=>x.classList.remove('actif'));
+ b.classList.add('actif'); kSel=+b.dataset.k; cible=0; angle=0;
+ const h=CLES[kSel];
+ document.getElementById('l2').textContent = kSel===0
+  ? 'Sans clé, les cinq goupilles traversent la ligne de césure. Le barillet est bloqué.'
+  : (ouvre()
+    ? 'Clé B : chaque dent pousse sa goupille à la bonne hauteur. Les cinq jonctions arrivent exactement sur la césure — plus rien ne traverse.'
+    : 'Cette clé place correctement '+h.filter((v,i)=>v===BON[i]).length+' goupille(s) sur 5. Les autres dépassent : le barillet reste bloqué.');
+ dess2();
+}));
+document.getElementById('tourner').addEventListener('click',()=>{
+ if(ouvre()){ cible=0.6;
+  document.getElementById('l2').textContent='Le barillet tourne : la serrure s’ouvre. Aucune information n’a été lue — c’est la forme des pièces qui a décidé.';
+ } else { cible=0.05; setTimeout(()=>{cible=0;},220);
+  document.getElementById('l2').textContent='Le barillet refuse de tourner : au moins une goupille traverse encore la césure.';
+ }
+});
+anim();
+/* ═══ 4 · combinaisons ═══ */
+const c3=document.getElementById('cv3').getContext('2d');
+function dess3(){
+ const g=+document.getElementById('sl').value, ht=+document.getElementById('sh').value;
+ document.getElementById('vg').textContent=g;
+ document.getElementById('vh').textContent=ht;
+ c3.clearRect(0,0,860,230); c3.fillStyle='#fdfcfa'; c3.fillRect(0,0,860,230);
+ const pas=Math.min(96,700/g), x0=430-(g-1)*pas/2;
+ for(let i=0;i<g;i++){
+  const x=x0+i*pas;
+  c3.fillStyle='#e2d9c8'; c3.fillRect(x-16,50,32,ht*16);
+  for(let k=0;k<ht;k++){ c3.fillStyle= k===i%ht ? '#b45309':'#f1e8d8';
+   c3.fillRect(x-13,53+k*16,26,12); }
+  txt(c3,'g'+(i+1),x,50+ht*16+18,12.5,'#8a8378');
+ }
+ const tot=Math.pow(ht,g);
+ txt(c3,ht+' hauteurs, '+g+' goupilles',430,32,14,'#7c2d12');
+ txt(c3,tot.toLocaleString('fr-FR')+' combinaisons possibles',430,214,17,'#b45309');
+ document.getElementById('l3').textContent =
+  ht+' hauteurs puissance '+g+' goupilles = '+tot.toLocaleString('fr-FR')+' clés différentes. '+
+  (tot<2000?'Peu : un cambrioleur patient pourrait toutes les essayer.'
+          :'Assez pour qu’essayer toutes les clés soit hors de portée.');
+}
+document.getElementById('sl').addEventListener('input',dess3);
+document.getElementById('sh').addEventListener('input',dess3);
+dess3();
+
+/* ═══ 0 · contexte : la porte ═══ */
+const c0=document.getElementById('cv0').getContext('2d');
+let etat0=0, tCle=0;
+function dess0(){
+ c0.clearRect(0,0,860,290); c0.fillStyle='#fdfcfa'; c0.fillRect(0,0,860,290);
+ // montant et porte
+ c0.fillStyle='#e7d9c3'; c0.fillRect(120,30,340,230);
+ c0.strokeStyle='#a1866a'; c0.lineWidth=3; c0.strokeRect(120,30,340,230);
+ c0.fillStyle='#cbb89b'; c0.fillRect(470,30,120,230);
+ c0.strokeStyle='#8a6f52'; c0.strokeRect(470,30,120,230);
+ txt(c0,'porte',290,52,13.5,'#7c5a3a'); txt(c0,'montant',530,52,13.5,'#7c5a3a');
+ // gâche
+ c0.fillStyle='#fdfcfa'; c0.fillRect(470,128,26,44);
+ c0.strokeStyle='#8a6f52'; c0.lineWidth=2; c0.strokeRect(470,128,26,44);
+ txt(c0,'gâche',530,158,12.5,'#8a6f52');
+ // coffre
+ c0.fillStyle='#94a3b8'; c0.fillRect(380,110,86,80);
+ txt(c0,'coffre',423,102,12.5,'#64748b');
+ // pêne : sort à l'étape 2
+ const sortie = etat0>=2 ? 26 : 0;
+ c0.fillStyle='#64748b'; c0.fillRect(466,134,sortie+6,32);
+ txt(c0,'pêne',492,120,12.5,'#475569');
+ // cylindre
+ c0.fillStyle='#b45309'; c0.beginPath(); c0.arc(408,150,26,0,6.284); c0.fill();
+ c0.fillStyle='#fdfcfa'; c0.save(); c0.translate(408,150); c0.rotate(etat0>=2?0.9:0);
+ c0.fillRect(-4,-16,8,32); c0.restore();
+ txt(c0,'cylindre',372,150,12.5,'#7c2d12','right');
+ // clé
+ if(etat0>=1){
+  c0.save(); c0.translate(408,150); c0.rotate(etat0>=2?0.9:0);
+  c0.fillStyle='#b45309'; c0.fillRect(-2,-14,4,60);
+  c0.beginPath(); c0.arc(0,58,15,0,6.284); c0.fill();
+  c0.fillStyle='#fdfcfa'; c0.beginPath(); c0.arc(0,58,6,0,6.284); c0.fill();
+  c0.restore();
+ }
+ // poignée
+ c0.strokeStyle='#94a3b8'; c0.lineWidth=9; c0.lineCap='round';
+ c0.beginPath(); c0.moveTo(408,206); c0.lineTo(340,214); c0.stroke(); c0.lineCap='butt';
+ txt(c0, ['porte déverrouillée','clé insérée : les goupilles se placent','clé tournée : le pêne bloque la porte'][etat0],
+  290, 282, 15, etat0===2?'#16a34a':'#7c2d12');
+}
+const L0=['Le pêne est rentré : la porte s’ouvre librement. Tout le mécanisme attend dans le cylindre.',
+ 'La clé entre dans le cylindre et pousse chaque goupille. Si elle est la bonne, le barillet devient libre.',
+ 'La rotation du barillet entraîne le pêne, qui sort dans la gâche du montant : la porte est verrouillée.'];
+document.querySelectorAll('[data-c0]').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('[data-c0]').forEach(x=>x.classList.remove('actif'));
+ b.classList.add('actif'); etat0=+b.dataset.c0;
+ document.getElementById('l0').textContent=L0[etat0]; dess0();
+}));
+dess0();
+/* ═══ 6 · exercices ═══ */
+const EX=[
+ {q:'Une serrure a 5 goupilles et 6 hauteurs possibles. Combien de clés différentes existe-t-il ?',
+  rep:7776,tol:0,u:'clés',
+  c:'6 hauteurs pour chacune des 5 goupilles : 6 × 6 × 6 × 6 × 6 = <b>6⁵ = 7 776</b> combinaisons.'},
+ {q:'Le serrurier ajoute une sixième goupille (toujours 6 hauteurs). Par combien le nombre de clés est-il multiplié ?',
+  rep:6,tol:0,u:'fois',
+  c:'On passe de 6⁵ à 6⁶ : le total est multiplié par <b>6</b>. Chaque goupille ajoutée multiplie par le nombre de hauteurs — c’est une croissance <b>exponentielle</b>.'},
+ {q:'Un cambrioleur teste une clé toutes les 4 secondes, sans jamais s’arrêter. Combien d’heures lui faudrait-il pour essayer les 7 776 clés ?',
+  rep:8.64,tol:0.3,u:'h',
+  c:'7 776 × 4 = 31 104 s, soit 31 104 ÷ 3 600 ≈ <b>8,6 heures</b>. Peu, en réalité — c’est pourquoi les serrures modernes ont davantage de goupilles et des profils de clé brevetés.'},
+ {q:'Sur les 5 goupilles, une clé en place correctement 4. Combien de goupilles traversent encore la césure ?',
+  rep:1,tol:0,u:'goupille',
+  c:'<b>Une seule</b> — et cela suffit à bloquer le barillet. Une serrure fonctionne en <b>tout ou rien</b> : il n’existe pas de « presque ouvert ».'}];
+const zEx=document.getElementById('exos');
+EX.forEach((e,i)=>{
+ const d=document.createElement('div');
+ d.style.cssText='margin:12px 0;padding:12px 14px;background:#faf6ec;border-radius:10px';
+ d.innerHTML='<div style="font-size:15px;line-height:1.7"><b>'+(i+1)+'.</b> '+e.q+'</div>'+
+  '<div style="margin-top:8px"><input id="ex'+i+'" autocomplete="off" style="width:130px;padding:8px;'+
+  'border:1px solid #d8cdb4;border-radius:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit"> '+
+  '<span style="color:#8a8378;font-size:14px">'+e.u+'</span></div>';
+ zEx.appendChild(d);
+});
+document.getElementById('valExo').addEventListener('click',()=>{
+ let bons=0, html='';
+ EX.forEach((e,i)=>{
+  const v=parseFloat((document.getElementById('ex'+i).value||'').replace(',','.'));
+  const ok=isFinite(v)&&Math.abs(v-e.rep)<=e.tol;
+  if(ok)bons++;
+  html+='<div class="retenir" style="background:'+(ok?'#f0fdf4':'#fff7ed')+';border-color:'+(ok?'#bbf7d0':'#fed7aa')+'">'+
+   '<b>'+(i+1)+'.</b> '+(ok?'Juste. ':'')+e.c+'</div>';
+ });
+ document.getElementById('lex').textContent=bons+' bonne(s) réponse(s) sur '+EX.length+
+  (bons===EX.length?' — parfait.':' — compare avec le corrigé ci-dessous.');
+ document.getElementById('corrExo').innerHTML=html;
+ document.getElementById('valExo').disabled=true;
+});
+</script></body></html>

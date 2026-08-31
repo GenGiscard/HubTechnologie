@@ -6,7 +6,7 @@
 <title>TP 4ème — Admin réseau · ESTIC</title>
 <style>
 :root{ --ink:#1e3a5f; --cyan:#0e7490; --niv:#059669; --niv-fonce:#047857; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
 .estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
@@ -55,6 +55,7 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .slots .fl{font-size:20px;color:var(--orange);font-weight:800}
 .panne{background:#f8fafc;border:2px solid #cbd5e1;border-radius:14px;padding:16px;margin-bottom:12px}
 .panne.resolue{border-color:var(--vert);background:#f0fdf4}
+.panne.ratee{border-color:#dc2626;background:#fef2f2}
 .panne .symptome{font-size:15px;font-weight:700;line-height:1.5}
 .panne .symptome .em{font-size:24px;margin-right:6px}
 .blocs-diag{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
@@ -81,117 +82,145 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#047857,#0e7490);border-radius:14px;padding:22px;color:#fff}
 .codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
 .codefinal a{color:#fde68a;font-weight:800}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:60px;height:60px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:12px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;font-size:19px;letter-spacing:1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+.rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
 </style>
 </head>
 <body>
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
 <header class="tp">
-  <h1>🔧 TP — Admin réseau</h1>
-  <p>Le collège te nomme administrateur réseau stagiaire. 7 missions — à la fin : le code des jeux !</p>
+ <h1>TP — Admin réseau</h1>
+ <p>Le collège te nomme administrateur réseau stagiaire. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
-  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
-  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+ <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ============ A1 : QUI SUIS-JE ============ -->
 <div class="acti" id="a1">
  <div class="boite">
-  <h2><span class="badge">1</span>Le matériel du réseau</h2>
-  <div class="consigne">Quatre équipements du cours se présentent masqués. Démasque chacun ! (1 pt par bonne réponse du premier coup)</div>
-  <div class="minicas" id="cas1"></div>
+ <h2><span class="badge">1</span>Le matériel du réseau</h2>
+ <div class="consigne">Quatre équipements du cours se présentent masqués. Démasque chacun ! <b>Attention : une seule tentative par question</b> — lis bien avant de cliquer ! (1 pt par bonne réponse)</div>
+ <div class="minicas" id="cas1"></div>
  </div>
 </div>
 
 <!-- ============ A2 : LE TRAJET D'UNE REQUÊTE ============ -->
 <div class="acti" id="a2">
  <div class="boite">
-  <h2><span class="badge">2</span>Remets le trajet de la requête web en ordre</h2>
-  <div class="consigne">Tu tapes l'adresse d'un site depuis un poste du collège. Clique les 4 étapes du voyage <b>dans l'ordre</b>.</div>
-  <div class="ordre" id="blocs2"></div>
-  <div class="slots" id="slots2">
-    <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
-    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
-    <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
-    <div class="slot" data-i="3">4ème</div>
-  </div>
-  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
-  <div class="verdict" id="verd2"></div>
+ <h2><span class="badge">2</span>Remets le trajet de la requête web en ordre</h2>
+ <div class="consigne">Tu tapes l'adresse d'un site depuis un poste du collège. Clique les 4 étapes du voyage <b>dans l'ordre</b>.</div>
+ <div class="ordre" id="blocs2"></div>
+ <div class="slots" id="slots2">
+ <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
+ <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+ <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
+ <div class="slot" data-i="3">4ème</div>
+ </div>
+ <div class="btnrow"><button class="btn" id="verif2">✓ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+ <div class="verdict" id="verd2"></div>
  </div>
 </div>
 
 <!-- ============ A3 : DIAGNOSTICS ============ -->
 <div class="acti" id="a3">
  <div class="boite">
-  <h2><span class="badge">3</span>Trois pannes sur le réseau !</h2>
-  <div class="consigne">🚨 Trois tickets d'incident arrivent. Pour chacun, raisonne <b>de proche en proche</b> et clique la bonne intervention. (Les erreurs se corrigent, mais chaque diagnostic juste du premier coup rapporte plus !)</div>
-  <div id="pannes3"></div>
-  <div class="verdict" id="verd3"></div>
+ <h2><span class="badge">3</span>Trois pannes sur le réseau !</h2>
+ <div class="consigne">Trois tickets d'incident arrivent. Pour chacun, raisonne <b>de proche en proche</b>et clique la bonne intervention. (Les erreurs se corrigent, mais chaque diagnostic juste du premier coup rapporte plus !)</div>
+ <div id="pannes3"></div>
+ <div class="verdict" id="verd3"></div>
  </div>
 </div>
 
 <!-- ============ A4 : LE DÉBIT ============ -->
 <div class="acti" id="a4">
  <div class="boite">
-  <h2><span class="badge">4</span>Le temps de téléchargement</h2>
-  <div class="consigne">⬇️ La classe doit télécharger une vidéo pédagogique de <b>500 Mo</b>. La connexion du collège transfère <b>25 Mo par seconde</b>. Combien de temps faut-il ?</div>
-  <div class="rappel">📐 Rappel : temps = taille du fichier ÷ débit</div>
-  <div class="calczone">
-    <span>temps =</span>
-    <input type="number" id="rep4" step="any" placeholder="?">
-    <span class="unite">secondes</span>
-    <button class="btn" id="verif4">✔ Vérifier</button>
-  </div>
-  <div class="verdict" id="verd4"></div>
+ <h2><span class="badge">4</span>Le temps de téléchargement</h2>
+ <div class="consigne">⬇ La classe doit télécharger une vidéo pédagogique de <b>500 Mo</b>. La connexion du collège transfère <b>25 Mo par seconde</b>. Combien de temps faut-il ?</div>
+ <div class="rappel">Rappel : temps = taille du fichier ÷ débit</div>
+ <div class="calczone">
+ <span>temps =</span>
+ <input type="number" id="rep4" step="any" placeholder="?">
+ <span class="unite">secondes</span>
+ <button class="btn" id="verif4">✓ Vérifier</button>
+ </div>
+ <div class="verdict" id="verd4"></div>
  </div>
 </div>
 
 <!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Le schéma du réseau du collège</h2>
-  <div class="consigne">🗺️ La baie de brassage vue de l'admin — suis les trames qui circulent du poste jusqu'à Internet ! Clique une étiquette, puis l'équipement correspondant. Place les 4 étiquettes.</div>
-  <canvas class="canvatp" id="cv5" width="860" height="300"></canvas>
-  <div class="etiqbar" id="etiq5"></div>
-  <div id="verd5"></div>
+ <h2><span class="badge">5</span>Le schéma du réseau du collège</h2>
+ <div class="consigne"><b>Chaque erreur coûte des points.</b>La baie de brassage vue de l'admin — suis les trames qui circulent du poste jusqu'à Internet ! Clique une étiquette, puis l'équipement correspondant. Place les 4 étiquettes.</div>
+ <canvas class="canvatp" id="cv5" width="860" height="300"></canvas>
+ <div class="etiqbar" id="etiq5"></div>
+ <div id="verd5"></div>
  </div>
 </div>
 
 <!-- ============ A6 : MANIPULATION ============ -->
 <div class="acti" id="a6">
  <div class="boite">
-  <h2><span class="badge">6</span>Attribue une adresse IP</h2>
-  <div class="consigne">🎛️ Un poste neuf arrive en salle info. Règle le dernier octet de son adresse <b>192.168.1.___</b> — sans conflit avec les adresses déjà prises, et dans la plage réservée aux élèves (DHCP : .100 à .199) !</div>
-  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
-  <div class="sliderrow">
-    <span>🔢 Dernier octet :</span>
-    <input type="range" id="slider6" min="2" max="254" step="1" value="10">
-    <span class="val"><span id="val6">10</span> </span>
-    <button class="btn" id="verif6">✔ Valider ce réglage</button>
-  </div>
-  <div id="verd6"></div>
+ <h2><span class="badge">6</span>Attribue une adresse IP</h2>
+ <div class="consigne">Un poste neuf arrive en salle info. Règle le dernier octet de son adresse <b>192.168.1.___</b> — sans conflit avec les adresses déjà prises, et dans la plage réservée aux élèves (DHCP : .100 à .199) !</div>
+ <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+ <div class="sliderrow">
+ <span>Dernier octet :</span>
+ <input type="range" id="slider6" min="2" max="254" step="1" value="10">
+ <span class="val"><span id="val6">10</span> </span>
+ <button class="btn" id="verif6">✓ Valider ce réglage</button>
+ </div>
+ <div id="verd6"></div>
  </div>
 </div>
 
 <!-- ============ A7 : BILAN ============ -->
 <div class="acti" id="a7">
  <div class="boite">
-  <h2><span class="badge">7</span>Bilan de l'admin réseau</h2>
-  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
-  <div id="quiz5"></div>
-  <div class="codefinal" id="codefinal">
-    🏆 Le réseau tourne impeccablement : te voilà admin réseau certifié !
-    <div class="code">SWITCH19</div>
-    <div>Entre ce code dans les jeux <a href="03_jeu_reseau_rush.html">🎮 Réseau Rush</a> et <a href="03b_jeu_admin_reseau.html">🛠️ Admin Réseau</a> pour les déverrouiller.</div>
-  </div>
+ <h2><span class="badge">7</span>Bilan de l'admin réseau</h2>
+ <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
+ <div id="quiz5"></div>
+ <div class="codefinal" id="codefinal">
+ Le réseau tourne impeccablement : te voilà admin réseau certifié !
+ <div class="code">SWITCH19</div>
+ <div>Entre ce code dans les jeux <a href="03_jeu_reseau_rush.html">Réseau Rush</a>et <a href="03b_jeu_admin_reseau.html">Admin Réseau</a>pour les déverrouiller.</div>
+ </div>
  </div>
 </div>
 
@@ -201,325 +230,340 @@ const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
 function sauver(){ try{ localStorage.setItem('tp_reseau_4e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
 function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_reseau_4e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
-  document.querySelectorAll('.progression .seg').forEach(seg=>{
-    const n=+seg.dataset.a;
-    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
-  });
-  document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=7;n++){
-    const acti=document.getElementById('a'+n);
-    let v=acti.querySelector('.verrou');
-    if(n>etat.debloque){
-      if(!v){ v=document.createElement('div'); v.className='verrou';
-        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
-        acti.querySelector('.boite').appendChild(v); }
-    } else if(v) v.remove();
-  }
+ document.querySelectorAll('.progression .seg').forEach(seg=>{
+ const n=+seg.dataset.a;
+ seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+ });
+ document.getElementById('scoreTot').textContent=etat.score;
+ for(let n=2;n<=7;n++){
+ const acti=document.getElementById('a'+n);
+ let v=acti.querySelector('.verrou');
+ if(n>etat.debloque){
+ if(!v){ v=document.createElement('div'); v.className='verrou';
+ v.innerHTML='<div class="cadenas"></div>Termine la mission '+(n-1)+' pour déverrouiller';
+ acti.querySelector('.boite').appendChild(v); }
+ } else if(v) v.remove();
+ }
 }
 function reussir(n,pts){
-  etat.score+=pts;
-  if(etat.debloque===n) etat.debloque=n+1;
-  sauver(); majProgression();
-  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ etat.score+=pts;
+ if(etat.debloque===n) etat.debloque=n+1;
+ sauver(); majProgression();
+ if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
 const CAS1=[
- {devinette:'🔀 « Je relie tous les câbles du réseau local et j\u2019aiguille chaque message vers le BON appareil en lisant son adresse IP. »', bonne:'le switch', autres:['la borne wifi']},
- {devinette:'📡 « Je suis la PORTE entre le réseau du collège et internet — et c\u2019est moi qui distribue les adresses IP aux appareils. »', bonne:'la box (routeur)', autres:['le serveur']},
- {devinette:'🏷️ « Je suis le numéro UNIQUE de chaque appareil sur le réseau, du genre 192.168.1.12 : sans moi, les messages se perdent. »', bonne:'l\u2019adresse IP', autres:['l\u2019extension']},
- {devinette:'🗄️ « Ordinateur central toujours allumé, je stocke fichiers, comptes et impressions de tout le collège. »', bonne:'le serveur', autres:['le switch']},
+ {devinette:' « Je relie tous les câbles du réseau local et j\u2019aiguille chaque message vers le BON appareil en lisant son adresse IP. »', bonne:'le switch', autres:['la borne wifi']},
+ {devinette:' « Je suis la PORTE entre le réseau du collège et internet — et c\u2019est moi qui distribue les adresses IP aux appareils. »', bonne:'la box (routeur)', autres:['le serveur']},
+ {devinette:' « Je suis le numéro UNIQUE de chaque appareil sur le réseau, du genre 192.168.1.12 : sans moi, les messages se perdent. »', bonne:'l\u2019adresse IP', autres:['l\u2019extension']},
+ {devinette:' « Ordinateur central toujours allumé, je stocke fichiers, comptes et impressions de tout le collège. »', bonne:'le serveur', autres:['le switch']},
 ];
 (function initA1(){
-  const zone=document.getElementById('cas1');
-  CAS1.forEach(cas=>{
-    const d=document.createElement('div'); d.className='cas';
-    d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
-    const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
-    let premier=true, fait=false;
-    [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
-      const b=document.createElement('button'); b.textContent=rep;
-      b.onclick=()=>{
-        if(fait) return;
-        if(rep===cas.bonne){
-          fait=true; d.classList.remove('faux'); d.classList.add('bon');
-          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          etat.q1ok++;
-          if(etat.q1ok===CAS1.length) reussir(1,2);
-        } else { d.classList.add('faux'); premier=false; }
-      };
-      ch.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('cas1');
+ CAS1.forEach(cas=>{
+ const d=document.createElement('div'); d.className='cas';
+ d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
+ const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
+ let premier=true, fait=false;
+ [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
+ const b=document.createElement('button'); b.textContent=rep;
+ b.onclick=()=>{
+ if(fait) return;
+ if(rep===cas.bonne){
+ fait=true; d.classList.remove('faux'); d.classList.add('bon');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ } else {
+ fait=true; premier=false;
+ d.classList.add('faux'); b.classList.add('faux');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ }
+ };
+ ch.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A2 : LE TRAJET DE LA REQUÊTE ================= */
 const BLOCS2=[
- {id:1,t:'💻 Le poste envoie la requête',s:'« je veux la page du site… »'},
- {id:0,t:'🔀 Le switch l\u2019aiguille',s:'il lit l\u2019adresse : direction la sortie'},
- {id:2,t:'📡 La box l\u2019envoie sur internet',s:'la requête franchit la porte du collège'},
- {id:3,t:'🌍 Le site web répond',s:'la page revient par le même chemin'},
+ {id:1,t:' Le poste envoie la requête',s:'« je veux la page du site… »'},
+ {id:0,t:' Le switch l\u2019aiguille',s:'il lit l\u2019adresse : direction la sortie'},
+ {id:2,t:' La box l\u2019envoie sur internet',s:'la requête franchit la porte du collège'},
+ {id:3,t:' Le site web répond',s:'la page revient par le même chemin'},
 ];
 const BON2=[1,0,2,3];
-let choix2=[], a2fait=false;
+let choix2=[], a2fait=false, essais2=0, err5=0, essais6=0, bons3=0;
 function initA2(){
-  choix2=[];
-  const zone=document.getElementById('blocs2'); zone.innerHTML='';
-  BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
-    const btn=document.createElement('button');
-    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
-    btn.onclick=()=>{
-      if(btn.classList.contains('pris')||choix2.length>=4) return;
-      btn.classList.add('pris'); choix2.push(b.id);
-      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
-      slot.textContent=b.t; slot.classList.add('rempli');
-    };
-    zone.appendChild(btn);
-  });
-  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
-  document.getElementById('verd2').className='verdict';
+ choix2=[];
+ const zone=document.getElementById('blocs2'); zone.innerHTML='';
+ BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
+ const btn=document.createElement('button');
+ btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+ btn.onclick=()=>{
+ if(btn.classList.contains('pris')||choix2.length>=4) return;
+ btn.classList.add('pris'); choix2.push(b.id);
+ const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+ slot.textContent=b.t; slot.classList.add('rempli');
+ };
+ zone.appendChild(btn);
+ });
+ document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
+ document.getElementById('verd2').className='verdict';
 }
 document.getElementById('reset2').onclick=initA2;
 document.getElementById('verif2').onclick=()=>{
-  const verd=document.getElementById('verd2');
-  if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
-  if(choix2.join()===BON2.join()){
-    verd.className='verdict ok';
-    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : poste → switch → box → internet. Le message ne sort du collège QUE par la box — retiens-le, c\u2019est la clé de tous les diagnostics ! (+3 pts)'; reussir(2,3); }
-    else verd.textContent='✅ Bon ordre !';
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ Le trajet est emmêlé. Réfléchis : par où passe FORCÉMENT un message avant de quitter le collège ? Qui aiguille en premier ? Recommence !';
-  }
+ const verd=document.getElementById('verd2');
+ if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
+ essais2++;
+ if(choix2.join()===BON2.join()){
+ verd.className='verdict ok';
+ if(!a2fait){ a2fait=true; verd.textContent='✓ Parfait : poste → switch → box → internet. Le message ne sort du collège QUE par la box — retiens-le, c\u2019est la clé de tous les diagnostics ! (+3 pts)'; reussir(2, essais2<=1?3:(essais2===2?2:1)); }
+ else verd.textContent='✓ Bon ordre !';
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ Le trajet est emmêlé. Réfléchis : par où passe FORCÉMENT un message avant de quitter le collège ? Qui aiguille en premier ? Recommence !';
+ }
 };
 initA2();
 
 /* ================= A3 : DIAGNOSTICS ================= */
 const PANNES=[
- {em:'🔴', symptome:'Ticket n°1 — « UN SEUL poste (le 14) n\u2019a plus le réseau… tous les autres postes de la salle fonctionnent parfaitement. »',
-  bon:'cable', exp:'si les voisins fonctionnent, le switch et la box sont innocents : le problème est ENTRE le poste 14 et le switch — son câble (débranché ou abîmé). De proche en proche, on commence toujours par soi !'},
- {em:'🟠', symptome:'Ticket n°2 — « Plus AUCUN site web ne répond dans tout le collège… mais les dossiers personnels sur le serveur s\u2019ouvrent normalement. »',
-  bon:'box', exp:'le réseau LOCAL vit (le serveur répond !) : seul le trafic qui doit SORTIR est bloqué. La porte vers internet, c\u2019est la box : la redémarrer.'},
- {em:'🟡', symptome:'Ticket n°3 — « Les postes 8 et 21 se coupent mutuellement par intermittence… le technicien remarque qu\u2019ils affichent tous les deux 192.168.1.30 ! »',
-  bon:'ip', exp:'deux appareils avec la MÊME adresse IP = conflit : le switch ne sait plus à qui livrer, les messages se perdent. Changer l\u2019adresse de l\u2019un des deux — chaque appareil doit avoir un numéro UNIQUE.'},
+ {em:'●', symptome:'Ticket n°1 — « UN SEUL poste (le 14) n\u2019a plus le réseau… tous les autres postes de la salle fonctionnent parfaitement. »',
+ bon:'cable', exp:'si les voisins fonctionnent, le switch et la box sont innocents : le problème est ENTRE le poste 14 et le switch — son câble (débranché ou abîmé). De proche en proche, on commence toujours par soi !'},
+ {em:'●', symptome:'Ticket n°2 — « Plus AUCUN site web ne répond dans tout le collège… mais les dossiers personnels sur le serveur s\u2019ouvrent normalement. »',
+ bon:'box', exp:'le réseau LOCAL vit (le serveur répond !) : seul le trafic qui doit SORTIR est bloqué. La porte vers internet, c\u2019est la box : la redémarrer.'},
+ {em:'', symptome:'Ticket n°3 — « Les postes 8 et 21 se coupent mutuellement par intermittence… le technicien remarque qu\u2019ils affichent tous les deux 192.168.1.30 ! »',
+ bon:'ip', exp:'deux appareils avec la MÊME adresse IP = conflit : le switch ne sait plus à qui livrer, les messages se perdent. Changer l\u2019adresse de l\u2019un des deux — chaque appareil doit avoir un numéro UNIQUE.'},
 ];
 const REMEDES=[
- {id:'cable', t:'🔌 Vérifier le câble du poste'},
- {id:'box', t:'📡 Redémarrer la box (routeur)'},
- {id:'ip', t:'🏷️ Corriger le conflit d\u2019adresses IP'},
- {id:'clavier', t:'⌨️ Changer le clavier'},
+ {id:'cable', t:' Vérifier le câble du poste'},
+ {id:'box', t:' Redémarrer la box (routeur)'},
+ {id:'ip', t:' Corriger le conflit d\u2019adresses IP'},
+ {id:'clavier', t:'⌨ Changer le clavier'},
 ];
 let diag3=0, a3fait=false;
 (function initA3(){
-  const zone=document.getElementById('pannes3');
-  const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
-  ordre3.forEach(pi=>{
-    const P=PANNES[pi];
-    const d=document.createElement('div'); d.className='panne';
-    d.innerHTML='<div class="symptome"><span class="em">'+P.em+'</span>'+P.symptome+'</div>';
-    const blocs=document.createElement('div'); blocs.className='blocs-diag'; d.appendChild(blocs);
-    const fb=document.createElement('div'); fb.className='verdict'; d.appendChild(fb);
-    let resolu=false, premier=true;
-    REMEDES.slice().sort(()=>0.5-Math.random()).forEach(r=>{
-      const b=document.createElement('button'); b.textContent=r.t; b.dataset.b=r.id;
-      b.onclick=()=>{
-        if(resolu) return;
-        if(r.id===P.bon){
-          resolu=true; d.classList.add('resolue');
-          blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
-          fb.className='verdict ok';
-          fb.textContent='✅ Bien vu'+(premier?' du premier coup (+1 pt bonus)':'')+' : '+P.exp;
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          diag3++;
-          if(diag3===PANNES.length && !a3fait){ a3fait=true;
-            const verd=document.getElementById('verd3');
-            verd.className='verdict ok';
-            verd.textContent='🏆 Trois tickets résolus ! Un poste seul = son câble ; tout le monde sauf le serveur = la box ; deux postes qui se battent = conflit IP. Le raisonnement de proche en proche, c\u2019est TOUT l\u2019art de l\u2019admin réseau. (+4 pts)';
-            reussir(3,4);
-          }
-        } else {
-          premier=false;
-          fb.className='verdict ko';
-          fb.textContent='❌ Cette intervention ne colle pas aux indices… Relis le ticket : COMBIEN de postes sont touchés ? Le serveur LOCAL répond-il ? Y a-t-il deux adresses identiques ?';
-        }
-      };
-      blocs.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('pannes3');
+ const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
+ ordre3.forEach(pi=>{
+ const P=PANNES[pi];
+ const d=document.createElement('div'); d.className='panne';
+ d.innerHTML='<div class="symptome"><span class="em">'+P.em+'</span>'+P.symptome+'</div>';
+ const blocs=document.createElement('div'); blocs.className='blocs-diag'; d.appendChild(blocs);
+ const fb=document.createElement('div'); fb.className='verdict'; d.appendChild(fb);
+ let resolu=false, premier=true;
+ REMEDES.slice().sort(()=>0.5-Math.random()).forEach(r=>{
+ const b=document.createElement('button'); b.textContent=r.t; b.dataset.b=r.id;
+ b.onclick=()=>{
+ if(resolu) return;
+ if(r.id===P.bon){
+ resolu=true; d.classList.add('resolue');
+ bons3++;
+ blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
+ fb.className='verdict ok';
+ fb.textContent='✓ Bien vu'+(premier?' du premier coup (+1 pt bonus)':'')+' : '+P.exp;
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ diag3++;
+ if(diag3===PANNES.length && !a3fait){ a3fait=true;
+ const verd=document.getElementById('verd3');
+ verd.className='verdict ok';
+ verd.textContent=' Trois tickets résolus ! Un poste seul = son câble ; tout le monde sauf le serveur = la box ; deux postes qui se battent = conflit IP. Le raisonnement de proche en proche, c\u2019est TOUT l\u2019art de l\u2019admin réseau. (+4 pts)';
+ reussir(3, Math.max(1,bons3+1));
+ }
+ } else {
+ premier=false;
+ fb.className='verdict ko';
+ fb.textContent='✗ Cette intervention ne colle pas aux indices… Relis le ticket : COMBIEN de postes sont touchés ? Le serveur LOCAL répond-il ? Y a-t-il deux adresses identiques ?';
+ resolu=true; premier=false;
+ d.classList.add('ratee');
+ blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
+ diag3++;
+ if(diag3===PANNES.length && !a3fait){ a3fait=true; reussir(3, Math.max(1,bons3+1)); }
+ }
+ };
+ blocs.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A4 : LE DÉBIT ================= */
 let a4fait=false;
 document.getElementById('verif4').onclick=()=>{
-  const verd=document.getElementById('verd4');
-  const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
-  if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
-  if(Math.abs(v-20)<=0.5){
-    verd.className='verdict ok';
-    verd.innerHTML='✅ 500 ÷ 25 = 20 secondes ! Et en wifi partagé entre 30 tablettes, le débit de chacun fondrait… d\u2019où les postes CÂBLÉS pour les gros téléchargements.'+(a4fait?'':' (+4 pts)');
-    if(!a4fait){ a4fait=true; reussir(4,4); }
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ Pas ça. Divise la taille du fichier (500 Mo) par ce qui passe chaque seconde (25 Mo).';
-  }
+ const verd=document.getElementById('verd4');
+ const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
+ if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
+ if(Math.abs(v-20)<=0.5){
+ verd.className='verdict ok';
+ verd.innerHTML='✓ 500 ÷ 25 = 20 secondes ! Et en wifi partagé entre 30 tablettes, le débit de chacun fondrait… d\u2019où les postes CÂBLÉS pour les gros téléchargements.'+(a4fait?'':' (+4 pts)');
+ if(!a4fait){ a4fait=true; reussir(4,4); }
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ Pas ça. Divise la taille du fichier (500 Mo) par ce qui passe chaque seconde (25 Mo).';
+ }
 };
 
 /* ================= A5 : SCHEMA A LEGENDER ================= */
 (function(){
-  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
-  const ZONES=[
-    {id:'poste',  x:60,  y:130, w:120, h:110, lbl:'LE POSTE ÉLÈVE',          tx:120, ty:120},
-    {id:'switch', x:290, y:150, w:130, h:70,  lbl:'LE SWITCH',               tx:355, ty:140},
-    {id:'serveur',x:330, y:30,  w:90,  h:90,  lbl:'LE SERVEUR',              tx:280, ty:24},
-    {id:'routeur',x:560, y:150, w:120, h:70,  lbl:'LE ROUTEUR (VERS INTERNET)', tx:620, ty:140},
-  ];
-  const poses={}; let sel=null, t=0;
-  function dessiner(){
-    t+=0.02;
-    ctx.clearRect(0,0,860,300);
-    // poste élève
-    ctx.fillStyle='#0f172a'; ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.roundRect(76,140,88,64,6); ctx.fill(); ctx.stroke();
-    ctx.fillStyle='#e0f2fe'; ctx.fillRect(82,146,76,52);
-    ctx.fillStyle='#334155'; ctx.fillRect(108,204,24,10); ctx.fillRect(92,214,58,6);
-    ctx.font='bold 10px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#64748b';
-    ctx.fillText('192.168.1.101',120,236);
-    // switch (rangée de ports qui clignotent)
-    ctx.fillStyle='#1e293b';
-    ctx.beginPath(); ctx.roundRect(300,162,110,44,6); ctx.fill();
-    for(let p=0;p<6;p++){
-      ctx.fillStyle= Math.sin(t*5+p*1.7)>0.3 ? '#22c55e' : '#14532d';
-      ctx.fillRect(310+p*17,176,10,8); }
-    // serveur (tour à LEDs)
-    ctx.fillStyle='#1e293b';
-    ctx.beginPath(); ctx.roundRect(346,40,58,80,6); ctx.fill();
-    for(let r=0;r<3;r++){
-      ctx.fillStyle= Math.sin(t*3+r)>0 ? '#38bdf8' : '#0c4a6e';
-      ctx.fillRect(356,52+r*20,38,7); }
-    ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#64748b'; ctx.fillText('.10',425,90);
-    // routeur + nuage Internet
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.roundRect(576,162,90,44,10); ctx.fill(); ctx.stroke();
-    ctx.fillStyle='#7c3aed'; ctx.font='bold 10px Segoe UI'; ctx.fillText('.1',621,190);
-    ctx.font='34px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\u2601\ufe0f',770,140);
-    ctx.font='bold 11px Segoe UI'; ctx.fillStyle='#64748b'; ctx.fillText('Internet',770,166);
-    // câbles
-    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.moveTo(164,180); ctx.lineTo(300,184); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(375,162); ctx.lineTo(375,120); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(410,184); ctx.lineTo(576,184); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(666,180); ctx.quadraticCurveTo(716,160,746,150); ctx.stroke();
-    // trames qui circulent poste -> switch -> routeur -> internet
-    ctx.fillStyle='#ea580c';
-    for(let i=0;i<3;i++){ const p=((t*0.5)+i/3)%1;
-      if(p<0.34){ const u=p/0.34; ctx.fillRect(164+u*136-4,180-4,8,8); }
-      else if(p<0.72){ const u=(p-0.34)/0.38; ctx.fillRect(410+u*166-4,184-4,8,8); }
-      else { const u=(p-0.72)/0.28; ctx.fillRect(666+u*80-4,180-u*30-4,8,8); } }
-    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
-    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  const bar=document.getElementById('etiq5');
-  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
-    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
-    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
-      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
-    bar.appendChild(b);
-  });
-  cv.addEventListener('click',e=>{
-    if(!sel) return;
-    const r=cv.getBoundingClientRect();
-    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
-    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
-    const verd=document.getElementById('verd5');
-    if(cible && cible.id===sel){
-      poses[sel]=true;
-      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
-      sel=null;
-      if(Object.keys(poses).length===ZONES.length){
-        verd.innerHTML='<div class="verdict ok">✅ Réseau décodé ! Le POSTE émet des trames, le SWITCH les aiguille à l\u2019intérieur du collège (regarde ses ports clignoter), le SERVEUR héberge dossiers et sessions (.10), et le ROUTEUR (.1) est la porte vers l\u2019extérieur : lui seul parle à Internet. Local d\u2019abord, Internet ensuite — l\u2019aiguillage est la clé. (+3 pts)</div>';
-        reussir(5,3);
-      }
-    } else if(cible){
-      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : suis les carrés orange — ils partent de l\u2019écran de l\u2019élève, passent par la barrette aux voyants verts qui aiguille, et sortent par la boîte violette vers le nuage. La tour aux LEDs bleues, elle, stocke les dossiers.</div>';
-    }
-  });
+ const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+ const ZONES=[
+ {id:'poste', x:60, y:130, w:120, h:110, lbl:'LE POSTE ÉLÈVE', tx:120, ty:120},
+ {id:'switch', x:290, y:150, w:130, h:70, lbl:'LE SWITCH', tx:355, ty:140},
+ {id:'serveur',x:330, y:30, w:90, h:90, lbl:'LE SERVEUR', tx:280, ty:24},
+ {id:'routeur',x:560, y:150, w:120, h:70, lbl:'LE ROUTEUR (VERS INTERNET)', tx:620, ty:140},
+ ];
+ const poses={}; let sel=null, t=0;
+ function dessiner(){
+ t+=0.02;
+ ctx.clearRect(0,0,860,300);
+ // poste élève
+ ctx.fillStyle='#0f172a'; ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.roundRect(76,140,88,64,6); ctx.fill(); ctx.stroke();
+ ctx.fillStyle='#e0f2fe'; ctx.fillRect(82,146,76,52);
+ ctx.fillStyle='#334155'; ctx.fillRect(108,204,24,10); ctx.fillRect(92,214,58,6);
+ ctx.font='bold 10px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#64748b';
+ ctx.fillText('192.168.1.101',120,236);
+ // switch (rangée de ports qui clignotent)
+ ctx.fillStyle='#1e293b';
+ ctx.beginPath(); ctx.roundRect(300,162,110,44,6); ctx.fill();
+ for(let p=0;p<6;p++){
+ ctx.fillStyle= Math.sin(t*5+p*1.7)>0.3 ? '#22c55e' : '#14532d';
+ ctx.fillRect(310+p*17,176,10,8); }
+ // serveur (tour à LEDs)
+ ctx.fillStyle='#1e293b';
+ ctx.beginPath(); ctx.roundRect(346,40,58,80,6); ctx.fill();
+ for(let r=0;r<3;r++){
+ ctx.fillStyle= Math.sin(t*3+r)>0 ? '#38bdf8' : '#0c4a6e';
+ ctx.fillRect(356,52+r*20,38,7); }
+ ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#64748b'; ctx.fillText('.10',425,90);
+ // routeur + nuage Internet
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.roundRect(576,162,90,44,10); ctx.fill(); ctx.stroke();
+ ctx.fillStyle='#7c3aed'; ctx.font='bold 10px Segoe UI'; ctx.fillText('.1',621,190);
+ ctx.font='34px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\u2601\ufe0f',770,140);
+ ctx.font='bold 11px Segoe UI'; ctx.fillStyle='#64748b'; ctx.fillText('Internet',770,166);
+ // câbles
+ ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.moveTo(164,180); ctx.lineTo(300,184); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(375,162); ctx.lineTo(375,120); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(410,184); ctx.lineTo(576,184); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(666,180); ctx.quadraticCurveTo(716,160,746,150); ctx.stroke();
+ // trames qui circulent poste ->switch ->routeur ->internet
+ ctx.fillStyle='#ea580c';
+ for(let i=0;i<3;i++){ const p=((t*0.5)+i/3)%1;
+ if(p<0.34){ const u=p/0.34; ctx.fillRect(164+u*136-4,180-4,8,8); }
+ else if(p<0.72){ const u=(p-0.34)/0.38; ctx.fillRect(410+u*166-4,184-4,8,8); }
+ else { const u=(p-0.72)/0.28; ctx.fillRect(666+u*80-4,180-u*30-4,8,8); } }
+ ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+ ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ const bar=document.getElementById('etiq5');
+ ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+ const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+ b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+ bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+ bar.appendChild(b);
+ });
+ cv.addEventListener('click',e=>{
+ if(!sel) return;
+ const r=cv.getBoundingClientRect();
+ const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+ const cible=ZONES.find(z=>x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+ const verd=document.getElementById('verd5');
+ if(cible && cible.id===sel){
+ poses[sel]=true;
+ const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+ sel=null;
+ if(Object.keys(poses).length===ZONES.length){
+ verd.innerHTML='<div class="verdict ok">✓ Réseau décodé ! Le POSTE émet des trames, le SWITCH les aiguille à l\u2019intérieur du collège (regarde ses ports clignoter), le SERVEUR héberge dossiers et sessions (.10), et le ROUTEUR (.1) est la porte vers l\u2019extérieur : lui seul parle à Internet. Local d\u2019abord, Internet ensuite — l\u2019aiguillage est la clé. (+3 pts)</div>';
+ reussir(5, err5===0?3:(err5<=2?2:1));
+ }
+ } else if(cible){
+ err5++;
+ verd.innerHTML='<div class="verdict ko">✗ Pas là ! Indice : suis les carrés orange — ils partent de l\u2019écran de l\u2019élève, passent par la barrette aux voyants verts qui aiguille, et sortent par la boîte violette vers le nuage. La tour aux LEDs bleues, elle, stocke les dossiers.</div>';
+ }
+ });
 })();
 
 /* ================= A6 : MANIPULATION AU CURSEUR ================= */
 (function(){
-  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
-  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
-  const SCEN=[
-    {min:100, max:199,
-     ok:'\u2705 Une adresse libre dans la plage élèves ! Le réseau du collège parle : 192.168.1 = la \u00ab rue \u00bb commune, le dernier octet = le \u00ab numéro de maison \u00bb, unique pour chacun. Plage .100-.199 aux élèves, adresses basses aux équipements : l\u2019ordre de l\u2019admin ! (+4 pts)',
-     kobas:'\u274c Zone interdite : les adresses basses sont réservées aux équipements fixes — .1 le routeur, .10 le serveur, .50 l\u2019imprimante\u2026 Un conflit d\u2019IP, et les DEUX machines perdent le réseau ! Vise la plage élèves : .100 à .199\u2026',
-     kohaut:'\u274c Hors plage : au-delà de .199, l\u2019admin a réservé pour les invités et les tests. Ton poste n\u2019obtiendra rien ici. Reste entre .100 et .199\u2026'}
-  ];
-  let etape=0, t=0, valide=false;
-  function dessiner(){
-    t+=0.03;
-    ctx.clearRect(0,0,860,280);
-    const v=+slider.value;
-    const sc=SCEN[Math.min(etape,SCEN.length-1)];
-    // plan d'adressage visuel
-    ctx.font='bold 15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
-    ctx.fillText('192.168.1.'+v, 430, 40);
-    // barre 0..254 avec zones
-    const x0=110, larg=640;
-    function zx(a){ return x0+a/254*larg; }
-    ctx.fillStyle='#fecaca'; ctx.fillRect(zx(0),70,zx(99)-zx(0),26);
-    ctx.fillStyle='#bbf7d0'; ctx.fillRect(zx(100),70,zx(199)-zx(100),26);
-    ctx.fillStyle='#fde68a'; ctx.fillRect(zx(200),70,zx(254)-zx(200),26);
-    ctx.font='bold 11px Segoe UI'; ctx.fillStyle='#991b1b';
-    ctx.fillText('équipements',zx(50),88);
-    ctx.fillStyle='#166534'; ctx.fillText('élèves (DHCP .100-.199)',zx(150),88);
-    ctx.fillStyle='#92400e'; ctx.fillText('réservé',zx(227),88);
-    // équipements marqués
-    [[1,'routeur'],[10,'serveur'],[50,'imprimante']].forEach(([a,nom])=>{
-      ctx.strokeStyle='#334155'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(zx(a),70); ctx.lineTo(zx(a),110); ctx.stroke();
-      ctx.font='10.5px Segoe UI'; ctx.fillStyle='#334155';
-      ctx.fillText('.'+a+' '+nom,zx(a)+4,122); });
-    // curseur position
-    ctx.fillStyle='#ea580c';
-    ctx.beginPath(); ctx.moveTo(zx(v),66); ctx.lineTo(zx(v)-7,52); ctx.lineTo(zx(v)+7,52); ctx.closePath(); ctx.fill();
-    // poste + verdict visuel
-    ctx.font='26px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\ud83d\udda5\ufe0f',200,190);
-    const conflit=[1,10,50].includes(v);
-    const okZone= v>=100&&v<=199;
-    if(conflit){
-      if(Math.sin(t*6)>0){ ctx.font='22px Segoe UI'; ctx.fillText('\ud83d\udca5',260,176); }
-      ctx.fillStyle='#dc2626'; ctx.font='bold 13px Segoe UI';
-      ctx.fillText('CONFLIT D\u2019ADRESSE : deux machines au même numéro !',430,196);
-    } else if(okZone){
-      ctx.fillStyle='#16a34a'; ctx.font='bold 13px Segoe UI';
-      ctx.fillText('\u2713 adresse libre, le poste rejoint le réseau',430,196);
-    } else {
-      ctx.fillStyle='#dc2626'; ctx.font='bold 13px Segoe UI';
-      ctx.fillText('\u2717 hors de la plage attribuée aux élèves',430,196);
-    }
-    ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
-    ctx.fillText('même \u00ab rue \u00bb (192.168.1) \u00b7 numéro de maison unique pour chaque machine',430,240);
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
-  document.getElementById('verif6').addEventListener('click',()=>{
-    if(valide) return;
-    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
-    if(v>=sc.min && v<=sc.max){
-      etape++;
-      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
-      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
-    } else {
-      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
-    }
-  });
+ const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+ const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+ const SCEN=[
+ {min:100, max:199,
+ ok:'\u2705 Une adresse libre dans la plage élèves ! Le réseau du collège parle : 192.168.1 = la \u00ab rue \u00bb commune, le dernier octet = le \u00ab numéro de maison \u00bb, unique pour chacun. Plage .100-.199 aux élèves, adresses basses aux équipements : l\u2019ordre de l\u2019admin ! (+4 pts)',
+ kobas:'\u274c Zone interdite : les adresses basses sont réservées aux équipements fixes — .1 le routeur, .10 le serveur, .50 l\u2019imprimante\u2026 Un conflit d\u2019IP, et les DEUX machines perdent le réseau ! Vise la plage élèves : .100 à .199\u2026',
+ kohaut:'\u274c Hors plage : au-delà de .199, l\u2019admin a réservé pour les invités et les tests. Ton poste n\u2019obtiendra rien ici. Reste entre .100 et .199\u2026'}
+ ];
+ let etape=0, t=0, valide=false;
+ function dessiner(){
+ t+=0.03;
+ ctx.clearRect(0,0,860,280);
+ const v=+slider.value;
+ const sc=SCEN[Math.min(etape,SCEN.length-1)];
+ // plan d'adressage visuel
+ ctx.font='bold 15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
+ ctx.fillText('192.168.1.'+v, 430, 40);
+ // barre 0..254 avec zones
+ const x0=110, larg=640;
+ function zx(a){ return x0+a/254*larg; }
+ ctx.fillStyle='#fecaca'; ctx.fillRect(zx(0),70,zx(99)-zx(0),26);
+ ctx.fillStyle='#bbf7d0'; ctx.fillRect(zx(100),70,zx(199)-zx(100),26);
+ ctx.fillStyle='#fde68a'; ctx.fillRect(zx(200),70,zx(254)-zx(200),26);
+ ctx.font='bold 11px Segoe UI'; ctx.fillStyle='#991b1b';
+ ctx.fillText('équipements',zx(50),88);
+ ctx.fillStyle='#166534'; ctx.fillText('élèves (DHCP .100-.199)',zx(150),88);
+ ctx.fillStyle='#92400e'; ctx.fillText('réservé',zx(227),88);
+ // équipements marqués
+ [[1,'routeur'],[10,'serveur'],[50,'imprimante']].forEach(([a,nom])=>{
+ ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+ ctx.beginPath(); ctx.moveTo(zx(a),70); ctx.lineTo(zx(a),110); ctx.stroke();
+ ctx.font='10.5px Segoe UI'; ctx.fillStyle='#334155';
+ ctx.fillText('.'+a+' '+nom,zx(a)+4,122); });
+ // curseur position
+ ctx.fillStyle='#ea580c';
+ ctx.beginPath(); ctx.moveTo(zx(v),66); ctx.lineTo(zx(v)-7,52); ctx.lineTo(zx(v)+7,52); ctx.closePath(); ctx.fill();
+ // poste + verdict visuel
+ ctx.font='26px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\ud83d\udda5\ufe0f',200,190);
+ const conflit=[1,10,50].includes(v);
+ const okZone= v>=100&&v<=199;
+ if(conflit){
+ if(Math.sin(t*6)>0){ ctx.font='22px Segoe UI'; ctx.fillText('\ud83d\udca5',260,176); }
+ ctx.fillStyle='#dc2626'; ctx.font='bold 13px Segoe UI';
+ ctx.fillText('CONFLIT D\u2019ADRESSE : deux machines au même numéro !',430,196);
+ } else if(okZone){
+ ctx.fillStyle='#16a34a'; ctx.font='bold 13px Segoe UI';
+ ctx.fillText('\u2713 adresse libre, le poste rejoint le réseau',430,196);
+ } else {
+ ctx.fillStyle='#dc2626'; ctx.font='bold 13px Segoe UI';
+ ctx.fillText('\u2717 hors de la plage attribuée aux élèves',430,196);
+ }
+ ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
+ ctx.fillText('même \u00ab rue \u00bb (192.168.1) \u00b7 numéro de maison unique pour chaque machine',430,240);
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+ document.getElementById('verif6').addEventListener('click',()=>{
+ essais6++;
+ if(valide) return;
+ const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+ if(v>=sc.min && v<=sc.max){
+ etape++;
+ if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6, essais6<=SCEN.length?4:(essais6<=SCEN.length+2?3:2)); }
+ else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+ } else {
+ verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+ }
+ });
 })();
 
 /* ================= A7 : BILAN ================= */
@@ -530,34 +574,142 @@ const Q5=[
  {q:"Un fichier de 100 Mo avec un débit de 20 Mo/s se télécharge en…", r:["5 s","20 s","2 000 s"], b:0},
 ];
 (function initQ5(){
-  const zone=document.getElementById('quiz5');
-  Q5.forEach((item,i)=>{
-    const d=document.createElement('div'); d.className='question';
-    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
-    const rep=d.querySelector('.rep');
-    item.r.forEach((r,k)=>{
-      const b=document.createElement('button'); b.textContent=r;
-      b.onclick=()=>{
-        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
-        etat.q5rep++;
-        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
-        if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
-          else{
-            const verd=document.createElement('div'); verd.className='verdict ko';
-            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
-            zone.appendChild(verd);
-          }
-        }
-      };
-      rep.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('quiz5');
+ let tentative=0, reponses={};
+ function melanger(t){ return t.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
+ function construire(){
+ reponses={};
+ zone.innerHTML='';
+ const ordre=melanger(Q5.map((q,i)=>i));
+ ordre.forEach((qi,rang)=>{
+ const item=Q5[qi];
+ const d=document.createElement('div'); d.className='question';
+ d.innerHTML='<div class="q">'+(rang+1)+'. '+item.q+'</div><div class="rep"></div>';
+ const rep=d.querySelector('.rep');
+ melanger(item.r.map((txt,k)=>({txt,k}))).forEach(o=>{
+ const b=document.createElement('button'); b.textContent=o.txt;
+ b.onclick=()=>{
+ rep.querySelectorAll('button').forEach(x=>x.classList.remove('choisi'));
+ b.classList.add('choisi');
+ reponses[qi]=o.k;
+ const n=Object.keys(reponses).length;
+ info.textContent = n<Q5.length
+ ? n+' réponse(s) sur '+Q5.length+' — aucune correction avant la validation.'
+ : 'Toutes les questions sont renseignées : tu peux valider.';
+ btn.disabled = n<Q5.length;
+ };
+ rep.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
+ zone.appendChild(barre);
+ btn.disabled=true;
+ info.textContent='Réponds aux '+Q5.length+' questions, puis valide. Aucune réponse ne sera corrigée avant.';
+ }
+ const barre=document.createElement('div');
+ const info=document.createElement('div'); info.className='verdict'; info.style.marginTop='10px';
+ const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Valider mes 4 réponses';
+ btn.style.marginTop='10px';
+ const sortie=document.createElement('div');
+ barre.appendChild(info); barre.appendChild(btn); barre.appendChild(sortie);
+ btn.onclick=()=>{
+ tentative++;
+ let bons=0;
+ Q5.forEach((item,i)=>{ if(reponses[i]===item.b) bons++; });
+ if(bons>=3){
+ etat.q5ok=bons; etat.score+=bons;
+ document.getElementById('scoreTot').textContent=etat.score;
+ zone.querySelectorAll('button').forEach(x=>x.disabled=true);
+ sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
+ ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
+ document.getElementById('codefinal').style.display='block';
+ reussir(7, tentative===1?2:(tentative===2?1:0));
+ } else {
+ sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
+ ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
+ 'Les questions seront remélangées.</div>';
+ setTimeout(()=>{ construire(); sortie.innerHTML=''; },2600);
+ }
+ };
+ construire();
 })();
 
 charger(); majProgression();
+</script>
+
+<button id="calcBtn" title="Ouvrir la calculatrice"><span class="ic">C</span>calcul</button>
+<div id="calcPan">
+ <div class="tete" id="calcTete"><b>CALCULATRICE</b><button id="calcX" title="Fermer">&times;</button></div>
+ <div id="calcEcr"><div class="op" id="calcOp"></div><div class="val" id="calcVal">0</div></div>
+ <div id="calcGr">
+ <button class="f" data-k="C">C</button><button class="f" data-k="back">&#9003;</button>
+ <button class="f" data-k="pct">%</button><button class="op" data-k="/">&divide;</button>
+ <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+ <button class="op" data-k="*">&times;</button>
+ <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+ <button class="op" data-k="-">&minus;</button>
+ <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+ <button class="op" data-k="+">+</button>
+ <button class="f" data-k="sign">+/&minus;</button><button data-k="0">0</button>
+ <button data-k=".">,</button><button class="eq" data-k="=">=</button>
+ </div>
+</div>
+<script>
+/* ===== Calculatrice (aucun eval, aucune dépendance) ===== */
+(function(){
+ var pan=document.getElementById('calcPan'), btn=document.getElementById('calcBtn');
+ var eVal=document.getElementById('calcVal'), eOp=document.getElementById('calcOp');
+ var cour='0', prec=null, oper=null, neuf=true;
+ function aff(){
+ eVal.textContent=String(cour).replace('.',',');
+ eOp.textContent=(prec!==null?String(prec).replace('.',',')+' '+({'+':'+','-':'\u2212','*':'\u00d7','/':'\u00f7'}[oper]||''):'');
+ }
+ function calcule(a,b,o){
+ a=parseFloat(a); b=parseFloat(b);
+ var r = o==='+'?a+b : o==='-'?a-b : o==='*'?a*b : (b===0?NaN:a/b);
+ if(!isFinite(r)) return 'Erreur';
+ return String(Math.round(r*1e10)/1e10);
+ }
+ function touche(k){
+ if(cour==='Erreur' && k!=='C'){ return; }
+ if(/^[0-9]$/.test(k)){ cour = (neuf||cour==='0') ? k : cour+k; neuf=false; }
+ else if(k==='.'){ if(neuf){ cour='0.'; neuf=false; } else if(cour.indexOf('.')<0) cour+='.'; }
+ else if(k==='C'){ cour='0'; prec=null; oper=null; neuf=true; }
+ else if(k==='back'){ cour = (cour.length>1) ? cour.slice(0,-1) : '0'; if(cour==='-')cour='0'; }
+ else if(k==='sign'){ cour = cour.charAt(0)==='-' ? cour.slice(1) : (cour==='0'?cour:'-'+cour); }
+ else if(k==='pct'){ cour=String(parseFloat(cour)/100); neuf=true; }
+ else if(k==='+'||k==='-'||k==='*'||k==='/'){
+ if(prec!==null && !neuf){ cour=calcule(prec,cour,oper); }
+ prec=cour; oper=k; neuf=true;
+ }
+ else if(k==='='){
+ if(prec!==null && oper){ cour=calcule(prec,cour,oper); prec=null; oper=null; neuf=true; }
+ }
+ aff();
+ }
+ document.getElementById('calcGr').addEventListener('click',function(ev){
+ var b=ev.target.closest('button'); if(!b)return; touche(b.dataset.k);
+ });
+ btn.addEventListener('click',function(){ pan.classList.toggle('on'); });
+ document.getElementById('calcX').addEventListener('click',function(){ pan.classList.remove('on'); });
+ /* déplacement du panneau */
+ var tete=document.getElementById('calcTete'), drag=false, dx=0, dy=0;
+ tete.addEventListener('pointerdown',function(e){
+ if(e.target.id==='calcX')return;
+ drag=true; var r=pan.getBoundingClientRect();
+ dx=e.clientX-r.left; dy=e.clientY-r.top;
+ pan.style.right='auto'; pan.style.bottom='auto';
+ pan.style.left=r.left+'px'; pan.style.top=r.top+'px';
+ try{ tete.setPointerCapture(e.pointerId); }catch(err){}
+ });
+ tete.addEventListener('pointermove',function(e){
+ if(!drag)return;
+ pan.style.left=Math.max(4,Math.min(window.innerWidth-244,e.clientX-dx))+'px';
+ pan.style.top=Math.max(4,Math.min(window.innerHeight-260,e.clientY-dy))+'px';
+ });
+ tete.addEventListener('pointerup',function(){ drag=false; });
+ aff();
+})();
 </script>
 </body>
 </html>

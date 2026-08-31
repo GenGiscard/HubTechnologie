@@ -6,8 +6,8 @@
 <title>Cours 5ème — L'environnement numérique · ESTIC</title>
 <style>
 :root{ --ink:#1e3a5f; --niv:#0284c7; --niv-fonce:#0369a1; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
-  --ombre:0 4px 14px rgba(30,58,95,.10);}
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+ --ombre:0 4px 14px rgba(30,58,95,.10);}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
@@ -67,295 +67,571 @@ table.mat code{font-family:Consolas,monospace;background:#e0f2fe;border-radius:6
 <body>
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
 <div class="layout">
 <nav class="side" id="menu">
-  <a href="#s1"><span class="dot"></span>L'exposé disparu</a>
-  <a href="#s2"><span class="dot"></span>Fichiers & dossiers</a>
-  <a href="#s3"><span class="dot"></span>L'arborescence (animation)</a>
-  <a href="#s4"><span class="dot"></span>Le réseau du collège</a>
-  <a href="#s5"><span class="dot"></span>Le voyage du fichier (animation)</a>
-  <a href="#s6"><span class="dot"></span>Ko, Mo, Go (animation)</a>
-  <a href="#s7"><span class="dot"></span>Les bons réflexes</a>
-  <a href="#s8"><span class="dot"></span>À retenir</a>
-  <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+ <a href="#s1"><span class="dot"></span>L'exposé disparu</a>
+ <a href="#s2"><span class="dot"></span>Fichiers & dossiers</a>
+ <a href="#s3"><span class="dot"></span>L'arborescence (animation)</a>
+ <a href="#s4"><span class="dot"></span>Le réseau du collège</a>
+ <a href="#s5"><span class="dot"></span>Le voyage du fichier (animation)</a>
+ <a href="#s6"><span class="dot"></span>Ko, Mo, Go (animation)</a>
+ <a href="#s7"><span class="dot"></span>Les bons réflexes</a>
+ <a href="#s8"><span class="dot"></span>À retenir</a>
+ <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
 </nav>
 
 <main>
 
 <section class="slide" id="s1">
-  <div class="eyebrow">Technologie · 5ème · Séquence L'environnement numérique</div>
-  <h1>💾 « Monsieur, mon exposé<br>a disparu !! »</h1>
-  <p class="sous" style="margin-top:16px">Zoé avait travaillé une heure sur son exposé… enregistré « quelque part », sur « un ordinateur de la salle info ».
-  Aujourd'hui : introuvable. Cette séquence t'apprend comment les fichiers sont <b>nommés</b>, <b>rangés</b> et <b>stockés</b>
-  sur le réseau du collège — pour que ça ne t'arrive plus jamais.</p>
+ <div class="eyebrow">Technologie · 5ème · Séquence L'environnement numérique</div>
+ <h1> « Monsieur, mon exposé<br>a disparu !! »</h1>
+ <p class="sous" style="margin-top:16px">Zoé avait travaillé une heure sur son exposé… enregistré « quelque part », sur « un ordinateur de la salle info ».
+ Aujourd'hui : introuvable. Cette séquence t'apprend comment les fichiers sont <b>nommés</b>, <b>rangés</b>et <b>stockés</b>
+ sur le réseau du collège — pour que ça ne t'arrive plus jamais.</p>
 </section>
 
 <section class="slide" id="s2">
-  <h2>Fichier, dossier, extension</h2>
-  <div class="cartes">
-    <div class="carte" style="--accent:#0284c7"><div class="ic">📄</div><h3>Le FICHIER</h3><p>Un document numérique avec un nom : texte, photo, son, vidéo, programme…</p><span class="ex">expose_volcans.odt</span></div>
-    <div class="carte" style="--accent:#ea580c"><div class="ic">🏷️</div><h3>L'EXTENSION</h3><p>La fin du nom, après le point : elle indique le TYPE du fichier et le logiciel qui l'ouvre.</p><span class="ex">.odt .jpg .mp3 .mp4</span></div>
-    <div class="carte" style="--accent:#16a34a"><div class="ic">📁</div><h3>Le DOSSIER</h3><p>Une boîte qui range fichiers… et autres dossiers : c'est l'ARBORESCENCE.</p><span class="ex">Travail ▸ 5B ▸ zoe</span></div>
-  </div>
-  <p class="sous" style="margin-top:22px">Un bon nom de fichier dit tout : <b>quoi</b>, <b>qui</b>, <b>quand</b> — <code style="font-family:Consolas,monospace">expose_volcans_zoe_v2.odt</code> vaut mieux que <code style="font-family:Consolas,monospace">truc.odt</code> !</p>
+ <h2>Fichier, dossier, extension</h2>
+ <div class="cartes">
+ <div class="carte" style="--accent:#0284c7"><div class="ic"></div><h3>Le FICHIER</h3><p>Un document numérique avec un nom : texte, photo, son, vidéo, programme…</p><span class="ex">expose_volcans.odt</span></div>
+ <div class="carte" style="--accent:#ea580c"><div class="ic"></div><h3>L'EXTENSION</h3><p>La fin du nom, après le point : elle indique le TYPE du fichier et le logiciel qui l'ouvre.</p><span class="ex">.odt .jpg .mp3 .mp4</span></div>
+ <div class="carte" style="--accent:#16a34a"><div class="ic"></div><h3>Le DOSSIER</h3><p>Une boîte qui range fichiers… et autres dossiers : c'est l'ARBORESCENCE.</p><span class="ex">Travail ▸ 5B ▸ zoe</span></div>
+ </div>
+ <p class="sous" style="margin-top:22px">Un bon nom de fichier dit tout : <b>quoi</b>, <b>qui</b>, <b>quand</b> — <code style="font-family:Consolas,monospace">expose_volcans_zoe_v2.odt</code>vaut mieux que <code style="font-family:Consolas,monospace">truc.odt</code> !</p>
 </section>
 
 <section class="slide" id="s3">
-  <h2>L'arborescence : ranger pour retrouver</h2>
-  <div class="animbox">
-    <canvas id="cvArbo" width="820" height="380"></canvas>
-    <div class="legende"><div class="caption" id="capArbo"></div></div>
-    <div class="anavig">
-      <button class="navbtn" data-prev="arbo">◀ Précédent</button>
-      <div class="phasepts" id="ptsArbo"></div>
-      <button class="navbtn" data-next="arbo">Suivant ▶</button>
-      <button class="rejbtn" data-anim="arbo">⟳ Rejouer l’étape</button>
-    </div>
-  </div>
+ <h2>L'arborescence : ranger pour retrouver</h2>
+ <div class="animbox">
+ <canvas id="cvArbo" width="820" height="380"></canvas>
+ <div class="legende"><div class="caption" id="capArbo"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="arbo">◀ Précédent</button>
+ <div class="phasepts" id="ptsArbo"></div>
+ <button class="navbtn" data-next="arbo">Suivant ▶</button>
+ <button class="rejbtn" data-anim="arbo">⟳ Rejouer l’étape</button>
+ </div>
+ </div>
 </section>
 
 <section class="slide" id="s4">
-  <h2>Le réseau du collège : qui fait quoi ?</h2>
-  <table class="mat">
-    <tr><th>Élément</th><th>Son rôle</th></tr>
-    <tr><td>💻 <b>Le poste de travail</b></td><td>l'ordinateur où TU travailles — il y en a plein, tu changes souvent !</td></tr>
-    <tr><td>🗄️ <b>Le serveur</b></td><td>l'ordinateur central, toujours allumé : il stocke les fichiers et les comptes de TOUT le collège</td></tr>
-    <tr><td>🔀 <b>Le switch</b></td><td>la multiprise du réseau : il relie tous les câbles entre eux</td></tr>
-    <tr><td>📶 <b>La borne wifi</b></td><td>le même réseau… sans câble, par ondes radio</td></tr>
-    <tr><td>🔑 <b>Ta session</b></td><td>identifiant + mot de passe : le réseau te reconnaît et ouvre TON dossier personnel</td></tr>
-  </table>
-  <p class="sous" style="margin-top:18px">La règle d'or : un fichier enregistré <b>sur le serveur</b> te suit sur n'importe quel poste. Un fichier laissé <b>sur le poste</b> y reste… et s'y perd !</p>
+ <h2>Le réseau du collège : qui fait quoi ?</h2>
+ <table class="mat">
+ <tr><th>Élément</th><th>Son rôle</th></tr>
+ <tr><td> <b>Le poste de travail</b></td><td>l'ordinateur où TU travailles — il y en a plein, tu changes souvent !</td></tr>
+ <tr><td> <b>Le serveur</b></td><td>l'ordinateur central, toujours allumé : il stocke les fichiers et les comptes de TOUT le collège</td></tr>
+ <tr><td> <b>Le switch</b></td><td>la multiprise du réseau : il relie tous les câbles entre eux</td></tr>
+ <tr><td> <b>La borne wifi</b></td><td>le même réseau… sans câble, par ondes radio</td></tr>
+ <tr><td> <b>Ta session</b></td><td>identifiant + mot de passe : le réseau te reconnaît et ouvre TON dossier personnel</td></tr>
+ </table>
+ <p class="sous" style="margin-top:18px">La règle d'or : un fichier enregistré <b>sur le serveur</b>te suit sur n'importe quel poste. Un fichier laissé <b>sur le poste</b>y reste… et s'y perd !</p>
 </section>
 
 <section class="slide" id="s5">
-  <h2>Le voyage du fichier</h2>
-  <div class="animbox">
-    <canvas id="cvVoyage" width="820" height="380"></canvas>
-    <div class="legende"><div class="caption" id="capVoyage"></div></div>
-    <div class="anavig">
-      <button class="navbtn" data-prev="voyage">◀ Précédent</button>
-      <div class="phasepts" id="ptsVoyage"></div>
-      <button class="navbtn" data-next="voyage">Suivant ▶</button>
-      <button class="rejbtn" data-anim="voyage">⟳ Rejouer l’étape</button>
-    </div>
-  </div>
+ <h2>Le voyage du fichier</h2>
+ <div class="animbox">
+ <canvas id="cvVoyage" width="820" height="380"></canvas>
+ <div class="legende"><div class="caption" id="capVoyage"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="voyage">◀ Précédent</button>
+ <div class="phasepts" id="ptsVoyage"></div>
+ <button class="navbtn" data-next="voyage">Suivant ▶</button>
+ <button class="rejbtn" data-anim="voyage">⟳ Rejouer l’étape</button>
+ </div>
+ </div>
 </section>
 
 <section class="slide" id="s6">
-  <h2>Ko, Mo, Go : le poids des fichiers</h2>
-  <div class="animbox">
-    <canvas id="cvOctets" width="820" height="380"></canvas>
-    <div class="legende"><div class="caption" id="capOctets"></div></div>
-    <div class="anavig">
-      <button class="navbtn" data-prev="octets">◀ Précédent</button>
-      <div class="phasepts" id="ptsOctets"></div>
-      <button class="navbtn" data-next="octets">Suivant ▶</button>
-      <button class="rejbtn" data-anim="octets">⟳ Rejouer l’étape</button>
-    </div>
-  </div>
+ <h2>Ko, Mo, Go : le poids des fichiers</h2>
+ <div class="animbox">
+ <canvas id="cvOctets" width="820" height="380"></canvas>
+ <div class="legende"><div class="caption" id="capOctets"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="octets">◀ Précédent</button>
+ <div class="phasepts" id="ptsOctets"></div>
+ <button class="navbtn" data-next="octets">Suivant ▶</button>
+ <button class="rejbtn" data-anim="octets">⟳ Rejouer l’étape</button>
+ </div>
+ </div>
 </section>
 
 <section class="slide" id="s7">
-  <h2>Les bons réflexes de la salle info</h2>
-  <table class="mat">
-    <tr><th>Réflexe</th><th>Pourquoi</th></tr>
-    <tr><td>🔑 Fermer sa session en partant</td><td>session ouverte = n'importe qui peut fouiller (ou saboter !) tes dossiers</td></tr>
-    <tr><td>🗄️ Enregistrer sur le SERVEUR, dans SON dossier</td><td>tes fichiers te suivent sur tous les postes — et le serveur est sauvegardé</td></tr>
-    <tr><td>🏷️ Nommer clairement : quoi_qui_version</td><td>« expose_volcans_zoe_v2.odt » se retrouve en 3 secondes</td></tr>
-    <tr><td>🤫 Ne JAMAIS prêter son mot de passe</td><td>tout ce qui est fait sur ta session… c'est TOI le responsable</td></tr>
-  </table>
-  <p class="sous" style="margin-top:18px">➡️ Au <b>TP</b>, tu deviens dépanneur officiel de la salle info : trois élèves en panique t'attendent !</p>
+ <h2>Les bons réflexes de la salle info</h2>
+ <table class="mat">
+ <tr><th>Réflexe</th><th>Pourquoi</th></tr>
+ <tr><td>Fermer sa session en partant</td><td>session ouverte = n'importe qui peut fouiller (ou saboter !) tes dossiers</td></tr>
+ <tr><td>Enregistrer sur le SERVEUR, dans SON dossier</td><td>tes fichiers te suivent sur tous les postes — et le serveur est sauvegardé</td></tr>
+ <tr><td>Nommer clairement : quoi_qui_version</td><td>« expose_volcans_zoe_v2.odt » se retrouve en 3 secondes</td></tr>
+ <tr><td>Ne JAMAIS prêter son mot de passe</td><td>tout ce qui est fait sur ta session… c'est TOI le responsable</td></tr>
+ </table>
+ <p class="sous" style="margin-top:18px">Au <b>TP</b>, tu deviens dépanneur officiel de la salle info : trois élèves en panique t'attendent !</p>
 </section>
 
 <section class="slide" id="s8">
-  <h2>✅ À retenir</h2>
-  <div class="retenir">
-    <ul>
-      <li>Un <b>fichier</b> a un nom et une <b>extension</b> (.odt, .jpg, .mp3, .mp4…) qui indique son type ; il se range dans des <b>dossiers</b> organisés en arborescence.</li>
-      <li>Le <b>chemin</b> décrit où il se trouve : <b>Travail ▸ 5B ▸ zoe ▸ techno ▸ expose.odt</b>.</li>
-      <li>Sur le réseau du collège, le <b>serveur</b> stocke les fichiers de tous : un fichier enregistré sur le serveur se retrouve depuis <b>n'importe quel poste</b>.</li>
-      <li>Ta <b>session</b> (identifiant + mot de passe) est personnelle : on la ferme en partant, on ne la prête jamais.</li>
-      <li>Les tailles se mesurent en octets : <b>1 Go = 1 000 Mo = 1 000 000 Ko</b> — un texte pèse des Ko, une photo des Mo, un film des Go.</li>
-    </ul>
-  </div>
+ <h2>✓ À retenir</h2>
+ <div class="retenir">
+ <ul>
+ <li>Un <b>fichier</b>a un nom et une <b>extension</b> (.odt, .jpg, .mp3, .mp4…) qui indique son type ; il se range dans des <b>dossiers</b>organisés en arborescence.</li>
+ <li>Le <b>chemin</b>décrit où il se trouve : <b>Travail ▸ 5B ▸ zoe ▸ techno ▸ expose.odt</b>.</li>
+ <li>Sur le réseau du collège, le <b>serveur</b>stocke les fichiers de tous : un fichier enregistré sur le serveur se retrouve depuis <b>n'importe quel poste</b>.</li>
+ <li>Ta <b>session</b> (identifiant + mot de passe) est personnelle : on la ferme en partant, on ne la prête jamais.</li>
+ <li>Les tailles se mesurent en octets : <b>1 Go = 1 000 Mo = 1 000 000 Ko</b> — un texte pèse des Ko, une photo des Mo, un film des Go.</li>
+ </ul>
+ </div>
 </section>
 
 </main>
 </div>
 
 <script>
+
+/* ===== SCHEMAS : dessins vectoriels remplaçant les anciens pictogrammes =====
+   SCHEMA(ctx,'nom',x,y,T) dessine le symbole centré en (x,y), taille T.
+   La couleur courante (ctx.fillStyle) sert de teinte principale.          */
+const SCHEMA=(function(){
+  function P(c,pts,rempli){
+    c.beginPath();
+    pts.forEach((p,i)=> i? c.lineTo(p[0],p[1]) : c.moveTo(p[0],p[1]));
+    c.closePath(); rempli? c.fill() : c.stroke();
+  }
+  const D={
+  maison(c,u,t){ c.fillRect(-.32*u,-.05*u,.64*u,.42*u);
+    P(c,[[-.44*u,-.05*u],[0,-.42*u],[.44*u,-.05*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.1*u,.12*u,.2*u,.25*u); c.restore(); },
+  batiment(c,u){ c.fillRect(-.3*u,-.42*u,.6*u,.84*u);
+    c.save(); c.fillStyle='#fff';
+    for(let i=0;i<4;i++)for(let j=0;j<3;j++) c.fillRect(-.22*u+j*.16*u,-.34*u+i*.19*u,.09*u,.11*u);
+    c.restore(); },
+  usine(c,u){ c.fillRect(-.42*u,0,.84*u,.4*u);
+    P(c,[[-.42*u,0],[-.14*u,-.2*u],[-.14*u,0]],true);
+    P(c,[[-.14*u,0],[.14*u,-.2*u],[.14*u,0]],true);
+    c.fillRect(.22*u,-.44*u,.14*u,.44*u); },
+  ville(c,u){ [[-.42,.5],[-.18,.78],[.08,.42],[.3,.66]].forEach(([bx,bh])=>
+      c.fillRect(bx*u,(.42-bh*.84)*u,.2*u,bh*.84*u)); },
+  soleil(c,u){ c.beginPath(); c.arc(0,0,.24*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.4,.055*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<8;k++){ const a=k*.785;
+      c.beginPath(); c.moveTo(.32*u*Math.cos(a),.32*u*Math.sin(a));
+      c.lineTo(.45*u*Math.cos(a),.45*u*Math.sin(a)); c.stroke(); } c.lineWidth=w; },
+  nuage(c,u){ c.beginPath();
+    c.arc(-.18*u,.04*u,.19*u,0,6.284); c.arc(.03*u,-.1*u,.24*u,0,6.284);
+    c.arc(.26*u,.05*u,.18*u,0,6.284); c.fill();
+    c.fillRect(-.18*u,-.02*u,.44*u,.24*u); },
+  pluie(c,u){ D.nuage(c,u*.85);
+    const w=c.lineWidth; c.lineWidth=Math.max(1.4,.05*u); c.strokeStyle=c.fillStyle;
+    [-.2,0,.2].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,.2*u); c.lineTo(dx*u-.05*u,.44*u); c.stroke(); });
+    c.lineWidth=w; },
+  goutte(c,u){ c.beginPath(); c.moveTo(0,-.42*u);
+    c.quadraticCurveTo(.34*u,.06*u,0,.4*u); c.quadraticCurveTo(-.34*u,.06*u,0,-.42*u); c.fill(); },
+  vent(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.075*u); c.strokeStyle=c.fillStyle;
+    [-.22,0,.22].forEach((dy,i)=>{ c.beginPath(); c.moveTo(-.44*u,dy*u);
+      c.lineTo((.2-i*.12)*u,dy*u); c.quadraticCurveTo(.42*u,dy*u,.3*u,(dy-.14)*u); c.stroke(); });
+    c.lineWidth=w; },
+  flocon(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.4,.055*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ const a=k*1.047;
+      c.beginPath(); c.moveTo(-.42*u*Math.cos(a),-.42*u*Math.sin(a));
+      c.lineTo(.42*u*Math.cos(a),.42*u*Math.sin(a)); c.stroke();
+      [-1,1].forEach(s=>{ c.beginPath();
+        c.moveTo(s*.42*u*Math.cos(a),s*.42*u*Math.sin(a));
+        c.lineTo(s*.26*u*Math.cos(a)+.12*u*Math.cos(a+2.1),s*.26*u*Math.sin(a)+.12*u*Math.sin(a+2.1)); c.stroke(); }); }
+    c.lineWidth=w; },
+  feu(c,u){ c.beginPath(); c.moveTo(0,.42*u);
+    c.quadraticCurveTo(-.4*u,.06*u,-.1*u,-.42*u);
+    c.quadraticCurveTo(-.04*u,-.12*u,.14*u,-.28*u);
+    c.quadraticCurveTo(.1*u,-.02*u,.36*u,.1*u);
+    c.quadraticCurveTo(.4*u,.34*u,0,.42*u); c.fill(); },
+  eclair(c,u){ P(c,[[.06*u,-.44*u],[-.28*u,.06*u],[-.02*u,.06*u],[-.1*u,.44*u],[.28*u,-.08*u],[.02*u,-.08*u]],true); },
+  choc(c,u){ const p=[]; for(let k=0;k<12;k++){ const a=k*.5236, r=(k%2? .2:.46)*u;
+      p.push([r*Math.cos(a),r*Math.sin(a)]); } P(c,p,true); },
+  pile(c,u){ c.fillRect(-.34*u,-.22*u,.6*u,.44*u); c.fillRect(.26*u,-.09*u,.08*u,.18*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.28*u,-.15*u,.12*u,.3*u); c.restore(); },
+  ampoule(c,u){ c.beginPath(); c.arc(0,-.1*u,.27*u,0,6.284); c.fill();
+    c.fillRect(-.11*u,.16*u,.22*u,.16*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.11*u,.21*u,.22*u,.03*u); c.restore(); },
+  engrenage(c,u){ const p=[]; for(let k=0;k<24;k++){ const a=k*.2618, r=(k%2? .3:.44)*u;
+      p.push([r*Math.cos(a),r*Math.sin(a)]); } P(c,p,true);
+    c.save(); c.globalCompositeOperation='destination-out';
+    c.beginPath(); c.arc(0,0,.15*u,0,6.284); c.fill(); c.restore(); },
+  vis(c,u){ c.fillRect(-.1*u,-.12*u,.2*u,.5*u);
+    c.fillRect(-.26*u,-.4*u,.52*u,.28*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.18*u,-.29*u,.36*u,.06*u); c.restore(); },
+  atome(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.3,.05*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ c.save(); c.rotate(k*1.047);
+      c.beginPath(); c.ellipse(0,0,.44*u,.17*u,0,0,6.284); c.stroke(); c.restore(); }
+    c.lineWidth=w; c.beginPath(); c.arc(0,0,.1*u,0,6.284); c.fill(); },
+  thermometre(c,u){ c.fillRect(-.07*u,-.4*u,.14*u,.5*u);
+    c.beginPath(); c.arc(0,.24*u,.17*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1,.03*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<4;k++){ c.beginPath(); c.moveTo(.09*u,(-.3+k*.13)*u); c.lineTo(.2*u,(-.3+k*.13)*u); c.stroke(); }
+    c.lineWidth=w; },
+  coeur(c,u){ c.beginPath(); c.moveTo(0,.4*u);
+    c.bezierCurveTo(-.62*u,-.02*u,-.3*u,-.46*u,0,-.16*u);
+    c.bezierCurveTo(.3*u,-.46*u,.62*u,-.02*u,0,.4*u); c.fill(); },
+  personne(c,u){ c.beginPath(); c.arc(0,-.3*u,.14*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.09*u); c.strokeStyle=c.fillStyle; c.lineCap='round';
+    c.beginPath(); c.moveTo(0,-.15*u); c.lineTo(0,.14*u); c.stroke();
+    c.beginPath(); c.moveTo(-.16*u,0); c.lineTo(.16*u,0); c.stroke();
+    c.beginPath(); c.moveTo(0,.14*u); c.lineTo(-.14*u,.42*u); c.moveTo(0,.14*u); c.lineTo(.14*u,.42*u); c.stroke();
+    c.lineWidth=w; },
+  marcheur(c,u){ c.beginPath(); c.arc(.02*u,-.3*u,.13*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.085*u); c.strokeStyle=c.fillStyle; c.lineCap='round';
+    c.beginPath(); c.moveTo(.02*u,-.16*u); c.lineTo(-.02*u,.12*u); c.stroke();
+    c.beginPath(); c.moveTo(-.02*u,.12*u); c.lineTo(-.2*u,.4*u); c.moveTo(-.02*u,.12*u); c.lineTo(.2*u,.36*u); c.stroke();
+    c.beginPath(); c.moveTo(.02*u,-.08*u); c.lineTo(.22*u,-.16*u); c.stroke();
+    c.lineWidth=w; },
+  main(c,u){ c.fillRect(-.09*u,-.44*u,.18*u,.4*u);
+    c.beginPath(); c.arc(0,.12*u,.24*u,0,6.284); c.fill(); },
+  voiture(c,u){ c.fillRect(-.44*u,-.02*u,.88*u,.24*u);
+    P(c,[[-.28*u,-.02*u],[-.16*u,-.28*u],[.18*u,-.28*u],[.3*u,-.02*u]],true);
+    c.beginPath(); c.arc(-.24*u,.24*u,.12*u,0,6.284); c.arc(.24*u,.24*u,.12*u,0,6.284); c.fill(); },
+  velo(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.28*u,.16*u,.22*u,0,6.284); c.stroke();
+    c.beginPath(); c.arc(.28*u,.16*u,.22*u,0,6.284); c.stroke();
+    c.beginPath(); c.moveTo(-.28*u,.16*u); c.lineTo(0,.16*u); c.lineTo(-.06*u,-.16*u);
+    c.lineTo(.2*u,-.16*u); c.lineTo(.28*u,.16*u); c.moveTo(0,.16*u); c.lineTo(.2*u,-.16*u); c.stroke();
+    c.lineWidth=w; },
+  satellite(c,u){ c.fillRect(-.13*u,-.16*u,.26*u,.32*u);
+    c.fillRect(-.46*u,-.11*u,.28*u,.22*u); c.fillRect(.18*u,-.11*u,.28*u,.22*u);
+    c.save(); c.fillStyle='#fff';
+    [-.4,-.3,.22,.32].forEach(dx=> c.fillRect(dx*u,-.09*u,.04*u,.18*u)); c.restore(); },
+  terre(c,u){ c.beginPath(); c.arc(0,0,.42*u,0,6.284); c.fill();
+    c.save(); c.fillStyle='#fff'; c.globalAlpha=.55;
+    c.beginPath(); c.ellipse(-.12*u,-.1*u,.16*u,.1*u,.4,0,6.284); c.fill();
+    c.beginPath(); c.ellipse(.14*u,.12*u,.13*u,.08*u,-.4,0,6.284); c.fill(); c.restore(); },
+  telephone(c,u){ c.fillRect(-.24*u,-.44*u,.48*u,.88*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.18*u,-.34*u,.36*u,.62*u); c.restore(); },
+  ecran(c,u){ c.fillRect(-.42*u,-.34*u,.84*u,.54*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.36*u,-.28*u,.72*u,.42*u); c.restore();
+    c.fillRect(-.12*u,.2*u,.24*u,.08*u); c.fillRect(-.26*u,.28*u,.52*u,.08*u); },
+  document(c,u){ c.fillRect(-.28*u,-.42*u,.56*u,.84*u);
+    c.save(); c.fillStyle='#fff';
+    for(let k=0;k<4;k++) c.fillRect(-.2*u,(-.3+k*.18)*u,.4*u,.06*u); c.restore(); },
+  colis(c,u){ c.fillRect(-.4*u,-.3*u,.8*u,.6*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.07*u,-.3*u,.14*u,.6*u);
+    c.fillRect(-.4*u,-.05*u,.8*u,.1*u); c.restore(); },
+  enveloppe(c,u){ c.fillRect(-.4*u,-.28*u,.8*u,.56*u);
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.4,.05*u);
+    c.beginPath(); c.moveTo(-.4*u,-.28*u); c.lineTo(0,.04*u); c.lineTo(.4*u,-.28*u); c.stroke(); c.restore(); },
+  antenne(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,.42*u); c.lineTo(0,-.1*u); c.stroke();
+    for(let k=1;k<=3;k++){ c.beginPath(); c.arc(0,-.1*u,k*.13*u,-2.4,-.74); c.stroke(); }
+    c.lineWidth=w; },
+  reseau(c,u){ c.beginPath(); c.arc(0,-.22*u,.1*u,0,6.284);
+    c.arc(-.3*u,.24*u,.1*u,0,6.284); c.arc(.3*u,.24*u,.1*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.2,.045*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,-.22*u); c.lineTo(-.3*u,.24*u); c.lineTo(.3*u,.24*u); c.lineTo(0,-.22*u); c.stroke();
+    c.lineWidth=w; },
+  lien(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.16*u,0,.2*u,-1.1,1.1,true); c.stroke();
+    c.beginPath(); c.arc(.16*u,0,.2*u,2.04,4.24,true); c.stroke();
+    c.beginPath(); c.moveTo(-.12*u,0); c.lineTo(.12*u,0); c.stroke(); c.lineWidth=w; },
+  cadenas(c,u){ c.fillRect(-.28*u,-.06*u,.56*u,.44*u);
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(0,-.08*u,.18*u,Math.PI,0); c.stroke(); c.lineWidth=w; },
+  robot(c,u){ c.fillRect(-.3*u,-.2*u,.6*u,.5*u);
+    c.save(); c.fillStyle='#fff';
+    c.beginPath(); c.arc(-.12*u,-.02*u,.06*u,0,6.284); c.arc(.12*u,-.02*u,.06*u,0,6.284); c.fill();
+    c.fillRect(-.14*u,.12*u,.28*u,.05*u); c.restore();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,-.2*u); c.lineTo(0,-.36*u); c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.arc(0,-.4*u,.07*u,0,6.284); c.fill(); },
+  cerveau(c,u){ c.beginPath();
+    c.arc(-.16*u,-.08*u,.2*u,0,6.284); c.arc(.16*u,-.08*u,.2*u,0,6.284);
+    c.arc(0,.14*u,.2*u,0,6.284); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    c.beginPath(); c.moveTo(0,-.26*u); c.lineTo(0,.3*u); c.stroke(); c.restore(); },
+  poubelle(c,u){ c.fillRect(-.26*u,-.2*u,.52*u,.6*u);
+    c.fillRect(-.34*u,-.3*u,.68*u,.1*u); c.fillRect(-.12*u,-.4*u,.24*u,.1*u);
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    [-.1,0,.1].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,-.1*u); c.lineTo(dx*u,.3*u); c.stroke(); }); c.restore(); },
+  recyclage(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.075*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ c.save(); c.rotate(k*2.094);
+      c.beginPath(); c.arc(0,0,.32*u,-1.9,-.5); c.stroke();
+      c.restore(); } c.lineWidth=w; },
+  feuille(c,u){ c.beginPath(); c.moveTo(-.34*u,.34*u);
+    c.quadraticCurveTo(-.1*u,-.44*u,.36*u,-.3*u);
+    c.quadraticCurveTo(.3*u,.3*u,-.34*u,.34*u); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    c.beginPath(); c.moveTo(-.3*u,.3*u); c.lineTo(.28*u,-.26*u); c.stroke(); c.restore(); },
+  arbre(c,u){ c.fillRect(-.07*u,.06*u,.14*u,.36*u);
+    c.beginPath(); c.arc(0,-.14*u,.3*u,0,6.284); c.fill(); },
+  plot(c,u){ P(c,[[0,-.4*u],[-.3*u,.34*u],[.3*u,.34*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.17*u,-.02*u,.34*u,.09*u); c.restore(); },
+  balle(c,u){ c.beginPath(); c.arc(0,0,.36*u,0,6.284); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.4,.05*u);
+    c.beginPath(); c.arc(-.34*u,0,.3*u,-.9,.9); c.stroke();
+    c.beginPath(); c.arc(.34*u,0,.3*u,2.24,4.04); c.stroke(); c.restore(); },
+  tortue(c,u){ c.beginPath(); c.ellipse(0,0,.34*u,.24*u,0,0,6.284); c.fill();
+    c.beginPath(); c.arc(.36*u,-.04*u,.11*u,0,6.284); c.fill();
+    [-.2,.14].forEach(dx=>{ c.beginPath(); c.ellipse(dx*u,.22*u,.09*u,.06*u,0,0,6.284); c.fill(); }); },
+  escargot(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath();
+    for(let a=0;a<12;a+=.15){ const r=.05*u+a*.028*u;
+      const px=-.05*u+r*Math.cos(a), py=r*Math.sin(a);
+      if(a===0) c.moveTo(px,py); else c.lineTo(px,py); }
+    c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.ellipse(.3*u,.2*u,.16*u,.07*u,0,0,6.284); c.fill(); },
+  oiseau(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.065*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.16*u,.06*u,.2*u,-2.2,-.5); c.stroke();
+    c.beginPath(); c.arc(.16*u,.06*u,.2*u,-2.64,-.94); c.stroke(); c.lineWidth=w; },
+  crane(c,u){ c.beginPath(); c.arc(0,-.08*u,.3*u,0,6.284); c.fill();
+    c.fillRect(-.16*u,.14*u,.32*u,.16*u);
+    c.save(); c.fillStyle='#fff';
+    c.beginPath(); c.arc(-.12*u,-.1*u,.08*u,0,6.284); c.arc(.12*u,-.1*u,.08*u,0,6.284); c.fill(); c.restore(); },
+  loupe(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.075*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.08*u,-.08*u,.26*u,0,6.284); c.stroke();
+    c.beginPath(); c.moveTo(.11*u,.11*u); c.lineTo(.38*u,.38*u); c.stroke(); c.lineWidth=w; },
+  microscope(c,u){ c.fillRect(-.3*u,.3*u,.6*u,.1*u);
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.05*u,.3*u); c.lineTo(-.05*u,-.02*u); c.stroke();
+    c.beginPath(); c.moveTo(-.05*u,-.02*u); c.lineTo(.2*u,-.34*u); c.stroke(); c.lineWidth=w;
+    c.fillRect(-.26*u,.06*u,.42*u,.07*u); },
+  graphique(c,u){ c.fillRect(-.34*u,.02*u,.16*u,.36*u); c.fillRect(-.08*u,-.18*u,.16*u,.56*u);
+    c.fillRect(.18*u,-.34*u,.16*u,.72*u); },
+  baignoire(c,u){ c.beginPath(); c.moveTo(-.4*u,-.06*u); c.lineTo(-.34*u,.28*u);
+    c.lineTo(.34*u,.28*u); c.lineTo(.4*u,-.06*u); c.closePath(); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.28*u,-.06*u); c.lineTo(-.28*u,-.3*u); c.lineTo(-.06*u,-.3*u); c.stroke();
+    c.lineWidth=w; },
+  canape(c,u){ c.fillRect(-.42*u,-.06*u,.84*u,.3*u);
+    c.fillRect(-.42*u,-.28*u,.14*u,.24*u); c.fillRect(.28*u,-.28*u,.14*u,.24*u);
+    c.fillRect(-.3*u,-.22*u,.6*u,.18*u); },
+  flacon(c,u){ c.fillRect(-.16*u,-.16*u,.32*u,.56*u); c.fillRect(-.08*u,-.4*u,.16*u,.24*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.1*u,0,.2*u,.14*u); c.restore(); },
+  bouteille(c,u){ c.beginPath(); c.moveTo(-.16*u,.4*u); c.lineTo(-.16*u,-.06*u);
+    c.lineTo(-.06*u,-.24*u); c.lineTo(-.06*u,-.4*u); c.lineTo(.06*u,-.4*u); c.lineTo(.06*u,-.24*u);
+    c.lineTo(.16*u,-.06*u); c.lineTo(.16*u,.4*u); c.closePath(); c.fill(); },
+  chaussure(c,u){ c.beginPath(); c.moveTo(-.4*u,.3*u); c.lineTo(-.4*u,-.1*u);
+    c.lineTo(-.12*u,-.1*u); c.quadraticCurveTo(.1*u,.06*u,.4*u,.12*u);
+    c.lineTo(.4*u,.3*u); c.closePath(); c.fill(); },
+  hache(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.09*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.28*u,.4*u); c.lineTo(.2*u,-.28*u); c.stroke(); c.lineWidth=w;
+    P(c,[[.06*u,-.18*u],[.34*u,-.42*u],[.44*u,-.16*u],[.2*u,-.02*u]],true); },
+  cloche(c,u){ c.beginPath(); c.moveTo(-.3*u,.2*u);
+    c.quadraticCurveTo(-.3*u,-.34*u,0,-.34*u); c.quadraticCurveTo(.3*u,-.34*u,.3*u,.2*u);
+    c.closePath(); c.fill(); c.fillRect(-.36*u,.2*u,.72*u,.08*u);
+    c.beginPath(); c.arc(0,.34*u,.08*u,0,6.284); c.fill(); },
+  alerte(c,u){ P(c,[[0,-.42*u],[.44*u,.34*u],[-.44*u,.34*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.05*u,-.16*u,.1*u,.3*u);
+    c.beginPath(); c.arc(0,.24*u,.06*u,0,6.284); c.fill(); c.restore(); },
+  chantier(c,u){ P(c,[[0,-.34*u],[.36*u,.3*u],[-.36*u,.3*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.3*u,.06*u,.6*u,.1*u); c.restore(); },
+  ciseaux(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.3*u,-.34*u); c.lineTo(.2*u,.16*u); c.stroke();
+    c.beginPath(); c.moveTo(.3*u,-.34*u); c.lineTo(-.2*u,.16*u); c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.arc(-.24*u,.3*u,.12*u,0,6.284); c.arc(.24*u,.3*u,.12*u,0,6.284); c.fill(); },
+  melange(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.065*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.4*u,-.16*u); c.lineTo(.1*u,-.16*u); c.stroke();
+    c.beginPath(); c.moveTo(-.4*u,.16*u); c.lineTo(.1*u,.16*u); c.stroke(); c.lineWidth=w;
+    P(c,[[.1*u,-.3*u],[.4*u,-.16*u],[.1*u,-.02*u]],true);
+    P(c,[[.1*u,.02*u],[.4*u,.16*u],[.1*u,.3*u]],true); },
+  boucle(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(0,0,.3*u,.5,5.6); c.stroke(); c.lineWidth=w;
+    P(c,[[.16*u,-.34*u],[.38*u,-.1*u],[.08*u,-.06*u]],true); },
+  fleche(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.36*u,0); c.lineTo(.14*u,0); c.stroke(); c.lineWidth=w;
+    P(c,[[.14*u,-.2*u],[.42*u,0],[.14*u,.2*u]],true); },
+  vapeur(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    [-.2,0,.2].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,.36*u);
+      c.bezierCurveTo((dx+.14)*u,.1*u,(dx-.14)*u,-.1*u,dx*u,-.36*u); c.stroke(); });
+    c.lineWidth=w; },
+  sommeil(c,u){ c.font='bold '+(.5*u)+'px Segoe UI'; c.textAlign='center';
+    c.fillText('z',-.14*u,.1*u); c.fillText('z',.14*u,-.16*u); },
+  point(c,u){ c.beginPath(); c.arc(0,0,.3*u,0,6.284); c.fill(); },
+  valide(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.1*u); c.strokeStyle=c.fillStyle;
+    c.lineCap='round'; c.beginPath(); c.moveTo(-.32*u,.02*u); c.lineTo(-.08*u,.28*u);
+    c.lineTo(.34*u,-.26*u); c.stroke(); c.lineWidth=w; },
+  };
+  return function(c,nom,x,y,T){
+    const f=D[nom]; if(!f) return false;
+    c.save(); c.translate(x,y);
+    f(c,T||24,T||24);
+    c.restore(); return true;
+  };
+})();
+
+/* Remplace un ancien pictogramme dessiné : reprend la taille de police et
+   l'alignement courants pour caler le schéma exactement où était le symbole. */
+function SPRITE(c,nom,x,y){
+  const m=/([\d.]+)px/.exec(c.font||''); const T=m?parseFloat(m[1]):24;
+  let cx=x; const al=c.textAlign||'start';
+  if(al==='left'||al==='start') cx=x+T*0.5;
+  else if(al==='right'||al==='end') cx=x-T*0.5;
+  SCHEMA(c,nom,cx,y-T*0.34,T);
+}
+
 /* ====== Moteur d'animations pédagogiques en phases ====== */
 const ANIMS={};
 function creerAnim(nom,canvasId,capId,ptsId,phases){
-  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
-  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
-  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
-  const etat={i:0,t0:null,raf:null};
-  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
-  function majBtns(){
-    const bp=document.querySelector('button[data-prev="'+nom+'"]');
-    const bn=document.querySelector('button[data-next="'+nom+'"]');
-    if(bp) bp.disabled=(etat.i===0);
-    if(bn) bn.disabled=(etat.i===phases.length-1);
-  }
-  function jouer(){
-    cancelAnimationFrame(etat.raf); etat.t0=null;
-    cap.textContent=phases[etat.i].caption; majPts(); majBtns();
-    etat.raf=requestAnimationFrame(function frame(ts){
-      if(etat.t0===null)etat.t0=ts;
-      const p=Math.min(1,(ts-etat.t0)/phases[etat.i].dur);
-      ctx.clearRect(0,0,cv.width,cv.height);
-      phases[etat.i].draw(ctx,p,cv.width,cv.height);
-      if(p<1) etat.raf=requestAnimationFrame(frame);
-    });
-  }
-  ANIMS[nom]={
-    demarrer(){ etat.i=0; jouer(); },
-    rejouer(){ jouer(); },
-    suivant(){ if(etat.i<phases.length-1){ etat.i++; jouer(); } },
-    precedent(){ if(etat.i>0){ etat.i--; jouer(); } }
-  };
-  cap.textContent=phases[0].caption; majPts(); majBtns();
-  phases[0].draw(ctx,0,cv.width,cv.height);
+ const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+ const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+ phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+ const etat={i:0,t0:null,raf:null};
+ function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+ function majBtns(){
+ const bp=document.querySelector('button[data-prev="'+nom+'"]');
+ const bn=document.querySelector('button[data-next="'+nom+'"]');
+ if(bp) bp.disabled=(etat.i===0);
+ if(bn) bn.disabled=(etat.i===phases.length-1);
+ }
+ function jouer(){
+ cancelAnimationFrame(etat.raf); etat.t0=null;
+ cap.textContent=phases[etat.i].caption; majPts(); majBtns();
+ etat.raf=requestAnimationFrame(function frame(ts){
+ if(etat.t0===null)etat.t0=ts;
+ const p=Math.min(1,(ts-etat.t0)/phases[etat.i].dur);
+ ctx.clearRect(0,0,cv.width,cv.height);
+ phases[etat.i].draw(ctx,p,cv.width,cv.height);
+ if(p<1) etat.raf=requestAnimationFrame(frame);
+ });
+ }
+ ANIMS[nom]={
+ demarrer(){ etat.i=0; jouer(); },
+ rejouer(){ jouer(); },
+ suivant(){ if(etat.i<phases.length-1){ etat.i++; jouer(); } },
+ precedent(){ if(etat.i>0){ etat.i--; jouer(); } }
+ };
+ cap.textContent=phases[0].caption; majPts(); majBtns();
+ phases[0].draw(ctx,0,cv.width,cv.height);
 }
 const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
 function etiquette(ctx,txt,x,y,coul='#0369a1',taille=15){
-  ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+ ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
 }
 function noeud(ctx,x,y,txt,emoji,actif){
-  ctx.fillStyle=actif?'#e0f2fe':'#fff';
-  ctx.strokeStyle=actif?'#0284c7':'#94a3b8'; ctx.lineWidth=actif?3.5:2;
-  ctx.beginPath(); ctx.roundRect(x-62,y-20,124,40,10); ctx.fill(); ctx.stroke();
-  ctx.font='15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e3a5f';
-  ctx.fillText(emoji+' '+txt,x,y+5);
+ ctx.fillStyle=actif?'#e0f2fe':'#fff';
+ ctx.strokeStyle=actif?'#0284c7':'#94a3b8'; ctx.lineWidth=actif?3.5:2;
+ ctx.beginPath(); ctx.roundRect(x-62,y-20,124,40,10); ctx.fill(); ctx.stroke();
+ ctx.font='15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e3a5f';
+ ctx.fillText(emoji+' '+txt,x,y+5);
 }
 
 /* ====== ANIM 1 : L'ARBORESCENCE ====== */
 const ARBRE=[
- {x:410,y:60,t:'Travail',e:'🗄️',parent:null},
- {x:220,y:150,t:'5A',e:'📁',parent:0},
- {x:410,y:150,t:'5B',e:'📁',parent:0},
- {x:600,y:150,t:'5C',e:'📁',parent:0},
- {x:300,y:240,t:'nino',e:'📁',parent:2},
- {x:520,y:240,t:'zoe',e:'📁',parent:2},
- {x:520,y:325,t:'techno',e:'📁',parent:5},
+ {x:410,y:60,t:'Travail',e:'',parent:null},
+ {x:220,y:150,t:'5A',e:'',parent:0},
+ {x:410,y:150,t:'5B',e:'',parent:0},
+ {x:600,y:150,t:'5C',e:'',parent:0},
+ {x:300,y:240,t:'nino',e:'',parent:2},
+ {x:520,y:240,t:'zoe',e:'',parent:2},
+ {x:520,y:325,t:'techno',e:'',parent:5},
 ];
 const CHEMIN=[0,2,5,6];
 function decorArbo(ctx,nVisibles,actifs,fichierPos){
-  for(let i=0;i<nVisibles;i++){
-    const n=ARBRE[i];
-    if(n.parent!==null && n.parent<nVisibles){
-      const p=ARBRE[n.parent];
-      ctx.strokeStyle=actifs.includes(i)&&actifs.includes(n.parent)?'#ea580c':'#cbd5e1';
-      ctx.lineWidth=actifs.includes(i)&&actifs.includes(n.parent)?3.5:2;
-      ctx.beginPath(); ctx.moveTo(p.x,p.y+20); ctx.lineTo(n.x,n.y-20); ctx.stroke();
-    }
-  }
-  for(let i=0;i<nVisibles;i++) noeud(ctx,ARBRE[i].x,ARBRE[i].y,ARBRE[i].t,ARBRE[i].e,actifs.includes(i));
-  if(fichierPos){
-    ctx.font='22px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
-    ctx.fillText('📄',fichierPos.x,fichierPos.y);
-    etiquette(ctx,'expose.odt',fichierPos.x,fichierPos.y+22,'#ea580c',12.5);
-  }
+ for(let i=0;i<nVisibles;i++){
+ const n=ARBRE[i];
+ if(n.parent!==null && n.parent<nVisibles){
+ const p=ARBRE[n.parent];
+ ctx.strokeStyle=actifs.includes(i)&&actifs.includes(n.parent)?'#ea580c':'#cbd5e1';
+ ctx.lineWidth=actifs.includes(i)&&actifs.includes(n.parent)?3.5:2;
+ ctx.beginPath(); ctx.moveTo(p.x,p.y+20); ctx.lineTo(n.x,n.y-20); ctx.stroke();
+ }
+ }
+ for(let i=0;i<nVisibles;i++) noeud(ctx,ARBRE[i].x,ARBRE[i].y,ARBRE[i].t,ARBRE[i].e,actifs.includes(i));
+ if(fichierPos){
+ ctx.font='22px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+ SPRITE(ctx,'document',fichierPos.x,fichierPos.y);
+ etiquette(ctx,'expose.odt',fichierPos.x,fichierPos.y+22,'#ea580c',12.5);
+ }
 }
 creerAnim('arbo','cvArbo','capArbo','ptsArbo',[
  {dur:4200,caption:'STRUCTURE — Sur le serveur, les dossiers s\u2019emboîtent comme des poupées russes : la racine « Travail », puis un dossier par classe, puis un dossier par élève : c\u2019est l\u2019ARBORESCENCE.',
-  draw(ctx,p){ const n=Math.max(1,Math.ceil(lisse(p)*ARBRE.length)); decorArbo(ctx,n,[],null); }},
+ draw(ctx,p){ const n=Math.max(1,Math.ceil(lisse(p)*ARBRE.length)); decorArbo(ctx,n,[],null); }},
  {dur:5200,caption:'ACTION — L\u2019exposé de Zoé descend l\u2019arbre : Travail → 5B → zoe → techno. À chaque étage, on choisit UNE branche : impossible de se perdre.',
-  draw(ctx,p){ const q=lisse(p)*(CHEMIN.length-1);
-    const seg=Math.min(CHEMIN.length-2,Math.floor(q)), f=q-seg;
-    const a=ARBRE[CHEMIN[seg]], b=ARBRE[CHEMIN[seg+1]];
-    decorArbo(ctx,ARBRE.length,CHEMIN.slice(0,seg+2),{x:a.x+(b.x-a.x)*f+80,y:a.y+(b.y-a.y)*f});
-  }},
+ draw(ctx,p){ const q=lisse(p)*(CHEMIN.length-1);
+ const seg=Math.min(CHEMIN.length-2,Math.floor(q)), f=q-seg;
+ const a=ARBRE[CHEMIN[seg]], b=ARBRE[CHEMIN[seg+1]];
+ decorArbo(ctx,ARBRE.length,CHEMIN.slice(0,seg+2),{x:a.x+(b.x-a.x)*f+80,y:a.y+(b.y-a.y)*f});
+ }},
  {dur:4600,caption:'PROPRIÉTÉ — L\u2019adresse complète du fichier s\u2019appelle son CHEMIN : Travail ▸ 5B ▸ zoe ▸ techno ▸ expose.odt. Qui connaît le chemin retrouve le fichier en 3 secondes — sur n\u2019importe quel poste.',
-  draw(ctx,p){ decorArbo(ctx,ARBRE.length,CHEMIN,{x:600,y:325});
-    etiquette(ctx,'chemin : Travail ▸ 5B ▸ zoe ▸ techno ▸ expose.odt',410,368,'#0369a1',15.5); }},
+ draw(ctx,p){ decorArbo(ctx,ARBRE.length,CHEMIN,{x:600,y:325});
+ etiquette(ctx,'chemin : Travail ▸ 5B ▸ zoe ▸ techno ▸ expose.odt',410,368,'#0369a1',15.5); }},
 ]);
 
 /* ====== ANIM 2 : LE VOYAGE DU FICHIER ====== */
 function decorVoyage(ctx,phase,q){
-  // serveur au centre-haut, deux postes en bas
-  noeud(ctx,410,80,'SERVEUR','🗄️',phase>=1);
-  etiquette(ctx,'toujours allumé, sauvegardé',410,125,'#94a3b8',12);
-  noeud(ctx,170,290,'poste 12','💻',phase===1);
-  etiquette(ctx,'salle info · lundi',170,335,'#94a3b8',12);
-  noeud(ctx,650,290,'poste 3','💻',phase===2);
-  etiquette(ctx,'CDI · mardi',650,335,'#94a3b8',12);
-  // câbles via switch
-  ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.moveTo(170,270); ctx.lineTo(410,190); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(650,270); ctx.lineTo(410,190); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(410,190); ctx.lineTo(410,100); ctx.stroke();
-  ctx.fillStyle='#fff'; ctx.strokeStyle='#0284c7'; ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.roundRect(378,175,64,30,8); ctx.fill(); ctx.stroke();
-  ctx.font='13px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e3a5f';
-  ctx.fillText('🔀 switch',410,195);
-  // fichier en mouvement
-  let fx=null,fy=null;
-  if(phase===1){ // poste12 -> serveur
-    if(q<0.5){ const f=q*2; fx=170+(410-170)*f; fy=270+(190-270)*f; }
-    else { const f=(q-0.5)*2; fx=410; fy=190+(100-190)*f; }
-  }
-  if(phase===2){ // serveur -> poste3
-    if(q<0.5){ const f=q*2; fx=410; fy=100+(190-100)*f; }
-    else { const f=(q-0.5)*2; fx=410+(650-410)*f; fy=190+(270-190)*f; }
-  }
-  if(fx!==null){
-    ctx.font='22px Segoe UI'; ctx.fillStyle='#000'; ctx.textAlign='center';
-    ctx.fillText('📄',fx,fy);
-  }
-  if(phase>=1&&(phase>1||q>=1)){ /* fichier rangé au serveur */ }
+ // serveur au centre-haut, deux postes en bas
+ noeud(ctx,410,80,'SERVEUR','',phase>=1);
+ etiquette(ctx,'toujours allumé, sauvegardé',410,125,'#94a3b8',12);
+ noeud(ctx,170,290,'poste 12','',phase===1);
+ etiquette(ctx,'salle info · lundi',170,335,'#94a3b8',12);
+ noeud(ctx,650,290,'poste 3','',phase===2);
+ etiquette(ctx,'CDI · mardi',650,335,'#94a3b8',12);
+ // câbles via switch
+ ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.moveTo(170,270); ctx.lineTo(410,190); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(650,270); ctx.lineTo(410,190); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(410,190); ctx.lineTo(410,100); ctx.stroke();
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#0284c7'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.roundRect(378,175,64,30,8); ctx.fill(); ctx.stroke();
+ ctx.font='13px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e3a5f';
+ ctx.fillText('switch',410,195);
+ // fichier en mouvement
+ let fx=null,fy=null;
+ if(phase===1){ // poste12 ->serveur
+ if(q<0.5){ const f=q*2; fx=170+(410-170)*f; fy=270+(190-270)*f; }
+ else { const f=(q-0.5)*2; fx=410; fy=190+(100-190)*f; }
+ }
+ if(phase===2){ // serveur ->poste3
+ if(q<0.5){ const f=q*2; fx=410; fy=100+(190-100)*f; }
+ else { const f=(q-0.5)*2; fx=410+(650-410)*f; fy=190+(270-190)*f; }
+ }
+ if(fx!==null){
+ ctx.font='22px Segoe UI'; ctx.fillStyle='#000'; ctx.textAlign='center';
+ SPRITE(ctx,'document',fx,fy);
+ }
+ if(phase>=1&&(phase>1||q>=1)){ /* fichier rangé au serveur */ }
 }
 creerAnim('voyage','cvVoyage','capVoyage','ptsVoyage',[
  {dur:3000,caption:'STRUCTURE — Le réseau du collège : des postes partout (salle info, CDI…), reliés par le switch au SERVEUR, l\u2019ordinateur central toujours allumé.',
-  draw(ctx,p){ decorVoyage(ctx,0,0); }},
+ draw(ctx,p){ decorVoyage(ctx,0,0); }},
  {dur:4600,caption:'ACTION 1/2 — Lundi, salle info, poste 12 : Zoé clique « Enregistrer » DANS SON DOSSIER RÉSEAU. Le fichier file par le câble, passe le switch… et se range sur le serveur.',
-  draw(ctx,p){ decorVoyage(ctx,1,lisse(p)); }},
+ draw(ctx,p){ decorVoyage(ctx,1,lisse(p)); }},
  {dur:4600,caption:'ACTION 2/2 — Mardi, CDI, poste 3 : Zoé ouvre sa session. Son dossier apparaît, elle double-clique… le serveur renvoie le fichier. Même exposé, autre poste !',
-  draw(ctx,p){ decorVoyage(ctx,2,lisse(p)); }},
+ draw(ctx,p){ decorVoyage(ctx,2,lisse(p)); }},
  {dur:4200,caption:'PROPRIÉTÉ — Enregistré sur le SERVEUR, ton fichier te suit sur n\u2019importe quel poste du collège (et il est sauvegardé chaque nuit). Laissé sur le bureau du poste 12… il y serait resté, invisible depuis le CDI !',
-  draw(ctx,p){ decorVoyage(ctx,0,0);
-    etiquette(ctx,'la règle d\u2019or : toujours enregistrer sur le serveur, dans SON dossier',410,368,'#0369a1',15); }},
+ draw(ctx,p){ decorVoyage(ctx,0,0);
+ etiquette(ctx,'la règle d\u2019or : toujours enregistrer sur le serveur, dans SON dossier',410,368,'#0369a1',15); }},
 ]);
 
 /* ====== ANIM 3 : KO, MO, GO ====== */
 const FICHIERS_O=[
- {e:'📄',n:'un exposé texte',taille:'50 Ko',barre:0.006},
- {e:'📷',n:'une photo',taille:'4 Mo',barre:0.12},
- {e:'🎵',n:'une chanson',taille:'8 Mo',barre:0.24},
- {e:'🎬',n:'un film HD',taille:'4 Go',barre:1},
+ {e:'',n:'un exposé texte',taille:'50 Ko',barre:0.006},
+ {e:'',n:'une photo',taille:'4 Mo',barre:0.12},
+ {e:'',n:'une chanson',taille:'8 Mo',barre:0.24},
+ {e:'',n:'un film HD',taille:'4 Go',barre:1},
 ];
 function decorOctets(ctx,nVisibles,q,cle){
-  etiquette(ctx,'1 Go = 1 000 Mo = 1 000 000 Ko',410,42,'#ea580c',16);
-  for(let i=0;i<nVisibles;i++){
-    const F=FICHIERS_O[i], y=90+i*62;
-    ctx.font='24px Segoe UI'; ctx.textAlign='left'; ctx.fillStyle='#000';
-    ctx.fillText(F.e,70,y+22);
-    ctx.font='bold 14.5px Segoe UI'; ctx.fillStyle='#1e3a5f';
-    ctx.fillText(F.n,110,y+10);
-    ctx.fillStyle='#64748b'; ctx.font='13px Segoe UI';
-    ctx.fillText(F.taille,110,y+28);
-    const w=560*F.barre*(i===nVisibles-1?q:1);
-    ctx.fillStyle='#e2e8f0'; ctx.fillRect(230,y,560,26);
-    ctx.fillStyle=['#38bdf8','#0284c7','#0369a1','#ea580c'][i];
-    ctx.fillRect(230,y,Math.max(2,w),26);
-  }
-  if(cle) etiquette(ctx,'💾 clé USB 32 Go = 8 000 photos… ou 8 films !',410,360,'#0369a1',15.5);
+ etiquette(ctx,'1 Go = 1 000 Mo = 1 000 000 Ko',410,42,'#ea580c',16);
+ for(let i=0;i<nVisibles;i++){
+ const F=FICHIERS_O[i], y=90+i*62;
+ ctx.font='24px Segoe UI'; ctx.textAlign='left'; ctx.fillStyle='#000';
+ ctx.fillText(F.e,70,y+22);
+ ctx.font='bold 14.5px Segoe UI'; ctx.fillStyle='#1e3a5f';
+ ctx.fillText(F.n,110,y+10);
+ ctx.fillStyle='#64748b'; ctx.font='13px Segoe UI';
+ ctx.fillText(F.taille,110,y+28);
+ const w=560*F.barre*(i===nVisibles-1?q:1);
+ ctx.fillStyle='#e2e8f0'; ctx.fillRect(230,y,560,26);
+ ctx.fillStyle=['#38bdf8','#0284c7','#0369a1','#ea580c'][i];
+ ctx.fillRect(230,y,Math.max(2,w),26);
+ }
+ if(cle) etiquette(ctx,' clé USB 32 Go = 8 000 photos… ou 8 films !',410,360,'#0369a1',15.5);
 }
 creerAnim('octets','cvOctets','capOctets','ptsOctets',[
  {dur:3000,caption:'STRUCTURE — Chaque fichier « pèse » un certain nombre d\u2019octets. Petit poids : le texte (des Ko, kilo-octets). Regarde son échelle : minuscule !',
-  draw(ctx,p){ decorOctets(ctx,1,lisse(p),false); }},
+ draw(ctx,p){ decorOctets(ctx,1,lisse(p),false); }},
  {dur:5600,caption:'ACTION — La photo pèse des Mo (méga-octets) : 80 fois l\u2019exposé ! La chanson, le double. Et le film HD explose l\u2019échelle : des Go (giga-octets), MILLE fois la photo.',
-  draw(ctx,p){ const q=lisse(p)*3;
-    const n=Math.min(3,Math.floor(q));
-    decorOctets(ctx,n+2>4?4:n+2,q-n,false); }},
+ draw(ctx,p){ const q=lisse(p)*3;
+ const n=Math.min(3,Math.floor(q));
+ decorOctets(ctx,n+2>4?4:n+2,q-n,false); }},
  {dur:4200,caption:'PROPRIÉTÉ — Texte = Ko, photo/musique = Mo, vidéo = Go : connaître les ordres de grandeur permet de prévoir : une clé de 32 Go emporte 8 000 photos de 4 Mo (32 000 ÷ 4)… mais seulement 8 films !',
-  draw(ctx,p){ decorOctets(ctx,4,1,true); }},
+ draw(ctx,p){ decorOctets(ctx,4,1,true); }},
 ]);
 
 /* ---------- Boutons + auto + menu + clavier ---------- */
@@ -371,8 +647,8 @@ document.querySelectorAll('section.slide').forEach(s=>obsMenu.observe(s));
 const slides=[...document.querySelectorAll('section.slide')];
 function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
 document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
-  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+ if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+ if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
 });
 </script>
 </body>

@@ -1,0 +1,362 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tableau de bord — résultats des évaluations · ESTIC</title><style>
+:root{--acc:#0e7490;--accf:#155e75;--fond:#F8F4EC;--encre:#3f3a34;--ok:#16a34a;--moy:#f59e0b;--ko:#dc2626}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(1180px,100%);padding:14px 14px 50px}
+h1{font-size:25px;color:var(--accf);text-align:center;margin:14px 0 4px}
+.sous{text-align:center;color:#8a8378;font-size:13.5px;margin-bottom:14px}
+#login{background:#fff;border:1px solid #eee4d0;border-radius:16px;padding:22px;max-width:420px;margin:30px auto;text-align:center}
+#login input{width:100%;padding:11px;border:1px solid #d8cdb4;border-radius:10px;font-size:16px;margin:10px 0;text-align:center}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-weight:900;font-size:15px;padding:11px 20px;cursor:pointer}
+.btn.sec{background:#e7dcc4;color:var(--encre)}
+#appli{display:none}
+.filtres{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.filtres select,.filtres input{padding:9px 12px;border:1px solid #d8cdb4;border-radius:10px;font-size:14px;font-family:inherit}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.stat{background:#fff;border:1px solid #eee4d0;border-radius:14px;padding:12px 18px;min-width:130px}
+.stat b{display:block;font-size:24px;color:var(--accf)}
+.stat span{font-size:12.5px;color:#8a8378}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;font-size:14px}
+th,td{padding:9px 11px;text-align:left;border-bottom:1px solid #f0e9db}
+th{background:#f3ecdd;color:var(--accf);font-size:12.5px;cursor:pointer;user-select:none}
+th:hover{background:#e9dfc8}
+tr:hover td{background:#fbf8f1}
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:800;color:#fff}
+.note{font-weight:900}
+.jauge{height:7px;background:#eee4d0;border-radius:99px;overflow:hidden;min-width:70px}
+.jauge div{height:100%}
+.vide{text-align:center;color:#8a8378;padding:26px;font-size:14.5px}
+.lien{color:var(--acc);text-decoration:none;font-weight:700}
+.lien:hover{text-decoration:underline}
+</style></head><body>
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<h1>Tableau de bord des évaluations</h1>
+<div class="sous">Toutes les séquences · résultats consolidés depuis Firebase</div>
+
+<div id="login">
+ <p style="font-size:14.5px">Espace réservé à l’enseignant.</p>
+ <input id="mdp" type="password" placeholder="mot de passe" autocomplete="off">
+ <button class="btn" id="entrer">Accéder</button>
+ <div id="err" style="color:var(--ko);font-size:13px;margin-top:8px;min-height:18px"></div>
+</div>
+
+<div id="appli">
+ <div class="filtres">
+ <select id="fNiv"><option value="">Tous les niveaux</option><option>5e</option><option>4e</option><option>3e</option></select>
+ <select id="fSeq"><option value="">Toutes les séquences</option></select>
+ <select id="fClasse"><option value="">Toutes les classes</option></select>
+ <input id="fNom" placeholder="rechercher un élève…" style="flex:1;min-width:180px">
+ <button class="btn sec" id="rafraichir">Rafraîchir</button>
+ <button class="btn sec" id="csv">Exporter CSV</button>
+ </div>
+ <div class="stats" id="stats"></div>
+ <div id="etat" class="vide">Chargement des résultats…</div>
+ <table id="tab" style="display:none">
+ <thead><tr>
+ <th data-tri="nom">Élève</th><th data-tri="classe">Classe</th><th data-tri="seq">Séquence</th>
+ <th data-tri="niv">Niveau</th><th data-tri="note">Note /20</th><th>Réussite</th>
+ <th data-tri="duree">Durée</th><th data-tri="date">Date</th>
+ </tr></thead><tbody id="corps"></tbody>
+ </table>
+</div>
+</main>
+<script>
+'use strict';
+const BASE='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/evaluations/';
+const MDP='Agostini2025';
+const EVALS=[
+ {
+ "f": "04_evaluation_design.html",
+ "fb": "design_5e",
+ "titre": "Design & ergonomie",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_habitat.html",
+ "fb": "habitat_5e_v2",
+ "titre": "Habitat & Ouvrages",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_environnement_num.html",
+ "fb": "envnum_5e",
+ "titre": "L'environnement numérique",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_evolution.html",
+ "fb": "evolution_5e",
+ "titre": "L'évolution des objets techniques",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_besoin.html",
+ "fb": "besoin_5e",
+ "titre": "Le besoin & le cahier des charges",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_velo.html",
+ "fb": "velo_5e",
+ "titre": "Le vélo",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_energies.html",
+ "fb": "energies_5e",
+ "titre": "Les Énergies",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_eau.html",
+ "fb": "eau_5e",
+ "titre": "L’eau dans la ville",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_meteo.html",
+ "fb": "meteo_5e",
+ "titre": "Météo & instruments de mesure",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_transports.html",
+ "fb": "transports_5e",
+ "titre": "Transports & mobilité",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_auto.html",
+ "fb": "auto_4e",
+ "titre": "Automobile & sécurité",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_aero.html",
+ "fb": "aero_4e",
+ "titre": "Aéronautique",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_dessin.html",
+ "fb": "dessin_4e",
+ "titre": "Dessin technique",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_domotique.html",
+ "fb": "domotique_4e_v2",
+ "titre": "Habitat & Ouvrages",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_chaine_energie.html",
+ "fb": "chaine_energie_4e",
+ "titre": "La chaîne d'énergie",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_smartphone.html",
+ "fb": "smartphone_4e",
+ "titre": "Le smartphone décortiqué",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_reseaux.html",
+ "fb": "reseau_4e",
+ "titre": "Les réseaux informatiques",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_ascenseur.html",
+ "fb": "ascenseur_4e",
+ "titre": "L’ascenseur",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_impression3d.html",
+ "fb": "impression3d_4e",
+ "titre": "Modélisation & impression 3D",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_transmissions.html",
+ "fb": "transmissions_4e",
+ "titre": "Transmissions de mouvement",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_algo.html",
+ "fb": "algo_3e",
+ "titre": "Algorithmes & programmation",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_espace.html",
+ "fb": "espace_3e",
+ "titre": "Espace & satellites",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_robotique.html",
+ "fb": "robotique_3e_v2",
+ "titre": "Habitat & Ouvrages",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_ia.html",
+ "fb": "ia_3e",
+ "titre": "Intelligence artificielle",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_internet.html",
+ "fb": "internet_3e",
+ "titre": "Internet & Cybersécurité",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_energie.html",
+ "fb": "energie_3e",
+ "titre": "Le réseau électrique intelligent",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_objets_connectes.html",
+ "fb": "objets_3e",
+ "titre": "Les objets connectés",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_simulation.html",
+ "fb": "simulation_3e",
+ "titre": "Modélisation & simulation",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_sante.html",
+ "fb": "sante_3e",
+ "titre": "Santé & technologie",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_cycle_vie.html",
+ "fb": "cycle_vie_3e",
+ "titre": "Éco-conception & cycle de vie",
+ "niv": "3e"
+ }
+];
+let DONNEES=[], tri={col:'date',sens:-1};
+document.getElementById('entrer').addEventListener('click',connexion);
+document.getElementById('mdp').addEventListener('keydown',e=>{ if(e.key==='Enter')connexion(); });
+function connexion(){
+ if(document.getElementById('mdp').value!==MDP){
+ document.getElementById('err').textContent='Mot de passe incorrect.'; return;
+ }
+ document.getElementById('login').style.display='none';
+ document.getElementById('appli').style.display='block';
+ const s=document.getElementById('fSeq');
+ EVALS.forEach(e=>{ const o=document.createElement('option'); o.value=e.fb; o.textContent=e.titre+' ('+e.niv+')'; s.appendChild(o); });
+ charger();
+}
+async function charger(){
+ document.getElementById('etat').textContent='Chargement des résultats…';
+ document.getElementById('etat').style.display='block';
+ document.getElementById('tab').style.display='none';
+ DONNEES=[];
+ const lots=await Promise.all(EVALS.map(async ev=>{
+ try{
+ const r=await fetch(BASE+ev.fb+'.json');
+ if(!r.ok) return [];
+ const j=await r.json();
+ if(!j) return [];
+ return Object.entries(j).map(([cle,v])=>({
+ cle, seq:ev.titre, fb:ev.fb, niv:ev.niv, fichier:ev.f,
+ nom:((v.nom||'')+' '+(v.prenom||'')).trim()||'(anonyme)',
+ classe:v.classe||'—', note:parseFloat(v.note)||0, score:v.score||0,
+ duree:v.duree||v.temps||'', date:v.date||v.horodatage||''
+ }));
+ }catch(e){ return []; }
+ }));
+ lots.forEach(l=>DONNEES=DONNEES.concat(l));
+ afficher();
+}
+function filtres(){
+ const n=document.getElementById('fNiv').value, s=document.getElementById('fSeq').value,
+ c=document.getElementById('fClasse').value, q=document.getElementById('fNom').value.toLowerCase();
+ return DONNEES.filter(d=> (!n||d.niv===n) && (!s||d.fb===s) && (!c||d.classe===c) && (!q||d.nom.toLowerCase().includes(q)));
+}
+function afficher(){
+ const classes=[...new Set(DONNEES.map(d=>d.classe))].filter(c=>c&&c!=='—').sort();
+ const sc=document.getElementById('fClasse'), av=sc.value;
+ sc.innerHTML='<option value="">Toutes les classes</option>'+classes.map(c=>'<option>'+c+'</option>').join('');
+ sc.value=av;
+ const L=filtres();
+ const corps=document.getElementById('corps');
+ const stats=document.getElementById('stats');
+ if(!DONNEES.length){
+ document.getElementById('etat').innerHTML='Aucun résultat pour l’instant — ou pas de connexion à Firebase.<br>'+
+ 'Les résultats apparaîtront ici dès que des élèves auront terminé une évaluation.';
+ stats.innerHTML=''; return;
+ }
+ document.getElementById('etat').style.display='none';
+ document.getElementById('tab').style.display='table';
+ const moy=L.length? L.reduce((s,d)=>s+d.note,0)/L.length : 0;
+ const reussite=L.length? L.filter(d=>d.note>=10).length/L.length*100 : 0;
+ const seqs=new Set(L.map(d=>d.fb)).size;
+ stats.innerHTML=
+ '<div class="stat"><b>'+L.length+'</b><span>copies</span></div>'+
+ '<div class="stat"><b>'+moy.toFixed(1).replace('.',',')+'</b><span>moyenne /20</span></div>'+
+ '<div class="stat"><b>'+Math.round(reussite)+' %</b><span>au-dessus de 10</span></div>'+
+ '<div class="stat"><b>'+seqs+'</b><span>séquences évaluées</span></div>'+
+ '<div class="stat"><b>'+new Set(L.map(d=>d.nom)).size+'</b><span>élèves</span></div>';
+ L.sort((a,b)=>{
+ const x=a[tri.col], y=b[tri.col];
+ if(typeof x==='number') return (x-y)*tri.sens;
+ return String(x).localeCompare(String(y))*tri.sens;
+ });
+ corps.innerHTML=L.map(d=>{
+ const coul = d.note>=14?'var(--ok)':(d.note>=10?'var(--moy)':'var(--ko)');
+ return '<tr><td>'+d.nom+'</td><td>'+d.classe+'</td>'+
+ '<td><a class="lien" href="'+d.fichier+'">'+d.seq+'</a></td>'+
+ '<td><span class="badge" style="background:'+(d.niv==='5e'?'#16a34a':(d.niv==='4e'?'#b45309':'#1d4ed8'))+'">'+d.niv+'</span></td>'+
+ '<td class="note" style="color:'+coul+'">'+String(d.note).replace('.',',')+'</td>'+
+ '<td><div class="jauge"><div style="width:'+Math.min(100,d.note/20*100)+'%;background:'+coul+'"></div></div></td>'+
+ '<td>'+(d.duree||'—')+'</td><td>'+(d.date||'—')+'</td></tr>';
+ }).join('');
+}
+document.querySelectorAll('th[data-tri]').forEach(th=>th.addEventListener('click',()=>{
+ const c=th.dataset.tri;
+ tri = tri.col===c ? {col:c,sens:-tri.sens} : {col:c,sens:1};
+ afficher();
+}));
+['fNiv','fSeq','fClasse'].forEach(id=>document.getElementById(id).addEventListener('change',afficher));
+document.getElementById('fNom').addEventListener('input',afficher);
+document.getElementById('rafraichir').addEventListener('click',charger);
+document.getElementById('csv').addEventListener('click',()=>{
+ const L=filtres();
+ const lignes=[['Nom','Classe','Sequence','Niveau','Note/20','Duree','Date']]
+ .concat(L.map(d=>[d.nom,d.classe,d.seq,d.niv,String(d.note).replace('.',','),d.duree,d.date]));
+ const csv=lignes.map(l=>l.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');
+ const a=document.createElement('a');
+ a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
+ a.download='resultats_toutes_sequences.csv'; a.click();
+});
+</script></body></html>
