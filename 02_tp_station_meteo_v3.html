@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP — La Station Météo · Technologie 5ème · ESTIC</title>
+<style>
+:root{--acc:#ca8a04;--accf:#a16207;--ok:#16a34a;--fond:#fdf9f0;--carte:#ffffff;--encre:#3f3a34}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(920px,100%);padding:12px 12px 40px}
+h1{font-size:24px;text-align:center;color:var(--accf);margin:10px 0 4px}
+.sous{text-align:center;color:#8a8378;font-size:13.5px;margin-bottom:10px}
+.access{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
+.access button{border:2px solid #e2d9c8;background:#fff;border-radius:999px;padding:7px 16px;font-size:14px;font-weight:800;cursor:pointer;color:var(--encre)}
+.access button.actif{border-color:var(--acc);background:#fef3c7}
+body.lisible{font-size:1.12em;letter-spacing:.045em;word-spacing:.16em}
+body.lisible .consigne,body.lisible .histoire{line-height:2}
+.progression{display:flex;gap:6px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.mseg{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 12px;border-radius:12px;background:#f3ecdd;min-width:92px}
+.mseg .num{font-size:15px;font-weight:900;color:#a89c82;background:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center}
+.mseg .lab{font-size:11.5px;font-weight:800;color:#8a8378}
+.mseg .et{font-size:12px;letter-spacing:1px;color:#c9bfa8}
+.mseg.faite{background:#fef3c7}
+.mseg.faite .et{color:var(--acc)}
+.mseg.faite .num{background:var(--acc);color:#fff}
+.mseg.courante{outline:3px solid var(--acc)}
+.mission{display:none;background:var(--carte);border:1px solid #eee4d0;border-radius:18px;padding:18px;box-shadow:0 4px 14px rgba(160,130,60,.08)}
+.mission.active{display:block}
+.histoire{background:#faf6ec;border-left:5px solid var(--acc);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:14.5px;line-height:1.65}
+.consigne{font-size:16px;font-weight:800;margin-bottom:12px;line-height:1.55;color:var(--accf)}
+canvas{width:100%;display:block;border-radius:14px;background:linear-gradient(#dbeafe,#eff6ff);border:1px solid #e2d9c8;touch-action:manipulation}
+.astuce{min-height:24px;font-size:14px;font-weight:700;color:#b45309;text-align:center;margin-top:8px}
+.ligne-etoiles{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:6px;font-size:14px;color:#8a8378}
+.ligne-etoiles b{color:var(--accf);font-size:17px;letter-spacing:2px}
+.chaine{display:flex;gap:10px;justify-content:center;margin:14px 0;flex-wrap:wrap}
+.slot{width:118px;height:96px;border:3px dashed #d8cdb4;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#faf6ec;cursor:pointer;position:relative}
+.slot .n{position:absolute;top:4px;left:8px;font-size:12px;font-weight:900;color:#c9bfa8}
+.slot.rempli{border-style:solid;border-color:var(--acc);background:#fff}
+.stock{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+.vig{width:112px;height:88px;border:2px solid #e2d9c8;border-radius:14px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:800;font-size:12.5px;text-align:center}
+.vig .pic{font-size:28px}
+.vig.choisie{outline:4px solid var(--acc);transform:scale(1.06)}
+.vig.posee{opacity:.25;pointer-events:none}
+.vig.tremble,.slot.tremble{animation:trembler .5s}
+@keyframes trembler{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.centre{text-align:center}
+.btn{border:none;border-radius:12px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;padding:12px 26px;cursor:pointer;margin:8px 4px}
+.btn:disabled{opacity:.35;cursor:default}
+#hud5{display:flex;justify-content:space-between;font-weight:900;font-size:15px;padding:5px 4px}
+.code{font-size:30px;font-weight:900;letter-spacing:6px;color:var(--accf);text-align:center;background:#fef3c7;border-radius:14px;padding:14px;margin:12px auto;max-width:340px}
+.memo{background:#faf6ec;border:1px solid #eee4d0;border-radius:14px;padding:14px 18px;margin:14px 0;font-size:14.5px;line-height:1.7}
+.memo h3{color:var(--accf);font-size:15px;margin-bottom:6px}
+.memo table{width:100%;border-collapse:collapse;margin:6px 0}
+.memo td{padding:5px 8px;border-bottom:1px solid #eee4d0}
+.memo td:first-child{font-weight:800}
+.tactile5{display:flex;gap:10px;justify-content:center;margin-top:8px}
+.tactile5 button{border:none;border-radius:12px;background:#e7dcc4;font-size:18px;font-weight:900;padding:12px 0;flex:1;max-width:140px;cursor:pointer}
+.tactile5 button:active{background:var(--acc);color:#fff}
+#ficheV{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(63,58,52,.5);z-index:55;padding:14px}
+#ficheV.on{display:flex}
+.fiche{background:#fff;border-radius:20px;max-width:560px;width:100%;padding:20px;animation:pop .3s}
+.fiche h2{color:var(--accf);font-size:20px;text-align:center;margin-bottom:4px}
+.fiche .grandeur{text-align:center;font-weight:800;color:#8a8378;font-size:14px;margin-bottom:10px}
+.fiche canvas{background:linear-gradient(#dbeafe,#f0fdf4);border-radius:14px}
+.fiche p{font-size:14.5px;line-height:1.7;background:#faf6ec;border-radius:12px;padding:11px 14px;margin:10px 0;text-align:left}
+#voile{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(63,58,52,.45);z-index:50;padding:14px}
+#voile.on{display:flex}
+.bravo{background:#fff;border-radius:20px;max-width:540px;width:100%;padding:24px;text-align:center;animation:pop .35s}
+@keyframes pop{0%{transform:scale(.7);opacity:0}70%{transform:scale(1.05)}100%{transform:scale(1)}}
+.bravo h2{color:var(--ok);font-size:21px;margin-bottom:4px}
+.bravo .grosses{font-size:34px;letter-spacing:6px;color:var(--acc);margin:6px 0}
+.bravo p{font-size:14.5px;line-height:1.7;text-align:left;background:#faf6ec;border-radius:12px;padding:12px 14px;margin:10px 0}
+.confetti{position:fixed;width:10px;height:14px;border-radius:3px;animation:tombe 1.6s linear forwards;z-index:60;pointer-events:none}
+@keyframes tombe{0%{transform:translateY(-40px) rotate(0)}100%{transform:translateY(105vh) rotate(340deg);opacity:.15}}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:60px;height:60px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:12px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;font-size:19px;letter-spacing:1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+</style>
+</head>
+<body>
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<h1>Alerte à la Station Météo !</h1>
+<div class="sous">Séquence Météo &amp; instruments · 5e · TP interactif</div>
+
+<div class="access"><button id="btnAa" title="Texte plus grand et plus aéré">Aa + confort de lecture</button></div>
+<div class="progression" id="prog"></div>
+
+<!-- ═══════════ M1 ═══════════ -->
+<section class="mission active" data-m="0">
+ <div class="histoire">
+ La cheffe de station t’accueille : « Bienvenue, stagiaire ! Je te fais d’abord <b>visiter</b> :
+ clique sur chaque instrument, il se présentera lui-même. Quand tu les connaîtras tous les quatre,
+ je vérifierai que tu sais qui fait quoi. »</div>
+ <div class="consigne" id="c1consigne">Mission 1 — Visite de la station : clique sur chaque instrument pour faire sa connaissance <b id="c1compte">(0/4)</b></div>
+ <canvas id="cv1" width="860" height="330"></canvas>
+ <div class="astuce" id="ast1"></div>
+ <div class="ligne-etoiles">Mission 1 · <b id="et1">☆☆☆</b></div>
+</section>
+
+<!-- ═══════════ M2 ═══════════ -->
+<section class="mission" data-m="1">
+ <div class="histoire">
+ Une mesure, c’est tout un voyage : l’instrument <b>mesure</b>, la station <b>enregistre</b>la valeur,
+ l’antenne la <b>transmet</b>au centre régional… qui l’<b>affiche</b>dans le bulletin télé.
+ Sauf qu’un stagiaire (pas toi !) a mélangé toutes les étapes.</div>
+ <div class="consigne">Mission 2 — Remets les 4 étapes dans l’ordre : clique une image, puis sa case.
+ Ensuite appuie sur TESTER pour regarder la mesure voyager dans TA chaîne.</div>
+ <div class="chaine" id="slots"></div>
+ <canvas id="cv2" width="860" height="120"></canvas>
+ <div class="stock" id="stock"></div>
+ <div class="centre"><button class="btn" id="btnTest2">TESTER LA CHAÎNE</button></div>
+ <div class="astuce" id="ast2"></div>
+ <div class="ligne-etoiles">Mission 2 · <b id="et2">☆☆☆</b></div>
+</section>
+
+<!-- ═══════════ M3 ═══════════ -->
+<section class="mission" data-m="2">
+ <div class="histoire">
+ Trois pannes signalées cette semaine ! Pour chacune : <b>observe le symptôme</b>sur l’écran de contrôle,
+ demande-toi <b>quelle grandeur est fausse</b>, et déduis quel instrument est responsable.
+ Clique un instrument pour le <b>tester</b> — un bon technicien trouve le coupable en un minimum de tests.</div>
+ <div class="consigne">Mission 3 — Panne <b id="c3num">1</b>/3 : <span id="c3symp">le bulletin affiche 45 °C… en plein hiver !</span></div>
+ <canvas id="cv3" width="860" height="360"></canvas>
+ <div class="astuce" id="ast3"></div>
+ <div class="ligne-etoiles">Mission 3 · <b id="et3">☆☆☆</b></div>
+</section>
+
+<!-- ═══════════ M4 ═══════════ -->
+<section class="mission" data-m="3">
+ <div class="histoire">
+ Dernier chantier : l’abri du thermomètre est posé presque au sol. Or le sol chauffe au soleil et
+ <b>fausse la mesure</b> — regarde les vagues de chaleur rouges monter, et l’écart entre la température
+ affichée et la température vraie (12,0&nbsp;°C). Trop haut, autre problème : le technicien ne peut plus faire le relevé.</div>
+ <div class="consigne">Mission 4 — Déplace le curseur pour régler la hauteur de l’abri, surveille la température affichée,
+ puis appuie sur VALIDER.</div>
+ <canvas id="cv4" width="860" height="300"></canvas>
+ <div class="centre" style="margin-top:8px">
+ <input type="range" id="slider4" min="20" max="300" step="10" value="30" style="width:70%">
+ <div style="font-weight:800;margin-top:4px">hauteur : <span id="v4">30</span>cm
+ <button class="btn" id="btnV4" style="padding:8px 18px;font-size:14px">VALIDER</button></div>
+ </div>
+ <div class="astuce" id="ast4"></div>
+ <div class="ligne-etoiles">Mission 4 · <b id="et4">☆☆☆</b></div>
+</section>
+
+<!-- ═══════════ M5 ═══════════ -->
+<section class="mission" data-m="4">
+ <div class="histoire">
+ L’orage a fait sauter le tri automatique : toutes les données tombent en vrac dans la salle !
+ Récupère uniquement les <b>données météo</b> — le reste, c’est du parasite qui fausserait le bulletin.</div>
+ <div class="consigne">Mission 5 — Défi éclair 30 secondes : flèches gauche/droite pour déplacer le panier.
+ Attrape les données météo, évite le reste !</div>
+ <div id="hud5"><span>données : <span id="s5">0</span></span><span>temps : <span id="t5">30</span>s</span></div>
+ <canvas id="cv5" width="860" height="300"></canvas>
+ <div class="centre"><button class="btn" id="btn5">LANCER LE DÉFI</button></div>
+ <div class="tactile5"><button id="tg5">&#9664;</button><button id="td5">&#9654;</button></div>
+ <div class="ligne-etoiles">Mission 5 · <b id="et5">☆☆☆</b></div>
+</section>
+
+<!-- ═══════════ BILAN ═══════════ -->
+<section class="mission" data-m="5">
+ <h2 class="centre" style="color:var(--accf)">Bilan du technicien météo</h2>
+ <p class="centre" style="margin:8px 0">Total : <b id="etTotal" style="font-size:22px;color:var(--acc)">0</b> ★ sur 15</p>
+ <div class="memo">
+ <h3>À retenir de ce TP</h3>
+ <table>
+ <tr><td>Anémomètre</td><td>vitesse du vent</td><td>km/h</td></tr>
+ <tr><td>Girouette</td><td>direction du vent</td><td>points cardinaux (N, S, E, O)</td></tr>
+ <tr><td>Thermomètre sous abri</td><td>température de l’air</td><td>°C</td></tr>
+ <tr><td>Pluviomètre</td><td>hauteur de pluie</td><td>mm</td></tr>
+ </table>
+ <p style="margin-top:8px">La <b>chaîne de la mesure</b> : MESURER → ENREGISTRER → TRANSMETTRE → AFFICHER.
+ Une étape manquante ou déplacée, et le bulletin n’a plus de données.</p>
+ <p style="margin-top:6px">Le <b>diagnostic</b>d’une panne : observer le symptôme → identifier la grandeur fausse →
+ tester l’instrument soupçonné → éliminer, jusqu’au coupable.</p>
+ <p style="margin-top:6px">L’abri du thermomètre est à <b>environ 1,50 m du sol</b> : c’est une <b>norme mondiale</b>,
+ pour que les mesures de tous les pays soient comparables.</p>
+ </div>
+ <p class="centre">Ton code pour les jeux de la séquence :</p>
+ <div class="code">STATION7</div>
+</section>
+</main>
+
+<div id="ficheV"><div class="fiche">
+ <h2 id="fiTitre">L’anémomètre</h2>
+ <div class="grandeur" id="fiGrand">vitesse du vent · km/h</div>
+ <canvas id="cvF" width="520" height="270"></canvas>
+ <p id="fiTxt"></p>
+ <div class="centre"><button class="btn" id="btnFermeFiche">J’ai bien observé — continuer la visite</button></div>
+</div></div>
+
+<div id="voile"><div class="bravo">
+ <h2 id="brTitre">Mission réussie !</h2>
+ <div class="grosses" id="brEt">★★★</div>
+ <p id="brTxt"></p>
+ <button class="btn" id="btnCont">Continuer</button>
+</div></div>
+
+<script>
+'use strict';
+const KEY='tp_meteo_5e_v3';
+document.getElementById('btnAa').addEventListener('click',function(){
+ document.body.classList.toggle('lisible');
+ this.classList.toggle('actif');
+});
+/* ─── progression / étoiles / bravo ─── */
+const MISSIONS=['Repérer','La chaîne','La panne','Réglage','Défi','Bilan'];
+const EXPL=[
+ 'Chaque grandeur a SON instrument et SON unité : l’anémomètre compte ses tours pour la vitesse du vent (km/h), la girouette pointe la direction d’où il vient (nord, sud…), le thermomètre mesure la température de l’air (°C) à l’ombre dans son abri aéré, et le pluviomètre additionne la hauteur d’eau tombée (mm). Quatre spécialistes : aucun ne sait faire le travail d’un autre.',
+ 'MESURER → ENREGISTRER → TRANSMETTRE → AFFICHER : c’est la chaîne de l’information, et tu viens de la voir fonctionner. Si UNE étape manque ou change de place, la mesure n’arrive jamais au bulletin. Retiens bien cette chaîne : tu la retrouveras en domotique, en robotique, dans les satellites… partout où une information voyage.',
+ 'Tu as appliqué la vraie méthode du technicien : observer le symptôme, identifier la grandeur fausse, tester l’instrument soupçonné, éliminer… et recommencer. Un symptôme ne désigne presque jamais le coupable du premier coup — c’est la méthode qui trouve, pas la chance. Et chaque test coûte du temps : d’où l’intérêt de bien réfléchir avant de tester.',
+ 'Environ 1,50 m : c’est la hauteur NORMALISÉE des abris météo du monde entier. Trop bas, le sol surchauffé peut ajouter plusieurs degrés à la mesure — tu l’as vu sur l’afficheur. À bonne hauteur, l’air circule et la mesure devient comparable d’un pays à l’autre. Sans normes communes, impossible de faire de la météo mondiale.',
+ 'Bien joué ! Trier les bonnes données des parasites, c’est le quotidien des stations : avant de nourrir le bulletin, chaque donnée est vérifiée et filtrée. Une seule donnée aberrante — un 45 °C en hiver — et c’est toute la prévision qui déraille.',
+];
+const E=[0,0,0,0,0];
+let mCour=0, missionEnAttente=null;
+const prog=document.getElementById('prog');
+MISSIONS.forEach((m,i)=>{
+ const d=document.createElement('div'); d.className='mseg'+(i===0?' courante':'');
+ d.innerHTML='<span class="num">'+(i+1)+'</span><span class="lab">'+m+'</span><span class="et" id="pe'+i+'">'+(i<5?'☆☆☆':'')+'</span>';
+ prog.appendChild(d);
+});
+function etoiles(n){ return '★'.repeat(n)+'☆'.repeat(3-n); }
+function confettis(){
+ const COUL=['#ca8a04','#16a34a','#0e7490','#dc2626','#7c3aed'];
+ for(let k=0;k<16;k++){
+ const c=document.createElement('div'); c.className='confetti';
+ c.style.background=COUL[k%COUL.length];
+ c.style.left=(5+Math.random()*90)+'vw';
+ c.style.animationDelay=(Math.random()*0.5)+'s';
+ document.body.appendChild(c);
+ setTimeout(()=>c.remove(),2300);
+ }
+}
+function finirMission(i,nb,titre){
+ E[i]=nb;
+ document.getElementById('et'+(i+1)).textContent=etoiles(nb);
+ document.getElementById('pe'+i).textContent=etoiles(nb);
+ document.querySelectorAll('.mseg')[i].classList.add('faite');
+ document.getElementById('brTitre').textContent= titre||'Mission réussie !';
+ document.getElementById('brEt').textContent=etoiles(nb);
+ document.getElementById('brTxt').textContent=EXPL[i];
+ missionEnAttente=i+1;
+ document.getElementById('voile').classList.add('on');
+ confettis();
+}
+document.getElementById('btnCont').addEventListener('click',()=>{
+ document.getElementById('voile').classList.remove('on');
+ if(missionEnAttente!==null){ aller(missionEnAttente); missionEnAttente=null; }
+});
+function aller(i){
+ mCour=i;
+ document.querySelectorAll('.mission').forEach((s,k)=>s.classList.toggle('active',k===i));
+ document.querySelectorAll('.mseg').forEach((s,k)=>s.classList.toggle('courante',k===i));
+ if(i===5){
+ const tot=E.reduce((a,b)=>a+b,0);
+ document.getElementById('etTotal').textContent=tot;
+ try{ localStorage.setItem(KEY, JSON.stringify(E)); }catch(e){}
+ }
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+/* ─── décor commun : la station, tout en dessin vectoriel ─── */
+const ORGANES=[
+ {id:'thermo', x:120,y:150,w:110,h:150, nom:'le thermomètre sous abri', role:'température de l’air, en °C — à l’ombre et ventilé', cause:'Son abri était resté grand ouvert : en plein soleil, un thermomètre peut afficher 20 °C de trop !'},
+ {id:'girou', x:330,y:60, w:100,h:110, nom:'la girouette', role:'direction du vent (nord, sud, est, ouest)', cause:'Sa flèche était bloquée par un nid : elle indiquait toujours la même direction.'},
+ {id:'anemo', x:480,y:70, w:110,h:110, nom:'l’anémomètre', role:'vitesse du vent, en km/h — il compte ses tours', cause:'Ses coupelles étaient grippées : plus un tour, donc 0 km/h même en pleine tempête.'},
+ {id:'pluvio', x:660,y:150,w:100,h:150, nom:'le pluviomètre', role:'hauteur de pluie, en mm — il additionne', cause:'Son entonnoir était bouché par des feuilles : l’eau n’atteignait plus le compteur.'},
+];
+function nuage(c,x,y,s){
+ c.fillStyle='rgba(255,255,255,.85)';
+ c.beginPath();
+ c.arc(x,y,12*s,0,Math.PI*2); c.arc(x+14*s,y-6*s,10*s,0,Math.PI*2);
+ c.arc(x+28*s,y,11*s,0,Math.PI*2); c.arc(x+14*s,y+5*s,12*s,0,Math.PI*2);
+ c.fill();
+}
+function dessineStation(c,t,H2,marque,marqueTxt){
+ c.clearRect(0,0,860,H2);
+ const g=c.createLinearGradient(0,0,0,H2);
+ g.addColorStop(0,'#bfdbfe'); g.addColorStop(1,'#eff6ff');
+ c.fillStyle=g; c.fillRect(0,0,860,H2);
+ nuage(c,(820-((t*16)%940)),44,1.1);
+ nuage(c,(940-((t*10+300)%940)),86,0.8);
+ c.fillStyle='#86efac'; c.fillRect(0,H2-30,860,30);
+ // abri : caillebotis + mini thermomètre dessiné
+ c.fillStyle='#fff'; c.strokeStyle='#94a3b8'; c.lineWidth=2.5;
+ c.beginPath(); c.roundRect(140,170,70,70,8); c.fill(); c.stroke();
+ for(let y=182;y<236;y+=9){ c.strokeStyle='#cbd5e1'; c.lineWidth=2;
+ c.beginPath(); c.moveTo(146,y); c.lineTo(204,y); c.stroke(); }
+ c.strokeStyle='#dc2626'; c.lineWidth=3;
+ c.beginPath(); c.moveTo(175,190); c.lineTo(175,214); c.stroke();
+ c.fillStyle='#dc2626';
+ c.beginPath(); c.arc(175,219,5,0,Math.PI*2); c.fill();
+ c.strokeStyle='#94a3b8'; c.lineWidth=4;
+ c.beginPath(); c.moveTo(175,240); c.lineTo(175,H2-30); c.stroke();
+ // girouette
+ c.strokeStyle='#475569'; c.lineWidth=4;
+ c.beginPath(); c.moveTo(380,H2-30); c.lineTo(380,110); c.stroke();
+ c.font='bold 11px Segoe UI'; c.textAlign='center'; c.fillStyle='#475569';
+ c.fillText('N',380,72);
+ c.save(); c.translate(380,105); c.rotate(Math.sin(t*0.7)*0.7);
+ c.strokeStyle='#0e7490'; c.lineWidth=5; c.lineCap='round';
+ c.beginPath(); c.moveTo(-30,0); c.lineTo(30,0); c.stroke();
+ c.fillStyle='#0e7490';
+ c.beginPath(); c.moveTo(30,0); c.lineTo(18,-8); c.lineTo(18,8); c.closePath(); c.fill();
+ c.beginPath(); c.moveTo(-30,-7); c.lineTo(-30,7); c.lineTo(-18,0); c.closePath(); c.fill();
+ c.restore();
+ // anémomètre
+ c.strokeStyle='#475569'; c.lineWidth=4;
+ c.beginPath(); c.moveTo(535,H2-30); c.lineTo(535,120); c.stroke();
+ c.save(); c.translate(535,115); c.rotate(t*3);
+ c.strokeStyle='#b45309'; c.lineWidth=3;
+ for(let k=0;k<3;k++){ c.rotate(Math.PI*2/3);
+ c.beginPath(); c.moveTo(0,0); c.lineTo(34,0); c.stroke();
+ c.fillStyle='#b45309';
+ c.beginPath(); c.arc(38,0,9,0,Math.PI*2); c.fill(); }
+ c.restore();
+ // pluviomètre
+ c.strokeStyle='#0369a1'; c.lineWidth=3;
+ c.beginPath(); c.moveTo(680,170); c.lineTo(740,170); c.lineTo(722,200); c.lineTo(722,255); c.lineTo(698,255); c.lineTo(698,200); c.closePath(); c.stroke();
+ c.fillStyle='rgba(56,189,248,.5)';
+ c.fillRect(700,232,20,21);
+ const gt=(t*0.9)%1;
+ c.fillStyle='#38bdf8';
+ c.beginPath(); c.arc(710,140+gt*80,5,0,Math.PI*2); c.fill();
+ c.strokeStyle='#0369a1'; c.lineWidth=4;
+ c.beginPath(); c.moveTo(710,255); c.lineTo(710,H2-30); c.stroke();
+ // étiquettes discrètes sous chaque instrument (repérage)
+ c.font='11px Segoe UI'; c.fillStyle='#8a8378';
+ if(marque){ marque.forEach(id=>{
+ const o=ORGANES.find(z=>z.id===id);
+ c.font='bold 13px Segoe UI'; c.fillStyle='#16a34a'; c.textAlign='center';
+ c.fillText(marqueTxt||'testé : il fonctionne',o.x+o.w/2,o.y-6);
+ }); }
+}
+function decoupe(c,txt,maxW){
+ const mots=String(txt).split(' ');
+ const lignes=[]; let cour='';
+ mots.forEach(m=>{
+ const essai=cour?cour+' '+m:m;
+ if(c.measureText(essai).width<=maxW||!cour){ cour=essai; }
+ else { lignes.push(cour); cour=m; }
+ });
+ if(cour)lignes.push(cour);
+ return lignes;
+}
+function dessineBulle(c,H2,flash){
+ if(!flash)return;
+ const o=flash.o;
+ c.font='12.5px Segoe UI';
+ const corps=decoupe(c,flash.l2,300);
+ c.font='bold 13.5px Segoe UI';
+ const titres=decoupe(c,flash.l1,300);
+ let larg=0;
+ c.font='bold 13.5px Segoe UI';
+ titres.forEach(l=>{ larg=Math.max(larg,c.measureText(l).width); });
+ c.font='12.5px Segoe UI';
+ corps.forEach(l=>{ larg=Math.max(larg,c.measureText(l).width); });
+ const w=Math.min(340,larg+30);
+ const h=16+titres.length*18+corps.length*17;
+ let bx=Math.max(10,Math.min(o.x+o.w/2-w/2,850-w));
+ let by=Math.max(58,Math.min(o.y-10,H2-14-h));
+ c.fillStyle='rgba(255,251,235,.97)';
+ c.strokeStyle='#f59e0b'; c.lineWidth=3;
+ c.beginPath(); c.roundRect(bx,by,w,h,12); c.fill(); c.stroke();
+ c.textAlign='left';
+ let ty=by+22;
+ c.fillStyle='#78350f'; c.font='bold 13.5px Segoe UI';
+ titres.forEach(l=>{ c.fillText(l,bx+15,ty); ty+=18; });
+ c.fillStyle='#a16207'; c.font='12.5px Segoe UI';
+ corps.forEach(l=>{ c.fillText(l,bx+15,ty); ty+=17; });
+ c.textAlign='center';
+}
+function hit(cvEl,ev,H2){
+ const r=cvEl.getBoundingClientRect();
+ const x=(ev.clientX-r.left)*860/r.width, y=(ev.clientY-r.top)*H2/r.height;
+ return ORGANES.find(o=>x>=o.x&&x<=o.x+o.w&&y>=o.y&&y<=o.y+o.h)||null;
+}
+/* ─── fiches d'identité (dessins réalistes plein cadre) ─── */
+let phase1='visite', visites1=[];
+function herbe(c,y){
+ c.fillStyle='#86efac'; c.fillRect(0,y,520,270-y);
+ c.strokeStyle='#4ade80'; c.lineWidth=2;
+ for(let x=10;x<520;x+=22){ c.beginPath(); c.moveTo(x,y+12); c.lineTo(x+5,y+2); c.stroke(); }
+}
+const FICHES={
+ thermo:{titre:'Le thermomètre sous abri', grandeur:'température de l’air · °C',
+ txt:'Dans la vraie vie : une caisse en bois peinte en blanc, montée sur quatre pieds dans l’herbe — l’« abri Stevenson ». Ses parois sont des persiennes : l’air circule, mais le soleil n’entre jamais. Ouvre la porte : à l’intérieur, un thermomètre gradué à liquide rouge. Tu en verras derrière les collèges, dans les jardins de Météo-France et les aérodromes.',
+ draw(c,t){
+ herbe(c,225);
+ // pieds
+ c.strokeStyle='#a8a29e'; c.lineWidth=6;
+ [[190,225],[330,225]].forEach(([x,y])=>{ c.beginPath(); c.moveTo(x,y); c.lineTo(x+ (x<260?12:-12),130); c.stroke(); });
+ // caisse à persiennes
+ c.fillStyle='#f8fafc'; c.strokeStyle='#94a3b8'; c.lineWidth=3;
+ c.beginPath(); c.roundRect(165,58,190,84,6); c.fill(); c.stroke();
+ for(let y=68;y<134;y+=9){
+ c.strokeStyle='#cbd5e1'; c.lineWidth=3;
+ c.beginPath(); c.moveTo(172,y+4); c.lineTo(240,y); c.stroke();
+ c.beginPath(); c.moveTo(280,y); c.lineTo(348,y+4); c.stroke();
+ }
+ // porte entrouverte au centre + thermomètre visible
+ c.fillStyle='#e2e8f0'; c.fillRect(244,66,32,70);
+ c.strokeStyle='#dc2626'; c.lineWidth=4;
+ c.beginPath(); c.moveTo(260,76); c.lineTo(260,116); c.stroke();
+ c.fillStyle='#dc2626';
+ c.beginPath(); c.arc(260,122,7,0,Math.PI*2); c.fill();
+ c.strokeStyle='#78716c'; c.lineWidth=1.5;
+ for(let y=80;y<114;y+=7){ c.beginPath(); c.moveTo(266,y); c.lineTo(271,y); c.stroke(); }
+ // double toit
+ c.fillStyle='#f8fafc'; c.strokeStyle='#94a3b8'; c.lineWidth=3;
+ c.beginPath(); c.moveTo(150,58); c.lineTo(260,36); c.lineTo(370,58); c.closePath(); c.fill(); c.stroke();
+ // cote 1,50 m
+ c.strokeStyle='#a16207'; c.lineWidth=2;
+ c.beginPath(); c.moveTo(410,142); c.lineTo(410,225); c.stroke();
+ c.beginPath(); c.moveTo(404,142); c.lineTo(416,142); c.moveTo(404,225); c.lineTo(416,225); c.stroke();
+ c.font='bold 12px Segoe UI'; c.textAlign='center'; c.fillStyle='#a16207';
+ c.fillText('1,50 m',445,187);
+ c.font='11px Segoe UI'; c.fillStyle='#78716c';
+ c.fillText('l’abri Stevenson, blanc à persiennes',260,252);
+ }},
+ girou:{titre:'La girouette', grandeur:'direction du vent · points cardinaux',
+ txt:'Dans la vraie vie : une flèche en métal perchée sur les toits, les clochers et les mâts météo. Elle pivote librement et sa pointe montre d’OÙ vient le vent. Dessous, la croix fixe des quatre lettres — N, S, E, O — permet de lire la direction. Certaines portent un coq : c’est la tradition française !',
+ draw(c,t){
+ // toit de maison
+ c.fillStyle='#b45309';
+ c.beginPath(); c.moveTo(60,270); c.lineTo(260,150); c.lineTo(460,270); c.closePath(); c.fill();
+ c.strokeStyle='#92400e'; c.lineWidth=2;
+ for(let k=1;k<6;k++){ c.beginPath(); c.moveTo(60+k*33,270); c.lineTo(260,150+ (270-150)*(1-k/6)*0 +0); c.stroke(); }
+ // mât
+ c.strokeStyle='#475569'; c.lineWidth=5;
+ c.beginPath(); c.moveTo(260,152); c.lineTo(260,60); c.stroke();
+ // croix cardinale
+ c.strokeStyle='#475569'; c.lineWidth=3;
+ c.beginPath(); c.moveTo(220,108); c.lineTo(300,108); c.moveTo(260,88); c.lineTo(260,128); c.stroke();
+ c.font='bold 13px Segoe UI'; c.textAlign='center'; c.fillStyle='#334155';
+ c.fillText('O',212,112); c.fillText('E',310,112); c.fillText('N',260,82); c.fillText('S',260,142);
+ // flèche pivotante avec empennage
+ c.save(); c.translate(260,66); c.rotate(Math.sin(t*0.6)*0.8);
+ c.strokeStyle='#0e7490'; c.lineWidth=6; c.lineCap='round';
+ c.beginPath(); c.moveTo(-52,0); c.lineTo(52,0); c.stroke();
+ c.fillStyle='#0e7490';
+ c.beginPath(); c.moveTo(52,0); c.lineTo(34,-11); c.lineTo(34,11); c.closePath(); c.fill();
+ c.beginPath(); c.moveTo(-52,-13); c.lineTo(-52,13); c.lineTo(-30,0); c.closePath(); c.fill();
+ c.restore();
+ c.font='11px Segoe UI'; c.fillStyle='#78716c';
+ c.fillText('la pointe montre d’où VIENT le vent',260,258);
+ }},
+ anemo:{titre:'L’anémomètre', grandeur:'vitesse du vent · km/h',
+ txt:'Dans la vraie vie : trois demi-boules creuses (les « coupelles ») montées en étoile au sommet d’un mât. Le vent les pousse et les fait tourner — plus il souffle fort, plus elles tournent vite. Un petit compteur au pied du mât compte les tours et les convertit en km/h. On en voit sur les bateaux, les stations de ski et les éoliennes de mesure.',
+ draw(c,t){
+ herbe(c,235);
+ c.strokeStyle='#475569'; c.lineWidth=6;
+ c.beginPath(); c.moveTo(260,235); c.lineTo(260,96); c.stroke();
+ // coupelles 3D-esques qui tournent
+ c.save(); c.translate(260,90); c.rotate(t*2.6);
+ for(let k=0;k<3;k++){ c.rotate(Math.PI*2/3);
+ c.strokeStyle='#78350f'; c.lineWidth=4;
+ c.beginPath(); c.moveTo(0,0); c.lineTo(58,0); c.stroke();
+ c.fillStyle='#b45309';
+ c.beginPath(); c.arc(66,0,15,Math.PI*0.5,Math.PI*1.5); c.closePath(); c.fill();
+ c.fillStyle='#7c2d12';
+ c.beginPath(); c.ellipse(66,0,5,15,0,0,Math.PI*2); c.fill();
+ }
+ c.restore();
+ // compteur au pied
+ c.fillStyle='#1e293b';
+ c.beginPath(); c.roundRect(232,196,56,34,6); c.fill();
+ c.fillStyle='#4ade80'; c.font='bold 13px Segoe UI'; c.textAlign='center';
+ c.fillText(Math.round(28+10*Math.sin(t*1.3))+' km/h',260,218);
+ // traits de vent
+ c.strokeStyle='#93c5fd'; c.lineWidth=3; c.lineCap='round';
+ for(let k=0;k<3;k++){ const x=((t*90)+k*130)%420;
+ c.beginPath(); c.moveTo(40+x,70+k*26); c.lineTo(90+x,70+k*26); c.stroke(); }
+ c.font='11px Segoe UI'; c.fillStyle='#78716c';
+ c.fillText('trois coupelles + un compteur de tours',260,260);
+ }},
+ pluvio:{titre:'Le pluviomètre', grandeur:'hauteur de pluie · mm',
+ txt:'Dans la vraie vie : un entonnoir posé sur un tube transparent gradué, planté dans l’herbe loin des arbres et des murs. La pluie tombe dans l’entonnoir et s’accumule dans le tube : on lit directement les millimètres sur la graduation. « 10 mm de pluie » = 10 litres d’eau tombés sur chaque mètre carré ! Ton voisin jardinier en a sûrement un.',
+ draw(c,t){
+ herbe(c,235);
+ // entonnoir
+ c.strokeStyle='#0369a1'; c.lineWidth=4;
+ c.beginPath(); c.moveTo(200,72); c.lineTo(320,72); c.lineTo(272,118); c.lineTo(248,118); c.closePath(); c.stroke();
+ // tube gradué transparent
+ c.fillStyle='rgba(224,242,254,.5)';
+ c.fillRect(240,118,40,117);
+ c.strokeStyle='#0369a1'; c.lineWidth=3;
+ c.strokeRect(240,118,40,117);
+ // eau accumulée
+ const niv=42+6*Math.sin(t*0.6);
+ c.fillStyle='rgba(56,189,248,.65)';
+ c.fillRect(242,235-niv,36,niv);
+ // graduation mm
+ c.strokeStyle='#075985'; c.lineWidth=1.6; c.font='10px Segoe UI'; c.textAlign='left'; c.fillStyle='#075985';
+ [0,10,20,30,40].forEach((mm,k)=>{
+ const y=233-k*26;
+ c.beginPath(); c.moveTo(280,y); c.lineTo(290,y); c.stroke();
+ c.fillText(mm+' mm',294,y+3);
+ });
+ // gouttes qui tombent dans l'entonnoir
+ for(let k=0;k<3;k++){ const p=((t*0.8)+k/3)%1;
+ c.fillStyle='#38bdf8';
+ c.beginPath(); c.arc(230+k*30,30+p*40,4,0,Math.PI*2); c.fill(); }
+ c.font='11px Segoe UI'; c.textAlign='center'; c.fillStyle='#78716c';
+ c.fillText('un entonnoir + un tube gradué en millimètres',260,260);
+ }},
+};
+let ficheO=null;
+const cvF=document.getElementById('cvF'), cF=cvF.getContext('2d');
+function ouvreFiche(id){
+ ficheO=id;
+ const f=FICHES[id];
+ document.getElementById('fiTitre').textContent=f.titre;
+ document.getElementById('fiGrand').textContent=f.grandeur;
+ document.getElementById('fiTxt').textContent=f.txt;
+ document.getElementById('ficheV').classList.add('on');
+}
+document.getElementById('btnFermeFiche').addEventListener('click',()=>{
+ document.getElementById('ficheV').classList.remove('on');
+ const id=ficheO; ficheO=null;
+ if(phase1==='visite' && !visites1.includes(id)){
+ visites1.push(id);
+ document.getElementById('c1compte').textContent='('+visites1.length+'/4)';
+ if(visites1.length>=4){
+ phase1='quiz';
+ document.getElementById('ast1').textContent='Visite terminée ! La cheffe vérifie maintenant que tu as retenu.';
+ majCible();
+ }
+ }
+});
+/* ═══ M1 ═══ */
+const cv1=document.getElementById('cv1'), c1=cv1.getContext('2d');
+const CIBLES=[
+ {id:'anemo', nom:'la vitesse du vent, en km/h'},
+ {id:'thermo',nom:'la température de l’air, en °C'},
+ {id:'pluvio',nom:'la hauteur de pluie tombée, en mm'},
+ {id:'girou', nom:'la direction d’où vient le vent'},
+];
+let i1=0, err1=0, flash1=null, fini1=false;
+function majCible(){ document.getElementById('c1consigne').innerHTML=
+ 'Mission 1 — Maintenant, à toi : clique sur l’instrument qui mesure <b>'+CIBLES[i1].nom+'</b>'; }
+cv1.addEventListener('click',ev=>{
+ if(fini1||flash1)return;
+ const o=hit(cv1,ev,330); if(!o)return;
+ if(phase1==='visite'){
+ ouvreFiche(o.id);
+ return;
+ }
+ const cible=CIBLES[i1];
+ if(o.id===cible.id){
+ flash1={o,l1:'Oui : c’est '+o.nom+' !',l2:o.role};
+ document.getElementById('ast1').textContent='Bien vu.';
+ i1++;
+ setTimeout(()=>{ flash1=null;
+ if(i1>=CIBLES.length){ fini1=true;
+ finirMission(0, err1===0?3: err1<=2?2:1, 'Les 4 instruments reconnus !');
+ } else { majCible(); document.getElementById('ast1').textContent=''; }
+ void 0;
+ },1500);
+ } else {
+ err1++;
+ flash1={o,l1:'Non : ici c’est '+o.nom+'.',l2:o.role};
+ document.getElementById('ast1').textContent='Raté — mais retiens qui il est, ça resservira.';
+ setTimeout(()=>{ flash1=null; },1900);
+ }
+});
+/* ═══ M2 ═══ */
+const ETAPES=[
+ {id:'mesurer', pic:'', txt:'MESURER'},
+ {id:'enregistrer',pic:'', txt:'ENREGISTRER'},
+ {id:'transmettre',pic:'', txt:'TRANSMETTRE'},
+ {id:'afficher', pic:'', txt:'LE BULLETIN'},
+];
+const slots=document.getElementById('slots'), stock=document.getElementById('stock');
+let place2=[null,null,null,null], choisi2=null, tests2=0, fini2=false, anim2=null;
+for(let k=0;k<4;k++){
+ const s=document.createElement('div'); s.className='slot'; s.dataset.k=k;
+ s.innerHTML='<span class="n">'+(k+1)+'</span>';
+ s.addEventListener('click',()=>{
+ if(fini2)return;
+ if(choisi2!==null){
+ if(place2[k]) document.querySelector('.vig[data-id="'+place2[k]+'"]').classList.remove('posee');
+ place2[k]=choisi2;
+ const et=ETAPES.find(e=>e.id===choisi2);
+ const v=document.querySelector('.vig[data-id="'+choisi2+'"]');
+ v.classList.remove('choisie'); v.classList.add('posee');
+ s.innerHTML='<span class="n">'+(k+1)+'</span><span style="font-size:26px">'+et.pic+'</span><span style="font-size:11.5px;font-weight:800">'+et.txt+'</span>';
+ s.classList.add('rempli');
+ choisi2=null;
+ } else if(place2[k]){
+ document.querySelector('.vig[data-id="'+place2[k]+'"]').classList.remove('posee');
+ place2[k]=null;
+ s.innerHTML='<span class="n">'+(k+1)+'</span>';
+ s.classList.remove('rempli');
+ }
+ });
+ slots.appendChild(s);
+}
+[...ETAPES].sort(()=>Math.random()-0.5).forEach(e=>{
+ const v=document.createElement('div'); v.className='vig'; v.dataset.id=e.id;
+ v.innerHTML='<span class="pic">'+e.pic+'</span>'+e.txt;
+ v.addEventListener('click',()=>{
+ if(fini2||v.classList.contains('posee'))return;
+ document.querySelectorAll('.vig').forEach(x=>x.classList.remove('choisie'));
+ choisi2 = choisi2===e.id ? null : e.id;
+ if(choisi2)v.classList.add('choisie');
+ });
+ stock.appendChild(v);
+});
+const cv2=document.getElementById('cv2'), c2=cv2.getContext('2d');
+document.getElementById('btnTest2').addEventListener('click',()=>{
+ if(fini2||anim2)return;
+ if(place2.some(p=>!p)){ document.getElementById('ast2').textContent='Remplis les 4 cases avant de tester.'; return; }
+ document.getElementById('ast2').textContent='';
+ tests2++;
+ const bonJusqua = place2.findIndex((p,k)=>p!==ETAPES[k].id);
+ anim2={p:0, stop: bonJusqua===-1 ? 4 : bonJusqua};
+});
+function dessineChaine(t){
+ c2.clearRect(0,0,860,120);
+ c2.fillStyle='#faf6ec'; c2.fillRect(0,0,860,120);
+ c2.strokeStyle='#d8cdb4'; c2.lineWidth=4;
+ c2.beginPath(); c2.moveTo(60,60); c2.lineTo(800,60); c2.stroke();
+ if(anim2){
+ anim2.p+=0.014;
+ const prog2=Math.min(anim2.p*4, anim2.stop+0.499);
+ const x=60+prog2/4*(800-60);
+ c2.fillStyle='#ca8a04';
+ c2.beginPath(); c2.arc(x,60,10,0,Math.PI*2); c2.fill();
+ c2.font='13px Segoe UI'; c2.textAlign='center'; c2.fillStyle='#a16207';
+ c2.fillText('la mesure voyage…',430,24);
+ if(prog2>=anim2.stop+0.45 && anim2.stop<4){
+ const slot=document.querySelectorAll('.slot')[anim2.stop];
+ slot.classList.add('tremble'); setTimeout(()=>slot.classList.remove('tremble'),600);
+ c2.strokeStyle='#dc2626'; c2.lineWidth=4;
+ c2.beginPath(); c2.moveTo(x+8,46); c2.lineTo(x+26,66); c2.moveTo(x+26,46); c2.lineTo(x+8,66); c2.stroke();
+ document.getElementById('ast2').textContent='Ça coince à la case '+(anim2.stop+1)+' : cette étape ne peut pas venir là. Que faut-il avoir fait AVANT ? Réorganise et re-teste.';
+ anim2=null;
+ } else if(anim2 && anim2.p>=1.05 && anim2.stop===4){
+ anim2=null; fini2=true;
+ finirMission(1, tests2===1?3: tests2===2?2:1, 'La chaîne fonctionne !');
+ }
+ } else {
+ c2.font='13px Segoe UI'; c2.textAlign='center'; c2.fillStyle='#c9bfa8';
+ c2.fillText('la bille-mesure voyagera ici, de la case 1 à la case 4',430,24);
+ }
+}
+/* ═══ M3 ═══ */
+const cv3=document.getElementById('cv3'), c3=cv3.getContext('2d');
+const PANNES=[
+ {coupable:'thermo', symp:'le bulletin affiche 45 °C… en plein hiver !', val:'45 °C', note:'dehors : il neige'},
+ {coupable:'anemo', symp:'vent affiché : 0 km/h… pendant la tempête !', val:'vent : 0 km/h', note:'dehors : rafales, arbres couchés'},
+ {coupable:'pluvio', symp:'il pleut depuis ce matin… et 0 mm au compteur !', val:'pluie : 0 mm', note:'dehors : averses continues'},
+];
+function dessinePanneau(c,p){
+ c.fillStyle='#1e293b';
+ c.beginPath(); c.roundRect(300,8,260,44,10); c.fill();
+ c.font='bold 19px Segoe UI'; c.textAlign='center'; c.fillStyle='#f87171';
+ c.fillText(p.val,430,28);
+ c.font='11.5px Segoe UI'; c.fillStyle='#94a3b8';
+ c.fillText(p.note,430,45);
+}
+let i3=0, tests3=0, testes3=[], flash3=null, fini3=false;
+cv3.addEventListener('click',ev=>{
+ if(fini3||flash3)return;
+ const o=hit(cv3,ev,360); if(!o)return;
+ if(testes3.includes(o.id)){ document.getElementById('ast3').textContent='Déjà testé : il fonctionne. Cherche ailleurs.'; return; }
+ const p=PANNES[i3];
+ tests3++;
+ if(o.id===p.coupable){
+ flash3={o,l1:'Coupable trouvé : '+o.nom+' !',l2:o.cause};
+ document.getElementById('ast3').textContent=o.cause;
+ setTimeout(()=>{
+ flash3=null; testes3=[]; i3++;
+ document.getElementById('ast3').textContent='';
+ if(i3>=PANNES.length){
+ fini3=true;
+ finirMission(2, tests3<=4?3: tests3<=6?2:1, 'Trois pannes résolues !');
+ } else {
+ document.getElementById('c3num').textContent=i3+1;
+ document.getElementById('c3symp').textContent=PANNES[i3].symp;
+ }
+ },2100);
+ } else {
+ testes3.push(o.id);
+ flash3={o,l1:'Test de '+o.nom+'… il fonctionne.',l2:'Relis le symptôme : quelle grandeur est fausse ? ('+o.role+')'};
+ document.getElementById('ast3').textContent='Innocent. Un test de plus au compteur…';
+ setTimeout(()=>{ flash3=null; },1600);
+ }
+});
+/* ═══ M4 ═══ */
+const cv4=document.getElementById('cv4'), c4=cv4.getContext('2d');
+const sl4=document.getElementById('slider4');
+let v4=30, fini4=false, essais4=0;
+sl4.addEventListener('input',()=>{ v4=+sl4.value; document.getElementById('v4').textContent=v4;
+ document.getElementById('ast4').textContent=''; });
+document.getElementById('btnV4').addEventListener('click',()=>{
+ if(fini4)return;
+ essais4++;
+ if(v4>=140&&v4<=180){
+ fini4=true;
+ finirMission(3, essais4===1?3: essais4===2?2:1, 'Abri à la norme !');
+ } else {
+ document.getElementById('ast4').textContent= v4<140
+ ? 'Trop bas ('+v4+' cm) : le sol chauffé fausse la mesure — regarde l’écart avec les 12,0 °C réels. Monte l’abri.'
+ : 'Trop haut ('+v4+' cm) : le technicien ne peut plus faire le relevé à hauteur d’homme. Redescends.';
+ }
+});
+function dessineM4(t){
+ c4.clearRect(0,0,860,300);
+ const g=c4.createLinearGradient(0,0,0,300);
+ g.addColorStop(0,'#bfdbfe'); g.addColorStop(1,'#eff6ff');
+ c4.fillStyle=g; c4.fillRect(0,0,860,300);
+ // soleil vectoriel
+ c4.fillStyle='#fbbf24';
+ c4.beginPath(); c4.arc(80,50,20,0,Math.PI*2); c4.fill();
+ c4.strokeStyle='#fbbf24'; c4.lineWidth=3;
+ for(let k=0;k<8;k++){ const a=k*Math.PI/4+t*0.3;
+ c4.beginPath(); c4.moveTo(80+26*Math.cos(a),50+26*Math.sin(a));
+ c4.lineTo(80+34*Math.cos(a),50+34*Math.sin(a)); c4.stroke(); }
+ c4.fillStyle='#86efac'; c4.fillRect(0,270,860,30);
+ for(let k=0;k<4;k++){
+ const ph=((t*0.5)+k/4)%1;
+ c4.strokeStyle='rgba(220,38,38,'+(0.5-ph*0.5)+')'; c4.lineWidth=2;
+ c4.beginPath();
+ for(let x=180;x<=420;x+=16){ c4.lineTo(x,266-ph*90+5*Math.sin(x/18+t*3)); }
+ c4.stroke();
+ }
+ const y=270-v4*0.72;
+ c4.strokeStyle='#94a3b8'; c4.lineWidth=4;
+ c4.beginPath(); c4.moveTo(300,270); c4.lineTo(300,y); c4.stroke();
+ c4.fillStyle='#fff'; c4.strokeStyle='#94a3b8'; c4.lineWidth=2.5;
+ c4.beginPath(); c4.roundRect(268,y-56,64,56,8); c4.fill(); c4.stroke();
+ c4.strokeStyle='#dc2626'; c4.lineWidth=3;
+ c4.beginPath(); c4.moveTo(300,y-46); c4.lineTo(300,y-22); c4.stroke();
+ c4.fillStyle='#dc2626';
+ c4.beginPath(); c4.arc(300,y-17,5,0,Math.PI*2); c4.fill();
+ c4.strokeStyle='#a16207'; c4.lineWidth=2;
+ c4.beginPath(); c4.moveTo(210,270); c4.lineTo(210,50); c4.stroke();
+ [50,100,150,200,250,300].forEach(cm=>{
+ const yy=270-cm*0.72;
+ c4.beginPath(); c4.moveTo(204,yy); c4.lineTo(216,yy); c4.stroke();
+ c4.font='10px Segoe UI'; c4.textAlign='center'; c4.fillStyle='#a16207'; c4.fillText(cm,190,yy+3);
+ });
+ const vraie=12;
+ const erreur= v4<140 ? (140-v4)*0.09 : (v4>180 ? -((v4-180)*0.012) : 0);
+ const lue=(vraie+erreur);
+ c4.fillStyle='#fff'; c4.strokeStyle= (v4>=140&&v4<=180)?'#16a34a':'#dc2626'; c4.lineWidth=3;
+ c4.beginPath(); c4.roundRect(560,80,220,90,14); c4.fill(); c4.stroke();
+ c4.font='bold 30px Segoe UI'; c4.textAlign='center';
+ c4.fillStyle=(v4>=140&&v4<=180)?'#16a34a':'#dc2626';
+ c4.fillText(lue.toFixed(1)+' °C',670,132);
+ c4.font='12px Segoe UI'; c4.fillStyle='#8a8378';
+ c4.fillText('température vraie : 12,0 °C',670,158);
+ // technicien vectoriel
+ c4.strokeStyle='#475569'; c4.lineWidth=3; c4.lineCap='round';
+ c4.beginPath(); c4.arc(460,232,9,0,Math.PI*2); c4.stroke();
+ c4.beginPath(); c4.moveTo(460,241); c4.lineTo(460,258); c4.moveTo(460,246); c4.lineTo(448,254);
+ c4.moveTo(460,246); c4.lineTo(472,254); c4.moveTo(460,258); c4.lineTo(452,270); c4.moveTo(460,258); c4.lineTo(468,270); c4.stroke();
+}
+/* ═══ M5 (inchangé : validé par le prof !) ═══ */
+const cv5=document.getElementById('cv5'), c5=cv5.getContext('2d');
+const BONNES=['','','',''];
+const MAUVAISES=['','','',''];
+const J5={etat:'off',t:30,px:430,dir:0,ents:[],spawn:0,pris:0};
+document.getElementById('btn5').addEventListener('click',()=>{
+ if(J5.etat==='jeu')return;
+ Object.assign(J5,{etat:'jeu',t:30,px:430,dir:0,ents:[],spawn:0.3,pris:0});
+ document.getElementById('s5').textContent='0';
+});
+document.addEventListener('keydown',e=>{
+ if(mCour!==4||J5.etat!=='jeu')return;
+ if(e.key==='ArrowLeft')J5.dir=-1;
+ if(e.key==='ArrowRight')J5.dir=1;
+});
+document.addEventListener('keyup',e=>{
+ if(e.key==='ArrowLeft'&&J5.dir===-1)J5.dir=0;
+ if(e.key==='ArrowRight'&&J5.dir===1)J5.dir=0;
+});
+[['tg5',-1],['td5',1]].forEach(([id,dd])=>{
+ const b=document.getElementById(id);
+ b.addEventListener('pointerdown',ev=>{ev.preventDefault();J5.dir=dd;});
+ b.addEventListener('pointerup',()=>{J5.dir=0;});
+ b.addEventListener('pointerleave',()=>{J5.dir=0;});
+});
+function stepM5(dt){
+ if(J5.etat!=='jeu')return;
+ J5.t-=dt;
+ document.getElementById('t5').textContent=Math.max(0,Math.ceil(J5.t));
+ J5.px=Math.max(50,Math.min(810,J5.px+J5.dir*dt*420));
+ J5.spawn-=dt;
+ if(J5.spawn<=0){
+ const bon=Math.random()<0.55;
+ const tab=bon?BONNES:MAUVAISES;
+ J5.ents.push({s:tab[Math.floor(Math.random()*tab.length)],bon,x:60+Math.random()*740,y:-20});
+ J5.spawn=0.55;
+ }
+ for(let i=J5.ents.length-1;i>=0;i--){
+ const e=J5.ents[i]; e.y+=dt*230;
+ if(e.y>300){ J5.ents.splice(i,1); continue; }
+ if(Math.abs(e.x-J5.px)<46&&e.y>238&&e.y<278){
+ if(e.bon){ J5.pris++; } else { J5.pris=Math.max(0,J5.pris-1); }
+ document.getElementById('s5').textContent=J5.pris;
+ J5.ents.splice(i,1);
+ }
+ }
+ if(J5.t<=0){
+ J5.etat='off';
+ finirMission(4, J5.pris>=12?3: J5.pris>=8?2:1, J5.pris+' données récupérées !');
+ }
+}
+function dessineM5(t){
+ c5.clearRect(0,0,860,300);
+ const g=c5.createLinearGradient(0,0,0,300);
+ g.addColorStop(0,'#bfdbfe'); g.addColorStop(1,'#eff6ff');
+ c5.fillStyle=g; c5.fillRect(0,0,860,300);
+ c5.font='24px Segoe UI'; c5.textAlign='center';
+ J5.ents.forEach(e=>c5.fillText(e.s,e.x,e.y));
+ c5.strokeStyle='#a16207'; c5.lineWidth=5;
+ c5.beginPath(); c5.moveTo(J5.px-42,244); c5.lineTo(J5.px-34,278); c5.lineTo(J5.px+34,278); c5.lineTo(J5.px+42,244); c5.stroke();
+ c5.fillStyle='rgba(202,138,4,.25)';
+ c5.beginPath(); c5.moveTo(J5.px-42,244); c5.lineTo(J5.px-34,278); c5.lineTo(J5.px+34,278); c5.lineTo(J5.px+42,244); c5.closePath(); c5.fill();
+ if(J5.etat!=='jeu'){
+ c5.fillStyle='#8a8378'; c5.font='15px Segoe UI';
+ c5.fillText('appuie sur LANCER LE DÉFI',430,150);
+ }
+}
+/* ─── boucle ─── */
+let last=null;
+function boucle(ts){
+ if(last===null)last=ts;
+ const dt=Math.min(0.05,(ts-last)/1000); last=ts;
+ const t=ts/1000;
+ if(mCour===0){ dessineStation(c1,t,330, phase1==='visite'?visites1:null, 'visité'); dessineBulle(c1,330,flash1); }
+ if(ficheO){ cF.clearRect(0,0,520,270); FICHES[ficheO].draw(cF,t); }
+ if(mCour===1) dessineChaine(t);
+ if(mCour===2){ dessineStation(c3,t,360,testes3); dessinePanneau(c3,PANNES[Math.min(i3,2)]); dessineBulle(c3,360,flash3); }
+ if(mCour===3) dessineM4(t);
+ if(mCour===4){ stepM5(dt); dessineM5(t); }
+ requestAnimationFrame(boucle);
+}
+requestAnimationFrame(boucle);
+</script>
+
+<button id="calcBtn" title="Ouvrir la calculatrice"><span class="ic">C</span>calcul</button>
+<div id="calcPan">
+ <div class="tete" id="calcTete"><b>CALCULATRICE</b><button id="calcX" title="Fermer">&times;</button></div>
+ <div id="calcEcr"><div class="op" id="calcOp"></div><div class="val" id="calcVal">0</div></div>
+ <div id="calcGr">
+ <button class="f" data-k="C">C</button><button class="f" data-k="back">&#9003;</button>
+ <button class="f" data-k="pct">%</button><button class="op" data-k="/">&divide;</button>
+ <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+ <button class="op" data-k="*">&times;</button>
+ <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+ <button class="op" data-k="-">&minus;</button>
+ <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+ <button class="op" data-k="+">+</button>
+ <button class="f" data-k="sign">+/&minus;</button><button data-k="0">0</button>
+ <button data-k=".">,</button><button class="eq" data-k="=">=</button>
+ </div>
+</div>
+<script>
+/* ===== Calculatrice (aucun eval, aucune dépendance) ===== */
+(function(){
+ var pan=document.getElementById('calcPan'), btn=document.getElementById('calcBtn');
+ var eVal=document.getElementById('calcVal'), eOp=document.getElementById('calcOp');
+ var cour='0', prec=null, oper=null, neuf=true;
+ function aff(){
+ eVal.textContent=String(cour).replace('.',',');
+ eOp.textContent=(prec!==null?String(prec).replace('.',',')+' '+({'+':'+','-':'\u2212','*':'\u00d7','/':'\u00f7'}[oper]||''):'');
+ }
+ function calcule(a,b,o){
+ a=parseFloat(a); b=parseFloat(b);
+ var r = o==='+'?a+b : o==='-'?a-b : o==='*'?a*b : (b===0?NaN:a/b);
+ if(!isFinite(r)) return 'Erreur';
+ return String(Math.round(r*1e10)/1e10);
+ }
+ function touche(k){
+ if(cour==='Erreur' && k!=='C'){ return; }
+ if(/^[0-9]$/.test(k)){ cour = (neuf||cour==='0') ? k : cour+k; neuf=false; }
+ else if(k==='.'){ if(neuf){ cour='0.'; neuf=false; } else if(cour.indexOf('.')<0) cour+='.'; }
+ else if(k==='C'){ cour='0'; prec=null; oper=null; neuf=true; }
+ else if(k==='back'){ cour = (cour.length>1) ? cour.slice(0,-1) : '0'; if(cour==='-')cour='0'; }
+ else if(k==='sign'){ cour = cour.charAt(0)==='-' ? cour.slice(1) : (cour==='0'?cour:'-'+cour); }
+ else if(k==='pct'){ cour=String(parseFloat(cour)/100); neuf=true; }
+ else if(k==='+'||k==='-'||k==='*'||k==='/'){
+ if(prec!==null && !neuf){ cour=calcule(prec,cour,oper); }
+ prec=cour; oper=k; neuf=true;
+ }
+ else if(k==='='){
+ if(prec!==null && oper){ cour=calcule(prec,cour,oper); prec=null; oper=null; neuf=true; }
+ }
+ aff();
+ }
+ document.getElementById('calcGr').addEventListener('click',function(ev){
+ var b=ev.target.closest('button'); if(!b)return; touche(b.dataset.k);
+ });
+ btn.addEventListener('click',function(){ pan.classList.toggle('on'); });
+ document.getElementById('calcX').addEventListener('click',function(){ pan.classList.remove('on'); });
+ /* déplacement du panneau */
+ var tete=document.getElementById('calcTete'), drag=false, dx=0, dy=0;
+ tete.addEventListener('pointerdown',function(e){
+ if(e.target.id==='calcX')return;
+ drag=true; var r=pan.getBoundingClientRect();
+ dx=e.clientX-r.left; dy=e.clientY-r.top;
+ pan.style.right='auto'; pan.style.bottom='auto';
+ pan.style.left=r.left+'px'; pan.style.top=r.top+'px';
+ try{ tete.setPointerCapture(e.pointerId); }catch(err){}
+ });
+ tete.addEventListener('pointermove',function(e){
+ if(!drag)return;
+ pan.style.left=Math.max(4,Math.min(window.innerWidth-244,e.clientX-dx))+'px';
+ pan.style.top=Math.max(4,Math.min(window.innerHeight-260,e.clientY-dy))+'px';
+ });
+ tete.addEventListener('pointerup',function(){ drag=false; });
+ aff();
+})();
+</script>
+</body>
+</html>

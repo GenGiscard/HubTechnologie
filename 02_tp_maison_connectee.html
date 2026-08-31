@@ -6,9 +6,9 @@
 <title>TP 4ème — Maison connectée · ESTIC</title>
 <style>
 :root{
-  --ink:#1e3a5f; --violet:#7c3aed; --violet-fonce:#6d28d9; --cyan:#0e7490; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
-  --ombre:0 4px 14px rgba(30,58,95,.10);
+ --ink:#1e3a5f; --violet:#7c3aed; --violet-fonce:#6d28d9; --cyan:#0e7490; --orange:#ea580c;
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+ --ombre:0 4px 14px rgba(30,58,95,.10);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
@@ -91,193 +91,504 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 .codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
 .codefinal a{color:#fde68a;font-weight:800}
 @media (max-width:820px){.simu{grid-template-columns:1fr}}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:60px;height:60px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:12px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;font-size:19px;letter-spacing:1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+.rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
 </style>
 </head>
 <body>
 
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
 <header class="tp">
-  <h1>🏡 TP — Programme ta maison connectée</h1>
-  <p>7 missions progressives. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Signal Rush</b> !</p>
+ <h1>TP — Programme ta maison connectée</h1>
+ <p>7 missions progressives. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Signal Rush</b> !</p>
 </header>
 
 <div class="progression" id="prog">
-  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
-  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+ <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ============ A1 : CAPTEUR OU ACTIONNEUR ============ -->
 <div class="acti" id="a1">
  <div class="boite">
-  <h2><span class="badge">1</span>Capteur ou actionneur ?</h2>
-  <div class="consigne">Pour chaque composant, clique sur la bonne famille. Rappel : le capteur <b>observe</b>, l'actionneur <b>agit</b>. (1 pt par bonne réponse du premier coup)</div>
-  <div class="tri" id="tri1"></div>
+ <h2><span class="badge">1</span>Capteur ou actionneur ?</h2>
+ <div class="consigne">Pour chaque composant, clique sur la bonne famille. Rappel : le capteur <b>observe</b>, l'actionneur <b>agit</b>. <b>Attention : une seule tentative par question</b> — lis bien avant de cliquer ! (1 pt par bonne réponse)</div>
+ <div class="tri" id="tri1"></div>
  </div>
 </div>
 
 <!-- ============ A2 : LA CHAÎNE D'INFORMATION ============ -->
 <div class="acti" id="a2">
  <div class="boite">
-  <h2><span class="badge">2</span>Reconstruis la chaîne d'information</h2>
-  <div class="consigne">Un <b>lampadaire automatique</b> s'allume à la tombée de la nuit. Clique sur les blocs <b>dans le bon ordre</b> pour reconstituer sa chaîne d'information.</div>
-  <div class="ordre" id="blocs2"></div>
-  <div class="slots" id="slots2">
-    <div class="slot" data-i="0">1er</div><span class="fl">→</span>
-    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
-    <div class="slot" data-i="2">3ème</div>
-  </div>
-  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
-  <div class="verdict" id="verd2"></div>
+ <h2><span class="badge">2</span>Reconstruis la chaîne d'information</h2>
+ <div class="consigne">Un <b>lampadaire automatique</b>s'allume à la tombée de la nuit. Clique sur les blocs <b>dans le bon ordre</b>pour reconstituer sa chaîne d'information.</div>
+ <div class="ordre" id="blocs2"></div>
+ <div class="slots" id="slots2">
+ <div class="slot" data-i="0">1er</div><span class="fl">→</span>
+ <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+ <div class="slot" data-i="2">3ème</div>
+ </div>
+ <div class="btnrow"><button class="btn" id="verif2">✓ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+ <div class="verdict" id="verd2"></div>
  </div>
 </div>
 
 <!-- ============ A3 : PROGRAMMER LA LAMPE ============ -->
 <div class="acti" id="a3">
  <div class="boite">
-  <h2><span class="badge">3</span>Mission 1 — La lampe intelligente</h2>
-  <div class="consigne">🎯 <b>Cahier des charges :</b> la lampe du salon doit s'allumer <b>quand la luminosité extérieure descend sous 30 %</b>.
-  Ajoute une règle SI…ALORS, joue avec les curseurs pour vérifier en direct, puis lance le test automatique.</div>
-  <div class="simu">
-    <div class="commandes">
-      <h3>🌍 Environnement (à toi de jouer)</h3>
-      <label>☀️ Luminosité extérieure : <span class="val" id="vLum">70 %</span></label>
-      <input type="range" id="eLum" min="0" max="100" value="70">
-      <label>🌡️ Température intérieure : <span class="val" id="vTemp">21 °C</span></label>
-      <input type="range" id="eTemp" min="5" max="30" value="21">
-      <label><input type="checkbox" id="ePres" style="width:auto"> 🚶 Présence détectée dans le salon</label>
-      <h3 style="margin-top:16px">🧠 Programme de la maison</h3>
-      <div class="regles" id="regles"></div>
-      <div class="btnrow">
-        <button class="btn violet" id="ajRegle">＋ Ajouter une règle</button>
-      </div>
-      <div class="btnrow"><button class="btn" id="test3">🧪 Lancer le test — Mission 1</button></div>
-    </div>
-    <div>
-      <canvas class="simcv" id="cvMaison" width="620" height="400"></canvas>
-      <div class="verdict" id="verd3"></div>
-    </div>
-  </div>
+ <h2><span class="badge">3</span>Mission 1 — La lampe intelligente</h2>
+ <div class="consigne"> <b>Cahier des charges :</b>la lampe du salon doit s'allumer <b>quand la luminosité extérieure descend sous 30 %</b>.
+ Ajoute une règle SI…ALORS, joue avec les curseurs pour vérifier en direct, puis lance le test automatique.</div>
+ <div class="simu">
+ <div class="commandes">
+ <h3>Environnement (à toi de jouer)</h3>
+ <label>Luminosité extérieure : <span class="val" id="vLum">70 %</span></label>
+ <input type="range" id="eLum" min="0" max="100" value="70">
+ <label>Température intérieure : <span class="val" id="vTemp">21 °C</span></label>
+ <input type="range" id="eTemp" min="5" max="30" value="21">
+ <label><input type="checkbox" id="ePres" style="width:auto">Présence détectée dans le salon</label>
+ <h3 style="margin-top:16px">Programme de la maison</h3>
+ <div class="regles" id="regles"></div>
+ <div class="btnrow">
+ <button class="btn violet" id="ajRegle">＋ Ajouter une règle</button>
+ </div>
+ <div class="btnrow"><button class="btn" id="test3">Lancer le test — Mission 1</button></div>
+ </div>
+ <div>
+ <canvas class="simcv" id="cvMaison" width="620" height="400"></canvas>
+ <div class="verdict" id="verd3"></div>
+ </div>
+ </div>
  </div>
 </div>
 
 <!-- ============ A4 : THERMOSTAT + VOLET ============ -->
 <div class="acti" id="a4">
  <div class="boite">
-  <h2><span class="badge">4</span>Mission 2 — Thermostat & volet automatiques</h2>
-  <div class="consigne">🎯 <b>Complète ton programme dans le simulateur ci-dessus</b> avec les règles nécessaires :<br>
-  ① le <b>chauffage</b> s'allume quand la température descend <b>sous 19 °C</b> ;<br>
-  ② le <b>volet</b> se ferme quand la luminosité descend <b>sous 30 %</b> (la nuit).<br>
-  Puis lance le test : 4 situations seront vérifiées automatiquement.</div>
-  <div class="btnrow"><button class="btn" id="test4">🧪 Lancer le test — Mission 2</button></div>
-  <div class="verdict" id="verd4"></div>
+ <h2><span class="badge">4</span>Mission 2 — Thermostat & volet automatiques</h2>
+ <div class="consigne"> <b>Complète ton programme dans le simulateur ci-dessus</b>avec les règles nécessaires :<br>
+ ① le <b>chauffage</b>s'allume quand la température descend <b>sous 19 °C</b> ;<br>
+ ② le <b>volet</b>se ferme quand la luminosité descend <b>sous 30 %</b> (la nuit).<br>
+ Puis lance le test : 4 situations seront vérifiées automatiquement.</div>
+ <div class="btnrow"><button class="btn" id="test4">Lancer le test — Mission 2</button></div>
+ <div class="verdict" id="verd4"></div>
  </div>
 </div>
 
 <!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Le schéma de la maison connectée</h2>
-  <div class="consigne">🗺️ Quelqu'un passe devant la maison : suis le SIGNAL qui circule du capteur jusqu'au volet ! Clique une étiquette, puis l'équipement correspondant. Place les 4 étiquettes.</div>
-  <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
-  <div class="etiqbar" id="etiq5"></div>
-  <div id="verd5"></div>
+ <h2><span class="badge">5</span>Le schéma de la maison connectée</h2>
+ <div class="consigne"><b>Chaque erreur coûte des points.</b>Quelqu'un passe devant la maison : suis le SIGNAL qui circule du capteur jusqu'au volet ! Clique une étiquette, puis l'équipement correspondant. Place les 4 étiquettes.</div>
+ <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
+ <div class="etiqbar" id="etiq5"></div>
+ <div id="verd5"></div>
  </div>
 </div>
 
 <!-- ============ A6 : MANIPULATION ============ -->
 <div class="acti" id="a6">
  <div class="boite">
-  <h2><span class="badge">6</span>Règle le thermostat</h2>
-  <div class="consigne">🎛️ Nuit d'hiver, –2 °C dehors. Règle la température de consigne : la jauge CONFORT et la jauge FACTURE réagissent en direct. Trouve le réglage du bon domoticien !</div>
-  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
-  <div class="sliderrow">
-    <span>🌡️ Consigne :</span>
-    <input type="range" id="slider6" min="12" max="26" step="1" value="24">
-    <span class="val"><span id="val6">24</span> °C</span>
-    <button class="btn" id="verif6">✔ Valider ce réglage</button>
-  </div>
-  <div id="verd6"></div>
+ <h2><span class="badge">6</span>Règle le thermostat</h2>
+ <div class="consigne">Nuit d'hiver, –2 °C dehors. Règle la température de consigne : la jauge CONFORT et la jauge FACTURE réagissent en direct. Trouve le réglage du bon domoticien !</div>
+ <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+ <div class="sliderrow">
+ <span>Consigne :</span>
+ <input type="range" id="slider6" min="12" max="26" step="1" value="24">
+ <span class="val"><span id="val6">24</span> °C</span>
+ <button class="btn" id="verif6">✓ Valider ce réglage</button>
+ </div>
+ <div id="verd6"></div>
  </div>
 </div>
 
 <!-- ============ A7 : BILAN ============ -->
 <div class="acti" id="a7">
  <div class="boite">
-  <h2><span class="badge">7</span>Bilan de domoticien</h2>
-  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code du jeu.</div>
-  <div id="quiz5"></div>
-  <div class="codefinal" id="codefinal">
-    🏆 Maison programmée avec brio !
-    <div class="code">MAISON24</div>
-    <div>Entre ce code dans les jeux <a href="03_jeu_signal_rush.html">🎮 Signal Rush</a> et <a href="03b_jeu_nuit_de_garde.html">🌙 Nuit de Garde</a> pour les déverrouiller.</div>
-  </div>
+ <h2><span class="badge">7</span>Bilan de domoticien</h2>
+ <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
+ <div id="quiz5"></div>
+ <div class="codefinal" id="codefinal">
+ Maison programmée avec brio !
+ <div class="code">MAISON24</div>
+ <div>Entre ce code dans les jeux <a href="03_jeu_signal_rush.html">Signal Rush</a>et <a href="03b_jeu_nuit_de_garde.html">Nuit de Garde</a>pour les déverrouiller.</div>
+ </div>
  </div>
 </div>
 
 <script>
+
+/* ===== SCHEMAS : dessins vectoriels remplaçant les anciens pictogrammes =====
+   SCHEMA(ctx,'nom',x,y,T) dessine le symbole centré en (x,y), taille T.
+   La couleur courante (ctx.fillStyle) sert de teinte principale.          */
+const SCHEMA=(function(){
+  function P(c,pts,rempli){
+    c.beginPath();
+    pts.forEach((p,i)=> i? c.lineTo(p[0],p[1]) : c.moveTo(p[0],p[1]));
+    c.closePath(); rempli? c.fill() : c.stroke();
+  }
+  const D={
+  maison(c,u,t){ c.fillRect(-.32*u,-.05*u,.64*u,.42*u);
+    P(c,[[-.44*u,-.05*u],[0,-.42*u],[.44*u,-.05*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.1*u,.12*u,.2*u,.25*u); c.restore(); },
+  batiment(c,u){ c.fillRect(-.3*u,-.42*u,.6*u,.84*u);
+    c.save(); c.fillStyle='#fff';
+    for(let i=0;i<4;i++)for(let j=0;j<3;j++) c.fillRect(-.22*u+j*.16*u,-.34*u+i*.19*u,.09*u,.11*u);
+    c.restore(); },
+  usine(c,u){ c.fillRect(-.42*u,0,.84*u,.4*u);
+    P(c,[[-.42*u,0],[-.14*u,-.2*u],[-.14*u,0]],true);
+    P(c,[[-.14*u,0],[.14*u,-.2*u],[.14*u,0]],true);
+    c.fillRect(.22*u,-.44*u,.14*u,.44*u); },
+  ville(c,u){ [[-.42,.5],[-.18,.78],[.08,.42],[.3,.66]].forEach(([bx,bh])=>
+      c.fillRect(bx*u,(.42-bh*.84)*u,.2*u,bh*.84*u)); },
+  soleil(c,u){ c.beginPath(); c.arc(0,0,.24*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.4,.055*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<8;k++){ const a=k*.785;
+      c.beginPath(); c.moveTo(.32*u*Math.cos(a),.32*u*Math.sin(a));
+      c.lineTo(.45*u*Math.cos(a),.45*u*Math.sin(a)); c.stroke(); } c.lineWidth=w; },
+  nuage(c,u){ c.beginPath();
+    c.arc(-.18*u,.04*u,.19*u,0,6.284); c.arc(.03*u,-.1*u,.24*u,0,6.284);
+    c.arc(.26*u,.05*u,.18*u,0,6.284); c.fill();
+    c.fillRect(-.18*u,-.02*u,.44*u,.24*u); },
+  pluie(c,u){ D.nuage(c,u*.85);
+    const w=c.lineWidth; c.lineWidth=Math.max(1.4,.05*u); c.strokeStyle=c.fillStyle;
+    [-.2,0,.2].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,.2*u); c.lineTo(dx*u-.05*u,.44*u); c.stroke(); });
+    c.lineWidth=w; },
+  goutte(c,u){ c.beginPath(); c.moveTo(0,-.42*u);
+    c.quadraticCurveTo(.34*u,.06*u,0,.4*u); c.quadraticCurveTo(-.34*u,.06*u,0,-.42*u); c.fill(); },
+  vent(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.075*u); c.strokeStyle=c.fillStyle;
+    [-.22,0,.22].forEach((dy,i)=>{ c.beginPath(); c.moveTo(-.44*u,dy*u);
+      c.lineTo((.2-i*.12)*u,dy*u); c.quadraticCurveTo(.42*u,dy*u,.3*u,(dy-.14)*u); c.stroke(); });
+    c.lineWidth=w; },
+  flocon(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.4,.055*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ const a=k*1.047;
+      c.beginPath(); c.moveTo(-.42*u*Math.cos(a),-.42*u*Math.sin(a));
+      c.lineTo(.42*u*Math.cos(a),.42*u*Math.sin(a)); c.stroke();
+      [-1,1].forEach(s=>{ c.beginPath();
+        c.moveTo(s*.42*u*Math.cos(a),s*.42*u*Math.sin(a));
+        c.lineTo(s*.26*u*Math.cos(a)+.12*u*Math.cos(a+2.1),s*.26*u*Math.sin(a)+.12*u*Math.sin(a+2.1)); c.stroke(); }); }
+    c.lineWidth=w; },
+  feu(c,u){ c.beginPath(); c.moveTo(0,.42*u);
+    c.quadraticCurveTo(-.4*u,.06*u,-.1*u,-.42*u);
+    c.quadraticCurveTo(-.04*u,-.12*u,.14*u,-.28*u);
+    c.quadraticCurveTo(.1*u,-.02*u,.36*u,.1*u);
+    c.quadraticCurveTo(.4*u,.34*u,0,.42*u); c.fill(); },
+  eclair(c,u){ P(c,[[.06*u,-.44*u],[-.28*u,.06*u],[-.02*u,.06*u],[-.1*u,.44*u],[.28*u,-.08*u],[.02*u,-.08*u]],true); },
+  choc(c,u){ const p=[]; for(let k=0;k<12;k++){ const a=k*.5236, r=(k%2? .2:.46)*u;
+      p.push([r*Math.cos(a),r*Math.sin(a)]); } P(c,p,true); },
+  pile(c,u){ c.fillRect(-.34*u,-.22*u,.6*u,.44*u); c.fillRect(.26*u,-.09*u,.08*u,.18*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.28*u,-.15*u,.12*u,.3*u); c.restore(); },
+  ampoule(c,u){ c.beginPath(); c.arc(0,-.1*u,.27*u,0,6.284); c.fill();
+    c.fillRect(-.11*u,.16*u,.22*u,.16*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.11*u,.21*u,.22*u,.03*u); c.restore(); },
+  engrenage(c,u){ const p=[]; for(let k=0;k<24;k++){ const a=k*.2618, r=(k%2? .3:.44)*u;
+      p.push([r*Math.cos(a),r*Math.sin(a)]); } P(c,p,true);
+    c.save(); c.globalCompositeOperation='destination-out';
+    c.beginPath(); c.arc(0,0,.15*u,0,6.284); c.fill(); c.restore(); },
+  vis(c,u){ c.fillRect(-.1*u,-.12*u,.2*u,.5*u);
+    c.fillRect(-.26*u,-.4*u,.52*u,.28*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.18*u,-.29*u,.36*u,.06*u); c.restore(); },
+  atome(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.3,.05*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ c.save(); c.rotate(k*1.047);
+      c.beginPath(); c.ellipse(0,0,.44*u,.17*u,0,0,6.284); c.stroke(); c.restore(); }
+    c.lineWidth=w; c.beginPath(); c.arc(0,0,.1*u,0,6.284); c.fill(); },
+  thermometre(c,u){ c.fillRect(-.07*u,-.4*u,.14*u,.5*u);
+    c.beginPath(); c.arc(0,.24*u,.17*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1,.03*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<4;k++){ c.beginPath(); c.moveTo(.09*u,(-.3+k*.13)*u); c.lineTo(.2*u,(-.3+k*.13)*u); c.stroke(); }
+    c.lineWidth=w; },
+  coeur(c,u){ c.beginPath(); c.moveTo(0,.4*u);
+    c.bezierCurveTo(-.62*u,-.02*u,-.3*u,-.46*u,0,-.16*u);
+    c.bezierCurveTo(.3*u,-.46*u,.62*u,-.02*u,0,.4*u); c.fill(); },
+  personne(c,u){ c.beginPath(); c.arc(0,-.3*u,.14*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.09*u); c.strokeStyle=c.fillStyle; c.lineCap='round';
+    c.beginPath(); c.moveTo(0,-.15*u); c.lineTo(0,.14*u); c.stroke();
+    c.beginPath(); c.moveTo(-.16*u,0); c.lineTo(.16*u,0); c.stroke();
+    c.beginPath(); c.moveTo(0,.14*u); c.lineTo(-.14*u,.42*u); c.moveTo(0,.14*u); c.lineTo(.14*u,.42*u); c.stroke();
+    c.lineWidth=w; },
+  marcheur(c,u){ c.beginPath(); c.arc(.02*u,-.3*u,.13*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.085*u); c.strokeStyle=c.fillStyle; c.lineCap='round';
+    c.beginPath(); c.moveTo(.02*u,-.16*u); c.lineTo(-.02*u,.12*u); c.stroke();
+    c.beginPath(); c.moveTo(-.02*u,.12*u); c.lineTo(-.2*u,.4*u); c.moveTo(-.02*u,.12*u); c.lineTo(.2*u,.36*u); c.stroke();
+    c.beginPath(); c.moveTo(.02*u,-.08*u); c.lineTo(.22*u,-.16*u); c.stroke();
+    c.lineWidth=w; },
+  main(c,u){ c.fillRect(-.09*u,-.44*u,.18*u,.4*u);
+    c.beginPath(); c.arc(0,.12*u,.24*u,0,6.284); c.fill(); },
+  voiture(c,u){ c.fillRect(-.44*u,-.02*u,.88*u,.24*u);
+    P(c,[[-.28*u,-.02*u],[-.16*u,-.28*u],[.18*u,-.28*u],[.3*u,-.02*u]],true);
+    c.beginPath(); c.arc(-.24*u,.24*u,.12*u,0,6.284); c.arc(.24*u,.24*u,.12*u,0,6.284); c.fill(); },
+  velo(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.28*u,.16*u,.22*u,0,6.284); c.stroke();
+    c.beginPath(); c.arc(.28*u,.16*u,.22*u,0,6.284); c.stroke();
+    c.beginPath(); c.moveTo(-.28*u,.16*u); c.lineTo(0,.16*u); c.lineTo(-.06*u,-.16*u);
+    c.lineTo(.2*u,-.16*u); c.lineTo(.28*u,.16*u); c.moveTo(0,.16*u); c.lineTo(.2*u,-.16*u); c.stroke();
+    c.lineWidth=w; },
+  satellite(c,u){ c.fillRect(-.13*u,-.16*u,.26*u,.32*u);
+    c.fillRect(-.46*u,-.11*u,.28*u,.22*u); c.fillRect(.18*u,-.11*u,.28*u,.22*u);
+    c.save(); c.fillStyle='#fff';
+    [-.4,-.3,.22,.32].forEach(dx=> c.fillRect(dx*u,-.09*u,.04*u,.18*u)); c.restore(); },
+  terre(c,u){ c.beginPath(); c.arc(0,0,.42*u,0,6.284); c.fill();
+    c.save(); c.fillStyle='#fff'; c.globalAlpha=.55;
+    c.beginPath(); c.ellipse(-.12*u,-.1*u,.16*u,.1*u,.4,0,6.284); c.fill();
+    c.beginPath(); c.ellipse(.14*u,.12*u,.13*u,.08*u,-.4,0,6.284); c.fill(); c.restore(); },
+  telephone(c,u){ c.fillRect(-.24*u,-.44*u,.48*u,.88*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.18*u,-.34*u,.36*u,.62*u); c.restore(); },
+  ecran(c,u){ c.fillRect(-.42*u,-.34*u,.84*u,.54*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.36*u,-.28*u,.72*u,.42*u); c.restore();
+    c.fillRect(-.12*u,.2*u,.24*u,.08*u); c.fillRect(-.26*u,.28*u,.52*u,.08*u); },
+  document(c,u){ c.fillRect(-.28*u,-.42*u,.56*u,.84*u);
+    c.save(); c.fillStyle='#fff';
+    for(let k=0;k<4;k++) c.fillRect(-.2*u,(-.3+k*.18)*u,.4*u,.06*u); c.restore(); },
+  colis(c,u){ c.fillRect(-.4*u,-.3*u,.8*u,.6*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.07*u,-.3*u,.14*u,.6*u);
+    c.fillRect(-.4*u,-.05*u,.8*u,.1*u); c.restore(); },
+  enveloppe(c,u){ c.fillRect(-.4*u,-.28*u,.8*u,.56*u);
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.4,.05*u);
+    c.beginPath(); c.moveTo(-.4*u,-.28*u); c.lineTo(0,.04*u); c.lineTo(.4*u,-.28*u); c.stroke(); c.restore(); },
+  antenne(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,.42*u); c.lineTo(0,-.1*u); c.stroke();
+    for(let k=1;k<=3;k++){ c.beginPath(); c.arc(0,-.1*u,k*.13*u,-2.4,-.74); c.stroke(); }
+    c.lineWidth=w; },
+  reseau(c,u){ c.beginPath(); c.arc(0,-.22*u,.1*u,0,6.284);
+    c.arc(-.3*u,.24*u,.1*u,0,6.284); c.arc(.3*u,.24*u,.1*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.2,.045*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,-.22*u); c.lineTo(-.3*u,.24*u); c.lineTo(.3*u,.24*u); c.lineTo(0,-.22*u); c.stroke();
+    c.lineWidth=w; },
+  lien(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.16*u,0,.2*u,-1.1,1.1,true); c.stroke();
+    c.beginPath(); c.arc(.16*u,0,.2*u,2.04,4.24,true); c.stroke();
+    c.beginPath(); c.moveTo(-.12*u,0); c.lineTo(.12*u,0); c.stroke(); c.lineWidth=w; },
+  cadenas(c,u){ c.fillRect(-.28*u,-.06*u,.56*u,.44*u);
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(0,-.08*u,.18*u,Math.PI,0); c.stroke(); c.lineWidth=w; },
+  robot(c,u){ c.fillRect(-.3*u,-.2*u,.6*u,.5*u);
+    c.save(); c.fillStyle='#fff';
+    c.beginPath(); c.arc(-.12*u,-.02*u,.06*u,0,6.284); c.arc(.12*u,-.02*u,.06*u,0,6.284); c.fill();
+    c.fillRect(-.14*u,.12*u,.28*u,.05*u); c.restore();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,-.2*u); c.lineTo(0,-.36*u); c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.arc(0,-.4*u,.07*u,0,6.284); c.fill(); },
+  cerveau(c,u){ c.beginPath();
+    c.arc(-.16*u,-.08*u,.2*u,0,6.284); c.arc(.16*u,-.08*u,.2*u,0,6.284);
+    c.arc(0,.14*u,.2*u,0,6.284); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    c.beginPath(); c.moveTo(0,-.26*u); c.lineTo(0,.3*u); c.stroke(); c.restore(); },
+  poubelle(c,u){ c.fillRect(-.26*u,-.2*u,.52*u,.6*u);
+    c.fillRect(-.34*u,-.3*u,.68*u,.1*u); c.fillRect(-.12*u,-.4*u,.24*u,.1*u);
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    [-.1,0,.1].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,-.1*u); c.lineTo(dx*u,.3*u); c.stroke(); }); c.restore(); },
+  recyclage(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.075*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ c.save(); c.rotate(k*2.094);
+      c.beginPath(); c.arc(0,0,.32*u,-1.9,-.5); c.stroke();
+      c.restore(); } c.lineWidth=w; },
+  feuille(c,u){ c.beginPath(); c.moveTo(-.34*u,.34*u);
+    c.quadraticCurveTo(-.1*u,-.44*u,.36*u,-.3*u);
+    c.quadraticCurveTo(.3*u,.3*u,-.34*u,.34*u); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    c.beginPath(); c.moveTo(-.3*u,.3*u); c.lineTo(.28*u,-.26*u); c.stroke(); c.restore(); },
+  arbre(c,u){ c.fillRect(-.07*u,.06*u,.14*u,.36*u);
+    c.beginPath(); c.arc(0,-.14*u,.3*u,0,6.284); c.fill(); },
+  plot(c,u){ P(c,[[0,-.4*u],[-.3*u,.34*u],[.3*u,.34*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.17*u,-.02*u,.34*u,.09*u); c.restore(); },
+  balle(c,u){ c.beginPath(); c.arc(0,0,.36*u,0,6.284); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.4,.05*u);
+    c.beginPath(); c.arc(-.34*u,0,.3*u,-.9,.9); c.stroke();
+    c.beginPath(); c.arc(.34*u,0,.3*u,2.24,4.04); c.stroke(); c.restore(); },
+  tortue(c,u){ c.beginPath(); c.ellipse(0,0,.34*u,.24*u,0,0,6.284); c.fill();
+    c.beginPath(); c.arc(.36*u,-.04*u,.11*u,0,6.284); c.fill();
+    [-.2,.14].forEach(dx=>{ c.beginPath(); c.ellipse(dx*u,.22*u,.09*u,.06*u,0,0,6.284); c.fill(); }); },
+  escargot(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath();
+    for(let a=0;a<12;a+=.15){ const r=.05*u+a*.028*u;
+      const px=-.05*u+r*Math.cos(a), py=r*Math.sin(a);
+      if(a===0) c.moveTo(px,py); else c.lineTo(px,py); }
+    c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.ellipse(.3*u,.2*u,.16*u,.07*u,0,0,6.284); c.fill(); },
+  oiseau(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.065*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.16*u,.06*u,.2*u,-2.2,-.5); c.stroke();
+    c.beginPath(); c.arc(.16*u,.06*u,.2*u,-2.64,-.94); c.stroke(); c.lineWidth=w; },
+  crane(c,u){ c.beginPath(); c.arc(0,-.08*u,.3*u,0,6.284); c.fill();
+    c.fillRect(-.16*u,.14*u,.32*u,.16*u);
+    c.save(); c.fillStyle='#fff';
+    c.beginPath(); c.arc(-.12*u,-.1*u,.08*u,0,6.284); c.arc(.12*u,-.1*u,.08*u,0,6.284); c.fill(); c.restore(); },
+  loupe(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.075*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.08*u,-.08*u,.26*u,0,6.284); c.stroke();
+    c.beginPath(); c.moveTo(.11*u,.11*u); c.lineTo(.38*u,.38*u); c.stroke(); c.lineWidth=w; },
+  microscope(c,u){ c.fillRect(-.3*u,.3*u,.6*u,.1*u);
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.05*u,.3*u); c.lineTo(-.05*u,-.02*u); c.stroke();
+    c.beginPath(); c.moveTo(-.05*u,-.02*u); c.lineTo(.2*u,-.34*u); c.stroke(); c.lineWidth=w;
+    c.fillRect(-.26*u,.06*u,.42*u,.07*u); },
+  graphique(c,u){ c.fillRect(-.34*u,.02*u,.16*u,.36*u); c.fillRect(-.08*u,-.18*u,.16*u,.56*u);
+    c.fillRect(.18*u,-.34*u,.16*u,.72*u); },
+  baignoire(c,u){ c.beginPath(); c.moveTo(-.4*u,-.06*u); c.lineTo(-.34*u,.28*u);
+    c.lineTo(.34*u,.28*u); c.lineTo(.4*u,-.06*u); c.closePath(); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.28*u,-.06*u); c.lineTo(-.28*u,-.3*u); c.lineTo(-.06*u,-.3*u); c.stroke();
+    c.lineWidth=w; },
+  canape(c,u){ c.fillRect(-.42*u,-.06*u,.84*u,.3*u);
+    c.fillRect(-.42*u,-.28*u,.14*u,.24*u); c.fillRect(.28*u,-.28*u,.14*u,.24*u);
+    c.fillRect(-.3*u,-.22*u,.6*u,.18*u); },
+  flacon(c,u){ c.fillRect(-.16*u,-.16*u,.32*u,.56*u); c.fillRect(-.08*u,-.4*u,.16*u,.24*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.1*u,0,.2*u,.14*u); c.restore(); },
+  bouteille(c,u){ c.beginPath(); c.moveTo(-.16*u,.4*u); c.lineTo(-.16*u,-.06*u);
+    c.lineTo(-.06*u,-.24*u); c.lineTo(-.06*u,-.4*u); c.lineTo(.06*u,-.4*u); c.lineTo(.06*u,-.24*u);
+    c.lineTo(.16*u,-.06*u); c.lineTo(.16*u,.4*u); c.closePath(); c.fill(); },
+  chaussure(c,u){ c.beginPath(); c.moveTo(-.4*u,.3*u); c.lineTo(-.4*u,-.1*u);
+    c.lineTo(-.12*u,-.1*u); c.quadraticCurveTo(.1*u,.06*u,.4*u,.12*u);
+    c.lineTo(.4*u,.3*u); c.closePath(); c.fill(); },
+  hache(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.09*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.28*u,.4*u); c.lineTo(.2*u,-.28*u); c.stroke(); c.lineWidth=w;
+    P(c,[[.06*u,-.18*u],[.34*u,-.42*u],[.44*u,-.16*u],[.2*u,-.02*u]],true); },
+  cloche(c,u){ c.beginPath(); c.moveTo(-.3*u,.2*u);
+    c.quadraticCurveTo(-.3*u,-.34*u,0,-.34*u); c.quadraticCurveTo(.3*u,-.34*u,.3*u,.2*u);
+    c.closePath(); c.fill(); c.fillRect(-.36*u,.2*u,.72*u,.08*u);
+    c.beginPath(); c.arc(0,.34*u,.08*u,0,6.284); c.fill(); },
+  alerte(c,u){ P(c,[[0,-.42*u],[.44*u,.34*u],[-.44*u,.34*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.05*u,-.16*u,.1*u,.3*u);
+    c.beginPath(); c.arc(0,.24*u,.06*u,0,6.284); c.fill(); c.restore(); },
+  chantier(c,u){ P(c,[[0,-.34*u],[.36*u,.3*u],[-.36*u,.3*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.3*u,.06*u,.6*u,.1*u); c.restore(); },
+  ciseaux(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.3*u,-.34*u); c.lineTo(.2*u,.16*u); c.stroke();
+    c.beginPath(); c.moveTo(.3*u,-.34*u); c.lineTo(-.2*u,.16*u); c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.arc(-.24*u,.3*u,.12*u,0,6.284); c.arc(.24*u,.3*u,.12*u,0,6.284); c.fill(); },
+  melange(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.065*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.4*u,-.16*u); c.lineTo(.1*u,-.16*u); c.stroke();
+    c.beginPath(); c.moveTo(-.4*u,.16*u); c.lineTo(.1*u,.16*u); c.stroke(); c.lineWidth=w;
+    P(c,[[.1*u,-.3*u],[.4*u,-.16*u],[.1*u,-.02*u]],true);
+    P(c,[[.1*u,.02*u],[.4*u,.16*u],[.1*u,.3*u]],true); },
+  boucle(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(0,0,.3*u,.5,5.6); c.stroke(); c.lineWidth=w;
+    P(c,[[.16*u,-.34*u],[.38*u,-.1*u],[.08*u,-.06*u]],true); },
+  fleche(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.36*u,0); c.lineTo(.14*u,0); c.stroke(); c.lineWidth=w;
+    P(c,[[.14*u,-.2*u],[.42*u,0],[.14*u,.2*u]],true); },
+  vapeur(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    [-.2,0,.2].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,.36*u);
+      c.bezierCurveTo((dx+.14)*u,.1*u,(dx-.14)*u,-.1*u,dx*u,-.36*u); c.stroke(); });
+    c.lineWidth=w; },
+  sommeil(c,u){ c.font='bold '+(.5*u)+'px Segoe UI'; c.textAlign='center';
+    c.fillText('z',-.14*u,.1*u); c.fillText('z',.14*u,-.16*u); },
+  point(c,u){ c.beginPath(); c.arc(0,0,.3*u,0,6.284); c.fill(); },
+  valide(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.1*u); c.strokeStyle=c.fillStyle;
+    c.lineCap='round'; c.beginPath(); c.moveTo(-.32*u,.02*u); c.lineTo(-.08*u,.28*u);
+    c.lineTo(.34*u,-.26*u); c.stroke(); c.lineWidth=w; },
+  };
+  return function(c,nom,x,y,T){
+    const f=D[nom]; if(!f) return false;
+    c.save(); c.translate(x,y);
+    f(c,T||24,T||24);
+    c.restore(); return true;
+  };
+})();
+
+/* Remplace un ancien pictogramme dessiné : reprend la taille de police et
+   l'alignement courants pour caler le schéma exactement où était le symbole. */
+function SPRITE(c,nom,x,y){
+  const m=/([\d.]+)px/.exec(c.font||''); const T=m?parseFloat(m[1]):24;
+  let cx=x; const al=c.textAlign||'start';
+  if(al==='left'||al==='start') cx=x+T*0.5;
+  else if(al==='right'||al==='end') cx=x-T*0.5;
+  SCHEMA(c,nom,cx,y-T*0.34,T);
+}
+
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
 function sauver(){ try{ localStorage.setItem('tp_domotique_4e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
 function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_domotique_4e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
-  document.querySelectorAll('.progression .seg').forEach(seg=>{
-    const n=+seg.dataset.a;
-    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
-  });
-  document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=7;n++){
-    const acti=document.getElementById('a'+n);
-    let v=acti.querySelector('.verrou');
-    if(n>etat.debloque){
-      if(!v){ v=document.createElement('div'); v.className='verrou';
-        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
-        acti.querySelector('.boite').appendChild(v); }
-    } else if(v) v.remove();
-  }
+ document.querySelectorAll('.progression .seg').forEach(seg=>{
+ const n=+seg.dataset.a;
+ seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+ });
+ document.getElementById('scoreTot').textContent=etat.score;
+ for(let n=2;n<=7;n++){
+ const acti=document.getElementById('a'+n);
+ let v=acti.querySelector('.verrou');
+ if(n>etat.debloque){
+ if(!v){ v=document.createElement('div'); v.className='verrou';
+ v.innerHTML='<div class="cadenas"></div>Termine la mission '+(n-1)+' pour déverrouiller';
+ acti.querySelector('.boite').appendChild(v); }
+ } else if(v) v.remove();
+ }
 }
 function reussir(n,pts){
-  etat.score+=pts;
-  if(etat.debloque===n) etat.debloque=n+1;
-  sauver(); majProgression();
-  if(n<7) setTimeout(()=>document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}),900);
+ etat.score+=pts;
+ if(etat.debloque===n) etat.debloque=n+1;
+ sauver(); majProgression();
+ if(n<7) setTimeout(()=>document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}),900);
 }
 
 /* ================= A1 : TRI CAPTEUR / ACTIONNEUR ================= */
 const ITEMS1=[
- {n:'🌡️ Sonde de température',t:'C'},{n:'💡 Ampoule du salon',t:'A'},
- {n:'🚶 Détecteur de mouvement',t:'C'},{n:'🔔 Sirène d\u2019alarme',t:'A'},
- {n:'⚙️ Moteur de volet roulant',t:'A'},{n:'☀️ Capteur de luminosité',t:'C'},
- {n:'🚪 Capteur d\u2019ouverture de porte',t:'C'},{n:'🔥 Radiateur électrique',t:'A'},
+ {n:' Sonde de température',t:'C'},{n:' Ampoule du salon',t:'A'},
+ {n:' Détecteur de mouvement',t:'C'},{n:' Sirène d\u2019alarme',t:'A'},
+ {n:' Moteur de volet roulant',t:'A'},{n:' Capteur de luminosité',t:'C'},
+ {n:' Capteur d\u2019ouverture de porte',t:'C'},{n:' Radiateur électrique',t:'A'},
 ];
 (function initA1(){
-  const zone=document.getElementById('tri1');
-  ITEMS1.forEach(it=>{
-    const d=document.createElement('div'); d.className='item';
-    d.innerHTML='<span>'+it.n+'</span><span class="choix"></span>';
-    const ch=d.querySelector('.choix');
-    let premier=true;
-    [['Capteur','C'],['Actionneur','A']].forEach(([lbl,code])=>{
-      const b=document.createElement('button'); b.textContent=lbl;
-      b.onclick=()=>{
-        if(code===it.t){
-          d.classList.remove('faux'); d.classList.add('bon');
-          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          etat.q1ok++;
-          if(etat.q1ok===ITEMS1.length) reussir(1,2);
-        } else { d.classList.add('faux'); premier=false; }
-      };
-      ch.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('tri1');
+ ITEMS1.forEach(it=>{
+ const d=document.createElement('div'); d.className='item';
+ d.innerHTML='<span>'+it.n+'</span><span class="choix"></span>';
+ const ch=d.querySelector('.choix');
+ let premier=true;
+ [['Capteur','C'],['Actionneur','A']].forEach(([lbl,code])=>{
+ const b=document.createElement('button'); b.textContent=lbl;
+ b.onclick=()=>{
+ if(code===it.t){
+ d.classList.remove('faux'); d.classList.add('bon');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ etat.q1ok++;
+ if(etat.q1ok===ITEMS1.length) reussir(1,2);
+ } else {
+ premier=false;
+ d.classList.add('faux'); b.classList.add('faux');
+ ch.querySelectorAll('button').forEach(x=>{ x.disabled=true;
+ if(x!==b) x.classList.add('bon'); });
+ etat.q1ok++;
+ if(etat.q1ok===ITEMS1.length) reussir(1,2);
+ }
+ };
+ ch.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A2 : ORDRE CHAÎNE D'INFO ================= */
@@ -289,35 +600,35 @@ const BLOCS2=[
 const BON_ORDRE=[1,0,2];
 let choix2=[];
 function initA2(){
-  choix2=[];
-  const zone=document.getElementById('blocs2'); zone.innerHTML='';
-  BLOCS2.forEach(b=>{
-    const btn=document.createElement('button');
-    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
-    btn.onclick=()=>{
-      if(btn.classList.contains('pris')||choix2.length>=3) return;
-      btn.classList.add('pris'); choix2.push(b.id);
-      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
-      slot.textContent=b.t; slot.classList.add('rempli');
-    };
-    zone.appendChild(btn);
-  });
-  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1er','2ème','3ème'][i]; s.classList.remove('rempli'); });
-  document.getElementById('verd2').className='verdict';
+ choix2=[];
+ const zone=document.getElementById('blocs2'); zone.innerHTML='';
+ BLOCS2.forEach(b=>{
+ const btn=document.createElement('button');
+ btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+ btn.onclick=()=>{
+ if(btn.classList.contains('pris')||choix2.length>=3) return;
+ btn.classList.add('pris'); choix2.push(b.id);
+ const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+ slot.textContent=b.t; slot.classList.add('rempli');
+ };
+ zone.appendChild(btn);
+ });
+ document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1er','2ème','3ème'][i]; s.classList.remove('rempli'); });
+ document.getElementById('verd2').className='verdict';
 }
 document.getElementById('reset2').onclick=initA2;
 let a2fait=false;
 document.getElementById('verif2').onclick=()=>{
-  const verd=document.getElementById('verd2');
-  if(choix2.length<3){ verd.className='verdict ko'; verd.textContent='Place les 3 blocs avant de vérifier !'; return; }
-  if(choix2.join()===BON_ORDRE.join()){
-    verd.className='verdict ok';
-    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : ACQUÉRIR → TRAITER → COMMUNIQUER. (+3 pts)'; reussir(2,3); }
-    else verd.textContent='✅ Bon ordre !';
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ Ce n\u2019est pas le bon ordre. Souviens-toi : on observe d\u2019abord, on réfléchit ensuite, on donne l\u2019ordre à la fin. Recommence !';
-  }
+ const verd=document.getElementById('verd2');
+ if(choix2.length<3){ verd.className='verdict ko'; verd.textContent='Place les 3 blocs avant de vérifier !'; return; }
+ if(choix2.join()===BON_ORDRE.join()){
+ verd.className='verdict ok';
+ if(!a2fait){ a2fait=true; verd.textContent='✓ Parfait : ACQUÉRIR → TRAITER → COMMUNIQUER. (+3 pts)'; reussir(2, essais2<=1?3:(essais2===2?2:1)); }
+ else verd.textContent='✓ Bon ordre !';
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ Ce n\u2019est pas le bon ordre. Souviens-toi : on observe d\u2019abord, on réfléchit ensuite, on donne l\u2019ordre à la fin. Recommence !';
+ }
 };
 initA2();
 
@@ -325,326 +636,328 @@ initA2();
 const env={lum:70,temp:21,pres:false};
 const sorties={lampe:false,chauffage:false,volet:'ouvert',alarme:false};
 let regles=[];
-const CAPTEURS={lum:'☀️ luminosité (%)',temp:'🌡️ température (°C)',pres:'🚶 présence (0/1)'};
-const ACTS={lampe:'💡 lampe salon',chauffage:'🔥 chauffage',volet:'🪟 volet',alarme:'🔔 alarme'};
+const CAPTEURS={lum:' luminosité (%)',temp:' température (°C)',pres:' présence (0/1)'};
+const ACTS={lampe:' lampe salon',chauffage:' chauffage',volet:' volet',alarme:' alarme'};
 const ACTIONS={lampe:['allumer','éteindre'],chauffage:['allumer','éteindre'],volet:['fermer','ouvrir'],alarme:['déclencher','couper']};
 
 function ajouterRegle(r){
-  regles.push(r||{capteur:'lum',op:'<',seuil:30,act:'lampe',action:0});
-  dessinerRegles();
+ regles.push(r||{capteur:'lum',op:'<',seuil:30,act:'lampe',action:0});
+ dessinerRegles();
 }
 function dessinerRegles(){
-  const zone=document.getElementById('regles'); zone.innerHTML='';
-  regles.forEach((r,i)=>{
-    const d=document.createElement('div'); d.className='regle';
-    d.innerHTML='SI ';
-    const sC=document.createElement('select');
-    Object.entries(CAPTEURS).forEach(([k,v])=>{ const o=document.createElement('option'); o.value=k; o.textContent=v; if(k===r.capteur)o.selected=true; sC.appendChild(o); });
-    const sO=document.createElement('select');
-    ['<','>'].forEach(op=>{ const o=document.createElement('option'); o.value=op; o.textContent=op; if(op===r.op)o.selected=true; sO.appendChild(o); });
-    const iS=document.createElement('input'); iS.type='number'; iS.value=r.seuil;
-    const spanAlors=document.createElement('span'); spanAlors.textContent=' ALORS ';
-    const sA=document.createElement('select');
-    Object.entries(ACTS).forEach(([k,v])=>{ const o=document.createElement('option'); o.value=k; o.textContent=v; if(k===r.act)o.selected=true; sA.appendChild(o); });
-    const sAc=document.createElement('select');
-    function majActions(){ sAc.innerHTML=''; ACTIONS[sA.value].forEach((a,k)=>{ const o=document.createElement('option'); o.value=k; o.textContent=a; if(k===r.action)o.selected=true; sAc.appendChild(o); }); }
-    majActions();
-    const del=document.createElement('button'); del.className='suppr'; del.textContent='✕';
-    del.onclick=()=>{ regles.splice(i,1); dessinerRegles(); };
-    [sC,sO,iS,sA,sAc].forEach(el=>el.addEventListener('input',()=>{
-      r.capteur=sC.value; r.op=sO.value; r.seuil=+iS.value; 
-      if(r.act!==sA.value){ r.act=sA.value; r.action=0; majActions(); }
-      r.action=+sAc.value;
-      simuler();
-    }));
-    d.append(sC,sO,iS,spanAlors,sA,sAc,del);
-    zone.appendChild(d);
-  });
-  simuler();
+ const zone=document.getElementById('regles'); zone.innerHTML='';
+ regles.forEach((r,i)=>{
+ const d=document.createElement('div'); d.className='regle';
+ d.innerHTML='SI ';
+ const sC=document.createElement('select');
+ Object.entries(CAPTEURS).forEach(([k,v])=>{ const o=document.createElement('option'); o.value=k; o.textContent=v; if(k===r.capteur)o.selected=true; sC.appendChild(o); });
+ const sO=document.createElement('select');
+ ['<','>'].forEach(op=>{ const o=document.createElement('option'); o.value=op; o.textContent=op; if(op===r.op)o.selected=true; sO.appendChild(o); });
+ const iS=document.createElement('input'); iS.type='number'; iS.value=r.seuil;
+ const spanAlors=document.createElement('span'); spanAlors.textContent=' ALORS ';
+ const sA=document.createElement('select');
+ Object.entries(ACTS).forEach(([k,v])=>{ const o=document.createElement('option'); o.value=k; o.textContent=v; if(k===r.act)o.selected=true; sA.appendChild(o); });
+ const sAc=document.createElement('select');
+ function majActions(){ sAc.innerHTML=''; ACTIONS[sA.value].forEach((a,k)=>{ const o=document.createElement('option'); o.value=k; o.textContent=a; if(k===r.action)o.selected=true; sAc.appendChild(o); }); }
+ majActions();
+ const del=document.createElement('button'); del.className='suppr'; del.textContent='';
+ del.onclick=()=>{ regles.splice(i,1); dessinerRegles(); };
+ [sC,sO,iS,sA,sAc].forEach(el=>el.addEventListener('input',()=>{
+ r.capteur=sC.value; r.op=sO.value; r.seuil=+iS.value; 
+ if(r.act!==sA.value){ r.act=sA.value; r.action=0; majActions(); }
+ r.action=+sAc.value;
+ simuler();
+ }));
+ d.append(sC,sO,iS,spanAlors,sA,sAc,del);
+ zone.appendChild(d);
+ });
+ simuler();
 }
 document.getElementById('ajRegle').onclick=()=>{ if(regles.length<6) ajouterRegle(); };
 
 function evaluer(e){
-  // états par défaut
-  const s={lampe:false,chauffage:false,volet:'ouvert',alarme:false};
-  regles.forEach(r=>{
-    const mesure = r.capteur==='lum'?e.lum : r.capteur==='temp'?e.temp : (e.pres?1:0);
-    const vrai = r.op==='<' ? mesure<r.seuil : mesure>r.seuil;
-    if(!vrai) return;
-    if(r.act==='lampe') s.lampe = r.action===0;
-    if(r.act==='chauffage') s.chauffage = r.action===0;
-    if(r.act==='volet') s.volet = r.action===0?'fermé':'ouvert';
-    if(r.act==='alarme') s.alarme = r.action===0;
-  });
-  return s;
+ // états par défaut
+ const s={lampe:false,chauffage:false,volet:'ouvert',alarme:false};
+ regles.forEach(r=>{
+ const mesure = r.capteur==='lum'?e.lum : r.capteur==='temp'?e.temp : (e.pres?1:0);
+ const vrai = r.op==='<' ? mesure<r.seuil : mesure>r.seuil;
+ if(!vrai) return;
+ if(r.act==='lampe') s.lampe = r.action===0;
+ if(r.act==='chauffage') s.chauffage = r.action===0;
+ if(r.act==='volet') s.volet = r.action===0?'fermé':'ouvert';
+ if(r.act==='alarme') s.alarme = r.action===0;
+ });
+ return s;
 }
 
 /* ------- dessin de la maison ------- */
 const cvM=document.getElementById('cvMaison'), cM=cvM.getContext('2d');
 function dessinerMaison(e,s){
-  const W=cvM.width,H=cvM.height;
-  cM.clearRect(0,0,W,H);
-  // ciel selon luminosité
-  const nuit=1-e.lum/100;
-  cM.fillStyle='rgb('+(180-120*nuit)+','+(215-150*nuit)+','+(250-160*nuit)+')';
-  cM.fillRect(0,0,W,H-60);
-  // soleil / lune
-  cM.font='34px Segoe UI'; cM.textAlign='center';
-  cM.fillText(e.lum>40?'☀️':'🌙', 60, 60);
-  // sol
-  cM.fillStyle='#a3b18a'; cM.fillRect(0,H-60,W,60);
-  // maison
-  const mx=150,my=110,mw=380,mh=230;
-  cM.fillStyle='#fef3c7'; cM.strokeStyle='#78716c'; cM.lineWidth=4;
-  cM.fillRect(mx,my,mw,mh); cM.strokeRect(mx,my,mw,mh);
-  cM.fillStyle='#b91c1c';
-  cM.beginPath(); cM.moveTo(mx-24,my); cM.lineTo(mx+mw/2,my-70); cM.lineTo(mx+mw+24,my); cM.closePath(); cM.fill();
-  // cloison
-  cM.strokeStyle='#d6d3d1'; cM.beginPath(); cM.moveTo(mx+mw/2,my); cM.lineTo(mx+mw/2,my+mh); cM.stroke();
-  cM.font='13px Segoe UI'; cM.fillStyle='#78716c';
-  cM.fillText('SALON',mx+mw/4,my+22); cM.fillText('CHAMBRE',mx+3*mw/4,my+22);
-  // lampe salon
-  if(s.lampe){ cM.fillStyle='rgba(253,224,71,.45)'; cM.beginPath(); cM.arc(mx+mw/4,my+90,55,0,7); cM.fill(); }
-  cM.font='30px Segoe UI'; cM.fillText(s.lampe?'💡':'⚪', mx+mw/4, my+100);
-  cM.font='12px Segoe UI'; cM.fillStyle=s.lampe?'#ca8a04':'#94a3b8';
-  cM.fillText('lampe '+(s.lampe?'ALLUMÉE':'éteinte'), mx+mw/4, my+124);
-  // chauffage
-  cM.fillStyle=s.chauffage?'#dc2626':'#cbd5e1';
-  cM.fillRect(mx+30,my+mh-46,60,30);
-  for(let k=0;k<4;k++){ cM.fillStyle=s.chauffage?'#fff':'#94a3b8'; cM.fillRect(mx+36+k*14,my+mh-42,5,22); }
-  if(s.chauffage){ cM.font='16px Segoe UI'; cM.fillText('♨️',mx+60,my+mh-52); }
-  cM.font='12px Segoe UI'; cM.fillStyle=s.chauffage?'#dc2626':'#94a3b8'; cM.textAlign='center';
-  cM.fillText('chauffage '+(s.chauffage?'ON':'off'), mx+60, my+mh+14);
-  // fenêtre chambre + volet
-  const fx=mx+3*mw/4-35, fy=my+60, fw=70, fh=80;
-  cM.fillStyle='#bae6fd'; cM.fillRect(fx,fy,fw,fh);
-  cM.strokeStyle='#78716c'; cM.lineWidth=3; cM.strokeRect(fx,fy,fw,fh);
-  if(s.volet==='fermé'){ cM.fillStyle='#a8a29e'; cM.fillRect(fx,fy,fw,fh);
-    cM.strokeStyle='#78716c'; for(let k=1;k<5;k++){ cM.beginPath(); cM.moveTo(fx,fy+k*fh/5); cM.lineTo(fx+fw,fy+k*fh/5); cM.stroke(); } }
-  cM.font='12px Segoe UI'; cM.fillStyle='#78716c';
-  cM.fillText('volet '+s.volet, fx+fw/2, fy+fh+16);
-  // présence
-  if(e.pres){ cM.font='26px Segoe UI'; cM.fillText('🚶', mx+mw/4+50, my+mh-30); }
-  // alarme
-  if(s.alarme){ cM.font='24px Segoe UI'; cM.fillText('🔔🚨', mx+mw/2, my-80); }
-  // température affichée
-  cM.font='bold 15px Segoe UI'; cM.fillStyle= e.temp<19 ? '#1d4ed8' : '#dc2626'; cM.textAlign='left';
-  cM.fillText('🌡️ intérieur : '+e.temp+' °C', 16, H-20);
-  cM.fillStyle='#334155';
-  cM.fillText('☀️ extérieur : '+e.lum+' %', 200, H-20);
+ const W=cvM.width,H=cvM.height;
+ cM.clearRect(0,0,W,H);
+ // ciel selon luminosité
+ const nuit=1-e.lum/100;
+ cM.fillStyle='rgb('+(180-120*nuit)+','+(215-150*nuit)+','+(250-160*nuit)+')';
+ cM.fillRect(0,0,W,H-60);
+ // soleil / lune
+ cM.font='34px Segoe UI'; cM.textAlign='center';
+ cM.fillText(e.lum>40?'':'', 60, 60);
+ // sol
+ cM.fillStyle='#a3b18a'; cM.fillRect(0,H-60,W,60);
+ // maison
+ const mx=150,my=110,mw=380,mh=230;
+ cM.fillStyle='#fef3c7'; cM.strokeStyle='#78716c'; cM.lineWidth=4;
+ cM.fillRect(mx,my,mw,mh); cM.strokeRect(mx,my,mw,mh);
+ cM.fillStyle='#b91c1c';
+ cM.beginPath(); cM.moveTo(mx-24,my); cM.lineTo(mx+mw/2,my-70); cM.lineTo(mx+mw+24,my); cM.closePath(); cM.fill();
+ // cloison
+ cM.strokeStyle='#d6d3d1'; cM.beginPath(); cM.moveTo(mx+mw/2,my); cM.lineTo(mx+mw/2,my+mh); cM.stroke();
+ cM.font='13px Segoe UI'; cM.fillStyle='#78716c';
+ cM.fillText('SALON',mx+mw/4,my+22); cM.fillText('CHAMBRE',mx+3*mw/4,my+22);
+ // lampe salon
+ if(s.lampe){ cM.fillStyle='rgba(253,224,71,.45)'; cM.beginPath(); cM.arc(mx+mw/4,my+90,55,0,7); cM.fill(); }
+ cM.font='30px Segoe UI'; cM.fillText(s.lampe?'':'', mx+mw/4, my+100);
+ cM.font='12px Segoe UI'; cM.fillStyle=s.lampe?'#ca8a04':'#94a3b8';
+ cM.fillText('lampe '+(s.lampe?'ALLUMÉE':'éteinte'), mx+mw/4, my+124);
+ // chauffage
+ cM.fillStyle=s.chauffage?'#dc2626':'#cbd5e1';
+ cM.fillRect(mx+30,my+mh-46,60,30);
+ for(let k=0;k<4;k++){ cM.fillStyle=s.chauffage?'#fff':'#94a3b8'; cM.fillRect(mx+36+k*14,my+mh-42,5,22); }
+ if(s.chauffage){ cM.font='16px Segoe UI'; SPRITE(cM,'vapeur',mx+60,my+mh-52); }
+ cM.font='12px Segoe UI'; cM.fillStyle=s.chauffage?'#dc2626':'#94a3b8'; cM.textAlign='center';
+ cM.fillText('chauffage '+(s.chauffage?'ON':'off'), mx+60, my+mh+14);
+ // fenêtre chambre + volet
+ const fx=mx+3*mw/4-35, fy=my+60, fw=70, fh=80;
+ cM.fillStyle='#bae6fd'; cM.fillRect(fx,fy,fw,fh);
+ cM.strokeStyle='#78716c'; cM.lineWidth=3; cM.strokeRect(fx,fy,fw,fh);
+ if(s.volet==='fermé'){ cM.fillStyle='#a8a29e'; cM.fillRect(fx,fy,fw,fh);
+ cM.strokeStyle='#78716c'; for(let k=1;k<5;k++){ cM.beginPath(); cM.moveTo(fx,fy+k*fh/5); cM.lineTo(fx+fw,fy+k*fh/5); cM.stroke(); } }
+ cM.font='12px Segoe UI'; cM.fillStyle='#78716c';
+ cM.fillText('volet '+s.volet, fx+fw/2, fy+fh+16);
+ // présence
+ if(e.pres){ cM.font='26px Segoe UI'; SPRITE(cM,'marcheur', mx+mw/4+50, my+mh-30); }
+ // alarme
+ if(s.alarme){ cM.font='24px Segoe UI'; SPRITE(cM,'cloche', mx+mw/2, my-80); }
+ // température affichée
+ cM.font='bold 15px Segoe UI'; cM.fillStyle= e.temp<19 ? '#1d4ed8' : '#dc2626'; cM.textAlign='left';
+ cM.fillText('intérieur : '+e.temp+' °C', 16, H-20);
+ cM.fillStyle='#334155';
+ cM.fillText('extérieur : '+e.lum+' %', 200, H-20);
 }
 function simuler(){
-  Object.assign(sorties, evaluer(env));
-  dessinerMaison(env,sorties);
+ Object.assign(sorties, evaluer(env));
+ dessinerMaison(env,sorties);
 }
 ['eLum','eTemp'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{
-  env.lum=+document.getElementById('eLum').value;
-  env.temp=+document.getElementById('eTemp').value;
-  document.getElementById('vLum').textContent=env.lum+' %';
-  document.getElementById('vTemp').textContent=env.temp+' °C';
-  simuler();
+ env.lum=+document.getElementById('eLum').value;
+ env.temp=+document.getElementById('eTemp').value;
+ document.getElementById('vLum').textContent=env.lum+' %';
+ document.getElementById('vTemp').textContent=env.temp+' °C';
+ simuler();
 }));
 document.getElementById('ePres').addEventListener('input',e=>{ env.pres=e.target.checked; simuler(); });
 
 /* ------- tests automatiques ------- */
 function lancerTests(cas, verdictId, surAct, nMission, pts, doneFlag){
-  const verd=document.getElementById(verdictId);
-  let i=0, reussis=0, lignes=[];
-  function suivant(){
-    if(i>=cas.length){
-      const total=cas.length;
-      if(reussis===total){
-        verd.className='verdict ok';
-        verd.innerHTML='✅ <b>'+reussis+'/'+total+' situations réussies — mission validée !</b><br>'+lignes.join('<br>');
-        if(!window[doneFlag]){ window[doneFlag]=true; reussir(nMission,pts); }
-      } else {
-        verd.className='verdict ko';
-        verd.innerHTML='❌ <b>'+reussis+'/'+total+' situations réussies.</b> Corrige ton programme puis relance le test.<br>'+lignes.join('<br>');
-      }
-      simuler(); return;
-    }
-    const c=cas[i];
-    Object.assign(env,c.env);
-    document.getElementById('eLum').value=env.lum; document.getElementById('eTemp').value=env.temp;
-    document.getElementById('vLum').textContent=env.lum+' %'; document.getElementById('vTemp').textContent=env.temp+' °C';
-    document.getElementById('ePres').checked=!!env.pres;
-    const s=evaluer(env); dessinerMaison(env,s);
-    const ok=Object.entries(c.attendu).every(([k,v])=>s[k]===v);
-    if(ok) reussis++;
-    lignes.push('<span class="cas">'+(ok?'✅':'❌')+' '+c.libelle+'</span>');
-    i++; setTimeout(suivant,650);
-  }
-  verd.className='verdict ok'; verd.innerHTML='🧪 Test en cours…';
-  suivant();
+ const verd=document.getElementById(verdictId);
+ let i=0, reussis=0, lignes=[];
+ function suivant(){
+ if(i>=cas.length){
+ const total=cas.length;
+ if(reussis===total){
+ verd.className='verdict ok';
+ verd.innerHTML='✓ <b>'+reussis+'/'+total+' situations réussies — mission validée !</b><br>'+lignes.join('<br>');
+ if(!window[doneFlag]){ window[doneFlag]=true; reussir(nMission,pts); }
+ } else {
+ verd.className='verdict ko';
+ verd.innerHTML='✗ <b>'+reussis+'/'+total+' situations réussies.</b>Corrige ton programme puis relance le test.<br>'+lignes.join('<br>');
+ }
+ simuler(); return;
+ }
+ const c=cas[i];
+ Object.assign(env,c.env);
+ document.getElementById('eLum').value=env.lum; document.getElementById('eTemp').value=env.temp;
+ document.getElementById('vLum').textContent=env.lum+' %'; document.getElementById('vTemp').textContent=env.temp+' °C';
+ document.getElementById('ePres').checked=!!env.pres;
+ const s=evaluer(env); dessinerMaison(env,s);
+ const ok=Object.entries(c.attendu).every(([k,v])=>s[k]===v);
+ if(ok) reussis++;
+ lignes.push('<span class="cas">'+(ok?'✓':'✗')+' '+c.libelle+'</span>');
+ i++; setTimeout(suivant,650);
+ }
+ verd.className='verdict ok'; verd.innerHTML=' Test en cours…';
+ suivant();
 }
 document.getElementById('test3').onclick=()=>lancerTests([
-  {libelle:'Plein jour (lum. 80 %) → la lampe doit être ÉTEINTE', env:{lum:80,temp:21,pres:false}, attendu:{lampe:false}},
-  {libelle:'Nuit tombée (lum. 15 %) → la lampe doit être ALLUMÉE', env:{lum:15,temp:21,pres:false}, attendu:{lampe:true}},
-  {libelle:'Crépuscule (lum. 29 %) → la lampe doit être ALLUMÉE', env:{lum:29,temp:21,pres:false}, attendu:{lampe:true}},
+ {libelle:'Plein jour (lum. 80 %) → la lampe doit être ÉTEINTE', env:{lum:80,temp:21,pres:false}, attendu:{lampe:false}},
+ {libelle:'Nuit tombée (lum. 15 %) → la lampe doit être ALLUMÉE', env:{lum:15,temp:21,pres:false}, attendu:{lampe:true}},
+ {libelle:'Crépuscule (lum. 29 %) → la lampe doit être ALLUMÉE', env:{lum:29,temp:21,pres:false}, attendu:{lampe:true}},
 ],'verd3','lampe',3,4,'a3fait');
 document.getElementById('test4').onclick=()=>lancerTests([
-  {libelle:'Il fait 15 °C → le chauffage doit être ALLUMÉ', env:{lum:70,temp:15,pres:false}, attendu:{chauffage:true}},
-  {libelle:'Il fait 23 °C → le chauffage doit être ÉTEINT', env:{lum:70,temp:23,pres:false}, attendu:{chauffage:false}},
-  {libelle:'Nuit (lum. 10 %) → le volet doit être FERMÉ', env:{lum:10,temp:21,pres:false}, attendu:{volet:'fermé'}},
-  {libelle:'Plein jour (lum. 85 %) → le volet doit être OUVERT', env:{lum:85,temp:21,pres:false}, attendu:{volet:'ouvert'}},
+ {libelle:'Il fait 15 °C → le chauffage doit être ALLUMÉ', env:{lum:70,temp:15,pres:false}, attendu:{chauffage:true}},
+ {libelle:'Il fait 23 °C → le chauffage doit être ÉTEINT', env:{lum:70,temp:23,pres:false}, attendu:{chauffage:false}},
+ {libelle:'Nuit (lum. 10 %) → le volet doit être FERMÉ', env:{lum:10,temp:21,pres:false}, attendu:{volet:'fermé'}},
+ {libelle:'Plein jour (lum. 85 %) → le volet doit être OUVERT', env:{lum:85,temp:21,pres:false}, attendu:{volet:'ouvert'}},
 ],'verd4',null,4,4,'a4fait');
 
 /* ================= A5 : SCHEMA A LEGENDER ================= */
 (function(){
-  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
-  const ZONES=[
-    {id:'capteur',   x:80,  y:96,  w:90,  h:80,  lbl:'LE CAPTEUR DE MOUVEMENT', tx:125, ty:86},
-    {id:'box',       x:330, y:150, w:110, h:80,  lbl:'LA BOX DOMOTIQUE',        tx:385, ty:140},
-    {id:'actionneur',x:560, y:70,  w:120, h:110, lbl:'LE VOLET MOTORISÉ (ACTIONNEUR)', tx:620, ty:60},
-    {id:'phone',     x:730, y:170, w:80,  h:120, lbl:'LE SMARTPHONE (INTERFACE)', tx:770, ty:160},
-  ];
-  const poses={}; let sel=null, t=0;
-  function dessiner(){
-    t+=0.02;
-    ctx.clearRect(0,0,860,320);
-    // maison
-    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
-    ctx.beginPath(); ctx.moveTo(0,290); ctx.lineTo(860,290); ctx.stroke();
-    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
-    ctx.strokeRect(300,120,400,170);
-    ctx.beginPath(); ctx.moveTo(280,120); ctx.lineTo(500,50); ctx.lineTo(720,120); ctx.stroke();
-    // passant devant la maison
-    const px=60+30*Math.sin(t*0.8);
-    ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
-    ctx.fillText('\ud83d\udeb6',px,270);
-    // capteur PIR sur poteau + cône de détection
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#dc2626'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.roundRect(100,108,44,34,8); ctx.fill(); ctx.stroke();
-    ctx.strokeStyle='#334155'; ctx.beginPath(); ctx.moveTo(122,142); ctx.lineTo(122,290); ctx.stroke();
-    ctx.fillStyle='rgba(220,38,38,'+(0.10+0.08*Math.sin(t*3))+')';
-    ctx.beginPath(); ctx.moveTo(122,142); ctx.lineTo(40,270); ctx.lineTo(200,270); ctx.closePath(); ctx.fill();
-    // box domotique dans la maison
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.roundRect(345,168,80,50,10); ctx.fill(); ctx.stroke();
-    ctx.fillStyle= Math.sin(t*4)>0 ? '#22c55e' : '#14532d';
-    ctx.beginPath(); ctx.arc(362,182,4,0,Math.PI*2); ctx.fill();
-    ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#7c3aed'; ctx.fillText('BOX',385,208);
-    // volet motorisé sur fenêtre (monte/descend)
-    ctx.strokeStyle='#334155'; ctx.lineWidth=2.5; ctx.strokeRect(580,90,80,80);
-    const vh=40+30*Math.sin(t*0.9);
-    ctx.fillStyle='#94a3b8'; ctx.fillRect(582,92,76,vh);
-    for(let l=8;l<vh;l+=9){ ctx.strokeStyle='#64748b'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.moveTo(582,92+l); ctx.lineTo(658,92+l); ctx.stroke(); }
-    ctx.fillStyle='#475569'; ctx.fillRect(596,72,48,16);
-    // smartphone
-    ctx.fillStyle='#0f172a';
-    ctx.beginPath(); ctx.roundRect(742,182,56,100,10); ctx.fill();
-    ctx.fillStyle='#38bdf8'; ctx.fillRect(748,190,44,84);
-    ctx.font='15px Segoe UI'; ctx.fillText('\ud83c\udfe0',770,236);
-    // signal : capteur -> box -> volet, et box <-> phone (wifi)
-    ctx.fillStyle='#ea580c';
-    for(let i=0;i<3;i++){ const p=((t*0.5)+i/3)%1;
-      if(p<0.5){ const u=p/0.5; ctx.beginPath(); ctx.arc(144+u*(345-144),140+u*50,4,0,Math.PI*2); ctx.fill(); }
-      else { const u=(p-0.5)/0.5; ctx.beginPath(); ctx.arc(425+u*(596-425),190-u*100,4,0,Math.PI*2); ctx.fill(); } }
-    const w=(t*0.9)%1;
-    ctx.strokeStyle='rgba(124,58,237,'+(1-w)+')'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.arc(425,193,8+w*30,-0.6,0.6); ctx.stroke();
-    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
-    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  const bar=document.getElementById('etiq5');
-  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
-    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
-    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
-      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
-    bar.appendChild(b);
-  });
-  cv.addEventListener('click',e=>{
-    if(!sel) return;
-    const r=cv.getBoundingClientRect();
-    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
-    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
-    const verd=document.getElementById('verd5');
-    if(cible && cible.id===sel){
-      poses[sel]=true;
-      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
-      sel=null;
-      if(Object.keys(poses).length===ZONES.length){
-        verd.innerHTML='<div class="verdict ok">✅ Chaîne d\u2019information complète ! Le CAPTEUR détecte (ACQUÉRIR), la BOX décide (TRAITER), le VOLET MOTORISÉ agit (l\u2019actionneur, côté chaîne d\u2019ÉNERGIE), et le SMARTPHONE te tient informé (RESTITUER). Suis les points orange : c\u2019est le trajet de l\u2019information — le même que dans l\u2019ascenseur, le tram ou la station météo ! (+3 pts)</div>';
-        reussir(5,3);
-      }
-    } else if(cible){
-      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : le capteur voit le passant (cône rouge), la box a la LED verte qui clignote (c\u2019est le cerveau), l\u2019actionneur est ce qui BOUGE (le volet), et l\u2019interface tient dans la main…</div>';
-    }
-  });
+ const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+ const ZONES=[
+ {id:'capteur', x:80, y:96, w:90, h:80, lbl:'LE CAPTEUR DE MOUVEMENT', tx:125, ty:86},
+ {id:'box', x:330, y:150, w:110, h:80, lbl:'LA BOX DOMOTIQUE', tx:385, ty:140},
+ {id:'actionneur',x:560, y:70, w:120, h:110, lbl:'LE VOLET MOTORISÉ (ACTIONNEUR)', tx:620, ty:60},
+ {id:'phone', x:730, y:170, w:80, h:120, lbl:'LE SMARTPHONE (INTERFACE)', tx:770, ty:160},
+ ];
+ const poses={}; let sel=null, t=0;
+ function dessiner(){
+ t+=0.02;
+ ctx.clearRect(0,0,860,320);
+ // maison
+ ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+ ctx.beginPath(); ctx.moveTo(0,290); ctx.lineTo(860,290); ctx.stroke();
+ ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+ ctx.strokeRect(300,120,400,170);
+ ctx.beginPath(); ctx.moveTo(280,120); ctx.lineTo(500,50); ctx.lineTo(720,120); ctx.stroke();
+ // passant devant la maison
+ const px=60+30*Math.sin(t*0.8);
+ ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+ ctx.fillText('\ud83d\udeb6',px,270);
+ // capteur PIR sur poteau + cône de détection
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#dc2626'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.roundRect(100,108,44,34,8); ctx.fill(); ctx.stroke();
+ ctx.strokeStyle='#334155'; ctx.beginPath(); ctx.moveTo(122,142); ctx.lineTo(122,290); ctx.stroke();
+ ctx.fillStyle='rgba(220,38,38,'+(0.10+0.08*Math.sin(t*3))+')';
+ ctx.beginPath(); ctx.moveTo(122,142); ctx.lineTo(40,270); ctx.lineTo(200,270); ctx.closePath(); ctx.fill();
+ // box domotique dans la maison
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.roundRect(345,168,80,50,10); ctx.fill(); ctx.stroke();
+ ctx.fillStyle= Math.sin(t*4)>0 ? '#22c55e' : '#14532d';
+ ctx.beginPath(); ctx.arc(362,182,4,0,Math.PI*2); ctx.fill();
+ ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#7c3aed'; ctx.fillText('BOX',385,208);
+ // volet motorisé sur fenêtre (monte/descend)
+ ctx.strokeStyle='#334155'; ctx.lineWidth=2.5; ctx.strokeRect(580,90,80,80);
+ const vh=40+30*Math.sin(t*0.9);
+ ctx.fillStyle='#94a3b8'; ctx.fillRect(582,92,76,vh);
+ for(let l=8;l<vh;l+=9){ ctx.strokeStyle='#64748b'; ctx.lineWidth=1;
+ ctx.beginPath(); ctx.moveTo(582,92+l); ctx.lineTo(658,92+l); ctx.stroke(); }
+ ctx.fillStyle='#475569'; ctx.fillRect(596,72,48,16);
+ // smartphone
+ ctx.fillStyle='#0f172a';
+ ctx.beginPath(); ctx.roundRect(742,182,56,100,10); ctx.fill();
+ ctx.fillStyle='#38bdf8'; ctx.fillRect(748,190,44,84);
+ ctx.font='15px Segoe UI'; ctx.fillText('\ud83c\udfe0',770,236);
+ // signal : capteur ->box ->volet, et box <->phone (wifi)
+ ctx.fillStyle='#ea580c';
+ for(let i=0;i<3;i++){ const p=((t*0.5)+i/3)%1;
+ if(p<0.5){ const u=p/0.5; ctx.beginPath(); ctx.arc(144+u*(345-144),140+u*50,4,0,Math.PI*2); ctx.fill(); }
+ else { const u=(p-0.5)/0.5; ctx.beginPath(); ctx.arc(425+u*(596-425),190-u*100,4,0,Math.PI*2); ctx.fill(); } }
+ const w=(t*0.9)%1;
+ ctx.strokeStyle='rgba(124,58,237,'+(1-w)+')'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.arc(425,193,8+w*30,-0.6,0.6); ctx.stroke();
+ ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+ ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ const bar=document.getElementById('etiq5');
+ ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+ const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+ b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+ bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+ bar.appendChild(b);
+ });
+ cv.addEventListener('click',e=>{
+ if(!sel) return;
+ const r=cv.getBoundingClientRect();
+ const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+ const cible=ZONES.find(z=>x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+ const verd=document.getElementById('verd5');
+ if(cible && cible.id===sel){
+ poses[sel]=true;
+ const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+ sel=null;
+ if(Object.keys(poses).length===ZONES.length){
+ verd.innerHTML='<div class="verdict ok">✓ Chaîne d\u2019information complète ! Le CAPTEUR détecte (ACQUÉRIR), la BOX décide (TRAITER), le VOLET MOTORISÉ agit (l\u2019actionneur, côté chaîne d\u2019ÉNERGIE), et le SMARTPHONE te tient informé (RESTITUER). Suis les points orange : c\u2019est le trajet de l\u2019information — le même que dans l\u2019ascenseur, le tram ou la station météo ! (+3 pts)</div>';
+ reussir(5, err5===0?3:(err5<=2?2:1));
+ }
+ } else if(cible){
+ err5++;
+ verd.innerHTML='<div class="verdict ko">✗ Pas là ! Indice : le capteur voit le passant (cône rouge), la box a la LED verte qui clignote (c\u2019est le cerveau), l\u2019actionneur est ce qui BOUGE (le volet), et l\u2019interface tient dans la main…</div>';
+ }
+ });
 })();
 
 /* ================= A6 : MANIPULATION AU CURSEUR ================= */
 (function(){
-  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
-  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
-  const SCEN=[
-    {min:18, max:20,
-     ok:'\u2705 18-20 °C : le confort est là et la facture reste douce. Chaque degré au-dessus de 19 °C, c\u2019est \u2248 7 % de consommation en plus — le thermostat programmable qui baisse la nuit, c\u2019est LE geste domotique qui rapporte ! (+4 pts)',
-     kobas:'\u274c Brrr\u2026 regarde la jauge confort : à cette consigne on dort avec trois couettes et la maison devient humide. Remonte un peu\u2026',
-     kohaut:'\u274c Tropical ! Regarde la facture s\u2019envoler : chaque degré au-dessus de 19 °C coûte \u2248 7 % de plus. La nuit, on dort MIEUX un peu plus frais\u2026 Redescends.'}
-  ];
-  let etape=0, t=0, valide=false;
-  function dessiner(){
-    t+=0.03;
-    ctx.clearRect(0,0,860,280);
-    const v=+slider.value;
-    const sc=SCEN[Math.min(etape,SCEN.length-1)];
-    // maison en coupe + radiateur
-    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
-    ctx.strokeRect(90,80,260,150);
-    ctx.beginPath(); ctx.moveTo(70,80); ctx.lineTo(220,26); ctx.lineTo(370,80); ctx.stroke();
-    ctx.font='24px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
-    ctx.fillText('\ud83d\udecc',170,180);
-    // radiateur dont l'intensité suit la consigne
-    const chauffe=(v-12)/14;
-    ctx.fillStyle='rgba(234,88,12,'+(0.25+0.6*chauffe)+')';
-    ctx.fillRect(280,150,50,70);
-    ctx.strokeStyle='#ea580c'; ctx.lineWidth=2;
-    for(let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(288+i*12,150); ctx.lineTo(288+i*12,220); ctx.stroke(); }
-    for(let i=0;i<3;i++){ const p=((t*0.5)+i/3)%1;
-      ctx.strokeStyle='rgba(234,88,12,'+(1-p)*(0.3+0.5*chauffe)+')';
-      ctx.beginPath(); ctx.arc(305,140-p*46,7,Math.PI*0.2,Math.PI*0.8); ctx.stroke(); }
-    // dehors
-    ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#0e7490';
-    ctx.fillText('\u2744\ufe0f dehors : \u22122 \u00b0C',170,262);
-    ctx.fillStyle='#334155'; ctx.font='bold 16px Segoe UI';
-    ctx.fillText('consigne : '+v+' \u00b0C',220,60);
-    // jauge confort (cloche autour de 19)
-    const conf=Math.max(0,1-Math.abs(v-19)/6);
-    ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#334155';
-    ctx.fillText('CONFORT',560,70);
-    ctx.fillStyle='#e2e8f0'; ctx.fillRect(470,80,180,16);
-    ctx.fillStyle= (v>=18&&v<=20) ? '#16a34a' : '#f59e0b';
-    ctx.fillRect(470,80,180*conf,16);
-    if(v<16){ ctx.font='15px Segoe UI'; ctx.fillText('\ud83e\udd76',668,94); }
-    // jauge facture (croît fort au-delà de 19)
-    const fact=Math.min(1,Math.max(0.1,(v-12)/14 + Math.max(0,v-19)*0.08));
-    ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
-    ctx.fillText('FACTURE DE CHAUFFAGE',560,140);
-    ctx.fillStyle='#e2e8f0'; ctx.fillRect(470,150,180,16);
-    ctx.fillStyle= v>20 ? '#dc2626' : '#16a34a';
-    ctx.fillRect(470,150,180*fact,16);
-    if(v>22){ ctx.font='15px Segoe UI'; ctx.fillText('\ud83d\udcb8',668,164); }
-    ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
-    ctx.fillText('+1 \u00b0C au-dessus de 19 \u2248 +7 % de consommation',560,210);
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
-  document.getElementById('verif6').addEventListener('click',()=>{
-    if(valide) return;
-    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
-    if(v>=sc.min && v<=sc.max){
-      etape++;
-      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
-      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
-    } else {
-      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
-    }
-  });
+ const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+ const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+ const SCEN=[
+ {min:18, max:20,
+ ok:'\u2705 18-20 °C : le confort est là et la facture reste douce. Chaque degré au-dessus de 19 °C, c\u2019est \u2248 7 % de consommation en plus — le thermostat programmable qui baisse la nuit, c\u2019est LE geste domotique qui rapporte ! (+4 pts)',
+ kobas:'\u274c Brrr\u2026 regarde la jauge confort : à cette consigne on dort avec trois couettes et la maison devient humide. Remonte un peu\u2026',
+ kohaut:'\u274c Tropical ! Regarde la facture s\u2019envoler : chaque degré au-dessus de 19 °C coûte \u2248 7 % de plus. La nuit, on dort MIEUX un peu plus frais\u2026 Redescends.'}
+ ];
+ let etape=0, t=0, valide=false;
+ function dessiner(){
+ t+=0.03;
+ ctx.clearRect(0,0,860,280);
+ const v=+slider.value;
+ const sc=SCEN[Math.min(etape,SCEN.length-1)];
+ // maison en coupe + radiateur
+ ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+ ctx.strokeRect(90,80,260,150);
+ ctx.beginPath(); ctx.moveTo(70,80); ctx.lineTo(220,26); ctx.lineTo(370,80); ctx.stroke();
+ ctx.font='24px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+ ctx.fillText('\ud83d\udecc',170,180);
+ // radiateur dont l'intensité suit la consigne
+ const chauffe=(v-12)/14;
+ ctx.fillStyle='rgba(234,88,12,'+(0.25+0.6*chauffe)+')';
+ ctx.fillRect(280,150,50,70);
+ ctx.strokeStyle='#ea580c'; ctx.lineWidth=2;
+ for(let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(288+i*12,150); ctx.lineTo(288+i*12,220); ctx.stroke(); }
+ for(let i=0;i<3;i++){ const p=((t*0.5)+i/3)%1;
+ ctx.strokeStyle='rgba(234,88,12,'+(1-p)*(0.3+0.5*chauffe)+')';
+ ctx.beginPath(); ctx.arc(305,140-p*46,7,Math.PI*0.2,Math.PI*0.8); ctx.stroke(); }
+ // dehors
+ ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#0e7490';
+ ctx.fillText('\u2744\ufe0f dehors : \u22122 \u00b0C',170,262);
+ ctx.fillStyle='#334155'; ctx.font='bold 16px Segoe UI';
+ ctx.fillText('consigne : '+v+' \u00b0C',220,60);
+ // jauge confort (cloche autour de 19)
+ const conf=Math.max(0,1-Math.abs(v-19)/6);
+ ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#334155';
+ ctx.fillText('CONFORT',560,70);
+ ctx.fillStyle='#e2e8f0'; ctx.fillRect(470,80,180,16);
+ ctx.fillStyle= (v>=18&&v<=20) ? '#16a34a' : '#f59e0b';
+ ctx.fillRect(470,80,180*conf,16);
+ if(v<16){ ctx.font='15px Segoe UI'; ctx.fillText('\ud83e\udd76',668,94); }
+ // jauge facture (croît fort au-delà de 19)
+ const fact=Math.min(1,Math.max(0.1,(v-12)/14 + Math.max(0,v-19)*0.08));
+ ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+ ctx.fillText('FACTURE DE CHAUFFAGE',560,140);
+ ctx.fillStyle='#e2e8f0'; ctx.fillRect(470,150,180,16);
+ ctx.fillStyle= v>20 ? '#dc2626' : '#16a34a';
+ ctx.fillRect(470,150,180*fact,16);
+ if(v>22){ ctx.font='15px Segoe UI'; ctx.fillText('\ud83d\udcb8',668,164); }
+ ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
+ ctx.fillText('+1 \u00b0C au-dessus de 19 \u2248 +7 % de consommation',560,210);
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+ document.getElementById('verif6').addEventListener('click',()=>{
+ essais6++;
+ if(valide) return;
+ const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+ if(v>=sc.min && v<=sc.max){
+ etape++;
+ if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6, essais6<=SCEN.length?4:(essais6<=SCEN.length+2?3:2)); }
+ else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+ } else {
+ verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+ }
+ });
 })();
 
 /* ================= A7 : BILAN ================= */
@@ -655,35 +968,143 @@ const Q5=[
  {q:"La chaîne d'énergie, dans l'ordre :", r:["Alimenter → Distribuer → Convertir → Transmettre","Convertir → Alimenter → Transmettre → Distribuer","Acquérir → Traiter → Communiquer → Agir"], b:0},
 ];
 (function initQ5(){
-  const zone=document.getElementById('quiz5');
-  Q5.forEach((item,i)=>{
-    const d=document.createElement('div'); d.className='question';
-    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
-    const rep=d.querySelector('.rep');
-    item.r.forEach((r,k)=>{
-      const b=document.createElement('button'); b.textContent=r;
-      b.onclick=()=>{
-        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
-        etat.q5rep++;
-        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
-        if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
-          else{
-            const verd=document.createElement('div'); verd.className='verdict ko';
-            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
-            zone.appendChild(verd);
-          }
-        }
-      };
-      rep.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('quiz5');
+ let tentative=0, reponses={};
+ function melanger(t){ return t.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
+ function construire(){
+ reponses={};
+ zone.innerHTML='';
+ const ordre=melanger(Q5.map((q,i)=>i));
+ ordre.forEach((qi,rang)=>{
+ const item=Q5[qi];
+ const d=document.createElement('div'); d.className='question';
+ d.innerHTML='<div class="q">'+(rang+1)+'. '+item.q+'</div><div class="rep"></div>';
+ const rep=d.querySelector('.rep');
+ melanger(item.r.map((txt,k)=>({txt,k}))).forEach(o=>{
+ const b=document.createElement('button'); b.textContent=o.txt;
+ b.onclick=()=>{
+ rep.querySelectorAll('button').forEach(x=>x.classList.remove('choisi'));
+ b.classList.add('choisi');
+ reponses[qi]=o.k;
+ const n=Object.keys(reponses).length;
+ info.textContent = n<Q5.length
+ ? n+' réponse(s) sur '+Q5.length+' — aucune correction avant la validation.'
+ : 'Toutes les questions sont renseignées : tu peux valider.';
+ btn.disabled = n<Q5.length;
+ };
+ rep.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
+ zone.appendChild(barre);
+ btn.disabled=true;
+ info.textContent='Réponds aux '+Q5.length+' questions, puis valide. Aucune réponse ne sera corrigée avant.';
+ }
+ const barre=document.createElement('div');
+ const info=document.createElement('div'); info.className='verdict'; info.style.marginTop='10px';
+ const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Valider mes 4 réponses';
+ btn.style.marginTop='10px';
+ const sortie=document.createElement('div');
+ barre.appendChild(info); barre.appendChild(btn); barre.appendChild(sortie);
+ btn.onclick=()=>{
+ tentative++;
+ let bons=0;
+ Q5.forEach((item,i)=>{ if(reponses[i]===item.b) bons++; });
+ if(bons>=3){
+ etat.q5ok=bons; etat.score+=bons;
+ document.getElementById('scoreTot').textContent=etat.score;
+ zone.querySelectorAll('button').forEach(x=>x.disabled=true);
+ sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
+ ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
+ document.getElementById('codefinal').style.display='block';
+ reussir(7, tentative===1?2:(tentative===2?1:0));
+ } else {
+ sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
+ ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
+ 'Les questions seront remélangées.</div>';
+ setTimeout(()=>{ construire(); sortie.innerHTML=''; },2600);
+ }
+ };
+ construire();
 })();
 
 ajouterRegle(); // une règle de départ pour guider
 charger(); majProgression(); simuler();
+</script>
+
+<button id="calcBtn" title="Ouvrir la calculatrice"><span class="ic">C</span>calcul</button>
+<div id="calcPan">
+ <div class="tete" id="calcTete"><b>CALCULATRICE</b><button id="calcX" title="Fermer">&times;</button></div>
+ <div id="calcEcr"><div class="op" id="calcOp"></div><div class="val" id="calcVal">0</div></div>
+ <div id="calcGr">
+ <button class="f" data-k="C">C</button><button class="f" data-k="back">&#9003;</button>
+ <button class="f" data-k="pct">%</button><button class="op" data-k="/">&divide;</button>
+ <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+ <button class="op" data-k="*">&times;</button>
+ <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+ <button class="op" data-k="-">&minus;</button>
+ <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+ <button class="op" data-k="+">+</button>
+ <button class="f" data-k="sign">+/&minus;</button><button data-k="0">0</button>
+ <button data-k=".">,</button><button class="eq" data-k="=">=</button>
+ </div>
+</div>
+<script>
+/* ===== Calculatrice (aucun eval, aucune dépendance) ===== */
+(function(){
+ var pan=document.getElementById('calcPan'), btn=document.getElementById('calcBtn');
+ var eVal=document.getElementById('calcVal'), eOp=document.getElementById('calcOp');
+ var cour='0', prec=null, oper=null, neuf=true;
+ function aff(){
+ eVal.textContent=String(cour).replace('.',',');
+ eOp.textContent=(prec!==null?String(prec).replace('.',',')+' '+({'+':'+','-':'\u2212','*':'\u00d7','/':'\u00f7'}[oper]||''):'');
+ }
+ function calcule(a,b,o){
+ a=parseFloat(a); b=parseFloat(b);
+ var r = o==='+'?a+b : o==='-'?a-b : o==='*'?a*b : (b===0?NaN:a/b);
+ if(!isFinite(r)) return 'Erreur';
+ return String(Math.round(r*1e10)/1e10);
+ }
+ function touche(k){
+ if(cour==='Erreur' && k!=='C'){ return; }
+ if(/^[0-9]$/.test(k)){ cour = (neuf||cour==='0') ? k : cour+k; neuf=false; }
+ else if(k==='.'){ if(neuf){ cour='0.'; neuf=false; } else if(cour.indexOf('.')<0) cour+='.'; }
+ else if(k==='C'){ cour='0'; prec=null; oper=null; neuf=true; }
+ else if(k==='back'){ cour = (cour.length>1) ? cour.slice(0,-1) : '0'; if(cour==='-')cour='0'; }
+ else if(k==='sign'){ cour = cour.charAt(0)==='-' ? cour.slice(1) : (cour==='0'?cour:'-'+cour); }
+ else if(k==='pct'){ cour=String(parseFloat(cour)/100); neuf=true; }
+ else if(k==='+'||k==='-'||k==='*'||k==='/'){
+ if(prec!==null && !neuf){ cour=calcule(prec,cour,oper); }
+ prec=cour; oper=k; neuf=true;
+ }
+ else if(k==='='){
+ if(prec!==null && oper){ cour=calcule(prec,cour,oper); prec=null; oper=null; neuf=true; }
+ }
+ aff();
+ }
+ document.getElementById('calcGr').addEventListener('click',function(ev){
+ var b=ev.target.closest('button'); if(!b)return; touche(b.dataset.k);
+ });
+ btn.addEventListener('click',function(){ pan.classList.toggle('on'); });
+ document.getElementById('calcX').addEventListener('click',function(){ pan.classList.remove('on'); });
+ /* déplacement du panneau */
+ var tete=document.getElementById('calcTete'), drag=false, dx=0, dy=0;
+ tete.addEventListener('pointerdown',function(e){
+ if(e.target.id==='calcX')return;
+ drag=true; var r=pan.getBoundingClientRect();
+ dx=e.clientX-r.left; dy=e.clientY-r.top;
+ pan.style.right='auto'; pan.style.bottom='auto';
+ pan.style.left=r.left+'px'; pan.style.top=r.top+'px';
+ try{ tete.setPointerCapture(e.pointerId); }catch(err){}
+ });
+ tete.addEventListener('pointermove',function(e){
+ if(!drag)return;
+ pan.style.left=Math.max(4,Math.min(window.innerWidth-244,e.clientX-dx))+'px';
+ pan.style.top=Math.max(4,Math.min(window.innerHeight-260,e.clientY-dy))+'px';
+ });
+ tete.addEventListener('pointerup',function(){ drag=false; });
+ aff();
+})();
 </script>
 </body>
 </html>

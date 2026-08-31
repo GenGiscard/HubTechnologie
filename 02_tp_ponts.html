@@ -6,9 +6,9 @@
 <title>TP 5ème — Simulateur de pont · ESTIC</title>
 <style>
 :root{
-  --ink:#1e3a5f; --bleu:#1d4ed8; --bleu-fonce:#1e40af; --cyan:#0e7490; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
-  --ombre:0 4px 14px rgba(30,58,95,.10);
+ --ink:#1e3a5f; --bleu:#1d4ed8; --bleu-fonce:#1e40af; --cyan:#0e7490; --orange:#ea580c;
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
+ --ombre:0 4px 14px rgba(30,58,95,.10);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
@@ -78,230 +78,547 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 .codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
 .codefinal a{color:#fde68a;font-weight:800}
 @media (max-width:760px){.simu{grid-template-columns:1fr}}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:60px;height:60px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:12px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;font-size:19px;letter-spacing:1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+.rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
 </style>
 </head>
 <body>
 
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
 <header class="tp">
-  <h1>🌉 TP — Ingénieur des ponts</h1>
-  <p>7 missions progressives. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Bâtisseur Fou</b> !</p>
+ <h1>TP — Ingénieur des ponts</h1>
+<div id="blocObj" style="background:#fff;border:1px solid #e9e2d4;border-left:6px solid #0e7490;border-radius:16px;padding:15px 19px;margin:14px 0;font-size:14.5px;line-height:1.7">
+<div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#8a8378;margin-bottom:6px">OBJECTIFS DE CE TP</div>
+<ul style="margin:0 0 12px 20px;line-height:1.8"><li>Nommer les trois efforts subis par une structure : compression, traction, flexion.</li><li>Expliquer pourquoi une structure triangulée ne se déforme pas.</li><li>Choisir un type de pont adapté à une portée donnée et le justifier.</li></ul>
+<div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#8a8378;margin-bottom:4px">COMPÉTENCES TRAVAILLÉES — BO n° 9 du 29 février 2024</div>
+<table style="width:100%;border-collapse:collapse;font-size:14px"><tr><td style="white-space:nowrap;font-weight:800;color:#155e75;padding:5px 9px;border-bottom:1px solid #e9e2d4">T2 · C4</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Décrire et caractériser l’organisation interne d’un objet ou d’un système technique et ses échanges avec son environnement (énergies, données)</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#155e75;padding:5px 9px;border-bottom:1px solid #e9e2d4">T1 · C3</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Caractériser et choisir un objet ou un système technique selon différents critères</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#155e75;padding:5px 9px;border-bottom:1px solid #e9e2d4">T3 · C8</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Valider les solutions techniques par des simulations ou par des protocoles de tests</td></tr></table>
+<div style="margin-top:9px;font-size:13.5px;color:#5b544a"><b>Repère de progressivité :</b> 5e — Associer des solutions techniques à des fonctions techniques ; identifier les principaux matériaux et leurs propriétés.</div>
+</div> <p>7 missions progressives. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Bâtisseur Fou</b> !</p>
 </header>
 
 <div class="progression" id="prog">
-  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
-  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+ <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ======================= A1 : QUIZ EFFORTS ======================= -->
 <div class="acti" id="a1">
  <div class="boite">
-  <h2><span class="badge">1</span>Reconnaître les efforts</h2>
-  <div class="consigne">Pour chaque situation, indique quel effort subit la pièce <b>en rouge</b>. (1 pt par bonne réponse du premier coup)</div>
-  <div id="quiz1"></div>
+ <h2><span class="badge">1</span>Reconnaître les efforts</h2>
+ <div class="consigne">Pour chaque situation, indique quel effort subit la pièce <b>en rouge</b>. <b>Attention : une seule tentative par question</b> — lis bien avant de cliquer ! (1 pt par bonne réponse)</div>
+ <div id="quiz1"></div>
  </div>
 </div>
 
 <!-- ======================= A2 : SIMULATEUR POUTRE ======================= -->
 <div class="acti" id="a2">
  <div class="boite">
-  <h2><span class="badge">2</span>Simulateur de poutre</h2>
-  <div class="consigne">Un camion de 40 t doit traverser. Règle la <b>portée</b>, le <b>matériau</b> et la <b>hauteur de poutre</b> pour que la flèche (déformation) reste sous la limite.
-  <span class="mission">🎯 Mission : réussir une traversée avec une portée d'<b>au moins 30 m</b>.</span></div>
-  <div class="simu">
-    <div class="commandes">
-      <label>Portée (longueur) : <span class="val" id="v2L">20 m</span></label>
-      <input type="range" id="s2L" min="10" max="40" value="20" step="1">
-      <label>Matériau du tablier</label>
-      <select id="s2M">
-        <option value="1">🪵 Bois (souple)</option>
-        <option value="10">🏗️ Béton armé (rigide)</option>
-        <option value="20">⛓️ Acier (très rigide)</option>
-      </select>
-      <label>Hauteur de la poutre : <span class="val" id="v2H">1,0 m</span></label>
-      <input type="range" id="s2H" min="0.3" max="2" value="1" step="0.1">
-      <div class="info">Flèche maximale autorisée = portée ÷ 200.<br>Astuce d'ingénieur : doubler la hauteur divise la flèche par 8 !</div>
-      <div class="btnrow"><button class="btn" id="btn2">🚚 Lancer le camion</button></div>
-      <div class="jauge"><div id="jauge2"></div></div>
-    </div>
-    <div>
-      <canvas class="simcv" id="cv2" width="640" height="330"></canvas>
-      <div class="verdict" id="verd2"></div>
-    </div>
-  </div>
+ <h2><span class="badge">2</span>Simulateur de poutre</h2>
+ <div class="consigne">Un camion de 40 t doit traverser. Règle la <b>portée</b>, le <b>matériau</b>et la <b>hauteur de poutre</b>pour que la flèche (déformation) reste sous la limite.
+ <span class="mission">Mission : réussir une traversée avec une portée d'<b>au moins 30 m</b>.</span></div>
+ <div class="simu">
+ <div class="commandes">
+ <label>Portée (longueur) : <span class="val" id="v2L">20 m</span></label>
+ <input type="range" id="s2L" min="10" max="40" value="20" step="1">
+ <label>Matériau du tablier</label>
+ <select id="s2M">
+ <option value="1">Bois (souple)</option>
+ <option value="10">Béton armé (rigide)</option>
+ <option value="20">Acier (très rigide)</option>
+ </select>
+ <label>Hauteur de la poutre : <span class="val" id="v2H">1,0 m</span></label>
+ <input type="range" id="s2H" min="0.3" max="2" value="1" step="0.1">
+ <div class="info">Flèche maximale autorisée = portée ÷ 200.<br>Astuce d'ingénieur : doubler la hauteur divise la flèche par 8 !</div>
+ <div class="btnrow"><button class="btn" id="btn2">Lancer le camion</button></div>
+ <div class="jauge"><div id="jauge2"></div></div>
+ </div>
+ <div>
+ <canvas class="simcv" id="cv2" width="640" height="330"></canvas>
+ <div class="verdict" id="verd2"></div>
+ </div>
+ </div>
  </div>
 </div>
 
 <!-- ======================= A3 : TRIANGULATION ======================= -->
 <div class="acti" id="a3">
  <div class="boite">
-  <h2><span class="badge">3</span>Rigidifier la tour de grue</h2>
-  <div class="consigne">Cette tour de grue est faite de 3 caissons carrés articulés : au moindre coup de vent, elle se déforme !
-  <b>Clique sur un caisson</b> pour y ajouter une barre diagonale (3 barres disponibles), puis lance le test du vent.</div>
-  <div class="simu">
-    <div class="commandes">
-      <div class="info" style="font-size:13.5px">Barres diagonales posées : <b id="nbDiag">0</b> / 3</div>
-      <div class="btnrow">
-        <button class="btn orange" id="btn3">🌬️ Tester le vent</button>
-        <button class="btn" id="reset3" style="background:#64748b">↺ Retirer les barres</button>
-      </div>
-      <div class="info" style="margin-top:12px">Rappel du cours : la seule figure indéformable est le <b>triangle</b>.</div>
-    </div>
-    <div>
-      <canvas class="simcv" id="cv3" width="640" height="360"></canvas>
-      <div class="verdict" id="verd3"></div>
-    </div>
-  </div>
+ <h2><span class="badge">3</span>Rigidifier la tour de grue</h2>
+ <div class="consigne">Cette tour de grue est faite de 3 caissons carrés articulés : au moindre coup de vent, elle se déforme !
+ <b>Clique sur un caisson</b>pour y ajouter une barre diagonale (3 barres disponibles), puis lance le test du vent.</div>
+ <div class="simu">
+ <div class="commandes">
+ <div class="info" style="font-size:13.5px">Barres diagonales posées : <b id="nbDiag">0</b> / 3</div>
+ <div class="btnrow">
+ <button class="btn orange" id="btn3">Tester le vent</button>
+ <button class="btn" id="reset3" style="background:#64748b">↺ Retirer les barres</button>
+ </div>
+ <div class="info" style="margin-top:12px">Rappel du cours : la seule figure indéformable est le <b>triangle</b>.</div>
+ </div>
+ <div>
+ <canvas class="simcv" id="cv3" width="640" height="360"></canvas>
+ <div class="verdict" id="verd3"></div>
+ </div>
+ </div>
  </div>
 </div>
 
 <!-- ======================= A4 : PONT COMPLET ======================= -->
 <div class="acti" id="a4">
  <div class="boite">
-  <h2><span class="badge">4</span>Franchir la gorge du Diable</h2>
-  <div class="consigne">Une gorge de <b>120 m</b> de large, très profonde (les piles coûtent cher !). Budget : <b>100 k€</b>.
-  Choisis le type de pont, le matériau et le nombre de piles, puis teste. <span class="mission">🎯 Il existe plusieurs solutions… trouve la plus économique pour gagner 3 étoiles !</span></div>
-  <div class="simu">
-    <div class="commandes">
-      <label>Type de pont</label>
-      <select id="s4T">
-        <option value="poutre">Pont poutre (20 k€)</option>
-        <option value="arc">Pont en arc (35 k€)</option>
-        <option value="suspendu">Pont suspendu (55 k€)</option>
-      </select>
-      <label>Matériau principal</label>
-      <select id="s4M">
-        <option value="bois">🪵 Bois (coût ×0,8)</option>
-        <option value="ba">🏗️ Béton armé (coût ×1)</option>
-        <option value="acier">⛓️ Acier (coût ×1,3)</option>
-      </select>
-      <label>Nombre de piles : <span class="val" id="v4P">0</span> (25 k€ / pile)</label>
-      <input type="range" id="s4P" min="0" max="2" value="0" step="1">
-      <div class="info">Coût total : <b id="cout4">16 k€</b> / 100 k€</div>
-      <div class="btnrow"><button class="btn" id="btn4">🚚 Tester le pont</button></div>
-    </div>
-    <div>
-      <canvas class="simcv" id="cv4" width="640" height="340"></canvas>
-      <div class="verdict" id="verd4"></div>
-    </div>
-  </div>
+ <h2><span class="badge">4</span>Franchir la gorge du Diable</h2>
+ <div class="consigne">Une gorge de <b>120 m</b>de large, très profonde (les piles coûtent cher !). Budget : <b>100 k€</b>.
+ Choisis le type de pont, le matériau et le nombre de piles, puis teste. <span class="mission">Il existe plusieurs solutions… trouve la plus économique pour gagner 3 étoiles !</span></div>
+ <div class="simu">
+ <div class="commandes">
+ <label>Type de pont</label>
+ <select id="s4T">
+ <option value="poutre">Pont poutre (20 k€)</option>
+ <option value="arc">Pont en arc (35 k€)</option>
+ <option value="suspendu">Pont suspendu (55 k€)</option>
+ </select>
+ <label>Matériau principal</label>
+ <select id="s4M">
+ <option value="bois">Bois (coût ×0,8)</option>
+ <option value="ba">Béton armé (coût ×1)</option>
+ <option value="acier">Acier (coût ×1,3)</option>
+ </select>
+ <label>Nombre de piles : <span class="val" id="v4P">0</span> (25 k€ / pile)</label>
+ <input type="range" id="s4P" min="0" max="2" value="0" step="1">
+ <div class="info">Coût total : <b id="cout4">16 k€</b> / 100 k€</div>
+ <div class="btnrow"><button class="btn" id="btn4">Tester le pont</button></div>
+ </div>
+ <div>
+ <canvas class="simcv" id="cv4" width="640" height="340"></canvas>
+ <div class="verdict" id="verd4"></div>
+ </div>
+ </div>
  </div>
 </div>
 
 <!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Le schéma du pont à haubans</h2>
-  <div class="consigne">🗺️ Un pont à haubans en service — regarde la voiture le traverser ! Clique une étiquette, puis l'élément du pont correspondant. Place les 4 étiquettes.</div>
-  <canvas class="canvatp" id="cv5" width="860" height="330"></canvas>
-  <div class="etiqbar" id="etiq5"></div>
-  <div id="verd5"></div>
+ <h2><span class="badge">5</span>Le schéma du pont à haubans</h2>
+ <div class="consigne"><b>Chaque erreur coûte des points.</b>Un pont à haubans en service — regarde la voiture le traverser ! Clique une étiquette, puis l'élément du pont correspondant. Place les 4 étiquettes.</div>
+ <canvas class="canvatp" id="cv5" width="860" height="330"></canvas>
+ <div class="etiqbar" id="etiq5"></div>
+ <div id="verd5"></div>
  </div>
 </div>
 
 <!-- ============ A6 : MANIPULATION ============ -->
 <div class="acti" id="a6">
  <div class="boite">
-  <h2><span class="badge">6</span>Dimensionne la poutre</h2>
-  <div class="consigne">🎛️ Une poutre de 20 m de portée, un camion au milieu. Règle sa hauteur avec le curseur : observe la FLÈCHE (elle plie !) et la jauge coût/matière. Trouve le juste dimensionnement.</div>
-  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
-  <div class="sliderrow">
-    <span>📏 Hauteur de la poutre :</span>
-    <input type="range" id="slider6" min="20" max="120" step="5" value="30">
-    <span class="val"><span id="val6">30</span> cm</span>
-    <button class="btn" id="verif6">✔ Valider ce réglage</button>
-  </div>
-  <div id="verd6"></div>
+ <h2><span class="badge">6</span>Dimensionne la poutre</h2>
+ <div class="consigne">Une poutre de 20 m de portée, un camion au milieu. Règle sa hauteur avec le curseur : observe la FLÈCHE (elle plie !) et la jauge coût/matière. Trouve le juste dimensionnement.</div>
+ <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+ <div class="sliderrow">
+ <span>Hauteur de la poutre :</span>
+ <input type="range" id="slider6" min="20" max="120" step="5" value="30">
+ <span class="val"><span id="val6">30</span>cm</span>
+ <button class="btn" id="verif6">✓ Valider ce réglage</button>
+ </div>
+ <div id="verd6"></div>
  </div>
 </div>
 
 <!-- ============ A7 : BILAN ============ -->
 <div class="acti" id="a7">
  <div class="boite">
-  <h2><span class="badge">7</span>Bilan d'ingénieur</h2>
-  <div class="consigne">Dernière ligne droite : au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code du jeu.</div>
-  <div id="quiz5"></div>
-  <div class="codefinal" id="codefinal">
-    🏆 Mission accomplie, ingénieur !
-    <div class="code">PONT343</div>
-    <div>Entre ce code dans les jeux <a href="03_jeu_batisseur.html">🎮 Bâtisseur Fou</a> et <a href="03b_jeu_inspecteur.html">🕵️ Inspecteur des Ouvrages</a> pour les déverrouiller.</div>
-  </div>
+ <h2><span class="badge">7</span>Bilan d'ingénieur</h2>
+ <div class="consigne">Dernière ligne droite : au moins <b>3 bonnes réponses sur 4</b>pour obtenir le code du jeu.</div>
+ <div id="quiz5"></div>
+ <div class="codefinal" id="codefinal">
+ Mission accomplie, ingénieur !
+ <div class="code">PONT343</div>
+ <div>Entre ce code dans les jeux <a href="03_jeu_batisseur.html">Bâtisseur Fou</a>et <a href="03b_jeu_inspecteur.html">Inspecteur des Ouvrages</a>pour les déverrouiller.</div>
+ </div>
  </div>
 </div>
 
 <script>
+
+/* ===== SCHEMAS : dessins vectoriels remplaçant les anciens pictogrammes =====
+   SCHEMA(ctx,'nom',x,y,T) dessine le symbole centré en (x,y), taille T.
+   La couleur courante (ctx.fillStyle) sert de teinte principale.          */
+const SCHEMA=(function(){
+  function P(c,pts,rempli){
+    c.beginPath();
+    pts.forEach((p,i)=> i? c.lineTo(p[0],p[1]) : c.moveTo(p[0],p[1]));
+    c.closePath(); rempli? c.fill() : c.stroke();
+  }
+  const D={
+  maison(c,u,t){ c.fillRect(-.32*u,-.05*u,.64*u,.42*u);
+    P(c,[[-.44*u,-.05*u],[0,-.42*u],[.44*u,-.05*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.1*u,.12*u,.2*u,.25*u); c.restore(); },
+  batiment(c,u){ c.fillRect(-.3*u,-.42*u,.6*u,.84*u);
+    c.save(); c.fillStyle='#fff';
+    for(let i=0;i<4;i++)for(let j=0;j<3;j++) c.fillRect(-.22*u+j*.16*u,-.34*u+i*.19*u,.09*u,.11*u);
+    c.restore(); },
+  usine(c,u){ c.fillRect(-.42*u,0,.84*u,.4*u);
+    P(c,[[-.42*u,0],[-.14*u,-.2*u],[-.14*u,0]],true);
+    P(c,[[-.14*u,0],[.14*u,-.2*u],[.14*u,0]],true);
+    c.fillRect(.22*u,-.44*u,.14*u,.44*u); },
+  ville(c,u){ [[-.42,.5],[-.18,.78],[.08,.42],[.3,.66]].forEach(([bx,bh])=>
+      c.fillRect(bx*u,(.42-bh*.84)*u,.2*u,bh*.84*u)); },
+  soleil(c,u){ c.beginPath(); c.arc(0,0,.24*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.4,.055*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<8;k++){ const a=k*.785;
+      c.beginPath(); c.moveTo(.32*u*Math.cos(a),.32*u*Math.sin(a));
+      c.lineTo(.45*u*Math.cos(a),.45*u*Math.sin(a)); c.stroke(); } c.lineWidth=w; },
+  nuage(c,u){ c.beginPath();
+    c.arc(-.18*u,.04*u,.19*u,0,6.284); c.arc(.03*u,-.1*u,.24*u,0,6.284);
+    c.arc(.26*u,.05*u,.18*u,0,6.284); c.fill();
+    c.fillRect(-.18*u,-.02*u,.44*u,.24*u); },
+  pluie(c,u){ D.nuage(c,u*.85);
+    const w=c.lineWidth; c.lineWidth=Math.max(1.4,.05*u); c.strokeStyle=c.fillStyle;
+    [-.2,0,.2].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,.2*u); c.lineTo(dx*u-.05*u,.44*u); c.stroke(); });
+    c.lineWidth=w; },
+  goutte(c,u){ c.beginPath(); c.moveTo(0,-.42*u);
+    c.quadraticCurveTo(.34*u,.06*u,0,.4*u); c.quadraticCurveTo(-.34*u,.06*u,0,-.42*u); c.fill(); },
+  vent(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.075*u); c.strokeStyle=c.fillStyle;
+    [-.22,0,.22].forEach((dy,i)=>{ c.beginPath(); c.moveTo(-.44*u,dy*u);
+      c.lineTo((.2-i*.12)*u,dy*u); c.quadraticCurveTo(.42*u,dy*u,.3*u,(dy-.14)*u); c.stroke(); });
+    c.lineWidth=w; },
+  flocon(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.4,.055*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ const a=k*1.047;
+      c.beginPath(); c.moveTo(-.42*u*Math.cos(a),-.42*u*Math.sin(a));
+      c.lineTo(.42*u*Math.cos(a),.42*u*Math.sin(a)); c.stroke();
+      [-1,1].forEach(s=>{ c.beginPath();
+        c.moveTo(s*.42*u*Math.cos(a),s*.42*u*Math.sin(a));
+        c.lineTo(s*.26*u*Math.cos(a)+.12*u*Math.cos(a+2.1),s*.26*u*Math.sin(a)+.12*u*Math.sin(a+2.1)); c.stroke(); }); }
+    c.lineWidth=w; },
+  feu(c,u){ c.beginPath(); c.moveTo(0,.42*u);
+    c.quadraticCurveTo(-.4*u,.06*u,-.1*u,-.42*u);
+    c.quadraticCurveTo(-.04*u,-.12*u,.14*u,-.28*u);
+    c.quadraticCurveTo(.1*u,-.02*u,.36*u,.1*u);
+    c.quadraticCurveTo(.4*u,.34*u,0,.42*u); c.fill(); },
+  eclair(c,u){ P(c,[[.06*u,-.44*u],[-.28*u,.06*u],[-.02*u,.06*u],[-.1*u,.44*u],[.28*u,-.08*u],[.02*u,-.08*u]],true); },
+  choc(c,u){ const p=[]; for(let k=0;k<12;k++){ const a=k*.5236, r=(k%2? .2:.46)*u;
+      p.push([r*Math.cos(a),r*Math.sin(a)]); } P(c,p,true); },
+  pile(c,u){ c.fillRect(-.34*u,-.22*u,.6*u,.44*u); c.fillRect(.26*u,-.09*u,.08*u,.18*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.28*u,-.15*u,.12*u,.3*u); c.restore(); },
+  ampoule(c,u){ c.beginPath(); c.arc(0,-.1*u,.27*u,0,6.284); c.fill();
+    c.fillRect(-.11*u,.16*u,.22*u,.16*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.11*u,.21*u,.22*u,.03*u); c.restore(); },
+  engrenage(c,u){ const p=[]; for(let k=0;k<24;k++){ const a=k*.2618, r=(k%2? .3:.44)*u;
+      p.push([r*Math.cos(a),r*Math.sin(a)]); } P(c,p,true);
+    c.save(); c.globalCompositeOperation='destination-out';
+    c.beginPath(); c.arc(0,0,.15*u,0,6.284); c.fill(); c.restore(); },
+  vis(c,u){ c.fillRect(-.1*u,-.12*u,.2*u,.5*u);
+    c.fillRect(-.26*u,-.4*u,.52*u,.28*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.18*u,-.29*u,.36*u,.06*u); c.restore(); },
+  atome(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.3,.05*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ c.save(); c.rotate(k*1.047);
+      c.beginPath(); c.ellipse(0,0,.44*u,.17*u,0,0,6.284); c.stroke(); c.restore(); }
+    c.lineWidth=w; c.beginPath(); c.arc(0,0,.1*u,0,6.284); c.fill(); },
+  thermometre(c,u){ c.fillRect(-.07*u,-.4*u,.14*u,.5*u);
+    c.beginPath(); c.arc(0,.24*u,.17*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1,.03*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<4;k++){ c.beginPath(); c.moveTo(.09*u,(-.3+k*.13)*u); c.lineTo(.2*u,(-.3+k*.13)*u); c.stroke(); }
+    c.lineWidth=w; },
+  coeur(c,u){ c.beginPath(); c.moveTo(0,.4*u);
+    c.bezierCurveTo(-.62*u,-.02*u,-.3*u,-.46*u,0,-.16*u);
+    c.bezierCurveTo(.3*u,-.46*u,.62*u,-.02*u,0,.4*u); c.fill(); },
+  personne(c,u){ c.beginPath(); c.arc(0,-.3*u,.14*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.09*u); c.strokeStyle=c.fillStyle; c.lineCap='round';
+    c.beginPath(); c.moveTo(0,-.15*u); c.lineTo(0,.14*u); c.stroke();
+    c.beginPath(); c.moveTo(-.16*u,0); c.lineTo(.16*u,0); c.stroke();
+    c.beginPath(); c.moveTo(0,.14*u); c.lineTo(-.14*u,.42*u); c.moveTo(0,.14*u); c.lineTo(.14*u,.42*u); c.stroke();
+    c.lineWidth=w; },
+  marcheur(c,u){ c.beginPath(); c.arc(.02*u,-.3*u,.13*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.085*u); c.strokeStyle=c.fillStyle; c.lineCap='round';
+    c.beginPath(); c.moveTo(.02*u,-.16*u); c.lineTo(-.02*u,.12*u); c.stroke();
+    c.beginPath(); c.moveTo(-.02*u,.12*u); c.lineTo(-.2*u,.4*u); c.moveTo(-.02*u,.12*u); c.lineTo(.2*u,.36*u); c.stroke();
+    c.beginPath(); c.moveTo(.02*u,-.08*u); c.lineTo(.22*u,-.16*u); c.stroke();
+    c.lineWidth=w; },
+  main(c,u){ c.fillRect(-.09*u,-.44*u,.18*u,.4*u);
+    c.beginPath(); c.arc(0,.12*u,.24*u,0,6.284); c.fill(); },
+  voiture(c,u){ c.fillRect(-.44*u,-.02*u,.88*u,.24*u);
+    P(c,[[-.28*u,-.02*u],[-.16*u,-.28*u],[.18*u,-.28*u],[.3*u,-.02*u]],true);
+    c.beginPath(); c.arc(-.24*u,.24*u,.12*u,0,6.284); c.arc(.24*u,.24*u,.12*u,0,6.284); c.fill(); },
+  velo(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.28*u,.16*u,.22*u,0,6.284); c.stroke();
+    c.beginPath(); c.arc(.28*u,.16*u,.22*u,0,6.284); c.stroke();
+    c.beginPath(); c.moveTo(-.28*u,.16*u); c.lineTo(0,.16*u); c.lineTo(-.06*u,-.16*u);
+    c.lineTo(.2*u,-.16*u); c.lineTo(.28*u,.16*u); c.moveTo(0,.16*u); c.lineTo(.2*u,-.16*u); c.stroke();
+    c.lineWidth=w; },
+  satellite(c,u){ c.fillRect(-.13*u,-.16*u,.26*u,.32*u);
+    c.fillRect(-.46*u,-.11*u,.28*u,.22*u); c.fillRect(.18*u,-.11*u,.28*u,.22*u);
+    c.save(); c.fillStyle='#fff';
+    [-.4,-.3,.22,.32].forEach(dx=> c.fillRect(dx*u,-.09*u,.04*u,.18*u)); c.restore(); },
+  terre(c,u){ c.beginPath(); c.arc(0,0,.42*u,0,6.284); c.fill();
+    c.save(); c.fillStyle='#fff'; c.globalAlpha=.55;
+    c.beginPath(); c.ellipse(-.12*u,-.1*u,.16*u,.1*u,.4,0,6.284); c.fill();
+    c.beginPath(); c.ellipse(.14*u,.12*u,.13*u,.08*u,-.4,0,6.284); c.fill(); c.restore(); },
+  telephone(c,u){ c.fillRect(-.24*u,-.44*u,.48*u,.88*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.18*u,-.34*u,.36*u,.62*u); c.restore(); },
+  ecran(c,u){ c.fillRect(-.42*u,-.34*u,.84*u,.54*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.36*u,-.28*u,.72*u,.42*u); c.restore();
+    c.fillRect(-.12*u,.2*u,.24*u,.08*u); c.fillRect(-.26*u,.28*u,.52*u,.08*u); },
+  document(c,u){ c.fillRect(-.28*u,-.42*u,.56*u,.84*u);
+    c.save(); c.fillStyle='#fff';
+    for(let k=0;k<4;k++) c.fillRect(-.2*u,(-.3+k*.18)*u,.4*u,.06*u); c.restore(); },
+  colis(c,u){ c.fillRect(-.4*u,-.3*u,.8*u,.6*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.07*u,-.3*u,.14*u,.6*u);
+    c.fillRect(-.4*u,-.05*u,.8*u,.1*u); c.restore(); },
+  enveloppe(c,u){ c.fillRect(-.4*u,-.28*u,.8*u,.56*u);
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.4,.05*u);
+    c.beginPath(); c.moveTo(-.4*u,-.28*u); c.lineTo(0,.04*u); c.lineTo(.4*u,-.28*u); c.stroke(); c.restore(); },
+  antenne(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,.42*u); c.lineTo(0,-.1*u); c.stroke();
+    for(let k=1;k<=3;k++){ c.beginPath(); c.arc(0,-.1*u,k*.13*u,-2.4,-.74); c.stroke(); }
+    c.lineWidth=w; },
+  reseau(c,u){ c.beginPath(); c.arc(0,-.22*u,.1*u,0,6.284);
+    c.arc(-.3*u,.24*u,.1*u,0,6.284); c.arc(.3*u,.24*u,.1*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.2,.045*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,-.22*u); c.lineTo(-.3*u,.24*u); c.lineTo(.3*u,.24*u); c.lineTo(0,-.22*u); c.stroke();
+    c.lineWidth=w; },
+  lien(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.16*u,0,.2*u,-1.1,1.1,true); c.stroke();
+    c.beginPath(); c.arc(.16*u,0,.2*u,2.04,4.24,true); c.stroke();
+    c.beginPath(); c.moveTo(-.12*u,0); c.lineTo(.12*u,0); c.stroke(); c.lineWidth=w; },
+  cadenas(c,u){ c.fillRect(-.28*u,-.06*u,.56*u,.44*u);
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(0,-.08*u,.18*u,Math.PI,0); c.stroke(); c.lineWidth=w; },
+  robot(c,u){ c.fillRect(-.3*u,-.2*u,.6*u,.5*u);
+    c.save(); c.fillStyle='#fff';
+    c.beginPath(); c.arc(-.12*u,-.02*u,.06*u,0,6.284); c.arc(.12*u,-.02*u,.06*u,0,6.284); c.fill();
+    c.fillRect(-.14*u,.12*u,.28*u,.05*u); c.restore();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,-.2*u); c.lineTo(0,-.36*u); c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.arc(0,-.4*u,.07*u,0,6.284); c.fill(); },
+  cerveau(c,u){ c.beginPath();
+    c.arc(-.16*u,-.08*u,.2*u,0,6.284); c.arc(.16*u,-.08*u,.2*u,0,6.284);
+    c.arc(0,.14*u,.2*u,0,6.284); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    c.beginPath(); c.moveTo(0,-.26*u); c.lineTo(0,.3*u); c.stroke(); c.restore(); },
+  poubelle(c,u){ c.fillRect(-.26*u,-.2*u,.52*u,.6*u);
+    c.fillRect(-.34*u,-.3*u,.68*u,.1*u); c.fillRect(-.12*u,-.4*u,.24*u,.1*u);
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    [-.1,0,.1].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,-.1*u); c.lineTo(dx*u,.3*u); c.stroke(); }); c.restore(); },
+  recyclage(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.075*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ c.save(); c.rotate(k*2.094);
+      c.beginPath(); c.arc(0,0,.32*u,-1.9,-.5); c.stroke();
+      c.restore(); } c.lineWidth=w; },
+  feuille(c,u){ c.beginPath(); c.moveTo(-.34*u,.34*u);
+    c.quadraticCurveTo(-.1*u,-.44*u,.36*u,-.3*u);
+    c.quadraticCurveTo(.3*u,.3*u,-.34*u,.34*u); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    c.beginPath(); c.moveTo(-.3*u,.3*u); c.lineTo(.28*u,-.26*u); c.stroke(); c.restore(); },
+  arbre(c,u){ c.fillRect(-.07*u,.06*u,.14*u,.36*u);
+    c.beginPath(); c.arc(0,-.14*u,.3*u,0,6.284); c.fill(); },
+  plot(c,u){ P(c,[[0,-.4*u],[-.3*u,.34*u],[.3*u,.34*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.17*u,-.02*u,.34*u,.09*u); c.restore(); },
+  balle(c,u){ c.beginPath(); c.arc(0,0,.36*u,0,6.284); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.4,.05*u);
+    c.beginPath(); c.arc(-.34*u,0,.3*u,-.9,.9); c.stroke();
+    c.beginPath(); c.arc(.34*u,0,.3*u,2.24,4.04); c.stroke(); c.restore(); },
+  tortue(c,u){ c.beginPath(); c.ellipse(0,0,.34*u,.24*u,0,0,6.284); c.fill();
+    c.beginPath(); c.arc(.36*u,-.04*u,.11*u,0,6.284); c.fill();
+    [-.2,.14].forEach(dx=>{ c.beginPath(); c.ellipse(dx*u,.22*u,.09*u,.06*u,0,0,6.284); c.fill(); }); },
+  escargot(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath();
+    for(let a=0;a<12;a+=.15){ const r=.05*u+a*.028*u;
+      const px=-.05*u+r*Math.cos(a), py=r*Math.sin(a);
+      if(a===0) c.moveTo(px,py); else c.lineTo(px,py); }
+    c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.ellipse(.3*u,.2*u,.16*u,.07*u,0,0,6.284); c.fill(); },
+  oiseau(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.065*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.16*u,.06*u,.2*u,-2.2,-.5); c.stroke();
+    c.beginPath(); c.arc(.16*u,.06*u,.2*u,-2.64,-.94); c.stroke(); c.lineWidth=w; },
+  crane(c,u){ c.beginPath(); c.arc(0,-.08*u,.3*u,0,6.284); c.fill();
+    c.fillRect(-.16*u,.14*u,.32*u,.16*u);
+    c.save(); c.fillStyle='#fff';
+    c.beginPath(); c.arc(-.12*u,-.1*u,.08*u,0,6.284); c.arc(.12*u,-.1*u,.08*u,0,6.284); c.fill(); c.restore(); },
+  loupe(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.075*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.08*u,-.08*u,.26*u,0,6.284); c.stroke();
+    c.beginPath(); c.moveTo(.11*u,.11*u); c.lineTo(.38*u,.38*u); c.stroke(); c.lineWidth=w; },
+  microscope(c,u){ c.fillRect(-.3*u,.3*u,.6*u,.1*u);
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.05*u,.3*u); c.lineTo(-.05*u,-.02*u); c.stroke();
+    c.beginPath(); c.moveTo(-.05*u,-.02*u); c.lineTo(.2*u,-.34*u); c.stroke(); c.lineWidth=w;
+    c.fillRect(-.26*u,.06*u,.42*u,.07*u); },
+  graphique(c,u){ c.fillRect(-.34*u,.02*u,.16*u,.36*u); c.fillRect(-.08*u,-.18*u,.16*u,.56*u);
+    c.fillRect(.18*u,-.34*u,.16*u,.72*u); },
+  baignoire(c,u){ c.beginPath(); c.moveTo(-.4*u,-.06*u); c.lineTo(-.34*u,.28*u);
+    c.lineTo(.34*u,.28*u); c.lineTo(.4*u,-.06*u); c.closePath(); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.28*u,-.06*u); c.lineTo(-.28*u,-.3*u); c.lineTo(-.06*u,-.3*u); c.stroke();
+    c.lineWidth=w; },
+  canape(c,u){ c.fillRect(-.42*u,-.06*u,.84*u,.3*u);
+    c.fillRect(-.42*u,-.28*u,.14*u,.24*u); c.fillRect(.28*u,-.28*u,.14*u,.24*u);
+    c.fillRect(-.3*u,-.22*u,.6*u,.18*u); },
+  flacon(c,u){ c.fillRect(-.16*u,-.16*u,.32*u,.56*u); c.fillRect(-.08*u,-.4*u,.16*u,.24*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.1*u,0,.2*u,.14*u); c.restore(); },
+  bouteille(c,u){ c.beginPath(); c.moveTo(-.16*u,.4*u); c.lineTo(-.16*u,-.06*u);
+    c.lineTo(-.06*u,-.24*u); c.lineTo(-.06*u,-.4*u); c.lineTo(.06*u,-.4*u); c.lineTo(.06*u,-.24*u);
+    c.lineTo(.16*u,-.06*u); c.lineTo(.16*u,.4*u); c.closePath(); c.fill(); },
+  chaussure(c,u){ c.beginPath(); c.moveTo(-.4*u,.3*u); c.lineTo(-.4*u,-.1*u);
+    c.lineTo(-.12*u,-.1*u); c.quadraticCurveTo(.1*u,.06*u,.4*u,.12*u);
+    c.lineTo(.4*u,.3*u); c.closePath(); c.fill(); },
+  hache(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.09*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.28*u,.4*u); c.lineTo(.2*u,-.28*u); c.stroke(); c.lineWidth=w;
+    P(c,[[.06*u,-.18*u],[.34*u,-.42*u],[.44*u,-.16*u],[.2*u,-.02*u]],true); },
+  cloche(c,u){ c.beginPath(); c.moveTo(-.3*u,.2*u);
+    c.quadraticCurveTo(-.3*u,-.34*u,0,-.34*u); c.quadraticCurveTo(.3*u,-.34*u,.3*u,.2*u);
+    c.closePath(); c.fill(); c.fillRect(-.36*u,.2*u,.72*u,.08*u);
+    c.beginPath(); c.arc(0,.34*u,.08*u,0,6.284); c.fill(); },
+  alerte(c,u){ P(c,[[0,-.42*u],[.44*u,.34*u],[-.44*u,.34*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.05*u,-.16*u,.1*u,.3*u);
+    c.beginPath(); c.arc(0,.24*u,.06*u,0,6.284); c.fill(); c.restore(); },
+  chantier(c,u){ P(c,[[0,-.34*u],[.36*u,.3*u],[-.36*u,.3*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.3*u,.06*u,.6*u,.1*u); c.restore(); },
+  ciseaux(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.3*u,-.34*u); c.lineTo(.2*u,.16*u); c.stroke();
+    c.beginPath(); c.moveTo(.3*u,-.34*u); c.lineTo(-.2*u,.16*u); c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.arc(-.24*u,.3*u,.12*u,0,6.284); c.arc(.24*u,.3*u,.12*u,0,6.284); c.fill(); },
+  melange(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.065*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.4*u,-.16*u); c.lineTo(.1*u,-.16*u); c.stroke();
+    c.beginPath(); c.moveTo(-.4*u,.16*u); c.lineTo(.1*u,.16*u); c.stroke(); c.lineWidth=w;
+    P(c,[[.1*u,-.3*u],[.4*u,-.16*u],[.1*u,-.02*u]],true);
+    P(c,[[.1*u,.02*u],[.4*u,.16*u],[.1*u,.3*u]],true); },
+  boucle(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(0,0,.3*u,.5,5.6); c.stroke(); c.lineWidth=w;
+    P(c,[[.16*u,-.34*u],[.38*u,-.1*u],[.08*u,-.06*u]],true); },
+  fleche(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.36*u,0); c.lineTo(.14*u,0); c.stroke(); c.lineWidth=w;
+    P(c,[[.14*u,-.2*u],[.42*u,0],[.14*u,.2*u]],true); },
+  vapeur(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    [-.2,0,.2].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,.36*u);
+      c.bezierCurveTo((dx+.14)*u,.1*u,(dx-.14)*u,-.1*u,dx*u,-.36*u); c.stroke(); });
+    c.lineWidth=w; },
+  sommeil(c,u){ c.font='bold '+(.5*u)+'px Segoe UI'; c.textAlign='center';
+    c.fillText('z',-.14*u,.1*u); c.fillText('z',.14*u,-.16*u); },
+  point(c,u){ c.beginPath(); c.arc(0,0,.3*u,0,6.284); c.fill(); },
+  valide(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.1*u); c.strokeStyle=c.fillStyle;
+    c.lineCap='round'; c.beginPath(); c.moveTo(-.32*u,.02*u); c.lineTo(-.08*u,.28*u);
+    c.lineTo(.34*u,-.26*u); c.stroke(); c.lineWidth=w; },
+  };
+  return function(c,nom,x,y,T){
+    const f=D[nom]; if(!f) return false;
+    c.save(); c.translate(x,y);
+    f(c,T||24,T||24);
+    c.restore(); return true;
+  };
+})();
+
+/* Remplace un ancien pictogramme dessiné : reprend la taille de police et
+   l'alignement courants pour caler le schéma exactement où était le symbole. */
+function SPRITE(c,nom,x,y){
+  const m=/([\d.]+)px/.exec(c.font||''); const T=m?parseFloat(m[1]):24;
+  let cx=x; const al=c.textAlign||'start';
+  if(al==='left'||al==='start') cx=x+T*0.5;
+  else if(al==='right'||al==='end') cx=x-T*0.5;
+  SCHEMA(c,nom,cx,y-T*0.34,T);
+}
+
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat = { debloque:1, score:0, diag:[false,false,false], q1ok:0, q5ok:0, q5rep:0 };
 function sauver(){ try{ localStorage.setItem('tp_ponts_5e_v2', JSON.stringify({d:etat.debloque, s:etat.score})); }catch(e){} }
 function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_ponts_5e_v2')); if(d){ etat.debloque=d.d; etat.score=d.s; } }catch(e){} }
 function majProgression(){
-  document.querySelectorAll('.progression .seg').forEach(seg=>{
-    const n=+seg.dataset.a;
-    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
-  });
-  document.getElementById('scoreTot').textContent = etat.score;
-  for(let n=2;n<=7;n++){
-    const acti=document.getElementById('a'+n);
-    let v=acti.querySelector('.verrou');
-    if(n>etat.debloque){
-      if(!v){ v=document.createElement('div'); v.className='verrou';
-        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
-        acti.querySelector('.boite').appendChild(v); }
-    } else if(v){ v.remove(); }
-  }
+ document.querySelectorAll('.progression .seg').forEach(seg=>{
+ const n=+seg.dataset.a;
+ seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+ });
+ document.getElementById('scoreTot').textContent = etat.score;
+ for(let n=2;n<=7;n++){
+ const acti=document.getElementById('a'+n);
+ let v=acti.querySelector('.verrou');
+ if(n>etat.debloque){
+ if(!v){ v=document.createElement('div'); v.className='verrou';
+ v.innerHTML='<div class="cadenas"></div>Termine la mission '+(n-1)+' pour déverrouiller';
+ acti.querySelector('.boite').appendChild(v); }
+ } else if(v){ v.remove(); }
+ }
 }
 function reussir(n, pts, message){
-  etat.score += pts;
-  if(etat.debloque === n) etat.debloque = n+1;
-  sauver(); majProgression();
-  if(n<7) setTimeout(()=> document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}), 900);
+ etat.score += pts;
+ if(etat.debloque === n) etat.debloque = n+1;
+ sauver(); majProgression();
+ if(n<7) setTimeout(()=>document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}), 900);
 }
 
 /* ================= A1 : QUIZ EFFORTS ================= */
 const Q1 = [
  { q:"Le câble qui retient le tablier d'un pont suspendu :", svg:
-   `<svg width="300" height="90" viewBox="0 0 300 90"><rect x="20" y="66" width="260" height="10" fill="#94a3b8"/><rect x="60" y="10" width="8" height="66" fill="#64748b"/><line x1="64" y1="14" x2="200" y2="66" stroke="#dc2626" stroke-width="4"/><text x="150" y="34" font-size="12" fill="#dc2626" font-family="Segoe UI">câble</text></svg>`,
-   reps:["Compression","Traction","Flexion"], bon:1 },
+ `<svg width="300" height="90" viewBox="0 0 300 90"><rect x="20" y="66" width="260" height="10" fill="#94a3b8"/><rect x="60" y="10" width="8" height="66" fill="#64748b"/><line x1="64" y1="14" x2="200" y2="66" stroke="#dc2626" stroke-width="4"/><text x="150" y="34" font-size="12" fill="#dc2626" font-family="Segoe UI">câble</text></svg>`,
+ reps:["Compression","Traction","Flexion"], bon:1 },
  { q:"La pile (le pilier) qui porte un pont poutre :", svg:
-   `<svg width="300" height="90" viewBox="0 0 300 90"><rect x="20" y="14" width="260" height="12" fill="#64748b"/><rect x="140" y="26" width="20" height="54" fill="#dc2626"/><path d="M120 6 L150 16 L180 6" fill="none" stroke="#1d4ed8" stroke-width="3"/></svg>`,
-   reps:["Compression","Traction","Flexion"], bon:0 },
+ `<svg width="300" height="90" viewBox="0 0 300 90"><rect x="20" y="14" width="260" height="12" fill="#64748b"/><rect x="140" y="26" width="20" height="54" fill="#dc2626"/><path d="M120 6 L150 16 L180 6" fill="none" stroke="#1d4ed8" stroke-width="3"/></svg>`,
+ reps:["Compression","Traction","Flexion"], bon:0 },
  { q:"La planche du plongeoir quand on saute au bout :", svg:
-   `<svg width="300" height="90" viewBox="0 0 300 90"><rect x="20" y="30" width="40" height="50" fill="#64748b"/><path d="M60 36 Q180 36 265 70" stroke="#dc2626" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="262" cy="50" r="9" fill="#1e3a5f"/></svg>`,
-   reps:["Compression","Traction","Flexion"], bon:2 },
+ `<svg width="300" height="90" viewBox="0 0 300 90"><rect x="20" y="30" width="40" height="50" fill="#64748b"/><path d="M60 36 Q180 36 265 70" stroke="#dc2626" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="262" cy="50" r="9" fill="#1e3a5f"/></svg>`,
+ reps:["Compression","Traction","Flexion"], bon:2 },
  { q:"La corde pendant un tir à la corde :", svg:
-   `<svg width="300" height="90" viewBox="0 0 300 90"><line x1="40" y1="45" x2="260" y2="45" stroke="#dc2626" stroke-width="6"/><path d="M60 45 l-25 -12 M60 45 l-25 12" stroke="#1e3a5f" stroke-width="4" fill="none"/><path d="M240 45 l25 -12 M240 45 l25 12" stroke="#1e3a5f" stroke-width="4" fill="none"/></svg>`,
-   reps:["Compression","Traction","Flexion"], bon:1 },
+ `<svg width="300" height="90" viewBox="0 0 300 90"><line x1="40" y1="45" x2="260" y2="45" stroke="#dc2626" stroke-width="6"/><path d="M60 45 l-25 -12 M60 45 l-25 12" stroke="#1e3a5f" stroke-width="4" fill="none"/><path d="M240 45 l25 -12 M240 45 l25 12" stroke="#1e3a5f" stroke-width="4" fill="none"/></svg>`,
+ reps:["Compression","Traction","Flexion"], bon:1 },
 ];
 (function initQ1(){
-  const zone=document.getElementById('quiz1');
-  Q1.forEach((item,i)=>{
-    const d=document.createElement('div'); d.className='question';
-    d.innerHTML = `<div class="q">${i+1}. ${item.q}</div>${item.svg}<div class="rep"></div>`;
-    const rep=d.querySelector('.rep');
-    let premier=true;
-    item.reps.forEach((r,k)=>{
-      const b=document.createElement('button'); b.textContent=r;
-      b.onclick=()=>{
-        if(k===item.bon){
-          b.classList.add('bon');
-          rep.querySelectorAll('button').forEach(x=>x.disabled=true);
-          if(premier) etat.score++;
-          etat.q1ok++;
-          document.getElementById('scoreTot').textContent=etat.score;
-          if(etat.q1ok===Q1.length) reussir(1,2);
-        } else { b.classList.add('faux'); b.disabled=true; premier=false; }
-      };
-      rep.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('quiz1');
+ Q1.forEach((item,i)=>{
+ const d=document.createElement('div'); d.className='question';
+ d.innerHTML = `<div class="q">${i+1}. ${item.q}</div>${item.svg}<div class="rep"></div>`;
+ const rep=d.querySelector('.rep');
+ let premier=true;
+ item.reps.forEach((r,k)=>{
+ const b=document.createElement('button'); b.textContent=r;
+ b.onclick=()=>{
+ if(k===item.bon){
+ b.classList.add('bon');
+ rep.querySelectorAll('button').forEach(x=>x.disabled=true);
+ if(premier) etat.score++;
+ etat.q1ok++;
+ document.getElementById('scoreTot').textContent=etat.score;
+ if(etat.q1ok===Q1.length) reussir(1,2);
+ } else {
+ premier=false;
+ b.classList.add('faux');
+ rep.querySelectorAll('button').forEach(x=>x.disabled=true);
+ etat.q1ok++;
+ document.getElementById('scoreTot').textContent=etat.score;
+ if(etat.q1ok===Q1.length) reussir(1,2);
+ }
+ };
+ rep.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A2 : SIMULATEUR POUTRE ================= */
@@ -312,77 +629,77 @@ function params2(){ return { L:+s2L.value, E:+s2M.value, h:+s2H.value }; }
 function fleche2(p){ return 0.0001 * Math.pow(p.L,3) / (p.E * Math.pow(p.h,3)); } // en m
 function limite2(p){ return p.L/200; }
 function dessiner2(fl=0, cx=-1, casse=false){
-  const W=cv2.width,H=cv2.height,p=params2();
-  c2.clearRect(0,0,W,H);
-  const y=190, marge=70, xg=marge, xd=W-marge;
-  // appuis
-  c2.fillStyle='#94a3b8';
-  [[xg,y+12],[xd,y+12]].forEach(([x,yy])=>{ c2.beginPath(); c2.moveTo(x,yy); c2.lineTo(x-16,yy+26); c2.lineTo(x+16,yy+26); c2.closePath(); c2.fill(); });
-  // poutre (épaisseur ∝ h)
-  const ep=8+p.h*14;
-  const amp = Math.min(90, fl*260); // amplification visuelle
-  c2.strokeStyle = casse ? '#dc2626' : '#475569'; c2.lineWidth=ep; c2.lineCap='round';
-  if(casse){
-    c2.beginPath(); c2.moveTo(xg,y); c2.quadraticCurveTo(W/2-30, y+amp+40, W/2-10, y+amp+70); c2.stroke();
-    c2.beginPath(); c2.moveTo(xd,y); c2.quadraticCurveTo(W/2+30, y+amp+40, W/2+10, y+amp+70); c2.stroke();
-    c2.font='bold 22px Segoe UI'; c2.fillStyle='#dc2626'; c2.textAlign='center'; c2.fillText('💥 RUPTURE !', W/2, 70);
-  } else {
-    c2.beginPath(); c2.moveTo(xg,y);
-    c2.quadraticCurveTo(W/2, y+amp*2, xd, y); c2.stroke();
-  }
-  // camion
-  if(cx>=0 && !casse){
-    const t=cx, px=xg+(xd-xg)*t;
-    const py = y + 2*amp*t*(1-t) - ep/2 - 4;
-    c2.fillStyle='#f59e0b'; c2.fillRect(px-26,py-24,40,20);
-    c2.fillStyle='#1e3a5f'; c2.fillRect(px+12,py-18,18,14);
-    c2.fillStyle='#334155'; c2.beginPath(); c2.arc(px-14,py-2,6,0,7); c2.arc(px+18,py-2,6,0,7); c2.fill();
-  }
-  // infos
-  c2.font='bold 15px Segoe UI'; c2.fillStyle='#1e40af'; c2.textAlign='left';
-  c2.fillText(`Portée : ${p.L} m`, 16, 26);
-  c2.fillText(`Flèche : ${(fl*100).toFixed(0)} cm`, 16, 48);
-  c2.fillStyle = fl<=limite2(p) ? '#16a34a' : '#dc2626';
-  c2.fillText(`Limite : ${(limite2(p)*100).toFixed(0)} cm`, 16, 70);
-  // cotation
-  c2.strokeStyle='#94a3b8'; c2.lineWidth=1.5; c2.beginPath(); c2.moveTo(xg,y+70); c2.lineTo(xd,y+70); c2.stroke();
-  c2.font='13px Segoe UI'; c2.fillStyle='#64748b'; c2.textAlign='center'; c2.fillText(p.L+' m', W/2, y+88);
+ const W=cv2.width,H=cv2.height,p=params2();
+ c2.clearRect(0,0,W,H);
+ const y=190, marge=70, xg=marge, xd=W-marge;
+ // appuis
+ c2.fillStyle='#94a3b8';
+ [[xg,y+12],[xd,y+12]].forEach(([x,yy])=>{ c2.beginPath(); c2.moveTo(x,yy); c2.lineTo(x-16,yy+26); c2.lineTo(x+16,yy+26); c2.closePath(); c2.fill(); });
+ // poutre (épaisseur ∝ h)
+ const ep=8+p.h*14;
+ const amp = Math.min(90, fl*260); // amplification visuelle
+ c2.strokeStyle = casse ? '#dc2626' : '#475569'; c2.lineWidth=ep; c2.lineCap='round';
+ if(casse){
+ c2.beginPath(); c2.moveTo(xg,y); c2.quadraticCurveTo(W/2-30, y+amp+40, W/2-10, y+amp+70); c2.stroke();
+ c2.beginPath(); c2.moveTo(xd,y); c2.quadraticCurveTo(W/2+30, y+amp+40, W/2+10, y+amp+70); c2.stroke();
+ c2.font='bold 22px Segoe UI'; c2.fillStyle='#dc2626'; c2.textAlign='center'; c2.fillText('RUPTURE !', W/2, 70);
+ } else {
+ c2.beginPath(); c2.moveTo(xg,y);
+ c2.quadraticCurveTo(W/2, y+amp*2, xd, y); c2.stroke();
+ }
+ // camion
+ if(cx>=0 && !casse){
+ const t=cx, px=xg+(xd-xg)*t;
+ const py = y + 2*amp*t*(1-t) - ep/2 - 4;
+ c2.fillStyle='#f59e0b'; c2.fillRect(px-26,py-24,40,20);
+ c2.fillStyle='#1e3a5f'; c2.fillRect(px+12,py-18,18,14);
+ c2.fillStyle='#334155'; c2.beginPath(); c2.arc(px-14,py-2,6,0,7); c2.arc(px+18,py-2,6,0,7); c2.fill();
+ }
+ // infos
+ c2.font='bold 15px Segoe UI'; c2.fillStyle='#1e40af'; c2.textAlign='left';
+ c2.fillText(`Portée : ${p.L} m`, 16, 26);
+ c2.fillText(`Flèche : ${(fl*100).toFixed(0)} cm`, 16, 48);
+ c2.fillStyle = fl<=limite2(p) ? '#16a34a' : '#dc2626';
+ c2.fillText(`Limite : ${(limite2(p)*100).toFixed(0)} cm`, 16, 70);
+ // cotation
+ c2.strokeStyle='#94a3b8'; c2.lineWidth=1.5; c2.beginPath(); c2.moveTo(xg,y+70); c2.lineTo(xd,y+70); c2.stroke();
+ c2.font='13px Segoe UI'; c2.fillStyle='#64748b'; c2.textAlign='center'; c2.fillText(p.L+' m', W/2, y+88);
 }
 function majUI2(){
-  document.getElementById('v2L').textContent=s2L.value+' m';
-  document.getElementById('v2H').textContent=(+s2H.value).toFixed(1).replace('.',',')+' m';
-  const p=params2(), r=Math.min(1, limite2(p)/fleche2(p));
-  const j=document.getElementById('jauge2');
-  j.style.width=(r*100)+'%';
-  j.style.background = r>=1 ? '#16a34a' : (r>0.6 ? '#f59e0b' : '#dc2626');
-  dessiner2(fleche2(p));
+ document.getElementById('v2L').textContent=s2L.value+' m';
+ document.getElementById('v2H').textContent=(+s2H.value).toFixed(1).replace('.',',')+' m';
+ const p=params2(), r=Math.min(1, limite2(p)/fleche2(p));
+ const j=document.getElementById('jauge2');
+ j.style.width=(r*100)+'%';
+ j.style.background = r>=1 ? '#16a34a' : (r>0.6 ? '#f59e0b' : '#dc2626');
+ dessiner2(fleche2(p));
 }
 [s2L,s2M,s2H].forEach(el=>el.addEventListener('input',majUI2));
 document.getElementById('btn2').onclick=()=>{
-  cancelAnimationFrame(anim2);
-  const p=params2(), fl=fleche2(p), ok=fl<=limite2(p);
-  const verd=document.getElementById('verd2');
-  verd.className='verdict';
-  let t=0;
-  function boucle(){
-    t+=0.008;
-    if(!ok && t>0.5){ dessiner2(fl,-1,true);
-      verd.className='verdict ko';
-      verd.innerHTML='💥 Rupture ! La flèche ('+(fl*100).toFixed(0)+' cm) dépasse la limite. Essaie un matériau plus rigide ou une poutre plus haute.';
-      return;
-    }
-    if(t>=1){ dessiner2(fl,1);
-      verd.className='verdict ok';
-      if(p.L>=30 && !a2fait){ a2fait=true;
-        verd.innerHTML='✅ Traversée réussie sur '+p.L+' m : mission accomplie ! (+3 pts)';
-        reussir(2,3);
-      } else if(p.L>=30){ verd.innerHTML='✅ Traversée réussie sur '+p.L+' m !'; }
-      else { verd.innerHTML='✅ Ça passe… mais la mission demande une portée d\u2019au moins 30 m. Allonge le pont !'; }
-      return;
-    }
-    dessiner2(fl,t); anim2=requestAnimationFrame(boucle);
-  }
-  boucle();
+ cancelAnimationFrame(anim2);
+ const p=params2(), fl=fleche2(p), ok=fl<=limite2(p);
+ const verd=document.getElementById('verd2');
+ verd.className='verdict';
+ let t=0;
+ function boucle(){
+ t+=0.008;
+ if(!ok && t>0.5){ dessiner2(fl,-1,true);
+ verd.className='verdict ko';
+ verd.innerHTML=' Rupture ! La flèche ('+(fl*100).toFixed(0)+' cm) dépasse la limite. Essaie un matériau plus rigide ou une poutre plus haute.';
+ return;
+ }
+ if(t>=1){ dessiner2(fl,1);
+ verd.className='verdict ok';
+ if(p.L>=30 && !a2fait){ a2fait=true;
+ verd.innerHTML='✓ Traversée réussie sur '+p.L+' m : mission accomplie ! (+3 pts)';
+ reussir(2, essais2<=1?3:(essais2===2?2:1));
+ } else if(p.L>=30){ verd.innerHTML='✓ Traversée réussie sur '+p.L+' m !'; }
+ else { verd.innerHTML='✓ Ça passe… mais la mission demande une portée d\u2019au moins 30 m. Allonge le pont !'; }
+ return;
+ }
+ dessiner2(fl,t); anim2=requestAnimationFrame(boucle);
+ }
+ boucle();
 };
 majUI2();
 
@@ -391,70 +708,70 @@ const cv3=document.getElementById('cv3'), c3=cv3.getContext('2d');
 let a3fait=false;
 function geo3(){ const W=cv3.width; return { x:W/2-70, larg:140, haut:90, y0:320 }; }
 function dessiner3(skews=[0,0,0], vent=0){
-  const W=cv3.width,H=cv3.height,g=geo3();
-  c3.clearRect(0,0,W,H);
-  // sol
-  c3.fillStyle='#e7e5e4'; c3.fillRect(0,g.y0,W,H-g.y0);
-  // vent
-  if(vent>0){ c3.strokeStyle='#0ea5e9'; c3.lineWidth=3;
-    for(let k=0;k<3;k++){ const yy=90+k*70;
-      c3.beginPath(); c3.moveTo(30,yy); c3.lineTo(30+50*vent,yy); c3.stroke();
-      c3.beginPath(); c3.moveTo(30+50*vent,yy); c3.lineTo(30+50*vent-10,yy-6); c3.moveTo(30+50*vent,yy); c3.lineTo(30+50*vent-10,yy+6); c3.stroke(); }
-    c3.font='bold 15px Segoe UI'; c3.fillStyle='#0ea5e9'; c3.fillText('VENT',26,64);
-  }
-  // 3 caissons empilés, décalage cumulé
-  let dxBas=0;
-  for(let i=0;i<3;i++){
-    const yb=g.y0-i*g.haut, yh=yb-g.haut;
-    const dxHaut=dxBas+skews[i];
-    const pts=[[g.x+dxHaut,yh],[g.x+g.larg+dxHaut,yh],[g.x+g.larg+dxBas,yb],[g.x+dxBas,yb]];
-    c3.strokeStyle = skews[i]!==0 ? '#dc2626' : '#475569';
-    c3.lineWidth=9; c3.lineJoin='round';
-    c3.beginPath(); c3.moveTo(...pts[0]); pts.slice(1).forEach(pt=>c3.lineTo(...pt)); c3.closePath(); c3.stroke();
-    if(etat.diag[i]){
-      c3.strokeStyle='#16a34a'; c3.beginPath(); c3.moveTo(...pts[3]); c3.lineTo(...pts[1]); c3.stroke();
-    }
-    c3.fillStyle='#1e3a5f'; pts.forEach(pt=>{c3.beginPath();c3.arc(pt[0],pt[1],6,0,7);c3.fill();});
-    dxBas=dxHaut;
-  }
-  // flèche de grue
-  c3.strokeStyle='#f59e0b'; c3.lineWidth=8;
-  c3.beginPath(); c3.moveTo(g.x+dxBas+g.larg/2, g.y0-3*g.haut); c3.lineTo(g.x+dxBas+g.larg/2+130, g.y0-3*g.haut-24); c3.stroke();
-  c3.font='13px Segoe UI'; c3.fillStyle='#64748b'; c3.textAlign='center';
-  c3.fillText('clique sur un caisson pour ajouter une diagonale', W/2, H-8);
+ const W=cv3.width,H=cv3.height,g=geo3();
+ c3.clearRect(0,0,W,H);
+ // sol
+ c3.fillStyle='#e7e5e4'; c3.fillRect(0,g.y0,W,H-g.y0);
+ // vent
+ if(vent>0){ c3.strokeStyle='#0ea5e9'; c3.lineWidth=3;
+ for(let k=0;k<3;k++){ const yy=90+k*70;
+ c3.beginPath(); c3.moveTo(30,yy); c3.lineTo(30+50*vent,yy); c3.stroke();
+ c3.beginPath(); c3.moveTo(30+50*vent,yy); c3.lineTo(30+50*vent-10,yy-6); c3.moveTo(30+50*vent,yy); c3.lineTo(30+50*vent-10,yy+6); c3.stroke(); }
+ c3.font='bold 15px Segoe UI'; c3.fillStyle='#0ea5e9'; c3.fillText('VENT',26,64);
+ }
+ // 3 caissons empilés, décalage cumulé
+ let dxBas=0;
+ for(let i=0;i<3;i++){
+ const yb=g.y0-i*g.haut, yh=yb-g.haut;
+ const dxHaut=dxBas+skews[i];
+ const pts=[[g.x+dxHaut,yh],[g.x+g.larg+dxHaut,yh],[g.x+g.larg+dxBas,yb],[g.x+dxBas,yb]];
+ c3.strokeStyle = skews[i]!==0 ? '#dc2626' : '#475569';
+ c3.lineWidth=9; c3.lineJoin='round';
+ c3.beginPath(); c3.moveTo(...pts[0]); pts.slice(1).forEach(pt=>c3.lineTo(...pt)); c3.closePath(); c3.stroke();
+ if(etat.diag[i]){
+ c3.strokeStyle='#16a34a'; c3.beginPath(); c3.moveTo(...pts[3]); c3.lineTo(...pts[1]); c3.stroke();
+ }
+ c3.fillStyle='#1e3a5f'; pts.forEach(pt=>{c3.beginPath();c3.arc(pt[0],pt[1],6,0,7);c3.fill();});
+ dxBas=dxHaut;
+ }
+ // flèche de grue
+ c3.strokeStyle='#f59e0b'; c3.lineWidth=8;
+ c3.beginPath(); c3.moveTo(g.x+dxBas+g.larg/2, g.y0-3*g.haut); c3.lineTo(g.x+dxBas+g.larg/2+130, g.y0-3*g.haut-24); c3.stroke();
+ c3.font='13px Segoe UI'; c3.fillStyle='#64748b'; c3.textAlign='center';
+ c3.fillText('clique sur un caisson pour ajouter une diagonale', W/2, H-8);
 }
 cv3.addEventListener('click',e=>{
-  const r=cv3.getBoundingClientRect(), g=geo3();
-  const mx=(e.clientX-r.left)*cv3.width/r.width, my=(e.clientY-r.top)*cv3.height/r.height;
-  for(let i=0;i<3;i++){
-    const yb=g.y0-i*g.haut, yh=yb-g.haut;
-    if(mx>g.x-20 && mx<g.x+g.larg+20 && my>yh && my<yb){
-      etat.diag[i]=!etat.diag[i];
-      document.getElementById('nbDiag').textContent=etat.diag.filter(Boolean).length;
-      dessiner3();
-    }
-  }
+ const r=cv3.getBoundingClientRect(), g=geo3();
+ const mx=(e.clientX-r.left)*cv3.width/r.width, my=(e.clientY-r.top)*cv3.height/r.height;
+ for(let i=0;i<3;i++){
+ const yb=g.y0-i*g.haut, yh=yb-g.haut;
+ if(mx>g.x-20 && mx<g.x+g.larg+20 && my>yh && my<yb){
+ etat.diag[i]=!etat.diag[i];
+ document.getElementById('nbDiag').textContent=etat.diag.filter(Boolean).length;
+ dessiner3();
+ }
+ }
 });
 document.getElementById('reset3').onclick=()=>{ etat.diag=[false,false,false]; document.getElementById('nbDiag').textContent=0; dessiner3(); document.getElementById('verd3').className='verdict'; };
 document.getElementById('btn3').onclick=()=>{
-  let t=0; const verd=document.getElementById('verd3'); verd.className='verdict';
-  function boucle(){
-    t+=0.02;
-    const force=Math.min(1,t);
-    const skews=etat.diag.map(d=> d?0: 34*force*Math.abs(Math.sin(t*3)));
-    dessiner3(skews, force);
-    if(t<2){ requestAnimationFrame(boucle); return; }
-    const ok=etat.diag.every(Boolean);
-    if(ok){ dessiner3([0,0,0],1);
-      verd.className='verdict ok';
-      if(!a3fait){ a3fait=true; verd.innerHTML='✅ Tour parfaitement rigide : chaque caisson est devenu deux triangles ! (+3 pts)'; reussir(3,3); }
-      else verd.innerHTML='✅ Tour parfaitement rigide !';
-    } else {
-      verd.className='verdict ko';
-      verd.innerHTML='🌪️ La tour se déforme : les caissons <b>sans diagonale</b> (en rouge) se tordent. Triangule-les tous !';
-    }
-  }
-  boucle();
+ let t=0; const verd=document.getElementById('verd3'); verd.className='verdict';
+ function boucle(){
+ t+=0.02;
+ const force=Math.min(1,t);
+ const skews=etat.diag.map(d=>d?0: 34*force*Math.abs(Math.sin(t*3)));
+ dessiner3(skews, force);
+ if(t<2){ requestAnimationFrame(boucle); return; }
+ const ok=etat.diag.every(Boolean);
+ if(ok){ dessiner3([0,0,0],1);
+ verd.className='verdict ok';
+ if(!a3fait){ a3fait=true; verd.innerHTML='✓ Tour parfaitement rigide : chaque caisson est devenu deux triangles ! (+3 pts)'; reussir(3,3); }
+ else verd.innerHTML='✓ Tour parfaitement rigide !';
+ } else {
+ verd.className='verdict ko';
+ verd.innerHTML=' La tour se déforme : les caissons <b>sans diagonale</b> (en rouge) se tordent. Triangule-les tous !';
+ }
+ }
+ boucle();
 };
 dessiner3();
 
@@ -465,211 +782,213 @@ let a4fait=false;
 const COUTS={poutre:20,arc:35,suspendu:55}, MULT={bois:0.8,ba:1,acier:1.3};
 function cout4(){ return Math.round(COUTS[s4T.value]*MULT[s4M.value] + 25*(+s4P.value)); }
 function majUI4(){
-  document.getElementById('v4P').textContent=s4P.value;
-  const c=cout4(), el=document.getElementById('cout4');
-  el.textContent=c+' k€'; el.style.color = c>100 ? '#dc2626' : '#16a34a';
-  dessiner4(-1);
+ document.getElementById('v4P').textContent=s4P.value;
+ const c=cout4(), el=document.getElementById('cout4');
+ el.textContent=c+' k€'; el.style.color = c>100 ? '#dc2626' : '#16a34a';
+ dessiner4(-1);
 }
 function analyse4(){
-  const type=s4T.value, mat=s4M.value, piles=+s4P.value, c=cout4();
-  if(c>100) return {ok:false, msg:'💸 Budget dépassé ('+c+' k€ > 100 k€) ! Trouve une solution plus économique.'};
-  if(type==='poutre'){
-    const portee=120/(piles+1);
-    const maxi={bois:20, ba:45, acier:60}[mat];
-    if(portee>maxi) return {ok:false, msg:'💥 Effondrement en flexion ! Chaque travée fait '+portee.toFixed(0)+' m, mais une poutre en '+({bois:'bois',ba:'béton armé',acier:'acier'}[mat])+' ne franchit que '+maxi+' m maximum. Ajoute des piles ou change de matériau.'};
-    return {ok:true, msg:'Le tablier fléchit un peu, les piles renvoient tout au sol en compression.'};
-  }
-  if(type==='arc'){
-    if(mat==='bois') return {ok:false, msg:'💥 Un arc en bois de 120 m, c\u2019est trop : l\u2019arc s\u2019écrase en compression. Il faut un matériau champion de la compression (béton armé) ou très résistant (acier).'};
-    if(piles>0) return {ok:false, msg:'🤔 L\u2019arc tient tout seul… mais tu as payé '+(25*piles)+' k€ de piles inutiles dans une gorge très profonde. Retire-les !'};
-    return {ok:true, msg:'L\u2019arc transmet toute la charge en compression vers les flancs de la gorge : aucune pile nécessaire !'};
-  }
-  // suspendu
-  if(mat!=='acier') return {ok:false, msg:'💥 Les câbles cassent ! Un pont suspendu travaille en traction : seul l\u2019acier des câbles peut résister. Choisis l\u2019acier.'};
-  if(piles>0) return {ok:false, msg:'🤔 Les pylônes du pont suspendu suffisent : les piles supplémentaires ('+(25*piles)+' k€) sont de l\u2019argent jeté dans la gorge !'};
-  return {ok:true, msg:'Le tablier pend aux câbles d\u2019acier tendus en traction : parfait pour les grandes portées !'};
+ const type=s4T.value, mat=s4M.value, piles=+s4P.value, c=cout4();
+ if(c>100) return {ok:false, msg:' Budget dépassé ('+c+' k€ >100 k€) ! Trouve une solution plus économique.'};
+ if(type==='poutre'){
+ const portee=120/(piles+1);
+ const maxi={bois:20, ba:45, acier:60}[mat];
+ if(portee>maxi) return {ok:false, msg:' Effondrement en flexion ! Chaque travée fait '+portee.toFixed(0)+' m, mais une poutre en '+({bois:'bois',ba:'béton armé',acier:'acier'}[mat])+' ne franchit que '+maxi+' m maximum. Ajoute des piles ou change de matériau.'};
+ return {ok:true, msg:'Le tablier fléchit un peu, les piles renvoient tout au sol en compression.'};
+ }
+ if(type==='arc'){
+ if(mat==='bois') return {ok:false, msg:' Un arc en bois de 120 m, c\u2019est trop : l\u2019arc s\u2019écrase en compression. Il faut un matériau champion de la compression (béton armé) ou très résistant (acier).'};
+ if(piles>0) return {ok:false, msg:' L\u2019arc tient tout seul… mais tu as payé '+(25*piles)+' k€ de piles inutiles dans une gorge très profonde. Retire-les !'};
+ return {ok:true, msg:'L\u2019arc transmet toute la charge en compression vers les flancs de la gorge : aucune pile nécessaire !'};
+ }
+ // suspendu
+ if(mat!=='acier') return {ok:false, msg:' Les câbles cassent ! Un pont suspendu travaille en traction : seul l\u2019acier des câbles peut résister. Choisis l\u2019acier.'};
+ if(piles>0) return {ok:false, msg:' Les pylônes du pont suspendu suffisent : les piles supplémentaires ('+(25*piles)+' k€) sont de l\u2019argent jeté dans la gorge !'};
+ return {ok:true, msg:'Le tablier pend aux câbles d\u2019acier tendus en traction : parfait pour les grandes portées !'};
 }
 function dessiner4(camT, casse=false){
-  const W=cv4.width,H=cv4.height, type=s4T.value, piles=+s4P.value;
-  c4.clearRect(0,0,W,H);
-  // gorge
-  c4.fillStyle='#e7e5e4';
-  c4.beginPath(); c4.moveTo(0,150); c4.lineTo(90,150); c4.lineTo(150,H); c4.lineTo(0,H); c4.closePath(); c4.fill();
-  c4.beginPath(); c4.moveTo(W,150); c4.lineTo(W-90,150); c4.lineTo(W-150,H); c4.lineTo(W,H); c4.closePath(); c4.fill();
-  c4.font='12px Segoe UI'; c4.fillStyle='#64748b'; c4.textAlign='center'; c4.fillText('⬅ 120 m ➡', W/2, H-12);
-  const y=150, xg=90, xd=W-90;
-  // piles
-  c4.fillStyle='#64748b';
-  for(let k=1;k<=piles;k++){ const px=xg+(xd-xg)*k/(piles+1); c4.fillRect(px-9,y,18,H-y); }
-  // tablier + structure
-  c4.strokeStyle= casse ? '#dc2626' : '#475569'; c4.lineWidth=11; c4.lineCap='round';
-  if(casse){
-    c4.beginPath(); c4.moveTo(xg,y); c4.quadraticCurveTo(W/2-40,y+70,W/2-15,y+110); c4.stroke();
-    c4.beginPath(); c4.moveTo(xd,y); c4.quadraticCurveTo(W/2+40,y+70,W/2+15,y+110); c4.stroke();
-    c4.font='bold 22px Segoe UI'; c4.fillStyle='#dc2626'; c4.fillText('💥 ÉCHEC !', W/2, 60);
-  } else {
-    c4.beginPath(); c4.moveTo(xg,y); c4.lineTo(xd,y); c4.stroke();
-    if(type==='arc'){ c4.strokeStyle='#78716c'; c4.lineWidth=12;
-      c4.beginPath(); c4.moveTo(xg+10,H-40); c4.quadraticCurveTo(W/2,y-70,xd-10,H-40); c4.stroke(); }
-    if(type==='suspendu'){
-      const t1=W*0.32,t2=W*0.68,ht=44;
-      c4.fillStyle='#64748b'; [t1,t2].forEach(px=>c4.fillRect(px-8,ht,16,y-ht+6));
-      c4.strokeStyle='#1d4ed8'; c4.lineWidth=4;
-      c4.beginPath(); c4.moveTo(xg,y-5);
-      c4.quadraticCurveTo((xg+t1)/2,ht+6,t1,ht);
-      c4.quadraticCurveTo(W/2,y-22,t2,ht);
-      c4.quadraticCurveTo((t2+xd)/2,ht+6,xd,y-5); c4.stroke();
-      c4.lineWidth=2;
-      for(let k=1;k<7;k++){ const sx=t1+(t2-t1)*k/7, sy=y-22-(y-22-ht)*Math.pow(Math.abs(k/7-0.5)*2,2);
-        c4.beginPath(); c4.moveTo(sx,sy); c4.lineTo(sx,y-6); c4.stroke(); }
-    }
-  }
-  if(camT>=0 && !casse){
-    const px=xg+(xd-xg)*camT;
-    c4.fillStyle='#f59e0b'; c4.fillRect(px-24,y-28,38,19);
-    c4.fillStyle='#1e3a5f'; c4.fillRect(px+12,y-22,16,13);
-    c4.fillStyle='#334155'; c4.beginPath(); c4.arc(px-12,y-6,6,0,7); c4.arc(px+18,y-6,6,0,7); c4.fill();
-  }
+ const W=cv4.width,H=cv4.height, type=s4T.value, piles=+s4P.value;
+ c4.clearRect(0,0,W,H);
+ // gorge
+ c4.fillStyle='#e7e5e4';
+ c4.beginPath(); c4.moveTo(0,150); c4.lineTo(90,150); c4.lineTo(150,H); c4.lineTo(0,H); c4.closePath(); c4.fill();
+ c4.beginPath(); c4.moveTo(W,150); c4.lineTo(W-90,150); c4.lineTo(W-150,H); c4.lineTo(W,H); c4.closePath(); c4.fill();
+ c4.font='12px Segoe UI'; c4.fillStyle='#64748b'; c4.textAlign='center'; c4.fillText('⬅ 120 m', W/2, H-12);
+ const y=150, xg=90, xd=W-90;
+ // piles
+ c4.fillStyle='#64748b';
+ for(let k=1;k<=piles;k++){ const px=xg+(xd-xg)*k/(piles+1); c4.fillRect(px-9,y,18,H-y); }
+ // tablier + structure
+ c4.strokeStyle= casse ? '#dc2626' : '#475569'; c4.lineWidth=11; c4.lineCap='round';
+ if(casse){
+ c4.beginPath(); c4.moveTo(xg,y); c4.quadraticCurveTo(W/2-40,y+70,W/2-15,y+110); c4.stroke();
+ c4.beginPath(); c4.moveTo(xd,y); c4.quadraticCurveTo(W/2+40,y+70,W/2+15,y+110); c4.stroke();
+ c4.font='bold 22px Segoe UI'; c4.fillStyle='#dc2626'; c4.fillText('ÉCHEC !', W/2, 60);
+ } else {
+ c4.beginPath(); c4.moveTo(xg,y); c4.lineTo(xd,y); c4.stroke();
+ if(type==='arc'){ c4.strokeStyle='#78716c'; c4.lineWidth=12;
+ c4.beginPath(); c4.moveTo(xg+10,H-40); c4.quadraticCurveTo(W/2,y-70,xd-10,H-40); c4.stroke(); }
+ if(type==='suspendu'){
+ const t1=W*0.32,t2=W*0.68,ht=44;
+ c4.fillStyle='#64748b'; [t1,t2].forEach(px=>c4.fillRect(px-8,ht,16,y-ht+6));
+ c4.strokeStyle='#1d4ed8'; c4.lineWidth=4;
+ c4.beginPath(); c4.moveTo(xg,y-5);
+ c4.quadraticCurveTo((xg+t1)/2,ht+6,t1,ht);
+ c4.quadraticCurveTo(W/2,y-22,t2,ht);
+ c4.quadraticCurveTo((t2+xd)/2,ht+6,xd,y-5); c4.stroke();
+ c4.lineWidth=2;
+ for(let k=1;k<7;k++){ const sx=t1+(t2-t1)*k/7, sy=y-22-(y-22-ht)*Math.pow(Math.abs(k/7-0.5)*2,2);
+ c4.beginPath(); c4.moveTo(sx,sy); c4.lineTo(sx,y-6); c4.stroke(); }
+ }
+ }
+ if(camT>=0 && !casse){
+ const px=xg+(xd-xg)*camT;
+ c4.fillStyle='#f59e0b'; c4.fillRect(px-24,y-28,38,19);
+ c4.fillStyle='#1e3a5f'; c4.fillRect(px+12,y-22,16,13);
+ c4.fillStyle='#334155'; c4.beginPath(); c4.arc(px-12,y-6,6,0,7); c4.arc(px+18,y-6,6,0,7); c4.fill();
+ }
 }
 [s4T,s4M,s4P].forEach(el=>el.addEventListener('input',majUI4));
 document.getElementById('btn4').onclick=()=>{
-  const res=analyse4(), verd=document.getElementById('verd4');
-  verd.className='verdict';
-  let t=0;
-  function boucle(){
-    t+=0.009;
-    if(!res.ok && t>0.45){ dessiner4(-1,true);
-      verd.className='verdict ko'; verd.innerHTML=res.msg; return; }
-    if(t>=1){ dessiner4(1);
-      const reste=100-cout4();
-      const etoiles = reste>=60 ? '⭐⭐⭐' : reste>=30 ? '⭐⭐' : '⭐';
-      verd.className='verdict ok';
-      verd.innerHTML='✅ Le camion est passé ! '+res.msg+'<br>Coût : '+cout4()+' k€ — il te reste '+reste+' k€ → '+etoiles;
-      if(!a4fait){ a4fait=true; reussir(4, reste>=60?4:3); }
-      return; }
-    dessiner4(t); requestAnimationFrame(boucle);
-  }
-  boucle();
+ const res=analyse4(), verd=document.getElementById('verd4');
+ verd.className='verdict';
+ let t=0;
+ function boucle(){
+ t+=0.009;
+ if(!res.ok && t>0.45){ dessiner4(-1,true);
+ verd.className='verdict ko'; verd.innerHTML=res.msg; return; }
+ if(t>=1){ dessiner4(1);
+ const reste=100-cout4();
+ const etoiles = reste>=60 ? '★★★' : reste>=30 ? '★★' : '★';
+ verd.className='verdict ok';
+ verd.innerHTML='✓ Le camion est passé ! '+res.msg+'<br>Coût : '+cout4()+' k€ — il te reste '+reste+' k€ → '+etoiles;
+ if(!a4fait){ a4fait=true; reussir(4, reste>=60?4:3); }
+ return; }
+ dessiner4(t); requestAnimationFrame(boucle);
+ }
+ boucle();
 };
 majUI4();
 
 /* ================= A5 : SCHEMA A LEGENDER ================= */
 (function(){
-  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
-  const ZONES=[
-    {id:'pylone', x:400, y:30,  w:60,  h:150, lbl:'LE PYLÔNE',   tx:430, ty:22},
-    {id:'haubans',x:480, y:60,  w:240, h:120, lbl:'LES HAUBANS', tx:610, ty:52},
-    {id:'tablier',x:130, y:192, w:240, h:30,  lbl:'LE TABLIER',  tx:250, ty:250},
-    {id:'culee',  x:52,  y:222, w:66,  h:62,  lbl:'LA CULÉE',    tx:88,  ty:310},
-  ];
-  const poses={}; let sel=null, t=0;
-  function dessiner(){
-    t+=0.02;
-    ctx.clearRect(0,0,860,330);
-    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
-    ctx.beginPath(); ctx.moveTo(0,284); ctx.lineTo(860,284); ctx.stroke();
-    ctx.fillStyle='#dbeafe'; ctx.fillRect(130,286,600,40);
-    ctx.fillStyle='#e2e8f0'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.rect(58,222,54,62); ctx.fill(); ctx.stroke();
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#334155'; ctx.lineWidth=3;
-    ctx.beginPath(); ctx.rect(58,206,760,14); ctx.fill(); ctx.stroke();
-    ctx.strokeStyle='#b45309'; ctx.lineWidth=7;
-    ctx.beginPath(); ctx.moveTo(418,206); ctx.lineTo(430,42); ctx.moveTo(442,206); ctx.lineTo(430,42); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(418,284); ctx.lineTo(418,206); ctx.moveTo(442,284); ctx.lineTo(442,206); ctx.stroke();
-    ctx.strokeStyle='#64748b'; ctx.lineWidth=1.6;
-    [530,600,670,740].forEach(px=>{ ctx.beginPath(); ctx.moveTo(430,50); ctx.lineTo(px,206); ctx.stroke(); });
-    [330,260,190,120].forEach(px=>{ ctx.beginPath(); ctx.moveTo(430,50); ctx.lineTo(px,206); ctx.stroke(); });
-    const vx=80+((t*46)%700);
-    ctx.font='22px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
-    ctx.fillText('\ud83d\ude97',vx,202);
-    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
-    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  const bar=document.getElementById('etiq5');
-  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
-    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
-    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
-      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
-    bar.appendChild(b);
-  });
-  cv.addEventListener('click',e=>{
-    if(!sel) return;
-    const r=cv.getBoundingClientRect();
-    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
-    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
-    const verd=document.getElementById('verd5');
-    if(cible && cible.id===sel){
-      poses[sel]=true;
-      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
-      sel=null;
-      if(Object.keys(poses).length===ZONES.length){
-        verd.innerHTML='<div class="verdict ok">✅ Schéma complet ! Le TABLIER porte la route, les HAUBANS le suspendent, le PYLÔNE reprend tous ces efforts et les descend vers le sol, et la CULÉE ancre les extrémités. Chaque élément a SA fonction dans la descente des charges. (+3 pts)</div>';
-        reussir(5,3);
-      }
-    } else if(cible){
-      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : les haubans sont les câbles en éventail, le pylône est la tour qui les porte, le tablier est la partie où roule la voiture, la culée est le bloc d\u2019appui au bord.</div>';
-    }
-  });
+ const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+ const ZONES=[
+ {id:'pylone', x:400, y:30, w:60, h:150, lbl:'LE PYLÔNE', tx:430, ty:22},
+ {id:'haubans',x:480, y:60, w:240, h:120, lbl:'LES HAUBANS', tx:610, ty:52},
+ {id:'tablier',x:130, y:192, w:240, h:30, lbl:'LE TABLIER', tx:250, ty:250},
+ {id:'culee', x:52, y:222, w:66, h:62, lbl:'LA CULÉE', tx:88, ty:310},
+ ];
+ const poses={}; let sel=null, t=0;
+ function dessiner(){
+ t+=0.02;
+ ctx.clearRect(0,0,860,330);
+ ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+ ctx.beginPath(); ctx.moveTo(0,284); ctx.lineTo(860,284); ctx.stroke();
+ ctx.fillStyle='#dbeafe'; ctx.fillRect(130,286,600,40);
+ ctx.fillStyle='#e2e8f0'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.rect(58,222,54,62); ctx.fill(); ctx.stroke();
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#334155'; ctx.lineWidth=3;
+ ctx.beginPath(); ctx.rect(58,206,760,14); ctx.fill(); ctx.stroke();
+ ctx.strokeStyle='#b45309'; ctx.lineWidth=7;
+ ctx.beginPath(); ctx.moveTo(418,206); ctx.lineTo(430,42); ctx.moveTo(442,206); ctx.lineTo(430,42); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(418,284); ctx.lineTo(418,206); ctx.moveTo(442,284); ctx.lineTo(442,206); ctx.stroke();
+ ctx.strokeStyle='#64748b'; ctx.lineWidth=1.6;
+ [530,600,670,740].forEach(px=>{ ctx.beginPath(); ctx.moveTo(430,50); ctx.lineTo(px,206); ctx.stroke(); });
+ [330,260,190,120].forEach(px=>{ ctx.beginPath(); ctx.moveTo(430,50); ctx.lineTo(px,206); ctx.stroke(); });
+ const vx=80+((t*46)%700);
+ ctx.font='22px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+ ctx.fillText('\ud83d\ude97',vx,202);
+ ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+ ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ const bar=document.getElementById('etiq5');
+ ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+ const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+ b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+ bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+ bar.appendChild(b);
+ });
+ cv.addEventListener('click',e=>{
+ if(!sel) return;
+ const r=cv.getBoundingClientRect();
+ const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+ const cible=ZONES.find(z=>x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+ const verd=document.getElementById('verd5');
+ if(cible && cible.id===sel){
+ poses[sel]=true;
+ const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+ sel=null;
+ if(Object.keys(poses).length===ZONES.length){
+ verd.innerHTML='<div class="verdict ok">✓ Schéma complet ! Le TABLIER porte la route, les HAUBANS le suspendent, le PYLÔNE reprend tous ces efforts et les descend vers le sol, et la CULÉE ancre les extrémités. Chaque élément a SA fonction dans la descente des charges. (+3 pts)</div>';
+ reussir(5, err5===0?3:(err5<=2?2:1));
+ }
+ } else if(cible){
+ err5++;
+ verd.innerHTML='<div class="verdict ko">✗ Pas là ! Indice : les haubans sont les câbles en éventail, le pylône est la tour qui les porte, le tablier est la partie où roule la voiture, la culée est le bloc d\u2019appui au bord.</div>';
+ }
+ });
 })();
 
 /* ================= A6 : MANIPULATION AU CURSEUR ================= */
 (function(){
-  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
-  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
-  const SCEN=[
-    {min:60, max:80,
-     ok:'\u2705 Entre 60 et 80 cm : la flèche reste sous la limite ET la matière est raisonnable — ni fragile, ni obèse. C\u2019est ça, le métier d\u2019ingénieur : le JUSTE dimensionnement ! (+4 pts)',
-     kobas:'\u274c Trop mince : regarde la poutre PLIER sous le camion — la flèche dépasse la limite admissible. Un tablier qui plie trop fissure la chaussée\u2026 Épaissis !',
-     kohaut:'\u274c Ça tient, évidemment\u2026 mais regarde la jauge coût/matière : à ce prix on construit DEUX ponts ! Sur-dimensionner gaspille béton et argent. Affine !'}
-  ];
-  let etape=0, t=0, valide=false;
-  function dessiner(){
-    t+=0.03;
-    ctx.clearRect(0,0,860,280);
-    const v=+slider.value;
-    const sc=SCEN[Math.min(etape,SCEN.length-1)];
-    const sag=Math.min(70, 900000/(v*v*v));
-    const ep=6+v/120*30;
-    ctx.fillStyle='#e2e8f0'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.rect(90,170,50,80); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); ctx.rect(560,170,50,80); ctx.fill(); ctx.stroke();
-    ctx.strokeStyle= sag>10 ? '#dc2626' : '#334155'; ctx.lineWidth=ep; ctx.lineCap='butt';
-    ctx.beginPath(); ctx.moveTo(115,170);
-    ctx.quadraticCurveTo(350,170+sag*2,585,170); ctx.stroke();
-    ctx.strokeStyle='#f59e0b'; ctx.lineWidth=1.5; ctx.setLineDash([6,5]);
-    ctx.beginPath(); ctx.moveTo(115,182); ctx.lineTo(585,182); ctx.stroke(); ctx.setLineDash([]);
-    ctx.font='11px Segoe UI'; ctx.textAlign='left'; ctx.fillStyle='#f59e0b';
-    ctx.fillText('limite de flèche', 592, 186);
-    ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
-    ctx.fillText('\ud83d\ude9a',350,158+sag);
-    ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#64748b';
-    ctx.fillText('portée : 20 m', 350, 268);
-    ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#334155';
-    ctx.fillText('FLÈCHE', 720, 60);
-    ctx.fillStyle='#e2e8f0'; ctx.fillRect(680,70,80,14);
-    ctx.fillStyle= sag>10 ? '#dc2626' : '#16a34a';
-    ctx.fillRect(680,70,Math.min(80,sag/70*80),14);
-    ctx.fillStyle='#334155'; ctx.fillText('COÛT / MATIÈRE', 720, 120);
-    ctx.fillStyle='#e2e8f0'; ctx.fillRect(680,130,80,14);
-    ctx.fillStyle= v>80 ? '#dc2626' : '#16a34a';
-    ctx.fillRect(680,130,v/120*80,14);
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
-  document.getElementById('verif6').addEventListener('click',()=>{
-    if(valide) return;
-    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
-    if(v>=sc.min && v<=sc.max){
-      etape++;
-      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
-      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
-    } else {
-      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
-    }
-  });
+ const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+ const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+ const SCEN=[
+ {min:60, max:80,
+ ok:'\u2705 Entre 60 et 80 cm : la flèche reste sous la limite ET la matière est raisonnable — ni fragile, ni obèse. C\u2019est ça, le métier d\u2019ingénieur : le JUSTE dimensionnement ! (+4 pts)',
+ kobas:'\u274c Trop mince : regarde la poutre PLIER sous le camion — la flèche dépasse la limite admissible. Un tablier qui plie trop fissure la chaussée\u2026 Épaissis !',
+ kohaut:'\u274c Ça tient, évidemment\u2026 mais regarde la jauge coût/matière : à ce prix on construit DEUX ponts ! Sur-dimensionner gaspille béton et argent. Affine !'}
+ ];
+ let etape=0, t=0, valide=false;
+ function dessiner(){
+ t+=0.03;
+ ctx.clearRect(0,0,860,280);
+ const v=+slider.value;
+ const sc=SCEN[Math.min(etape,SCEN.length-1)];
+ const sag=Math.min(70, 900000/(v*v*v));
+ const ep=6+v/120*30;
+ ctx.fillStyle='#e2e8f0'; ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.rect(90,170,50,80); ctx.fill(); ctx.stroke();
+ ctx.beginPath(); ctx.rect(560,170,50,80); ctx.fill(); ctx.stroke();
+ ctx.strokeStyle= sag>10 ? '#dc2626' : '#334155'; ctx.lineWidth=ep; ctx.lineCap='butt';
+ ctx.beginPath(); ctx.moveTo(115,170);
+ ctx.quadraticCurveTo(350,170+sag*2,585,170); ctx.stroke();
+ ctx.strokeStyle='#f59e0b'; ctx.lineWidth=1.5; ctx.setLineDash([6,5]);
+ ctx.beginPath(); ctx.moveTo(115,182); ctx.lineTo(585,182); ctx.stroke(); ctx.setLineDash([]);
+ ctx.font='11px Segoe UI'; ctx.textAlign='left'; ctx.fillStyle='#f59e0b';
+ ctx.fillText('limite de flèche', 592, 186);
+ ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
+ ctx.fillText('\ud83d\ude9a',350,158+sag);
+ ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#64748b';
+ ctx.fillText('portée : 20 m', 350, 268);
+ ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#334155';
+ ctx.fillText('FLÈCHE', 720, 60);
+ ctx.fillStyle='#e2e8f0'; ctx.fillRect(680,70,80,14);
+ ctx.fillStyle= sag>10 ? '#dc2626' : '#16a34a';
+ ctx.fillRect(680,70,Math.min(80,sag/70*80),14);
+ ctx.fillStyle='#334155'; ctx.fillText('COÛT / MATIÈRE', 720, 120);
+ ctx.fillStyle='#e2e8f0'; ctx.fillRect(680,130,80,14);
+ ctx.fillStyle= v>80 ? '#dc2626' : '#16a34a';
+ ctx.fillRect(680,130,v/120*80,14);
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+ document.getElementById('verif6').addEventListener('click',()=>{
+ essais6++;
+ if(valide) return;
+ const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+ if(v>=sc.min && v<=sc.max){
+ etape++;
+ if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6, essais6<=SCEN.length?4:(essais6<=SCEN.length+2?3:2)); }
+ else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+ } else {
+ verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+ }
+ });
 })();
 
 /* ================= A7 : BILAN ================= */
@@ -680,34 +999,177 @@ const Q5=[
  { q:"Une poutre chargée fléchit. Sa partie basse est :", reps:["étirée (traction)","écrasée (compression)","au repos"], bon:0 },
 ];
 (function initQ5(){
-  const zone=document.getElementById('quiz5');
-  Q5.forEach((item,i)=>{
-    const d=document.createElement('div'); d.className='question';
-    d.innerHTML=`<div class="q">${i+1}. ${item.q}</div><div class="rep"></div>`;
-    const rep=d.querySelector('.rep');
-    item.reps.forEach((r,k)=>{
-      const b=document.createElement('button'); b.textContent=r;
-      b.onclick=()=>{
-        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
-        etat.q5rep++;
-        if(k===item.bon){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-        else { b.classList.add('faux'); rep.children[item.bon].classList.add('bon'); }
-        if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
-          else {
-            const verd=document.createElement('div'); verd.className='verdict ko';
-            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
-            zone.appendChild(verd);
-          }
-        }
-      };
-      rep.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('quiz5');
+ let tentative=0, reponses={};
+ function melanger(t){ return t.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
+ function construire(){
+ reponses={};
+ zone.innerHTML='';
+ const ordre=melanger(Q5.map((q,i)=>i));
+ ordre.forEach((qi,rang)=>{
+ const item=Q5[qi];
+ const d=document.createElement('div'); d.className='question';
+ d.innerHTML='<div class="q">'+(rang+1)+'. '+item.q+'</div><div class="rep"></div>';
+ const rep=d.querySelector('.rep');
+ melanger(item.reps.map((txt,k)=>({txt,k}))).forEach(o=>{
+ const b=document.createElement('button'); b.textContent=o.txt;
+ b.onclick=()=>{
+ rep.querySelectorAll('button').forEach(x=>x.classList.remove('choisi'));
+ b.classList.add('choisi');
+ reponses[qi]=o.k;
+ const n=Object.keys(reponses).length;
+ info.textContent = n<Q5.length
+ ? n+' réponse(s) sur '+Q5.length+' — aucune correction avant la validation.'
+ : 'Toutes les questions sont renseignées : tu peux valider.';
+ btn.disabled = n<Q5.length;
+ };
+ rep.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
+ zone.appendChild(barre);
+ btn.disabled=true;
+ info.textContent='Réponds aux '+Q5.length+' questions, puis valide. Aucune réponse ne sera corrigée avant.';
+ }
+ const barre=document.createElement('div');
+ const info=document.createElement('div'); info.className='verdict'; info.style.marginTop='10px';
+ const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Valider mes 4 réponses';
+ btn.style.marginTop='10px';
+ const sortie=document.createElement('div');
+ barre.appendChild(info); barre.appendChild(btn); barre.appendChild(sortie);
+ btn.onclick=()=>{
+ tentative++;
+ let bons=0;
+ Q5.forEach((item,i)=>{ if(reponses[i]===item.bon) bons++; });
+ if(bons>=3){
+ etat.q5ok=bons; etat.score+=bons;
+ document.getElementById('scoreTot').textContent=etat.score;
+ zone.querySelectorAll('button').forEach(x=>x.disabled=true);
+ sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
+ ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
+ document.getElementById('codefinal').style.display='block';
+ reussir(7, tentative===1?2:(tentative===2?1:0));
+ } else {
+ sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
+ ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
+ 'Les questions seront remélangées.</div>';
+ setTimeout(()=>{ construire(); sortie.innerHTML=''; },2600);
+ }
+ };
+ construire();
 })();
 
 charger(); majProgression();
 </script>
+
+<button id="calcBtn" title="Ouvrir la calculatrice"><span class="ic">C</span>calcul</button>
+<div id="calcPan">
+ <div class="tete" id="calcTete"><b>CALCULATRICE</b><button id="calcX" title="Fermer">&times;</button></div>
+ <div id="calcEcr"><div class="op" id="calcOp"></div><div class="val" id="calcVal">0</div></div>
+ <div id="calcGr">
+ <button class="f" data-k="C">C</button><button class="f" data-k="back">&#9003;</button>
+ <button class="f" data-k="pct">%</button><button class="op" data-k="/">&divide;</button>
+ <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+ <button class="op" data-k="*">&times;</button>
+ <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+ <button class="op" data-k="-">&minus;</button>
+ <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+ <button class="op" data-k="+">+</button>
+ <button class="f" data-k="sign">+/&minus;</button><button data-k="0">0</button>
+ <button data-k=".">,</button><button class="eq" data-k="=">=</button>
+ </div>
+</div>
+<script>
+/* ===== Calculatrice (aucun eval, aucune dépendance) ===== */
+(function(){
+ var pan=document.getElementById('calcPan'), btn=document.getElementById('calcBtn');
+ var eVal=document.getElementById('calcVal'), eOp=document.getElementById('calcOp');
+ var cour='0', prec=null, oper=null, neuf=true;
+ function aff(){
+ eVal.textContent=String(cour).replace('.',',');
+ eOp.textContent=(prec!==null?String(prec).replace('.',',')+' '+({'+':'+','-':'\u2212','*':'\u00d7','/':'\u00f7'}[oper]||''):'');
+ }
+ function calcule(a,b,o){
+ a=parseFloat(a); b=parseFloat(b);
+ var r = o==='+'?a+b : o==='-'?a-b : o==='*'?a*b : (b===0?NaN:a/b);
+ if(!isFinite(r)) return 'Erreur';
+ return String(Math.round(r*1e10)/1e10);
+ }
+ function touche(k){
+ if(cour==='Erreur' && k!=='C'){ return; }
+ if(/^[0-9]$/.test(k)){ cour = (neuf||cour==='0') ? k : cour+k; neuf=false; }
+ else if(k==='.'){ if(neuf){ cour='0.'; neuf=false; } else if(cour.indexOf('.')<0) cour+='.'; }
+ else if(k==='C'){ cour='0'; prec=null; oper=null; neuf=true; }
+ else if(k==='back'){ cour = (cour.length>1) ? cour.slice(0,-1) : '0'; if(cour==='-')cour='0'; }
+ else if(k==='sign'){ cour = cour.charAt(0)==='-' ? cour.slice(1) : (cour==='0'?cour:'-'+cour); }
+ else if(k==='pct'){ cour=String(parseFloat(cour)/100); neuf=true; }
+ else if(k==='+'||k==='-'||k==='*'||k==='/'){
+ if(prec!==null && !neuf){ cour=calcule(prec,cour,oper); }
+ prec=cour; oper=k; neuf=true;
+ }
+ else if(k==='='){
+ if(prec!==null && oper){ cour=calcule(prec,cour,oper); prec=null; oper=null; neuf=true; }
+ }
+ aff();
+ }
+ document.getElementById('calcGr').addEventListener('click',function(ev){
+ var b=ev.target.closest('button'); if(!b)return; touche(b.dataset.k);
+ });
+ btn.addEventListener('click',function(){ pan.classList.toggle('on'); });
+ document.getElementById('calcX').addEventListener('click',function(){ pan.classList.remove('on'); });
+ /* déplacement du panneau */
+ var tete=document.getElementById('calcTete'), drag=false, dx=0, dy=0;
+ tete.addEventListener('pointerdown',function(e){
+ if(e.target.id==='calcX')return;
+ drag=true; var r=pan.getBoundingClientRect();
+ dx=e.clientX-r.left; dy=e.clientY-r.top;
+ pan.style.right='auto'; pan.style.bottom='auto';
+ pan.style.left=r.left+'px'; pan.style.top=r.top+'px';
+ try{ tete.setPointerCapture(e.pointerId); }catch(err){}
+ });
+ tete.addEventListener('pointermove',function(e){
+ if(!drag)return;
+ pan.style.left=Math.max(4,Math.min(window.innerWidth-244,e.clientX-dx))+'px';
+ pan.style.top=Math.max(4,Math.min(window.innerHeight-260,e.clientY-dy))+'px';
+ });
+ tete.addEventListener('pointerup',function(){ drag=false; });
+ aff();
+})();
+</script>
+
+<div class="acti" id="aTrace" style="display:block">
+ <div class="boite">
+  <h2>Trace écrite</h2>
+  <div class="consigne">À recopier sur le cahier, schéma compris.</div>
+  <canvas class="canvatp" id="cvTrace" width="860" height="200" style="cursor:default"></canvas>
+  <ul style="margin:12px 0 0 20px;line-height:1.95;font-size:15.5px"><li>Un ouvrage doit <b>transmettre les charges jusqu’au sol</b> sans se rompre ni se déformer.</li><li>Trois efforts : la <b>compression</b> écrase, la <b>traction</b> étire, la <b>flexion</b> plie.</li><li>Un carré se déforme, un <b>triangle</b> non : la <b>triangulation</b> rigidifie une structure.</li><li>Plus la <b>portée</b> est grande, plus la solution est élaborée : poutre, puis arc, puis haubans.</li></ul>
+ </div>
+</div>
+<script>
+/* ── schéma de la trace écrite ── */
+(function(){
+ const cv=document.getElementById('cvTrace'); if(!cv)return;
+ const c=cv.getContext('2d');
+ function T(s,x,y,t,coul,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=coul||'#3f3a34';c.textAlign=al||'center';c.fillText(s,x,y);}
+ const B=[['CHARGE','le poids appliqué'],['TABLIER','il fléchit'],['PILES ou CÂBLES','ils transmettent'],['FONDATIONS','le sol reprend tout']], A='#0e7490', F='#155e75';
+ c.fillStyle='#fff'; c.fillRect(0,0,860,200);
+ T('DE LA CHARGE AU SOL',430,28,14.5,F);
+ const n=B.length, marge=24, esp=18;
+ const w=Math.floor((860-2*marge-(n-1)*esp)/n);
+ B.forEach((b,i)=>{
+  const x=marge+i*(w+esp);
+  c.fillStyle='#fff'; c.strokeStyle=A; c.lineWidth=2.4;
+  c.beginPath(); c.roundRect(x,58,w,68,12); c.fill(); c.stroke();
+  T(b[0],x+w/2,88,13,F); T(b[1],x+w/2,108,11.5,'#5b544a');
+  if(i<n-1){
+   c.strokeStyle=A; c.fillStyle=A; c.lineWidth=3;
+   c.beginPath(); c.moveTo(x+w,92); c.lineTo(x+w+esp-8,92); c.stroke();
+   c.beginPath(); c.moveTo(x+w+esp,92); c.lineTo(x+w+esp-9,86); c.lineTo(x+w+esp-9,98); c.closePath(); c.fill();
+  }
+ });
+ T('compression = écraser · traction = étirer · flexion = plier',430,168,13.5,'#5b544a');
+})();
+</script>
+
 </body>
 </html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ballon-Sonde — Technologie 5ème · ESTIC</title>
+<style>
+:root{--niv:#ca8a04;--fonce:#a16207;--neon:#fbbf24;--orange:#ea580c}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(940px,100%);padding:14px 12px 30px}
+h1{font-size:24px;color:var(--neon);text-align:center;margin:8px 0 2px}
+.sous{text-align:center;color:#94a3b8;font-size:13.5px;margin-bottom:12px}
+.panneau{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:22px;max-width:560px;margin:20px auto;text-align:center}
+.panneau h2{color:var(--neon);font-size:19px;margin-bottom:10px}
+.panneau p{font-size:14px;color:#cbd5e1;line-height:1.55;margin-bottom:12px}
+.panneau input{width:170px;padding:11px;font-size:17px;font-weight:800;text-align:center;letter-spacing:2px;border-radius:10px;border:2px solid #475569;background:#0f172a;color:#fff;text-transform:uppercase}
+.panneau button,.gros{border:none;border-radius:12px;background:var(--niv);color:#fff;font-size:16px;font-weight:900;padding:13px 26px;cursor:pointer;margin-top:12px}
+.panneau button:hover,.gros:hover{filter:brightness(1.15)}
+.err{color:#f87171;font-size:13px;height:18px;margin-top:8px}
+.regles{text-align:left;font-size:13.5px;color:#cbd5e1;background:#0f172a;border-radius:10px;padding:12px 16px;margin:10px 0}
+.regles b{color:var(--neon)}
+#zone{display:none;position:relative}
+#hud{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:15px;padding:6px 4px}
+#hud .vies{letter-spacing:3px}
+canvas{width:100%;display:block;border-radius:14px;background:#0b1120;border:1px solid #334155}
+#over{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.82);border-radius:14px}
+#over .bloc{text-align:center;background:#1e293b;border:1px solid #475569;border-radius:16px;padding:26px 34px}
+#over h2{color:var(--neon);font-size:22px;margin-bottom:8px}
+#over p{color:#cbd5e1;font-size:14.5px;margin-bottom:4px}
+.tactile{display:flex;gap:10px;justify-content:center;margin-top:10px}
+.tactile button{border:none;border-radius:12px;background:#334155;color:#fff;font-size:17px;font-weight:900;padding:14px 0;flex:1;max-width:150px;cursor:pointer}
+.tactile button:active{background:var(--niv)}
+.retour{display:block;text-align:center;margin:16px auto 0;color:#94a3b8;font-size:13px;text-decoration:none}
+.retour:hover{color:var(--neon)}
+</style>
+</head>
+<body>
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<h1>Ballon-Sonde</h1>
+<div class="sous">Fais monter le ballon météo à travers la tempête — Séquence Météo · 5e</div>
+
+<div class="panneau" id="pverrou">
+ <h2>Jeu verrouillé</h2>
+ <p>Termine le TP de la séquence pour obtenir le code d'accès !</p>
+ <input id="codein" maxlength="8" autocomplete="off" spellcheck="false">
+ <br><button id="btnCode">Déverrouiller</button>
+ <div class="err" id="errCode"></div>
+</div>
+
+<div class="panneau" id="ptitre" style="display:none">
+ <h2>Ballon-Sonde</h2>
+ <p>Ton ballon-sonde grimpe dans un ciel déchaîné. Faufile-toi entre les fronts orageux, attrape les capteurs largués… et évite les cumulonimbus, la grêle et les éclairs !</p>
+ <div class="regles"><b>MAINTIENS</b>Espace / ↑ (ou le bouton) pour <b>monter</b>, relâche pour descendre.<br>Passe entre les nuages d’orage · capteur = +50 pts · grêle et éclairs = −1 vie.</div>
+ <p>Record : <b id="recAff">0</b></p>
+ <button class="gros" id="btnJouer">▶ JOUER</button>
+</div>
+
+<div id="zone">
+ <div id="hud">
+ <span>SCORE <span id="score">0</span></span>
+ <span class="vies" id="vies">●●●</span>
+ <span> <span id="rec2">0</span></span>
+ </div>
+ <canvas id="cv" width="900" height="440"></canvas>
+ <div id="over"><div class="bloc">
+ <h2 id="overTitre">GAME OVER</h2>
+ <p>Score : <b id="overScore">0</b></p>
+ <p id="overRecord"></p>
+ <p style="margin-top:6px;font-size:13px;color:#94a3b8">Les vrais ballons-sondes montent à 30 km d’altitude — et personne ne les pilote !</p>
+ <button class="gros" id="btnRejouer">⟳ Rejouer</button>
+ </div></div>
+ <div class="tactile" id="tactile"></div>
+</div>
+<a class="retour" href="00_hub_meteo_5e.html">← Retour au hub de la séquence</a>
+</main>
+<script>
+const CODE='STATION7';
+const CLE='ballonsonde';
+const MODE='flappy';
+/* ============ VERROU ============ */
+function dejaOuvert(){ try{ return localStorage.getItem(CLE+'_ok')==='1'; }catch(e){ return false; } }
+const pv=document.getElementById('pverrou'), pt=document.getElementById('ptitre');
+function ouvrir(){ pv.style.display='none'; pt.style.display='block'; }
+if(dejaOuvert()) ouvrir();
+document.getElementById('btnCode').addEventListener('click',()=>{
+ const v=document.getElementById('codein').value.trim().toUpperCase();
+ if(v===CODE){ try{ localStorage.setItem(CLE+'_ok','1'); }catch(e){} ouvrir(); }
+ else document.getElementById('errCode').textContent='Code incorrect\u2026 termine le TP !';
+});
+/* ============ MOTEUR ============ */
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+const W=900,H=440;
+let record=0; try{ record=+localStorage.getItem(CLE+'_rec3')||0; }catch(e){}
+document.getElementById('recAff').textContent=record;
+document.getElementById('rec2').textContent=record;
+
+
+const SPAWN=[{id:'front',p:5},{id:'grele',p:3},{id:'eclair',p:2},{id:'capteur',p:3}];
+const SPRITES={
+ front:{bon:false,mur:true,w:56,h:440,draw(c,e){
+ c.fillStyle='#334155';
+ c.beginPath(); c.roundRect(e.x-28,-8,56,e.trou-75,14); c.fill();
+ c.beginPath(); c.roundRect(e.x-28,e.trou+75,56,H-e.trou-67,14); c.fill();
+ c.fillStyle='#475569';
+ [e.trou-95,e.trou+95].forEach(y=>{ for(let k=-1;k<2;k++){ c.beginPath(); c.arc(e.x+k*18,y,16,0,Math.PI*2); c.fill(); } });
+ }},
+ grele:{bon:false,w:34,h:34,draw(c,e){
+ c.font='26px Segoe UI'; c.textAlign='center'; c.fillText('\ud83e\uddca',e.x,e.y+9);
+ }},
+ eclair:{bon:false,w:30,h:44,draw(c,e){
+ c.font='30px Segoe UI'; c.textAlign='center'; c.fillText('\u26a1',e.x,e.y+11);
+ }},
+ capteur:{bon:true,w:34,h:34,draw(c,e){
+ c.font='24px Segoe UI'; c.textAlign='center'; c.fillText('\ud83d\udce1',e.x,e.y+8);
+ c.strokeStyle='rgba(251,191,36,.7)'; c.lineWidth=2;
+ c.beginPath(); c.arc(e.x,e.y,20+4*Math.sin(Date.now()/200),0,Math.PI*2); c.stroke();
+ }},
+};
+function drawBG(c,t,v){
+ const g=c.createLinearGradient(0,0,0,H);
+ g.addColorStop(0,'#1e3a5f'); g.addColorStop(1,'#0b1120');
+ c.fillStyle=g; c.fillRect(0,0,W,H);
+ c.font='22px Segoe UI'; c.textAlign='center'; c.globalAlpha=.5;
+ for(let i=0;i<5;i++){ c.fillText('\u2601\ufe0f',(W+80-((t*v*0.35+i*230)%(W+160))),60+i*82); }
+ c.globalAlpha=1;
+}
+function drawPlayer(c,x,y,G){
+ const osc=3*Math.sin(G.anim*4);
+ c.strokeStyle='#e2e8f0'; c.lineWidth=1.6;
+ c.beginPath(); c.moveTo(x,y+2+osc); c.lineTo(x,y+26+osc); c.stroke();
+ c.fillStyle='#dc2626';
+ c.beginPath(); c.arc(x,y-8+osc,20,0,Math.PI*2); c.fill();
+ c.fillStyle='#fecaca';
+ c.beginPath(); c.arc(x-7,y-14+osc,6,0,Math.PI*2); c.fill();
+ c.fillStyle='#f8fafc';
+ c.fillRect(x-9,y+26+osc,18,13);
+ c.fillStyle='#ca8a04'; c.fillRect(x-9,y+33+osc,18,3);
+}
+
+const G={etat:'titre',t:0,score:0,vies:3,inv:0,v:0,ents:[],spawnT:0,
+ lane:1,laneX:0,px:0,py:0,vy:0,ausol:true,glisse:false,frame:0,anim:0};
+const LANES=[W/2-240,W/2,W/2+240];
+const SOL=H-74;
+
+function reset(){
+ G.etat='jeu'; G.t=0; G.score=0; G.vies=3; G.inv=0; G.ents=[]; G.spawnT=0.4;
+ G.v=210; G.lane=1; G.laneX=LANES[1]; G.px=W/2; G.py= MODE==='flappy'? H/2 : SOL; G.vy=0; G.ausol=true; G.glisse=false;
+ document.getElementById('over').style.display='none';
+ majHud();
+}
+function majHud(){
+ document.getElementById('score').textContent=Math.floor(G.score);
+ document.getElementById('vies').textContent='●'.repeat(G.vies)+'○'.repeat(3-G.vies);
+}
+function pick(){
+ const total=SPAWN.reduce((s,e)=>s+e.p,0);
+ let r=Math.random()*total;
+ for(const e of SPAWN){ r-=e.p; if(r<=0) return e.id; }
+ return SPAWN[0].id;
+}
+function spawnEntite(force){
+ const id=force||pick(); const S=SPRITES[id];
+ const e={id,bon:S.bon,w:S.w,h:S.h,x:0,y:0};
+ if(MODE==='lanes'){ e.lane=Math.floor(Math.random()*3); e.x=LANES[e.lane]; e.y=-60; }
+ else if(MODE==='catch'){ e.x=60+Math.random()*(W-120); e.y=-50; }
+ else if(MODE==='flappy'){ e.x=W+60; e.y= S.mur ? 0 : 60+Math.random()*(H-160); }
+ else { e.x=W+60; e.y= S.haut ? SOL-92 : SOL; }
+ if(S.mur){ e.trou=90+Math.random()*(H-260); }
+ G.ents.push(e);
+ return e;
+}
+function toucheJoueur(e){
+ let px=G.px, py=G.py, pw=46, ph=52;
+ if(MODE==='lanes'){ px=G.laneX; py=H-90; }
+ if(MODE==='jump' && G.glisse){ ph=Math.round(ph*0.45); }
+ if(MODE==='jump'){ px=140; }
+ const S=SPRITES[e.id];
+ if(S.mur){
+ if(e.x-28>px+pw/2||e.x+28<px-pw/2) return false;
+ return (py-ph/2<e.trou-150/2)||(py+ph/2>e.trou+150/2);
+ }
+ const my=MODE==='jump'? e.y-e.h/2 : e.y;
+ return Math.abs(px-e.x)<(pw+e.w)/2-8 && Math.abs((MODE==='jump'?py-ph/2:py)-my)<(ph+e.h)/2-8;
+}
+function perdVie(){
+ if(G.inv>0)return;
+ G.vies--; G.inv=1.5; majHud();
+ if(G.vies<=0){
+ G.etat='fin';
+ document.getElementById('overScore').textContent=Math.floor(G.score);
+ const nr=Math.floor(G.score)>record;
+ if(nr){ record=Math.floor(G.score); try{ localStorage.setItem(CLE+'_rec3',record); }catch(e){} }
+ document.getElementById('overRecord').textContent= nr? ' NOUVEAU RECORD !' : ('Record : '+record);
+ document.getElementById('rec2').textContent=record;
+ document.getElementById('over').style.display='flex';
+ }
+}
+function step(dt){
+ if(G.etat!=='jeu')return;
+ G.t+=dt; G.anim+=dt;
+ G.v=Math.min(520, 210+G.t*9);
+ G.score+=dt*10; if(G.inv>0)G.inv-=dt;
+ // joueur
+ if(MODE==='lanes'){ G.laneX+=(LANES[G.lane]-G.laneX)*Math.min(1,dt*12); }
+ else if(MODE==='catch'){ G.px=Math.max(40,Math.min(W-40,G.px+G.dir*dt*430)); }
+ else if(MODE==='jump'){
+ if(!G.ausol){ G.vy+=dt*1900; G.py+=G.vy*dt;
+ if(G.py>=SOL){ G.py=SOL; G.ausol=true; G.vy=0; } }
+ } else if(MODE==='flappy'){
+ G.vy+=dt*(G.monte? -2300 : 1500);
+ G.vy=Math.max(-420,Math.min(430,G.vy));
+ G.py+=G.vy*dt;
+ if(G.py<26||G.py>H-26){ G.py=Math.max(26,Math.min(H-26,G.py)); perdVie(); G.vy=0; }
+ }
+ // entités
+ G.spawnT-=dt;
+ if(G.spawnT<=0){ spawnEntite(); G.spawnT=Math.max(0.5, 1.15 - G.t*0.012); }
+ for(let i=G.ents.length-1;i>=0;i--){
+ const e=G.ents[i];
+ if(MODE==='lanes'||MODE==='catch') e.y+=G.v*dt; else e.x-=G.v*dt;
+ if(e.y>H+70||e.x<-90){ G.ents.splice(i,1); continue; }
+ if(toucheJoueur(e)){
+ if(e.bon){ G.score+=50; G.ents.splice(i,1); majHud(); }
+ else { perdVie(); G.ents.splice(i,1); }
+ }
+ }
+ majHud();
+}
+function dessiner(){
+ ctx.clearRect(0,0,W,H);
+ drawBG(ctx,G.t,G.v);
+ for(const e of G.ents){ SPRITES[e.id].draw(ctx,e); }
+ const cligno = G.inv>0 && Math.floor(G.inv*10)%2===0;
+ if(!cligno){
+ if(MODE==='lanes') drawPlayer(ctx,G.laneX,H-90,G);
+ else if(MODE==='jump') drawPlayer(ctx,140,G.py,G);
+ else drawPlayer(ctx,G.px,G.py,G);
+ }
+}
+let last=null;
+function boucle(ts){
+ if(last===null)last=ts;
+ const dt=Math.min(0.05,(ts-last)/1000); last=ts;
+ step(dt); dessiner();
+ requestAnimationFrame(boucle);
+}
+requestAnimationFrame(boucle);
+/* ============ CONTRÔLES ============ */
+G.dir=0; G.monte=false;
+document.addEventListener('keydown',e=>{
+ if(G.etat!=='jeu')return;
+ if(MODE==='lanes'){
+ if(e.key==='ArrowLeft')G.lane=Math.max(0,G.lane-1);
+ if(e.key==='ArrowRight')G.lane=Math.min(2,G.lane+1);
+ } else if(MODE==='catch'){
+ if(e.key==='ArrowLeft')G.dir=-1;
+ if(e.key==='ArrowRight')G.dir=1;
+ } else if(MODE==='jump'){
+ if((e.key==='ArrowUp'||e.key===' ')&&G.ausol){ G.ausol=false; G.vy=-760; }
+ if(e.key==='ArrowDown')G.glisse=true;
+ } else if(MODE==='flappy'){
+ if(e.key==='ArrowUp'||e.key===' ')G.monte=true;
+ }
+ if(e.key===' ')e.preventDefault();
+});
+document.addEventListener('keyup',e=>{
+ if(MODE==='catch'&&(e.key==='ArrowLeft'&&G.dir===-1||e.key==='ArrowRight'&&G.dir===1))G.dir=0;
+ if(MODE==='jump'&&e.key==='ArrowDown')G.glisse=false;
+ if(MODE==='flappy'&&(e.key==='ArrowUp'||e.key===' '))G.monte=false;
+});
+const tac=document.getElementById('tactile');
+function btnT(txt,down,up){
+ const b=document.createElement('button'); b.textContent=txt;
+ b.addEventListener('pointerdown',ev=>{ev.preventDefault();down();});
+ if(up){ b.addEventListener('pointerup',up); b.addEventListener('pointerleave',up); }
+ tac.appendChild(b);
+}
+if(MODE==='lanes'){ btnT('\u25c0',()=>{G.lane=Math.max(0,G.lane-1);}); btnT('\u25b6',()=>{G.lane=Math.min(2,G.lane+1);}); }
+else if(MODE==='catch'){ btnT('\u25c0',()=>{G.dir=-1;},()=>{G.dir=0;}); btnT('\u25b6',()=>{G.dir=1;},()=>{G.dir=0;}); }
+else if(MODE==='jump'){ btnT('\u2b06 SAUT',()=>{ if(G.ausol){G.ausol=false;G.vy=-760;} }); btnT('\u2b07 GLISSE',()=>{G.glisse=true;},()=>{G.glisse=false;}); }
+else { btnT('\u2b06 MONTER (maintenir)',()=>{G.monte=true;},()=>{G.monte=false;}); }
+document.getElementById('btnJouer').addEventListener('click',()=>{ pt.style.display='none'; document.getElementById('zone').style.display='block'; reset(); });
+document.getElementById('btnRejouer').addEventListener('click',reset);
+</script>
+</body>
+</html>

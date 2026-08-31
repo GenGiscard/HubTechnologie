@@ -6,7 +6,7 @@
 <title>TP 3ème — Mission ACV · ESTIC</title>
 <style>
 :root{ --ink:#1e3a5f; --cyan:#0e7490; --niv:#0d9488; --niv-fonce:#0f766e; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
 .estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
@@ -83,122 +83,193 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#0f766e,#0e7490);border-radius:14px;padding:22px;color:#fff}
 .codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
 .codefinal a{color:#fde68a;font-weight:800}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:60px;height:60px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:12px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;font-size:19px;letter-spacing:1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+.rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
+.cahiernote b{color:#c2410c;letter-spacing:1px;display:block;margin-bottom:4px;font-size:13px}
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
 </style>
 </head>
 <body>
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
 <header class="tp">
-  <h1>🔧 TP — Mission ACV</h1>
-  <p>Le bureau d'études d'Esticville t'a recruté comme éco-concepteur junior. 7 missions — à la fin : le code des jeux !</p>
+ <h1>TP — Mission ACV</h1>
+ <p>Le bureau d'études d'Esticville t'a recruté comme éco-concepteur junior. 10 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
-  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
-  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+ <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div><div class="seg" data-a="10"></div>
+ <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ============ A1 : QUI SUIS-JE ============ -->
 <div class="acti" id="a1">
  <div class="boite">
-  <h2><span class="badge">1</span>Le vocabulaire de l'éco-concepteur</h2>
-  <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! (1 pt par bonne réponse du premier coup)</div>
-  <div class="minicas" id="cas1"></div>
+ <h2><span class="badge">1</span>Le vocabulaire de l'éco-concepteur</h2>
+ <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! <b>Attention : une seule tentative par question</b> — lis bien avant de cliquer ! (1 pt par bonne réponse)</div>
+ <div class="minicas" id="cas1"></div>
  </div>
 </div>
 
 <!-- ============ A2 : ORDRE DU CYCLE ============ -->
 <div class="acti" id="a2">
  <div class="boite">
-  <h2><span class="badge">2</span>Remonte le cycle de vie</h2>
-  <div class="consigne">De la mine à la borne de recyclage : clique les 4 grandes étapes <b>dans l'ordre</b> de la vie d'un objet.</div>
-  <div class="ordre" id="blocs2"></div>
-  <div class="slots" id="slots2">
-    <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
-    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
-    <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
-    <div class="slot" data-i="3">4ème</div>
-  </div>
-  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
-  <div class="verdict" id="verd2"></div>
+ <h2><span class="badge">2</span>Remonte le cycle de vie</h2>
+ <div class="consigne">De la mine à la borne de recyclage : clique les 4 grandes étapes <b>dans l'ordre</b>de la vie d'un objet.</div>
+ <div class="ordre" id="blocs2"></div>
+ <div class="slots" id="slots2">
+ <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
+ <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+ <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
+ <div class="slot" data-i="3">4ème</div>
+ </div>
+ <div class="btnrow"><button class="btn" id="verif2">✓ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+ <div class="verdict" id="verd2"></div>
  </div>
 </div>
 
 <!-- ============ A3 : ÉCO-CONCEPTION ============ -->
 <div class="acti" id="a3">
  <div class="boite">
-  <h2><span class="badge">3</span>Éco-conçois la trottinette ESTIC-Glide !</h2>
-  <div class="consigne">🛴 L'ACV de la trottinette actuelle affiche un impact de <b>100 points</b>. Le cahier des charges impose de descendre à <b>60 points ou moins</b> en choisissant <b>exactement 3 modifications</b>. Attention : certaines propositions du service marketing n'aident pas du tout…</div>
-  <div class="jauge">
-    <div class="barre"><div id="jaugeImpact" style="width:100%"></div><div class="cible" style="left:60%"></div></div>
-    <div class="lbl">Impact : <span id="impactVal">100</span> / 100 — 🎯 objectif ≤ 60 (trait vert) · sélection : <span id="nbSel">0</span>/3</div>
-  </div>
-  <div class="leviers" id="leviers3"></div>
-  <div class="btnrow"><button class="btn" id="verif3">✔ Présenter au bureau d'études</button><button class="btn" id="reset3" style="background:#64748b">↺ Tout désélectionner</button></div>
-  <div class="verdict" id="verd3"></div>
+ <h2><span class="badge">3</span>Éco-conçois la trottinette ESTIC-Glide !</h2>
+ <div class="consigne">L'ACV de la trottinette actuelle affiche un impact de <b>100 points</b>. Le cahier des charges impose de descendre à <b>60 points ou moins</b>en choisissant <b>exactement 3 modifications</b>. Attention : certaines propositions du service marketing n'aident pas du tout…</div>
+ <div class="jauge">
+ <div class="barre"><div id="jaugeImpact" style="width:100%"></div><div class="cible" style="left:60%"></div></div>
+ <div class="lbl">Impact : <span id="impactVal">100</span> / 100 — objectif ≤ 60 (trait vert) · sélection : <span id="nbSel">0</span>/3</div>
+ </div>
+ <div class="leviers" id="leviers3"></div>
+ <div class="btnrow"><button class="btn" id="verif3">✓ Présenter au bureau d'études</button><button class="btn" id="reset3" style="background:#64748b">↺ Tout désélectionner</button></div>
+ <div class="verdict" id="verd3"></div>
  </div>
 </div>
 
 <!-- ============ A4 : BILAN CARBONE ============ -->
 <div class="acti" id="a4">
  <div class="boite">
-  <h2><span class="badge">4</span>Le bilan carbone du smartphone</h2>
-  <div class="consigne">📱 L'ACV d'un smartphone affiche <b>50 kg de CO₂</b> sur toute sa vie, dont <b>80 %</b> émis à la FABRICATION. Combien de kg de CO₂ la fabrication représente-t-elle ?</div>
-  <div class="rappel">📐 Rappel : part = total × pourcentage ÷ 100</div>
-  <div class="calczone">
-    <span>fabrication =</span>
-    <input type="number" id="rep4" step="any" placeholder="?">
-    <span class="unite">kg de CO₂</span>
-    <button class="btn" id="verif4">✔ Vérifier</button>
-  </div>
-  <div class="verdict" id="verd4"></div>
+ <h2><span class="badge">4</span>Le bilan carbone du smartphone</h2>
+ <div class="consigne">L'ACV d'un smartphone affiche <b>50 kg de CO₂</b>sur toute sa vie, dont <b>80 %</b>émis à la FABRICATION. Combien de kg de CO₂ la fabrication représente-t-elle ?</div>
+ <div class="rappel">Rappel : part = total × pourcentage ÷ 100</div>
+ <div class="calczone">
+ <span>fabrication =</span>
+ <input type="number" id="rep4" step="any" placeholder="?">
+ <span class="unite">kg de CO₂</span>
+ <button class="btn" id="verif4">✓ Vérifier</button>
+ </div>
+ <div class="verdict" id="verd4"></div>
  </div>
 </div>
 
 <!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>La boucle du cycle de vie</h2>
-  <div class="consigne">🗺️ Suis le smartphone-jeton qui parcourt sa vie en boucle ! Clique une étiquette, puis l'étape correspondante du cycle. Place les 4 étiquettes.</div>
-  <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
-  <div class="etiqbar" id="etiq5"></div>
-  <div id="verd5"></div>
+ <h2><span class="badge">5</span>La boucle du cycle de vie</h2>
+ <div class="consigne"><b>Chaque erreur coûte des points.</b>Suis le smartphone-jeton qui parcourt sa vie en boucle ! Clique une étiquette, puis l'étape correspondante du cycle. Place les 4 étiquettes.</div>
+ <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
+ <div class="etiqbar" id="etiq5"></div>
+ <div id="verd5"></div>
  </div>
 </div>
 
 <!-- ============ A6 : MANIPULATION ============ -->
 <div class="acti" id="a6">
  <div class="boite">
-  <h2><span class="badge">6</span>La durée de vie qui change tout</h2>
-  <div class="consigne">🎛️ Fabriquer un smartphone « coûte » <b>200 points d'impact</b> (mines, usine, transport) ; l'utiliser, 15 points par an. Règle combien d'années tu le gardes et regarde l'impact PAR ANNÉE d'usage !</div>
-  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
-  <div class="sliderrow">
-    <span>📱 Années d’usage :</span>
-    <input type="range" id="slider6" min="1" max="10" step="1" value="2">
-    <span class="val"><span id="val6">2</span> ans</span>
-    <button class="btn" id="verif6">✔ Valider ce réglage</button>
-  </div>
-  <div id="verd6"></div>
+ <h2><span class="badge">6</span>La durée de vie qui change tout</h2>
+ <div class="consigne">Fabriquer un smartphone « coûte » <b>200 points d'impact</b> (mines, usine, transport) ; l'utiliser, 15 points par an. Règle combien d'années tu le gardes et regarde l'impact PAR ANNÉE d'usage !</div>
+ <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+ <div class="sliderrow">
+ <span>Années d’usage :</span>
+ <input type="range" id="slider6" min="1" max="10" step="1" value="2">
+ <span class="val"><span id="val6">2</span>ans</span>
+ <button class="btn" id="verif6">✓ Valider ce réglage</button>
+ </div>
+ <div id="verd6"></div>
  </div>
 </div>
 
-<!-- ============ A7 : BILAN ============ -->
+
+<!-- ============ A7 : EXPLIQUER ============ -->
 <div class="acti" id="a7">
- <div class="boite">
-  <h2><span class="badge">7</span>Bilan de l'éco-concepteur</h2>
-  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
-  <div id="quiz5"></div>
-  <div class="codefinal" id="codefinal">
-    🏆 La trottinette ESTIC-Glide part en production !
-    <div class="code">CYCLE360</div>
-    <div>Entre ce code dans les jeux <a href="03_jeu_tri_rush.html">🎮 Tri Rush</a> et <a href="03b_jeu_centre_valorisation.html">🏭 Centre de valorisation</a> pour les déverrouiller.</div>
+  <div class="boite">
+    <h2><span class="badge">7</span>Expliquer les choix de l’éco-conception</h2>
+    <div class="consigne">Trois questions de raisonnement. Réponds par une <b>phrase complète</b>.</div>
+    <div class="cahiernote"><b>SUR TON CAHIER</b> — rédige au brouillon, puis recopie à l’écran.</div>
+    <div id="champs7"></div>
+    <div class="btnrow"><button class="btn" id="verif7">Valider mes explications</button></div>
+    <div id="verd7"></div>
   </div>
+</div>
+<!-- ============ A8 : CALCULER ============ -->
+<div class="acti" id="a8">
+  <div class="boite">
+    <h2><span class="badge">8</span>Calculer un impact et un gain</h2>
+    <div class="consigne">Fabriquer un smartphone coûte <b>200 points d’impact</b>, l’utiliser <b>15 points par an</b>. Un modèle reconditionné ne coûte que <b>40 points</b> à remettre en état.</div>
+    <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
+    <div id="champs8"></div>
+    <div class="btnrow"><button class="btn" id="verif8">Valider mes calculs</button></div>
+    <div id="verd8"></div>
+  </div>
+</div>
+<!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
+<div class="acti" id="a9">
+  <div class="boite">
+    <h2><span class="badge">9</span>Tracer la boucle du cycle de vie</h2>
+    <div class="consigne">Le schéma de la mission 5 t’a montré la boucle. Reconstruis-la de mémoire sur ton cahier.</div>
+    <div class="cahiernote"><b>SUR TON CAHIER</b> — trace la boucle complète du cycle de vie d’un objet : les quatre grandes étapes dans des cadres, reliées par des flèches en cercle. Ajoute sous chaque étape un exemple concret pour un smartphone, et repère d’une étoile l’étape la plus impactante.</div>
+    <canvas class="canvatp" id="cv9" width="860" height="300" style="cursor:default"></canvas>
+    <div id="champs9"></div>
+    <div class="btnrow"><button class="btn" id="verif9">Valider mon travail</button></div>
+    <div id="verd9"></div>
+  </div>
+</div>
+
+<!-- ============ A10 : BILAN ============ -->
+<div class="acti" id="a10">
+ <div class="boite">
+ <h2><span class="badge">10</span>Bilan de l'éco-concepteur</h2>
+ <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
+ <div id="quiz5"></div>
+ <div class="codefinal" id="codefinal">
+ La trottinette ESTIC-Glide part en production !
+ <div class="code">CYCLE360</div>
+ <div>Entre ce code dans les jeux <a href="03_jeu_tri_rush.html">Tri Rush</a>et <a href="03b_jeu_centre_valorisation.html">Centre de valorisation</a>pour les déverrouiller.</div>
+ </div>
  </div>
 </div>
 
@@ -208,26 +279,26 @@ const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
 function sauver(){ try{ localStorage.setItem('tp_cycle_3e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
 function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_cycle_3e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
-  document.querySelectorAll('.progression .seg').forEach(seg=>{
-    const n=+seg.dataset.a;
-    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
-  });
-  document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=7;n++){
-    const acti=document.getElementById('a'+n);
-    let v=acti.querySelector('.verrou');
-    if(n>etat.debloque){
-      if(!v){ v=document.createElement('div'); v.className='verrou';
-        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
-        acti.querySelector('.boite').appendChild(v); }
-    } else if(v) v.remove();
-  }
+ document.querySelectorAll('.progression .seg').forEach(seg=>{
+ const n=+seg.dataset.a;
+ seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+ });
+ document.getElementById('scoreTot').textContent=etat.score;
+ for(let n=2;n<=10;n++){
+ const acti=document.getElementById('a'+n);
+ let v=acti.querySelector('.verrou');
+ if(n>etat.debloque){
+ if(!v){ v=document.createElement('div'); v.className='verrou';
+ v.innerHTML='<div class="cadenas"></div>Termine la mission '+(n-1)+' pour déverrouiller';
+ acti.querySelector('.boite').appendChild(v); }
+ } else if(v) v.remove();
+ }
 }
 function reussir(n,pts){
-  etat.score+=pts;
-  if(etat.debloque===n) etat.debloque=n+1;
-  sauver(); majProgression();
-  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ etat.score+=pts;
+ if(etat.debloque===n) etat.debloque=n+1;
+ sauver(); majProgression();
+ if(n<10) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -238,290 +309,299 @@ const CAS1=[
  {devinette:'« Affiché sur les appareils en magasin, je note de 0 à 10 la facilité à RÉPARER un produit. »', bonne:'l\u2019indice de réparabilité', autres:['le bilan carbone']},
 ];
 (function initA1(){
-  const zone=document.getElementById('cas1');
-  CAS1.forEach(cas=>{
-    const d=document.createElement('div'); d.className='cas';
-    d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
-    const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
-    let premier=true, fait=false;
-    [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
-      const b=document.createElement('button'); b.textContent=rep;
-      b.onclick=()=>{
-        if(fait) return;
-        if(rep===cas.bonne){
-          fait=true; d.classList.remove('faux'); d.classList.add('bon');
-          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          etat.q1ok++;
-          if(etat.q1ok===CAS1.length) reussir(1,2);
-        } else { d.classList.add('faux'); premier=false; }
-      };
-      ch.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('cas1');
+ CAS1.forEach(cas=>{
+ const d=document.createElement('div'); d.className='cas';
+ d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
+ const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
+ let premier=true, fait=false;
+ [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
+ const b=document.createElement('button'); b.textContent=rep;
+ b.onclick=()=>{
+ if(fait) return;
+ if(rep===cas.bonne){
+ fait=true; d.classList.remove('faux'); d.classList.add('bon');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ } else {
+ fait=true; premier=false;
+ d.classList.add('faux'); b.classList.add('faux');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ }
+ };
+ ch.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A2 : ORDRE DU CYCLE ================= */
 const BLOCS2=[
- {id:1,t:'⛏️ Extraction',s:'prélever les matières premières'},
- {id:0,t:'🏭 Fabrication',s:'transformer et assembler'},
- {id:2,t:'📱 Utilisation',s:'la vie de l\u2019objet chez toi'},
- {id:3,t:'♻️ Fin de vie',s:'recycler, réemployer… ou jeter'},
+ {id:1,t:' Extraction',s:'prélever les matières premières'},
+ {id:0,t:' Fabrication',s:'transformer et assembler'},
+ {id:2,t:' Utilisation',s:'la vie de l\u2019objet chez toi'},
+ {id:3,t:' Fin de vie',s:'recycler, réemployer… ou jeter'},
 ];
 const BON2=[1,0,2,3];
-let choix2=[], a2fait=false;
+let choix2=[], a2fait=false, essais2=0, err5=0, essais6=0, bons3=0;
 function initA2(){
-  choix2=[];
-  const zone=document.getElementById('blocs2'); zone.innerHTML='';
-  BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
-    const btn=document.createElement('button');
-    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
-    btn.onclick=()=>{
-      if(btn.classList.contains('pris')||choix2.length>=4) return;
-      btn.classList.add('pris'); choix2.push(b.id);
-      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
-      slot.textContent=b.t; slot.classList.add('rempli');
-    };
-    zone.appendChild(btn);
-  });
-  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
-  document.getElementById('verd2').className='verdict';
+ choix2=[];
+ const zone=document.getElementById('blocs2'); zone.innerHTML='';
+ BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
+ const btn=document.createElement('button');
+ btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+ btn.onclick=()=>{
+ if(btn.classList.contains('pris')||choix2.length>=4) return;
+ btn.classList.add('pris'); choix2.push(b.id);
+ const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+ slot.textContent=b.t; slot.classList.add('rempli');
+ };
+ zone.appendChild(btn);
+ });
+ document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
+ document.getElementById('verd2').className='verdict';
 }
 document.getElementById('reset2').onclick=initA2;
 document.getElementById('verif2').onclick=()=>{
-  const verd=document.getElementById('verd2');
-  if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
-  if(choix2.join()===BON2.join()){
-    verd.className='verdict ok';
-    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : extraction → fabrication → utilisation → fin de vie (avec la distribution entre fabrication et utilisation : cargos et camions comptent aussi !). (+3 pts)'; reussir(2,3); }
-    else verd.textContent='✅ Bon ordre !';
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ Le cycle est emmêlé. Pars de la mine : peut-on fabriquer sans matière ? Utiliser sans avoir fabriqué ? Recommence !';
-  }
+ const verd=document.getElementById('verd2');
+ if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
+ essais2++;
+ if(choix2.join()===BON2.join()){
+ verd.className='verdict ok';
+ if(!a2fait){ a2fait=true; verd.textContent='✓ Parfait : extraction → fabrication → utilisation → fin de vie (avec la distribution entre fabrication et utilisation : cargos et camions comptent aussi !). (+3 pts)'; reussir(2, essais2<=1?3:(essais2===2?2:1)); }
+ else verd.textContent='✓ Bon ordre !';
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ Le cycle est emmêlé. Pars de la mine : peut-on fabriquer sans matière ? Utiliser sans avoir fabriqué ? Recommence !';
+ }
 };
 initA2();
 
 /* ================= A3 : ÉCO-CONCEPTION ================= */
 const LEVIERS=[
- {id:'alu', t:'♻️ Cadre en aluminium 100 % recyclé', s:'même solidité, beaucoup moins d\u2019extraction', d:-18},
- {id:'alleger', t:'🪶 Alléger le cadre de 1,2 kg', s:'moins de matière = moins d\u2019impact partout', d:-15},
- {id:'batterie', t:'🔋 Batterie remplaçable sans outil', s:'la trottinette vit deux fois plus longtemps', d:-14},
- {id:'repar', t:'🔧 Pièces détachées garanties 10 ans', s:'réparable = jetée moins vite', d:-10},
- {id:'chrome', t:'✨ Finition chromée brillante (marketing)', s:'« ça fera vendre ! »', d:+5},
- {id:'avion', t:'✈️ Livraison express par avion (marketing)', s:'« le client adore recevoir vite ! »', d:+12},
+ {id:'alu', t:' Cadre en aluminium 100 % recyclé', s:'même solidité, beaucoup moins d\u2019extraction', d:-18},
+ {id:'alleger', t:' Alléger le cadre de 1,2 kg', s:'moins de matière = moins d\u2019impact partout', d:-15},
+ {id:'batterie', t:' Batterie remplaçable sans outil', s:'la trottinette vit deux fois plus longtemps', d:-14},
+ {id:'repar', t:' Pièces détachées garanties 10 ans', s:'réparable = jetée moins vite', d:-10},
+ {id:'chrome', t:' Finition chromée brillante (marketing)', s:'« ça fera vendre ! »', d:+5},
+ {id:'avion', t:' Livraison express par avion (marketing)', s:'« le client adore recevoir vite ! »', d:+12},
 ];
 let sel3=[], a3fait=false;
 function majJauge(){
-  const total=100+sel3.reduce((s,id)=>s+LEVIERS.find(l=>l.id===id).d,0);
-  document.getElementById('impactVal').textContent=total;
-  document.getElementById('nbSel').textContent=sel3.length;
-  const j=document.getElementById('jaugeImpact');
-  j.style.width=Math.max(0,Math.min(100,total))+'%';
-  j.style.background= total<=60?'#16a34a':(total<=80?'#f59e0b':'#dc2626');
-  return total;
+ const total=100+sel3.reduce((s,id)=>s+LEVIERS.find(l=>l.id===id).d,0);
+ document.getElementById('impactVal').textContent=total;
+ document.getElementById('nbSel').textContent=sel3.length;
+ const j=document.getElementById('jaugeImpact');
+ j.style.width=Math.max(0,Math.min(100,total))+'%';
+ j.style.background= total<=60?'#16a34a':(total<=80?'#f59e0b':'#dc2626');
+ return total;
 }
 (function initA3(){
-  const zone=document.getElementById('leviers3');
-  LEVIERS.slice().sort(()=>0.5-Math.random()).forEach(l=>{
-    const b=document.createElement('button');
-    b.innerHTML=l.t+' <b>('+(l.d>0?'+':'')+l.d+' pts d\u2019impact)</b><small>'+l.s+'</small>';
-    b.dataset.id=l.id;
-    b.onclick=()=>{
-      if(a3fait) return;
-      if(sel3.includes(l.id)){ sel3=sel3.filter(x=>x!==l.id); b.classList.remove('sel'); }
-      else if(sel3.length<3){ sel3.push(l.id); b.classList.add('sel'); }
-      majJauge();
-    };
-    zone.appendChild(b);
-  });
+ const zone=document.getElementById('leviers3');
+ LEVIERS.slice().sort(()=>0.5-Math.random()).forEach(l=>{
+ const b=document.createElement('button');
+ b.innerHTML=l.t+' <b>('+(l.d>0?'+':'')+l.d+' pts d\u2019impact)</b><small>'+l.s+'</small>';
+ b.dataset.id=l.id;
+ b.onclick=()=>{
+ if(a3fait) return;
+ if(sel3.includes(l.id)){ sel3=sel3.filter(x=>x!==l.id); b.classList.remove('sel'); }
+ else if(sel3.length<3){ sel3.push(l.id); b.classList.add('sel'); }
+ majJauge();
+ };
+ zone.appendChild(b);
+ });
 })();
 document.getElementById('reset3').onclick=()=>{
-  if(a3fait) return;
-  sel3=[]; document.querySelectorAll('#leviers3 button').forEach(b=>b.classList.remove('sel'));
-  document.getElementById('verd3').className='verdict'; majJauge();
+ if(a3fait) return;
+ sel3=[]; document.querySelectorAll('#leviers3 button').forEach(b=>b.classList.remove('sel'));
+ document.getElementById('verd3').className='verdict'; majJauge();
 };
 document.getElementById('verif3').onclick=()=>{
-  const verd=document.getElementById('verd3');
-  if(sel3.length!==3){ verd.className='verdict ko'; verd.textContent='Choisis exactement 3 modifications !'; return; }
-  const total=majJauge();
-  if(total<=60){
-    verd.className='verdict ok';
-    verd.innerHTML='✅ Impact : '+total+'/100 — cahier des charges respecté ! Tu as fait comme un vrai bureau d\u2019études : chiffrer chaque option et ignorer les fausses bonnes idées du marketing (le chrome et l\u2019avion AUGMENTENT l\u2019impact !).'+(a3fait?'':' (+4 pts)');
-    if(!a3fait){ a3fait=true; reussir(3,4); }
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ Impact : '+total+'/100, encore trop haut (objectif ≤ 60). Regarde bien les chiffres : certaines propositions AJOUTENT de l\u2019impact au lieu d\u2019en retirer…';
-  }
+ const verd=document.getElementById('verd3');
+ if(sel3.length!==3){ verd.className='verdict ko'; verd.textContent='Choisis exactement 3 modifications !'; return; }
+ const total=majJauge();
+ if(total<=60){
+ verd.className='verdict ok';
+ verd.innerHTML='✓ Impact : '+total+'/100 — cahier des charges respecté ! Tu as fait comme un vrai bureau d\u2019études : chiffrer chaque option et ignorer les fausses bonnes idées du marketing (le chrome et l\u2019avion AUGMENTENT l\u2019impact !).'+(a3fait?'':' (+4 pts)');
+ if(!a3fait){ a3fait=true; reussir(3, Math.max(1,bons3+1)); }
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ Impact : '+total+'/100, encore trop haut (objectif ≤ 60). Regarde bien les chiffres : certaines propositions AJOUTENT de l\u2019impact au lieu d\u2019en retirer…';
+ }
 };
 majJauge();
 
 /* ================= A4 : BILAN CARBONE ================= */
 let a4fait=false;
 document.getElementById('verif4').onclick=()=>{
-  const verd=document.getElementById('verd4');
-  const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
-  if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
-  if(Math.abs(v-40)<=0.5){
-    verd.className='verdict ok';
-    verd.innerHTML='✅ 50 × 80 ÷ 100 = 40 kg de CO₂ rien que pour la fabrication ! Conclusion d\u2019ACV : changer de téléphone tous les 2 ans coûte bien plus cher à la planète que de recharger le tien. Le garder longtemps, c\u2019est le geste n°1.'+(a4fait?'':' (+4 pts)');
-    if(!a4fait){ a4fait=true; reussir(4,4); }
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ Pas ça. 80 % de 50 kg : calcule 50 × 80 ÷ 100 (ou 50 × 0,8).';
-  }
+ const verd=document.getElementById('verd4');
+ const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
+ if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
+ if(Math.abs(v-40)<=0.5){
+ verd.className='verdict ok';
+ verd.innerHTML='✓ 50 × 80 ÷ 100 = 40 kg de CO₂ rien que pour la fabrication ! Conclusion d\u2019ACV : changer de téléphone tous les 2 ans coûte bien plus cher à la planète que de recharger le tien. Le garder longtemps, c\u2019est le geste n°1.'+(a4fait?'':' (+4 pts)');
+ if(!a4fait){ a4fait=true; reussir(4,4); }
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ Pas ça. 80 % de 50 kg : calcule 50 × 80 ÷ 100 (ou 50 × 0,8).';
+ }
 };
 
 /* ================= A5 : SCHEMA A LEGENDER ================= */
 (function(){
-  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
-  const ZONES=[
-    {id:'extraction',x:60,  y:90,  w:150, h:110, lbl:'L\u2019EXTRACTION DES MATIÈRES', tx:135, ty:80},
-    {id:'fabrication',x:330,y:40,  w:150, h:100, lbl:'LA FABRICATION',                tx:405, ty:30},
-    {id:'usage',     x:610, y:90,  w:150, h:110, lbl:'L\u2019USAGE',                  tx:685, ty:80},
-    {id:'recyclage', x:330, y:200, w:150, h:100, lbl:'LE RECYCLAGE (FIN DE VIE)',     tx:405, ty:312},
-  ];
-  const poses={}; let sel=null, t=0;
-  function dessiner(){
-    t+=0.02;
-    ctx.clearRect(0,0,860,320);
-    // 4 étapes en boucle
-    // extraction : mine + pioche
-    ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#b45309'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.roundRect(72,100,126,90,12); ctx.fill(); ctx.stroke();
-    ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillText('\u26cf\ufe0f',135,140);
-    ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#b45309';
-    ctx.fillText('cobalt \u00b7 lithium \u00b7 terres rares',135,172);
-    // fabrication : usine
-    ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#334155';
-    ctx.beginPath(); ctx.roundRect(342,50,126,80,12); ctx.fill(); ctx.stroke();
-    ctx.font='26px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\ud83c\udfed',405,92);
-    const fum=(t*0.6)%1;
-    ctx.fillStyle='rgba(100,116,139,'+(0.5-fum*0.5)+')';
-    ctx.beginPath(); ctx.arc(430,54-fum*22,6+fum*6,0,Math.PI*2); ctx.fill();
-    // usage : main + téléphone
-    ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#16a34a';
-    ctx.beginPath(); ctx.roundRect(622,100,126,90,12); ctx.fill(); ctx.stroke();
-    ctx.font='26px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\ud83d\udcf1',685,140);
-    ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#16a34a';
-    ctx.fillText('des années\u2026 ou des mois ?',685,172);
-    // recyclage
-    ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#0e7490';
-    ctx.beginPath(); ctx.roundRect(342,210,126,80,12); ctx.fill(); ctx.stroke();
-    ctx.font='26px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\u267b\ufe0f',405,252);
-    // flèches de la boucle
-    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
-    function arc2(x1,y1,x2,y2,cy){ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.quadraticCurveTo((x1+x2)/2,cy,x2,y2); ctx.stroke(); }
-    arc2(200,120,340,80,70);
-    arc2(470,80,620,120,70);
-    arc2(700,192,470,250,270);
-    arc2(340,250,120,192,282);
-    // jeton produit qui parcourt la boucle
-    const p=(t*0.12)%1;
-    let jx,jy;
-    if(p<0.25){ const u=p/0.25; jx=200+u*140; jy=115-30*Math.sin(Math.PI*u); }
-    else if(p<0.5){ const u=(p-0.25)/0.25; jx=470+u*150; jy=88+22*u-26*Math.sin(Math.PI*u); }
-    else if(p<0.75){ const u=(p-0.5)/0.25; jx=700-u*230; jy=200+46*Math.sin(Math.PI*u); }
-    else { const u=(p-0.75)/0.25; jx=340-u*220; jy=250-46*u+30*Math.sin(Math.PI*u); }
-    ctx.fillStyle='#ea580c';
-    ctx.beginPath(); ctx.arc(jx,jy,8,0,Math.PI*2); ctx.fill();
-    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
-    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  const bar=document.getElementById('etiq5');
-  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
-    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
-    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
-      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
-    bar.appendChild(b);
-  });
-  cv.addEventListener('click',e=>{
-    if(!sel) return;
-    const r=cv.getBoundingClientRect();
-    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
-    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
-    const verd=document.getElementById('verd5');
-    if(cible && cible.id===sel){
-      poses[sel]=true;
-      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
-      sel=null;
-      if(Object.keys(poses).length===ZONES.length){
-        verd.innerHTML='<div class="verdict ok">✅ Boucle complète ! EXTRACTION (creuser cobalt, lithium, terres rares — souvent à l\u2019autre bout du monde), FABRICATION (l\u2019usine, le transport), USAGE (la seule étape chez toi !), RECYCLAGE (récupérer les métaux pour boucler la boucle). L\u2019ACV additionne l\u2019impact de TOUTES les étapes — et surprise : pour un smartphone, l\u2019essentiel est joué AVANT la première charge. (+3 pts)</div>';
-        reussir(5,3);
-      }
-    } else if(cible){
-      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : suis le jeton orange dans le sens de la boucle — la pioche creuse, l\u2019usine fume, la main utilise… et le symbole ♻️ referme le cercle.</div>';
-    }
-  });
+ const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+ const ZONES=[
+ {id:'extraction',x:60, y:90, w:150, h:110, lbl:'L\u2019EXTRACTION DES MATIÈRES', tx:135, ty:80},
+ {id:'fabrication',x:330,y:40, w:150, h:100, lbl:'LA FABRICATION', tx:405, ty:30},
+ {id:'usage', x:610, y:90, w:150, h:110, lbl:'L\u2019USAGE', tx:685, ty:80},
+ {id:'recyclage', x:330, y:200, w:150, h:100, lbl:'LE RECYCLAGE (FIN DE VIE)', tx:405, ty:312},
+ ];
+ const poses={}; let sel=null, t=0;
+ function dessiner(){
+ t+=0.02;
+ ctx.clearRect(0,0,860,320);
+ // 4 étapes en boucle
+ // extraction : mine + pioche
+ ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#b45309'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.roundRect(72,100,126,90,12); ctx.fill(); ctx.stroke();
+ ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillText('\u26cf\ufe0f',135,140);
+ ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#b45309';
+ ctx.fillText('cobalt \u00b7 lithium \u00b7 terres rares',135,172);
+ // fabrication : usine
+ ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#334155';
+ ctx.beginPath(); ctx.roundRect(342,50,126,80,12); ctx.fill(); ctx.stroke();
+ ctx.font='26px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\ud83c\udfed',405,92);
+ const fum=(t*0.6)%1;
+ ctx.fillStyle='rgba(100,116,139,'+(0.5-fum*0.5)+')';
+ ctx.beginPath(); ctx.arc(430,54-fum*22,6+fum*6,0,Math.PI*2); ctx.fill();
+ // usage : main + téléphone
+ ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#16a34a';
+ ctx.beginPath(); ctx.roundRect(622,100,126,90,12); ctx.fill(); ctx.stroke();
+ ctx.font='26px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\ud83d\udcf1',685,140);
+ ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#16a34a';
+ ctx.fillText('des années\u2026 ou des mois ?',685,172);
+ // recyclage
+ ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#0e7490';
+ ctx.beginPath(); ctx.roundRect(342,210,126,80,12); ctx.fill(); ctx.stroke();
+ ctx.font='26px Segoe UI'; ctx.fillStyle='#000'; ctx.fillText('\u267b\ufe0f',405,252);
+ // flèches de la boucle
+ ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+ function arc2(x1,y1,x2,y2,cy){ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.quadraticCurveTo((x1+x2)/2,cy,x2,y2); ctx.stroke(); }
+ arc2(200,120,340,80,70);
+ arc2(470,80,620,120,70);
+ arc2(700,192,470,250,270);
+ arc2(340,250,120,192,282);
+ // jeton produit qui parcourt la boucle
+ const p=(t*0.12)%1;
+ let jx,jy;
+ if(p<0.25){ const u=p/0.25; jx=200+u*140; jy=115-30*Math.sin(Math.PI*u); }
+ else if(p<0.5){ const u=(p-0.25)/0.25; jx=470+u*150; jy=88+22*u-26*Math.sin(Math.PI*u); }
+ else if(p<0.75){ const u=(p-0.5)/0.25; jx=700-u*230; jy=200+46*Math.sin(Math.PI*u); }
+ else { const u=(p-0.75)/0.25; jx=340-u*220; jy=250-46*u+30*Math.sin(Math.PI*u); }
+ ctx.fillStyle='#ea580c';
+ ctx.beginPath(); ctx.arc(jx,jy,8,0,Math.PI*2); ctx.fill();
+ ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+ ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ const bar=document.getElementById('etiq5');
+ ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+ const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+ b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+ bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+ bar.appendChild(b);
+ });
+ cv.addEventListener('click',e=>{
+ if(!sel) return;
+ const r=cv.getBoundingClientRect();
+ const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+ const cible=ZONES.find(z=>x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+ const verd=document.getElementById('verd5');
+ if(cible && cible.id===sel){
+ poses[sel]=true;
+ const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+ sel=null;
+ if(Object.keys(poses).length===ZONES.length){
+ verd.innerHTML='<div class="verdict ok">✓ Boucle complète ! EXTRACTION (creuser cobalt, lithium, terres rares — souvent à l\u2019autre bout du monde), FABRICATION (l\u2019usine, le transport), USAGE (la seule étape chez toi !), RECYCLAGE (récupérer les métaux pour boucler la boucle). L\u2019ACV additionne l\u2019impact de TOUTES les étapes — et surprise : pour un smartphone, l\u2019essentiel est joué AVANT la première charge. (+3 pts)</div>';
+ reussir(5, err5===0?3:(err5<=2?2:1));
+ }
+ } else if(cible){
+ err5++;
+ verd.innerHTML='<div class="verdict ko">✗ Pas là ! Indice : suis le jeton orange dans le sens de la boucle — la pioche creuse, l\u2019usine fume, la main utilise… et le symbole referme le cercle.</div>';
+ }
+ });
 })();
 
 /* ================= A6 : MANIPULATION AU CURSEUR ================= */
 (function(){
-  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
-  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
-  const SCEN=[
-    {min:4, max:10,
-     ok:'\u2705 4 ans et plus : les 200 points de fabrication s\u2019amortissent — l\u2019impact annuel s\u2019effondre. GARDER son téléphone est le premier geste d\u2019éco-conception : batterie remplaçable, réparabilité, mises à jour longues\u2026 tout ce qui allonge la vie divise l\u2019impact ! (+4 pts)',
-     kobas:'\u274c Changer si vite ? Regarde la jauge : les 200 points de fabrication retombent sur 1 ou 2 ans — l\u2019impact annuel explose. La planète paie la fabrication, pas la charge de la batterie\u2026 Garde-le plus longtemps !',
-     kohaut:''}
-  ];
-  let etape=0, t=0, valide=false;
-  function dessiner(){
-    t+=0.03;
-    ctx.clearRect(0,0,860,280);
-    const v=+slider.value;
-    const sc=SCEN[Math.min(etape,SCEN.length-1)];
-    const impactAn=200/v+15;
-    // téléphone + compteur d'années
-    ctx.font='34px Segoe UI'; ctx.textAlign='center';
-    ctx.fillText('\ud83d\udcf1',140,110);
-    ctx.font='bold 15px Segoe UI'; ctx.fillStyle='#334155';
-    ctx.fillText('gardé '+v+' an'+(v>1?'s':''),140,146);
-    // barres : fabrication amortie vs usage
-    ctx.font='bold 12.5px Segoe UI';
-    ctx.fillText('IMPACT PAR ANNÉE D\u2019USAGE',430,54);
-    const bh=Math.min(150,impactAn*0.7);
-    const bhFab=Math.min(150,(200/v)*0.7);
-    ctx.fillStyle='#b45309'; ctx.fillRect(390,210-bh,80,bh-15*0.7);
-    ctx.fillStyle='#16a34a'; ctx.fillRect(390,210-15*0.7,80,15*0.7);
-    ctx.strokeStyle='#334155'; ctx.lineWidth=2; ctx.strokeRect(390,210-bh,80,bh);
-    ctx.fillStyle='#334155'; ctx.font='bold 14px Segoe UI';
-    ctx.fillText(Math.round(impactAn)+' pts/an',430,236);
-    ctx.font='10.5px Segoe UI'; ctx.fillStyle='#b45309';
-    ctx.fillText('\u25a0 part fabrication ('+Math.round(200/v)+')',430,258);
-    ctx.fillStyle='#16a34a'; ctx.fillText('\u25a0 part usage (15)',430,274);
-    // comparaison : celui qui change chaque année
-    const ref=215;
-    ctx.fillStyle='#e2e8f0'; ctx.fillRect(580,210-ref*0.7,80,ref*0.7);
-    ctx.strokeStyle='#94a3b8'; ctx.setLineDash([5,4]); ctx.strokeRect(580,210-ref*0.7,80,ref*0.7); ctx.setLineDash([]);
-    ctx.fillStyle='#64748b'; ctx.font='bold 12px Segoe UI';
-    ctx.fillText('215 pts/an',620,236);
-    ctx.font='10.5px Segoe UI';
-    ctx.fillText('celui qui change chaque année',620,258);
-    // verdict économie
-    if(v>=2){
-      const gain=Math.round((1-impactAn/215)*100);
-      ctx.fillStyle= v>=4 ? '#16a34a' : '#f59e0b'; ctx.font='bold 13px Segoe UI';
-      ctx.fillText('\u2212'+gain+' % d\u2019impact annuel',430,120);
-    }
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
-  document.getElementById('verif6').addEventListener('click',()=>{
-    if(valide) return;
-    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
-    if(v>=sc.min && v<=sc.max){
-      etape++;
-      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
-      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
-    } else {
-      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
-    }
-  });
+ const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+ const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+ const SCEN=[
+ {min:4, max:10,
+ ok:'\u2705 4 ans et plus : les 200 points de fabrication s\u2019amortissent — l\u2019impact annuel s\u2019effondre. GARDER son téléphone est le premier geste d\u2019éco-conception : batterie remplaçable, réparabilité, mises à jour longues\u2026 tout ce qui allonge la vie divise l\u2019impact ! (+4 pts)',
+ kobas:'\u274c Changer si vite ? Regarde la jauge : les 200 points de fabrication retombent sur 1 ou 2 ans — l\u2019impact annuel explose. La planète paie la fabrication, pas la charge de la batterie\u2026 Garde-le plus longtemps !',
+ kohaut:''}
+ ];
+ let etape=0, t=0, valide=false;
+ function dessiner(){
+ t+=0.03;
+ ctx.clearRect(0,0,860,280);
+ const v=+slider.value;
+ const sc=SCEN[Math.min(etape,SCEN.length-1)];
+ const impactAn=200/v+15;
+ // téléphone + compteur d'années
+ ctx.font='34px Segoe UI'; ctx.textAlign='center';
+ ctx.fillText('\ud83d\udcf1',140,110);
+ ctx.font='bold 15px Segoe UI'; ctx.fillStyle='#334155';
+ ctx.fillText('gardé '+v+' an'+(v>1?'s':''),140,146);
+ // barres : fabrication amortie vs usage
+ ctx.font='bold 12.5px Segoe UI';
+ ctx.fillText('IMPACT PAR ANNÉE D\u2019USAGE',430,54);
+ const bh=Math.min(150,impactAn*0.7);
+ const bhFab=Math.min(150,(200/v)*0.7);
+ ctx.fillStyle='#b45309'; ctx.fillRect(390,210-bh,80,bh-15*0.7);
+ ctx.fillStyle='#16a34a'; ctx.fillRect(390,210-15*0.7,80,15*0.7);
+ ctx.strokeStyle='#334155'; ctx.lineWidth=2; ctx.strokeRect(390,210-bh,80,bh);
+ ctx.fillStyle='#334155'; ctx.font='bold 14px Segoe UI';
+ ctx.fillText(Math.round(impactAn)+' pts/an',430,236);
+ ctx.font='10.5px Segoe UI'; ctx.fillStyle='#b45309';
+ ctx.fillText('\u25a0 part fabrication ('+Math.round(200/v)+')',430,258);
+ ctx.fillStyle='#16a34a'; ctx.fillText('\u25a0 part usage (15)',430,274);
+ // comparaison : celui qui change chaque année
+ const ref=215;
+ ctx.fillStyle='#e2e8f0'; ctx.fillRect(580,210-ref*0.7,80,ref*0.7);
+ ctx.strokeStyle='#94a3b8'; ctx.setLineDash([5,4]); ctx.strokeRect(580,210-ref*0.7,80,ref*0.7); ctx.setLineDash([]);
+ ctx.fillStyle='#64748b'; ctx.font='bold 12px Segoe UI';
+ ctx.fillText('215 pts/an',620,236);
+ ctx.font='10.5px Segoe UI';
+ ctx.fillText('celui qui change chaque année',620,258);
+ // verdict économie
+ if(v>=2){
+ const gain=Math.round((1-impactAn/215)*100);
+ ctx.fillStyle= v>=4 ? '#16a34a' : '#f59e0b'; ctx.font='bold 13px Segoe UI';
+ ctx.fillText('\u2212'+gain+' % d\u2019impact annuel',430,120);
+ }
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+ document.getElementById('verif6').addEventListener('click',()=>{
+ essais6++;
+ if(valide) return;
+ const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+ if(v>=sc.min && v<=sc.max){
+ etape++;
+ if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6, essais6<=SCEN.length?4:(essais6<=SCEN.length+2?3:2)); }
+ else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+ } else {
+ verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+ }
+ });
 })();
 
 /* ================= A7 : BILAN ================= */
@@ -532,34 +612,216 @@ const Q5=[
  {q:"Le geste le plus efficace pour réduire l'impact de ton téléphone :", r:["le recharger moins","le garder plus longtemps","le mettre en mode avion"], b:1},
 ];
 (function initQ5(){
-  const zone=document.getElementById('quiz5');
-  Q5.forEach((item,i)=>{
-    const d=document.createElement('div'); d.className='question';
-    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
-    const rep=d.querySelector('.rep');
-    item.r.forEach((r,k)=>{
-      const b=document.createElement('button'); b.textContent=r;
-      b.onclick=()=>{
-        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
-        etat.q5rep++;
-        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
-        if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
-          else{
-            const verd=document.createElement('div'); verd.className='verdict ko';
-            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
-            zone.appendChild(verd);
-          }
-        }
-      };
-      rep.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('quiz5');
+ let tentative=0, reponses={};
+ function melanger(t){ return t.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
+ function construire(){
+ reponses={};
+ zone.innerHTML='';
+ const ordre=melanger(Q5.map((q,i)=>i));
+ ordre.forEach((qi,rang)=>{
+ const item=Q5[qi];
+ const d=document.createElement('div'); d.className='question';
+ d.innerHTML='<div class="q">'+(rang+1)+'. '+item.q+'</div><div class="rep"></div>';
+ const rep=d.querySelector('.rep');
+ melanger(item.r.map((txt,k)=>({txt,k}))).forEach(o=>{
+ const b=document.createElement('button'); b.textContent=o.txt;
+ b.onclick=()=>{
+ rep.querySelectorAll('button').forEach(x=>x.classList.remove('choisi'));
+ b.classList.add('choisi');
+ reponses[qi]=o.k;
+ const n=Object.keys(reponses).length;
+ info.textContent = n<Q5.length
+ ? n+' réponse(s) sur '+Q5.length+' — aucune correction avant la validation.'
+ : 'Toutes les questions sont renseignées : tu peux valider.';
+ btn.disabled = n<Q5.length;
+ };
+ rep.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
+ zone.appendChild(barre);
+ btn.disabled=true;
+ info.textContent='Réponds aux '+Q5.length+' questions, puis valide. Aucune réponse ne sera corrigée avant.';
+ }
+ const barre=document.createElement('div');
+ const info=document.createElement('div'); info.className='verdict'; info.style.marginTop='10px';
+ const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Valider mes 4 réponses';
+ btn.style.marginTop='10px';
+ const sortie=document.createElement('div');
+ barre.appendChild(info); barre.appendChild(btn); barre.appendChild(sortie);
+ btn.onclick=()=>{
+ tentative++;
+ let bons=0;
+ Q5.forEach((item,i)=>{ if(reponses[i]===item.b) bons++; });
+ if(bons>=3){
+ etat.q5ok=bons; etat.score+=bons;
+ document.getElementById('scoreTot').textContent=etat.score;
+ zone.querySelectorAll('button').forEach(x=>x.disabled=true);
+ sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
+ ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
+ document.getElementById('codefinal').style.display='block';
+ reussir(10, tentative===1?2:(tentative===2?1:0));
+ } else {
+ sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
+ ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
+ 'Les questions seront remélangées.</div>';
+ setTimeout(()=>{ construire(); sortie.innerHTML=''; },2600);
+ }
+ };
+ construire();
 })();
 
 charger(); majProgression();
+</script>
+
+<button id="calcBtn" title="Ouvrir la calculatrice"><span class="ic">C</span>calcul</button>
+<div id="calcPan">
+ <div class="tete" id="calcTete"><b>CALCULATRICE</b><button id="calcX" title="Fermer">&times;</button></div>
+ <div id="calcEcr"><div class="op" id="calcOp"></div><div class="val" id="calcVal">0</div></div>
+ <div id="calcGr">
+ <button class="f" data-k="C">C</button><button class="f" data-k="back">&#9003;</button>
+ <button class="f" data-k="pct">%</button><button class="op" data-k="/">&divide;</button>
+ <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+ <button class="op" data-k="*">&times;</button>
+ <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+ <button class="op" data-k="-">&minus;</button>
+ <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+ <button class="op" data-k="+">+</button>
+ <button class="f" data-k="sign">+/&minus;</button><button data-k="0">0</button>
+ <button data-k=".">,</button><button class="eq" data-k="=">=</button>
+ </div>
+</div>
+<script>
+/* ===== Calculatrice (aucun eval, aucune dépendance) ===== */
+(function(){
+ var pan=document.getElementById('calcPan'), btn=document.getElementById('calcBtn');
+ var eVal=document.getElementById('calcVal'), eOp=document.getElementById('calcOp');
+ var cour='0', prec=null, oper=null, neuf=true;
+ function aff(){
+ eVal.textContent=String(cour).replace('.',',');
+ eOp.textContent=(prec!==null?String(prec).replace('.',',')+' '+({'+':'+','-':'\u2212','*':'\u00d7','/':'\u00f7'}[oper]||''):'');
+ }
+ function calcule(a,b,o){
+ a=parseFloat(a); b=parseFloat(b);
+ var r = o==='+'?a+b : o==='-'?a-b : o==='*'?a*b : (b===0?NaN:a/b);
+ if(!isFinite(r)) return 'Erreur';
+ return String(Math.round(r*1e10)/1e10);
+ }
+ function touche(k){
+ if(cour==='Erreur' && k!=='C'){ return; }
+ if(/^[0-9]$/.test(k)){ cour = (neuf||cour==='0') ? k : cour+k; neuf=false; }
+ else if(k==='.'){ if(neuf){ cour='0.'; neuf=false; } else if(cour.indexOf('.')<0) cour+='.'; }
+ else if(k==='C'){ cour='0'; prec=null; oper=null; neuf=true; }
+ else if(k==='back'){ cour = (cour.length>1) ? cour.slice(0,-1) : '0'; if(cour==='-')cour='0'; }
+ else if(k==='sign'){ cour = cour.charAt(0)==='-' ? cour.slice(1) : (cour==='0'?cour:'-'+cour); }
+ else if(k==='pct'){ cour=String(parseFloat(cour)/100); neuf=true; }
+ else if(k==='+'||k==='-'||k==='*'||k==='/'){
+ if(prec!==null && !neuf){ cour=calcule(prec,cour,oper); }
+ prec=cour; oper=k; neuf=true;
+ }
+ else if(k==='='){
+ if(prec!==null && oper){ cour=calcule(prec,cour,oper); prec=null; oper=null; neuf=true; }
+ }
+ aff();
+ }
+ document.getElementById('calcGr').addEventListener('click',function(ev){
+ var b=ev.target.closest('button'); if(!b)return; touche(b.dataset.k);
+ });
+ btn.addEventListener('click',function(){ pan.classList.toggle('on'); });
+ document.getElementById('calcX').addEventListener('click',function(){ pan.classList.remove('on'); });
+ /* déplacement du panneau */
+ var tete=document.getElementById('calcTete'), drag=false, dx=0, dy=0;
+ tete.addEventListener('pointerdown',function(e){
+ if(e.target.id==='calcX')return;
+ drag=true; var r=pan.getBoundingClientRect();
+ dx=e.clientX-r.left; dy=e.clientY-r.top;
+ pan.style.right='auto'; pan.style.bottom='auto';
+ pan.style.left=r.left+'px'; pan.style.top=r.top+'px';
+ try{ tete.setPointerCapture(e.pointerId); }catch(err){}
+ });
+ tete.addEventListener('pointermove',function(e){
+ if(!drag)return;
+ pan.style.left=Math.max(4,Math.min(window.innerWidth-244,e.clientX-dx))+'px';
+ pan.style.top=Math.max(4,Math.min(window.innerHeight-260,e.clientY-dy))+'px';
+ });
+ tete.addEventListener('pointerup',function(){ drag=false; });
+ aff();
+})();
+
+/* ============ A7-A9 : expliquer, calculer, tracer ============ */
+(function(){
+  function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function nbv(v){return parseFloat(String(v||'').replace(',','.'));}
+  function champs(zone,liste,grand){
+    const z=document.getElementById(zone);
+    liste.forEach(c=>{
+      const d=document.createElement('div'); d.className='chp';
+      const l=document.createElement('label'); l.innerHTML=c.lbl; d.appendChild(l);
+      const i=document.createElement('input'); i.id=c.id; i.autocomplete='off';
+      if(grand){ i.className='large'; i.placeholder='rédige une phrase complète'; }
+      d.appendChild(i);
+      if(c.u){ const u=document.createElement('span'); u.className='u'; u.textContent=c.u; d.appendChild(u); }
+      z.appendChild(d);
+    });
+  }
+  const REDAC=[
+  {id:'q71',lbl:'a) Pour un smartphone, quelle étape du cycle de vie pèse le plus lourd, et pourquoi ?',
+   cles:['fabrication','extraction','production','mines','avant','achat','usine','matiere']},
+  {id:'q72',lbl:'b) Pourquoi garder son téléphone plus longtemps réduit-il son impact, alors qu’on continue de l’utiliser ?',
+   cles:['amorti','repartit','divise','etale','plusdannees','longtemps','fabrication','reparti']},
+  {id:'q73',lbl:'c) Que doit prévoir un concepteur, dès le dessin, pour qu’un objet soit recyclable ?',
+   cles:['demonter','demontab','separer','trier','materiaux','moins','colle','vis','identifier','marquage']}], CALC=[
+  {id:'c81',lbl:'a) Impact total d’un neuf gardé 2 ans',rep:230,u:'points'},
+  {id:'c82',lbl:'b) Impact ANNUEL d’un neuf gardé 5 ans',rep:55,u:'points/an'},
+  {id:'c83',lbl:'c) Impact total d’un reconditionné gardé 3 ans',rep:85,u:'points'},
+  {id:'c84',lbl:'d) Gain, en pourcentage, du reconditionné 3 ans face au neuf 3 ans (arrondi à l’unité)',rep:65,tol:1.5,u:'%'}], TRACE=[
+  {id:'t91',lbl:'a) Combien d’étapes ta boucle comporte-t-elle ?',rep:'4',num:true},
+  {id:'t92',lbl:'b) Quelle étape as-tu marquée d’une étoile ?',rep:['fabrication','extraction','production']},
+  {id:'t93',lbl:'c) Quelle étape referme la boucle vers l’extraction ?',rep:['recyclage','findevie','recycler','valorisation']},
+  {id:'t94',lbl:'d) Quelle est la seule étape qui se déroule chez l’utilisateur ?',rep:['usage','utilisation','lusage']}];
+  champs('champs7',REDAC,true); champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  let e7=0,e8=0,e9=0;
+  function verdict(id,html,ok){
+    const v=document.getElementById(id);
+    v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
+  }
+  document.getElementById('verif7').addEventListener('click',()=>{
+    let bons=0;
+    REDAC.forEach(c=>{ const v=norm(document.getElementById(c.id).value);
+      if(v.length>12 && c.cles.some(k=>v.includes(k))) bons++; });
+    if(bons===REDAC.length){
+      verdict('verd7','\u2713 Explications convaincantes. '+'Pour un smartphone, l’essentiel de l’impact est joué AVANT la première charge : extraire les métaux et fabriquer les composants coûte bien plus que des années d’usage. Garder l’appareil ne supprime pas ce coût, mais l’étale sur davantage d’années : le même impact divisé par quatre ans au lieu d’un. Et un objet recyclable se prépare dès le dessin : peu de matériaux différents, assemblés par vis plutôt que collés, et marqués pour être triés.',true);
+      reussir(7, e7===0?3:2);
+    } else { e7++;
+      verdict('verd7','\u2717 Réponse(s) convaincante(s) : '+bons+' sur '+REDAC.length+
+        '. Rédige une phrase complète et nomme précisément la cause ou la fonction.',false); }
+  });
+  document.getElementById('verif8').addEventListener('click',()=>{
+    let faux=0;
+    CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
+      if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
+    if(faux===0){
+      verdict('verd8','\u2713 Tous les calculs sont justes. '+'Neuf 2 ans : 200 + 2 × 15 = 230 points. Sur 5 ans, l’impact annuel tombe à (200 + 75) ÷ 5 = 55 points par an, contre 215 la première année. Un reconditionné gardé 3 ans coûte 40 + 45 = 85 points, contre 245 pour un neuf sur la même durée, soit environ 65 % de moins. Deux leviers, donc : allonger la durée, et éviter la fabrication neuve.',true);
+      reussir(8, e8===0?3:2);
+    } else { e8++;
+      verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
+        '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
+  });
+  document.getElementById('verif9').addEventListener('click',()=>{
+    let faux=0;
+    TRACE.forEach(c=>{ const v=document.getElementById(c.id).value;
+      const bon = c.num ? String(nbv(v))===String(nbv(c.rep))
+        : (Array.isArray(c.rep)?c.rep:[c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+      if(!bon) faux++; });
+    if(faux===0){
+      verdict('verd9','\u2713 Ton tracé est conforme. '+'Quatre étapes : extraction, fabrication, usage, recyclage. La plus lourde est la fabrication au sens large — extraction comprise. Le recyclage referme la boucle en renvoyant des matières vers la production, ce qui évite de creuser de nouvelles mines. Et une seule étape se passe chez toi : l’usage. C’est peu, et c’est justement pour cela que le vrai pouvoir du consommateur est de faire durer.',true);
+      reussir(9, e9===0?3:2);
+    } else { e9++;
+      verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
+  });
+  
+})();
 </script>
 </body>
 </html>

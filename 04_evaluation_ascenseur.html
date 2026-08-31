@@ -6,9 +6,9 @@
 <title>Évaluation 4ème — L’ascenseur · ESTIC</title>
 <style>
 :root{
-  --ink:#1e3a5f; --niv:#0f766e; --niv-fonce:#115e59; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
-  --ombre:0 4px 14px rgba(30,58,95,.10);
+ --ink:#1e3a5f; --niv:#0f766e; --niv-fonce:#115e59; --orange:#ea580c;
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
+ --ombre:0 4px 14px rgba(30,58,95,.10);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);min-height:100vh;padding-bottom:60px}
@@ -99,89 +99,90 @@ svg .cliquable:hover{opacity:.75}
 .num-rep input{width:160px;font-size:20px;font-weight:800;text-align:center;padding:12px;border:3px solid var(--niv);border-radius:12px}
 .num-rep .unite{font-size:18px;font-weight:900;color:var(--niv-fonce)}
 .rappel-formule{text-align:center;font-weight:800;color:var(--niv-fonce);background:#f1f5f9;border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:15.5px}
+.cc.choisi{outline:3px solid #94a3b8;font-weight:800}
 </style>
 </head>
 <body>
 
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
-<button id="calcToggle" title="Ouvrir / fermer la calculatrice" aria-label="Calculatrice">🧮</button>
+<button id="calcToggle" title="Ouvrir / fermer la calculatrice" aria-label="Calculatrice"></button>
 <div id="calcPanel" role="region" aria-label="Calculatrice">
-  <div class="titrecalc"><span>🧮 Calculatrice</span><span style="cursor:pointer" id="calcFermer">✕</span></div>
-  <div id="calcAff">0</div>
-  <div class="calcbtns" id="calcBtns"></div>
+ <div class="titrecalc"><span>Calculatrice</span><span style="cursor:pointer" id="calcFermer"></span></div>
+ <div id="calcAff">0</div>
+ <div class="calcbtns" id="calcBtns"></div>
 </div>
 
 <div class="conteneur">
 
  <!-- IDENTIFICATION -->
  <div class="panneau" id="ecranLogin">
-  <!-- ===CONFIG_TITRE=== -->
-  <h1>🛗 Évaluation — L'ascenseur</h1>
-  <div class="sous">8 activités variées : organes à étiqueter, trajet d'un appel à ordonner, animations à interpréter… Montre ce que tu sais faire, pas seulement ce que tu sais réciter !</div>
-  <!-- ===FIN CONFIG_TITRE=== -->
-  <div class="rassure">🕐 <b>Aucune limite de temps.</b> · 👆 Tout se fait en cliquant. · 🔍 Tu peux zoomer la page si besoin. ·
-  💬 Après chaque activité, la bonne réponse t'est expliquée. · ⭐ Ta note est calculée sur l'ensemble : une activité ratée ne fait pas tout perdre.</div>
-  <label>Nom</label><input id="fNom" autocomplete="off">
-  <label>Prénom</label><input id="fPrenom" autocomplete="off">
-  <label>Classe</label>
-  <select id="fClasse">
-    <option value="">— Choisis ta classe —</option>
-    <option>4A</option><option>4B</option><option>4C</option><option>4D</option><option>4E</option>
-  </select>
-  <button class="btn" id="btnCommencer">🚀 C'est parti !</button>
-  <div class="lienprof" id="lienProf">Espace professeur</div>
+ <!-- ===CONFIG_TITRE=== -->
+ <h1>Évaluation — L'ascenseur</h1>
+ <div class="sous">8 activités variées : organes à étiqueter, trajet d'un appel à ordonner, animations à interpréter… Montre ce que tu sais faire, pas seulement ce que tu sais réciter !</div>
+ <!-- ===FIN CONFIG_TITRE=== -->
+ <div class="rassure"> <b>Aucune limite de temps.</b> · Tout se fait en cliquant. · Tu peux zoomer la page si besoin. ·
+ Après chaque activité, la bonne réponse t'est expliquée. · ★ Ta note est calculée sur l'ensemble : une activité ratée ne fait pas tout perdre.</div>
+ <label>Nom</label><input id="fNom" autocomplete="off">
+ <label>Prénom</label><input id="fPrenom" autocomplete="off">
+ <label>Classe</label>
+ <select id="fClasse">
+ <option value="">— Choisis ta classe —</option>
+ <option>4A</option><option>4B</option><option>4C</option><option>4D</option><option>4E</option>
+ </select>
+ <button class="btn" id="btnCommencer">C'est parti !</button>
+ <div class="lienprof" id="lienProf">Espace professeur</div>
  </div>
 
  <!-- ACTIVITÉ -->
  <div class="panneau cache" id="ecranAct">
-  <div class="barre"><div id="barreP"></div></div>
-  <div class="entete-act"><span class="numa" id="numAct"></span><span class="ptsmax" id="ptsMaxAct"></span></div>
-  <div class="titre-act" id="titreAct"></div>
-  <div class="consigne-act" id="consigneAct"></div>
-  <div class="zone-act" id="zoneAct"></div>
-  <div class="feedback" id="fbAct"></div>
-  <div class="pied-act">
-    <span class="gain cache" id="gainAct"></span>
-    <button class="btn bleu cache" id="btnSuivant" style="margin:0 0 0 auto">Suivant ➜</button>
-  </div>
+ <div class="barre"><div id="barreP"></div></div>
+ <div class="entete-act"><span class="numa" id="numAct"></span><span class="ptsmax" id="ptsMaxAct"></span></div>
+ <div class="titre-act" id="titreAct"></div>
+ <div class="consigne-act" id="consigneAct"></div>
+ <div class="zone-act" id="zoneAct"></div>
+ <div class="feedback" id="fbAct"></div>
+ <div class="pied-act">
+ <span class="gain cache" id="gainAct"></span>
+ <button class="btn bleu cache" id="btnSuivant" style="margin:0 0 0 auto">Suivant ➜</button>
+ </div>
  </div>
 
  <!-- RÉSULTAT -->
  <div class="panneau cache" id="ecranFin">
-  <h1>🎓 Résultat</h1>
-  <div class="notefinale"><span class="gros" id="note20"></span><span class="sur"> / 20</span>
-    <div class="sous" id="scoreBrut"></div></div>
-  <div class="etat-envoi" id="etatEnvoi"></div>
-  <div class="detail" id="detailRep"></div>
+ <h1>Résultat</h1>
+ <div class="notefinale"><span class="gros" id="note20"></span><span class="sur"> / 20</span>
+ <div class="sous" id="scoreBrut"></div></div>
+ <div class="etat-envoi" id="etatEnvoi"></div>
+ <div class="detail" id="detailRep"></div>
  </div>
 
  <!-- ESPACE PROF -->
  <div class="panneau cache" id="ecranProf">
-  <h1>👨‍🏫 Tableau de bord professeur</h1>
-  <div id="profLogin">
-    <label>Mot de passe</label><input id="fMdp" type="password">
-    <button class="btn bleu" id="btnProf">Accéder</button>
-    <div class="etat-envoi ko cache" id="errMdp">Mot de passe incorrect.</div>
-  </div>
-  <div class="cache" id="profContenu">
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <select id="filtreClasse" style="max-width:160px"><option value="">Toutes les classes</option>
-        <option>4A</option><option>4B</option><option>4C</option><option>4D</option><option>4E</option></select>
-      <button class="btn bleu" id="btnRafraichir" style="margin-top:0">⟳ Actualiser</button>
-      <button class="btn gris" id="btnCSV" style="margin-top:0">⬇ Export CSV</button>
-    </div>
-    <div class="kpis" id="kpis"></div>
-    <h2 style="font-size:16px;color:var(--niv-fonce);margin-top:20px">Réussite par activité</h2>
-    <div id="statsQ"></div>
-    <h2 style="font-size:16px;color:var(--niv-fonce);margin-top:20px">Résultats individuels</h2>
-    <div style="max-height:380px;overflow:auto"><table class="res" id="tableRes"></table></div>
-  </div>
+ <h1>Tableau de bord professeur</h1>
+ <div id="profLogin">
+ <label>Mot de passe</label><input id="fMdp" type="password">
+ <button class="btn bleu" id="btnProf">Accéder</button>
+ <div class="etat-envoi ko cache" id="errMdp">Mot de passe incorrect.</div>
+ </div>
+ <div class="cache" id="profContenu">
+ <div style="display:flex;gap:10px;flex-wrap:wrap">
+ <select id="filtreClasse" style="max-width:160px"><option value="">Toutes les classes</option>
+ <option>4A</option><option>4B</option><option>4C</option><option>4D</option><option>4E</option></select>
+ <button class="btn bleu" id="btnRafraichir" style="margin-top:0">⟳ Actualiser</button>
+ <button class="btn gris" id="btnCSV" style="margin-top:0">⬇ Export CSV</button>
+ </div>
+ <div class="kpis" id="kpis"></div>
+ <h2 style="font-size:16px;color:var(--niv-fonce);margin-top:20px">Réussite par activité</h2>
+ <div id="statsQ"></div>
+ <h2 style="font-size:16px;color:var(--niv-fonce);margin-top:20px">Résultats individuels</h2>
+ <div style="max-height:380px;overflow:auto"><table class="res" id="tableRes"></table></div>
+ </div>
  </div>
 
 </div>
@@ -194,356 +195,377 @@ const CSV_NOM='resultats_ascenseur_4e.csv';
 /* ===FIN CONFIG=== */
 
 /* ============================================================
-   BOÎTE À OUTILS DES ACTIVITÉS (inclusif : clic uniquement,
-   pas de chrono, feedback explicatif, symboles + couleurs)
-   ============================================================ */
+ BOÎTE À OUTILS DES ACTIVITÉS (inclusif : clic uniquement,
+ pas de chrono, feedback explicatif, symboles + couleurs)
+ ============================================================ */
 const SVGNS='http://www.w3.org/2000/svg';
 function el(tag,attrs={},parent=null,texte=''){
-  const e=document.createElement(tag);
-  Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
-  if(texte) e.textContent=texte;
-  if(parent) parent.appendChild(e);
-  return e;
+ const e=document.createElement(tag);
+ Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+ if(texte) e.textContent=texte;
+ if(parent) parent.appendChild(e);
+ return e;
 }
 function svgEl(tag,attrs={},parent=null,texte=''){
-  const e=document.createElementNS(SVGNS,tag);
-  Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
-  if(texte) e.textContent=texte;
-  if(parent) parent.appendChild(e);
-  return e;
+ const e=document.createElementNS(SVGNS,tag);
+ Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+ if(texte) e.textContent=texte;
+ if(parent) parent.appendChild(e);
+ return e;
 }
 function boutonValider(zone,cb){
-  const b=el('button',{class:'btn'},zone,'✔ Valider ma réponse');
-  b.disabled=true; b.onclick=cb; return b;
+ const b=el('button',{class:'btn'},zone,'✓ Valider ma réponse');
+ b.disabled=true; b.onclick=cb; return b;
 }
 function feedback(type,html){
-  const fb=document.getElementById('fbAct');
-  fb.className='feedback '+type; fb.innerHTML=html;
+ /* ÉVALUATION : aucune correction pendant l'épreuve.
+ Le commentaire est mis de côté et n'apparaîtra qu'à la fin, avec la note. */
+ CORRECTIONS.push({type:type, html:html, activite: (typeof idx==='number'? idx : -1)});
+ const fb=document.getElementById('fbAct');
+ fb.className='feedback';
+ fb.innerHTML='<b>Réponse enregistrée.</b>La correction détaillée sera donnée à la fin de l\u2019évaluation.';
+}
+const CORRECTIONS=[];
+function afficherCorrections(){
+ const zone=document.getElementById('detailRep');
+ if(!zone||!CORRECTIONS.length) return;
+ const bloc=document.createElement('div');
+ bloc.style.cssText='margin-top:18px;text-align:left';
+ bloc.innerHTML='<h2 style="font-size:17px;color:var(--niv-fonce);margin-bottom:8px">Correction détaillée</h2>';
+ CORRECTIONS.forEach((c,i)=>{
+ const a=(typeof ACTIVITES!=='undefined' && ACTIVITES[c.activite]) ? ACTIVITES[c.activite] : null;
+ const d=document.createElement('div');
+ d.className='feedback '+c.type;
+ d.style.cssText='margin-bottom:8px';
+ d.innerHTML=(a? '<b style="display:block;margin-bottom:3px">'+(a.titre||('Activité '+(c.activite+1)))+'</b>' : '')+c.html;
+ bloc.appendChild(d);
+ });
+ zone.appendChild(bloc);
 }
 /* ===== Calculatrice : évaluateur maison (sans eval), gère , × ÷ − et parenthèses ===== */
 function calcEval(expr){
-  expr=String(expr).replace(/,/g,'.').replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/\s/g,'');
-  let i=0;
-  function expre(){ let v=terme();
-    while(expr[i]==='+'||expr[i]==='-'){ const op=expr[i++]; const r=terme(); v= op==='+'? v+r : v-r; }
-    return v; }
-  function terme(){ let v=fact();
-    while(expr[i]==='*'||expr[i]==='/'){ const op=expr[i++]; const r=fact(); v= op==='*'? v*r : v/r; }
-    return v; }
-  function fact(){
-    if(expr[i]==='('){ i++; const v=expre(); if(expr[i]===')') i++; return v; }
-    if(expr[i]==='-'){ i++; return -fact(); }
-    const s=i; while(i<expr.length && /[0-9.]/.test(expr[i])) i++;
-    return parseFloat(expr.slice(s,i));
-  }
-  const v=expre();
-  return (i===expr.length && isFinite(v)) ? v : null;
+ expr=String(expr).replace(/,/g,'.').replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/\s/g,'');
+ let i=0;
+ function expre(){ let v=terme();
+ while(expr[i]==='+'||expr[i]==='-'){ const op=expr[i++]; const r=terme(); v= op==='+'? v+r : v-r; }
+ return v; }
+ function terme(){ let v=fact();
+ while(expr[i]==='*'||expr[i]==='/'){ const op=expr[i++]; const r=fact(); v= op==='*'? v*r : v/r; }
+ return v; }
+ function fact(){
+ if(expr[i]==='('){ i++; const v=expre(); if(expr[i]===')') i++; return v; }
+ if(expr[i]==='-'){ i++; return -fact(); }
+ const s=i; while(i<expr.length && /[0-9.]/.test(expr[i])) i++;
+ return parseFloat(expr.slice(s,i));
+ }
+ const v=expre();
+ return (i===expr.length && isFinite(v)) ? v : null;
 }
 (function initCalculatrice(){
-  const aff=document.getElementById('calcAff');
-  const grille=document.getElementById('calcBtns');
-  let saisie='';
-  function maj(){ aff.textContent = saisie===''? '0' : saisie; }
-  const touches=['7','8','9','÷','4','5','6','×','1','2','3','−','0',',','(',')','C','⌫','+','='];
-  touches.forEach(t=>{
-    const b=document.createElement('button');
-    b.textContent=t;
-    if('÷×−+'.includes(t)) b.className='op';
-    if(t==='=') b.className='eg';
-    b.onclick=()=>{
-      if(t==='C'){ saisie=''; }
-      else if(t==='⌫'){ saisie=saisie.slice(0,-1); }
-      else if(t==='='){
-        const r=calcEval(saisie);
-        saisie = (r===null)? '' : String(Math.round(r*1e6)/1e6).replace('.',',');
-        if(r===null) aff.textContent='Erreur';
-        maj(); return;
-      }
-      else saisie+=t;
-      maj();
-    };
-    grille.appendChild(b);
-  });
-  document.getElementById('calcToggle').onclick=()=>document.getElementById('calcPanel').classList.toggle('ouvert');
-  document.getElementById('calcFermer').onclick=()=>document.getElementById('calcPanel').classList.remove('ouvert');
+ const aff=document.getElementById('calcAff');
+ const grille=document.getElementById('calcBtns');
+ let saisie='';
+ function maj(){ aff.textContent = saisie===''? '0' : saisie; }
+ const touches=['7','8','9','÷','4','5','6','×','1','2','3','−','0',',','(',')','C','⌫','+','='];
+ touches.forEach(t=>{
+ const b=document.createElement('button');
+ b.textContent=t;
+ if('÷×−+'.includes(t)) b.className='op';
+ if(t==='=') b.className='eg';
+ b.onclick=()=>{
+ if(t==='C'){ saisie=''; }
+ else if(t==='⌫'){ saisie=saisie.slice(0,-1); }
+ else if(t==='='){
+ const r=calcEval(saisie);
+ saisie = (r===null)? '' : String(Math.round(r*1e6)/1e6).replace('.',',');
+ if(r===null) aff.textContent='Erreur';
+ maj(); return;
+ }
+ else saisie+=t;
+ maj();
+ };
+ grille.appendChild(b);
+ });
+ document.getElementById('calcToggle').onclick=()=>document.getElementById('calcPanel').classList.toggle('ouvert');
+ document.getElementById('calcFermer').onclick=()=>document.getElementById('calcPanel').classList.remove('ouvert');
 })();
 function ouvrirCalculatrice(){ document.getElementById('calcPanel').classList.add('ouvert'); }
 /* Widget « question de calcul » : schéma optionnel, rappel de formule, saisie numérique (virgule acceptée), tolérance */
 function activiteCalcul(zone,done,cfg){
-  ouvrirCalculatrice();
-  if(cfg.schema){ const s=cfg.schema(); if(s) zone.appendChild(s); }
-  if(cfg.rappel) el('div',{class:'rappel-formule'},zone,'📐 '+cfg.rappel);
-  const rang=el('div',{class:'num-rep'},zone);
-  el('span',{style:'font-weight:800;font-size:16px'},rang,'Réponse :');
-  const inp=el('input',{type:'text',inputmode:'decimal',placeholder:'…','aria-label':'ta réponse'},rang);
-  el('span',{class:'unite'},rang,cfg.unite);
-  inp.addEventListener('input',()=>{ valider.disabled=inp.value.trim()===''; });
-  const valider=boutonValider(zone,()=>{
-    const v=parseFloat(inp.value.replace(',','.'));
-    valider.disabled=true; inp.disabled=true;
-    const ok=isFinite(v) && Math.abs(v-cfg.bonne)<=(cfg.tol!==undefined?cfg.tol:0.001);
-    inp.style.borderColor= ok?'#16a34a':'#dc2626';
-    feedback(ok?'ok':'ko',(ok?'✓ Calcul exact ! ':'✗ Ce n\u2019est pas la bonne valeur. ')+cfg.solution);
-    done(ok?cfg.max:0);
-  });
+ ouvrirCalculatrice();
+ if(cfg.schema){ const s=cfg.schema(); if(s) zone.appendChild(s); }
+ /* la formule n'est PAS donnee ici : l'eleve doit retrouver le raisonnement */
+ const rang=el('div',{class:'num-rep'},zone);
+ el('span',{style:'font-weight:800;font-size:16px'},rang,'Réponse :');
+ const inp=el('input',{type:'text',inputmode:'decimal',placeholder:'…','aria-label':'ta réponse'},rang);
+ el('span',{class:'unite'},rang,cfg.unite);
+ inp.addEventListener('input',()=>{ valider.disabled=inp.value.trim()===''; });
+ const valider=boutonValider(zone,()=>{
+ const v=parseFloat(inp.value.replace(',','.'));
+ valider.disabled=true; inp.disabled=true;
+ const ok=isFinite(v) && Math.abs(v-cfg.bonne)<=(cfg.tol!==undefined?cfg.tol:0.001);
+ inp.style.borderColor= ok?'#16a34a':'#dc2626';
+ feedback(ok?'ok':'ko',(ok?'\u2713 Calcul exact. ':'\u2717 Ce n\u2019est pas la bonne valeur. ')+cfg.solution+(cfg.rappel? ' <span class="rappel-formule" style="display:inline-block;margin-top:7px">\u00c0 retenir \u2014 '+cfg.rappel+'</span>' : ''));
+ done(ok?cfg.max:0);
+ });
 }
 /* Widget « étiquettes à poser » : clique une étiquette, puis sa zone sur le schéma */
 function widgetEtiquettes(zone, svg, zonesDef, etiquettesDef, bonnes, aideCorrection, done, maxPts){
-  let etiqChoisie=null; const poses={};
-  const rangEtiq=el('div',{class:'etiqs'},zone);
-  const btns={};
-  etiquettesDef.forEach(nom=>{
-    const b=el('button',{},rangEtiq,nom);
-    btns[nom]=b;
-    b.onclick=()=>{ if(b.classList.contains('pose'))return;
-      Object.values(btns).forEach(x=>x.classList.remove('choisi'));
-      etiqChoisie=nom; b.classList.add('choisi'); };
-  });
-  zone.appendChild(svg);
-  const textesPoses={};
-  zonesDef.forEach(z=>{
-    z.forme.classList.add('cliquable');
-    z.forme.addEventListener('click',()=>{
-      if(!etiqChoisie) return;
-      // retirer l'étiquette de son ancienne zone éventuelle
-      Object.keys(poses).forEach(k=>{ if(poses[k]===etiqChoisie){ delete poses[k]; textesPoses[k].textContent='?'; } });
-      poses[z.id]=etiqChoisie;
-      textesPoses[z.id].textContent=etiqChoisie;
-      btns[etiqChoisie].classList.remove('choisi'); btns[etiqChoisie].classList.add('pose');
-      etiqChoisie=null;
-      // toutes posées ?
-      valider.disabled = Object.keys(poses).length<zonesDef.length;
-    });
-    const t=svgEl('text',{x:z.tx,y:z.ty,'text-anchor':'middle','font-size':'14','font-weight':'bold',fill:'#ea580c','font-family':'Segoe UI'},svg,'?');
-    textesPoses[z.id]=t;
-  });
-  const valider=boutonValider(zone,()=>{
-    valider.disabled=true;
-    let pts=0;
-    zonesDef.forEach(z=>{
-      const ok=poses[z.id]===bonnes[z.id];
-      if(ok) pts++;
-      textesPoses[z.id].setAttribute('fill', ok?'#16a34a':'#dc2626');
-      textesPoses[z.id].textContent=(ok?'✓ ':'✗ ')+bonnes[z.id];
-    });
-    const p=Math.round(pts/zonesDef.length*maxPts*10)/10;
-    feedback(pts===zonesDef.length?'ok':(pts>0?'moyen':'ko'),
-      (pts===zonesDef.length?'👏 Toutes les étiquettes sont bien placées !':'Les bonnes réponses sont affichées en vert sur le schéma. ')+aideCorrection);
-    done(p);
-  });
+ let etiqChoisie=null; const poses={};
+ const rangEtiq=el('div',{class:'etiqs'},zone);
+ const btns={};
+ etiquettesDef.forEach(nom=>{
+ const b=el('button',{},rangEtiq,nom);
+ btns[nom]=b;
+ b.onclick=()=>{ if(b.classList.contains('pose'))return;
+ Object.values(btns).forEach(x=>x.classList.remove('choisi'));
+ etiqChoisie=nom; b.classList.add('choisi'); };
+ });
+ zone.appendChild(svg);
+ const textesPoses={};
+ zonesDef.forEach(z=>{
+ z.forme.classList.add('cliquable');
+ z.forme.addEventListener('click',()=>{
+ if(!etiqChoisie) return;
+ // retirer l'étiquette de son ancienne zone éventuelle
+ Object.keys(poses).forEach(k=>{ if(poses[k]===etiqChoisie){ delete poses[k]; textesPoses[k].textContent='?'; } });
+ poses[z.id]=etiqChoisie;
+ textesPoses[z.id].textContent=etiqChoisie;
+ btns[etiqChoisie].classList.remove('choisi'); btns[etiqChoisie].classList.add('pose');
+ etiqChoisie=null;
+ // toutes posées ?
+ valider.disabled = Object.keys(poses).length<zonesDef.length;
+ });
+ const t=svgEl('text',{x:z.tx,y:z.ty,'text-anchor':'middle','font-size':'14','font-weight':'bold',fill:'#ea580c','font-family':'Segoe UI'},svg,'?');
+ textesPoses[z.id]=t;
+ });
+ const valider=boutonValider(zone,()=>{
+ valider.disabled=true;
+ let pts=0;
+ zonesDef.forEach(z=>{
+ const ok=poses[z.id]===bonnes[z.id];
+ if(ok) pts++;
+ textesPoses[z.id].setAttribute('fill', ok?'#16a34a':'#dc2626');
+ textesPoses[z.id].textContent=(ok?'✓ ':'✗ ')+bonnes[z.id];
+ });
+ const p=Math.round(pts/zonesDef.length*maxPts*10)/10;
+ feedback(pts===zonesDef.length?'ok':(pts>0?'moyen':'ko'),
+ (pts===zonesDef.length?' Toutes les étiquettes sont bien placées !':'Les bonnes réponses sont affichées en vert sur le schéma. ')+aideCorrection);
+ done(p);
+ });
 }
 
 /* ============================================================
-   MOTEUR : enchaîne les activités, score, envoi Firebase
-   ============================================================ */
+ MOTEUR : enchaîne les activités, score, envoi Firebase
+ ============================================================ */
 /* ===ACTIVITES=== */
 const ACTIVITES=[
 
-{ titre:'Trois organes de l\u2019ascenseur', icone:'🛗', max:3,
-  consigne:'Trois organes essentiels. Clique une étiquette (le NOM de l\u2019organe), puis l\u2019image correspondante. Place les 3 étiquettes, puis valide.',
-  render(zone,done){
-    const svg=svgEl('svg',{viewBox:'0 0 620 210',width:'620'});
-    function element(cx,emoji,coul){
-      const g=svgEl('g',{},svg);
-      svgEl('rect',{x:cx-46,y:56,width:92,height:88,rx:12,fill:'#fff',stroke:coul,'stroke-width':'3'},g);
-      svgEl('text',{x:cx,y:112,'text-anchor':'middle','font-size':'36'},g,emoji);
-      return g;
-    }
-    const co=element(110,'🏋️','#0f766e');
-    const pa=element(310,'🪂','#dc2626');
-    const tr=element(510,'⚙️','#334155');
-    widgetEtiquettes(zone,svg,
-      [{id:'co',forme:co,tx:110,ty:180},
-       {id:'pa',forme:pa,tx:310,ty:180},
-       {id:'tr',forme:tr,tx:510,ty:180}],
-      ['LE CONTREPOIDS','LE PARACHUTE','LE TREUIL'],
-      {co:'LE CONTREPOIDS',pa:'LE PARACHUTE',tr:'LE TREUIL'},
-      'Le CONTREPOIDS (🏋️) équilibre la cabine : sa masse vaut la cabine + la moitié de la charge maxi, et le moteur ne compense que la différence. Le PARACHUTE (🪂), inventé par Otis, mord les rails si les câbles lâchent. Le TREUIL (⚙️) est le muscle : son moteur entraîne la poulie motrice où adhèrent les câbles.',
-      done,3);
-  }
+{ titre:'Trois organes de l\u2019ascenseur', icone:'', max:3,
+ consigne:'Trois organes essentiels. Clique une étiquette (le NOM de l\u2019organe), puis l\u2019image correspondante. Place les 3 étiquettes, puis valide.',
+ render(zone,done){
+ const svg=svgEl('svg',{viewBox:'0 0 620 210',width:'620'});
+ function element(cx,emoji,coul){
+ const g=svgEl('g',{},svg);
+ svgEl('rect',{x:cx-46,y:56,width:92,height:88,rx:12,fill:'#fff',stroke:coul,'stroke-width':'3'},g);
+ svgEl('text',{x:cx,y:112,'text-anchor':'middle','font-size':'36'},g,emoji);
+ return g;
+ }
+ const co=element(110,'','#0f766e');
+ const pa=element(310,'','#dc2626');
+ const tr=element(510,'','#334155');
+ widgetEtiquettes(zone,svg,
+ [{id:'co',forme:co,tx:110,ty:180},
+ {id:'pa',forme:pa,tx:310,ty:180},
+ {id:'tr',forme:tr,tx:510,ty:180}],
+ ['LE CONTREPOIDS','LE PARACHUTE','LE TREUIL'],
+ {co:'LE CONTREPOIDS',pa:'LE PARACHUTE',tr:'LE TREUIL'},
+ 'Le CONTREPOIDS () équilibre la cabine : sa masse vaut la cabine + la moitié de la charge maxi, et le moteur ne compense que la différence. Le PARACHUTE (), inventé par Otis, mord les rails si les câbles lâchent. Le TREUIL () est le muscle : son moteur entraîne la poulie motrice où adhèrent les câbles.',
+ done,3);
+ }
 },
 
-{ titre:'Le trajet d\u2019un appel', icone:'🔢', max:3,
-  consigne:'Quelqu\u2019un appuie sur le bouton du 3ème étage. Clique les 4 étapes du trajet de l\u2019information DANS L\u2019ORDRE (vérification automatique après le 4ème clic).',
-  render(zone,done){
-    const ETAPES=[
-      {id:0,t:'🔘 LE BOUTON D\u2019APPEL — ACQUÉRIR : l\u2019appel entre dans le système'},
-      {id:1,t:'🧠 L\u2019ARMOIRE DE COMMANDE — TRAITER : choisir l\u2019ordre de desserte'},
-      {id:2,t:'⚙️ LE TREUIL DÉPLACE LA CABINE — AGIR : moteur, poulie, câbles'},
-      {id:3,t:'💡 PORTES, VOYANT ET GONG — RESTITUER : informer les passagers'},
-    ];
-    const BON=[0,1,2,3];
-    const rang=el('div',{class:'choix-cartes'},zone);
-    const choix=[];
-    ETAPES.slice().sort(()=>0.5-Math.random()).forEach(e=>{
-      const c=el('div',{class:'cc'},rang,e.t);
-      c.onclick=()=>{
-        if(choix.length>=4 || choix.includes(e.id)) return;
-        choix.push(e.id);
-        c.style.opacity='.45';
-        el('span',{style:'display:inline-block;background:#0f766e;color:#fff;border-radius:50%;width:24px;height:24px;line-height:24px;font-weight:900;margin-left:8px'},c,String(choix.length));
-        if(choix.length===4){
-          const exact=choix.join()===BON.join();
-          const premierOk=choix[0]===BON[0];
-          const pts=exact?3:(premierOk?1:0);
-          feedback(exact?'ok':(pts?'moyen':'ko'),
-            (exact?'\u2713 Trajet parfait !':'L\u2019ordre correct : le bouton (ACQUÉRIR) \u2192 l\u2019armoire (TRAITER) \u2192 le treuil (AGIR) \u2192 portes et voyants (RESTITUER).')+
-            ' C\u2019est la chaîne d\u2019information complète — le moteur ne peut pas bouger avant que l\u2019armoire ait décidé, et l\u2019armoire ne décide rien sans avoir reçu l\u2019appel.');
-          done(pts);
-        }
-      };
-    });
-  }
+{ titre:'Le trajet d\u2019un appel', icone:'', max:3,
+ consigne:'Quelqu\u2019un appuie sur le bouton du 3ème étage. Clique les 4 étapes du trajet de l\u2019information DANS L\u2019ORDRE (vérification automatique après le 4ème clic).',
+ render(zone,done){
+ const ETAPES=[
+ {id:0,t:' LE BOUTON D\u2019APPEL — ACQUÉRIR : l\u2019appel entre dans le système'},
+ {id:1,t:' L\u2019ARMOIRE DE COMMANDE — TRAITER : choisir l\u2019ordre de desserte'},
+ {id:2,t:' LE TREUIL DÉPLACE LA CABINE — AGIR : moteur, poulie, câbles'},
+ {id:3,t:' PORTES, VOYANT ET GONG — RESTITUER : informer les passagers'},
+ ];
+ const BON=[0,1,2,3];
+ const rang=el('div',{class:'choix-cartes'},zone);
+ const choix=[];
+ ETAPES.slice().sort(()=>0.5-Math.random()).forEach(e=>{
+ const c=el('div',{class:'cc'},rang,e.t);
+ c.onclick=()=>{
+ if(choix.length>=4 || choix.includes(e.id)) return;
+ choix.push(e.id);
+ c.style.opacity='.45';
+ el('span',{style:'display:inline-block;background:#0f766e;color:#fff;border-radius:50%;width:24px;height:24px;line-height:24px;font-weight:900;margin-left:8px'},c,String(choix.length));
+ if(choix.length===4){
+ const exact=choix.join()===BON.join();
+ const premierOk=choix[0]===BON[0];
+ const pts=exact?3:(premierOk?1:0);
+ feedback(exact?'ok':(pts?'moyen':'ko'),
+ (exact?'\u2713 Trajet parfait !':'L\u2019ordre correct : le bouton (ACQUÉRIR) \u2192 l\u2019armoire (TRAITER) \u2192 le treuil (AGIR) \u2192 portes et voyants (RESTITUER).')+
+ ' C\u2019est la chaîne d\u2019information complète — le moteur ne peut pas bouger avant que l\u2019armoire ait décidé, et l\u2019armoire ne décide rien sans avoir reçu l\u2019appel.');
+ done(pts);
+ }
+ };
+ });
+ }
 },
 
-{ titre:'Les portes qui mordent', icone:'🚪', max:2,
-  consigne:'Signalement : les portes se referment sur les passagers ! Le capteur qui devait les voir ne réagit plus — il est couvert de poussière de chantier. Que faire ? Clique ta réponse.',
-  render(zone,done){
-    const rang=el('div',{class:'choix-cartes'},zone);
-    const options=[
-      {t:'🚪 Nettoyer ou remplacer la cellule photoélectrique, puis tester la réouverture', ok:true},
-      {t:'🕐 Régler les portes pour qu\u2019elles se ferment plus lentement', ok:false, exp:'des portes lentes mais AVEUGLES restent dangereuses : le vrai problème est le capteur qui ne voit plus.'},
-      {t:'📋 Afficher un panneau \u00ab Attention aux portes \u00bb dans la cabine', ok:false, exp:'un panneau ne remplace pas un capteur : la sécurité doit être TECHNIQUE, pas seulement un avertissement.'},
-    ];
-    let repondu=false;
-    options.forEach(o=>{
-      const c=el('div',{class:'cc'},rang,o.t);
-      c.onclick=()=>{
-        if(repondu)return; repondu=true;
-        [...rang.children].forEach((cc,i)=>{ if(options[i].ok) cc.classList.add('bon'); });
-        if(!o.ok) c.classList.add('faux');
-        feedback(o.ok?'ok':'ko',(o.ok?'\u2713 Exactement :':'\u2717 Non — '+o.exp+' La bonne réponse :')+' la cellule photoélectrique projette un rideau de faisceaux invisibles ; encrassée, elle ne \u00ab voit \u00bb plus personne. On la NETTOIE ou on la remplace, puis on teste — un capteur aveugle rend tout le système dangereux.');
-        done(o.ok?2:0);
-      };
-    });
-  }
+{ titre:'Les portes qui mordent', icone:'', max:2,
+ consigne:'Signalement : les portes se referment sur les passagers ! Le capteur qui devait les voir ne réagit plus — il est couvert de poussière de chantier. Que faire ? Clique ta réponse.',
+ render(zone,done){
+ const rang=el('div',{class:'choix-cartes'},zone);
+ const options=[
+ {t:' Nettoyer ou remplacer la cellule photoélectrique, puis tester la réouverture', ok:true},
+ {t:' Régler les portes pour qu\u2019elles se ferment plus lentement', ok:false, exp:'des portes lentes mais AVEUGLES restent dangereuses : le vrai problème est le capteur qui ne voit plus.'},
+ {t:' Afficher un panneau \u00ab Attention aux portes \u00bb dans la cabine', ok:false, exp:'un panneau ne remplace pas un capteur : la sécurité doit être TECHNIQUE, pas seulement un avertissement.'},
+ ];
+ let repondu=false;
+ options.forEach(o=>{
+ const c=el('div',{class:'cc'},rang,o.t);
+ c.onclick=()=>{
+ if(repondu)return; repondu=true;
+ /* correction différée : la bonne réponse n'est pas montrée ici */
+ if(!o.ok) c.classList.add('choisi');
+ feedback(o.ok?'ok':'ko',(o.ok?'\u2713 Exactement :':'\u2717 Non — '+o.exp+' La bonne réponse :')+' la cellule photoélectrique projette un rideau de faisceaux invisibles ; encrassée, elle ne \u00ab voit \u00bb plus personne. On la NETTOIE ou on la remplace, puis on teste — un capteur aveugle rend tout le système dangereux.');
+ done(o.ok?2:0);
+ };
+ });
+ }
 },
 
-{ titre:'L\u2019animation mystère', icone:'🎬', max:2,
-  consigne:'Observe la scène (l\u2019animation tourne en boucle)\u2026 puis clique la légende qui décrit correctement ce qui se passe.',
-  render(zone,done){
-    const cv=el('canvas',{width:620,height:240},zone);
-    const ctx=cv.getContext('2d'); let t=0,fini=false,raf;
-    function boucleAnim(){
-      if(fini)return;
-      t+=0.004;
-      const cycle=t%1;
-      const q=cycle<0.5 ? cycle*2 : (1-cycle)*2;
-      ctx.clearRect(0,0,620,240);
-      ctx.fillStyle='#f0fdfa'; ctx.fillRect(0,0,620,240);
-      ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(160,25); ctx.lineTo(160,230); ctx.moveTo(300,25); ctx.lineTo(300,230); ctx.stroke();
-      ctx.strokeStyle='#0f766e'; ctx.lineWidth=4;
-      ctx.beginPath(); ctx.arc(230,30,26,Math.PI,0); ctx.stroke();
-      const yCab=150-q*95, yCp=55+q*95;
-      ctx.strokeStyle='#334155'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(195,yCab); ctx.lineTo(195,30); ctx.moveTo(285,yCp); ctx.lineTo(285,30); ctx.stroke();
-      ctx.fillStyle='#fff'; ctx.strokeStyle='#0f766e'; ctx.lineWidth=3;
-      ctx.beginPath(); ctx.rect(170,yCab,52,58); ctx.fill(); ctx.stroke();
-      ctx.font='20px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000'; ctx.fillText('\ud83e\uddcd',196,yCab+40);
-      ctx.fillStyle='#64748b'; ctx.strokeStyle='#334155';
-      ctx.beginPath(); ctx.rect(272,yCp,28,42); ctx.fill(); ctx.stroke();
-      ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=12; ctx.lineCap='round';
-      ctx.beginPath(); ctx.moveTo(400,120); ctx.lineTo(580,120); ctx.stroke();
-      ctx.strokeStyle='#16a34a';
-      ctx.beginPath(); ctx.moveTo(400,120); ctx.lineTo(430,120); ctx.stroke();
-      ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.fillText('effort du moteur : FAIBLE',490,150);
-      raf=requestAnimationFrame(boucleAnim);
-    }
-    boucleAnim();
-    const rang=el('div',{class:'choix-cartes'},zone);
-    const legs=[
-      {t:'La cabine monte pendant que le contrepoids descend : équilibrés, le moteur fournit très peu d\u2019effort.', ok:true},
-      {t:'Le bloc gris est un frein qui descend pour ralentir la cabine.', ok:false},
-      {t:'Le moteur soulève seul tout le poids de la cabine : c\u2019est pour cela que la jauge est basse.', ok:false},
-    ];
-    let repondu=false;
-    legs.forEach(L=>{
-      const c=el('div',{class:'cc'},rang,L.t);
-      c.onclick=()=>{
-        if(repondu)return; repondu=true; fini=true; cancelAnimationFrame(raf);
-        [...rang.children].forEach((cc,i)=>{ if(legs[i].ok) cc.classList.add('bon'); });
-        if(!L.ok) c.classList.add('faux');
-        feedback(L.ok?'ok':'ko',(L.ok?'\u2713 Exactement !':'\u2717 Regarde les deux masses :')+' quand la cabine monte, le contrepoids descend — reliés par les câbles sur la poulie, ils s\u2019équilibrent. Le moteur ne compense que la DIFFÉRENCE : c\u2019est pour ça que sa jauge reste basse. Équilibrer plutôt que forcer !');
-        done(L.ok?2:0);
-      };
-    });
-  }
+{ titre:'L\u2019animation mystère', icone:'', max:2,
+ consigne:'Observe la scène (l\u2019animation tourne en boucle)\u2026 puis clique la légende qui décrit correctement ce qui se passe.',
+ render(zone,done){
+ const cv=el('canvas',{width:620,height:240},zone);
+ const ctx=cv.getContext('2d'); let t=0,fini=false,raf;
+ function boucleAnim(){
+ if(fini)return;
+ t+=0.004;
+ const cycle=t%1;
+ const q=cycle<0.5 ? cycle*2 : (1-cycle)*2;
+ ctx.clearRect(0,0,620,240);
+ ctx.fillStyle='#f0fdfa'; ctx.fillRect(0,0,620,240);
+ ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2;
+ ctx.beginPath(); ctx.moveTo(160,25); ctx.lineTo(160,230); ctx.moveTo(300,25); ctx.lineTo(300,230); ctx.stroke();
+ ctx.strokeStyle='#0f766e'; ctx.lineWidth=4;
+ ctx.beginPath(); ctx.arc(230,30,26,Math.PI,0); ctx.stroke();
+ const yCab=150-q*95, yCp=55+q*95;
+ ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+ ctx.beginPath(); ctx.moveTo(195,yCab); ctx.lineTo(195,30); ctx.moveTo(285,yCp); ctx.lineTo(285,30); ctx.stroke();
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#0f766e'; ctx.lineWidth=3;
+ ctx.beginPath(); ctx.rect(170,yCab,52,58); ctx.fill(); ctx.stroke();
+ ctx.font='20px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000'; ctx.fillText('\ud83e\uddcd',196,yCab+40);
+ ctx.fillStyle='#64748b'; ctx.strokeStyle='#334155';
+ ctx.beginPath(); ctx.rect(272,yCp,28,42); ctx.fill(); ctx.stroke();
+ ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=12; ctx.lineCap='round';
+ ctx.beginPath(); ctx.moveTo(400,120); ctx.lineTo(580,120); ctx.stroke();
+ ctx.strokeStyle='#16a34a';
+ ctx.beginPath(); ctx.moveTo(400,120); ctx.lineTo(430,120); ctx.stroke();
+ ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.fillText('effort du moteur : FAIBLE',490,150);
+ raf=requestAnimationFrame(boucleAnim);
+ }
+ boucleAnim();
+ const rang=el('div',{class:'choix-cartes'},zone);
+ const legs=[
+ {t:'La cabine monte pendant que le contrepoids descend : équilibrés, le moteur fournit très peu d\u2019effort.', ok:true},
+ {t:'Le bloc gris est un frein qui descend pour ralentir la cabine.', ok:false},
+ {t:'Le moteur soulève seul tout le poids de la cabine : c\u2019est pour cela que la jauge est basse.', ok:false},
+ ];
+ let repondu=false;
+ legs.forEach(L=>{
+ const c=el('div',{class:'cc'},rang,L.t);
+ c.onclick=()=>{
+ if(repondu)return; repondu=true; fini=true; cancelAnimationFrame(raf);
+ /* correction différée : la bonne réponse n'est pas montrée ici */
+ if(!L.ok) c.classList.add('choisi');
+ feedback(L.ok?'ok':'ko',(L.ok?'\u2713 Exactement !':'\u2717 Regarde les deux masses :')+' quand la cabine monte, le contrepoids descend — reliés par les câbles sur la poulie, ils s\u2019équilibrent. Le moteur ne compense que la DIFFÉRENCE : c\u2019est pour ça que sa jauge reste basse. Équilibrer plutôt que forcer !');
+ done(L.ok?2:0);
+ };
+ });
+ }
 },
 
 { titre:'Verdicts de l\u2019ascensoriste', icone:'\u2696\ufe0f', max:2,
-  consigne:'Deux affirmations entendues dans la gaine. Pour chacune, rends ton verdict, puis valide.',
-  render(zone,done){
-    const CAS=[
-      {n:'\u00ab Grâce au contrepoids, le moteur fournit beaucoup moins d\u2019effort. \u00bb', vrai:true},
-      {n:'\u00ab Si le câble casse, la cabine tombe en chute libre jusqu\u2019en bas. \u00bb', vrai:false},
-    ];
-    const verdicts=[null,null];
-    const grille=el('div',{class:'choix-cartes'},zone);
-    CAS.forEach((c,i)=>{
-      const carte=el('div',{class:'cc',style:'cursor:default'},grille);
-      el('div',{style:'font-size:14.5px;line-height:1.5'},carte,c.n);
-      const rang=el('div',{style:'display:flex;gap:8px;justify-content:center;margin-top:10px'},carte);
-      const bV=el('button',{class:'btn bleu',style:'margin:0;padding:8px 14px;font-size:13px'},rang,'\u2705 VRAI');
-      const bF=el('button',{class:'btn gris',style:'margin:0;padding:8px 14px;font-size:13px'},rang,'\u274c FAUX');
-      bV.onclick=()=>{ verdicts[i]=true; bV.style.outline='4px solid #ea580c'; bF.style.outline='none'; maj(); };
-      bF.onclick=()=>{ verdicts[i]=false; bF.style.outline='4px solid #ea580c'; bV.style.outline='none'; maj(); };
-    });
-    const valider=boutonValider(zone,()=>{
-      valider.disabled=true;
-      let pts=0;
-      [...grille.children].forEach((carte,i)=>{
-        const ok=verdicts[i]===CAS[i].vrai;
-        if(ok) pts++;
-        carte.classList.add(ok?'bon':'faux');
-      });
-      feedback(pts===2?'ok':(pts===1?'moyen':'ko'),
-        'Le contrepoids soulage le moteur : VRAI — il ne compense que la différence entre cabine et contrepoids. Mais la chute libre : FAUX — le parachute d\u2019Otis mord les rails et bloque la cabine, automatiquement, sans électricité. Et il y a toujours PLUSIEURS câbles : un seul suffirait à tout porter.');
-      done(pts);
-    });
-    function maj(){ valider.disabled=verdicts.some(v=>v===null); }
-  }
+ consigne:'Deux affirmations entendues dans la gaine. Pour chacune, rends ton verdict, puis valide.',
+ render(zone,done){
+ const CAS=[
+ {n:'\u00ab Grâce au contrepoids, le moteur fournit beaucoup moins d\u2019effort. \u00bb', vrai:true},
+ {n:'\u00ab Si le câble casse, la cabine tombe en chute libre jusqu\u2019en bas. \u00bb', vrai:false},
+ ];
+ const verdicts=[null,null];
+ const grille=el('div',{class:'choix-cartes'},zone);
+ CAS.forEach((c,i)=>{
+ const carte=el('div',{class:'cc',style:'cursor:default'},grille);
+ el('div',{style:'font-size:14.5px;line-height:1.5'},carte,c.n);
+ const rang=el('div',{style:'display:flex;gap:8px;justify-content:center;margin-top:10px'},carte);
+ const bV=el('button',{class:'btn bleu',style:'margin:0;padding:8px 14px;font-size:13px'},rang,'\u2705 VRAI');
+ const bF=el('button',{class:'btn gris',style:'margin:0;padding:8px 14px;font-size:13px'},rang,'\u274c FAUX');
+ bV.onclick=()=>{ verdicts[i]=true; bV.style.outline='4px solid #ea580c'; bF.style.outline='none'; maj(); };
+ bF.onclick=()=>{ verdicts[i]=false; bF.style.outline='4px solid #ea580c'; bV.style.outline='none'; maj(); };
+ });
+ const valider=boutonValider(zone,()=>{
+ valider.disabled=true;
+ let pts=0;
+ [...grille.children].forEach((carte,i)=>{
+ const ok=verdicts[i]===CAS[i].vrai;
+ if(ok) pts++;
+ carte.classList.add(ok?'bon':'faux');
+ });
+ feedback(pts===2?'ok':(pts===1?'moyen':'ko'),
+ 'Le contrepoids soulage le moteur : VRAI — il ne compense que la différence entre cabine et contrepoids. Mais la chute libre : FAUX — le parachute d\u2019Otis mord les rails et bloque la cabine, automatiquement, sans électricité. Et il y a toujours PLUSIEURS câbles : un seul suffirait à tout porter.');
+ done(pts);
+ });
+ function maj(){ valider.disabled=verdicts.some(v=>v===null); }
+ }
 },
 
-{ titre:'Le grincement suspect', icone:'🔩', max:2,
-  consigne:'Un grincement strident accompagne chaque montée depuis trois semaines. Rien n\u2019est cassé\u2026 pour l\u2019instant. Que fait l\u2019ascensoriste ? Clique ta réponse.',
-  render(zone,done){
-    const rang=el('div',{class:'choix-cartes'},zone);
-    const options=[
-      {t:'🛢️ Graisser câbles et guides et contrôler l\u2019usure dès maintenant : on intervient avant la panne', ok:true},
-      {t:'⏳ Attendre que quelque chose casse pour savoir exactement quoi réparer', ok:false, exp:'attendre la casse, c\u2019est risquer une panne grave, une cabine bloquée, des pièces bien plus chères : l\u2019usure s\u2019accélère en silence.'},
-      {t:'🎧 Mettre de la musique dans la cabine pour couvrir le bruit', ok:false, exp:'le grincement est un SYMPTÔME : le masquer laisse l\u2019usure travailler tranquillement.'},
-    ];
-    let repondu=false;
-    options.forEach(o=>{
-      const c=el('div',{class:'cc'},rang,o.t);
-      c.onclick=()=>{
-        if(repondu)return; repondu=true;
-        [...rang.children].forEach((cc,i)=>{ if(options[i].ok) cc.classList.add('bon'); });
-        if(!o.ok) c.classList.add('faux');
-        feedback(o.ok?'ok':'ko',(o.ok?'\u2713 Exactement :':'\u2717 Non — '+o.exp+' La bonne réponse :')+' c\u2019est la maintenance PRÉVENTIVE : graisser, contrôler, remplacer AVANT la panne, lors des visites régulières (toutes les 6 semaines en France). C\u2019est elle qui fait de l\u2019ascenseur le transport le plus sûr du monde.');
-        done(o.ok?2:0);
-      };
-    });
-  }
+{ titre:'Le grincement suspect', icone:'', max:2,
+ consigne:'Un grincement strident accompagne chaque montée depuis trois semaines. Rien n\u2019est cassé\u2026 pour l\u2019instant. Que fait l\u2019ascensoriste ? Clique ta réponse.',
+ render(zone,done){
+ const rang=el('div',{class:'choix-cartes'},zone);
+ const options=[
+ {t:' Graisser câbles et guides et contrôler l\u2019usure dès maintenant : on intervient avant la panne', ok:true},
+ {t:'⏳ Attendre que quelque chose casse pour savoir exactement quoi réparer', ok:false, exp:'attendre la casse, c\u2019est risquer une panne grave, une cabine bloquée, des pièces bien plus chères : l\u2019usure s\u2019accélère en silence.'},
+ {t:' Mettre de la musique dans la cabine pour couvrir le bruit', ok:false, exp:'le grincement est un SYMPTÔME : le masquer laisse l\u2019usure travailler tranquillement.'},
+ ];
+ let repondu=false;
+ options.forEach(o=>{
+ const c=el('div',{class:'cc'},rang,o.t);
+ c.onclick=()=>{
+ if(repondu)return; repondu=true;
+ /* correction différée : la bonne réponse n'est pas montrée ici */
+ if(!o.ok) c.classList.add('choisi');
+ feedback(o.ok?'ok':'ko',(o.ok?'\u2713 Exactement :':'\u2717 Non — '+o.exp+' La bonne réponse :')+' c\u2019est la maintenance PRÉVENTIVE : graisser, contrôler, remplacer AVANT la panne, lors des visites régulières (toutes les 6 semaines en France). C\u2019est elle qui fait de l\u2019ascenseur le transport le plus sûr du monde.');
+ done(o.ok?2:0);
+ };
+ });
+ }
 },
 
-{ titre:'Le contrepoids sur mesure', icone:'🧮', max:2,
-  consigne:'La cabine vide pèse 600 kg et sa charge maximale est de 800 kg. Le contrepoids doit peser : masse de la cabine + la MOITIÉ de la charge maxi. Quelle masse ? La calculatrice est ouverte à droite !',
-  render(zone,done){
-    activiteCalcul(zone,done,{max:2,unite:'kg',bonne:1000,tol:10,
-      rappel:'contrepoids = masse cabine + charge maxi \u00f7 2',
-      solution:'Le calcul : 600 + 800 \u00f7 2 = 600 + 400 = 1 000 kg. Ainsi équilibré, le moteur fournit très peu d\u2019effort, que la cabine soit pleine ou vide — l\u2019astuce d\u2019économie d\u2019énergie vieille de 150 ans.'});
-  }
+{ titre:'Le contrepoids sur mesure', icone:'', max:2,
+ consigne:'La cabine vide pèse 600 kg et sa charge maximale est de 800 kg. Le contrepoids doit peser : masse de la cabine + la MOITIÉ de la charge maxi. Quelle masse ? La calculatrice est ouverte à droite !',
+ render(zone,done){
+ activiteCalcul(zone,done,{max:2,unite:'kg',bonne:1000,tol:10,
+ rappel:'contrepoids = masse cabine + charge maxi \u00f7 2',
+ solution:'Le calcul : 600 + 800 \u00f7 2 = 600 + 400 = 1 000 kg. Ainsi équilibré, le moteur fournit très peu d\u2019effort, que la cabine soit pleine ou vide — l\u2019astuce d\u2019économie d\u2019énergie vieille de 150 ans.'});
+ }
 },
 
-{ titre:'Le trajet chronométré', icone:'⏱️', max:2,
-  consigne:'La cabine se déplace à 1 mètre par seconde. Elle doit parcourir 30 mètres (10 étages) : combien de temps dure le trajet ?',
-  render(zone,done){
-    activiteCalcul(zone,done,{max:2,unite:'s',bonne:30,tol:1,
-      rappel:'durée = distance \u00f7 vitesse',
-      solution:'Le calcul : 30 \u00f7 1 = 30 secondes. C\u2019est la vitesse classique d\u2019un ascenseur d\u2019immeuble ; les tours géantes montent à 10 m/s et plus — mais nos oreilles, elles, réclament des montées en douceur !'});
-  }
+{ titre:'Le trajet chronométré', icone:'⏱', max:2,
+ consigne:'La cabine se déplace à 1 mètre par seconde. Elle doit parcourir 30 mètres (10 étages) : combien de temps dure le trajet ?',
+ render(zone,done){
+ activiteCalcul(zone,done,{max:2,unite:'s',bonne:30,tol:1,
+ rappel:'durée = distance \u00f7 vitesse',
+ solution:'Le calcul : 30 \u00f7 1 = 30 secondes. C\u2019est la vitesse classique d\u2019un ascenseur d\u2019immeuble ; les tours géantes montent à 10 m/s et plus — mais nos oreilles, elles, réclament des montées en douceur !'});
+ }
 },
 
 ];
@@ -556,120 +578,121 @@ const $=id=>document.getElementById(id);
 function montrer(id){ ['ecranLogin','ecranAct','ecranFin','ecranProf'].forEach(e=>$(e).classList.add('cache')); $(id).classList.remove('cache'); }
 
 $('btnCommencer').onclick=()=>{
-  const nom=$('fNom').value.trim(), prenom=$('fPrenom').value.trim(), classe=$('fClasse').value;
-  if(!nom||!prenom||!classe){ alert('Complète ton nom, ton prénom et ta classe !'); return; }
-  eleve={nom,prenom,classe}; idx=0; pts=[]; t0=Date.now();
-  montrer('ecranAct'); lancerActivite();
+ const nom=$('fNom').value.trim(), prenom=$('fPrenom').value.trim(), classe=$('fClasse').value;
+ if(!nom||!prenom||!classe){ alert('Complète ton nom, ton prénom et ta classe !'); return; }
+ eleve={nom,prenom,classe}; idx=0; pts=[]; t0=Date.now();
+ montrer('ecranAct'); lancerActivite();
 };
 function lancerActivite(){
-  const a=ACTIVITES[idx];
-  $('barreP').style.width=(idx/ACTIVITES.length*100)+'%';
-  $('numAct').textContent='Activité '+(idx+1)+' / '+ACTIVITES.length;
-  $('ptsMaxAct').textContent=a.max+' pt'+(a.max>1?'s':'');
-  $('titreAct').textContent=a.icone+' '+a.titre;
-  $('consigneAct').textContent=a.consigne;
-  $('fbAct').className='feedback';
-  $('gainAct').classList.add('cache');
-  $('btnSuivant').classList.add('cache');
-  const zone=$('zoneAct'); zone.innerHTML='';
-  a.render(zone, p=>{
-    pts[idx]=p;
-    $('gainAct').textContent='➜ '+String(p).replace('.',',')+' / '+a.max+' pt'+(a.max>1?'s':'');
-    $('gainAct').classList.remove('cache');
-    $('btnSuivant').textContent = idx<ACTIVITES.length-1 ? 'Suivant ➜' : 'Voir mon résultat 🎓';
-    $('btnSuivant').classList.remove('cache');
-  });
+ const a=ACTIVITES[idx];
+ $('barreP').style.width=(idx/ACTIVITES.length*100)+'%';
+ $('numAct').textContent='Activité '+(idx+1)+' / '+ACTIVITES.length;
+ $('ptsMaxAct').textContent=a.max+' pt'+(a.max>1?'s':'');
+ $('titreAct').textContent=a.icone+' '+a.titre;
+ $('consigneAct').textContent=a.consigne;
+ $('fbAct').className='feedback';
+ $('gainAct').classList.add('cache');
+ $('btnSuivant').classList.add('cache');
+ const zone=$('zoneAct'); zone.innerHTML='';
+ a.render(zone, p=>{
+ pts[idx]=p;
+ $('gainAct').textContent='➜ '+String(p).replace('.',',')+' / '+a.max+' pt'+(a.max>1?'s':'');
+ $('gainAct').classList.remove('cache');
+ $('btnSuivant').textContent = idx<ACTIVITES.length-1 ? 'Suivant ➜' : 'Voir mon résultat ';
+ $('btnSuivant').classList.remove('cache');
+ });
 }
 $('btnSuivant').onclick=()=>{
-  idx++;
-  if(idx<ACTIVITES.length) lancerActivite(); else terminer();
+ idx++;
+ if(idx<ACTIVITES.length) lancerActivite(); else terminer();
 };
 function terminer(){
-  montrer('ecranFin');
-  const total=pts.reduce((s,p)=>s+p,0);
-  const note=Math.round(total/MAXTOT*20*10)/10;
-  $('note20').textContent=String(note).replace('.',',');
-  $('note20').style.color= note>=10?'var(--vert)':'var(--rouge)';
-  $('scoreBrut').textContent=String(Math.round(total*10)/10).replace('.',',')+' points sur '+MAXTOT;
-  const zone=$('detailRep'); zone.innerHTML='';
-  ACTIVITES.forEach((a,i)=>{
-    const l=el('div',{class:'ligne'},zone);
-    el('b',{},l,a.icone+' '+a.titre);
-    const bar=el('div',{class:'bar'},l);
-    el('div',{style:'width:'+(pts[i]/a.max*100)+'%'},bar);
-    el('span',{style:'font-weight:800;min-width:64px;text-align:right'},l,String(pts[i]).replace('.',',')+'/'+a.max);
-  });
-  envoyer(note,total);
+ montrer('ecranFin');
+ const total=pts.reduce((s,p)=>s+p,0);
+ const note=Math.round(total/MAXTOT*20*10)/10;
+ $('note20').textContent=String(note).replace('.',',');
+ $('note20').style.color= note>=10?'var(--vert)':'var(--rouge)';
+ $('scoreBrut').textContent=String(Math.round(total*10)/10).replace('.',',')+' points sur '+MAXTOT;
+ const zone=$('detailRep'); zone.innerHTML='';
+ ACTIVITES.forEach((a,i)=>{
+ const l=el('div',{class:'ligne'},zone);
+ el('b',{},l,a.icone+' '+a.titre);
+ const bar=el('div',{class:'bar'},l);
+ el('div',{style:'width:'+(pts[i]/a.max*100)+'%'},bar);
+ el('span',{style:'font-weight:800;min-width:64px;text-align:right'},l,String(pts[i]).replace('.',',')+'/'+a.max);
+ });
+ afficherCorrections();
+ envoyer(note,total);
 }
 async function envoyer(note,total){
-  const elx=$('etatEnvoi');
-  elx.className='etat-envoi'; elx.textContent='⏳ Transmission au professeur…';
-  const donnees={ nom:eleve.nom, prenom:eleve.prenom, classe:eleve.classe,
-    score:Math.round(total*10)/10, sur:MAXTOT, note20:note,
-    duree_s:Math.round((Date.now()-t0)/1000),
-    date:new Date().toISOString(),
-    reponses:pts };
-  try{
-    const rep=await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(donnees)});
-    if(!rep.ok) throw new Error(rep.status);
-    elx.className='etat-envoi ok'; elx.textContent='✅ Résultat transmis au professeur.';
-  }catch(e){
-    elx.className='etat-envoi ko'; elx.textContent='⚠️ Résultat non transmis (pas de connexion ?). Montre cet écran à ton professeur.';
-  }
+ const elx=$('etatEnvoi');
+ elx.className='etat-envoi'; elx.textContent='⏳ Transmission au professeur…';
+ const donnees={ nom:eleve.nom, prenom:eleve.prenom, classe:eleve.classe,
+ score:Math.round(total*10)/10, sur:MAXTOT, note20:note,
+ duree_s:Math.round((Date.now()-t0)/1000),
+ date:new Date().toISOString(),
+ reponses:pts };
+ try{
+ const rep=await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(donnees)});
+ if(!rep.ok) throw new Error(rep.status);
+ elx.className='etat-envoi ok'; elx.textContent='✓ Résultat transmis au professeur.';
+ }catch(e){
+ elx.className='etat-envoi ko'; elx.textContent=' Résultat non transmis (pas de connexion ?). Montre cet écran à ton professeur.';
+ }
 }
 
 /* ============ Espace prof ============ */
 let cacheRes={};
 $('lienProf').onclick=()=>montrer('ecranProf');
 $('btnProf').onclick=()=>{
-  if($('fMdp').value===MDP_PROF){ $('profLogin').classList.add('cache'); $('profContenu').classList.remove('cache'); chargerRes(); }
-  else $('errMdp').classList.remove('cache');
+ if($('fMdp').value===MDP_PROF){ $('profLogin').classList.add('cache'); $('profContenu').classList.remove('cache'); chargerRes(); }
+ else $('errMdp').classList.remove('cache');
 };
 $('fMdp').addEventListener('keydown',e=>{ if(e.key==='Enter') $('btnProf').click(); });
 $('btnRafraichir').onclick=chargerRes;
 $('filtreClasse').onchange=afficherRes;
 async function chargerRes(){
-  try{ const rep=await fetch(FIREBASE+'.json'); cacheRes=await rep.json()||{}; }
-  catch(e){ cacheRes={}; alert('Impossible de charger les résultats (connexion ?).'); }
-  afficherRes();
+ try{ const rep=await fetch(FIREBASE+'.json'); cacheRes=await rep.json()||{}; }
+ catch(e){ cacheRes={}; alert('Impossible de charger les résultats (connexion ?).'); }
+ afficherRes();
 }
 function lignesFiltrees(){
-  const f=$('filtreClasse').value;
-  return Object.values(cacheRes).filter(r=>!f||r.classe===f)
-    .sort((a,b)=>(a.classe+a.nom).localeCompare(b.classe+b.nom));
+ const f=$('filtreClasse').value;
+ return Object.values(cacheRes).filter(r=>!f||r.classe===f)
+ .sort((a,b)=>(a.classe+a.nom).localeCompare(b.classe+b.nom));
 }
 function afficherRes(){
-  const lignes=lignesFiltrees(), n=lignes.length;
-  const moy=n?(lignes.reduce((s,r)=>s+r.note20,0)/n):0;
-  const reussite=n?Math.round(lignes.filter(r=>r.note20>=10).length/n*100):0;
-  $('kpis').innerHTML=
-    '<div class="kpi"><b>'+n+'</b><span>copies</span></div>'+
-    '<div class="kpi"><b>'+moy.toFixed(1).replace('.',',')+'</b><span>moyenne / 20</span></div>'+
-    '<div class="kpi"><b>'+reussite+' %</b><span>élèves ≥ 10</span></div>';
-  const stats=ACTIVITES.map((a,i)=>{
-    const rep=lignes.filter(r=>Array.isArray(r.reponses)&&r.reponses.length===ACTIVITES.length);
-    if(!rep.length) return 0;
-    return Math.round(rep.reduce((s,r)=>s+r.reponses[i]/a.max,0)/rep.length*100);
-  });
-  $('statsQ').innerHTML=stats.map((s,i)=>
-    '<div class="statq"><b>'+ACTIVITES[i].icone+' '+ACTIVITES[i].titre+'</b><div class="bq"><div style="width:'+s+'%;background:'+(s>=60?'#16a34a':(s>=40?'#f59e0b':'#dc2626'))+'"></div></div><span style="width:44px;text-align:right">'+s+' %</span></div>').join('');
-  let html='<tr><th>Classe</th><th>Nom</th><th>Prénom</th><th>Score</th><th>Note /20</th><th>Durée</th><th>Date</th></tr>';
-  lignes.forEach(r=>{
-    html+='<tr><td>'+r.classe+'</td><td>'+r.nom+'</td><td>'+r.prenom+'</td><td>'+String(r.score).replace('.',',')+'/'+r.sur+
-      '</td><td style="font-weight:800;color:'+(r.note20>=10?'#16a34a':'#dc2626')+'">'+String(r.note20).replace('.',',')+
-      '</td><td>'+(r.duree_s?Math.floor(r.duree_s/60)+'min'+String(r.duree_s%60).padStart(2,'0'):'—')+
-      '</td><td>'+new Date(r.date).toLocaleDateString('fr-FR')+' '+new Date(r.date).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</td></tr>';
-  });
-  $('tableRes').innerHTML=html;
+ const lignes=lignesFiltrees(), n=lignes.length;
+ const moy=n?(lignes.reduce((s,r)=>s+r.note20,0)/n):0;
+ const reussite=n?Math.round(lignes.filter(r=>r.note20>=10).length/n*100):0;
+ $('kpis').innerHTML=
+ '<div class="kpi"><b>'+n+'</b><span>copies</span></div>'+
+ '<div class="kpi"><b>'+moy.toFixed(1).replace('.',',')+'</b><span>moyenne / 20</span></div>'+
+ '<div class="kpi"><b>'+reussite+' %</b><span>élèves ≥ 10</span></div>';
+ const stats=ACTIVITES.map((a,i)=>{
+ const rep=lignes.filter(r=>Array.isArray(r.reponses)&&r.reponses.length===ACTIVITES.length);
+ if(!rep.length) return 0;
+ return Math.round(rep.reduce((s,r)=>s+r.reponses[i]/a.max,0)/rep.length*100);
+ });
+ $('statsQ').innerHTML=stats.map((s,i)=>
+ '<div class="statq"><b>'+ACTIVITES[i].icone+' '+ACTIVITES[i].titre+'</b><div class="bq"><div style="width:'+s+'%;background:'+(s>=60?'#16a34a':(s>=40?'#f59e0b':'#dc2626'))+'"></div></div><span style="width:44px;text-align:right">'+s+' %</span></div>').join('');
+ let html='<tr><th>Classe</th><th>Nom</th><th>Prénom</th><th>Score</th><th>Note /20</th><th>Durée</th><th>Date</th></tr>';
+ lignes.forEach(r=>{
+ html+='<tr><td>'+r.classe+'</td><td>'+r.nom+'</td><td>'+r.prenom+'</td><td>'+String(r.score).replace('.',',')+'/'+r.sur+
+ '</td><td style="font-weight:800;color:'+(r.note20>=10?'#16a34a':'#dc2626')+'">'+String(r.note20).replace('.',',')+
+ '</td><td>'+(r.duree_s?Math.floor(r.duree_s/60)+'min'+String(r.duree_s%60).padStart(2,'0'):'—')+
+ '</td><td>'+new Date(r.date).toLocaleDateString('fr-FR')+' '+new Date(r.date).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</td></tr>';
+ });
+ $('tableRes').innerHTML=html;
 }
 $('btnCSV').onclick=()=>{
-  const lignes=lignesFiltrees();
-  let csv='Classe;Nom;Prenom;Score;Sur;Note20;Duree_s;Date;'+ACTIVITES.map((a,i)=>'Act'+(i+1)).join(';')+'\n';
-  lignes.forEach(r=>{ csv+=[r.classe,r.nom,r.prenom,String(r.score).replace('.',','),r.sur,String(r.note20).replace('.',','),r.duree_s||'',r.date,
-    ...(Array.isArray(r.reponses)?r.reponses.map(p=>String(p).replace('.',',')):[])].join(';')+'\n'; });
-  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=CSV_NOM; a.click(); URL.revokeObjectURL(a.href);
+ const lignes=lignesFiltrees();
+ let csv='Classe;Nom;Prenom;Score;Sur;Note20;Duree_s;Date;'+ACTIVITES.map((a,i)=>'Act'+(i+1)).join(';')+'\n';
+ lignes.forEach(r=>{ csv+=[r.classe,r.nom,r.prenom,String(r.score).replace('.',','),r.sur,String(r.note20).replace('.',','),r.duree_s||'',r.date,
+ ...(Array.isArray(r.reponses)?r.reponses.map(p=>String(p).replace('.',',')):[])].join(';')+'\n'; });
+ const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
+ const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+ a.download=CSV_NOM; a.click(); URL.revokeObjectURL(a.href);
 };
 </script>
 </body>

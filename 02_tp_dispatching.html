@@ -6,7 +6,7 @@
 <title>TP 3ème — Le dispatching · ESTIC</title>
 <style>
 :root{ --ink:#1e3a5f; --cyan:#0e7490; --niv:#b45309; --niv-fonce:#7c2d12; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
 .estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
@@ -55,6 +55,7 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .slots .fl{font-size:20px;color:var(--orange);font-weight:800}
 .panne{background:#f8fafc;border:2px solid #cbd5e1;border-radius:14px;padding:16px;margin-bottom:12px}
 .panne.resolue{border-color:var(--vert);background:#fffbeb}
+.panne.ratee{border-color:#dc2626;background:#fef2f2}
 .panne .symptome{font-size:15px;font-weight:700;line-height:1.5}
 .panne .symptome .em{font-size:24px;margin-right:6px}
 .blocs-diag{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
@@ -81,59 +82,96 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#7c2d12,#0e7490);border-radius:14px;padding:22px;color:#fff}
 .codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
 .codefinal a{color:#fde68a;font-weight:800}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:60px;height:60px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:12px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;font-size:19px;letter-spacing:1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+.rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
+.cahiernote b{color:#c2410c;letter-spacing:1px;display:block;margin-bottom:4px;font-size:13px}
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
 </style>
 </head>
 <body>
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
 <header class="tp">
-  <h1>🔧 TP — Le dispatching</h1>
-  <p>Le centre de pilotage du réseau électrique t'embauche comme opérateur junior : des alertes s'affichent sur le grand écran. 7 missions — à la fin : le code des jeux !</p>
+ <h1>TP — Le dispatching</h1>
+ <p>Le centre de pilotage du réseau électrique t'embauche comme opérateur junior : des alertes s'affichent sur le grand écran. 10 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
-  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
-  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+ <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div><div class="seg" data-a="10"></div>
+ <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ============ A1 : QUI SUIS-JE ============ -->
 <div class="acti" id="a1">
  <div class="boite">
-  <h2><span class="badge">1</span>Le vocabulaire de l'opérateur</h2>
-  <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! (1 pt par bonne réponse du premier coup)</div>
-  <div class="minicas" id="cas1"></div>
+  <h2><span class="badge">1</span>Le réseau électrique en direct</h2>
+  <div class="consigne" id="cons1">Visite guidée : clique sur chaque élément du réseau pour découvrir son rôle <b id="cpt1">(0/5)</b></div>
+  <canvas class="canvatp" id="cv1" width="860" height="330"></canvas>
+  <div class="verdict" id="verd1"></div>
  </div>
 </div>
 
 <!-- ============ A2 : LA DÉMARCHE ============ -->
 <div class="acti" id="a2">
  <div class="boite">
-  <h2><span class="badge">2</span>Remets la journée du dispatcher en ordre</h2>
-  <div class="consigne">Le réseau se pilote en anticipant. Clique les 4 étapes du travail du dispatcher <b>dans l'ordre</b>.</div>
-  <div class="ordre" id="blocs2"></div>
-  <div class="slots" id="slots2">
-    <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
-    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
-    <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
-    <div class="slot" data-i="3">4ème</div>
-  </div>
-  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
-  <div class="verdict" id="verd2"></div>
+ <h2><span class="badge">2</span>Remets la journée du dispatcher en ordre</h2>
+ <div class="consigne">Le réseau se pilote en anticipant. Clique les 4 étapes du travail du dispatcher <b>dans l'ordre</b>.</div>
+ <div class="ordre" id="blocs2"></div>
+ <div class="slots" id="slots2">
+ <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
+ <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+ <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
+ <div class="slot" data-i="3">4ème</div>
+ </div>
+ <div class="btnrow"><button class="btn" id="verif2">✓ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+ <div class="verdict" id="verd2"></div>
  </div>
 </div>
 
 <!-- ============ A3 : EXPERTISES ============ -->
 <div class="acti" id="a3">
  <div class="boite">
-  <h2><span class="badge">3</span>Trois alertes sur le réseau !</h2>
-  <div class="consigne">⚡ Trois alertes s'affichent au dispatching. Pour chacune, identifie la cause et clique la <b>bonne décision</b>. (Les erreurs se corrigent, mais chaque expertise juste du premier coup rapporte plus !)</div>
-  <div id="pannes3"></div>
+  <h2><span class="badge">3</span>Trois incidents au dispatching</h2>
+  <div class="consigne">Une alerte s’affiche : <b>observe la courbe et le schéma</b>, puis clique directement sur
+   l’élément du réseau qu’il faut manœuvrer. Une seule tentative par incident. <b id="cpt3">(1/3)</b></div>
+  <canvas class="canvatp" id="cv3" width="860" height="360"></canvas>
   <div class="verdict" id="verd3"></div>
  </div>
 </div>
@@ -141,57 +179,93 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <!-- ============ A4 : LA PRÉCISION ============ -->
 <div class="acti" id="a4">
  <div class="boite">
-  <h2><span class="badge">4</span>Le parc d'éoliennes</h2>
-  <div class="consigne">🌬️ Un quartier consomme <b>30 MW</b> en pointe. Une éolienne produit <b>2 MW</b> à pleine puissance. Combien d'éoliennes faut-il (quand le vent souffle à fond) ?</div>
-  <div class="rappel">🌬️ Rappel : nombre d'éoliennes = consommation ÷ puissance d'une éolienne</div>
-  <div class="calczone">
-    <span>éoliennes =</span>
-    <input type="number" id="rep4" step="any" placeholder="?">
-    <span class="unite">éol.</span>
-    <button class="btn" id="verif4">✔ Vérifier</button>
-  </div>
-  <div class="verdict" id="verd4"></div>
+ <h2><span class="badge">4</span>Le parc d'éoliennes</h2>
+ <div class="consigne">Un quartier consomme <b>30 MW</b>en pointe. Une éolienne produit <b>2 MW</b>à pleine puissance. Combien d'éoliennes faut-il (quand le vent souffle à fond) ?</div>
+ <div class="rappel">Rappel : nombre d'éoliennes = consommation ÷ puissance d'une éolienne</div>
+ <div class="calczone">
+ <span>éoliennes =</span>
+ <input type="number" id="rep4" step="any" placeholder="?">
+ <span class="unite">éol.</span>
+ <button class="btn" id="verif4">✓ Vérifier</button>
+ </div>
+ <div class="verdict" id="verd4"></div>
  </div>
 </div>
 
 <!-- ============ A5 : SCHÉMA DU RÉSEAU ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>Le schéma du réseau</h2>
-  <div class="consigne">🗺️ De la centrale à la maison — le courant CIRCULE sous tes yeux (suis les points jaunes !). Clique une étiquette, puis l'élément correspondant. Place les 4 étiquettes.</div>
-  <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
-  <div class="etiqbar" id="etiq5"></div>
-  <div id="verd5"></div>
+ <h2><span class="badge">5</span>Le schéma du réseau</h2>
+ <div class="consigne"><b>Chaque erreur coûte des points.</b>De la centrale à la maison — le courant CIRCULE sous tes yeux (suis les points jaunes !). Clique une étiquette, puis l'élément correspondant. Place les 4 étiquettes.</div>
+ <canvas class="canvatp" id="cv5" width="860" height="320"></canvas>
+ <div class="etiqbar" id="etiq5"></div>
+ <div id="verd5"></div>
  </div>
 </div>
 
 <!-- ============ A6 : TIENS LES 50 HZ ============ -->
 <div class="acti" id="a6">
  <div class="boite">
-  <h2><span class="badge">6</span>Tiens les 50 Hz !</h2>
-  <div class="consigne">🎛️ Te voilà au pupitre : ajuste la PRODUCTION avec le curseur pour l'aligner sur la consommation affichée — l'aiguille doit revenir sur 50,00 Hz. Trois moments de la journée à tenir !</div>
-  <canvas class="canvatp" id="cv6" width="860" height="300" style="cursor:default"></canvas>
-  <div class="sliderrow">
-    <span>⚡ Production :</span>
-    <input type="range" id="slider6" min="30" max="90" step="1" value="60">
-    <span class="val"><span id="val6">60</span> GW</span>
-    <button class="btn" id="verif6">✔ Valider ce réglage</button>
-  </div>
-  <div id="verd6"></div>
+ <h2><span class="badge">6</span>Tiens les 50 Hz !</h2>
+ <div class="consigne">Te voilà au pupitre : ajuste la PRODUCTION avec le curseur pour l'aligner sur la consommation affichée — l'aiguille doit revenir sur 50,00 Hz. Trois moments de la journée à tenir !</div>
+ <canvas class="canvatp" id="cv6" width="860" height="300" style="cursor:default"></canvas>
+ <div class="sliderrow">
+ <span>Production :</span>
+ <input type="range" id="slider6" min="30" max="90" step="1" value="60">
+ <span class="val"><span id="val6">60</span>GW</span>
+ <button class="btn" id="verif6">✓ Valider ce réglage</button>
+ </div>
+ <div id="verd6"></div>
  </div>
 </div>
 
-<!-- ============ A7 : BILAN ============ -->
+
+<!-- ============ A7 : EXPLIQUER ============ -->
 <div class="acti" id="a7">
- <div class="boite">
-  <h2><span class="badge">7</span>Bilan de l'opérateur junior</h2>
-  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
-  <div id="quiz5"></div>
-  <div class="codefinal" id="codefinal">
-    🏆 Aucun déséquilibre ne t'échappe : te voilà opérateur réseau junior certifié !
-    <div class="code">RESEAU50</div>
-    <div>Entre ce code dans les jeux <a href="03_jeu_watt_rush.html">🎮 Watt Rush</a> et <a href="03b_jeu_dispatching.html">⚡ Dispatching</a> pour les déverrouiller.</div>
+  <div class="boite">
+    <h2><span class="badge">7</span>Expliquer l’équilibre du réseau électrique</h2>
+    <div class="consigne">Trois questions de raisonnement. Réponds par une <b>phrase complète</b>.</div>
+    <div class="cahiernote"><b>SUR TON CAHIER</b> — rédige au brouillon avant de recopier.</div>
+    <div id="champs7"></div>
+    <div class="btnrow"><button class="btn" id="verif7">Valider mes explications</button></div>
+    <div id="verd7"></div>
   </div>
+</div>
+<!-- ============ A8 : CALCULER ============ -->
+<div class="acti" id="a8">
+  <div class="boite">
+    <h2><span class="badge">8</span>Calculer un équilibre production-consommation</h2>
+    <div class="consigne">Une ville consomme <b>180 MW</b>. Elle dispose d’un parc solaire de <b>60 MW</b> (production réelle : <b>40 %</b> de sa puissance en journée), d’un parc éolien de <b>50 MW</b> (production réelle : <b>30 %</b>) et d’une centrale pilotable.</div>
+    <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
+    <div id="champs8"></div>
+    <div class="btnrow"><button class="btn" id="verif8">Valider mes calculs</button></div>
+    <div id="verd8"></div>
+  </div>
+</div>
+<!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
+<div class="acti" id="a9">
+  <div class="boite">
+    <h2><span class="badge">9</span>Tracer le schéma du réseau électrique</h2>
+    <div class="consigne">Reprends l’organisation vue en cours et mets-la au propre.</div>
+    <div class="cahiernote"><b>SUR TON CAHIER</b> — trace le schéma du trajet de l’électricité, de la production jusqu’à la prise : production, transformateur élévateur, lignes très haute tension, transformateur abaisseur, distribution. Note au-dessus de chaque tronçon la tension approximative, et explique en une ligne pourquoi on élève la tension pour le transport.</div>
+    <canvas class="canvatp" id="cv9" width="860" height="300" style="cursor:default"></canvas>
+    <div id="champs9"></div>
+    <div class="btnrow"><button class="btn" id="verif9">Valider mon travail</button></div>
+    <div id="verd9"></div>
+  </div>
+</div>
+
+<!-- ============ A10 : BILAN ============ -->
+<div class="acti" id="a10">
+ <div class="boite">
+ <h2><span class="badge">10</span>Bilan de l'opérateur junior</h2>
+ <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
+ <div id="quiz5"></div>
+ <div class="codefinal" id="codefinal">
+ Aucun déséquilibre ne t'échappe : te voilà opérateur réseau junior certifié !
+ <div class="code">RESEAU50</div>
+ <div>Entre ce code dans les jeux <a href="03_jeu_watt_rush.html">Watt Rush</a>et <a href="03b_jeu_dispatching.html">Dispatching</a>pour les déverrouiller.</div>
+ </div>
  </div>
 </div>
 
@@ -201,338 +275,353 @@ const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
 function sauver(){ try{ localStorage.setItem('tp_energie_3e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
 function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_energie_3e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
-  document.querySelectorAll('.progression .seg').forEach(seg=>{
-    const n=+seg.dataset.a;
-    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
-  });
-  document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=7;n++){
-    const acti=document.getElementById('a'+n);
-    let v=acti.querySelector('.verrou');
-    if(n>etat.debloque){
-      if(!v){ v=document.createElement('div'); v.className='verrou';
-        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
-        acti.querySelector('.boite').appendChild(v); }
-    } else if(v) v.remove();
-  }
+ document.querySelectorAll('.progression .seg').forEach(seg=>{
+ const n=+seg.dataset.a;
+ seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+ });
+ document.getElementById('scoreTot').textContent=etat.score;
+ for(let n=2;n<=10;n++){
+ const acti=document.getElementById('a'+n);
+ let v=acti.querySelector('.verrou');
+ if(n>etat.debloque){
+ if(!v){ v=document.createElement('div'); v.className='verrou';
+ v.innerHTML='<div class="cadenas"></div>Termine la mission '+(n-1)+' pour déverrouiller';
+ acti.querySelector('.boite').appendChild(v); }
+ } else if(v) v.remove();
+ }
 }
 function reussir(n,pts){
-  etat.score+=pts;
-  if(etat.debloque===n) etat.debloque=n+1;
-  sauver(); majProgression();
-  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ etat.score+=pts;
+ if(etat.debloque===n) etat.debloque=n+1;
+ sauver(); majProgression();
+ if(n<10) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
 const CAS1=[
- {devinette:'⚖️ « Je suis la balance instantanée du réseau : 50 exactement quand production = consommation. Si je chute, tout le dispatching retient son souffle. »', bonne:'la fréquence du réseau (50 Hz)', autres:['la température des câbles']},
- {devinette:'🥧 « Nucléaire en socle, hydraulique en sprint, solaire à midi, gaz en renfort : je suis la recette, recomposée minute par minute, de l\u2019électricité du pays. »', bonne:'le mix électrique', autres:['la recette de cuisine']},
- {devinette:'✂️ « Couper 10 minutes des millions de ballons d\u2019eau chaude sans que personne ne le remarque : je « produis » l\u2019équivalent d\u2019une centrale… en consommant moins. »', bonne:'l\u2019effacement de consommation', autres:['la coupure générale']},
- {devinette:'📊 « Installé chez toi, je transmets la courbe de consommation au réseau : grâce à moi, le smart grid voit enfin ce qui se passe dans les maisons. »', bonne:'le compteur communicant', autres:['le vieux compteur à disque']},
+ {devinette:' « Je suis la balance instantanée du réseau : 50 exactement quand production = consommation. Si je chute, tout le dispatching retient son souffle. »', bonne:'la fréquence du réseau (50 Hz)', autres:['la température des câbles']},
+ {devinette:' « Nucléaire en socle, hydraulique en sprint, solaire à midi, gaz en renfort : je suis la recette, recomposée minute par minute, de l\u2019électricité du pays. »', bonne:'le mix électrique', autres:['la recette de cuisine']},
+ {devinette:' « Couper 10 minutes des millions de ballons d\u2019eau chaude sans que personne ne le remarque : je « produis » l\u2019équivalent d\u2019une centrale… en consommant moins. »', bonne:'l\u2019effacement de consommation', autres:['la coupure générale']},
+ {devinette:' « Installé chez toi, je transmets la courbe de consommation au réseau : grâce à moi, le smart grid voit enfin ce qui se passe dans les maisons. »', bonne:'le compteur communicant', autres:['le vieux compteur à disque']},
 ];
 (function initA1(){
-  const zone=document.getElementById('cas1');
-  CAS1.forEach(cas=>{
-    const d=document.createElement('div'); d.className='cas';
-    d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
-    const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
-    let premier=true, fait=false;
-    [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
-      const b=document.createElement('button'); b.textContent=rep;
-      b.onclick=()=>{
-        if(fait) return;
-        if(rep===cas.bonne){
-          fait=true; d.classList.remove('faux'); d.classList.add('bon');
-          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          etat.q1ok++;
-          if(etat.q1ok===CAS1.length) reussir(1,2);
-        } else { d.classList.add('faux'); premier=false; }
-      };
-      ch.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('cas1');
+ CAS1.forEach(cas=>{
+ const d=document.createElement('div'); d.className='cas';
+ d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
+ const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
+ let premier=true, fait=false;
+ [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
+ const b=document.createElement('button'); b.textContent=rep;
+ b.onclick=()=>{
+ if(fait) return;
+ if(rep===cas.bonne){
+ fait=true; d.classList.remove('faux'); d.classList.add('bon');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ } else {
+ fait=true; premier=false;
+ d.classList.add('faux'); b.classList.add('faux');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ }
+ };
+ ch.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A2 : LA DÉMARCHE ================= */
 const BLOCS2=[
- {id:1,t:'📊 Prévoir la consommation de demain',s:'météo, saison, événements : tout compte'},
- {id:0,t:'📋 Programmer les centrales pilotables',s:'le planning de production, décidé la veille'},
- {id:2,t:'⚖️ Surveiller la fréquence en temps réel',s:'50 Hz = équilibre parfait'},
- {id:3,t:'🚨 Déclencher renforts ou effacement si écart',s:'hydraulique en 2 minutes, ballons coupés'},
+ {id:1,t:' Prévoir la consommation de demain',s:'météo, saison, événements : tout compte'},
+ {id:0,t:' Programmer les centrales pilotables',s:'le planning de production, décidé la veille'},
+ {id:2,t:' Surveiller la fréquence en temps réel',s:'50 Hz = équilibre parfait'},
+ {id:3,t:' Déclencher renforts ou effacement si écart',s:'hydraulique en 2 minutes, ballons coupés'},
 ];
 const BON2=[1,0,2,3];
-let choix2=[], a2fait=false;
+let choix2=[], a2fait=false, essais2=0, err5=0, essais6=0, bons3=0;
 function initA2(){
-  choix2=[];
-  const zone=document.getElementById('blocs2'); zone.innerHTML='';
-  BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
-    const btn=document.createElement('button');
-    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
-    btn.onclick=()=>{
-      if(btn.classList.contains('pris')||choix2.length>=4) return;
-      btn.classList.add('pris'); choix2.push(b.id);
-      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
-      slot.textContent=b.t; slot.classList.add('rempli');
-    };
-    zone.appendChild(btn);
-  });
-  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
-  document.getElementById('verd2').className='verdict';
+ choix2=[];
+ const zone=document.getElementById('blocs2'); zone.innerHTML='';
+ BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
+ const btn=document.createElement('button');
+ btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+ btn.onclick=()=>{
+ if(btn.classList.contains('pris')||choix2.length>=4) return;
+ btn.classList.add('pris'); choix2.push(b.id);
+ const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+ slot.textContent=b.t; slot.classList.add('rempli');
+ };
+ zone.appendChild(btn);
+ });
+ document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
+ document.getElementById('verd2').className='verdict';
 }
 document.getElementById('reset2').onclick=initA2;
 document.getElementById('verif2').onclick=()=>{
-  const verd=document.getElementById('verd2');
-  if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
-  if(choix2.join()===BON2.join()){
-    verd.className='verdict ok';
-    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : prévoir → programmer → surveiller → corriger. Le réseau se pilote en ANTICIPANT — et la prévision météo de 5ème est devenue un outil électrique ! (+3 pts)'; reussir(2,3); }
-    else verd.textContent='✅ Bon ordre !';
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ La journée est emmêlée. Réfléchis : peut-on programmer les centrales… sans avoir prévu la consommation ? Et corriger un écart… sans surveiller la fréquence ? Recommence !';
-  }
+ const verd=document.getElementById('verd2');
+ if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
+ essais2++;
+ if(choix2.join()===BON2.join()){
+ verd.className='verdict ok';
+ if(!a2fait){ a2fait=true; verd.textContent='✓ Parfait : prévoir → programmer → surveiller → corriger. Le réseau se pilote en ANTICIPANT — et la prévision météo de 5ème est devenue un outil électrique ! (+3 pts)'; reussir(2, essais2<=1?3:(essais2===2?2:1)); }
+ else verd.textContent='✓ Bon ordre !';
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ La journée est emmêlée. Réfléchis : peut-on programmer les centrales… sans avoir prévu la consommation ? Et corriger un écart… sans surveiller la fréquence ? Recommence !';
+ }
 };
 initA2();
 
 /* ================= A3 : EXPERTISES ================= */
 const PANNES=[
- {em:'📉', symptome:'Alerte n°1 — 19 h 02 : la fréquence CHUTE à 49,8 Hz. Toute la France vient d\u2019allumer fours et plaques en même temps — la production n\u2019a pas suivi le pic.',
-  bon:'pointe', exp:'consommation > production : la fréquence glisse. On démarre les moyens de POINTE — l\u2019hydraulique répond en 2 minutes — et on déclenche des effacements. En quelques instants, l\u2019aiguille revient sur 50.'},
- {em:'☁️', symptome:'Alerte n°2 — Un front nuageux GÉANT traverse le pays : la production solaire s\u2019écroule de plusieurs gigawatts en une demi-heure… en plein après-midi.',
-  bon:'compenser', exp:'l\u2019intermittence en action : quand le solaire disparaît, les PILOTABLES compensent — hydraulique et gaz montent en puissance selon le programme prévu par… la météo. Prévoir le ciel, c\u2019est piloter le réseau.'},
- {em:'🔥', symptome:'Alerte n°3 — Une ligne principale SURCHAUFFE : trop de courant passe au même endroit au même moment, les protections menacent de la déconnecter.',
-  bon:'delester', exp:'on DÉLESTE : répartir le flux sur d\u2019autres lignes, effacer des consommations en aval, baisser certaines productions. Une ligne qui déclenche peut entraîner les autres — c\u2019est l\u2019effet domino du blackout.'},
+ {em:'', symptome:'Alerte n°1 — 19 h 02 : la fréquence CHUTE à 49,8 Hz. Toute la France vient d\u2019allumer fours et plaques en même temps — la production n\u2019a pas suivi le pic.',
+ bon:'pointe', exp:'consommation >production : la fréquence glisse. On démarre les moyens de POINTE — l\u2019hydraulique répond en 2 minutes — et on déclenche des effacements. En quelques instants, l\u2019aiguille revient sur 50.'},
+ {em:'', symptome:'Alerte n°2 — Un front nuageux GÉANT traverse le pays : la production solaire s\u2019écroule de plusieurs gigawatts en une demi-heure… en plein après-midi.',
+ bon:'compenser', exp:'l\u2019intermittence en action : quand le solaire disparaît, les PILOTABLES compensent — hydraulique et gaz montent en puissance selon le programme prévu par… la météo. Prévoir le ciel, c\u2019est piloter le réseau.'},
+ {em:'', symptome:'Alerte n°3 — Une ligne principale SURCHAUFFE : trop de courant passe au même endroit au même moment, les protections menacent de la déconnecter.',
+ bon:'delester', exp:'on DÉLESTE : répartir le flux sur d\u2019autres lignes, effacer des consommations en aval, baisser certaines productions. Une ligne qui déclenche peut entraîner les autres — c\u2019est l\u2019effet domino du blackout.'},
 ];
 const REMEDES=[
- {id:'pointe', t:'💧 Démarrer les moyens de pointe (hydraulique) + effacements'},
- {id:'compenser', t:'🎛️ Compenser par les centrales pilotables'},
- {id:'delester', t:'🔀 Répartir le flux et délester la ligne'},
- {id:'peinture', t:'🎨 Repeindre les pylônes en orange'},
+ {id:'pointe', t:' Démarrer les moyens de pointe (hydraulique) + effacements'},
+ {id:'compenser', t:' Compenser par les centrales pilotables'},
+ {id:'delester', t:' Répartir le flux et délester la ligne'},
+ {id:'peinture', t:' Repeindre les pylônes en orange'},
 ];
 let diag3=0, a3fait=false;
 (function initA3(){
-  const zone=document.getElementById('pannes3');
-  const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
-  ordre3.forEach(pi=>{
-    const P=PANNES[pi];
-    const d=document.createElement('div'); d.className='panne';
-    d.innerHTML='<div class="symptome"><span class="em">'+P.em+'</span>'+P.symptome+'</div>';
-    const blocs=document.createElement('div'); blocs.className='blocs-diag'; d.appendChild(blocs);
-    const fb=document.createElement('div'); fb.className='verdict'; d.appendChild(fb);
-    let resolu=false, premier=true;
-    REMEDES.slice().sort(()=>0.5-Math.random()).forEach(r=>{
-      const b=document.createElement('button'); b.textContent=r.t; b.dataset.b=r.id;
-      b.onclick=()=>{
-        if(resolu) return;
-        if(r.id===P.bon){
-          resolu=true; d.classList.add('resolue');
-          blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
-          fb.className='verdict ok';
-          fb.textContent='✅ Bien vu'+(premier?' du premier coup (+1 pt bonus)':'')+' : '+P.exp;
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          diag3++;
-          if(diag3===PANNES.length && !a3fait){ a3fait=true;
-            const verd=document.getElementById('verd3');
-            verd.className='verdict ok';
-            verd.textContent='🏆 Trois expertises réussies ! Fréquence qui chute = moyens de pointe, solaire qui s\u2019écroule = pilotables, ligne qui surchauffe = délestage. Le réseau ne laisse RIEN au hasard. (+4 pts)';
-            reussir(3,4);
-          }
-        } else {
-          premier=false;
-          fb.className='verdict ko';
-          fb.textContent='❌ Cette décision ne colle pas à l\u2019alerte… Relis : la fréquence qui CHUTE (pointe), le front nuageux GÉANT (compenser) ou la ligne qui SURCHAUFFE (délester) ? (La peinture n\u2019a jamais équilibré un réseau !)';
-        }
-      };
-      blocs.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('pannes3');
+ const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
+ ordre3.forEach(pi=>{
+ const P=PANNES[pi];
+ const d=document.createElement('div'); d.className='panne';
+ d.innerHTML='<div class="symptome"><span class="em">'+P.em+'</span>'+P.symptome+'</div>';
+ const blocs=document.createElement('div'); blocs.className='blocs-diag'; d.appendChild(blocs);
+ const fb=document.createElement('div'); fb.className='verdict'; d.appendChild(fb);
+ let resolu=false, premier=true;
+ REMEDES.slice().sort(()=>0.5-Math.random()).forEach(r=>{
+ const b=document.createElement('button'); b.textContent=r.t; b.dataset.b=r.id;
+ b.onclick=()=>{
+ if(resolu) return;
+ if(r.id===P.bon){
+ resolu=true; d.classList.add('resolue');
+ bons3++;
+ blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
+ fb.className='verdict ok';
+ fb.textContent='✓ Bien vu'+(premier?' du premier coup (+1 pt bonus)':'')+' : '+P.exp;
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ diag3++;
+ if(diag3===PANNES.length && !a3fait){ a3fait=true;
+ const verd=document.getElementById('verd3');
+ verd.className='verdict ok';
+ verd.textContent=' Trois expertises réussies ! Fréquence qui chute = moyens de pointe, solaire qui s\u2019écroule = pilotables, ligne qui surchauffe = délestage. Le réseau ne laisse RIEN au hasard. (+4 pts)';
+ reussir(3, Math.max(1,bons3+1));
+ }
+ } else {
+ premier=false;
+ fb.className='verdict ko';
+ fb.textContent='✗ Cette décision ne colle pas à l\u2019alerte… Relis : la fréquence qui CHUTE (pointe), le front nuageux GÉANT (compenser) ou la ligne qui SURCHAUFFE (délester) ? (La peinture n\u2019a jamais équilibré un réseau !)';
+ resolu=true; premier=false;
+ d.classList.add('ratee');
+ blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
+ diag3++;
+ if(diag3===PANNES.length && !a3fait){ a3fait=true; reussir(3, Math.max(1,bons3+1)); }
+ }
+ };
+ blocs.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A4 : LA PRÉCISION ================= */
 let a4fait=false;
 document.getElementById('verif4').onclick=()=>{
-  const verd=document.getElementById('verd4');
-  const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
-  if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
-  if(Math.abs(v-15)<=0.5){
-    verd.className='verdict ok';
-    verd.innerHTML='✅ 30 ÷ 2 = 15 éoliennes… quand le vent souffle à fond ! Vent moyen : il en faudrait bien plus — et vent nul : zéro. Voilà TOUT le défi de l\u2019intermittence : sans stockage ni pilotables en renfort, le compte n\u2019y est jamais.'+(a4fait?'':' (+4 pts)');
-    if(!a4fait){ a4fait=true; reussir(4,4); }
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ Pas ça. Divise la consommation du quartier (30 MW) par la puissance d\u2019une éolienne (2 MW).';
-  }
+ const verd=document.getElementById('verd4');
+ const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
+ if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
+ if(Math.abs(v-15)<=0.5){
+ verd.className='verdict ok';
+ verd.innerHTML='✓ 30 ÷ 2 = 15 éoliennes… quand le vent souffle à fond ! Vent moyen : il en faudrait bien plus — et vent nul : zéro. Voilà TOUT le défi de l\u2019intermittence : sans stockage ni pilotables en renfort, le compte n\u2019y est jamais.'+(a4fait?'':' (+4 pts)');
+ if(!a4fait){ a4fait=true; reussir(4,4); }
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ Pas ça. Divise la consommation du quartier (30 MW) par la puissance d\u2019une éolienne (2 MW).';
+ }
 };
 
 /* ================= A5 : SCHÉMA DU RÉSEAU ================= */
 (function(){
-  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
-  const ZONES=[
-    {id:'centrale',x:35,  y:100, w:150, h:130, lbl:'LA CENTRALE',              tx:110, ty:85},
-    {id:'tht',     x:250, y:60,  w:210, h:150, lbl:'LA LIGNE THT (400 000 V)', tx:355, ty:45},
-    {id:'transfo', x:500, y:130, w:100, h:100, lbl:'LE TRANSFORMATEUR',        tx:550, ty:115},
-    {id:'batterie',x:730, y:180, w:100, h:90,  lbl:'LA BATTERIE DE QUARTIER',  tx:770, ty:165},
-  ];
-  const poses={}; let sel=null, t=0, fini=false;
-  function dessiner(){
-    t+=0.02;
-    ctx.clearRect(0,0,860,320);
-    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
-    ctx.beginPath(); ctx.moveTo(0,270); ctx.lineTo(860,270); ctx.stroke();
-    // centrale (bâtiment + tour)
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#b45309'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.rect(55,180,90,90); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(85,180); ctx.lineTo(92,120); ctx.lineTo(118,120); ctx.lineTo(125,180); ctx.stroke();
-    ctx.font='16px Segoe UI'; ctx.textAlign='center';
-    ctx.fillText('\u2601\ufe0f',105+6*Math.sin(t),108);
-    ctx.font='22px Segoe UI'; ctx.fillText('\u26a1',100,232);
-    // pylônes + fil
-    function pylone(x){ ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
-      ctx.beginPath(); ctx.moveTo(x-16,270); ctx.lineTo(x,110); ctx.lineTo(x+16,270); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(x-22,140); ctx.lineTo(x+22,140); ctx.stroke(); }
-    pylone(300); pylone(410);
-    ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
-    ctx.beginPath(); ctx.moveTo(145,200);
-    ctx.quadraticCurveTo(222,150,300,140);
-    ctx.quadraticCurveTo(355,168,410,140);
-    ctx.quadraticCurveTo(465,168,520,175);
-    ctx.stroke();
-    // électrons qui circulent
-    ctx.fillStyle='#f59e0b';
-    for(let i=0;i<5;i++){
-      const p=((t*0.16)+i/5)%1;
-      let px,py;
-      if(p<0.4){ const u=p/0.4;   px=145+u*155; py=200-55*Math.sin(Math.PI*u*0.9); }
-      else if(p<0.7){ const u=(p-0.4)/0.3; px=300+u*110; py=140+22*Math.sin(Math.PI*u); }
-      else { const u=(p-0.7)/0.3; px=410+u*110; py=140+30*u; }
-      ctx.beginPath(); ctx.arc(px,py,4.5,0,Math.PI*2); ctx.fill();
-    }
-    // transformateur (boîte + éclair)
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.rect(520,160,60,70); ctx.fill(); ctx.stroke();
-    ctx.font='20px Segoe UI'; ctx.fillText('\u26a1',550,202);
-    ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#7c3aed';
-    ctx.fillText('400 000 V \u2192 230 V',550,250);
-    // fil basse tension vers maisons
-    ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
-    ctx.beginPath(); ctx.moveTo(580,195); ctx.lineTo(650,210); ctx.stroke();
-    ctx.font='24px Segoe UI'; ctx.fillStyle='#000';
-    ctx.fillText('\ud83c\udfe0',668,235); ctx.fillText('\ud83c\udfe0',700,255);
-    // batterie de quartier
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#16a34a'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.rect(748,200,64,70); ctx.fill(); ctx.stroke();
-    ctx.font='22px Segoe UI'; ctx.fillText('\ud83d\udd0b',780,242);
-    const charge=(Math.sin(t*0.7)+1)/2;
-    ctx.fillStyle='#16a34a'; ctx.fillRect(752,266-charge*60,8,charge*60);
-    // étiquettes posées
-    ctx.font='bold 12.5px Segoe UI';
-    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
-    if(!fini) requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  const bar=document.getElementById('etiq5');
-  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
-    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
-    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
-      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
-    bar.appendChild(b);
-  });
-  cv.addEventListener('click',e=>{
-    if(!sel) return;
-    const r=cv.getBoundingClientRect();
-    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
-    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
-    const verd=document.getElementById('verd5');
-    if(cible && cible.id===sel){
-      poses[sel]=true;
-      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
-      sel=null;
-      if(Object.keys(poses).length===ZONES.length){
-        verd.innerHTML='<div class="verdict ok">\u2705 Schéma complet ! Le trajet du courant : la CENTRALE produit, la ligne THT transporte à 400 000 V (haute tension = moins de pertes sur la distance), le TRANSFORMATEUR abaisse à 230 V avant les maisons\u2026 et la BATTERIE de quartier stocke le surplus (regarde son niveau qui monte et descend !). (+3 pts)</div>';
-        reussir(5,3);
-      }
-    } else if(cible){
-      verd.innerHTML='<div class="verdict ko">\u274c Pas là ! Cette zone correspond à un autre élément. Indice : suis les points jaunes depuis le bâtiment qui produit, via les pylônes, jusqu\u2019à la boîte violette qui abaisse la tension\u2026</div>';
-    }
-  });
+ const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+ const ZONES=[
+ {id:'centrale',x:35, y:100, w:150, h:130, lbl:'LA CENTRALE', tx:110, ty:85},
+ {id:'tht', x:250, y:60, w:210, h:150, lbl:'LA LIGNE THT (400 000 V)', tx:355, ty:45},
+ {id:'transfo', x:500, y:130, w:100, h:100, lbl:'LE TRANSFORMATEUR', tx:550, ty:115},
+ {id:'batterie',x:730, y:180, w:100, h:90, lbl:'LA BATTERIE DE QUARTIER', tx:770, ty:165},
+ ];
+ const poses={}; let sel=null, t=0, fini=false;
+ function dessiner(){
+ t+=0.02;
+ ctx.clearRect(0,0,860,320);
+ ctx.strokeStyle='#94a3b8'; ctx.lineWidth=3;
+ ctx.beginPath(); ctx.moveTo(0,270); ctx.lineTo(860,270); ctx.stroke();
+ // centrale (bâtiment + tour)
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#b45309'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.rect(55,180,90,90); ctx.fill(); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(85,180); ctx.lineTo(92,120); ctx.lineTo(118,120); ctx.lineTo(125,180); ctx.stroke();
+ ctx.font='16px Segoe UI'; ctx.textAlign='center';
+ ctx.fillText('\u2601\ufe0f',105+6*Math.sin(t),108);
+ ctx.font='22px Segoe UI'; ctx.fillText('\u26a1',100,232);
+ // pylônes + fil
+ function pylone(x){ ctx.strokeStyle='#334155'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.moveTo(x-16,270); ctx.lineTo(x,110); ctx.lineTo(x+16,270); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(x-22,140); ctx.lineTo(x+22,140); ctx.stroke(); }
+ pylone(300); pylone(410);
+ ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
+ ctx.beginPath(); ctx.moveTo(145,200);
+ ctx.quadraticCurveTo(222,150,300,140);
+ ctx.quadraticCurveTo(355,168,410,140);
+ ctx.quadraticCurveTo(465,168,520,175);
+ ctx.stroke();
+ // électrons qui circulent
+ ctx.fillStyle='#f59e0b';
+ for(let i=0;i<5;i++){
+ const p=((t*0.16)+i/5)%1;
+ let px,py;
+ if(p<0.4){ const u=p/0.4; px=145+u*155; py=200-55*Math.sin(Math.PI*u*0.9); }
+ else if(p<0.7){ const u=(p-0.4)/0.3; px=300+u*110; py=140+22*Math.sin(Math.PI*u); }
+ else { const u=(p-0.7)/0.3; px=410+u*110; py=140+30*u; }
+ ctx.beginPath(); ctx.arc(px,py,4.5,0,Math.PI*2); ctx.fill();
+ }
+ // transformateur (boîte + éclair)
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.rect(520,160,60,70); ctx.fill(); ctx.stroke();
+ ctx.font='20px Segoe UI'; ctx.fillText('\u26a1',550,202);
+ ctx.font='bold 10px Segoe UI'; ctx.fillStyle='#7c3aed';
+ ctx.fillText('400 000 V \u2192 230 V',550,250);
+ // fil basse tension vers maisons
+ ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
+ ctx.beginPath(); ctx.moveTo(580,195); ctx.lineTo(650,210); ctx.stroke();
+ ctx.font='24px Segoe UI'; ctx.fillStyle='#000';
+ ctx.fillText('\ud83c\udfe0',668,235); ctx.fillText('\ud83c\udfe0',700,255);
+ // batterie de quartier
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#16a34a'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.rect(748,200,64,70); ctx.fill(); ctx.stroke();
+ ctx.font='22px Segoe UI'; ctx.fillText('\ud83d\udd0b',780,242);
+ const charge=(Math.sin(t*0.7)+1)/2;
+ ctx.fillStyle='#16a34a'; ctx.fillRect(752,266-charge*60,8,charge*60);
+ // étiquettes posées
+ ctx.font='bold 12.5px Segoe UI';
+ ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+ if(!fini) requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ const bar=document.getElementById('etiq5');
+ ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+ const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+ b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+ bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+ bar.appendChild(b);
+ });
+ cv.addEventListener('click',e=>{
+ if(!sel) return;
+ const r=cv.getBoundingClientRect();
+ const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+ const cible=ZONES.find(z=>x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+ const verd=document.getElementById('verd5');
+ if(cible && cible.id===sel){
+ poses[sel]=true;
+ const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+ sel=null;
+ if(Object.keys(poses).length===ZONES.length){
+ verd.innerHTML='<div class="verdict ok">\u2705 Schéma complet ! Le trajet du courant : la CENTRALE produit, la ligne THT transporte à 400 000 V (haute tension = moins de pertes sur la distance), le TRANSFORMATEUR abaisse à 230 V avant les maisons\u2026 et la BATTERIE de quartier stocke le surplus (regarde son niveau qui monte et descend !). (+3 pts)</div>';
+ reussir(5, err5===0?3:(err5<=2?2:1));
+ }
+ } else if(cible){
+ err5++;
+ verd.innerHTML='<div class="verdict ko">\u274c Pas là ! Cette zone correspond à un autre élément. Indice : suis les points jaunes depuis le bâtiment qui produit, via les pylônes, jusqu\u2019à la boîte violette qui abaisse la tension\u2026</div>';
+ }
+ });
 })();
 
 /* ================= A6 : TIENS LES 50 HZ ================= */
 (function(){
-  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
-  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
-  const MOMENTS=[
-    {nom:'\ud83c\udf19 3 h du matin — le pays dort', conso:40,
-     ok:'\u2705 40 GW produits pour 40 GW consommés : la nuit, on ralentit les centrales — produire trop ferait MONTER la fréquence !'},
-    {nom:'\u2600\ufe0f 13 h — journée ordinaire', conso:57,
-     ok:'\u2705 57 GW : équilibre tenu. En vrai, le solaire aide à cette heure-ci — le dispatching module les pilotables autour.'},
-    {nom:'\ud83c\udf73 19 h — toute la France cuisine', conso:78,
-     ok:'\u2705 78 GW : le pic du soir est tenu ! C\u2019est LE moment des moyens de pointe : barrages turbinés à fond, effacements activés. (+4 pts)'},
-  ];
-  let etape=0, t=0, fini=false, valide=false;
-  function freqActuelle(){
-    const sc=MOMENTS[Math.min(etape,2)];
-    const f=50+(+slider.value - sc.conso)*0.06;
-    return Math.max(48.6,Math.min(51.4,f));
-  }
-  function dessiner(){
-    t+=0.03;
-    ctx.clearRect(0,0,860,300);
-    const sc=MOMENTS[Math.min(etape,2)];
-    // titre du moment
-    ctx.font='bold 16px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#7c2d12';
-    ctx.fillText(sc.nom+'  ·  réglage '+(Math.min(etape,2)+1)+'/3', 430, 30);
-    // barres production vs consommation
-    function barre(x,val,coul,titre){
-      ctx.fillStyle='#e2e8f0'; ctx.fillRect(x,70,70,170);
-      const h=val/90*170;
-      ctx.fillStyle=coul; ctx.fillRect(x,240-h,70,h);
-      ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
-      ctx.fillText(titre,x+35,62); ctx.fillText(val+' GW',x+35,262);
-    }
-    const pulse=1+0.02*Math.sin(t*3);
-    barre(120,+slider.value,'#b45309','PRODUCTION');
-    ctx.save(); ctx.translate(250*0,0);
-    barre(250,Math.round(sc.conso*pulse),'#334155','CONSOMMATION');
-    ctx.restore();
-    // cadran 50 Hz
-    const f=freqActuelle();
-    ctx.strokeStyle='#b45309'; ctx.lineWidth=5;
-    ctx.beginPath(); ctx.arc(600,160,85,Math.PI*0.75,Math.PI*2.25); ctx.stroke();
-    ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#64748b';
-    ctx.fillText('49',536,232); ctx.fillText('50',600,58); ctx.fillText('51',666,232);
-    const ang=Math.PI*1.5+(f-50)*1.5;
-    const okF=Math.abs(f-50)<=0.06;
-    ctx.strokeStyle= okF ? '#16a34a' : '#dc2626'; ctx.lineWidth=4;
-    ctx.beginPath(); ctx.moveTo(600,160); ctx.lineTo(600+62*Math.cos(ang),160+62*Math.sin(ang)); ctx.stroke();
-    ctx.fillStyle= okF ? '#16a34a' : '#dc2626'; ctx.font='bold 20px Segoe UI';
-    ctx.fillText(f.toFixed(2)+' Hz',600,282);
-    if(!okF){ ctx.font='bold 13px Segoe UI';
-      ctx.fillText(f<50?'\u26a0\ufe0f production insuffisante':'\u26a0\ufe0f trop de production !',600,80); }
-    if(!fini) requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
-  document.getElementById('verif6').addEventListener('click',()=>{
-    if(valide) return;
-    const sc=MOMENTS[etape], verd=document.getElementById('verd6');
-    if(Math.abs(+slider.value - sc.conso)<=1){
-      etape++;
-      if(etape>=MOMENTS.length){
-        valide=true;
-        verd.innerHTML='<div class="verdict ok">'+sc.ok+' Tu viens de vivre la règle d\u2019or : production = consommation, \u00c0 CHAQUE INSTANT.</div>';
-        reussir(6,4);
-      } else {
-        verd.innerHTML='<div class="verdict ok">'+sc.ok+' \u2192 Nouveau moment de la journée : la consommation a changé, rattrape-la !</div>';
-      }
-    } else {
-      const f=freqActuelle();
-      verd.innerHTML='<div class="verdict ko">\u274c L\u2019aiguille est à '+f.toFixed(2)+' Hz : '+(f<50?'il MANQUE de la production (la fréquence chute quand on consomme plus qu\u2019on ne produit). Monte le curseur\u2026':'il y a TROP de production (la fréquence monte quand on produit plus qu\u2019on ne consomme). Baisse le curseur\u2026')+' Vise 50,00 Hz avant de valider.</div>';
-    }
-  });
+ const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+ const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+ const MOMENTS=[
+ {nom:'\ud83c\udf19 3 h du matin — le pays dort', conso:40,
+ ok:'\u2705 40 GW produits pour 40 GW consommés : la nuit, on ralentit les centrales — produire trop ferait MONTER la fréquence !'},
+ {nom:'\u2600\ufe0f 13 h — journée ordinaire', conso:57,
+ ok:'\u2705 57 GW : équilibre tenu. En vrai, le solaire aide à cette heure-ci — le dispatching module les pilotables autour.'},
+ {nom:'\ud83c\udf73 19 h — toute la France cuisine', conso:78,
+ ok:'\u2705 78 GW : le pic du soir est tenu ! C\u2019est LE moment des moyens de pointe : barrages turbinés à fond, effacements activés. (+4 pts)'},
+ ];
+ let etape=0, t=0, fini=false, valide=false;
+ function freqActuelle(){
+ const sc=MOMENTS[Math.min(etape,2)];
+ const f=50+(+slider.value - sc.conso)*0.06;
+ return Math.max(48.6,Math.min(51.4,f));
+ }
+ function dessiner(){
+ t+=0.03;
+ ctx.clearRect(0,0,860,300);
+ const sc=MOMENTS[Math.min(etape,2)];
+ // titre du moment
+ ctx.font='bold 16px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#7c2d12';
+ ctx.fillText(sc.nom+' · réglage '+(Math.min(etape,2)+1)+'/3', 430, 30);
+ // barres production vs consommation
+ function barre(x,val,coul,titre){
+ ctx.fillStyle='#e2e8f0'; ctx.fillRect(x,70,70,170);
+ const h=val/90*170;
+ ctx.fillStyle=coul; ctx.fillRect(x,240-h,70,h);
+ ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+ ctx.fillText(titre,x+35,62); ctx.fillText(val+' GW',x+35,262);
+ }
+ const pulse=1+0.02*Math.sin(t*3);
+ barre(120,+slider.value,'#b45309','PRODUCTION');
+ ctx.save(); ctx.translate(250*0,0);
+ barre(250,Math.round(sc.conso*pulse),'#334155','CONSOMMATION');
+ ctx.restore();
+ // cadran 50 Hz
+ const f=freqActuelle();
+ ctx.strokeStyle='#b45309'; ctx.lineWidth=5;
+ ctx.beginPath(); ctx.arc(600,160,85,Math.PI*0.75,Math.PI*2.25); ctx.stroke();
+ ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#64748b';
+ ctx.fillText('49',536,232); ctx.fillText('50',600,58); ctx.fillText('51',666,232);
+ const ang=Math.PI*1.5+(f-50)*1.5;
+ const okF=Math.abs(f-50)<=0.06;
+ ctx.strokeStyle= okF ? '#16a34a' : '#dc2626'; ctx.lineWidth=4;
+ ctx.beginPath(); ctx.moveTo(600,160); ctx.lineTo(600+62*Math.cos(ang),160+62*Math.sin(ang)); ctx.stroke();
+ ctx.fillStyle= okF ? '#16a34a' : '#dc2626'; ctx.font='bold 20px Segoe UI';
+ ctx.fillText(f.toFixed(2)+' Hz',600,282);
+ if(!okF){ ctx.font='bold 13px Segoe UI';
+ ctx.fillText(f<50?'\u26a0\ufe0f production insuffisante':'\u26a0\ufe0f trop de production !',600,80); }
+ if(!fini) requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+ document.getElementById('verif6').addEventListener('click',()=>{
+ essais6++;
+ if(valide) return;
+ const sc=MOMENTS[etape], verd=document.getElementById('verd6');
+ if(Math.abs(+slider.value - sc.conso)<=1){
+ etape++;
+ if(etape>=MOMENTS.length){
+ valide=true;
+ verd.innerHTML='<div class="verdict ok">'+sc.ok+' Tu viens de vivre la règle d\u2019or : production = consommation, \u00c0 CHAQUE INSTANT.</div>';
+ reussir(6, essais6<=SCEN.length?4:(essais6<=SCEN.length+2?3:2));
+ } else {
+ verd.innerHTML='<div class="verdict ok">'+sc.ok+' \u2192 Nouveau moment de la journée : la consommation a changé, rattrape-la !</div>';
+ }
+ } else {
+ const f=freqActuelle();
+ verd.innerHTML='<div class="verdict ko">\u274c L\u2019aiguille est à '+f.toFixed(2)+' Hz : '+(f<50?'il MANQUE de la production (la fréquence chute quand on consomme plus qu\u2019on ne produit). Monte le curseur\u2026':'il y a TROP de production (la fréquence monte quand on produit plus qu\u2019on ne consomme). Baisse le curseur\u2026')+' Vise 50,00 Hz avant de valider.</div>';
+ }
+ });
 })();
 
 /* ================= A7 : BILAN ================= */
@@ -543,34 +632,393 @@ const Q5=[
  {q:"L'électricité du réseau…", r:["se stocke très difficilement en grande quantité","se stocke facilement dans des cuves","n'a jamais besoin d'être stockée"], b:0},
 ];
 (function initQ5(){
-  const zone=document.getElementById('quiz5');
-  Q5.forEach((item,i)=>{
-    const d=document.createElement('div'); d.className='question';
-    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
-    const rep=d.querySelector('.rep');
-    item.r.forEach((r,k)=>{
-      const b=document.createElement('button'); b.textContent=r;
-      b.onclick=()=>{
-        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
-        etat.q5rep++;
-        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
-        if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
-          else{
-            const verd=document.createElement('div'); verd.className='verdict ko';
-            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
-            zone.appendChild(verd);
-          }
-        }
-      };
-      rep.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('quiz5');
+ let tentative=0, reponses={};
+ function melanger(t){ return t.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
+ function construire(){
+ reponses={};
+ zone.innerHTML='';
+ const ordre=melanger(Q5.map((q,i)=>i));
+ ordre.forEach((qi,rang)=>{
+ const item=Q5[qi];
+ const d=document.createElement('div'); d.className='question';
+ d.innerHTML='<div class="q">'+(rang+1)+'. '+item.q+'</div><div class="rep"></div>';
+ const rep=d.querySelector('.rep');
+ melanger(item.r.map((txt,k)=>({txt,k}))).forEach(o=>{
+ const b=document.createElement('button'); b.textContent=o.txt;
+ b.onclick=()=>{
+ rep.querySelectorAll('button').forEach(x=>x.classList.remove('choisi'));
+ b.classList.add('choisi');
+ reponses[qi]=o.k;
+ const n=Object.keys(reponses).length;
+ info.textContent = n<Q5.length
+ ? n+' réponse(s) sur '+Q5.length+' — aucune correction avant la validation.'
+ : 'Toutes les questions sont renseignées : tu peux valider.';
+ btn.disabled = n<Q5.length;
+ };
+ rep.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
+ zone.appendChild(barre);
+ btn.disabled=true;
+ info.textContent='Réponds aux '+Q5.length+' questions, puis valide. Aucune réponse ne sera corrigée avant.';
+ }
+ const barre=document.createElement('div');
+ const info=document.createElement('div'); info.className='verdict'; info.style.marginTop='10px';
+ const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Valider mes 4 réponses';
+ btn.style.marginTop='10px';
+ const sortie=document.createElement('div');
+ barre.appendChild(info); barre.appendChild(btn); barre.appendChild(sortie);
+ btn.onclick=()=>{
+ tentative++;
+ let bons=0;
+ Q5.forEach((item,i)=>{ if(reponses[i]===item.b) bons++; });
+ if(bons>=3){
+ etat.q5ok=bons; etat.score+=bons;
+ document.getElementById('scoreTot').textContent=etat.score;
+ zone.querySelectorAll('button').forEach(x=>x.disabled=true);
+ sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
+ ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
+ document.getElementById('codefinal').style.display='block';
+ reussir(10, tentative===1?2:(tentative===2?1:0));
+ } else {
+ sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
+ ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
+ 'Les questions seront remélangées.</div>';
+ setTimeout(()=>{ construire(); sortie.innerHTML=''; },2600);
+ }
+ };
+ construire();
 })();
 
 charger(); majProgression();
+</script>
+
+<button id="calcBtn" title="Ouvrir la calculatrice"><span class="ic">C</span>calcul</button>
+<div id="calcPan">
+ <div class="tete" id="calcTete"><b>CALCULATRICE</b><button id="calcX" title="Fermer">&times;</button></div>
+ <div id="calcEcr"><div class="op" id="calcOp"></div><div class="val" id="calcVal">0</div></div>
+ <div id="calcGr">
+ <button class="f" data-k="C">C</button><button class="f" data-k="back">&#9003;</button>
+ <button class="f" data-k="pct">%</button><button class="op" data-k="/">&divide;</button>
+ <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+ <button class="op" data-k="*">&times;</button>
+ <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+ <button class="op" data-k="-">&minus;</button>
+ <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+ <button class="op" data-k="+">+</button>
+ <button class="f" data-k="sign">+/&minus;</button><button data-k="0">0</button>
+ <button data-k=".">,</button><button class="eq" data-k="=">=</button>
+ </div>
+</div>
+<script>
+/* ===== Calculatrice (aucun eval, aucune dépendance) ===== */
+(function(){
+ var pan=document.getElementById('calcPan'), btn=document.getElementById('calcBtn');
+ var eVal=document.getElementById('calcVal'), eOp=document.getElementById('calcOp');
+ var cour='0', prec=null, oper=null, neuf=true;
+ function aff(){
+ eVal.textContent=String(cour).replace('.',',');
+ eOp.textContent=(prec!==null?String(prec).replace('.',',')+' '+({'+':'+','-':'\u2212','*':'\u00d7','/':'\u00f7'}[oper]||''):'');
+ }
+ function calcule(a,b,o){
+ a=parseFloat(a); b=parseFloat(b);
+ var r = o==='+'?a+b : o==='-'?a-b : o==='*'?a*b : (b===0?NaN:a/b);
+ if(!isFinite(r)) return 'Erreur';
+ return String(Math.round(r*1e10)/1e10);
+ }
+ function touche(k){
+ if(cour==='Erreur' && k!=='C'){ return; }
+ if(/^[0-9]$/.test(k)){ cour = (neuf||cour==='0') ? k : cour+k; neuf=false; }
+ else if(k==='.'){ if(neuf){ cour='0.'; neuf=false; } else if(cour.indexOf('.')<0) cour+='.'; }
+ else if(k==='C'){ cour='0'; prec=null; oper=null; neuf=true; }
+ else if(k==='back'){ cour = (cour.length>1) ? cour.slice(0,-1) : '0'; if(cour==='-')cour='0'; }
+ else if(k==='sign'){ cour = cour.charAt(0)==='-' ? cour.slice(1) : (cour==='0'?cour:'-'+cour); }
+ else if(k==='pct'){ cour=String(parseFloat(cour)/100); neuf=true; }
+ else if(k==='+'||k==='-'||k==='*'||k==='/'){
+ if(prec!==null && !neuf){ cour=calcule(prec,cour,oper); }
+ prec=cour; oper=k; neuf=true;
+ }
+ else if(k==='='){
+ if(prec!==null && oper){ cour=calcule(prec,cour,oper); prec=null; oper=null; neuf=true; }
+ }
+ aff();
+ }
+ document.getElementById('calcGr').addEventListener('click',function(ev){
+ var b=ev.target.closest('button'); if(!b)return; touche(b.dataset.k);
+ });
+ btn.addEventListener('click',function(){ pan.classList.toggle('on'); });
+ document.getElementById('calcX').addEventListener('click',function(){ pan.classList.remove('on'); });
+ /* déplacement du panneau */
+ var tete=document.getElementById('calcTete'), drag=false, dx=0, dy=0;
+ tete.addEventListener('pointerdown',function(e){
+ if(e.target.id==='calcX')return;
+ drag=true; var r=pan.getBoundingClientRect();
+ dx=e.clientX-r.left; dy=e.clientY-r.top;
+ pan.style.right='auto'; pan.style.bottom='auto';
+ pan.style.left=r.left+'px'; pan.style.top=r.top+'px';
+ try{ tete.setPointerCapture(e.pointerId); }catch(err){}
+ });
+ tete.addEventListener('pointermove',function(e){
+ if(!drag)return;
+ pan.style.left=Math.max(4,Math.min(window.innerWidth-244,e.clientX-dx))+'px';
+ pan.style.top=Math.max(4,Math.min(window.innerHeight-260,e.clientY-dy))+'px';
+ });
+ tete.addEventListener('pointerup',function(){ drag=false; });
+ aff();
+})();
+
+/* ============ A7-A9 : expliquer, calculer, tracer ============ */
+(function(){
+  function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function nbv(v){return parseFloat(String(v||'').replace(',','.'));}
+  function champs(zone,liste,grand){
+    const z=document.getElementById(zone);
+    liste.forEach(c=>{
+      const d=document.createElement('div'); d.className='chp';
+      const l=document.createElement('label'); l.innerHTML=c.lbl; d.appendChild(l);
+      const i=document.createElement('input'); i.id=c.id; i.autocomplete='off';
+      if(grand){ i.className='large'; i.placeholder='rédige une phrase complète'; }
+      d.appendChild(i);
+      if(c.u){ const u=document.createElement('span'); u.className='u'; u.textContent=c.u; d.appendChild(u); }
+      z.appendChild(d);
+    });
+  }
+  const REDAC=[
+  {id:'q71',lbl:'a) Pourquoi la production doit-elle égaler la consommation à chaque instant sur un réseau électrique ?',
+   cles:['stock','stocke','pasdestock','frequence','panne','black','coupure','desequilibre','instant','directement']},
+  {id:'q72',lbl:'b) Pourquoi ne peut-on pas alimenter un pays uniquement avec des éoliennes et du solaire ?',
+   cles:['vent','soleil','nuit','intermit','irregul','pastoujours','depend','meteo','variable','stock']},
+  {id:'q73',lbl:'c) À quoi servent les barrages et les batteries dans le pilotage du réseau ?',
+   cles:['stock','reserve','demarre','vite','rapide','pointe','ajuste','tampon','equilibre','regule']}], CALC=[
+  {id:'c81',lbl:'a) Production réelle du solaire en journée',rep:24,u:'MW'},
+  {id:'c82',lbl:'b) Production réelle de l’éolien',rep:15,u:'MW'},
+  {id:'c83',lbl:'c) Puissance que la centrale pilotable doit fournir pour équilibrer',rep:141,u:'MW'},
+  {id:'c84',lbl:'d) Part des renouvelables dans la consommation, en pourcentage (arrondie à l’unité)',rep:22,tol:1,u:'%'}], TRACE=[
+  {id:'t91',lbl:'a) Combien d’étapes ton schéma comporte-t-il ?',rep:'5',num:true},
+  {id:'t92',lbl:'b) Quelle tension utilise-t-on pour le transport sur longue distance ? (en kV)',rep:['400','225','400kv','225kv','tres','haute']},
+  {id:'t93',lbl:'c) Pourquoi élève-t-on la tension pour transporter ? (un mot)',rep:['pertes','perte','moinsdepertes','chaleur','effetjoule','joule']},
+  {id:'t94',lbl:'d) Quelle tension arrive à la prise de courant ?',rep:['230','230v','220','220v']}];
+  champs('champs7',REDAC,true); champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  let e7=0,e8=0,e9=0;
+  function verdict(id,html,ok){
+    const v=document.getElementById(id);
+    v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
+  }
+  document.getElementById('verif7').addEventListener('click',()=>{
+    let bons=0;
+    REDAC.forEach(c=>{ const v=norm(document.getElementById(c.id).value);
+      if(v.length>12 && c.cles.some(k=>v.includes(k))) bons++; });
+    if(bons===REDAC.length){
+      verdict('verd7','\u2713 Explications convaincantes. '+'L’électricité ne se stocke pratiquement pas sur le réseau : ce qui est consommé doit être produit au même instant, sinon la fréquence dérive et les protections déclenchent — c’est le black-out. Or le vent et le soleil ne se commandent pas : il faut les compléter par des moyens pilotables. Les barrages et les batteries jouent ce rôle de tampon : ils démarrent en quelques secondes pour absorber une pointe de consommation ou stocker un surplus.',true);
+      reussir(7, e7===0?3:2);
+    } else { e7++;
+      verdict('verd7','\u2717 Réponse(s) convaincante(s) : '+bons+' sur '+REDAC.length+
+        '. Rédige une phrase complète et nomme précisément la cause ou la fonction.',false); }
+  });
+  document.getElementById('verif8').addEventListener('click',()=>{
+    let faux=0;
+    CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
+      if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
+    if(faux===0){
+      verdict('verd8','\u2713 Tous les calculs sont justes. '+'60 MW installés ne produisent que 24 MW réels, et 50 MW d’éolien seulement 15 : la puissance installée n’est jamais la puissance produite. Il reste donc 141 MW à fournir par la centrale pilotable, et les renouvelables ne couvrent que 22 % de la consommation. Retiens cette distinction — c’est elle qui explique pourquoi un pays ne se décarbone pas en installant seulement des panneaux.',true);
+      reussir(8, e8===0?3:2);
+    } else { e8++;
+      verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
+        '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
+  });
+  document.getElementById('verif9').addEventListener('click',()=>{
+    let faux=0;
+    TRACE.forEach(c=>{ const v=document.getElementById(c.id).value;
+      const bon = c.num ? String(nbv(v))===String(nbv(c.rep))
+        : (Array.isArray(c.rep)?c.rep:[c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+      if(!bon) faux++; });
+    if(faux===0){
+      verdict('verd9','\u2713 Ton tracé est conforme. '+'Cinq étapes et une idée centrale : on élève la tension à 225 ou 400 kV pour transporter, parce que les pertes par échauffement dans les câbles dépendent du courant, pas de la tension. À puissance égale, une tension plus haute signifie un courant plus faible, donc moins de pertes. On redescend ensuite progressivement jusqu’aux 230 V de la prise. Ce jeu de transformateurs rend possible d’alimenter une ville depuis une centrale située à 300 km.',true);
+      reussir(9, e9===0?3:2);
+    } else { e9++;
+      verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
+  });
+  
+})();
+
+/* ============ A1 & A3 : schémas animés ============ */
+(function(){
+ const ORG=[
+  {id:'centrale', x:40, y:150,w:130,h:120, nom:'la centrale pilotable',
+   role:'Elle produit l\u2019électricité et, surtout, on peut régler sa puissance à la demande.'},
+  {id:'eleve',    x:200,y:170,w:90, h:90,  nom:'le transformateur élévateur',
+   role:'Il monte la tension à 400 000 V pour le transport : moins de courant, donc moins de pertes.'},
+  {id:'ligne',    x:310,y:100,w:230,h:90,  nom:'la ligne très haute tension',
+   role:'Elle transporte l\u2019énergie sur des centaines de kilomètres, sur ses pylônes.'},
+  {id:'abaisse',  x:570,y:170,w:90, h:90,  nom:'le transformateur abaisseur',
+   role:'Il redescend la tension avant la distribution, jusqu\u2019aux 230 V de la prise.'},
+  {id:'ville',    x:690,y:140,w:140,h:130, nom:'la ville (les consommateurs)',
+   role:'C\u2019est elle qui impose le rythme : la production doit suivre la consommation, seconde par seconde.'},
+ ];
+ function dessineReseau(c,t,vus,surbrille,fx){
+  c.clearRect(0,0,860,330);
+  c.fillStyle='#f8fafc'; c.fillRect(0,0,860,330);
+  c.fillStyle='#86efac'; c.fillRect(0,296,860,34);
+  /* centrale */
+  c.fillStyle='#94a3b8'; c.fillRect(60,190,90,106);
+  c.beginPath(); c.moveTo(70,190); c.lineTo(86,150); c.lineTo(112,150); c.lineTo(126,190); c.closePath(); c.fill();
+  for(let k=0;k<3;k++){ const p=((t*0.5)+k/3)%1;
+   c.fillStyle='rgba(148,163,184,'+(0.5-p*0.5)+')';
+   c.beginPath(); c.arc(99,146-p*40,8+p*10,0,6.284); c.fill(); }
+  /* transformateurs */
+  [[245,'#b45309'],[615,'#b45309']].forEach(([x,coul])=>{
+   c.fillStyle=coul; c.fillRect(x-32,196,64,64);
+   c.strokeStyle='#7c2d12'; c.lineWidth=2;
+   for(let k=0;k<3;k++){ c.beginPath(); c.arc(x-16+k*16,228,9,0,6.284); c.stroke(); }
+   c.strokeStyle='#475569'; c.lineWidth=3;
+   c.beginPath(); c.moveTo(x,260); c.lineTo(x,296); c.stroke();
+  });
+  /* pylônes + ligne */
+  [355,425,495].forEach(px=>{
+   c.strokeStyle='#475569'; c.lineWidth=3;
+   c.beginPath(); c.moveTo(px,296); c.lineTo(px,120); c.stroke();
+   c.beginPath(); c.moveTo(px-26,150); c.lineTo(px+26,150); c.moveTo(px-18,178); c.lineTo(px+18,178); c.stroke();
+   c.beginPath(); c.moveTo(px,120); c.lineTo(px-26,150); c.moveTo(px,120); c.lineTo(px+26,150); c.stroke();
+  });
+  c.strokeStyle='#334155'; c.lineWidth=2;
+  [150,178].forEach(y=>{ c.beginPath(); c.moveTo(277,214); c.quadraticCurveTo(425,y+34,583,214); c.stroke(); });
+  /* ville */
+  c.fillStyle='#64748b';
+  [[700,80],[740,120],[786,64],[820,100]].forEach(([bx,bh])=>c.fillRect(bx,296-bh,32,bh));
+  c.fillStyle='#fde68a';
+  [[706,60],[746,100],[792,44]].forEach(([bx,by],i)=>{ if(Math.sin(t*2+i)>0) c.fillRect(bx,296-by,9,9); });
+  /* flux d'énergie */
+  const vitesse = fx===0 ? 0 : 1;
+  c.fillStyle= fx===0 ? '#cbd5e1' : '#facc15';
+  for(let k=0;k<5;k++){ const p=((t*0.35*vitesse)+k/5)%1;
+   const x=100+p*680; const y=214-40*Math.sin(Math.PI*Math.min(1,Math.max(0,(x-277)/306)));
+   c.beginPath(); c.arc(x, x<277||x>583? 240 : y, 5,0,6.284); c.fill(); }
+  /* repères visités */
+  c.font='bold 12px Segoe UI'; c.textAlign='center';
+  ORG.forEach(o=>{
+   if(vus && vus.includes(o.id)){ c.fillStyle='#16a34a'; c.fillText('\u2713',o.x+o.w/2,o.y-6); }
+   if(surbrille===o.id){ c.strokeStyle='#dc2626'; c.lineWidth=3;
+    c.strokeRect(o.x,o.y,o.w,o.h); }
+  });
+ }
+ function bulle(c,o,l1,l2){
+  c.font='bold 13.5px Segoe UI';
+  const w=Math.min(340,Math.max(c.measureText(l1).width,c.measureText(l2).width*0.9)+30);
+  const bx=Math.max(8,Math.min(o.x+o.w/2-w/2,850-w)), by=Math.max(8,o.y-64);
+  c.fillStyle='rgba(255,251,235,.97)'; c.strokeStyle='#f59e0b'; c.lineWidth=3;
+  c.beginPath(); c.roundRect(bx,by,w,54,12); c.fill(); c.stroke();
+  c.textAlign='left'; c.fillStyle='#78350f'; c.fillText(l1,bx+14,by+22);
+  c.font='12px Segoe UI'; c.fillStyle='#a16207';
+  const mots=l2.split(' '); let ligne='', y=by+40;
+  mots.forEach(m=>{ if(c.measureText(ligne+' '+m).width>w-28){ c.fillText(ligne,bx+14,y); ligne=m; y+=15; } else ligne=ligne?ligne+' '+m:m; });
+  c.fillText(ligne,bx+14,y);
+  c.textAlign='center';
+ }
+ function clique(cv,ev,H){
+  const r=cv.getBoundingClientRect();
+  const x=(ev.clientX-r.left)*860/r.width, y=(ev.clientY-r.top)*H/r.height;
+  return ORG.find(o=>x>=o.x&&x<=o.x+o.w&&y>=o.y&&y<=o.y+o.h)||null;
+ }
+ /* ---- A1 : visite ---- */
+ const cv1=document.getElementById('cv1'), c1=cv1.getContext('2d');
+ let vus1=[], flash1=null, fini1=false;
+ cv1.addEventListener('click',ev=>{
+  if(fini1||flash1)return;
+  const o=clique(cv1,ev,330); if(!o)return;
+  flash1={o,l1:o.nom.toUpperCase(),l2:o.role};
+  if(!vus1.includes(o.id)){
+   vus1.push(o.id);
+   document.getElementById('cpt1').textContent='('+vus1.length+'/5)';
+   if(vus1.length===5){ fini1=true;
+    setTimeout(()=>{ flash1=null;
+     document.getElementById('verd1').className='verdict ok';
+     document.getElementById('verd1').innerHTML='\u2713 Tu connais les cinq maillons. L\u2019électricité voyage toujours '+
+      'dans cet ordre : on produit, on élève la tension pour transporter sans pertes, on transporte, on abaisse, on distribue. '+
+      'Et à l\u2019autre bout, c\u2019est le consommateur qui commande : la production doit s\u2019adapter à lui, jamais l\u2019inverse.';
+     reussir(1,2);
+    },2200); return;
+  }}
+  setTimeout(()=>{ flash1=null; },2400);
+ });
+ /* ---- A3 : incidents ---- */
+ const cv3=document.getElementById('cv3'), c3=cv3.getContext('2d');
+ const INC=[
+  {titre:'ALERTE — la fréquence chute à 49,7 Hz',
+   sous:'La consommation vient de bondir : il manque de la production.',
+   f0:50, f1:49.7, bon:'centrale',
+   ok:'Il faut AUGMENTER la production : on démarre un moyen pilotable. Une fréquence qui chute signale toujours qu\u2019on consomme plus qu\u2019on ne produit.',
+   ko:'Non. Une fréquence trop basse veut dire qu\u2019il manque de la production : agir sur le transport ou la distribution n\u2019y changera rien.'},
+  {titre:'ALERTE — surcharge sur la ligne 400 kV',
+   sous:'Le courant dépasse la limite thermique des câbles : ils chauffent et s\u2019allongent.',
+   f0:50, f1:50, bon:'ligne',
+   ok:'C\u2019est bien la LIGNE qu\u2019il faut soulager : on réoriente le flux vers un autre chemin du réseau maillé. Une ligne trop chargée chauffe, s\u2019allonge et finit par toucher la végétation.',
+   ko:'Non. Ici la fréquence est bonne : l\u2019équilibre production-consommation est correct. Le problème est un problème de TRANSPORT.'},
+  {titre:'ALERTE — la ville dépasse la puissance souscrite',
+   sous:'Pointe de 19 h : tout le monde allume en même temps.',
+   f0:50, f1:49.85, bon:'ville',
+   ok:'Quand plus aucune réserve n\u2019est disponible, on agit sur la CONSOMMATION : effacement, délestage, ou signal tarifaire pour décaler les usages. Agir sur la demande est le dernier levier — mais c\u2019est un vrai levier.',
+   ko:'Non. Toutes les réserves de production sont déjà engagées : c\u2019est du côté de la demande qu\u2019il faut agir.'}];
+ let i3=0, essais3=0, flash3=null, fini3=false, animF=0;
+ cv3.addEventListener('click',ev=>{
+  if(fini3||flash3)return;
+  const o=clique(cv3,ev,360); if(!o)return;
+  const inc=INC[i3];
+  const juste = o.id===inc.bon;
+  if(!juste) essais3++;
+  flash3={o, l1: juste?'\u2713 Bonne manœuvre':'\u2717 Mauvaise cible', l2: juste?inc.ok:inc.ko};
+  setTimeout(()=>{
+   flash3=null; i3++;
+   if(i3>=INC.length){ fini3=true;
+    document.getElementById('verd3').className='verdict '+(essais3===0?'ok':'ko');
+    document.getElementById('verd3').innerHTML= (essais3===0?'\u2713 Trois incidents bien traités. ':'Trois incidents traités, '+essais3+' erreur(s). ')+
+     'Retiens la méthode du dispatcher : la FRÉQUENCE renseigne sur l\u2019équilibre production-consommation, '+
+     'la CHARGE des lignes sur le transport. Deux problèmes différents, deux leviers différents.';
+    reussir(3, essais3===0?3:(essais3===1?2:1));
+   } else { document.getElementById('cpt3').textContent='('+(i3+1)+'/3)'; }
+  },3200);
+ });
+ /* ---- boucle ---- */
+ let t=0;
+ (function boucle(){
+  t+=0.03;
+  if(document.getElementById('a1').classList.contains('on')||!fini1){
+   dessineReseau(c1,t,vus1,null,1);
+   if(flash1) bulle(c1,flash1.o,flash1.l1,flash1.l2);
+   if(!fini1&&!flash1){ c1.font='bold 13px Segoe UI'; c1.textAlign='center'; c1.fillStyle='#b45309';
+    c1.fillText('clique sur chacun des cinq éléments du réseau',430,322); }
+  }
+  if(!fini3){
+   const inc=INC[Math.min(i3,INC.length-1)];
+   dessineReseau(c3,t,null,flash3?null:inc.bon===null?null:null,1);
+   /* bandeau d'alerte + courbe de fréquence */
+   c3.fillStyle='#7f1d1d'; c3.fillRect(0,0,860,46);
+   c3.font='bold 15px Segoe UI'; c3.textAlign='left'; c3.fillStyle='#fecaca';
+   c3.fillText(inc.titre,16,22);
+   c3.font='12.5px Segoe UI'; c3.fillStyle='#fca5a5'; c3.fillText(inc.sous,16,38);
+   /* courbe */
+   c3.fillStyle='#0f172a'; c3.fillRect(596,296,250,60);
+   c3.strokeStyle='#22c55e'; c3.lineWidth=2; c3.beginPath();
+   for(let k=0;k<=60;k++){
+    const u=k/60, f = inc.f0+(inc.f1-inc.f0)*Math.min(1,Math.max(0,(u-0.35)/0.4));
+    const y=326-(f-49.6)*60;
+    if(k===0)c3.moveTo(600+u*242,y); else c3.lineTo(600+u*242,y);
+   }
+   c3.stroke();
+   c3.strokeStyle='#64748b'; c3.setLineDash([4,4]); c3.lineWidth=1;
+   c3.beginPath(); c3.moveTo(600,326-24); c3.lineTo(842,326-24); c3.stroke(); c3.setLineDash([]);
+   c3.font='bold 11px Segoe UI'; c3.textAlign='left'; c3.fillStyle='#e2e8f0';
+   c3.fillText('fréquence : '+inc.f1.toFixed(2).replace('.',',')+' Hz',604,312);
+   c3.fillStyle='#64748b'; c3.fillText('consigne 50,00',604,352);
+   c3.textAlign='center';
+   if(flash3) bulle(c3,flash3.o,flash3.l1,flash3.l2);
+   else { c3.font='bold 13px Segoe UI'; c3.fillStyle='#b45309';
+    c3.fillText('clique sur l\u2019élément du réseau à manœuvrer',330,322); }
+  }
+  requestAnimationFrame(boucle);
+ })();
+})();
 </script>
 </body>
 </html>

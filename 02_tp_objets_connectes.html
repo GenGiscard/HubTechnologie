@@ -6,7 +6,7 @@
 <title>TP 3ème — Le laboratoire des objets connectés · ESTIC</title>
 <style>
 :root{ --ink:#1e3a5f; --cyan:#0e7490; --niv:#c026d3; --niv-fonce:#a21caf; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --ombre:0 4px 14px rgba(30,58,95,.10);}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
 .estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
@@ -55,6 +55,7 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .slots .fl{font-size:20px;color:var(--orange);font-weight:800}
 .panne{background:#f8fafc;border:2px solid #cbd5e1;border-radius:14px;padding:16px;margin-bottom:12px}
 .panne.resolue{border-color:var(--vert);background:#f0fdf4}
+.panne.ratee{border-color:#dc2626;background:#fef2f2}
 .panne .symptome{font-size:15px;font-weight:700;line-height:1.5}
 .panne .symptome .em{font-size:24px;margin-right:6px}
 .blocs-diag{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
@@ -81,117 +82,188 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 .codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#a21caf,#0e7490);border-radius:14px;padding:22px;color:#fff}
 .codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
 .codefinal a{color:#fde68a;font-weight:800}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:60px;height:60px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:12px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;font-size:19px;letter-spacing:1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+.rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
+.cahiernote b{color:#c2410c;letter-spacing:1px;display:block;margin-bottom:4px;font-size:13px}
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
 </style>
 </head>
 <body>
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
 <header class="tp">
-  <h1>🔧 TP — Le laboratoire des objets connectés</h1>
-  <p>Le labo t'embauche comme expert : des objets connectés qui déraillent arrivent sur ta table. 7 missions — à la fin : le code des jeux !</p>
+ <h1>TP — Le laboratoire des objets connectés</h1>
+ <p>Le labo t'embauche comme expert : des objets connectés qui déraillent arrivent sur ta table. 10 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
-  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
-  <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
-  <div class="score">⭐ <span id="scoreTot">0</span> pts</div>
+ <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div><div class="seg" data-a="10"></div>
+ <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ============ A1 : QUI SUIS-JE ============ -->
 <div class="acti" id="a1">
  <div class="boite">
-  <h2><span class="badge">1</span>Le vocabulaire de l'expert</h2>
-  <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! (1 pt par bonne réponse du premier coup)</div>
-  <div class="minicas" id="cas1"></div>
+ <h2><span class="badge">1</span>Le vocabulaire de l'expert</h2>
+ <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! <b>Attention : une seule tentative par question</b> — lis bien avant de cliquer ! (1 pt par bonne réponse)</div>
+ <div class="minicas" id="cas1"></div>
  </div>
 </div>
 
 <!-- ============ A2 : LE TRAJET D'UNE MESURE ============ -->
 <div class="acti" id="a2">
  <div class="boite">
-  <h2><span class="badge">2</span>Remets le trajet de la mesure en ordre</h2>
-  <div class="consigne">Du battement de cœur à l'écran de l'appli : clique les 4 étapes <b>dans l'ordre</b>.</div>
-  <div class="ordre" id="blocs2"></div>
-  <div class="slots" id="slots2">
-    <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
-    <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
-    <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
-    <div class="slot" data-i="3">4ème</div>
-  </div>
-  <div class="btnrow"><button class="btn" id="verif2">✔ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
-  <div class="verdict" id="verd2"></div>
+ <h2><span class="badge">2</span>Remets le trajet de la mesure en ordre</h2>
+ <div class="consigne">Du battement de cœur à l'écran de l'appli : clique les 4 étapes <b>dans l'ordre</b>.</div>
+ <div class="ordre" id="blocs2"></div>
+ <div class="slots" id="slots2">
+ <div class="slot" data-i="0">1ère</div><span class="fl">→</span>
+ <div class="slot" data-i="1">2ème</div><span class="fl">→</span>
+ <div class="slot" data-i="2">3ème</div><span class="fl">→</span>
+ <div class="slot" data-i="3">4ème</div>
+ </div>
+ <div class="btnrow"><button class="btn" id="verif2">✓ Vérifier</button><button class="btn" id="reset2" style="background:#64748b">↺ Recommencer</button></div>
+ <div class="verdict" id="verd2"></div>
  </div>
 </div>
 
 <!-- ============ A3 : EXPERTISES ============ -->
 <div class="acti" id="a3">
  <div class="boite">
-  <h2><span class="badge">3</span>Trois objets sur la table de dissection !</h2>
-  <div class="consigne">🔬 Trois objets connectés déraillent. Pour chacun, identifie l'organe fautif et clique la <b>bonne intervention</b>. (Les erreurs se corrigent, mais chaque expertise juste du premier coup rapporte plus !)</div>
-  <div id="pannes3"></div>
-  <div class="verdict" id="verd3"></div>
+ <h2><span class="badge">3</span>Trois objets sur la table de dissection !</h2>
+ <div class="consigne">Trois objets connectés déraillent. Pour chacun, identifie l'organe fautif et clique la <b>bonne intervention</b>. <b>Une seule tentative par expertise</b> : observe et réfléchis avant de cliquer !</div>
+ <div id="pannes3"></div>
+ <div class="verdict" id="verd3"></div>
  </div>
 </div>
 
 <!-- ============ A4 : L'AUTONOMIE ============ -->
 <div class="acti" id="a4">
  <div class="boite">
-  <h2><span class="badge">4</span>L'autonomie de la montre</h2>
-  <div class="consigne">🔋 La batterie de la montre stocke <b>300 mAh</b>. La montre consomme <b>20 mAh par jour</b>. Combien de jours tient-elle sans recharge ?</div>
-  <div class="rappel">📐 Rappel : autonomie = capacité de la batterie ÷ consommation par jour</div>
-  <div class="calczone">
-    <span>autonomie =</span>
-    <input type="number" id="rep4" step="any" placeholder="?">
-    <span class="unite">jours</span>
-    <button class="btn" id="verif4">✔ Vérifier</button>
-  </div>
-  <div class="verdict" id="verd4"></div>
+ <h2><span class="badge">4</span>L'autonomie de la montre</h2>
+ <div class="consigne">La batterie de la montre stocke <b>300 mAh</b>. La montre consomme <b>20 mAh par jour</b>. Combien de jours tient-elle sans recharge ?</div>
+ <div class="rappel">Rappel : autonomie = capacité de la batterie ÷ consommation par jour</div>
+ <div class="calczone">
+ <span>autonomie =</span>
+ <input type="number" id="rep4" step="any" placeholder="?">
+ <span class="unite">jours</span>
+ <button class="btn" id="verif4">✓ Vérifier</button>
+ </div>
+ <div class="verdict" id="verd4"></div>
  </div>
 </div>
 
 <!-- ============ A5 : SCHEMA ============ -->
 <div class="acti" id="a5">
  <div class="boite">
-  <h2><span class="badge">5</span>La chaîne de l’objet connecté</h2>
-  <div class="consigne">🗺️ Le détecteur de fuite d'eau veille sous l'évier — suis la mesure qui monte au cloud et l'alerte qui redescend ! Clique une étiquette, puis le maillon correspondant. Place les 4 étiquettes.</div>
-  <canvas class="canvatp" id="cv5" width="860" height="300"></canvas>
-  <div class="etiqbar" id="etiq5"></div>
-  <div id="verd5"></div>
+ <h2><span class="badge">5</span>La chaîne de l’objet connecté</h2>
+ <div class="consigne"><b>Chaque erreur coûte des points.</b>Le détecteur de fuite d'eau veille sous l'évier — suis la mesure qui monte au cloud et l'alerte qui redescend ! Clique une étiquette, puis le maillon correspondant. Place les 4 étiquettes.</div>
+ <canvas class="canvatp" id="cv5" width="860" height="300"></canvas>
+ <div class="etiqbar" id="etiq5"></div>
+ <div id="verd5"></div>
  </div>
 </div>
 
 <!-- ============ A6 : MANIPULATION ============ -->
 <div class="acti" id="a6">
  <div class="boite">
-  <h2><span class="badge">6</span>Règle la fréquence de mesure</h2>
-  <div class="consigne">🎛️ Le capteur tourne sur pile bouton. Règle combien de mesures il envoie par heure : il doit détecter une fuite en <b>moins de 10 min</b>… et la pile doit tenir <b>au moins 12 mois</b> !</div>
-  <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
-  <div class="sliderrow">
-    <span>📶 Mesures :</span>
-    <input type="range" id="slider6" min="1" max="60" step="1" value="30">
-    <span class="val"><span id="val6">30</span> /heure</span>
-    <button class="btn" id="verif6">✔ Valider ce réglage</button>
-  </div>
-  <div id="verd6"></div>
+ <h2><span class="badge">6</span>Règle la fréquence de mesure</h2>
+ <div class="consigne">Le capteur tourne sur pile bouton. Règle combien de mesures il envoie par heure : il doit détecter une fuite en <b>moins de 10 min</b>… et la pile doit tenir <b>au moins 12 mois</b> !</div>
+ <canvas class="canvatp" id="cv6" width="860" height="280" style="cursor:default"></canvas>
+ <div class="sliderrow">
+ <span>Mesures :</span>
+ <input type="range" id="slider6" min="1" max="60" step="1" value="30">
+ <span class="val"><span id="val6">30</span> /heure</span>
+ <button class="btn" id="verif6">✓ Valider ce réglage</button>
+ </div>
+ <div id="verd6"></div>
  </div>
 </div>
 
-<!-- ============ A7 : BILAN ============ -->
+
+<!-- ============ A7 : EXPLIQUER ============ -->
 <div class="acti" id="a7">
- <div class="boite">
-  <h2><span class="badge">7</span>Bilan de l'expert</h2>
-  <div class="consigne">Au moins <b>3 bonnes réponses sur 4</b> pour obtenir le code des jeux.</div>
-  <div id="quiz5"></div>
-  <div class="codefinal" id="codefinal">
-    🏆 Aucun objet connecté ne te résiste : te voilà expert certifié du laboratoire !
-    <div class="code">CAPTEUR8</div>
-    <div>Entre ce code dans les jeux <a href="03_jeu_capteur_rush.html">🎮 Capteur Rush</a> et <a href="03b_jeu_maison_connectee.html">🏠 Maison connectée</a> pour les déverrouiller.</div>
+  <div class="boite">
+    <h2><span class="badge">7</span>Expliquer la chaîne de l’objet connecté</h2>
+    <div class="consigne">Trois questions de raisonnement. Réponds par une <b>phrase complète</b>.</div>
+    <div class="cahiernote"><b>SUR TON CAHIER</b> — rédige au brouillon avant de recopier.</div>
+    <div id="champs7"></div>
+    <div class="btnrow"><button class="btn" id="verif7">Valider mes explications</button></div>
+    <div id="verd7"></div>
   </div>
+</div>
+<!-- ============ A8 : CALCULER ============ -->
+<div class="acti" id="a8">
+  <div class="boite">
+    <h2><span class="badge">8</span>Calculer l’autonomie du capteur</h2>
+    <div class="consigne">Le capteur envoie <b>8 mesures par heure</b>. Chaque envoi consomme <b>0,05 mAh</b>, et la veille consomme <b>0,4 mAh par jour</b>. Sa pile contient <b>620 mAh</b>.</div>
+    <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
+    <div id="champs8"></div>
+    <div class="btnrow"><button class="btn" id="verif8">Valider mes calculs</button></div>
+    <div id="verd8"></div>
+  </div>
+</div>
+<!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
+<div class="acti" id="a9">
+  <div class="boite">
+    <h2><span class="badge">9</span>Tracer la chaîne IoT</h2>
+    <div class="consigne">Reconstruis de mémoire la chaîne que tu as légendée à la mission 5.</div>
+    <div class="cahiernote"><b>SUR TON CAHIER</b> — trace la chaîne complète de l’objet connecté, de la mesure à la notification : quatre cadres reliés par des flèches, avec au-dessus de chaque flèche le moyen de transmission utilisé (radio, internet, notification). Ajoute sous chaque cadre ce qu’il fait en un verbe.</div>
+    <canvas class="canvatp" id="cv9" width="860" height="300" style="cursor:default"></canvas>
+    <div id="champs9"></div>
+    <div class="btnrow"><button class="btn" id="verif9">Valider mon travail</button></div>
+    <div id="verd9"></div>
+  </div>
+</div>
+
+<!-- ============ A10 : BILAN ============ -->
+<div class="acti" id="a10">
+ <div class="boite">
+ <h2><span class="badge">10</span>Bilan de l'expert</h2>
+ <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
+ <div id="quiz5"></div>
+ <div class="codefinal" id="codefinal">
+ Aucun objet connecté ne te résiste : te voilà expert certifié du laboratoire !
+ <div class="code">CAPTEUR8</div>
+ <div>Entre ce code dans les jeux <a href="03_jeu_capteur_rush.html">Capteur Rush</a>et <a href="03b_jeu_maison_connectee.html">Maison connectée</a>pour les déverrouiller.</div>
+ </div>
  </div>
 </div>
 
@@ -201,325 +273,340 @@ const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
 function sauver(){ try{ localStorage.setItem('tp_objets_3e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
 function charger(){ try{ const d=JSON.parse(localStorage.getItem('tp_objets_3e_v2')); if(d){etat.debloque=d.d;etat.score=d.s;} }catch(e){} }
 function majProgression(){
-  document.querySelectorAll('.progression .seg').forEach(seg=>{
-    const n=+seg.dataset.a;
-    seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
-  });
-  document.getElementById('scoreTot').textContent=etat.score;
-  for(let n=2;n<=7;n++){
-    const acti=document.getElementById('a'+n);
-    let v=acti.querySelector('.verrou');
-    if(n>etat.debloque){
-      if(!v){ v=document.createElement('div'); v.className='verrou';
-        v.innerHTML='<div class="cadenas">🔒</div>Termine la mission '+(n-1)+' pour déverrouiller';
-        acti.querySelector('.boite').appendChild(v); }
-    } else if(v) v.remove();
-  }
+ document.querySelectorAll('.progression .seg').forEach(seg=>{
+ const n=+seg.dataset.a;
+ seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
+ });
+ document.getElementById('scoreTot').textContent=etat.score;
+ for(let n=2;n<=10;n++){
+ const acti=document.getElementById('a'+n);
+ let v=acti.querySelector('.verrou');
+ if(n>etat.debloque){
+ if(!v){ v=document.createElement('div'); v.className='verrou';
+ v.innerHTML='<div class="cadenas"></div>Termine la mission '+(n-1)+' pour déverrouiller';
+ acti.querySelector('.boite').appendChild(v); }
+ } else if(v) v.remove();
+ }
 }
 function reussir(n,pts){
-  etat.score+=pts;
-  if(etat.debloque===n) etat.debloque=n+1;
-  sauver(); majProgression();
-  if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ etat.score+=pts;
+ if(etat.debloque===n) etat.debloque=n+1;
+ sauver(); majProgression();
+ if(n<10) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
 const CAS1=[
- {devinette:'🌡️ « Je transforme le monde réel en nombres : température, pouls, lumière, mouvement… Sans moi, l\u2019objet est aveugle. »', bonne:'un capteur', autres:['un actionneur']},
- {devinette:'⚙️ « Moteur, radiateur, vibreur… Quand le micro-ordinateur donne un ordre, c\u2019est MOI qui passe à l\u2019action physique. »', bonne:'un actionneur', autres:['une antenne']},
- {devinette:'🗄️ « Je suis l\u2019ensemble des SERVEURS distants d\u2019une entreprise, où atterrissent tes données — parfois à des milliers de kilomètres. »', bonne:'le cloud', autres:['le Bluetooth']},
- {devinette:'📡 « Liaison sans fil à COURTE portée, je relie la montre au smartphone qui est dans ta poche. »', bonne:'le Bluetooth', autres:['la fibre optique']},
+ {devinette:' « Je transforme le monde réel en nombres : température, pouls, lumière, mouvement… Sans moi, l\u2019objet est aveugle. »', bonne:'un capteur', autres:['un actionneur']},
+ {devinette:' « Moteur, radiateur, vibreur… Quand le micro-ordinateur donne un ordre, c\u2019est MOI qui passe à l\u2019action physique. »', bonne:'un actionneur', autres:['une antenne']},
+ {devinette:' « Je suis l\u2019ensemble des SERVEURS distants d\u2019une entreprise, où atterrissent tes données — parfois à des milliers de kilomètres. »', bonne:'le cloud', autres:['le Bluetooth']},
+ {devinette:' « Liaison sans fil à COURTE portée, je relie la montre au smartphone qui est dans ta poche. »', bonne:'le Bluetooth', autres:['la fibre optique']},
 ];
 (function initA1(){
-  const zone=document.getElementById('cas1');
-  CAS1.forEach(cas=>{
-    const d=document.createElement('div'); d.className='cas';
-    d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
-    const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
-    let premier=true, fait=false;
-    [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
-      const b=document.createElement('button'); b.textContent=rep;
-      b.onclick=()=>{
-        if(fait) return;
-        if(rep===cas.bonne){
-          fait=true; d.classList.remove('faux'); d.classList.add('bon');
-          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          etat.q1ok++;
-          if(etat.q1ok===CAS1.length) reussir(1,2);
-        } else { d.classList.add('faux'); premier=false; }
-      };
-      ch.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('cas1');
+ CAS1.forEach(cas=>{
+ const d=document.createElement('div'); d.className='cas';
+ d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
+ const ch=document.createElement('div'); ch.className='choix'; d.appendChild(ch);
+ let premier=true, fait=false;
+ [cas.bonne,...cas.autres].sort(()=>0.5-Math.random()).forEach(rep=>{
+ const b=document.createElement('button'); b.textContent=rep;
+ b.onclick=()=>{
+ if(fait) return;
+ if(rep===cas.bonne){
+ fait=true; d.classList.remove('faux'); d.classList.add('bon');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ } else {
+ fait=true; premier=false;
+ d.classList.add('faux'); b.classList.add('faux');
+ ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+ etat.q1ok++;
+ if(etat.q1ok===CAS1.length) reussir(1,2);
+ }
+ };
+ ch.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A2 : LE TRAJET D'UNE MESURE ================= */
 const BLOCS2=[
- {id:1,t:'🌡️ Le capteur mesure',s:'le battement devient un nombre : 72 bpm'},
- {id:0,t:'🧠 Le micro-ordinateur traite',s:'il compare, calcule, décide'},
- {id:2,t:'📡 L\u2019antenne envoie',s:'Bluetooth vers le smartphone, puis le cloud'},
- {id:3,t:'📊 L\u2019appli affiche',s:'tes courbes redescendent du cloud'},
+ {id:1,t:' Le capteur mesure',s:'le battement devient un nombre : 72 bpm'},
+ {id:0,t:' Le micro-ordinateur traite',s:'il compare, calcule, décide'},
+ {id:2,t:' L\u2019antenne envoie',s:'Bluetooth vers le smartphone, puis le cloud'},
+ {id:3,t:' L\u2019appli affiche',s:'tes courbes redescendent du cloud'},
 ];
 const BON2=[1,0,2,3];
-let choix2=[], a2fait=false;
+let choix2=[], a2fait=false, essais2=0, err5=0, essais6=0, bons3=0;
 function initA2(){
-  choix2=[];
-  const zone=document.getElementById('blocs2'); zone.innerHTML='';
-  BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
-    const btn=document.createElement('button');
-    btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
-    btn.onclick=()=>{
-      if(btn.classList.contains('pris')||choix2.length>=4) return;
-      btn.classList.add('pris'); choix2.push(b.id);
-      const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
-      slot.textContent=b.t; slot.classList.add('rempli');
-    };
-    zone.appendChild(btn);
-  });
-  document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
-  document.getElementById('verd2').className='verdict';
+ choix2=[];
+ const zone=document.getElementById('blocs2'); zone.innerHTML='';
+ BLOCS2.slice().sort(()=>0.5-Math.random()).forEach(b=>{
+ const btn=document.createElement('button');
+ btn.innerHTML=b.t+'<small>'+b.s+'</small>'; btn.dataset.id=b.id;
+ btn.onclick=()=>{
+ if(btn.classList.contains('pris')||choix2.length>=4) return;
+ btn.classList.add('pris'); choix2.push(b.id);
+ const slot=document.querySelector('#slots2 .slot[data-i="'+(choix2.length-1)+'"]');
+ slot.textContent=b.t; slot.classList.add('rempli');
+ };
+ zone.appendChild(btn);
+ });
+ document.querySelectorAll('#slots2 .slot').forEach((s,i)=>{ s.textContent=['1ère','2ème','3ème','4ème'][i]; s.classList.remove('rempli'); });
+ document.getElementById('verd2').className='verdict';
 }
 document.getElementById('reset2').onclick=initA2;
 document.getElementById('verif2').onclick=()=>{
-  const verd=document.getElementById('verd2');
-  if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
-  if(choix2.join()===BON2.join()){
-    verd.className='verdict ok';
-    if(!a2fait){ a2fait=true; verd.textContent='✅ Parfait : mesurer → traiter → communiquer → afficher. La chaîne complète d\u2019un objet connecté — chaque organe a son tour ! (+3 pts)'; reussir(2,3); }
-    else verd.textContent='✅ Bon ordre !';
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ La chaîne est emmêlée. Réfléchis : peut-on envoyer une mesure… avant de l\u2019avoir mesurée ? Qui décide avant que l\u2019antenne parle ? Recommence !';
-  }
+ const verd=document.getElementById('verd2');
+ if(choix2.length<4){ verd.className='verdict ko'; verd.textContent='Place les 4 étapes avant de vérifier !'; return; }
+ essais2++;
+ if(choix2.join()===BON2.join()){
+ verd.className='verdict ok';
+ if(!a2fait){ a2fait=true; verd.textContent='✓ Parfait : mesurer → traiter → communiquer → afficher. La chaîne complète d\u2019un objet connecté — chaque organe a son tour ! (+3 pts)'; reussir(2, essais2<=1?3:(essais2===2?2:1)); }
+ else verd.textContent='✓ Bon ordre !';
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ La chaîne est emmêlée. Réfléchis : peut-on envoyer une mesure… avant de l\u2019avoir mesurée ? Qui décide avant que l\u2019antenne parle ? Recommence !';
+ }
 };
 initA2();
 
 /* ================= A3 : EXPERTISES ================= */
 const PANNES=[
  {em:'⌚', symptome:'Objet n°1 — La montre affiche 250 bpm ALORS QUE son propriétaire est tranquillement assis dans le canapé. Le smartphone reçoit bien les données.',
-  bon:'capteur', exp:'les données CIRCULENT (le smartphone les reçoit)… mais elles sont ABSURDES : l\u2019organe qui mesure est fautif. Capteur encrassé ou mal plaqué contre la peau : le nettoyer et resserrer le bracelet.'},
- {em:'🔇', symptome:'Objet n°2 — L\u2019appli n\u2019affiche PLUS RIEN depuis ce matin… pourtant la montre elle-même fonctionne et affiche le pouls correctement à l\u2019écran.',
-  bon:'communication', exp:'la mesure existe (la montre l\u2019affiche !) mais elle n\u2019arrive plus à l\u2019appli : c\u2019est la COMMUNICATION qui est coupée — Bluetooth désactivé ou smartphone en mode avion. Réactiver la liaison.'},
- {em:'🎤', symptome:'Objet n°3 — L\u2019enceinte connectée du salon s\u2019active TOUTE SEULE plusieurs fois par jour et envoie des enregistrements au cloud sans qu\u2019on lui ait parlé.',
-  bon:'confidentialite', exp:'l\u2019enceinte écoute en permanence son mot d\u2019activation et se déclenche par erreur : régler la sensibilité, COUPER LE MICRO quand on ne s\u2019en sert pas, et vérifier les paramètres de confidentialité. Tes conversations n\u2019ont rien à faire dans le cloud !'},
+ bon:'capteur', exp:'les données CIRCULENT (le smartphone les reçoit)… mais elles sont ABSURDES : l\u2019organe qui mesure est fautif. Capteur encrassé ou mal plaqué contre la peau : le nettoyer et resserrer le bracelet.'},
+ {em:'', symptome:'Objet n°2 — L\u2019appli n\u2019affiche PLUS RIEN depuis ce matin… pourtant la montre elle-même fonctionne et affiche le pouls correctement à l\u2019écran.',
+ bon:'communication', exp:'la mesure existe (la montre l\u2019affiche !) mais elle n\u2019arrive plus à l\u2019appli : c\u2019est la COMMUNICATION qui est coupée — Bluetooth désactivé ou smartphone en mode avion. Réactiver la liaison.'},
+ {em:'', symptome:'Objet n°3 — L\u2019enceinte connectée du salon s\u2019active TOUTE SEULE plusieurs fois par jour et envoie des enregistrements au cloud sans qu\u2019on lui ait parlé.',
+ bon:'confidentialite', exp:'l\u2019enceinte écoute en permanence son mot d\u2019activation et se déclenche par erreur : régler la sensibilité, COUPER LE MICRO quand on ne s\u2019en sert pas, et vérifier les paramètres de confidentialité. Tes conversations n\u2019ont rien à faire dans le cloud !'},
 ];
 const REMEDES=[
- {id:'capteur', t:'🌡️ Nettoyer / repositionner le capteur'},
- {id:'communication', t:'📡 Rétablir la liaison Bluetooth'},
- {id:'confidentialite', t:'🔒 Régler la confidentialité, couper le micro'},
- {id:'ecran', t:'🖥️ Changer l\u2019écran'},
+ {id:'capteur', t:' Nettoyer / repositionner le capteur'},
+ {id:'communication', t:' Rétablir la liaison Bluetooth'},
+ {id:'confidentialite', t:' Régler la confidentialité, couper le micro'},
+ {id:'ecran', t:' Changer l\u2019écran'},
 ];
 let diag3=0, a3fait=false;
 (function initA3(){
-  const zone=document.getElementById('pannes3');
-  const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
-  ordre3.forEach(pi=>{
-    const P=PANNES[pi];
-    const d=document.createElement('div'); d.className='panne';
-    d.innerHTML='<div class="symptome"><span class="em">'+P.em+'</span>'+P.symptome+'</div>';
-    const blocs=document.createElement('div'); blocs.className='blocs-diag'; d.appendChild(blocs);
-    const fb=document.createElement('div'); fb.className='verdict'; d.appendChild(fb);
-    let resolu=false, premier=true;
-    REMEDES.slice().sort(()=>0.5-Math.random()).forEach(r=>{
-      const b=document.createElement('button'); b.textContent=r.t; b.dataset.b=r.id;
-      b.onclick=()=>{
-        if(resolu) return;
-        if(r.id===P.bon){
-          resolu=true; d.classList.add('resolue');
-          blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
-          fb.className='verdict ok';
-          fb.textContent='✅ Bien vu'+(premier?' du premier coup (+1 pt bonus)':'')+' : '+P.exp;
-          if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-          diag3++;
-          if(diag3===PANNES.length && !a3fait){ a3fait=true;
-            const verd=document.getElementById('verd3');
-            verd.className='verdict ok';
-            verd.textContent='🏆 Trois expertises réussies ! Données absurdes = capteur ; données bloquées = communication ; données trop bavardes = confidentialité. Localiser l\u2019organe fautif dans la chaîne, c\u2019est TOUT l\u2019art de l\u2019expert. (+4 pts)';
-            reussir(3,4);
-          }
-        } else {
-          premier=false;
-          fb.className='verdict ko';
-          fb.textContent='❌ Cette intervention ne colle pas aux indices… Relis : les données sont-elles FAUSSES, BLOQUÉES en route, ou envoyées SANS raison ?';
-        }
-      };
-      blocs.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('pannes3');
+ const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
+ ordre3.forEach(pi=>{
+ const P=PANNES[pi];
+ const d=document.createElement('div'); d.className='panne';
+ d.innerHTML='<div class="symptome"><span class="em">'+P.em+'</span>'+P.symptome+'</div>';
+ const blocs=document.createElement('div'); blocs.className='blocs-diag'; d.appendChild(blocs);
+ const fb=document.createElement('div'); fb.className='verdict'; d.appendChild(fb);
+ let resolu=false, premier=true;
+ REMEDES.slice().sort(()=>0.5-Math.random()).forEach(r=>{
+ const b=document.createElement('button'); b.textContent=r.t; b.dataset.b=r.id;
+ b.onclick=()=>{
+ if(resolu) return;
+ if(r.id===P.bon){
+ resolu=true; d.classList.add('resolue');
+ bons3++;
+ blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
+ fb.className='verdict ok';
+ fb.textContent='✓ Bien vu'+(premier?' du premier coup (+1 pt bonus)':'')+' : '+P.exp;
+ if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
+ diag3++;
+ if(diag3===PANNES.length && !a3fait){ a3fait=true;
+ const verd=document.getElementById('verd3');
+ verd.className='verdict ok';
+ verd.textContent=' Trois expertises réussies ! Données absurdes = capteur ; données bloquées = communication ; données trop bavardes = confidentialité. Localiser l\u2019organe fautif dans la chaîne, c\u2019est TOUT l\u2019art de l\u2019expert. (+4 pts)';
+ reussir(3, Math.max(1,bons3+1));
+ }
+ } else {
+ premier=false;
+ fb.className='verdict ko';
+ fb.textContent='✗ Cette intervention ne colle pas aux indices… Relis : les données sont-elles FAUSSES, BLOQUÉES en route, ou envoyées SANS raison ?';
+ resolu=true; premier=false;
+ d.classList.add('ratee');
+ blocs.querySelectorAll('button').forEach(x=>x.disabled=true);
+ diag3++;
+ if(diag3===PANNES.length && !a3fait){ a3fait=true; reussir(3, Math.max(1,bons3+1)); }
+ }
+ };
+ blocs.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
 })();
 
 /* ================= A4 : L'AUTONOMIE ================= */
 let a4fait=false;
 document.getElementById('verif4').onclick=()=>{
-  const verd=document.getElementById('verd4');
-  const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
-  if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
-  if(Math.abs(v-15)<=0.5){
-    verd.className='verdict ok';
-    verd.innerHTML='✅ 300 ÷ 20 = 15 jours ! Et si on active le GPS en continu, la consommation triple… autonomie divisée par trois : 5 jours. La batterie est LA contrainte de conception n°1 des objets connectés.'+(a4fait?'':' (+4 pts)');
-    if(!a4fait){ a4fait=true; reussir(4,4); }
-  } else {
-    verd.className='verdict ko';
-    verd.textContent='❌ Pas ça. Divise la capacité de la batterie (300 mAh) par ce qu\u2019elle dépense chaque jour (20 mAh).';
-  }
+ const verd=document.getElementById('verd4');
+ const v=parseFloat(String(document.getElementById('rep4').value).replace(',','.'));
+ if(isNaN(v)){ verd.className='verdict ko'; verd.textContent='Entre un nombre !'; return; }
+ if(Math.abs(v-15)<=0.5){
+ verd.className='verdict ok';
+ verd.innerHTML='✓ 300 ÷ 20 = 15 jours ! Et si on active le GPS en continu, la consommation triple… autonomie divisée par trois : 5 jours. La batterie est LA contrainte de conception n°1 des objets connectés.'+(a4fait?'':' (+4 pts)');
+ if(!a4fait){ a4fait=true; reussir(4,4); }
+ } else {
+ verd.className='verdict ko';
+ verd.textContent='✗ Pas ça. Divise la capacité de la batterie (300 mAh) par ce qu\u2019elle dépense chaque jour (20 mAh).';
+ }
 };
 
 /* ================= A5 : SCHEMA A LEGENDER ================= */
 (function(){
-  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
-  const ZONES=[
-    {id:'capteur',x:70,  y:150, w:110, h:100, lbl:'LE CAPTEUR (L\u2019OBJET)',      tx:125, ty:140},
-    {id:'passerelle',x:290,y:140, w:110, h:80, lbl:'LA PASSERELLE (BOX)',           tx:345, ty:130},
-    {id:'cloud',  x:470, y:40,  w:140, h:90,  lbl:'LE CLOUD (SERVEUR)',             tx:540, ty:30},
-    {id:'appli',  x:680, y:150, w:90,  h:130, lbl:'L\u2019APPLICATION (SMARTPHONE)', tx:725, ty:140},
-  ];
-  const poses={}; let sel=null, t=0;
-  function dessiner(){
-    t+=0.02;
-    ctx.clearRect(0,0,860,300);
-    // évier + capteur
-    ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.moveTo(70,170); ctx.lineTo(190,170); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(100,170); ctx.lineTo(100,150); ctx.moveTo(100,150); ctx.lineTo(120,150); ctx.stroke();
-    const g=(t*0.8)%1;
-    ctx.fillStyle='#3b82f6';
-    ctx.beginPath(); ctx.arc(120,156+g*60,4,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#0e7490'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.roundRect(96,218,60,28,8); ctx.fill(); ctx.stroke();
-    ctx.fillStyle= Math.sin(t*3)>0.6 ? '#22c55e' : '#dcfce7';
-    ctx.beginPath(); ctx.arc(112,232,5,0,Math.PI*2); ctx.fill();
-    ctx.font='bold 9px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#0e7490';
-    ctx.fillText('pile bouton',126,262);
-    // passerelle
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.roundRect(302,156,86,46,10); ctx.fill(); ctx.stroke();
-    ctx.fillStyle='#7c3aed';
-    ctx.beginPath(); ctx.arc(345,178,4,0,Math.PI*2); ctx.fill();
-    // cloud
-    ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#0284c7'; ctx.lineWidth=2.5;
-    ctx.beginPath();
-    ctx.arc(510,95,26,Math.PI*0.5,Math.PI*1.5);
-    ctx.arc(540,75,30,Math.PI*0.9,Math.PI*1.9);
-    ctx.arc(575,95,26,Math.PI*1.5,Math.PI*0.5);
-    ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.font='bold 11px Segoe UI'; ctx.fillStyle='#0284c7';
-    ctx.fillText('serveur',540,100);
-    // smartphone + notification
-    ctx.fillStyle='#0f172a';
-    ctx.beginPath(); ctx.roundRect(692,160,66,112,10); ctx.fill();
-    ctx.fillStyle='#38bdf8'; ctx.fillRect(698,168,54,96);
-    if(Math.sin(t*2)>0){ ctx.fillStyle='#dc2626';
-      ctx.beginPath(); ctx.roundRect(702,176,46,20,5); ctx.fill();
-      ctx.fillStyle='#fff'; ctx.font='bold 9px Segoe UI';
-      ctx.fillText('\ud83d\udca7 fuite !',725,190); }
-    // ondes : capteur->passerelle->cloud->appli
-    ctx.fillStyle='#ea580c';
-    for(let i=0;i<2;i++){ const p=((t*0.45)+i/2)%1;
-      if(p<0.33){ const u=p/0.33; ctx.beginPath(); ctx.arc(156+u*(302-156),230-u*52,4,0,Math.PI*2); ctx.fill(); }
-      else if(p<0.66){ const u=(p-0.33)/0.33; ctx.beginPath(); ctx.arc(388+u*(510-388),178-u*80,4,0,Math.PI*2); ctx.fill(); }
-      else { const u=(p-0.66)/0.34; ctx.beginPath(); ctx.arc(575+u*(700-575),110+u*70,4,0,Math.PI*2); ctx.fill(); } }
-    ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
-    ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  const bar=document.getElementById('etiq5');
-  ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
-    const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
-    b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
-      bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
-    bar.appendChild(b);
-  });
-  cv.addEventListener('click',e=>{
-    if(!sel) return;
-    const r=cv.getBoundingClientRect();
-    const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
-    const cible=ZONES.find(z=> x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
-    const verd=document.getElementById('verd5');
-    if(cible && cible.id===sel){
-      poses[sel]=true;
-      const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
-      sel=null;
-      if(Object.keys(poses).length===ZONES.length){
-        verd.innerHTML='<div class="verdict ok">✅ Chaîne IoT complète ! Le CAPTEUR mesure sous l\u2019évier (sur pile, en radio basse conso), la PASSERELLE relaie vers Internet, le CLOUD stocke et analyse (c\u2019est là que la décision se prend), et l\u2019APPLICATION t\u2019alerte où que tu sois. Un objet « connecté », c\u2019est un objet + toute cette chaîne invisible — coupe UN maillon et la notification n\u2019arrive jamais. (+3 pts)</div>';
-        reussir(5,3);
-      }
-    } else if(cible){
-      verd.innerHTML='<div class="verdict ko">❌ Pas là ! Indice : suis les points orange — ils partent du petit boîtier sous l\u2019évier, passent par la box violette, montent au nuage… et finissent en notification rouge sur l\u2019écran.</div>';
-    }
-  });
+ const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
+ const ZONES=[
+ {id:'capteur',x:70, y:150, w:110, h:100, lbl:'LE CAPTEUR (L\u2019OBJET)', tx:125, ty:140},
+ {id:'passerelle',x:290,y:140, w:110, h:80, lbl:'LA PASSERELLE (BOX)', tx:345, ty:130},
+ {id:'cloud', x:470, y:40, w:140, h:90, lbl:'LE CLOUD (SERVEUR)', tx:540, ty:30},
+ {id:'appli', x:680, y:150, w:90, h:130, lbl:'L\u2019APPLICATION (SMARTPHONE)', tx:725, ty:140},
+ ];
+ const poses={}; let sel=null, t=0;
+ function dessiner(){
+ t+=0.02;
+ ctx.clearRect(0,0,860,300);
+ // évier + capteur
+ ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.moveTo(70,170); ctx.lineTo(190,170); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(100,170); ctx.lineTo(100,150); ctx.moveTo(100,150); ctx.lineTo(120,150); ctx.stroke();
+ const g=(t*0.8)%1;
+ ctx.fillStyle='#3b82f6';
+ ctx.beginPath(); ctx.arc(120,156+g*60,4,0,Math.PI*2); ctx.fill();
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#0e7490'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.roundRect(96,218,60,28,8); ctx.fill(); ctx.stroke();
+ ctx.fillStyle= Math.sin(t*3)>0.6 ? '#22c55e' : '#dcfce7';
+ ctx.beginPath(); ctx.arc(112,232,5,0,Math.PI*2); ctx.fill();
+ ctx.font='bold 9px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#0e7490';
+ ctx.fillText('pile bouton',126,262);
+ // passerelle
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.roundRect(302,156,86,46,10); ctx.fill(); ctx.stroke();
+ ctx.fillStyle='#7c3aed';
+ ctx.beginPath(); ctx.arc(345,178,4,0,Math.PI*2); ctx.fill();
+ // cloud
+ ctx.fillStyle='#f1f5f9'; ctx.strokeStyle='#0284c7'; ctx.lineWidth=2.5;
+ ctx.beginPath();
+ ctx.arc(510,95,26,Math.PI*0.5,Math.PI*1.5);
+ ctx.arc(540,75,30,Math.PI*0.9,Math.PI*1.9);
+ ctx.arc(575,95,26,Math.PI*1.5,Math.PI*0.5);
+ ctx.closePath(); ctx.fill(); ctx.stroke();
+ ctx.font='bold 11px Segoe UI'; ctx.fillStyle='#0284c7';
+ ctx.fillText('serveur',540,100);
+ // smartphone + notification
+ ctx.fillStyle='#0f172a';
+ ctx.beginPath(); ctx.roundRect(692,160,66,112,10); ctx.fill();
+ ctx.fillStyle='#38bdf8'; ctx.fillRect(698,168,54,96);
+ if(Math.sin(t*2)>0){ ctx.fillStyle='#dc2626';
+ ctx.beginPath(); ctx.roundRect(702,176,46,20,5); ctx.fill();
+ ctx.fillStyle='#fff'; ctx.font='bold 9px Segoe UI';
+ ctx.fillText('\ud83d\udca7 fuite !',725,190); }
+ // ondes : capteur->passerelle->cloud->appli
+ ctx.fillStyle='#ea580c';
+ for(let i=0;i<2;i++){ const p=((t*0.45)+i/2)%1;
+ if(p<0.33){ const u=p/0.33; ctx.beginPath(); ctx.arc(156+u*(302-156),230-u*52,4,0,Math.PI*2); ctx.fill(); }
+ else if(p<0.66){ const u=(p-0.33)/0.33; ctx.beginPath(); ctx.arc(388+u*(510-388),178-u*80,4,0,Math.PI*2); ctx.fill(); }
+ else { const u=(p-0.66)/0.34; ctx.beginPath(); ctx.arc(575+u*(700-575),110+u*70,4,0,Math.PI*2); ctx.fill(); } }
+ ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
+ ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ const bar=document.getElementById('etiq5');
+ ZONES.slice().sort(()=>0.5-Math.random()).forEach(z=>{
+ const b=document.createElement('button'); b.textContent=z.lbl; b.dataset.z=z.id;
+ b.addEventListener('click',()=>{ if(b.classList.contains('pose'))return;
+ bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
+ bar.appendChild(b);
+ });
+ cv.addEventListener('click',e=>{
+ if(!sel) return;
+ const r=cv.getBoundingClientRect();
+ const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+ const cible=ZONES.find(z=>x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+ const verd=document.getElementById('verd5');
+ if(cible && cible.id===sel){
+ poses[sel]=true;
+ const b=bar.querySelector('button[data-z="'+sel+'"]'); b.classList.remove('sel'); b.classList.add('pose');
+ sel=null;
+ if(Object.keys(poses).length===ZONES.length){
+ verd.innerHTML='<div class="verdict ok">✓ Chaîne IoT complète ! Le CAPTEUR mesure sous l\u2019évier (sur pile, en radio basse conso), la PASSERELLE relaie vers Internet, le CLOUD stocke et analyse (c\u2019est là que la décision se prend), et l\u2019APPLICATION t\u2019alerte où que tu sois. Un objet « connecté », c\u2019est un objet + toute cette chaîne invisible — coupe UN maillon et la notification n\u2019arrive jamais. (+3 pts)</div>';
+ reussir(5, err5===0?3:(err5<=2?2:1));
+ }
+ } else if(cible){
+ err5++;
+ verd.innerHTML='<div class="verdict ko">✗ Pas là ! Indice : suis les points orange — ils partent du petit boîtier sous l\u2019évier, passent par la box violette, montent au nuage… et finissent en notification rouge sur l\u2019écran.</div>';
+ }
+ });
 })();
 
 /* ================= A6 : MANIPULATION AU CURSEUR ================= */
 (function(){
-  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
-  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
-  const SCEN=[
-    {min:6, max:10,
-     ok:'\u2705 Entre 6 et 10 mesures/heure : la fuite est détectée en moins de 10 minutes ET la pile dépasse l\u2019année. C\u2019est LE dilemme de tous les objets connectés : réactivité contre autonomie — le bon réglage est celui qui satisfait les DEUX contraintes, pas celui qui maximise l\u2019une ! (+4 pts)',
-     kobas:'\u274c Trop espacé : entre deux mesures, la fuite a le temps d\u2019inonder la cuisine (regarde le délai !). Le cahier des charges exige une détection en moins de 10 minutes\u2026',
-     kohaut:'\u274c Mitraillette ! Chaque envoi radio croque la pile : à ce rythme elle meurt en quelques mois (regarde la jauge), et un capteur mort ne détecte plus RIEN. Espace les mesures\u2026'}
-  ];
-  let etape=0, t=0, valide=false;
-  function dessiner(){
-    t+=0.03;
-    ctx.clearRect(0,0,860,280);
-    const v=+slider.value;
-    const sc=SCEN[Math.min(etape,SCEN.length-1)];
-    const delaiMin=60/v;
-    const pileMois=Math.round(120/v);
-    // capteur qui émet au rythme v
-    ctx.fillStyle='#fff'; ctx.strokeStyle='#0e7490'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.roundRect(110,110,70,34,8); ctx.fill(); ctx.stroke();
-    const blip=Math.sin(t*v*0.4)>0.75;
-    if(blip){ ctx.strokeStyle='rgba(234,88,12,.8)'; ctx.lineWidth=2.5;
-      ctx.beginPath(); ctx.arc(180,127,14,-0.6,0.6); ctx.stroke();
-      ctx.beginPath(); ctx.arc(180,127,24,-0.6,0.6); ctx.stroke(); }
-    ctx.font='bold 12px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
-    ctx.fillText('1 mesure toutes les '+delaiMin.toFixed(delaiMin<2?1:0)+' min',210,80);
-    // flaque qui grandit pendant le délai
-    const fl=(t*0.25)%1;
-    ctx.fillStyle='rgba(59,130,246,.5)';
-    ctx.beginPath(); ctx.ellipse(145,196,14+fl*delaiMin*4.4,5+fl*delaiMin*1.5,0,0,Math.PI*2); ctx.fill();
-    ctx.font='bold 12px Segoe UI';
-    ctx.fillStyle= delaiMin>10 ? '#dc2626' : '#16a34a';
-    ctx.fillText('détection en \u2264 '+Math.ceil(delaiMin)+' min '+(delaiMin>10?'\u2717 (limite : 10)':'\u2713'),210,238);
-    // jauge pile (12 mois exigés)
-    ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
-    ctx.fillText('DURÉE DE LA PILE : '+pileMois+' mois',590,70);
-    ctx.strokeStyle='#334155'; ctx.lineWidth=2;
-    ctx.beginPath(); ctx.roundRect(490,84,200,26,6); ctx.stroke();
-    ctx.fillRect(690,90,6,14);
-    ctx.fillStyle= pileMois<12 ? '#dc2626' : '#16a34a';
-    ctx.fillRect(492,86,196*Math.min(1,pileMois/40),22);
-    // repère 12 mois
-    const rx=492+196*(12/40);
-    ctx.strokeStyle='#ea580c'; ctx.setLineDash([4,4]);
-    ctx.beginPath(); ctx.moveTo(rx,78); ctx.lineTo(rx,116); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle='#ea580c'; ctx.font='bold 10.5px Segoe UI';
-    ctx.fillText('12 mois mini',rx,130);
-    // rappel du dilemme
-    ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
-    ctx.fillText('chaque envoi radio consomme \u00b7 chaque silence retarde l\u2019alerte',590,190);
-    ctx.fillText('réactivité \u2194 autonomie : le grand dilemme de l\u2019IoT',590,214);
-    requestAnimationFrame(dessiner);
-  }
-  dessiner();
-  slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
-  document.getElementById('verif6').addEventListener('click',()=>{
-    if(valide) return;
-    const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
-    if(v>=sc.min && v<=sc.max){
-      etape++;
-      if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6,4); }
-      else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
-    } else {
-      verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
-    }
-  });
+ const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
+ const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
+ const SCEN=[
+ {min:6, max:10,
+ ok:'\u2705 Entre 6 et 10 mesures/heure : la fuite est détectée en moins de 10 minutes ET la pile dépasse l\u2019année. C\u2019est LE dilemme de tous les objets connectés : réactivité contre autonomie — le bon réglage est celui qui satisfait les DEUX contraintes, pas celui qui maximise l\u2019une ! (+4 pts)',
+ kobas:'\u274c Trop espacé : entre deux mesures, la fuite a le temps d\u2019inonder la cuisine (regarde le délai !). Le cahier des charges exige une détection en moins de 10 minutes\u2026',
+ kohaut:'\u274c Mitraillette ! Chaque envoi radio croque la pile : à ce rythme elle meurt en quelques mois (regarde la jauge), et un capteur mort ne détecte plus RIEN. Espace les mesures\u2026'}
+ ];
+ let etape=0, t=0, valide=false;
+ function dessiner(){
+ t+=0.03;
+ ctx.clearRect(0,0,860,280);
+ const v=+slider.value;
+ const sc=SCEN[Math.min(etape,SCEN.length-1)];
+ const delaiMin=60/v;
+ const pileMois=Math.round(120/v);
+ // capteur qui émet au rythme v
+ ctx.fillStyle='#fff'; ctx.strokeStyle='#0e7490'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.roundRect(110,110,70,34,8); ctx.fill(); ctx.stroke();
+ const blip=Math.sin(t*v*0.4)>0.75;
+ if(blip){ ctx.strokeStyle='rgba(234,88,12,.8)'; ctx.lineWidth=2.5;
+ ctx.beginPath(); ctx.arc(180,127,14,-0.6,0.6); ctx.stroke();
+ ctx.beginPath(); ctx.arc(180,127,24,-0.6,0.6); ctx.stroke(); }
+ ctx.font='bold 12px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
+ ctx.fillText('1 mesure toutes les '+delaiMin.toFixed(delaiMin<2?1:0)+' min',210,80);
+ // flaque qui grandit pendant le délai
+ const fl=(t*0.25)%1;
+ ctx.fillStyle='rgba(59,130,246,.5)';
+ ctx.beginPath(); ctx.ellipse(145,196,14+fl*delaiMin*4.4,5+fl*delaiMin*1.5,0,0,Math.PI*2); ctx.fill();
+ ctx.font='bold 12px Segoe UI';
+ ctx.fillStyle= delaiMin>10 ? '#dc2626' : '#16a34a';
+ ctx.fillText('détection en \u2264 '+Math.ceil(delaiMin)+' min '+(delaiMin>10?'\u2717 (limite : 10)':'\u2713'),210,238);
+ // jauge pile (12 mois exigés)
+ ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
+ ctx.fillText('DURÉE DE LA PILE : '+pileMois+' mois',590,70);
+ ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+ ctx.beginPath(); ctx.roundRect(490,84,200,26,6); ctx.stroke();
+ ctx.fillRect(690,90,6,14);
+ ctx.fillStyle= pileMois<12 ? '#dc2626' : '#16a34a';
+ ctx.fillRect(492,86,196*Math.min(1,pileMois/40),22);
+ // repère 12 mois
+ const rx=492+196*(12/40);
+ ctx.strokeStyle='#ea580c'; ctx.setLineDash([4,4]);
+ ctx.beginPath(); ctx.moveTo(rx,78); ctx.lineTo(rx,116); ctx.stroke(); ctx.setLineDash([]);
+ ctx.fillStyle='#ea580c'; ctx.font='bold 10.5px Segoe UI';
+ ctx.fillText('12 mois mini',rx,130);
+ // rappel du dilemme
+ ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
+ ctx.fillText('chaque envoi radio consomme \u00b7 chaque silence retarde l\u2019alerte',590,190);
+ ctx.fillText('réactivité \u2194 autonomie : le grand dilemme de l\u2019IoT',590,214);
+ requestAnimationFrame(dessiner);
+ }
+ dessiner();
+ slider.addEventListener('input',()=>{ lecture.textContent=slider.value; });
+ document.getElementById('verif6').addEventListener('click',()=>{
+ essais6++;
+ if(valide) return;
+ const sc=SCEN[etape], v=+slider.value, verd=document.getElementById('verd6');
+ if(v>=sc.min && v<=sc.max){
+ etape++;
+ if(etape>=SCEN.length){ valide=true; verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; reussir(6, essais6<=SCEN.length?4:(essais6<=SCEN.length+2?3:2)); }
+ else { verd.innerHTML='<div class="verdict ok">'+sc.ok+'</div>'; }
+ } else {
+ verd.innerHTML='<div class="verdict ko">'+(v<sc.min?sc.kobas:sc.kohaut)+'</div>';
+ }
+ });
 })();
 
 /* ================= A7 : BILAN ================= */
@@ -530,34 +617,216 @@ const Q5=[
  {q:"Une batterie de 400 mAh avec une consommation de 50 mAh/jour tient…", r:["8 jours","50 jours","400 jours"], b:0},
 ];
 (function initQ5(){
-  const zone=document.getElementById('quiz5');
-  Q5.forEach((item,i)=>{
-    const d=document.createElement('div'); d.className='question';
-    d.innerHTML='<div class="q">'+(i+1)+'. '+item.q+'</div><div class="rep"></div>';
-    const rep=d.querySelector('.rep');
-    item.r.forEach((r,k)=>{
-      const b=document.createElement('button'); b.textContent=r;
-      b.onclick=()=>{
-        rep.querySelectorAll('button').forEach(x=>x.disabled=true);
-        etat.q5rep++;
-        if(k===item.b){ b.classList.add('bon'); etat.q5ok++; etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
-        else { b.classList.add('faux'); rep.children[item.b].classList.add('bon'); }
-        if(etat.q5rep===Q5.length){
-          if(etat.q5ok>=3){ document.getElementById('codefinal').style.display='block'; reussir(7,2); }
-          else{
-            const verd=document.createElement('div'); verd.className='verdict ko';
-            verd.innerHTML='Presque ! Il fallait 3 bonnes réponses. Relis le cours puis recharge la page pour retenter le bilan.';
-            zone.appendChild(verd);
-          }
-        }
-      };
-      rep.appendChild(b);
-    });
-    zone.appendChild(d);
-  });
+ const zone=document.getElementById('quiz5');
+ let tentative=0, reponses={};
+ function melanger(t){ return t.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
+ function construire(){
+ reponses={};
+ zone.innerHTML='';
+ const ordre=melanger(Q5.map((q,i)=>i));
+ ordre.forEach((qi,rang)=>{
+ const item=Q5[qi];
+ const d=document.createElement('div'); d.className='question';
+ d.innerHTML='<div class="q">'+(rang+1)+'. '+item.q+'</div><div class="rep"></div>';
+ const rep=d.querySelector('.rep');
+ melanger(item.r.map((txt,k)=>({txt,k}))).forEach(o=>{
+ const b=document.createElement('button'); b.textContent=o.txt;
+ b.onclick=()=>{
+ rep.querySelectorAll('button').forEach(x=>x.classList.remove('choisi'));
+ b.classList.add('choisi');
+ reponses[qi]=o.k;
+ const n=Object.keys(reponses).length;
+ info.textContent = n<Q5.length
+ ? n+' réponse(s) sur '+Q5.length+' — aucune correction avant la validation.'
+ : 'Toutes les questions sont renseignées : tu peux valider.';
+ btn.disabled = n<Q5.length;
+ };
+ rep.appendChild(b);
+ });
+ zone.appendChild(d);
+ });
+ zone.appendChild(barre);
+ btn.disabled=true;
+ info.textContent='Réponds aux '+Q5.length+' questions, puis valide. Aucune réponse ne sera corrigée avant.';
+ }
+ const barre=document.createElement('div');
+ const info=document.createElement('div'); info.className='verdict'; info.style.marginTop='10px';
+ const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Valider mes 4 réponses';
+ btn.style.marginTop='10px';
+ const sortie=document.createElement('div');
+ barre.appendChild(info); barre.appendChild(btn); barre.appendChild(sortie);
+ btn.onclick=()=>{
+ tentative++;
+ let bons=0;
+ Q5.forEach((item,i)=>{ if(reponses[i]===item.b) bons++; });
+ if(bons>=3){
+ etat.q5ok=bons; etat.score+=bons;
+ document.getElementById('scoreTot').textContent=etat.score;
+ zone.querySelectorAll('button').forEach(x=>x.disabled=true);
+ sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
+ ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
+ document.getElementById('codefinal').style.display='block';
+ reussir(10, tentative===1?2:(tentative===2?1:0));
+ } else {
+ sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
+ ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
+ 'Les questions seront remélangées.</div>';
+ setTimeout(()=>{ construire(); sortie.innerHTML=''; },2600);
+ }
+ };
+ construire();
 })();
 
 charger(); majProgression();
+</script>
+
+<button id="calcBtn" title="Ouvrir la calculatrice"><span class="ic">C</span>calcul</button>
+<div id="calcPan">
+ <div class="tete" id="calcTete"><b>CALCULATRICE</b><button id="calcX" title="Fermer">&times;</button></div>
+ <div id="calcEcr"><div class="op" id="calcOp"></div><div class="val" id="calcVal">0</div></div>
+ <div id="calcGr">
+ <button class="f" data-k="C">C</button><button class="f" data-k="back">&#9003;</button>
+ <button class="f" data-k="pct">%</button><button class="op" data-k="/">&divide;</button>
+ <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+ <button class="op" data-k="*">&times;</button>
+ <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+ <button class="op" data-k="-">&minus;</button>
+ <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+ <button class="op" data-k="+">+</button>
+ <button class="f" data-k="sign">+/&minus;</button><button data-k="0">0</button>
+ <button data-k=".">,</button><button class="eq" data-k="=">=</button>
+ </div>
+</div>
+<script>
+/* ===== Calculatrice (aucun eval, aucune dépendance) ===== */
+(function(){
+ var pan=document.getElementById('calcPan'), btn=document.getElementById('calcBtn');
+ var eVal=document.getElementById('calcVal'), eOp=document.getElementById('calcOp');
+ var cour='0', prec=null, oper=null, neuf=true;
+ function aff(){
+ eVal.textContent=String(cour).replace('.',',');
+ eOp.textContent=(prec!==null?String(prec).replace('.',',')+' '+({'+':'+','-':'\u2212','*':'\u00d7','/':'\u00f7'}[oper]||''):'');
+ }
+ function calcule(a,b,o){
+ a=parseFloat(a); b=parseFloat(b);
+ var r = o==='+'?a+b : o==='-'?a-b : o==='*'?a*b : (b===0?NaN:a/b);
+ if(!isFinite(r)) return 'Erreur';
+ return String(Math.round(r*1e10)/1e10);
+ }
+ function touche(k){
+ if(cour==='Erreur' && k!=='C'){ return; }
+ if(/^[0-9]$/.test(k)){ cour = (neuf||cour==='0') ? k : cour+k; neuf=false; }
+ else if(k==='.'){ if(neuf){ cour='0.'; neuf=false; } else if(cour.indexOf('.')<0) cour+='.'; }
+ else if(k==='C'){ cour='0'; prec=null; oper=null; neuf=true; }
+ else if(k==='back'){ cour = (cour.length>1) ? cour.slice(0,-1) : '0'; if(cour==='-')cour='0'; }
+ else if(k==='sign'){ cour = cour.charAt(0)==='-' ? cour.slice(1) : (cour==='0'?cour:'-'+cour); }
+ else if(k==='pct'){ cour=String(parseFloat(cour)/100); neuf=true; }
+ else if(k==='+'||k==='-'||k==='*'||k==='/'){
+ if(prec!==null && !neuf){ cour=calcule(prec,cour,oper); }
+ prec=cour; oper=k; neuf=true;
+ }
+ else if(k==='='){
+ if(prec!==null && oper){ cour=calcule(prec,cour,oper); prec=null; oper=null; neuf=true; }
+ }
+ aff();
+ }
+ document.getElementById('calcGr').addEventListener('click',function(ev){
+ var b=ev.target.closest('button'); if(!b)return; touche(b.dataset.k);
+ });
+ btn.addEventListener('click',function(){ pan.classList.toggle('on'); });
+ document.getElementById('calcX').addEventListener('click',function(){ pan.classList.remove('on'); });
+ /* déplacement du panneau */
+ var tete=document.getElementById('calcTete'), drag=false, dx=0, dy=0;
+ tete.addEventListener('pointerdown',function(e){
+ if(e.target.id==='calcX')return;
+ drag=true; var r=pan.getBoundingClientRect();
+ dx=e.clientX-r.left; dy=e.clientY-r.top;
+ pan.style.right='auto'; pan.style.bottom='auto';
+ pan.style.left=r.left+'px'; pan.style.top=r.top+'px';
+ try{ tete.setPointerCapture(e.pointerId); }catch(err){}
+ });
+ tete.addEventListener('pointermove',function(e){
+ if(!drag)return;
+ pan.style.left=Math.max(4,Math.min(window.innerWidth-244,e.clientX-dx))+'px';
+ pan.style.top=Math.max(4,Math.min(window.innerHeight-260,e.clientY-dy))+'px';
+ });
+ tete.addEventListener('pointerup',function(){ drag=false; });
+ aff();
+})();
+
+/* ============ A7-A9 : expliquer, calculer, tracer ============ */
+(function(){
+  function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function nbv(v){return parseFloat(String(v||'').replace(',','.'));}
+  function champs(zone,liste,grand){
+    const z=document.getElementById(zone);
+    liste.forEach(c=>{
+      const d=document.createElement('div'); d.className='chp';
+      const l=document.createElement('label'); l.innerHTML=c.lbl; d.appendChild(l);
+      const i=document.createElement('input'); i.id=c.id; i.autocomplete='off';
+      if(grand){ i.className='large'; i.placeholder='rédige une phrase complète'; }
+      d.appendChild(i);
+      if(c.u){ const u=document.createElement('span'); u.className='u'; u.textContent=c.u; d.appendChild(u); }
+      z.appendChild(d);
+    });
+  }
+  const REDAC=[
+  {id:'q71',lbl:'a) La box du logement tombe en panne. Le capteur fonctionne toujours. Reçois-tu l’alerte ? Explique.',
+   cles:['non','pas','coupe','maillon','passerelle','interne','plusdinternet','cloud','narrivepas','bloque']},
+  {id:'q72',lbl:'b) Pourquoi le capteur envoie-t-il ses mesures par radio plutôt que par un câble ?',
+   cles:['fil','cable','installer','placer','partout','libre','deplacer','pratique','travaux','sansfil']},
+  {id:'q73',lbl:'c) Pourquoi la décision d’alerter est-elle prise dans le cloud, et non dans le capteur lui-même ?',
+   cles:['calcul','puissance','pile','energie','economi','compare','historique','memoire','simple','petit']}], CALC=[
+  {id:'c81',lbl:'a) Nombre d’envois par jour',rep:192,u:'envois'},
+  {id:'c82',lbl:'b) Consommation quotidienne totale (envois + veille)',rep:10,tol:0.05,u:'mAh'},
+  {id:'c83',lbl:'c) Autonomie de la pile, en jours (arrondie à l’unité)',rep:62,tol:1,u:'jours'},
+  {id:'c84',lbl:'d) Autonomie si on passe à 4 mesures par heure au lieu de 8 (arrondie à l’unité)',rep:118,tol:2,u:'jours'}], TRACE=[
+  {id:'t91',lbl:'a) Combien de maillons ta chaîne comporte-t-elle ?',rep:'4',num:true},
+  {id:'t92',lbl:'b) Quel maillon relie le capteur à Internet ?',rep:['passerelle','box','labox','lapasserelle']},
+  {id:'t93',lbl:'c) Où la décision d’alerter est-elle prise ?',rep:['cloud','serveur','lecloud','leserveur']},
+  {id:'t94',lbl:'d) Combien de maillons peux-tu supprimer sans casser la chaîne ?',rep:'0',num:true}];
+  champs('champs7',REDAC,true); champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  let e7=0,e8=0,e9=0;
+  function verdict(id,html,ok){
+    const v=document.getElementById(id);
+    v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
+  }
+  document.getElementById('verif7').addEventListener('click',()=>{
+    let bons=0;
+    REDAC.forEach(c=>{ const v=norm(document.getElementById(c.id).value);
+      if(v.length>12 && c.cles.some(k=>v.includes(k))) bons++; });
+    if(bons===REDAC.length){
+      verdict('verd7','\u2713 Explications convaincantes. '+'Non : la passerelle est un maillon obligatoire. Le capteur a beau mesurer, sans box la donnée n’atteint jamais le cloud et l’alerte n’arrive pas — couper UN maillon suffit à casser toute la chaîne. La radio évite de tirer un câble jusque sous l’évier et permet de déplacer le capteur. Enfin, décider dans le cloud épargne la pile du capteur : lui se contente de mesurer et d’envoyer, l’intelligence est ailleurs. C’est le principe de tous les objets connectés — un objet bête, un service intelligent.',true);
+      reussir(7, e7===0?3:2);
+    } else { e7++;
+      verdict('verd7','\u2717 Réponse(s) convaincante(s) : '+bons+' sur '+REDAC.length+
+        '. Rédige une phrase complète et nomme précisément la cause ou la fonction.',false); }
+  });
+  document.getElementById('verif8').addEventListener('click',()=>{
+    let faux=0;
+    CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
+      if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
+    if(faux===0){
+      verdict('verd8','\u2713 Tous les calculs sont justes. '+'192 envois par jour à 0,05 mAh font 9,6 mAh, plus 0,4 de veille : 10 mAh par jour, soit 62 jours d’autonomie. En divisant la fréquence par deux, la consommation tombe à 5,2 mAh et l’autonomie grimpe à 118 jours — presque le double. Voilà pourquoi le réglage de la fréquence est LE paramètre décisif d’un objet sur pile : chaque envoi se paie en jours d’autonomie.',true);
+      reussir(8, e8===0?3:2);
+    } else { e8++;
+      verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
+        '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
+  });
+  document.getElementById('verif9').addEventListener('click',()=>{
+    let faux=0;
+    TRACE.forEach(c=>{ const v=document.getElementById(c.id).value;
+      const bon = c.num ? String(nbv(v))===String(nbv(c.rep))
+        : (Array.isArray(c.rep)?c.rep:[c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+      if(!bon) faux++; });
+    if(faux===0){
+      verdict('verd9','\u2713 Ton tracé est conforme. '+'Quatre maillons : capteur, passerelle, cloud, application. Aucun n’est superflu — c’est la réponse à la dernière question, et c’est le point essentiel. Un objet connecté n’est pas un objet, c’est une chaîne de services. Quand une alerte n’arrive pas, le diagnostic consiste justement à remonter cette chaîne maillon par maillon.',true);
+      reussir(9, e9===0?3:2);
+    } else { e9++;
+      verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
+  });
+  
+})();
 </script>
 </body>
 </html>

@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
+<html lang="fr"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TP — Lecture de plan · ESTIC</title>
-<style>
+<title>TP — Lecture de plan · ESTIC</title><style>
 :root{--acc:#0e7490;--accf:#155e75;--ok:#16a34a;--ko:#dc2626;--fond:#fdf9f0;--carte:#fff;--encre:#3f3a34}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
@@ -18,53 +15,60 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:va
 .estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
 
 .estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
-main{width:min(1000px,100%);padding:12px 12px 40px}
+main{width:min(1020px,100%);padding:12px 12px 40px}
 h1{font-size:23px;text-align:center;color:var(--accf);margin:10px 0 2px}
-.sous{text-align:center;color:#8a8378;font-size:13.5px;margin-bottom:12px}
-.barre{display:flex;gap:6px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
-.seg{padding:7px 12px;border-radius:12px;background:#f3ecdd;font-size:12.5px;font-weight:800;color:#8a8378;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:96px}
-.seg .et{letter-spacing:1px;color:#c9bfa8;font-size:11.5px}
+.sous{text-align:center;color:#8a8378;font-size:13.5px;margin-bottom:6px}
+.materiel{background:#ecfeff;border:1px solid #a5f3fc;border-radius:12px;padding:9px 14px;font-size:13.5px;margin-bottom:12px;text-align:center}
+.barre{display:flex;gap:4px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.seg{padding:6px 9px;border-radius:10px;background:#f3ecdd;font-size:11.5px;font-weight:800;color:#8a8378;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:74px;text-align:center}
+.seg .et{letter-spacing:1px;color:#c9bfa8;font-size:11px}
 .seg.faite{background:#cffafe;color:var(--accf)}.seg.faite .et{color:var(--acc)}
 .seg.courante{outline:3px solid var(--acc)}
+.partie{text-align:center;font-size:12.5px;font-weight:900;color:#a89c82;letter-spacing:2px;margin:14px 0 6px}
 .ex{display:none;background:var(--carte);border:1px solid #eee4d0;border-radius:18px;padding:18px}
 .ex.on{display:block}
 .enonce{background:#faf6ec;border-left:5px solid var(--acc);border-radius:10px;padding:11px 15px;margin-bottom:12px;font-size:15px;line-height:1.7}
 .enonce b{color:var(--accf)}
-.q{font-size:15.5px;font-weight:800;color:var(--accf);margin:12px 0 6px}
-.cadre{border:1px solid #d8cdb4;border-radius:12px;overflow:hidden;background:#fff}
+.cahier{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:12px 16px;margin:10px 0;font-size:15px;line-height:1.7}
+.cahier h3{font-size:14px;color:#c2410c;margin-bottom:5px;letter-spacing:1px}
+.cadre{border:1px solid #d8cdb4;border-radius:12px;overflow:hidden;background:#fff;margin:8px 0}
 .cadre svg{display:block;width:100%;height:auto}
 .hit{cursor:pointer;transition:fill .12s}
 .hit:hover{fill:rgba(14,116,144,.16)}
 .hit.sel{fill:rgba(14,116,144,.3)}
 .hit.inactive{pointer-events:none}
+.champ{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.champ label{font-size:15px;flex:1;min-width:230px;line-height:1.6}
+.champ input{width:120px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.champ input.large{width:100%;text-align:left;font-weight:400}
+.champ .u{font-size:14px;color:#8a8378;min-width:34px}
 table.saisie{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:8px}
 table.saisie th,table.saisie td{border:1px solid #e2d9c8;padding:6px 8px;text-align:left}
 table.saisie th{background:#f3ecdd;color:var(--accf);font-size:13px}
 table.saisie input{width:100%;border:1px solid #d8cdb4;border-radius:7px;padding:6px 8px;font-size:14px;font-family:inherit}
-.champ{display:flex;align-items:center;gap:8px;margin:8px 0;flex-wrap:wrap}
-.champ input{width:110px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700}
-.champ label{font-size:15px;flex:1;min-width:240px}
-.outils{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
-.btn{border:none;border-radius:12px;background:var(--acc);color:#fff;font-size:15px;font-weight:900;padding:11px 22px;cursor:pointer}
+.qcm{margin:10px 0}
+.qcm .q{font-weight:800;margin:10px 0 5px;font-size:15px}
+.qcm button{display:block;width:100%;text-align:left;margin:5px 0;padding:10px 13px;border:2px solid #e2d9c8;background:#fff;border-radius:10px;font-size:14.5px;cursor:pointer;font-family:inherit;color:var(--encre)}
+.qcm button.choisi{border-color:var(--acc);background:#cffafe;font-weight:800}
+.outils{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.btn{border:none;border-radius:12px;background:var(--acc);color:#fff;font-size:15px;font-weight:900;padding:11px 22px;cursor:pointer;font-family:inherit}
 .btn.sec{background:#e7dcc4;color:var(--encre)}
 .btn:disabled{opacity:.4;cursor:default}
 .verdict{min-height:26px;text-align:center;font-size:14.5px;font-weight:700;margin-top:10px;color:#b45309}
 .essais{text-align:center;font-size:13px;color:#8a8378;margin-top:4px}
-.aide{font-size:13.5px;background:#ecfeff;border:1px solid #a5f3fc;border-radius:10px;padding:9px 12px;margin-top:10px}
-.aide a{color:var(--accf)}
+.aide{font-size:13.5px;background:#ecfeff;border:1px solid #a5f3fc;border-radius:10px;padding:9px 12px;margin-top:10px;line-height:1.6}
 #bilan{display:none}
 .memo{background:#faf6ec;border:1px solid #eee4d0;border-radius:14px;padding:14px 18px;margin:12px 0;font-size:14.5px;line-height:1.7}
 #voile{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(63,58,52,.45);z-index:50;padding:14px}
 #voile.on{display:flex}
-.bravo{background:#fff;border-radius:20px;max-width:560px;width:100%;padding:24px;text-align:center;animation:pop .35s}
+.bravo{background:#fff;border-radius:20px;max-width:580px;width:100%;padding:24px;text-align:center;animation:pop .35s;max-height:92vh;overflow:auto}
 @keyframes pop{0%{transform:scale(.75);opacity:0}70%{transform:scale(1.04)}100%{transform:scale(1)}}
 .bravo h2{color:var(--ok);font-size:21px}
 .bravo .gr{font-size:32px;letter-spacing:6px;color:var(--acc);margin:6px 0}
 .bravo p{font-size:14.5px;line-height:1.7;text-align:left;background:#faf6ec;border-radius:12px;padding:12px 14px;margin:10px 0}
 .code{font-size:28px;font-weight:900;letter-spacing:6px;color:var(--accf);text-align:center;background:#cffafe;border-radius:14px;padding:14px;margin:12px auto;max-width:320px}
-</style>
-</head>
-<body>
+canvas{width:100%;display:block;border-radius:12px;background:#fbfcfd;border:1px solid #d8cdb4}
+</style></head><body>
 <div class="estic-bar">
   <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
   <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
@@ -72,16 +76,27 @@ table.saisie input{width:100%;border:1px solid #d8cdb4;border-radius:7px;padding
 </div>
 <main>
 <h1>TP — Lecture d’un plan d’ensemble</h1>
-<div class="sous">Palier lisse · 5 exercices · le cours reste ouvert dans un autre onglet</div>
+<div class="sous">Palier lisse · 11 exercices · environ 1 h 30</div>
+<div class="materiel"><b>Matériel :</b> cet écran, ton <b>cahier</b> et un <b>stylo</b>. Plusieurs exercices demandent
+de tracer ou de rédiger sur le cahier : l’écran vérifie ensuite ce que tu as trouvé. Garde le cours ouvert dans un autre onglet.</div>
 <div class="barre" id="barre"></div>
+<div class="partie" id="partie"></div>
+<section class="ex on" id="ex"></section>
 
-<!-- ══ EX 1 ══ -->
-<section class="ex on" data-x="0">
-  <div class="enonce"><b>Exercice 1 — Identifier les pièces coupées.</b>
-    Le plan t’est livré <b>sans ses hachures</b>. Sélectionne sur le dessin <b>toutes</b> les pièces qui doivent être
-    hachurées sur la coupe A-A, puis valide. Attention : rien ne t’indiquera lesquelles sont justes avant la validation,
-    et une sélection incomplète ou excédentaire est comptée fausse.</div>
-  <div class="cadre" id="plan1"><svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+<section class="ex" id="bilan">
+  <h2 style="color:var(--accf);text-align:center">Bilan du TP</h2>
+  <p style="text-align:center;margin:8px 0">Total : <b id="tot" style="font-size:22px;color:var(--acc)">0</b> ★ sur <span id="totmax">33</span></p>
+  <div class="memo" id="memo"></div>
+  <p style="text-align:center">Ton code pour les exercices compétitifs :</p>
+  <div class="code">COUPE45</div>
+</section>
+</main>
+<div id="voile"><div class="bravo">
+  <h2 id="brT">Exercice validé</h2><div class="gr" id="brE">★★★</div>
+  <p id="brP"></p><button class="btn" id="cont">Continuer</button>
+</div></div>
+
+<template id="tplPlan"><svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
 <defs>
   <pattern id="h1" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
     <line x1="0" y1="0" x2="0" y2="6" stroke="#000" stroke-width="0.7"/></pattern>
@@ -223,305 +238,405 @@ table.saisie input{width:100%;border:1px solid #d8cdb4;border-radius:7px;padding
 <path class="hit" data-id="nomen" d="M20,406 L350,406 L350,500 L20,500 Z" fill="transparent" stroke="transparent" stroke-width="6" fill-rule="evenodd"/>
 <path class="hit" data-id="cart" d="M560,406 L880,406 L880,500 L560,500 Z" fill="transparent" stroke="transparent" stroke-width="6" fill-rule="evenodd"/>
 </g>
-</svg></div>
-  <div class="outils">
-    <button class="btn sec" id="raz1">Tout désélectionner</button>
-    <button class="btn" id="val1">Valider ma sélection</button>
-  </div>
-  <div class="verdict" id="v1"></div>
-  <div class="essais" id="e1">Essai 1 · 3 étoiles en jeu</div>
-</section>
-
-<!-- ══ EX 2 ══ -->
-<section class="ex" data-x="1">
-  <div class="enonce"><b>Exercice 2 — Compléter la nomenclature.</b>
-    Le dessinateur a effacé trois lignes. Retrouve-les à partir du dessin et de ce que tu sais des matériaux.
-    Écris les désignations et matières exactement comme elles s’écrivent sur un plan.</div>
-  <table class="saisie">
-    <tr><th style="width:60px">Repère</th><th style="width:60px">Nb</th><th>Désignation</th><th style="width:170px">Matière</th></tr>
-    <tr><td>4</td><td>1</td><td>Couvercle</td><td>EN-GJL-200</td></tr>
-    <tr><td>3</td><td>1</td><td><input id="d3" placeholder="désignation" autocomplete="off"></td>
-        <td><input id="m3" placeholder="matière" autocomplete="off"></td></tr>
-    <tr><td>2</td><td>1</td><td><input id="d2" placeholder="désignation" autocomplete="off"></td><td>C 45</td></tr>
-    <tr><td>1</td><td><input id="n1" style="width:60px" placeholder="nb" autocomplete="off"></td>
-        <td>Corps</td><td><input id="m1" placeholder="matière" autocomplete="off"></td></tr>
-  </table>
-  <div class="aide">Indices : la pièce 3 est la bague qui s’use à la place du corps ; sa matière est un alliage de cuivre
-  et d’étain. Le corps et le couvercle sont dans la même matière.</div>
-  <div class="outils"><button class="btn" id="val2">Valider la nomenclature</button></div>
-  <div class="verdict" id="v2"></div>
-  <div class="essais" id="e2">Essai 1 · 3 étoiles en jeu</div>
-</section>
-
-<!-- ══ EX 3 ══ -->
-<section class="ex" data-x="2">
-  <div class="enonce"><b>Exercice 3 — Exploiter la cotation.</b>
-    Le plan est à l’échelle <b>1:2</b>. L’arbre est coté <b>Ø50</b>, le coussinet a une longueur de <b>120</b>,
-    et son épaisseur mesurée sur le dessin vaut <b>4 mm</b>. Réponds en millimètres, sans unité.</div>
-  <div class="champ"><label>a) Diamètre réel de l’arbre :</label><input id="r1" autocomplete="off"><span>mm</span></div>
-  <div class="champ"><label>b) Épaisseur réelle du coussinet (attention à l’échelle !) :</label><input id="r2" autocomplete="off"><span>mm</span></div>
-  <div class="champ"><label>c) Diamètre de l’alésage dans le corps, sachant que le coussinet s’y loge :</label><input id="r3" autocomplete="off"><span>mm</span></div>
-  <div class="champ"><label>d) Sur le dessin, quelle longueur mesure le coussinet à la règle ?</label><input id="r4" autocomplete="off"><span>mm</span></div>
-  <div class="outils"><button class="btn" id="val3">Valider mes calculs</button></div>
-  <div class="verdict" id="v3"></div>
-  <div class="essais" id="e3">Essai 1 · 3 étoiles en jeu</div>
-</section>
-
-<!-- ══ EX 4 ══ -->
-<section class="ex" data-x="3">
-  <div class="enonce"><b>Exercice 4 — Expertise : trois plans fautifs.</b>
-    Un stagiaire a rendu trois dessins. Pour chacun, écris <b>en une phrase</b> quelle règle n’est pas respectée.
-    Ta réponse est acceptée si elle contient les mots-clés attendus.</div>
-  <canvas id="cv4" width="900" height="250"></canvas>
-  <div class="champ"><label>Dessin A :</label><input id="f1" style="width:100%;text-align:left" autocomplete="off" placeholder="quelle règle n’est pas respectée ?"></div>
-  <div class="champ"><label>Dessin B :</label><input id="f2" style="width:100%;text-align:left" autocomplete="off"></div>
-  <div class="champ"><label>Dessin C :</label><input id="f3" style="width:100%;text-align:left" autocomplete="off"></div>
-  <div class="outils"><button class="btn" id="val4">Valider mes expertises</button></div>
-  <div class="verdict" id="v4"></div>
-  <div class="essais" id="e4">Essai 1 · 3 étoiles en jeu</div>
-</section>
-
-<!-- ══ EX 5 ══ -->
-<section class="ex" data-x="4">
-  <div class="enonce"><b>Exercice 5 — Du volume au plan.</b>
-    Voici le palier en demi-coupe, en volume. Sur le plan 2D à droite, <b>place les 4 repères</b> aux bons endroits :
-    clique d’abord le numéro dans la liste, puis la pièce correspondante sur le plan.</div>
-  <div class="cadre" style="margin-bottom:10px"><svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif"><defs>
+</svg></template>
+<template id="tplCpe"><svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif"><defs>
 <pattern id="i1" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
 <line x1="0" y1="0" x2="0" y2="7" stroke="#111" stroke-width="0.8"/></pattern>
 <pattern id="i2" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
 <line x1="0" y1="0" x2="0" y2="7" stroke="#111" stroke-width="0.8"/></pattern>
 <pattern id="i3" width="3.6" height="3.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
 <line x1="0" y1="0" x2="0" y2="3.6" stroke="#111" stroke-width="0.7"/></pattern>
-</defs><rect width="900" height="520" fill="#fff"/><path d="M685.9,136.6 L685.8,133.1 L558.5,206.6 L558.7,210.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M685.8,133.1 L685.3,129.4 L558.0,202.9 L558.5,206.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M685.3,129.4 L684.4,125.7 L557.2,199.1 L558.0,202.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M684.4,125.7 L683.3,121.8 L556.1,195.3 L557.2,199.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M683.3,121.8 L681.9,118.0 L554.6,191.5 L556.1,195.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M681.9,118.0 L680.1,114.2 L552.9,187.7 L554.6,191.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M680.1,114.2 L678.2,110.5 L550.9,184.0 L552.9,187.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M678.2,110.5 L675.9,107.0 L548.7,180.4 L550.9,184.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M675.9,107.0 L673.5,103.6 L546.3,177.0 L548.7,180.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M673.5,103.6 L670.9,100.4 L543.7,173.9 L546.3,177.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M670.9,100.4 L668.2,97.5 L540.9,171.0 L543.7,173.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M668.2,97.5 L665.3,94.9 L538.1,168.4 L540.9,171.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M665.3,94.9 L662.4,92.6 L535.1,166.1 L538.1,168.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M662.4,92.6 L659.4,90.7 L532.2,164.2 L535.1,166.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M659.4,90.7 L656.4,89.2 L529.2,162.7 L532.2,164.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M656.4,89.2 L653.5,88.1 L526.3,161.6 L529.2,162.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M653.5,88.1 L650.7,87.4 L523.4,160.9 L526.3,161.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M650.7,87.4 L647.9,87.1 L520.7,160.6 L523.4,160.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M647.9,87.1 L645.3,87.3 L518.1,160.7 L520.7,160.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M645.3,87.3 L642.9,87.9 L515.6,161.3 L518.1,160.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M642.9,87.9 L640.7,88.9 L513.4,162.3 L515.6,161.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M640.7,88.9 L638.7,90.3 L511.5,163.8 L513.4,162.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M638.7,90.3 L637.0,92.1 L509.7,165.6 L511.5,163.8 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M637.0,92.1 L635.5,94.3 L508.3,167.7 L509.7,165.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M635.5,94.3 L634.4,96.8 L507.2,170.2 L508.3,167.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M634.4,96.8 L633.6,99.6 L506.3,173.1 L507.2,170.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M633.6,99.6 L633.1,102.7 L505.8,176.2 L506.3,173.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M633.1,102.7 L632.9,106.0 L505.7,179.5 L505.8,176.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M632.9,106.0 L633.1,109.6 L505.8,183.0 L505.7,179.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M633.1,109.6 L633.6,113.2 L506.3,186.7 L505.8,183.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M633.6,113.2 L634.4,117.0 L507.2,190.5 L506.3,186.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M634.4,117.0 L635.5,120.8 L508.3,194.3 L507.2,190.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M635.5,120.8 L637.0,124.7 L509.7,198.1 L508.3,194.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M637.0,124.7 L638.7,128.5 L511.5,201.9 L509.7,198.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M638.7,128.5 L640.7,132.2 L513.4,205.6 L511.5,201.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M640.7,132.2 L642.9,135.7 L515.6,209.2 L513.4,205.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M642.9,135.7 L645.3,139.1 L518.1,212.6 L515.6,209.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M645.3,139.1 L647.9,142.3 L520.7,215.7 L518.1,212.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M647.9,142.3 L650.7,145.2 L523.4,218.6 L520.7,215.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M650.7,145.2 L653.5,147.8 L526.3,221.2 L523.4,218.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M653.5,147.8 L656.4,150.0 L529.2,223.5 L526.3,221.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M656.4,150.0 L659.4,151.9 L532.2,225.4 L529.2,223.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M659.4,151.9 L662.4,153.5 L535.1,226.9 L532.2,225.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M662.4,153.5 L665.3,154.6 L538.1,228.0 L535.1,226.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M665.3,154.6 L668.2,155.3 L540.9,228.7 L538.1,228.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M668.2,155.3 L670.9,155.6 L543.7,229.0 L540.9,228.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M670.9,155.6 L673.5,155.4 L546.3,228.9 L543.7,229.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M673.5,155.4 L675.9,154.8 L548.7,228.3 L546.3,228.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M675.9,154.8 L678.2,153.8 L550.9,227.3 L548.7,228.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M678.2,153.8 L680.1,152.4 L552.9,225.9 L550.9,227.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M680.1,152.4 L681.9,150.6 L554.6,224.0 L552.9,225.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M681.9,150.6 L683.3,148.4 L556.1,221.9 L554.6,224.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M683.3,148.4 L684.4,145.9 L557.2,219.4 L556.1,221.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M684.4,145.9 L685.3,143.1 L558.0,216.5 L557.2,219.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M685.3,143.1 L685.8,140.0 L558.5,213.4 L558.0,216.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M685.8,140.0 L685.9,136.6 L558.7,210.1 L558.5,213.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><line x1="678.2" y1="153.8" x2="550.9" y2="227.3" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><line x1="640.7" y1="88.9" x2="513.4" y2="162.3" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><path d="M489.8,170.3 L606.4,237.7 L330.7,396.8 L214.1,329.5 Z" fill="#efefef" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M606.4,276.8 L330.7,436.0 L330.7,396.8 L606.4,237.7 Z" fill="#bfbfbf" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M214.1,368.7 L330.7,436.0 L330.7,396.8 L214.1,329.5 Z" fill="#dadada" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M468.6,72.4 L542.8,115.2 L394.3,200.9 L320.1,158.1 Z" fill="#f2f2f2" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M542.8,274.4 L394.3,360.1 L394.3,200.9 L542.8,115.2 Z" fill="#c4c4c4" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M320.1,317.2 L394.3,360.1 L394.3,200.9 L320.1,158.1 Z" fill="#dedede" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M606.4,276.8 L330.7,436.0 L330.7,396.8 L606.4,237.7 Z" fill="url(#i1)" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M542.8,274.4 L394.3,360.1 L394.3,314.8 L542.8,229.1 Z" fill="url(#i1)" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M542.8,148.3 L394.3,234.0 L394.3,200.9 L542.8,115.2 Z" fill="url(#i1)" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M532.2,235.2 L404.9,308.7 L404.9,298.9 L532.2,225.4 Z" fill="url(#i3)" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M532.2,164.2 L404.9,237.7 L404.9,227.9 L532.2,154.4 Z" fill="url(#i3)" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M394.3,234.0 L392.4,232.9 L390.4,232.0 L388.5,231.2 L386.5,230.5 L384.6,230.0 L382.8,229.6 L380.9,229.3 L379.2,229.2 L377.4,229.3 L375.7,229.4 L374.1,229.7 L372.5,230.2 L371.0,230.8 L369.6,231.5 L368.2,232.4 L367.0,233.4 L365.8,234.5 L364.7,235.8 L363.7,237.2 L362.8,238.7 L362.0,240.3 L361.3,242.0 L360.7,243.8 L360.2,245.7 L359.8,247.7 L359.6,249.8 L359.4,251.9 L359.3,254.2 L359.4,256.5 L359.6,258.8 L359.8,261.2 L360.2,263.7 L360.7,266.2 L361.3,268.7 L362.0,271.2 L362.8,273.7 L363.7,276.2 L364.7,278.8 L365.8,281.3 L367.0,283.8 L368.2,286.2 L369.6,288.7 L371.0,291.0 L372.5,293.4 L374.1,295.6 L375.7,297.8 L377.4,300.0 L379.2,302.0 L380.9,304.0 L382.8,305.8 L384.6,307.6 L386.5,309.3 L388.5,310.8 L390.4,312.3 L392.4,313.6 L394.3,314.8 L394.3,314.8 Z" fill="#8f8f8f" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M404.9,227.9 L403.0,226.8 L401.0,225.9 L399.1,225.0 L397.1,224.4 L395.2,223.8 L393.4,223.5 L391.5,223.2 L389.8,223.1 L388.0,223.1 L386.3,223.3 L384.7,223.6 L383.1,224.1 L381.6,224.7 L380.2,225.4 L378.8,226.3 L377.6,227.3 L376.4,228.4 L375.3,229.7 L374.3,231.0 L373.4,232.5 L372.6,234.1 L371.9,235.9 L371.3,237.7 L370.8,239.6 L370.4,241.6 L370.2,243.7 L370.0,245.8 L369.9,248.1 L370.0,250.4 L370.2,252.7 L370.4,255.1 L370.8,257.6 L371.3,260.0 L371.9,262.5 L372.6,265.1 L373.4,267.6 L374.3,270.1 L375.3,272.7 L376.4,275.2 L377.6,277.7 L378.8,280.1 L380.2,282.5 L381.6,284.9 L383.1,287.3 L384.7,289.5 L386.3,291.7 L388.0,293.9 L389.8,295.9 L391.5,297.9 L393.4,299.7 L395.2,301.5 L397.1,303.2 L399.1,304.7 L401.0,306.2 L403.0,307.5 L404.9,308.7 L404.9,308.7 Z" fill="#b9b9b9" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M462.2,54.0 L536.4,96.9 L400.7,175.2 L326.5,132.4 Z" fill="#f6f6f6" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M536.4,118.9 L400.7,197.2 L400.7,175.2 L536.4,96.9 Z" fill="#c9c9c9" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M326.5,154.4 L400.7,197.2 L400.7,175.2 L326.5,132.4 Z" fill="#e2e2e2" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M536.4,118.9 L400.7,197.2 L400.7,175.2 L536.4,96.9 Z" fill="url(#i2)" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M558.7,210.1 L558.5,206.6 L304.0,353.5 L304.2,357.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M558.5,206.6 L558.0,202.9 L303.5,349.8 L304.0,353.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M558.0,202.9 L557.2,199.1 L302.7,346.1 L303.5,349.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M557.2,199.1 L556.1,195.3 L301.6,342.2 L302.7,346.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M556.1,195.3 L554.6,191.5 L300.1,338.4 L301.6,342.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M554.6,191.5 L552.9,187.7 L298.4,334.6 L300.1,338.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M552.9,187.7 L550.9,184.0 L296.4,330.9 L298.4,334.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M550.9,184.0 L548.7,180.4 L294.2,327.3 L296.4,330.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M548.7,180.4 L546.3,177.0 L291.8,323.9 L294.2,327.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M546.3,177.0 L543.7,173.9 L289.2,320.8 L291.8,323.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M543.7,173.9 L540.9,171.0 L286.5,317.9 L289.2,320.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M540.9,171.0 L538.1,168.4 L283.6,315.3 L286.5,317.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M538.1,168.4 L535.1,166.1 L280.7,313.0 L283.6,315.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M535.1,166.1 L532.2,164.2 L277.7,311.1 L280.7,313.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M532.2,164.2 L529.2,162.7 L274.7,309.6 L277.7,311.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M529.2,162.7 L526.3,161.6 L271.8,308.5 L274.7,309.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M526.3,161.6 L523.4,160.9 L268.9,307.8 L271.8,308.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M523.4,160.9 L520.7,160.6 L266.2,307.5 L268.9,307.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M520.7,160.6 L518.1,160.7 L263.6,307.7 L266.2,307.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M518.1,160.7 L515.6,161.3 L261.2,308.3 L263.6,307.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M515.6,161.3 L513.4,162.3 L259.0,309.3 L261.2,308.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M513.4,162.3 L511.5,163.8 L257.0,310.7 L259.0,309.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M511.5,163.8 L509.7,165.6 L255.3,312.5 L257.0,310.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M509.7,165.6 L508.3,167.7 L253.8,314.7 L255.3,312.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M508.3,167.7 L507.2,170.2 L252.7,317.2 L253.8,314.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M507.2,170.2 L506.3,173.1 L251.9,320.0 L252.7,317.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M506.3,173.1 L505.8,176.2 L251.4,323.1 L251.9,320.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M505.8,176.2 L505.7,179.5 L251.2,326.4 L251.4,323.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M505.7,179.5 L505.8,183.0 L251.4,329.9 L251.2,326.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M505.8,183.0 L506.3,186.7 L251.9,333.6 L251.4,329.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M506.3,186.7 L507.2,190.5 L252.7,337.4 L251.9,333.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M507.2,190.5 L508.3,194.3 L253.8,341.2 L252.7,337.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M508.3,194.3 L509.7,198.1 L255.3,345.1 L253.8,341.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M509.7,198.1 L511.5,201.9 L257.0,348.8 L255.3,345.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M511.5,201.9 L513.4,205.6 L259.0,352.5 L257.0,348.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M513.4,205.6 L515.6,209.2 L261.2,356.1 L259.0,352.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M515.6,209.2 L518.1,212.6 L263.6,359.5 L261.2,356.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M518.1,212.6 L520.7,215.7 L266.2,362.7 L263.6,359.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M520.7,215.7 L523.4,218.6 L268.9,365.6 L266.2,362.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M523.4,218.6 L526.3,221.2 L271.8,368.2 L268.9,365.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M526.3,221.2 L529.2,223.5 L274.7,370.4 L271.8,368.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M529.2,223.5 L532.2,225.4 L277.7,372.3 L274.7,370.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M532.2,225.4 L535.1,226.9 L280.7,373.9 L277.7,372.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M535.1,226.9 L538.1,228.0 L283.6,375.0 L280.7,373.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M538.1,228.0 L540.9,228.7 L286.5,375.7 L283.6,375.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M540.9,228.7 L543.7,229.0 L289.2,375.9 L286.5,375.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M543.7,229.0 L546.3,228.9 L291.8,375.8 L289.2,375.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M546.3,228.9 L548.7,228.3 L294.2,375.2 L291.8,375.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M548.7,228.3 L550.9,227.3 L296.4,374.2 L294.2,375.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M550.9,227.3 L552.9,225.9 L298.4,372.8 L296.4,374.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M552.9,225.9 L554.6,224.0 L300.1,371.0 L298.4,372.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M554.6,224.0 L556.1,221.9 L301.6,368.8 L300.1,371.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M556.1,221.9 L557.2,219.4 L302.7,366.3 L301.6,368.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M557.2,219.4 L558.0,216.5 L303.5,363.5 L302.7,366.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M558.0,216.5 L558.5,213.4 L304.0,360.4 L303.5,363.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M558.5,213.4 L558.7,210.1 L304.2,357.0 L304.0,360.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><line x1="550.9" y1="227.3" x2="296.4" y2="374.2" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><line x1="513.4" y1="162.3" x2="259.0" y2="309.3" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><path d="M304.2,357.0 L304.0,353.5 L303.5,349.8 L302.7,346.1 L301.6,342.2 L300.1,338.4 L298.4,334.6 L296.4,330.9 L294.2,327.3 L291.8,323.9 L289.2,320.8 L286.5,317.9 L283.6,315.3 L280.7,313.0 L277.7,311.1 L274.7,309.6 L271.8,308.5 L268.9,307.8 L266.2,307.5 L263.6,307.7 L261.2,308.3 L259.0,309.3 L257.0,310.7 L255.3,312.5 L253.8,314.7 L252.7,317.2 L251.9,320.0 L251.4,323.1 L251.2,326.4 L251.4,329.9 L251.9,333.6 L252.7,337.4 L253.8,341.2 L255.3,345.1 L257.0,348.8 L259.0,352.5 L261.2,356.1 L263.6,359.5 L266.2,362.7 L268.9,365.6 L271.8,368.2 L274.7,370.4 L277.7,372.3 L280.7,373.9 L283.6,375.0 L286.5,375.7 L289.2,375.9 L291.8,375.8 L294.2,375.2 L296.4,374.2 L298.4,372.8 L300.1,371.0 L301.6,368.8 L302.7,366.3 L303.5,363.5 L304.0,360.4 L304.2,357.0 Z" fill="#ededed" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><text x="277.7" y="414.0" font-size="12.5" text-anchor="middle" font-weight="bold">arbre 2 : jamais coupé, jamais hachuré</text><line x1="511.0" y1="150.7" x2="628.5" y2="114.0" stroke="#111" stroke-width="0.9"/><circle cx="628.5" cy="114.0" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="628.5" y="119.0" font-size="14" font-weight="bold" text-anchor="middle">1</text><line x1="511.0" y1="171.5" x2="638.3" y2="176.4" stroke="#111" stroke-width="0.9"/><circle cx="638.3" cy="176.4" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="638.3" y="181.4" font-size="14" font-weight="bold" text-anchor="middle">3</text><line x1="511.0" y1="122.6" x2="601.6" y2="46.7" stroke="#111" stroke-width="0.9"/><circle cx="601.6" cy="46.7" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="601.6" y="51.7" font-size="14" font-weight="bold" text-anchor="middle">4</text><line x1="277.7" y1="311.1" x2="226.3" y2="254.8" stroke="#111" stroke-width="0.9"/><circle cx="226.3" cy="254.8" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="226.3" y="259.8" font-size="14" font-weight="bold" text-anchor="middle">2</text><text x="450.0" y="504" font-size="15" font-weight="bold" text-anchor="middle">PERSPECTIVE EN DEMI-COUPE — ce que fait le plan de coupe A-A</text></svg></div>
-  <div class="outils" id="rep5"></div>
-  <div class="cadre" id="plan5"></div>
-  <div class="outils"><button class="btn" id="val5">Valider le repérage</button></div>
-  <div class="verdict" id="v5"></div>
-  <div class="essais" id="e5">Essai 1 · 3 étoiles en jeu</div>
-</section>
-
-<!-- ══ BILAN ══ -->
-<section class="ex" id="bilan">
-  <h2 style="color:var(--accf);text-align:center">Bilan du TP</h2>
-  <p style="text-align:center;margin:8px 0">Total : <b id="tot" style="font-size:22px;color:var(--acc)">0</b> ★ sur 15</p>
-  <div class="memo" id="memo"></div>
-  <p style="text-align:center">Ton code pour les exercices compétitifs :</p>
-  <div class="code">COUPE45</div>
-</section>
-</main>
-
-<div id="voile"><div class="bravo">
-  <h2 id="brT">Exercice validé</h2><div class="gr" id="brE">★★★</div>
-  <p id="brP"></p><button class="btn" id="cont">Continuer</button>
-</div></div>
+</defs><rect width="900" height="520" fill="#fff"/><path d="M685.9,136.6 L685.8,133.1 L558.5,206.6 L558.7,210.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M685.8,133.1 L685.3,129.4 L558.0,202.9 L558.5,206.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M685.3,129.4 L684.4,125.7 L557.2,199.1 L558.0,202.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M684.4,125.7 L683.3,121.8 L556.1,195.3 L557.2,199.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M683.3,121.8 L681.9,118.0 L554.6,191.5 L556.1,195.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M681.9,118.0 L680.1,114.2 L552.9,187.7 L554.6,191.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M680.1,114.2 L678.2,110.5 L550.9,184.0 L552.9,187.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M678.2,110.5 L675.9,107.0 L548.7,180.4 L550.9,184.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M675.9,107.0 L673.5,103.6 L546.3,177.0 L548.7,180.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M673.5,103.6 L670.9,100.4 L543.7,173.9 L546.3,177.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M670.9,100.4 L668.2,97.5 L540.9,171.0 L543.7,173.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M668.2,97.5 L665.3,94.9 L538.1,168.4 L540.9,171.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M665.3,94.9 L662.4,92.6 L535.1,166.1 L538.1,168.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M662.4,92.6 L659.4,90.7 L532.2,164.2 L535.1,166.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M659.4,90.7 L656.4,89.2 L529.2,162.7 L532.2,164.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M656.4,89.2 L653.5,88.1 L526.3,161.6 L529.2,162.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M653.5,88.1 L650.7,87.4 L523.4,160.9 L526.3,161.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M650.7,87.4 L647.9,87.1 L520.7,160.6 L523.4,160.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M647.9,87.1 L645.3,87.3 L518.1,160.7 L520.7,160.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M645.3,87.3 L642.9,87.9 L515.6,161.3 L518.1,160.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M642.9,87.9 L640.7,88.9 L513.4,162.3 L515.6,161.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M640.7,88.9 L638.7,90.3 L511.5,163.8 L513.4,162.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M638.7,90.3 L637.0,92.1 L509.7,165.6 L511.5,163.8 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M637.0,92.1 L635.5,94.3 L508.3,167.7 L509.7,165.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M635.5,94.3 L634.4,96.8 L507.2,170.2 L508.3,167.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M634.4,96.8 L633.6,99.6 L506.3,173.1 L507.2,170.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M633.6,99.6 L633.1,102.7 L505.8,176.2 L506.3,173.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M633.1,102.7 L632.9,106.0 L505.7,179.5 L505.8,176.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M632.9,106.0 L633.1,109.6 L505.8,183.0 L505.7,179.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M633.1,109.6 L633.6,113.2 L506.3,186.7 L505.8,183.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M633.6,113.2 L634.4,117.0 L507.2,190.5 L506.3,186.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M634.4,117.0 L635.5,120.8 L508.3,194.3 L507.2,190.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M635.5,120.8 L637.0,124.7 L509.7,198.1 L508.3,194.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M637.0,124.7 L638.7,128.5 L511.5,201.9 L509.7,198.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M638.7,128.5 L640.7,132.2 L513.4,205.6 L511.5,201.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M640.7,132.2 L642.9,135.7 L515.6,209.2 L513.4,205.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M642.9,135.7 L645.3,139.1 L518.1,212.6 L515.6,209.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M645.3,139.1 L647.9,142.3 L520.7,215.7 L518.1,212.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M647.9,142.3 L650.7,145.2 L523.4,218.6 L520.7,215.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M650.7,145.2 L653.5,147.8 L526.3,221.2 L523.4,218.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M653.5,147.8 L656.4,150.0 L529.2,223.5 L526.3,221.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M656.4,150.0 L659.4,151.9 L532.2,225.4 L529.2,223.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M659.4,151.9 L662.4,153.5 L535.1,226.9 L532.2,225.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M662.4,153.5 L665.3,154.6 L538.1,228.0 L535.1,226.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M665.3,154.6 L668.2,155.3 L540.9,228.7 L538.1,228.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M668.2,155.3 L670.9,155.6 L543.7,229.0 L540.9,228.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M670.9,155.6 L673.5,155.4 L546.3,228.9 L543.7,229.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M673.5,155.4 L675.9,154.8 L548.7,228.3 L546.3,228.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M675.9,154.8 L678.2,153.8 L550.9,227.3 L548.7,228.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M678.2,153.8 L680.1,152.4 L552.9,225.9 L550.9,227.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M680.1,152.4 L681.9,150.6 L554.6,224.0 L552.9,225.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M681.9,150.6 L683.3,148.4 L556.1,221.9 L554.6,224.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M683.3,148.4 L684.4,145.9 L557.2,219.4 L556.1,221.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M684.4,145.9 L685.3,143.1 L558.0,216.5 L557.2,219.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M685.3,143.1 L685.8,140.0 L558.5,213.4 L558.0,216.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M685.8,140.0 L685.9,136.6 L558.7,210.1 L558.5,213.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><line x1="678.2" y1="153.8" x2="550.9" y2="227.3" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><line x1="640.7" y1="88.9" x2="513.4" y2="162.3" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><path d="M489.8,170.3 L606.4,237.7 L330.7,396.8 L214.1,329.5 Z" fill="#efefef" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M606.4,276.8 L330.7,436.0 L330.7,396.8 L606.4,237.7 Z" fill="#bfbfbf" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M214.1,368.7 L330.7,436.0 L330.7,396.8 L214.1,329.5 Z" fill="#dadada" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M468.6,72.4 L542.8,115.2 L394.3,200.9 L320.1,158.1 Z" fill="#f2f2f2" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M542.8,274.4 L394.3,360.1 L394.3,200.9 L542.8,115.2 Z" fill="#c4c4c4" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M320.1,317.2 L394.3,360.1 L394.3,200.9 L320.1,158.1 Z" fill="#dedede" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M606.4,276.8 L330.7,436.0 L330.7,396.8 L606.4,237.7 Z" fill="url(#i1)" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M542.8,274.4 L394.3,360.1 L394.3,314.8 L542.8,229.1 Z" fill="url(#i1)" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M542.8,148.3 L394.3,234.0 L394.3,200.9 L542.8,115.2 Z" fill="url(#i1)" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M532.2,235.2 L404.9,308.7 L404.9,298.9 L532.2,225.4 Z" fill="url(#i3)" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M532.2,164.2 L404.9,237.7 L404.9,227.9 L532.2,154.4 Z" fill="url(#i3)" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M394.3,234.0 L392.4,232.9 L390.4,232.0 L388.5,231.2 L386.5,230.5 L384.6,230.0 L382.8,229.6 L380.9,229.3 L379.2,229.2 L377.4,229.3 L375.7,229.4 L374.1,229.7 L372.5,230.2 L371.0,230.8 L369.6,231.5 L368.2,232.4 L367.0,233.4 L365.8,234.5 L364.7,235.8 L363.7,237.2 L362.8,238.7 L362.0,240.3 L361.3,242.0 L360.7,243.8 L360.2,245.7 L359.8,247.7 L359.6,249.8 L359.4,251.9 L359.3,254.2 L359.4,256.5 L359.6,258.8 L359.8,261.2 L360.2,263.7 L360.7,266.2 L361.3,268.7 L362.0,271.2 L362.8,273.7 L363.7,276.2 L364.7,278.8 L365.8,281.3 L367.0,283.8 L368.2,286.2 L369.6,288.7 L371.0,291.0 L372.5,293.4 L374.1,295.6 L375.7,297.8 L377.4,300.0 L379.2,302.0 L380.9,304.0 L382.8,305.8 L384.6,307.6 L386.5,309.3 L388.5,310.8 L390.4,312.3 L392.4,313.6 L394.3,314.8 L394.3,314.8 Z" fill="#8f8f8f" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M404.9,227.9 L403.0,226.8 L401.0,225.9 L399.1,225.0 L397.1,224.4 L395.2,223.8 L393.4,223.5 L391.5,223.2 L389.8,223.1 L388.0,223.1 L386.3,223.3 L384.7,223.6 L383.1,224.1 L381.6,224.7 L380.2,225.4 L378.8,226.3 L377.6,227.3 L376.4,228.4 L375.3,229.7 L374.3,231.0 L373.4,232.5 L372.6,234.1 L371.9,235.9 L371.3,237.7 L370.8,239.6 L370.4,241.6 L370.2,243.7 L370.0,245.8 L369.9,248.1 L370.0,250.4 L370.2,252.7 L370.4,255.1 L370.8,257.6 L371.3,260.0 L371.9,262.5 L372.6,265.1 L373.4,267.6 L374.3,270.1 L375.3,272.7 L376.4,275.2 L377.6,277.7 L378.8,280.1 L380.2,282.5 L381.6,284.9 L383.1,287.3 L384.7,289.5 L386.3,291.7 L388.0,293.9 L389.8,295.9 L391.5,297.9 L393.4,299.7 L395.2,301.5 L397.1,303.2 L399.1,304.7 L401.0,306.2 L403.0,307.5 L404.9,308.7 L404.9,308.7 Z" fill="#b9b9b9" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M462.2,54.0 L536.4,96.9 L400.7,175.2 L326.5,132.4 Z" fill="#f6f6f6" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M536.4,118.9 L400.7,197.2 L400.7,175.2 L536.4,96.9 Z" fill="#c9c9c9" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M326.5,154.4 L400.7,197.2 L400.7,175.2 L326.5,132.4 Z" fill="#e2e2e2" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M536.4,118.9 L400.7,197.2 L400.7,175.2 L536.4,96.9 Z" fill="url(#i2)" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M558.7,210.1 L558.5,206.6 L304.0,353.5 L304.2,357.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M558.5,206.6 L558.0,202.9 L303.5,349.8 L304.0,353.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M558.0,202.9 L557.2,199.1 L302.7,346.1 L303.5,349.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M557.2,199.1 L556.1,195.3 L301.6,342.2 L302.7,346.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M556.1,195.3 L554.6,191.5 L300.1,338.4 L301.6,342.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M554.6,191.5 L552.9,187.7 L298.4,334.6 L300.1,338.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M552.9,187.7 L550.9,184.0 L296.4,330.9 L298.4,334.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M550.9,184.0 L548.7,180.4 L294.2,327.3 L296.4,330.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M548.7,180.4 L546.3,177.0 L291.8,323.9 L294.2,327.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M546.3,177.0 L543.7,173.9 L289.2,320.8 L291.8,323.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M543.7,173.9 L540.9,171.0 L286.5,317.9 L289.2,320.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M540.9,171.0 L538.1,168.4 L283.6,315.3 L286.5,317.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M538.1,168.4 L535.1,166.1 L280.7,313.0 L283.6,315.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M535.1,166.1 L532.2,164.2 L277.7,311.1 L280.7,313.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M532.2,164.2 L529.2,162.7 L274.7,309.6 L277.7,311.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M529.2,162.7 L526.3,161.6 L271.8,308.5 L274.7,309.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M526.3,161.6 L523.4,160.9 L268.9,307.8 L271.8,308.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M523.4,160.9 L520.7,160.6 L266.2,307.5 L268.9,307.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M520.7,160.6 L518.1,160.7 L263.6,307.7 L266.2,307.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M518.1,160.7 L515.6,161.3 L261.2,308.3 L263.6,307.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M515.6,161.3 L513.4,162.3 L259.0,309.3 L261.2,308.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M513.4,162.3 L511.5,163.8 L257.0,310.7 L259.0,309.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M511.5,163.8 L509.7,165.6 L255.3,312.5 L257.0,310.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M509.7,165.6 L508.3,167.7 L253.8,314.7 L255.3,312.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M508.3,167.7 L507.2,170.2 L252.7,317.2 L253.8,314.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M507.2,170.2 L506.3,173.1 L251.9,320.0 L252.7,317.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M506.3,173.1 L505.8,176.2 L251.4,323.1 L251.9,320.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M505.8,176.2 L505.7,179.5 L251.2,326.4 L251.4,323.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M505.7,179.5 L505.8,183.0 L251.4,329.9 L251.2,326.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M505.8,183.0 L506.3,186.7 L251.9,333.6 L251.4,329.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M506.3,186.7 L507.2,190.5 L252.7,337.4 L251.9,333.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M507.2,190.5 L508.3,194.3 L253.8,341.2 L252.7,337.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M508.3,194.3 L509.7,198.1 L255.3,345.1 L253.8,341.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M509.7,198.1 L511.5,201.9 L257.0,348.8 L255.3,345.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M511.5,201.9 L513.4,205.6 L259.0,352.5 L257.0,348.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M513.4,205.6 L515.6,209.2 L261.2,356.1 L259.0,352.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M515.6,209.2 L518.1,212.6 L263.6,359.5 L261.2,356.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M518.1,212.6 L520.7,215.7 L266.2,362.7 L263.6,359.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M520.7,215.7 L523.4,218.6 L268.9,365.6 L266.2,362.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M523.4,218.6 L526.3,221.2 L271.8,368.2 L268.9,365.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M526.3,221.2 L529.2,223.5 L274.7,370.4 L271.8,368.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M529.2,223.5 L532.2,225.4 L277.7,372.3 L274.7,370.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M532.2,225.4 L535.1,226.9 L280.7,373.9 L277.7,372.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M535.1,226.9 L538.1,228.0 L283.6,375.0 L280.7,373.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M538.1,228.0 L540.9,228.7 L286.5,375.7 L283.6,375.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M540.9,228.7 L543.7,229.0 L289.2,375.9 L286.5,375.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M543.7,229.0 L546.3,228.9 L291.8,375.8 L289.2,375.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M546.3,228.9 L548.7,228.3 L294.2,375.2 L291.8,375.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M548.7,228.3 L550.9,227.3 L296.4,374.2 L294.2,375.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M550.9,227.3 L552.9,225.9 L298.4,372.8 L296.4,374.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M552.9,225.9 L554.6,224.0 L300.1,371.0 L298.4,372.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M554.6,224.0 L556.1,221.9 L301.6,368.8 L300.1,371.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M556.1,221.9 L557.2,219.4 L302.7,366.3 L301.6,368.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M557.2,219.4 L558.0,216.5 L303.5,363.5 L302.7,366.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M558.0,216.5 L558.5,213.4 L304.0,360.4 L303.5,363.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M558.5,213.4 L558.7,210.1 L304.2,357.0 L304.0,360.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><line x1="550.9" y1="227.3" x2="296.4" y2="374.2" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><line x1="513.4" y1="162.3" x2="259.0" y2="309.3" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><path d="M304.2,357.0 L304.0,353.5 L303.5,349.8 L302.7,346.1 L301.6,342.2 L300.1,338.4 L298.4,334.6 L296.4,330.9 L294.2,327.3 L291.8,323.9 L289.2,320.8 L286.5,317.9 L283.6,315.3 L280.7,313.0 L277.7,311.1 L274.7,309.6 L271.8,308.5 L268.9,307.8 L266.2,307.5 L263.6,307.7 L261.2,308.3 L259.0,309.3 L257.0,310.7 L255.3,312.5 L253.8,314.7 L252.7,317.2 L251.9,320.0 L251.4,323.1 L251.2,326.4 L251.4,329.9 L251.9,333.6 L252.7,337.4 L253.8,341.2 L255.3,345.1 L257.0,348.8 L259.0,352.5 L261.2,356.1 L263.6,359.5 L266.2,362.7 L268.9,365.6 L271.8,368.2 L274.7,370.4 L277.7,372.3 L280.7,373.9 L283.6,375.0 L286.5,375.7 L289.2,375.9 L291.8,375.8 L294.2,375.2 L296.4,374.2 L298.4,372.8 L300.1,371.0 L301.6,368.8 L302.7,366.3 L303.5,363.5 L304.0,360.4 L304.2,357.0 Z" fill="#ededed" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><text x="277.7" y="414.0" font-size="12.5" text-anchor="middle" font-weight="bold">arbre 2 : jamais coupé, jamais hachuré</text><line x1="511.0" y1="150.7" x2="628.5" y2="114.0" stroke="#111" stroke-width="0.9"/><circle cx="628.5" cy="114.0" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="628.5" y="119.0" font-size="14" font-weight="bold" text-anchor="middle">1</text><line x1="511.0" y1="171.5" x2="638.3" y2="176.4" stroke="#111" stroke-width="0.9"/><circle cx="638.3" cy="176.4" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="638.3" y="181.4" font-size="14" font-weight="bold" text-anchor="middle">3</text><line x1="511.0" y1="122.6" x2="601.6" y2="46.7" stroke="#111" stroke-width="0.9"/><circle cx="601.6" cy="46.7" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="601.6" y="51.7" font-size="14" font-weight="bold" text-anchor="middle">4</text><line x1="277.7" y1="311.1" x2="226.3" y2="254.8" stroke="#111" stroke-width="0.9"/><circle cx="226.3" cy="254.8" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="226.3" y="259.8" font-size="14" font-weight="bold" text-anchor="middle">2</text><text x="450.0" y="504" font-size="15" font-weight="bold" text-anchor="middle">PERSPECTIVE EN DEMI-COUPE — ce que fait le plan de coupe A-A</text></svg></template>
+<template id="tplEns"><svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif"><defs>
+<pattern id="i1" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+<line x1="0" y1="0" x2="0" y2="7" stroke="#111" stroke-width="0.8"/></pattern>
+<pattern id="i2" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+<line x1="0" y1="0" x2="0" y2="7" stroke="#111" stroke-width="0.8"/></pattern>
+<pattern id="i3" width="3.6" height="3.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+<line x1="0" y1="0" x2="0" y2="3.6" stroke="#111" stroke-width="0.7"/></pattern>
+</defs><rect width="900" height="520" fill="#fff"/><path d="M634.8,124.3 L634.6,121.3 L526.5,183.7 L526.6,186.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M634.6,121.3 L634.2,118.1 L526.1,180.6 L526.5,183.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M634.2,118.1 L633.5,114.9 L525.4,177.4 L526.1,180.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M633.5,114.9 L632.6,111.7 L524.4,174.1 L525.4,177.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M632.6,111.7 L631.3,108.4 L523.2,170.9 L524.4,174.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M631.3,108.4 L629.9,105.2 L521.7,167.6 L523.2,170.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M629.9,105.2 L628.2,102.0 L520.0,164.5 L521.7,167.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M628.2,102.0 L626.3,99.0 L518.1,161.5 L520.0,164.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M626.3,99.0 L624.2,96.1 L516.1,158.6 L518.1,161.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M624.2,96.1 L622.0,93.4 L513.9,155.9 L516.1,158.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M622.0,93.4 L619.7,91.0 L511.5,153.4 L513.9,155.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M619.7,91.0 L617.3,88.8 L509.1,151.2 L511.5,153.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M617.3,88.8 L614.8,86.8 L506.6,149.3 L509.1,151.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M614.8,86.8 L612.3,85.2 L504.1,147.7 L506.6,149.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M612.3,85.2 L609.7,83.9 L501.6,146.4 L504.1,147.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M609.7,83.9 L607.2,83.0 L499.1,145.4 L501.6,146.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M607.2,83.0 L604.8,82.4 L496.6,144.8 L499.1,145.4 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M604.8,82.4 L602.5,82.2 L494.3,144.6 L496.6,144.8 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M602.5,82.2 L600.3,82.3 L492.1,144.7 L494.3,144.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M600.3,82.3 L598.2,82.8 L490.0,145.2 L492.1,144.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M598.2,82.8 L596.3,83.6 L488.2,146.1 L490.0,145.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M596.3,83.6 L594.6,84.9 L486.5,147.3 L488.2,146.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M594.6,84.9 L593.2,86.4 L485.0,148.8 L486.5,147.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M593.2,86.4 L592.0,88.2 L483.8,150.7 L485.0,148.8 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M592.0,88.2 L591.0,90.4 L482.8,152.8 L483.8,150.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M591.0,90.4 L590.3,92.8 L482.1,155.2 L482.8,152.8 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M590.3,92.8 L589.9,95.4 L481.7,157.9 L482.1,155.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M589.9,95.4 L589.7,98.2 L481.5,160.7 L481.7,157.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M589.7,98.2 L589.9,101.2 L481.7,163.7 L481.5,160.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M589.9,101.2 L590.3,104.4 L482.1,166.8 L481.7,163.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M590.3,104.4 L591.0,107.6 L482.8,170.0 L482.1,166.8 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M591.0,107.6 L592.0,110.8 L483.8,173.3 L482.8,170.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M592.0,110.8 L593.2,114.1 L485.0,176.5 L483.8,173.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M593.2,114.1 L594.6,117.3 L486.5,179.8 L485.0,176.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M594.6,117.3 L596.3,120.4 L488.2,182.9 L486.5,179.8 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M596.3,120.4 L598.2,123.5 L490.0,185.9 L488.2,182.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M598.2,123.5 L600.3,126.4 L492.1,188.8 L490.0,185.9 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M600.3,126.4 L602.5,129.0 L494.3,191.5 L492.1,188.8 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M602.5,129.0 L604.8,131.5 L496.6,194.0 L494.3,191.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M604.8,131.5 L607.2,133.7 L499.1,196.2 L496.6,194.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M607.2,133.7 L609.7,135.6 L501.6,198.1 L499.1,196.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M609.7,135.6 L612.3,137.3 L504.1,199.7 L501.6,198.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M612.3,137.3 L614.8,138.6 L506.6,201.0 L504.1,199.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M614.8,138.6 L617.3,139.5 L509.1,202.0 L506.6,201.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M617.3,139.5 L619.7,140.1 L511.5,202.6 L509.1,202.0 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M619.7,140.1 L622.0,140.3 L513.9,202.8 L511.5,202.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M622.0,140.3 L624.2,140.2 L516.1,202.7 L513.9,202.8 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M624.2,140.2 L626.3,139.7 L518.1,202.2 L516.1,202.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M626.3,139.7 L628.2,138.8 L520.0,201.3 L518.1,202.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M628.2,138.8 L629.9,137.6 L521.7,200.1 L520.0,201.3 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M629.9,137.6 L631.3,136.1 L523.2,198.6 L521.7,200.1 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M631.3,136.1 L632.6,134.3 L524.4,196.7 L523.2,198.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M632.6,134.3 L633.5,132.1 L525.4,194.6 L524.4,196.7 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M633.5,132.1 L634.2,129.7 L526.1,192.2 L525.4,194.6 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M634.2,129.7 L634.6,127.1 L526.5,189.5 L526.1,192.2 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><path d="M634.6,127.1 L634.8,124.3 L526.6,186.7 L526.5,189.5 Z" fill="#cfcfcf" stroke="#cfcfcf" stroke-width="0.6"/><line x1="628.2" y1="138.8" x2="520.0" y2="201.3" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><line x1="596.3" y1="83.6" x2="488.2" y2="146.1" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><path d="M468.0,152.9 L666.3,267.4 L432.0,402.7 L233.7,288.2 Z" fill="#efefef" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M666.3,300.7 L432.0,436.0 L432.0,402.7 L666.3,267.4 Z" fill="#bfbfbf" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M233.7,321.5 L432.0,436.0 L432.0,402.7 L233.7,288.2 Z" fill="#dadada" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M450.0,69.6 L576.2,142.5 L450.0,215.3 L323.8,142.5 Z" fill="#f2f2f2" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M576.2,277.8 L450.0,350.6 L450.0,215.3 L576.2,142.5 Z" fill="#c4c4c4" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M323.8,277.8 L450.0,350.6 L450.0,215.3 L323.8,142.5 Z" fill="#dedede" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M416.6,258.5 L416.5,254.6 L415.9,250.5 L415.0,246.2 L413.7,241.9 L412.1,237.6 L410.2,233.4 L407.9,229.2 L405.4,225.2 L402.7,221.4 L399.8,217.9 L396.7,214.6 L393.5,211.7 L390.2,209.1 L386.9,207.0 L383.6,205.3 L380.3,204.0 L377.1,203.3 L374.0,203.0 L371.1,203.1 L368.4,203.8 L365.9,204.9 L363.6,206.5 L361.7,208.5 L360.1,211.0 L358.8,213.8 L357.9,217.0 L357.3,220.4 L357.2,224.2 L357.3,228.1 L357.9,232.3 L358.8,236.5 L360.1,240.8 L361.7,245.1 L363.6,249.3 L365.9,253.5 L368.4,257.5 L371.1,261.3 L374.0,264.9 L377.1,268.1 L380.3,271.0 L383.6,273.6 L386.9,275.7 L390.2,277.4 L393.5,278.7 L396.7,279.5 L399.8,279.8 L402.7,279.6 L405.4,278.9 L407.9,277.8 L410.2,276.2 L412.1,274.2 L413.7,271.7 L415.0,268.9 L415.9,265.7 L416.5,262.3 L416.6,258.5 Z" fill="#8f8f8f" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M425.7,253.3 L425.5,249.4 L424.9,245.3 L424.0,241.0 L422.7,236.7 L421.1,232.4 L419.2,228.2 L416.9,224.0 L414.5,220.0 L411.7,216.2 L408.8,212.7 L405.7,209.4 L402.5,206.5 L399.2,203.9 L395.9,201.8 L392.6,200.1 L389.3,198.8 L386.1,198.1 L383.0,197.8 L380.1,197.9 L377.4,198.6 L374.9,199.7 L372.7,201.3 L370.7,203.3 L369.1,205.8 L367.8,208.6 L366.9,211.8 L366.4,215.2 L366.2,219.0 L366.4,222.9 L366.9,227.1 L367.8,231.3 L369.1,235.6 L370.7,239.9 L372.7,244.1 L374.9,248.3 L377.4,252.3 L380.1,256.1 L383.0,259.6 L386.1,262.9 L389.3,265.8 L392.6,268.4 L395.9,270.5 L399.2,272.2 L402.5,273.5 L405.7,274.2 L408.8,274.6 L411.7,274.4 L414.5,273.7 L416.9,272.6 L419.2,271.0 L421.1,269.0 L422.7,266.5 L424.0,263.7 L424.9,260.5 L425.5,257.1 L425.7,253.3 Z" fill="#b9b9b9" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M444.6,54.0 L570.8,126.9 L455.4,193.5 L329.2,120.6 Z" fill="#f6f6f6" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M570.8,145.6 L455.4,212.2 L455.4,193.5 L570.8,126.9 Z" fill="#c9c9c9" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M329.2,139.4 L455.4,212.2 L455.4,193.5 L329.2,120.6 Z" fill="#e2e2e2" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/><path d="M452.7,85.7 L451.2,86.5 L451.2,69.8 L452.7,69.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M451.2,86.5 L449.5,87.1 L449.5,70.4 L451.2,69.8 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M449.5,87.1 L447.6,87.5 L447.6,70.9 L449.5,70.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M447.6,87.5 L445.7,87.8 L445.7,71.2 L447.6,70.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M445.7,87.8 L443.7,87.9 L443.7,71.2 L445.7,71.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M443.7,87.9 L441.7,87.8 L441.7,71.2 L443.7,71.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M441.7,87.8 L439.8,87.5 L439.8,70.9 L441.7,71.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M439.8,87.5 L437.9,87.1 L437.9,70.4 L439.8,70.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M437.9,87.1 L436.2,86.5 L436.2,69.8 L437.9,70.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M436.2,86.5 L434.7,85.7 L434.7,69.1 L436.2,69.8 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M434.7,85.7 L433.4,84.9 L433.4,68.2 L434.7,69.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M433.4,84.9 L432.3,83.9 L432.3,67.2 L433.4,68.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M432.3,83.9 L431.6,82.8 L431.6,66.2 L432.3,67.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M431.6,82.8 L431.1,81.7 L431.1,65.0 L431.6,66.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M431.1,81.7 L430.9,80.5 L430.9,63.9 L431.1,65.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M430.9,80.5 L431.1,79.4 L431.1,62.7 L430.9,63.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M431.1,79.4 L431.6,78.3 L431.6,61.6 L431.1,62.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M431.6,78.3 L432.3,77.2 L432.3,60.5 L431.6,61.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M432.3,77.2 L433.4,76.2 L433.4,59.6 L432.3,60.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M433.4,76.2 L434.7,75.3 L434.7,58.7 L433.4,59.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M434.7,75.3 L436.2,74.6 L436.2,57.9 L434.7,58.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M436.2,74.6 L437.9,74.0 L437.9,57.3 L436.2,57.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M437.9,74.0 L439.8,73.5 L439.8,56.9 L437.9,57.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M439.8,73.5 L441.7,73.3 L441.7,56.6 L439.8,56.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M441.7,73.3 L443.7,73.2 L443.7,56.5 L441.7,56.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M443.7,73.2 L445.7,73.3 L445.7,56.6 L443.7,56.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M445.7,73.3 L447.6,73.5 L447.6,56.9 L445.7,56.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M447.6,73.5 L449.5,74.0 L449.5,57.3 L447.6,56.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M449.5,74.0 L451.2,74.6 L451.2,57.9 L449.5,57.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M451.2,74.6 L452.7,75.3 L452.7,58.7 L451.2,57.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M452.7,75.3 L454.0,76.2 L454.0,59.6 L452.7,58.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M454.0,76.2 L455.0,77.2 L455.0,60.5 L454.0,59.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M455.0,77.2 L455.8,78.3 L455.8,61.6 L455.0,60.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M455.8,78.3 L456.3,79.4 L456.3,62.7 L455.8,61.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M456.3,79.4 L456.4,80.5 L456.4,63.9 L456.3,62.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M456.4,80.5 L456.3,81.7 L456.3,65.0 L456.4,63.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M456.3,81.7 L455.8,82.8 L455.8,66.2 L456.3,65.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M455.8,82.8 L455.0,83.9 L455.0,67.2 L455.8,66.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M455.0,83.9 L454.0,84.9 L454.0,68.2 L455.0,67.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M454.0,84.9 L452.7,85.7 L452.7,69.1 L454.0,68.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><line x1="430.9" y1="80.5" x2="430.9" y2="63.9" stroke="#111" stroke-width="1.4" stroke-linecap="round"/><line x1="456.4" y1="80.5" x2="456.4" y2="63.9" stroke="#111" stroke-width="1.4" stroke-linecap="round"/><path d="M452.7,69.1 L451.2,69.8 L449.5,70.4 L447.6,70.9 L445.7,71.2 L443.7,71.2 L441.7,71.2 L439.8,70.9 L437.9,70.4 L436.2,69.8 L434.7,69.1 L433.4,68.2 L432.3,67.2 L431.6,66.2 L431.1,65.0 L430.9,63.9 L431.1,62.7 L431.6,61.6 L432.3,60.5 L433.4,59.6 L434.7,58.7 L436.2,57.9 L437.9,57.3 L439.8,56.9 L441.7,56.6 L443.7,56.5 L445.7,56.6 L447.6,56.9 L449.5,57.3 L451.2,57.9 L452.7,58.7 L454.0,59.6 L455.0,60.5 L455.8,61.6 L456.3,62.7 L456.4,63.9 L456.3,65.0 L455.8,66.2 L455.0,67.2 L454.0,68.2 L452.7,69.1 Z" fill="#e4e4e4" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M384.2,125.3 L382.7,126.0 L382.7,109.4 L384.2,108.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M382.7,126.0 L381.0,126.7 L381.0,110.0 L382.7,109.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M381.0,126.7 L379.1,127.1 L379.1,110.4 L381.0,110.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M379.1,127.1 L377.2,127.4 L377.2,110.7 L379.1,110.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M377.2,127.4 L375.2,127.5 L375.2,110.8 L377.2,110.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M375.2,127.5 L373.2,127.4 L373.2,110.7 L375.2,110.8 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M373.2,127.4 L371.2,127.1 L371.2,110.4 L373.2,110.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M371.2,127.1 L369.4,126.7 L369.4,110.0 L371.2,110.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M369.4,126.7 L367.7,126.0 L367.7,109.4 L369.4,110.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M367.7,126.0 L366.2,125.3 L366.2,108.6 L367.7,109.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M366.2,125.3 L364.9,124.4 L364.9,107.8 L366.2,108.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M364.9,124.4 L363.8,123.4 L363.8,106.8 L364.9,107.8 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M363.8,123.4 L363.1,122.4 L363.1,105.7 L363.8,106.8 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M363.1,122.4 L362.6,121.2 L362.6,104.6 L363.1,105.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M362.6,121.2 L362.4,120.1 L362.4,103.4 L362.6,104.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M362.4,120.1 L362.6,118.9 L362.6,102.3 L362.4,103.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M362.6,118.9 L363.1,117.8 L363.1,101.2 L362.6,102.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M363.1,117.8 L363.8,116.8 L363.8,100.1 L363.1,101.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M363.8,116.8 L364.9,115.8 L364.9,99.1 L363.8,100.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M364.9,115.8 L366.2,114.9 L366.2,98.2 L364.9,99.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M366.2,114.9 L367.7,114.1 L367.7,97.5 L366.2,98.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M367.7,114.1 L369.4,113.5 L369.4,96.9 L367.7,97.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M369.4,113.5 L371.2,113.1 L371.2,96.4 L369.4,96.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M371.2,113.1 L373.2,112.8 L373.2,96.2 L371.2,96.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M373.2,112.8 L375.2,112.7 L375.2,96.1 L373.2,96.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M375.2,112.7 L377.2,112.8 L377.2,96.2 L375.2,96.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M377.2,112.8 L379.1,113.1 L379.1,96.4 L377.2,96.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M379.1,113.1 L381.0,113.5 L381.0,96.9 L379.1,96.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M381.0,113.5 L382.7,114.1 L382.7,97.5 L381.0,96.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M382.7,114.1 L384.2,114.9 L384.2,98.2 L382.7,97.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M384.2,114.9 L385.5,115.8 L385.5,99.1 L384.2,98.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M385.5,115.8 L386.5,116.8 L386.5,100.1 L385.5,99.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M386.5,116.8 L387.3,117.8 L387.3,101.2 L386.5,100.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M387.3,117.8 L387.8,118.9 L387.8,102.3 L387.3,101.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M387.8,118.9 L387.9,120.1 L387.9,103.4 L387.8,102.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M387.9,120.1 L387.8,121.2 L387.8,104.6 L387.9,103.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M387.8,121.2 L387.3,122.4 L387.3,105.7 L387.8,104.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M387.3,122.4 L386.5,123.4 L386.5,106.8 L387.3,105.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M386.5,123.4 L385.5,124.4 L385.5,107.8 L386.5,106.8 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M385.5,124.4 L384.2,125.3 L384.2,108.6 L385.5,107.8 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><line x1="362.4" y1="120.1" x2="362.4" y2="103.4" stroke="#111" stroke-width="1.4" stroke-linecap="round"/><line x1="387.9" y1="120.1" x2="387.9" y2="103.4" stroke="#111" stroke-width="1.4" stroke-linecap="round"/><path d="M384.2,108.6 L382.7,109.4 L381.0,110.0 L379.1,110.4 L377.2,110.7 L375.2,110.8 L373.2,110.7 L371.2,110.4 L369.4,110.0 L367.7,109.4 L366.2,108.6 L364.9,107.8 L363.8,106.8 L363.1,105.7 L362.6,104.6 L362.4,103.4 L362.6,102.3 L363.1,101.2 L363.8,100.1 L364.9,99.1 L366.2,98.2 L367.7,97.5 L369.4,96.9 L371.2,96.4 L373.2,96.2 L375.2,96.1 L377.2,96.2 L379.1,96.4 L381.0,96.9 L382.7,97.5 L384.2,98.2 L385.5,99.1 L386.5,100.1 L387.3,101.2 L387.8,102.3 L387.9,103.4 L387.8,104.6 L387.3,105.7 L386.5,106.8 L385.5,107.8 L384.2,108.6 Z" fill="#e4e4e4" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M533.8,132.6 L532.3,133.3 L532.3,116.7 L533.8,115.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M532.3,133.3 L530.6,133.9 L530.6,117.3 L532.3,116.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M530.6,133.9 L528.8,134.4 L528.8,117.7 L530.6,117.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M528.8,134.4 L526.8,134.7 L526.8,118.0 L528.8,117.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M526.8,134.7 L524.8,134.7 L524.8,118.1 L526.8,118.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M524.8,134.7 L522.8,134.7 L522.8,118.0 L524.8,118.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M522.8,134.7 L520.9,134.4 L520.9,117.7 L522.8,118.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M520.9,134.4 L519.0,133.9 L519.0,117.3 L520.9,117.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M519.0,133.9 L517.3,133.3 L517.3,116.7 L519.0,117.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M517.3,133.3 L515.8,132.6 L515.8,115.9 L517.3,116.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M515.8,132.6 L514.5,131.7 L514.5,115.1 L515.8,115.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M514.5,131.7 L513.5,130.7 L513.5,114.1 L514.5,115.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M513.5,130.7 L512.7,129.7 L512.7,113.0 L513.5,114.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M512.7,129.7 L512.2,128.5 L512.2,111.9 L512.7,113.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M512.2,128.5 L512.1,127.4 L512.1,110.7 L512.2,111.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M512.1,127.4 L512.2,126.2 L512.2,109.6 L512.1,110.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M512.2,126.2 L512.7,125.1 L512.7,108.5 L512.2,109.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M512.7,125.1 L513.5,124.0 L513.5,107.4 L512.7,108.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M513.5,124.0 L514.5,123.1 L514.5,106.4 L513.5,107.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M514.5,123.1 L515.8,122.2 L515.8,105.5 L514.5,106.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M515.8,122.2 L517.3,121.4 L517.3,104.8 L515.8,105.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M517.3,121.4 L519.0,120.8 L519.0,104.2 L517.3,104.8 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M519.0,120.8 L520.9,120.4 L520.9,103.7 L519.0,104.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M520.9,120.4 L522.8,120.1 L522.8,103.5 L520.9,103.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M522.8,120.1 L524.8,120.0 L524.8,103.4 L522.8,103.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M524.8,120.0 L526.8,120.1 L526.8,103.5 L524.8,103.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M526.8,120.1 L528.8,120.4 L528.8,103.7 L526.8,103.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M528.8,120.4 L530.6,120.8 L530.6,104.2 L528.8,103.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M530.6,120.8 L532.3,121.4 L532.3,104.8 L530.6,104.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M532.3,121.4 L533.8,122.2 L533.8,105.5 L532.3,104.8 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M533.8,122.2 L535.1,123.1 L535.1,106.4 L533.8,105.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M535.1,123.1 L536.2,124.0 L536.2,107.4 L535.1,106.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M536.2,124.0 L536.9,125.1 L536.9,108.5 L536.2,107.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M536.9,125.1 L537.4,126.2 L537.4,109.6 L536.9,108.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M537.4,126.2 L537.6,127.4 L537.6,110.7 L537.4,109.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M537.6,127.4 L537.4,128.5 L537.4,111.9 L537.6,110.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M537.4,128.5 L536.9,129.7 L536.9,113.0 L537.4,111.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M536.9,129.7 L536.2,130.7 L536.2,114.1 L536.9,113.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M536.2,130.7 L535.1,131.7 L535.1,115.1 L536.2,114.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M535.1,131.7 L533.8,132.6 L533.8,115.9 L535.1,115.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><line x1="512.1" y1="127.4" x2="512.1" y2="110.7" stroke="#111" stroke-width="1.4" stroke-linecap="round"/><line x1="537.6" y1="127.4" x2="537.6" y2="110.7" stroke="#111" stroke-width="1.4" stroke-linecap="round"/><path d="M533.8,115.9 L532.3,116.7 L530.6,117.3 L528.8,117.7 L526.8,118.0 L524.8,118.1 L522.8,118.0 L520.9,117.7 L519.0,117.3 L517.3,116.7 L515.8,115.9 L514.5,115.1 L513.5,114.1 L512.7,113.0 L512.2,111.9 L512.1,110.7 L512.2,109.6 L512.7,108.5 L513.5,107.4 L514.5,106.4 L515.8,105.5 L517.3,104.8 L519.0,104.2 L520.9,103.7 L522.8,103.5 L524.8,103.4 L526.8,103.5 L528.8,103.7 L530.6,104.2 L532.3,104.8 L533.8,105.5 L535.1,106.4 L536.2,107.4 L536.9,108.5 L537.4,109.6 L537.6,110.7 L537.4,111.9 L536.9,113.0 L536.2,114.1 L535.1,115.1 L533.8,115.9 Z" fill="#e4e4e4" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M465.3,172.1 L463.8,172.9 L463.8,156.2 L465.3,155.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M463.8,172.9 L462.1,173.5 L462.1,156.8 L463.8,156.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M462.1,173.5 L460.2,173.9 L460.2,157.3 L462.1,156.8 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M460.2,173.9 L458.3,174.2 L458.3,157.6 L460.2,157.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M458.3,174.2 L456.3,174.3 L456.3,157.6 L458.3,157.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M456.3,174.3 L454.3,174.2 L454.3,157.6 L456.3,157.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M454.3,174.2 L452.4,173.9 L452.4,157.3 L454.3,157.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M452.4,173.9 L450.5,173.5 L450.5,156.8 L452.4,157.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M450.5,173.5 L448.8,172.9 L448.8,156.2 L450.5,156.8 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M448.8,172.9 L447.3,172.1 L447.3,155.5 L448.8,156.2 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M447.3,172.1 L446.0,171.3 L446.0,154.6 L447.3,155.5 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M446.0,171.3 L445.0,170.3 L445.0,153.6 L446.0,154.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M445.0,170.3 L444.2,169.2 L444.2,152.6 L445.0,153.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M444.2,169.2 L443.7,168.1 L443.7,151.4 L444.2,152.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M443.7,168.1 L443.6,166.9 L443.6,150.3 L443.7,151.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M443.6,166.9 L443.7,165.8 L443.7,149.1 L443.6,150.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M443.7,165.8 L444.2,164.7 L444.2,148.0 L443.7,149.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M444.2,164.7 L445.0,163.6 L445.0,146.9 L444.2,148.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M445.0,163.6 L446.0,162.6 L446.0,146.0 L445.0,146.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M446.0,162.6 L447.3,161.7 L447.3,145.1 L446.0,146.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M447.3,161.7 L448.8,161.0 L448.8,144.3 L447.3,145.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M448.8,161.0 L450.5,160.4 L450.5,143.7 L448.8,144.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M450.5,160.4 L452.4,159.9 L452.4,143.3 L450.5,143.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M452.4,159.9 L454.3,159.7 L454.3,143.0 L452.4,143.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M454.3,159.7 L456.3,159.6 L456.3,142.9 L454.3,143.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M456.3,159.6 L458.3,159.7 L458.3,143.0 L456.3,142.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M458.3,159.7 L460.2,159.9 L460.2,143.3 L458.3,143.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M460.2,159.9 L462.1,160.4 L462.1,143.7 L460.2,143.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M462.1,160.4 L463.8,161.0 L463.8,144.3 L462.1,143.7 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M463.8,161.0 L465.3,161.7 L465.3,145.1 L463.8,144.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M465.3,161.7 L466.6,162.6 L466.6,146.0 L465.3,145.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M466.6,162.6 L467.7,163.6 L467.7,146.9 L466.6,146.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M467.7,163.6 L468.4,164.7 L468.4,148.0 L467.7,146.9 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M468.4,164.7 L468.9,165.8 L468.9,149.1 L468.4,148.0 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M468.9,165.8 L469.1,166.9 L469.1,150.3 L468.9,149.1 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M469.1,166.9 L468.9,168.1 L468.9,151.4 L469.1,150.3 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M468.9,168.1 L468.4,169.2 L468.4,152.6 L468.9,151.4 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M468.4,169.2 L467.7,170.3 L467.7,153.6 L468.4,152.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M467.7,170.3 L466.6,171.3 L466.6,154.6 L467.7,153.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><path d="M466.6,171.3 L465.3,172.1 L465.3,155.5 L466.6,154.6 Z" fill="#c9c9c9" stroke="#c9c9c9" stroke-width="0.6"/><line x1="443.6" y1="166.9" x2="443.6" y2="150.3" stroke="#111" stroke-width="1.4" stroke-linecap="round"/><line x1="469.1" y1="166.9" x2="469.1" y2="150.3" stroke="#111" stroke-width="1.4" stroke-linecap="round"/><path d="M465.3,155.5 L463.8,156.2 L462.1,156.8 L460.2,157.3 L458.3,157.6 L456.3,157.6 L454.3,157.6 L452.4,157.3 L450.5,156.8 L448.8,156.2 L447.3,155.5 L446.0,154.6 L445.0,153.6 L444.2,152.6 L443.7,151.4 L443.6,150.3 L443.7,149.1 L444.2,148.0 L445.0,146.9 L446.0,146.0 L447.3,145.1 L448.8,144.3 L450.5,143.7 L452.4,143.3 L454.3,143.0 L456.3,142.9 L458.3,143.0 L460.2,143.3 L462.1,143.7 L463.8,144.3 L465.3,145.1 L466.6,146.0 L467.7,146.9 L468.4,148.0 L468.9,149.1 L469.1,150.3 L468.9,151.4 L468.4,152.6 L467.7,153.6 L466.6,154.6 L465.3,155.5 Z" fill="#e4e4e4" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><path d="M418.5,249.2 L418.3,246.2 L310.1,308.6 L310.3,311.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M418.3,246.2 L417.9,243.0 L309.7,305.5 L310.1,308.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M417.9,243.0 L417.2,239.8 L309.0,302.3 L309.7,305.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M417.2,239.8 L416.2,236.6 L308.0,299.0 L309.0,302.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M416.2,236.6 L415.0,233.3 L306.8,295.8 L308.0,299.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M415.0,233.3 L413.5,230.1 L305.4,292.6 L306.8,295.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M413.5,230.1 L411.8,227.0 L303.7,289.4 L305.4,292.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M411.8,227.0 L410.0,223.9 L301.8,286.4 L303.7,289.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M410.0,223.9 L407.9,221.0 L299.7,283.5 L301.8,286.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M407.9,221.0 L405.7,218.4 L297.5,280.8 L299.7,283.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M405.7,218.4 L403.4,215.9 L295.2,278.3 L297.5,280.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M403.4,215.9 L400.9,213.7 L292.8,276.1 L295.2,278.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M400.9,213.7 L398.4,211.8 L290.3,274.2 L292.8,276.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M398.4,211.8 L395.9,210.1 L287.7,272.6 L290.3,274.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M395.9,210.1 L393.4,208.8 L285.2,271.3 L287.7,272.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M393.4,208.8 L390.9,207.9 L282.7,270.3 L285.2,271.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M390.9,207.9 L388.5,207.3 L280.3,269.7 L282.7,270.3 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M388.5,207.3 L386.1,207.1 L278.0,269.5 L280.3,269.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M386.1,207.1 L383.9,207.2 L275.8,269.6 L278.0,269.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M383.9,207.2 L381.9,207.7 L273.7,270.1 L275.8,269.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M381.9,207.7 L380.0,208.6 L271.8,271.0 L273.7,270.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M380.0,208.6 L378.3,209.8 L270.1,272.2 L271.8,271.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M378.3,209.8 L376.8,211.3 L268.7,273.7 L270.1,272.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M376.8,211.3 L375.6,213.1 L267.4,275.6 L268.7,273.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M375.6,213.1 L374.6,215.3 L266.5,277.7 L267.4,275.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M374.6,215.3 L373.9,217.7 L265.8,280.1 L266.5,277.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M373.9,217.7 L373.5,220.3 L265.4,282.8 L265.8,280.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M373.5,220.3 L373.4,223.1 L265.2,285.6 L265.4,282.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M373.4,223.1 L373.5,226.1 L265.4,288.6 L265.2,285.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M373.5,226.1 L373.9,229.3 L265.8,291.7 L265.4,288.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M373.9,229.3 L374.6,232.5 L266.5,294.9 L265.8,291.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M374.6,232.5 L375.6,235.7 L267.4,298.2 L266.5,294.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M375.6,235.7 L376.8,239.0 L268.7,301.4 L267.4,298.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M376.8,239.0 L378.3,242.2 L270.1,304.7 L268.7,301.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M378.3,242.2 L380.0,245.4 L271.8,307.8 L270.1,304.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M380.0,245.4 L381.9,248.4 L273.7,310.8 L271.8,307.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M381.9,248.4 L383.9,251.3 L275.8,313.7 L273.7,310.8 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M383.9,251.3 L386.1,254.0 L278.0,316.4 L275.8,313.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M386.1,254.0 L388.5,256.4 L280.3,318.9 L278.0,316.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M388.5,256.4 L390.9,258.6 L282.7,321.1 L280.3,318.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M390.9,258.6 L393.4,260.6 L285.2,323.0 L282.7,321.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M393.4,260.6 L395.9,262.2 L287.7,324.6 L285.2,323.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M395.9,262.2 L398.4,263.5 L290.3,325.9 L287.7,324.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M398.4,263.5 L400.9,264.4 L292.8,326.9 L290.3,325.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M400.9,264.4 L403.4,265.0 L295.2,327.5 L292.8,326.9 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M403.4,265.0 L405.7,265.2 L297.5,327.7 L295.2,327.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M405.7,265.2 L407.9,265.1 L299.7,327.6 L297.5,327.7 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M407.9,265.1 L410.0,264.6 L301.8,327.1 L299.7,327.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M410.0,264.6 L411.8,263.8 L303.7,326.2 L301.8,327.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M411.8,263.8 L413.5,262.5 L305.4,325.0 L303.7,326.2 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M413.5,262.5 L415.0,261.0 L306.8,323.5 L305.4,325.0 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M415.0,261.0 L416.2,259.2 L308.0,321.6 L306.8,323.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M416.2,259.2 L417.2,257.0 L309.0,319.5 L308.0,321.6 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M417.2,257.0 L417.9,254.6 L309.7,317.1 L309.0,319.5 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M417.9,254.6 L418.3,252.0 L310.1,314.4 L309.7,317.1 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><path d="M418.3,252.0 L418.5,249.2 L310.3,311.6 L310.1,314.4 Z" fill="#d5d5d5" stroke="#d5d5d5" stroke-width="0.6"/><line x1="411.8" y1="263.8" x2="303.7" y2="326.2" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><line x1="380.0" y1="208.6" x2="271.8" y2="271.0" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><path d="M310.3,311.6 L310.1,308.6 L309.7,305.5 L309.0,302.3 L308.0,299.0 L306.8,295.8 L305.4,292.6 L303.7,289.4 L301.8,286.4 L299.7,283.5 L297.5,280.8 L295.2,278.3 L292.8,276.1 L290.3,274.2 L287.7,272.6 L285.2,271.3 L282.7,270.3 L280.3,269.7 L278.0,269.5 L275.8,269.6 L273.7,270.1 L271.8,271.0 L270.1,272.2 L268.7,273.7 L267.4,275.6 L266.5,277.7 L265.8,280.1 L265.4,282.8 L265.2,285.6 L265.4,288.6 L265.8,291.7 L266.5,294.9 L267.4,298.2 L268.7,301.4 L270.1,304.7 L271.8,307.8 L273.7,310.8 L275.8,313.7 L278.0,316.4 L280.3,318.9 L282.7,321.1 L285.2,323.0 L287.7,324.6 L290.3,325.9 L292.8,326.9 L295.2,327.5 L297.5,327.7 L299.7,327.6 L301.8,327.1 L303.7,326.2 L305.4,325.0 L306.8,323.5 L308.0,321.6 L309.0,319.5 L309.7,317.1 L310.1,314.4 L310.3,311.6 Z" fill="#ededed" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/><line x1="666.3" y1="284.0" x2="722.5" y2="313.2" stroke="#111" stroke-width="0.9"/><circle cx="722.5" cy="313.2" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="722.5" y="318.2" font-size="14" font-weight="bold" text-anchor="middle">1</text><line x1="287.7" y1="272.6" x2="241.9" y2="218.5" stroke="#111" stroke-width="0.9"/><circle cx="241.9" cy="218.5" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="241.9" y="223.5" font-size="14" font-weight="bold" text-anchor="middle">2</text><line x1="375.2" y1="200.2" x2="302.3" y2="169.0" stroke="#111" stroke-width="0.9"/><circle cx="302.3" cy="169.0" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="302.3" y="174.0" font-size="14" font-weight="bold" text-anchor="middle">3</text><line x1="329.2" y1="120.6" x2="250.1" y2="114.4" stroke="#111" stroke-width="0.9"/><circle cx="250.1" cy="114.4" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="250.1" y="119.4" font-size="14" font-weight="bold" text-anchor="middle">4</text><line x1="456.3" y1="150.3" x2="522.9" y2="123.2" stroke="#111" stroke-width="0.9"/><circle cx="522.9" cy="123.2" r="12.5" fill="#fff" stroke="#111" stroke-width="1.2"/><text x="522.9" y="128.2" font-size="14" font-weight="bold" text-anchor="middle">5</text><text x="450.0" y="504" font-size="15" font-weight="bold" text-anchor="middle">PERSPECTIVE D’ENSEMBLE — le mécanisme assemblé</text></svg></template>
 
 <script>
 'use strict';
-const NOMS=['Pièces coupées','Nomenclature','Cotation','Expertise','Repérage'];
-const E=[0,0,0,0,0], ESSAIS=[0,0,0,0,0];
-let ex=0, suite=null;
+function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+function nb(v){return parseFloat(String(v||'').replace(',','.'));}
+function el(t,p,a){const e=document.createElement(t); if(a)Object.assign(e,a); if(p)p.appendChild(e); return e;}
+function planNeuf(id){
+  const d=el('div',null,{className:'cadre',id:id});
+  d.appendChild(document.getElementById('tplPlan').content.cloneNode(true));
+  return d;
+}
+/* ═══════════ LES 11 EXERCICES ═══════════ */
+const EX=[
+/* ---------- PARTIE 1 : DÉCOUVRIR ---------- */
+{p:'PARTIE 1 — DÉCOUVRIR LE MÉCANISME', nom:'Explorer', max:3, type:'clic',
+ enonce:'<b>Exercice 1 — Faire connaissance avec le palier.</b> Un palier lisse guide un arbre en rotation. '+
+   'Explore le plan en cliquant successivement sur les <b>5 pièces</b> du mécanisme : le corps, l’arbre, le coussinet, le couvercle et les vis. '+
+   'Aide-toi de la nomenclature en bas à gauche et des lignes de repère.',
+ zones:['corps','arbre','couss','couv','vis'], bonnes:['corps','arbre','couss','couv','vis'], ordre:false,
+ cahier:'Sur ton cahier, note le titre « TP — Lecture de plan », puis recopie la nomenclature du plan (repère, nombre, désignation, matière). Tu t’en serviras dans tout le TP.',
+ expl:'Les cinq pièces sont repérées de 1 à 5. La nomenclature se lit de bas en haut : le repère 1 (le corps) est en bas. '+
+   'Un palier lisse est le mécanisme de guidage en rotation le plus simple qui soit : un arbre tourne dans une bague de bronze, elle-même logée dans un corps en fonte.'},
+
+{p:'PARTIE 1 — DÉCOUVRIR LE MÉCANISME', nom:'Vocabulaire', max:4, type:'qcm',
+ enonce:'<b>Exercice 2 — Le vocabulaire du dessin technique.</b> Quatre questions rapides pour vérifier que le cours est acquis. '+
+   'Réponds aux quatre, puis valide en une seule fois : rien ne sera corrigé avant.',
+ questions:[
+  {q:'Un trait fin interrompu (pointillé) représente…', r:['une arête cachée','un axe de symétrie','une hachure','un plan de coupe'], b:0},
+  {q:'Le cartouche d’un plan contient…', r:['la liste des pièces','le titre, l’échelle et le format','les hachures','les cotes'], b:1},
+  {q:'À l’échelle 2:1, le dessin est…', r:['2 fois plus petit que la réalité','à la taille réelle','2 fois plus grand que la réalité','sans rapport avec la réalité'], b:2},
+  {q:'Le symbole Ø placé devant une cote annonce…', r:['un rayon','une longueur','une profondeur','un diamètre'], b:3}],
+ expl:'Quatre repères indispensables : le pointillé cache, le cartouche identifie, l’échelle rapporte le dessin au réel, et Ø annonce un diamètre '+
+   '(alors que R annonce un rayon). Attention au piège de l’échelle : 1:2 réduit, 2:1 agrandit — le premier chiffre est toujours le dessin, le second la réalité.'},
+
+/* ---------- PARTIE 2 : LA COUPE ---------- */
+{p:'PARTIE 2 — COMPRENDRE LA COUPE', nom:'Pièces coupées', max:3, type:'clic',
+ enonce:'<b>Exercice 3 — Quelles pièces sont coupées ?</b> Le plan est livré <b>sans ses hachures</b>. '+
+   'Sélectionne toutes les pièces qui doivent être hachurées sur la coupe A-A, puis valide. '+
+   'Une sélection incomplète ou excédentaire est comptée fausse, et aucune réponse ne te sera dévoilée.',
+ zones:['corps','couss','couv','arbre','vis'], bonnes:['corps','couss','couv'], hachurer:true,
+ expl:'Trois pièces sont traversées par le plan de coupe : le corps 1, le coussinet 3 et le couvercle 4. '+
+   'L’arbre et les vis le sont aussi, mais ce sont des pièces pleines coupées dans leur longueur : la norme interdit de les hachurer. '+
+   'On ne hachure QUE ce que la scie a réellement traversé, et jamais la visserie ni les arbres.'},
+
+{p:'PARTIE 2 — COMPRENDRE LA COUPE', nom:'Les traits', max:3, type:'cahier',
+ enonce:'<b>Exercice 4 — Le tableau des traits.</b> Cet exercice se fait d’abord <b>sur le cahier</b>.',
+ cahier:'Trace un tableau à trois colonnes : <b>allure du trait</b> · <b>nom</b> · <b>rôle</b>. '+
+   'Remplis-le avec les <b>cinq</b> types de traits du cours, en dessinant chaque trait à la règle sur environ 4 cm. '+
+   'Puis, pour chacun, cherche un exemple précis sur le plan affiché ci-dessous et note où tu l’as trouvé.',
+ avecPlan:true,
+ champs:[{id:'t1',lbl:'Combien de types de traits différents as-tu tracés ?',rep:'5',num:true},
+         {id:'t2',lbl:'Quel type de trait forme le contour extérieur du corps ?',rep:['fortcontinu','traitfort','fort'],aide:'deux mots'},
+         {id:'t3',lbl:'Quel type de trait est utilisé pour les hachures ?',rep:['fincontinu','traitfin','fin'],aide:'deux mots'},
+         {id:'t4',lbl:'Quel type de trait indique l’axe de l’arbre ?',rep:['finmixte','traitmixte','mixte','axe'],aide:'deux mots'}],
+ expl:'Cinq traits, cinq rôles. Le trait fort continu dessine ce qu’on voit ; le fin interrompu ce qui est caché ; le fin mixte les axes ; '+
+   'le fort mixte le plan de coupe ; le fin continu les hachures et les cotes. L’épaisseur n’est pas décorative : c’est elle qui distingue '+
+   'une arête réelle d’une ligne de construction. Sur un plan bien fait, on lit l’essentiel rien qu’à l’épaisseur des traits.'},
+
+{p:'PARTIE 2 — COMPRENDRE LA COUPE', nom:'Non hachurés', max:2, type:'clic',
+ enonce:'<b>Exercice 5 — L’exception.</b> Deux pièces sont bien traversées par le plan de coupe, et pourtant elles ne portent aucune hachure. '+
+   'Clique-les toutes les deux.',
+ zones:['arbre','vis','corps','couss','couv'], bonnes:['arbre','vis'],
+ expl:'Arbres, axes, vis, boulons, rivets, billes, clavettes et nervures : coupés dans leur LONGUEUR, ils ne sont jamais hachurés. '+
+   'La raison est pratique : ces pièces sont pleines et normalisées, les hachurer noierait leur forme sous des traits sans rien apprendre. '+
+   'Nuance à retenir : coupés en TRAVERS, ils sont hachurés tout à fait normalement.'},
+
+/* ---------- PARTIE 3 : NOMENCLATURE ---------- */
+{p:'PARTIE 3 — NOMENCLATURE ET MATÉRIAUX', nom:'Nomenclature', max:3, type:'saisie',
+ enonce:'<b>Exercice 6 — Compléter la nomenclature.</b> Le dessinateur a effacé plusieurs cases. '+
+   'Retrouve-les à partir du dessin et de ta lecture. Écris les désignations et matières comme elles s’écrivent sur un plan.',
+ tableau:[['4','1','Couvercle','EN-GJL-200'],
+          ['3','1',{id:'d3',ph:'désignation'},{id:'m3',ph:'matière'}],
+          ['2',{id:'n2',ph:'nb'},{id:'d2',ph:'désignation'},'C 45'],
+          ['1','1','Corps',{id:'m1',ph:'matière'}]],
+ champs:[{id:'d3',rep:['coussinet']},{id:'m3',rep:['cusn8']},{id:'n2',rep:['1']},
+         {id:'d2',rep:['arbre']},{id:'m1',rep:['engjl200']}],
+ aide:'Indices : la pièce 3 est la bague qui s’use à la place du corps, dans un alliage de cuivre et d’étain. Le corps et le couvercle sont dans la même matière.',
+ expl:'La nomenclature se lit de bas en haut, repère 1 en bas. Chaque ligne donne le nombre de pièces identiques, la désignation normalisée et la matière. '+
+   'Ces matières ne sont pas décoratives : la fonte EN-GJL-200 amortit les vibrations, l’acier C 45 donne à l’arbre sa résistance, '+
+   'et le bronze CuSn8 du coussinet glisse sans gripper contre l’acier.'},
+
+{p:'PARTIE 3 — NOMENCLATURE ET MATÉRIAUX', nom:'Matériaux', max:3, type:'redaction',
+ enonce:'<b>Exercice 7 — Justifier les choix du concepteur.</b> Réponds en une phrase complète pour chaque question. '+
+   'Ta réponse est acceptée si elle contient les idées attendues — rédige, ne réponds pas par un mot.',
+ cahier:'Rédige d’abord tes trois réponses sur le cahier, au brouillon, puis recopie-les ici.',
+ champs:[
+  {id:'r1',lbl:'a) Pourquoi le coussinet est-il une pièce séparée, et non un simple trou percé dans le corps ?',
+   cles:['use','usure','remplac','change','sacrifi','moins cher','economi']},
+  {id:'r2',lbl:'b) Pourquoi avoir choisi du bronze pour le coussinet, alors que l’arbre est en acier ?',
+   cles:['gripp','frotte','glisse','coince','souder','dur','tendre','different']},
+  {id:'r3',lbl:'c) À quoi sert le couvercle ? Pourquoi ne pas avoir fait le corps d’un seul bloc ?',
+   cles:['monter','montage','demonter','placer','poser','remplacer','acces','ouvrir','entretien']}],
+ expl:'a) Le coussinet est la pièce sacrifiée : c’est lui qui s’use, et on le remplace pour quelques euros au lieu de changer tout le corps. '+
+   'b) Deux métaux identiques qui frottent ont tendance à gripper, voire à se souder à chaud ; le bronze, plus tendre que l’acier, glisse sans l’abîmer. '+
+   'c) Sans couvercle amovible, impossible de poser l’arbre dans son logement : on l’enfilerait par le bout, ce qui interdit tout entretien. '+
+   'Retiens la démarche : chaque pièce d’un mécanisme existe pour une raison précise, et le concepteur peut toujours la justifier.'},
+
+/* ---------- PARTIE 4 : COTATION ---------- */
+{p:'PARTIE 4 — COTATION ET CALCULS', nom:'Échelle', max:4, type:'calcul',
+ enonce:'<b>Exercice 8 — Exploiter la cotation.</b> Le plan est à l’échelle <b>1:2</b>. L’arbre est coté <b>Ø50</b>, '+
+   'le coussinet a une longueur de <b>120</b> et son épaisseur mesurée sur le dessin vaut <b>4 mm</b>. '+
+   'Aucune formule ne t’est donnée : réfléchis au sens de l’échelle.',
+ cahier:'Pose chaque calcul sur ton cahier avant de saisir le résultat : opération complète, puis résultat avec son unité.',
+ champs:[{id:'c1',lbl:'a) Diamètre réel de l’arbre',rep:50,u:'mm'},
+         {id:'c2',lbl:'b) Épaisseur réelle du coussinet',rep:8,u:'mm'},
+         {id:'c3',lbl:'c) Diamètre de l’alésage du corps (le coussinet s’y loge)',rep:66,u:'mm'},
+         {id:'c4',lbl:'d) Longueur du coussinet mesurée à la règle sur le dessin',rep:60,u:'mm'}],
+ expl:'Une cote donne TOUJOURS la dimension réelle : Ø50 vaut 50 mm en vrai, quelle que soit l’échelle. '+
+   'En revanche, ce que tu mesures à la règle sur le dessin doit être multiplié par 2 : 4 mm mesurés font 8 mm réels. '+
+   'L’alésage vaut alors 50 + 2 × 8 = 66 mm, et les 120 mm réels du coussinet occupent 60 mm sur la feuille. '+
+   'Règle d’or : on lit les cotes, on ne mesure jamais un plan.'},
+
+{p:'PARTIE 4 — COTATION ET CALCULS', nom:'Jeu et montage', max:3, type:'calcul',
+ enonce:'<b>Exercice 9 — Le jeu de fonctionnement.</b> Pour que l’arbre tourne sans coincer, son diamètre est légèrement '+
+   'inférieur à celui du coussinet. Ici : alésage du coussinet <b>Ø50,08</b> ; arbre <b>Ø49,98</b>.',
+ cahier:'Sur ton cahier, fais un schéma en coupe de l’arbre dans son coussinet et place la lettre J pour le jeu, en exagérant l’écart pour qu’il soit visible.',
+ champs:[{id:'j1',lbl:'a) Jeu diamétral (différence des deux diamètres)',rep:0.1,tol:0.005,u:'mm'},
+         {id:'j2',lbl:'b) Jeu radial (l’espace d’un seul côté)',rep:0.05,tol:0.005,u:'mm'},
+         {id:'j3',lbl:'c) Si l’arbre s’use de 0,04 mm au diamètre, quel devient le jeu diamétral ?',rep:0.14,tol:0.005,u:'mm'}],
+ expl:'Le jeu diamétral est la différence des diamètres : 50,08 − 49,98 = 0,10 mm. Le jeu radial en est la moitié, 0,05 mm — '+
+   'c’est l’épaisseur du film d’huile qui sépare les deux pièces. L’usure augmente le jeu : 0,10 + 0,04 = 0,14 mm. '+
+   'Quand le jeu devient trop grand, l’arbre vibre, cogne, et le palier devient bruyant : c’est le moment de remplacer le coussinet. '+
+   'Un dixième de millimètre décide de la durée de vie du mécanisme.'},
+
+/* ---------- PARTIE 5 : EXPERTISE ---------- */
+{p:'PARTIE 5 — EXPERTISE ET SYNTHÈSE', nom:'Expertise', max:3, type:'redaction',
+ enonce:'<b>Exercice 10 — Trois plans fautifs.</b> Un stagiaire a rendu trois dessins. Pour chacun, écris <b>en une phrase</b> '+
+   'quelle règle de la coupe n’est pas respectée.',
+ canvas:'fautes',
+ champs:[{id:'f1',lbl:'Dessin A :',cles:['meme','identiq','pareil','distingu','different']},
+         {id:'f2',lbl:'Dessin B :',cles:['arbre','vis','plein','long','hachur']},
+         {id:'f3',lbl:'Dessin C :',cles:['deborde','depasse','contour','sortent','limite','arret']}],
+ expl:'Dessin A : deux pièces voisines portent les mêmes hachures — impossible de voir où finit l’une et où commence l’autre. '+
+   'Dessin B : l’arbre, pièce pleine coupée dans sa longueur, a été hachuré alors que la norme l’interdit. '+
+   'Dessin C : les hachures débordent du contour ; elles doivent s’arrêter net sur les traits forts. '+
+   'Ce sont les trois fautes les plus fréquentes chez les débutants.'},
+
+{p:'PARTIE 5 — EXPERTISE ET SYNTHÈSE', nom:'Du volume au plan', max:5, type:'cahier',
+ enonce:'<b>Exercice 11 — Passer du volume au dessin.</b> Le plus difficile, et le plus utile. Observe la perspective ci-dessous, '+
+   'puis réalise le travail demandé <b>sur ton cahier</b> avant de répondre.',
+ avecEns:true,
+ cahier:'À main levée, trace sur ton cahier la <b>vue de face</b> du palier <b>en coupe A-A</b>, en respectant : '+
+   'les contours en trait fort, les hachures à 45° sur les trois pièces coupées, l’arbre laissé sans hachures, '+
+   'et l’axe de l’arbre en trait mixte. Compte tes traits et mesure ce que tu as tracé avant de répondre.',
+ champs:[{id:'v1',lbl:'a) Combien de zones distinctes as-tu hachurées ?',rep:'3',num:true},
+         {id:'v2',lbl:'b) Combien de motifs de hachures différents as-tu utilisés au minimum ?',rep:'2',num:true},
+         {id:'v3',lbl:'c) Quelle pièce as-tu laissée sans hachures ?',rep:['arbre','larbre','arbre2']},
+         {id:'v4',lbl:'d) Combien d’axes en trait mixte ton dessin comporte-t-il au minimum ?',rep:'1',num:true},
+         {id:'v5',lbl:'e) La semelle du corps : hachurée ou non ?',rep:['hachuree','oui','hachure']}],
+ expl:'Trois zones hachurées (corps, coussinet, couvercle), au moins deux motifs différents pour distinguer le corps du coussinet, '+
+   'l’arbre laissé vierge, et au moins un axe — celui de l’arbre. La semelle fait partie du corps : elle est coupée, donc hachurée, '+
+   'et avec exactement le même motif que le montant, puisqu’une même pièce garde ses hachures partout. '+
+   'Si ton dessin respecte ces cinq points, tu sais lire ET produire une coupe.'},
+];
+
+/* ═══════════ MOTEUR ═══════════ */
+const E=EX.map(()=>0), ESSAIS=EX.map(()=>0);
+let idx=0, suite=null, etat={};
+const MAXTOT=EX.reduce((s,x)=>s+x.max,0);
+document.getElementById('totmax').textContent=MAXTOT;
 const barre=document.getElementById('barre');
-NOMS.concat(['Bilan']).forEach((n,i)=>{
-  const d=document.createElement('div'); d.className='seg'+(i===0?' courante':'');
-  d.innerHTML='<span>'+(i+1)+' · '+n+'</span><span class="et" id="be'+i+'">'+(i<5?'☆☆☆':'')+'</span>';
-  barre.appendChild(d);
+EX.forEach((x,i)=>{
+  const d=el('div',barre,{className:'seg'+(i===0?' courante':'')});
+  el('span',d,{textContent:(i+1)+' · '+x.nom});
+  el('span',d,{className:'et',id:'be'+i,textContent:'☆☆☆'});
 });
-const et=n=>'★'.repeat(n)+'☆'.repeat(3-n);
-function noter(){ const n=ESSAIS[ex]; return n<=1?3:(n===2?2:1); }
-function valider(ok,titre,txt){
-  ESSAIS[ex]++;
-  const el=document.getElementById('e'+(ex+1));
-  if(!ok){
-    if(el) el.textContent='Essai '+(ESSAIS[ex]+1)+' · '+(ESSAIS[ex]+1<=2?2:1)+' étoile(s) en jeu';
-    return false;
-  }
-  E[ex]=noter();
-  document.getElementById('be'+ex).textContent=et(E[ex]);
-  document.querySelectorAll('.seg')[ex].classList.add('faite');
+{ const d=el('div',barre,{className:'seg'}); el('span',d,{textContent:'Bilan'}); }
+const etoiles=n=>'★'.repeat(n)+'☆'.repeat(3-n);
+function pointsGagnes(x){ const t=ESSAIS[idx]; const r=t<=1?1:(t===2?0.66:0.34); return Math.max(1,Math.round(x.max*r)); }
+function reussir(titre,txt){
+  const x=EX[idx];
+  E[idx]=pointsGagnes(x);
+  const n3=ESSAIS[idx]<=1?3:(ESSAIS[idx]===2?2:1);
+  document.getElementById('be'+idx).textContent=etoiles(n3);
+  document.querySelectorAll('.seg')[idx].classList.add('faite');
   document.getElementById('brT').textContent=titre;
-  document.getElementById('brE').textContent=et(E[ex]);
-  document.getElementById('brP').textContent=txt;
-  suite=()=>aller(ex+1);
+  document.getElementById('brE').textContent=etoiles(n3);
+  document.getElementById('brP').innerHTML=txt+'<br><br><b>'+E[idx]+' point(s) sur '+x.max+'</b>';
+  suite=()=>aller(idx+1);
   document.getElementById('voile').classList.add('on');
-  return true;
+}
+function echouer(msg){
+  document.getElementById('verdict').innerHTML=msg;
+  const t=ESSAIS[idx]+1;
+  document.getElementById('essais').textContent='Essai '+t+' — chaque nouvel essai réduit les points.';
 }
 document.getElementById('cont').addEventListener('click',()=>{
   document.getElementById('voile').classList.remove('on');
-  if(suite){ suite(); suite=null; }
+  if(suite){suite(); suite=null;}
 });
 function aller(i){
-  ex=i;
-  document.querySelectorAll('.ex').forEach((s,k)=>s.classList.toggle('on',k===i));
-  document.querySelectorAll('.seg').forEach((s,k)=>s.classList.toggle('courante',k===i));
-  if(i===5){
+  if(i>=EX.length){
+    document.getElementById('ex').style.display='none';
+    document.getElementById('partie').textContent='';
     document.getElementById('bilan').classList.add('on');
     document.getElementById('tot').textContent=E.reduce((a,b)=>a+b,0);
     document.getElementById('memo').innerHTML=
-      '<b>Ce que tu as appris :</b><br>· les hachures marquent les surfaces réellement coupées, et deux pièces voisines '+
-      'doivent avoir des hachures différentes ;<br>· arbres et vis coupés en long ne sont jamais hachurés ;<br>'+
-      '· une nomenclature se lit de bas en haut, et la matière traduit une fonction (le bronze du coussinet s’use à la place du corps) ;<br>'+
-      '· à l’échelle 1:2, la réalité vaut le double du dessin — on lit toujours les cotes, jamais la règle.';
+      '<b>Ce que tu as appris :</b><br>· le plan de coupe se trace sur une autre vue, avec deux flèches et deux lettres ;<br>'+
+      '· les hachures marquent les surfaces réellement coupées, et deux pièces voisines ont des motifs différents ;<br>'+
+      '· arbres et vis coupés en long ne sont jamais hachurés ;<br>'+
+      '· la nomenclature se lit de bas en haut, et chaque matière traduit une fonction ;<br>'+
+      '· à l’échelle 1:2 la réalité vaut le double du dessin — on lit les cotes, jamais la règle ;<br>'+
+      '· un jeu de quelques centièmes décide de la durée de vie d’un guidage.';
+    document.querySelectorAll('.seg').forEach(s=>s.classList.remove('courante'));
+    document.querySelectorAll('.seg')[EX.length].classList.add('courante');
+    window.scrollTo({top:0,behavior:'smooth'}); return;
   }
+  idx=i; etat={};
+  document.querySelectorAll('.seg').forEach((s,k)=>s.classList.toggle('courante',k===i));
+  document.getElementById('partie').textContent=EX[i].p;
+  rendre();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-/* ══════ EX 1 : sélection multiple, validation globale ══════ */
-const BONS1=['corps','couss','couv'];
-let sel1=new Set();
-document.querySelectorAll('#plan1 .hit').forEach(p=>{
-  if(!['corps','couss','couv','arbre','vis'].includes(p.dataset.id)){ p.classList.add('inactive'); return; }
-  p.addEventListener('click',()=>{
-    const id=p.dataset.id;
-    if(sel1.has(id)){ sel1.delete(id); p.classList.remove('sel'); }
-    else { sel1.add(id); p.classList.add('sel'); }
-    document.getElementById('v1').textContent=sel1.size+' pièce(s) sélectionnée(s)';
-  });
-});
-document.getElementById('raz1').addEventListener('click',()=>{
-  sel1.clear();
-  document.querySelectorAll('#plan1 .hit').forEach(p=>p.classList.remove('sel'));
-  document.getElementById('v1').textContent='';
-});
-document.getElementById('val1').addEventListener('click',()=>{
-  const ok = sel1.size===3 && BONS1.every(b=>sel1.has(b));
-  if(!valider(ok,'Sélection exacte',
-    'Trois pièces sont traversées par le plan de coupe : le corps 1, le coussinet 3 et le couvercle 4. '+
-    'L’arbre et les vis le sont aussi, mais ce sont des pièces pleines coupées dans leur longueur : la norme interdit de les hachurer. '+
-    'Retiens la méthode : on ne hachure QUE ce que la scie a réellement traversé, et jamais la visserie ni les arbres.')){
-    const n=sel1.size;
-    document.getElementById('v1').textContent = n!==3
-      ? 'Non : tu as sélectionné '+n+' pièce(s), il n’y en a pas ce nombre. Relis le cours, partie 5 et 6.'
-      : 'Non : le compte est bon mais au moins une pièce n’a pas à être hachurée. Revois quelles pièces ne sont jamais hachurées.';
-  }
-});
-/* ══════ EX 2 : saisie libre tolérante ══════ */
-function norm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,''); }
-document.getElementById('val2').addEventListener('click',()=>{
-  const r={d3:norm(document.getElementById('d3').value), m3:norm(document.getElementById('m3').value),
-           d2:norm(document.getElementById('d2').value), n1:norm(document.getElementById('n1').value),
-           m1:norm(document.getElementById('m1').value)};
-  const ok = r.d3==='coussinet' && (r.m3==='cusn8') && r.d2==='arbre' && r.n1==='1' && r.m1==='engjl200';
-  if(!valider(ok,'Nomenclature complétée',
-    'La nomenclature se lit de bas en haut : repère 1 en bas. Chaque ligne donne le nombre de pièces identiques, '+
-    'la désignation normalisée et la matière. Ces matières ne sont pas décoratives : la fonte EN-GJL-200 amortit les vibrations, '+
-    'l’acier C 45 donne à l’arbre sa résistance, et le bronze CuSn8 du coussinet glisse sans gripper contre l’acier — '+
-    'c’est la pièce sacrifiée, remplaçable, qui s’use à la place du corps.')){
-    const faux=[];
-    if(r.d3!=='coussinet')faux.push('désignation 3');
-    if(r.m3!=='cusn8')faux.push('matière 3');
-    if(r.d2!=='arbre')faux.push('désignation 2');
-    if(r.n1!=='1')faux.push('nombre 1');
-    if(r.m1!=='engjl200')faux.push('matière 1');
-    document.getElementById('v2').textContent='Il reste '+faux.length+' erreur(s). Vérifie : '+faux.join(', ')+'.';
-  }
-});
-/* ══════ EX 3 : calculs ══════ */
-document.getElementById('val3').addEventListener('click',()=>{
-  const v=id=>parseFloat((document.getElementById(id).value||'').replace(',','.'));
-  const a=v('r1'), b=v('r2'), c=v('r3'), d=v('r4');
-  const ok = a===50 && b===8 && c===66 && d===60;
-  if(!valider(ok,'Cotation maîtrisée',
-    'Une cote donne TOUJOURS la dimension réelle : Ø50 signifie 50 mm en vrai, quelle que soit l’échelle. '+
-    'En revanche, ce que tu mesures à la règle sur le dessin doit être multiplié par 2 à l’échelle 1:2 : '+
-    '4 mm mesurés font 8 mm réels d’épaisseur de coussinet. L’alésage vaut alors 50 + 2 × 8 = 66 mm, '+
-    'et les 120 mm réels du coussinet occupent 60 mm sur la feuille. Règle d’or : on lit les cotes, on ne mesure jamais un plan.')){
-    let n=0; [a===50,b===8,c===66,d===60].forEach(x=>{if(!x)n++;});
-    document.getElementById('v3').textContent=n+' réponse(s) incorrecte(s) sur 4. Revois la partie 7 du cours : échelle 1:2.';
-  }
-});
-/* ══════ EX 4 : trois plans fautifs ══════ */
-const c4=document.getElementById('cv4').getContext('2d');
-function hach(c,x,y,w,h,pas,sens){
-  c.save(); c.beginPath(); c.rect(x,y,w,h); c.clip();
-  c.strokeStyle='#111'; c.lineWidth=0.9;
-  for(let d=-h;d<w+h;d+=pas){ c.beginPath();
-    if(sens>0){ c.moveTo(x+d,y+h); c.lineTo(x+d+h,y); } else { c.moveTo(x+d,y); c.lineTo(x+d+h,y+h); }
-    c.stroke(); }
-  c.restore();
+function rendre(){
+  const x=EX[idx], z=document.getElementById('ex');
+  z.innerHTML='';
+  el('div',z,{className:'enonce',innerHTML:x.enonce});
+  if(x.cahier){ const c=el('div',z,{className:'cahier'});
+    el('h3',c,{textContent:'SUR TON CAHIER'}); el('div',c,{innerHTML:x.cahier}); }
+  TYPES[x.type](x,z);
+  if(x.aide) el('div',z,{className:'aide',innerHTML:x.aide});
+  const o=el('div',z,{className:'outils'});
+  if(x.type==='clic') el('button',o,{className:'btn sec',textContent:'Tout désélectionner',onclick:()=>{
+    etat.sel=new Set(); z.querySelectorAll('.hit').forEach(p=>p.classList.remove('sel'));
+    document.getElementById('verdict').textContent=''; }});
+  el('button',o,{className:'btn',textContent:'Valider',onclick:valider});
+  el('div',z,{className:'verdict',id:'verdict'});
+  el('div',z,{className:'essais',id:'essais',textContent:'Essai 1 — réussis du premier coup pour tous les points.'});
 }
-(function(){
-  c4.clearRect(0,0,900,250);
-  const y=52,h=120;
-  // A : deux pièces voisines, mêmes hachures
-  hach(c4,40,y,110,h,9,1); hach(c4,150,y,90,h,9,1);
-  c4.strokeStyle='#111'; c4.lineWidth=2.4; c4.strokeRect(40,y,110,h); c4.strokeRect(150,y,90,h);
-  c4.font='bold 15px Segoe UI'; c4.textAlign='center'; c4.fillStyle='#155e75';
-  c4.fillText('DESSIN A',140,y+h+34);
-  // B : arbre hachuré en long
-  hach(c4,340,y,70,h,9,1); hach(c4,470,y,70,h,9,1);
-  c4.strokeStyle='#111'; c4.strokeRect(340,y,70,h); c4.strokeRect(470,y,70,h);
-  hach(c4,410,y+42,60,36,9,1);
-  c4.fillStyle='#fff';
-  c4.strokeRect(410,y+42,60,36);
-  hach(c4,410,y+42,60,36,7,1);
-  c4.strokeStyle='#111'; c4.lineWidth=2.4; c4.strokeRect(410,y+42,60,36);
-  c4.setLineDash([20,3,3,3]); c4.lineWidth=1;
-  c4.beginPath(); c4.moveTo(320,y+60); c4.lineTo(560,y+60); c4.stroke(); c4.setLineDash([]);
-  c4.fillStyle='#155e75'; c4.fillText('DESSIN B',440,y+h+34);
-  c4.font='12.5px Segoe UI'; c4.fillStyle='#5b544a';
-  c4.fillText('l’arbre est coupé dans sa longueur',440,y+h+54);
-  // C : hachures qui débordent
-  hach(c4,660,y-14,120,h+28,9,1);
-  c4.strokeStyle='#111'; c4.lineWidth=2.4; c4.strokeRect(660,y,120,h);
-  c4.font='bold 15px Segoe UI'; c4.fillStyle='#155e75'; c4.fillText('DESSIN C',720,y+h+34);
-})();
-const CLES=[['meme','identiq','pareil','distingu','different','differente','differentes'],
-            ['arbre','vis','plein','long','jamaishachur','hachur'],
-            ['deborde','depasse','contour','arrete','sortent','limite']];
-document.getElementById('val4').addEventListener('click',()=>{
-  const r=[norm(document.getElementById('f1').value),norm(document.getElementById('f2').value),norm(document.getElementById('f3').value)];
-  const bons=r.map((t,i)=> t.length>8 && CLES[i].some(k=>t.includes(k)));
-  const ok=bons.every(b=>b);
-  if(!valider(ok,'Trois erreurs repérées',
-    'Dessin A : deux pièces voisines portent les mêmes hachures — on ne peut plus voir où finit l’une et où commence l’autre. '+
-    'Dessin B : l’arbre, pièce pleine coupée dans sa longueur, a été hachuré alors que la norme l’interdit. '+
-    'Dessin C : les hachures débordent du contour de la pièce ; elles doivent s’arrêter net sur les traits forts. '+
-    'Ces trois fautes sont les plus fréquentes chez les débutants — et les plus faciles à éviter en relisant les trois règles du cours.')){
-    document.getElementById('v4').textContent='Expertise(s) juste(s) : '+bons.filter(b=>b).length+' sur 3. Sois plus précis : nomme la règle enfreinte.';
+/* ═══════════ TYPES D'EXERCICES ═══════════ */
+const TYPES={
+ clic(x,z){
+   const box=planNeuf('plan'); z.appendChild(box);
+   etat.sel=new Set();
+   box.querySelectorAll('.hit').forEach(p=>{
+     if(!x.zones.includes(p.dataset.id)){ p.classList.add('inactive'); return; }
+     p.addEventListener('click',()=>{
+       const id=p.dataset.id;
+       if(etat.sel.has(id)){ etat.sel.delete(id); p.classList.remove('sel'); }
+       else { etat.sel.add(id); p.classList.add('sel');
+         if(x.hachurer){ const m = id==='couv'?'url(#h2)':(id==='couss'?'url(#h3)':'url(#h1)');
+           if(id==='couss') box.querySelectorAll('.p-couss').forEach(e=>e.setAttribute('fill',m));
+           else { const q=box.querySelector('#p-'+id); if(q)q.setAttribute('fill',m); } } }
+       document.getElementById('verdict').textContent=etat.sel.size+' pièce(s) sélectionnée(s)';
+     });
+   });
+ },
+ qcm(x,z){
+   etat.rep={};
+   const w=el('div',z,{className:'qcm'});
+   x.questions.forEach((q,qi)=>{
+     el('div',w,{className:'q',textContent:(qi+1)+'. '+q.q});
+     const ordre=q.r.map((t,k)=>({t,k})).sort(()=>Math.random()-0.5);
+     const box=el('div',w);
+     ordre.forEach(o=>{
+       const b=el('button',box,{textContent:o.t});
+       b.onclick=()=>{ box.querySelectorAll('button').forEach(y=>y.classList.remove('choisi'));
+         b.classList.add('choisi'); etat.rep[qi]=o.k;
+         document.getElementById('verdict').textContent=Object.keys(etat.rep).length+' / '+x.questions.length+' renseignée(s)'; };
+     });
+   });
+ },
+ saisie(x,z){
+   const t=el('table',z,{className:'saisie'});
+   const th=el('tr',el('thead',t));
+   ['Repère','Nb','Désignation','Matière'].forEach(h=>el('th',th,{textContent:h}));
+   const tb=el('tbody',t);
+   x.tableau.forEach(l=>{
+     const tr=el('tr',tb);
+     l.forEach(c=>{
+       const td=el('td',tr);
+       if(typeof c==='string') td.textContent=c;
+       else el('input',td,{id:c.id,placeholder:c.ph,autocomplete:'off'});
+     });
+   });
+ },
+ calcul(x,z){
+   x.champs.forEach(c=>{
+     const d=el('div',z,{className:'champ'});
+     el('label',d,{innerHTML:c.lbl});
+     el('input',d,{id:c.id,autocomplete:'off',inputMode:'decimal'});
+     el('span',d,{className:'u',textContent:c.u||''});
+   });
+ },
+ redaction(x,z){
+   if(x.canvas==='fautes'){ const cv=el('canvas',z,{width:900,height:250,id:'cvF'}); dessineFautes(cv); }
+   x.champs.forEach(c=>{
+     const d=el('div',z,{className:'champ'});
+     el('label',d,{innerHTML:c.lbl});
+     el('input',d,{id:c.id,className:'large',autocomplete:'off',placeholder:'rédige une phrase complète'});
+   });
+ },
+ cahier(x,z){
+   if(x.avecPlan){ z.appendChild(planNeuf('planC')); }
+   if(x.avecEns){ const d=el('div',z,{className:'cadre'});
+     d.appendChild(document.getElementById('tplEns').content.cloneNode(true)); }
+   x.champs.forEach(c=>{
+     const d=el('div',z,{className:'champ'});
+     el('label',d,{innerHTML:c.lbl});
+     el('input',d,{id:c.id,autocomplete:'off',placeholder:c.aide||''});
+   });
+ },
+};
+/* ═══════════ VALIDATION ═══════════ */
+function valider(){
+  const x=EX[idx]; ESSAIS[idx]++;
+  let ok=false, msg='';
+  if(x.type==='clic'){
+    const s=etat.sel;
+    ok = s.size===x.bonnes.length && x.bonnes.every(b=>s.has(b));
+    if(!ok) msg = s.size!==x.bonnes.length
+      ? 'Non : tu as sélectionné '+s.size+' pièce(s). Ce n’est pas le bon nombre — relis le cours.'
+      : 'Non : le compte est bon, mais au moins une pièce n’a rien à faire dans cette liste.';
   }
-});
-/* ══════ EX 5 : repérage ══════ */
-document.getElementById('plan5').innerHTML=document.getElementById('plan1').innerHTML;
-document.getElementById('plan5').querySelectorAll('.hit').forEach(p=>p.classList.remove('sel'));
-const REPS=[['1','le corps'],['2','l’arbre'],['3','le coussinet'],['4','le couvercle']];
-const CIBLE={'1':'corps','2':'arbre','3':'couss','4':'couv'};
-let choisi5=null, place5={};
-const z5=document.getElementById('rep5');
-REPS.forEach(([n,lbl])=>{
-  const b=document.createElement('button'); b.className='btn sec'; b.dataset.n=n;
-  b.textContent='Repère '+n+' — '+lbl;
-  b.addEventListener('click',()=>{
-    z5.querySelectorAll('button').forEach(x=>x.classList.remove('btn'));
-    z5.querySelectorAll('button').forEach(x=>x.classList.add('sec'));
-    choisi5=n; b.classList.remove('sec');
-    document.getElementById('v5').textContent='Repère '+n+' sélectionné : clique la pièce sur le plan.';
-  });
-  z5.appendChild(b);
-});
-document.getElementById('plan5').querySelectorAll('.hit').forEach(p=>{
-  const id=p.dataset.id;
-  if(!['corps','arbre','couss','couv','vis'].includes(id)){ p.classList.add('inactive'); return; }
-  p.addEventListener('click',()=>{
-    if(!choisi5){ document.getElementById('v5').textContent='Choisis d’abord un repère dans la liste.'; return; }
-    Object.keys(place5).forEach(k=>{ if(place5[k]===id) delete place5[k]; });
-    place5[choisi5]=id;
-    document.getElementById('plan5').querySelectorAll('.hit').forEach(q=>q.classList.remove('sel'));
-    Object.values(place5).forEach(v=>{
-      const q=document.getElementById('plan5').querySelector('.hit[data-id="'+v+'"]'); if(q)q.classList.add('sel');
+  else if(x.type==='qcm'){
+    if(Object.keys(etat.rep).length<x.questions.length){
+      ESSAIS[idx]--; document.getElementById('verdict').textContent='Réponds aux '+x.questions.length+' questions avant de valider.'; return; }
+    let bons=0; x.questions.forEach((q,i)=>{ if(etat.rep[i]===q.b)bons++; });
+    ok = bons===x.questions.length;
+    if(!ok) msg='Seulement '+bons+' bonne(s) réponse(s) sur '+x.questions.length+'. Les réponses ne sont pas données : retourne au cours.';
+  }
+  else if(x.type==='saisie'||x.type==='cahier'){
+    let faux=0;
+    x.champs.forEach(c=>{
+      const v=document.getElementById(c.id).value;
+      const bon = c.num ? String(nb(v))===String(nb(c.rep))
+                        : (Array.isArray(c.rep)? c.rep : [c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+      if(!bon)faux++;
     });
-    document.getElementById('v5').textContent=Object.keys(place5).length+' repère(s) placé(s) sur 4.';
-    choisi5=null;
-  });
-});
-document.getElementById('val5').addEventListener('click',()=>{
-  const ok=Object.keys(CIBLE).every(n=>place5[n]===CIBLE[n]) && Object.keys(place5).length===4;
-  if(!valider(ok,'Repérage correct',
-    'Tu sais passer du volume au plan : c’est exactement ce que fait un technicien quand il reçoit un dessin '+
-    'd’une pièce qu’il n’a jamais vue. La demi-coupe 3D et la coupe A-A montrent la même chose — l’une en volume, '+
-    'l’autre en projection plane. Savoir faire l’aller-retour entre les deux est LA compétence de la lecture de plan.')){
-    document.getElementById('v5').textContent='Au moins un repère est mal placé. Compare avec la vue en volume, en haut.';
+    ok = faux===0;
+    if(!ok) msg='Il reste '+faux+' réponse(s) incorrecte(s) sur '+x.champs.length+'.'+
+      (x.type==='cahier'?' Reprends ton tracé sur le cahier et recompte.':'');
   }
-});
-</script>
-</body>
-</html>
+  else if(x.type==='calcul'){
+    let faux=0;
+    x.champs.forEach(c=>{
+      const v=nb(document.getElementById(c.id).value);
+      if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++;
+    });
+    ok=faux===0;
+    if(!ok) msg=faux+' réponse(s) incorrecte(s) sur '+x.champs.length+'. Vérifie tes calculs sur le cahier.';
+  }
+  else if(x.type==='redaction'){
+    let bons=0;
+    x.champs.forEach(c=>{
+      const v=norm(document.getElementById(c.id).value);
+      if(v.length>12 && c.cles.some(k=>v.includes(k))) bons++;
+    });
+    ok = bons===x.champs.length;
+    if(!ok) msg='Réponse(s) convaincante(s) : '+bons+' sur '+x.champs.length+
+      '. Rédige une phrase complète et nomme précisément la règle ou la raison.';
+  }
+  if(ok) reussir('Exercice '+(idx+1)+' validé', x.expl);
+  else echouer(msg);
+}
+/* ═══════════ dessin des trois plans fautifs ═══════════ */
+function dessineFautes(cv){
+  const c=cv.getContext('2d');
+  function hach(x,y,w,h,pas,sens){
+    c.save(); c.beginPath(); c.rect(x,y,w,h); c.clip();
+    c.strokeStyle='#111'; c.lineWidth=0.9;
+    for(let d=-h;d<w+h;d+=pas){ c.beginPath();
+      if(sens>0){c.moveTo(x+d,y+h);c.lineTo(x+d+h,y);}else{c.moveTo(x+d,y);c.lineTo(x+d+h,y+h);}
+      c.stroke(); }
+    c.restore();
+  }
+  c.clearRect(0,0,900,250); const y=52,h=120;
+  hach(40,y,110,h,9,1); hach(150,y,90,h,9,1);
+  c.strokeStyle='#111'; c.lineWidth=2.4; c.strokeRect(40,y,110,h); c.strokeRect(150,y,90,h);
+  c.font='bold 15px Segoe UI'; c.textAlign='center'; c.fillStyle='#155e75'; c.fillText('DESSIN A',140,y+h+34);
+  hach(340,y,70,h,9,1); hach(470,y,70,h,9,1);
+  c.strokeStyle='#111'; c.strokeRect(340,y,70,h); c.strokeRect(470,y,70,h);
+  hach(410,y+42,60,36,7,1);
+  c.lineWidth=2.4; c.strokeRect(410,y+42,60,36);
+  c.setLineDash([20,3,3,3]); c.lineWidth=1;
+  c.beginPath(); c.moveTo(320,y+60); c.lineTo(560,y+60); c.stroke(); c.setLineDash([]);
+  c.fillStyle='#155e75'; c.fillText('DESSIN B',440,y+h+34);
+  c.font='12.5px Segoe UI'; c.fillStyle='#5b544a'; c.fillText('l’arbre est coupé dans sa longueur',440,y+h+54);
+  hach(660,y-14,120,h+28,9,1);
+  c.strokeStyle='#111'; c.lineWidth=2.4; c.strokeRect(660,y,120,h);
+  c.font='bold 15px Segoe UI'; c.fillStyle='#155e75'; c.fillText('DESSIN C',720,y+h+34);
+}
+aller(0);
+
+</script></body></html>
