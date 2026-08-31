@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trajectoires — analyse graphique d’un plan d’assemblage · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--ok:#16a34a;--ko:#dc2626;--fond:#fdf9f0;--carte:#fff;--encre:#3f3a34}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(960px,100%);padding:12px 12px 40px}
+h1{font-size:23px;text-align:center;color:var(--accf);margin:10px 0 4px}
+.sous{text-align:center;color:#8a8378;font-size:13.5px;margin-bottom:10px}
+.access{text-align:center;margin-bottom:12px}
+.access button{border:2px solid #e2d9c8;background:#fff;border-radius:999px;padding:7px 16px;font-size:14px;font-weight:800;cursor:pointer;color:var(--encre)}
+.access button.actif{border-color:var(--acc);background:#cffafe}
+body.lisible{font-size:1.1em;letter-spacing:.04em;word-spacing:.15em}
+.progression{display:flex;gap:6px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.mseg{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 10px;border-radius:12px;background:#f3ecdd;min-width:96px}
+.mseg .num{font-size:14px;font-weight:900;color:#a89c82;background:#fff;border-radius:50%;width:25px;height:25px;display:flex;align-items:center;justify-content:center}
+.mseg .lab{font-size:11px;font-weight:800;color:#8a8378;text-align:center}
+.mseg .et{font-size:12px;letter-spacing:1px;color:#c9bfa8}
+.mseg.faite{background:#cffafe}
+.mseg.faite .et{color:var(--acc)}
+.mseg.faite .num{background:var(--acc);color:#fff}
+.mseg.courante{outline:3px solid var(--acc)}
+.mission{display:none;background:var(--carte);border:1px solid #eee4d0;border-radius:18px;padding:18px;box-shadow:0 4px 14px rgba(60,120,140,.08)}
+.mission.active{display:block}
+.histoire{background:#faf6ec;border-left:5px solid var(--acc);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:14.5px;line-height:1.65}
+.consigne{font-size:16px;font-weight:800;margin-bottom:10px;line-height:1.55;color:var(--accf)}
+canvas{width:100%;display:block;border-radius:14px;background:#fbfcfd;border:1px solid #d8cdb4;touch-action:none;cursor:crosshair}
+.outils{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.btn{border:none;border-radius:12px;background:var(--acc);color:#fff;font-size:15px;font-weight:900;padding:11px 22px;cursor:pointer}
+.btn.sec{background:#e7dcc4;color:var(--encre)}
+.btn:disabled{opacity:.4;cursor:default}
+.astuce{min-height:22px;font-size:14px;font-weight:700;color:#b45309;text-align:center;margin-top:8px}
+.ligne-etoiles{text-align:center;margin-top:4px;font-size:14px;color:#8a8378}
+.ligne-etoiles b{color:var(--accf);font-size:17px;letter-spacing:2px}
+.legende{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-size:13px;margin-top:8px;color:#5b544a}
+.legende span{display:flex;align-items:center;gap:6px}
+.pastille{width:16px;height:16px;border-radius:4px;display:inline-block}
+.memo{background:#faf6ec;border:1px solid #eee4d0;border-radius:14px;padding:14px 18px;margin:14px 0;font-size:14.5px;line-height:1.7}
+.memo h3{color:var(--accf);font-size:15px;margin-bottom:6px}
+.memo table{width:100%;border-collapse:collapse;margin:6px 0}
+.memo td,.memo th{padding:6px 8px;border-bottom:1px solid #eee4d0;text-align:left;vertical-align:top}
+.memo th{color:var(--accf);font-size:13px}
+.memo td:first-child{font-weight:800;white-space:nowrap}
+#voile{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(63,58,52,.45);z-index:50;padding:14px}
+#voile.on{display:flex}
+.bravo{background:#fff;border-radius:20px;max-width:560px;width:100%;padding:24px;text-align:center;animation:pop .35s}
+@keyframes pop{0%{transform:scale(.75);opacity:0}70%{transform:scale(1.04)}100%{transform:scale(1)}}
+.bravo h2{color:var(--ok);font-size:21px;margin-bottom:4px}
+.bravo .grosses{font-size:32px;letter-spacing:6px;color:var(--acc);margin:6px 0}
+.bravo p{font-size:14.5px;line-height:1.7;text-align:left;background:#faf6ec;border-radius:12px;padding:12px 14px;margin:10px 0}
+.mesures{display:flex;gap:18px;justify-content:center;font-size:13px;color:#5b544a;margin-top:6px}
+.mesures b{color:var(--accf)}
+</style>
+</head>
+<body>
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<h1>Trajectoires — l’analyse graphique d’un plan d’assemblage</h1>
+<div class="sous">Sciences de l’ingénieur · lire un mécanisme et construire la trajectoire d’un point</div>
+
+<div class="access"><button id="btnAa">Aa + confort de lecture</button></div>
+<div class="progression" id="prog"></div>
+
+<!-- ══════ M0 : LECTURE DU PLAN ══════ -->
+<section class="mission active" data-m="0">
+ <div class="histoire">
+ Voici le plan d’assemblage d’un <b>compresseur à piston</b>. Quatre pièces : le <b>bâti 0</b> (immobile, hachuré),
+ la <b>manivelle 1</b>, la <b>bielle 2</b>et le <b>piston 3</b>. Avant toute trajectoire, il faut identifier
+ <b>le mouvement de chaque pièce par rapport au bâti</b> : c’est la première question de toute analyse graphique.</div>
+ <div class="consigne">Étape 1 — Clique sur chaque pièce du plan pour l’étudier <b id="c0compte">(0/3)</b></div>
+ <canvas id="cv0" width="900" height="440"></canvas>
+ <div class="legende">
+ <span><i class="pastille" style="background:#64748b"></i>bâti 0 — fixe</span>
+ <span><i class="pastille" style="background:#dc2626"></i>manivelle 1</span>
+ <span><i class="pastille" style="background:#0e7490"></i>bielle 2</span>
+ <span><i class="pastille" style="background:#b45309"></i>piston 3</span>
+ </div>
+ <div class="astuce" id="ast0"></div>
+ <div class="ligne-etoiles">Étape 1 · <b id="et0">☆☆☆</b></div>
+</section>
+
+<!-- ══════ M1 à M3 : TRACÉS (bielle-manivelle) ══════ -->
+<section class="mission" data-m="1">
+ <div class="histoire" id="hist1"></div>
+ <div class="consigne" id="cons1"></div>
+ <canvas id="cv1" width="900" height="440"></canvas>
+ <div class="outils">
+ <button class="btn sec" id="btnAnim1">Animer le mécanisme</button>
+ <button class="btn sec" id="btnPos1">Afficher les positions successives</button>
+ <button class="btn sec" id="btnEff1">Effacer mon tracé</button>
+ <button class="btn" id="btnVal1">Valider le tracé</button>
+ </div>
+ <div class="mesures" id="mes1"></div>
+ <div class="astuce" id="ast1"></div>
+ <div class="ligne-etoiles">Étape <span id="numEt1">2</span> · <b id="et1">☆☆☆</b></div>
+</section>
+
+<!-- ══════ M4 : PARALLÉLOGRAMME ══════ -->
+<section class="mission" data-m="2">
+ <div class="histoire">
+ Deuxième plan : une <b>table élévatrice à parallélogramme</b>. Les deux bras <b>1</b>et <b>1’</b>ont la même longueur
+ et restent parallèles : le plateau <b>2</b>ne bascule jamais. Attention, son mouvement n’est pas une rotation…
+ mais ce n’est pas non plus une translation rectiligne.</div>
+ <div class="consigne">Étape 5 — Trace la trajectoire du point <b>P</b>du plateau (par rapport au bâti 0)</div>
+ <canvas id="cv4" width="900" height="440"></canvas>
+ <div class="outils">
+ <button class="btn sec" id="btnAnim4">Animer le mécanisme</button>
+ <button class="btn sec" id="btnPos4">Afficher les positions successives</button>
+ <button class="btn sec" id="btnEff4">Effacer mon tracé</button>
+ <button class="btn" id="btnVal4">Valider le tracé</button>
+ </div>
+ <div class="mesures" id="mes4"></div>
+ <div class="astuce" id="ast4"></div>
+ <div class="ligne-etoiles">Étape 5 · <b id="et4">☆☆☆</b></div>
+</section>
+
+<!-- ══════ BILAN ══════ -->
+<section class="mission" data-m="3">
+ <h2 style="color:var(--accf);text-align:center">Bilan de l’analyse graphique</h2>
+ <p style="text-align:center;margin:8px 0">Total : <b id="etTotal" style="font-size:22px;color:var(--acc)">0</b> ★ sur 15</p>
+ <div class="memo">
+ <h3>La méthode</h3>
+ <p><b>1.</b>Repérer le <b>bâti</b> (la pièce fixe, hachurée) : toutes les trajectoires se définissent PAR RAPPORT à lui.<br>
+ <b>2.</b>Identifier le <b>mouvement de la pièce</b>qui porte le point.<br>
+ <b>3.</b>En déduire la <b>forme</b>de la trajectoire, puis la construire point par point si nécessaire.</p>
+ <h3 style="margin-top:12px">Les quatre cas à connaître</h3>
+ <table>
+ <tr><th>Mouvement de la pièce / bâti</th><th>Trajectoire d’un point</th><th>Construction</th></tr>
+ <tr><td>Rotation autour d’un axe fixe</td><td>Arc de cercle</td><td>centre = l’axe de rotation, rayon = distance point-axe</td></tr>
+ <tr><td>Translation rectiligne</td><td>Segment de droite</td><td>parallèle à la direction de translation</td></tr>
+ <tr><td>Translation circulaire</td><td>Arc de cercle</td><td>même rayon que les bras, mais centre décalé — le point ne tourne PAS sur lui-même</td></tr>
+ <tr><td>Mouvement plan quelconque</td><td>Courbe complexe</td><td>se construit uniquement point par point, position après position</td></tr>
+ </table>
+ <p style="margin-top:8px"><b>À retenir :</b>dans une translation, <b>tous</b>les points de la pièce décrivent des trajectoires
+ <b>identiques</b> (superposables). Dans une rotation, chaque point décrit un cercle <b>différent</b> — d’autant plus grand qu’il est loin de l’axe.</p>
+ </div>
+</section>
+</main>
+
+<div id="voile"><div class="bravo">
+ <h2 id="brTitre">Tracé validé</h2>
+ <div class="grosses" id="brEt">★★★</div>
+ <p id="brTxt"></p>
+ <button class="btn" id="btnCont">Continuer</button>
+</div></div>
+
+<script>
+'use strict';
+document.getElementById('btnAa').addEventListener('click',function(){
+ document.body.classList.toggle('lisible'); this.classList.toggle('actif');
+});
+/* ════════ progression ════════ */
+const ETAPES=['Lire le plan','Point A','Point B','Point M','Table élévatrice','Bilan'];
+const E=[0,0,0,0,0];
+let mCour=0, sousEtape=0, enAttente=null;
+const prog=document.getElementById('prog');
+ETAPES.forEach((m,i)=>{
+ const d=document.createElement('div'); d.className='mseg'+(i===0?' courante':'');
+ d.innerHTML='<span class="num">'+(i+1)+'</span><span class="lab">'+m+'</span><span class="et" id="pe'+i+'">'+(i<5?'☆☆☆':'')+'</span>';
+ prog.appendChild(d);
+});
+function etoiles(n){ return '★'.repeat(n)+'☆'.repeat(3-n); }
+function majProg(){
+ document.querySelectorAll('.mseg').forEach((s,k)=>{
+ s.classList.toggle('courante', k===(mCour===1? 1+sousEtape : (mCour===0?0:(mCour===2?4:5))));
+ });
+}
+function finir(idx,nb,titre,txt){
+ E[idx]=nb;
+ document.getElementById('pe'+idx).textContent=etoiles(nb);
+ document.querySelectorAll('.mseg')[idx].classList.add('faite');
+ document.getElementById('brTitre').textContent=titre;
+ document.getElementById('brEt').textContent=etoiles(nb);
+ document.getElementById('brTxt').textContent=txt;
+ document.getElementById('voile').classList.add('on');
+}
+document.getElementById('btnCont').addEventListener('click',()=>{
+ document.getElementById('voile').classList.remove('on');
+ if(enAttente){ enAttente(); enAttente=null; }
+});
+function afficher(i){
+ mCour=i;
+ document.querySelectorAll('.mission').forEach((s,k)=>s.classList.toggle('active',k===i));
+ majProg();
+ if(i===3){ document.getElementById('etTotal').textContent=E.reduce((a,b)=>a+b,0); }
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+/* ════════ géométrie du mécanisme bielle-manivelle ════════ */
+const O={x:250,y:250}, Rm=92, L=270;
+function poseBM(th){
+ const A={x:O.x+Rm*Math.cos(th), y:O.y-Rm*Math.sin(th)};
+ const dy=A.y-O.y;
+ const B={x:A.x+Math.sqrt(Math.max(1,L*L-dy*dy)), y:O.y};
+ const M={x:(A.x+B.x)/2, y:(A.y+B.y)/2};
+ return {A,B,M};
+}
+function hachures(c,x,y,w,h,pas){
+ c.save(); c.beginPath(); c.rect(x,y,w,h); c.clip();
+ c.strokeStyle='#94a3b8'; c.lineWidth=1.2;
+ for(let d=-h;d<w+h;d+=(pas||9)){
+ c.beginPath(); c.moveTo(x+d,y+h); c.lineTo(x+d+h,y); c.stroke();
+ }
+ c.restore();
+}
+function dessineBM(c,th,opts){
+ opts=opts||{};
+ const P=poseBM(th);
+ c.clearRect(0,0,900,440);
+ // axe de translation du piston
+ c.strokeStyle='#cbd5e1'; c.lineWidth=1.4; c.setLineDash([9,7]);
+ c.beginPath(); c.moveTo(120,O.y); c.lineTo(860,O.y); c.stroke(); c.setLineDash([]);
+ // bâti : palier + glissière
+ c.fillStyle='#e2e8f0';
+ c.fillRect(150,300,180,54); hachures(c,150,300,180,54);
+ c.strokeStyle='#64748b'; c.lineWidth=2.5; c.strokeRect(150,300,180,54);
+ c.fillStyle='#e2e8f0';
+ c.fillRect(560,196,300,26); hachures(c,560,196,300,26);
+ c.fillRect(560,278,300,26); hachures(c,560,278,300,26);
+ c.strokeStyle='#64748b'; c.lineWidth=2.5;
+ c.strokeRect(560,196,300,26); c.strokeRect(560,278,300,26);
+ c.font='bold 13px Segoe UI'; c.textAlign='center'; c.fillStyle='#475569';
+ c.fillText('bâti 0',240,342); c.fillText('bâti 0 (glissière)',710,186);
+ // fantômes des positions successives
+ if(opts.positions){
+ for(let k=0;k<12;k++){
+ const t2=k*Math.PI/6, Q=poseBM(t2);
+ c.globalAlpha=0.16;
+ c.strokeStyle='#dc2626'; c.lineWidth=5; c.lineCap='round';
+ c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(Q.A.x,Q.A.y); c.stroke();
+ c.strokeStyle='#0e7490';
+ c.beginPath(); c.moveTo(Q.A.x,Q.A.y); c.lineTo(Q.B.x,Q.B.y); c.stroke();
+ c.fillStyle='#b45309';
+ c.fillRect(Q.B.x-26,Q.B.y-34,52,68);
+ c.globalAlpha=1;
+ // le point suivi, à chaque position
+ const pt=opts.suivi==='A'?Q.A:(opts.suivi==='B'?Q.B:Q.M);
+ c.fillStyle='#7c3aed';
+ c.beginPath(); c.arc(pt.x,pt.y,3.5,0,Math.PI*2); c.fill();
+ }
+ }
+ // manivelle 1
+ c.strokeStyle='#dc2626'; c.lineWidth=11; c.lineCap='round';
+ c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(P.A.x,P.A.y); c.stroke();
+ // bielle 2
+ c.strokeStyle='#0e7490'; c.lineWidth=9;
+ c.beginPath(); c.moveTo(P.A.x,P.A.y); c.lineTo(P.B.x,P.B.y); c.stroke();
+ // piston 3
+ c.fillStyle='#b45309';
+ c.beginPath(); c.roundRect(P.B.x-28,P.B.y-36,56,72,5); c.fill();
+ c.strokeStyle='#7c2d12'; c.lineWidth=2; c.strokeRect(P.B.x-28,P.B.y-36,56,72);
+ c.fillStyle='#fed7aa';
+ c.fillRect(P.B.x-28,P.B.y-30,56,5); c.fillRect(P.B.x-28,P.B.y+25,56,5);
+ // articulations
+ [[O,'O'],[P.A,'A'],[P.B,'B']].forEach(([p,n])=>{
+ c.fillStyle='#fff'; c.strokeStyle='#1e293b'; c.lineWidth=2.5;
+ c.beginPath(); c.arc(p.x,p.y,7,0,Math.PI*2); c.fill(); c.stroke();
+ });
+ c.fillStyle='#7c3aed';
+ c.beginPath(); c.arc(P.M.x,P.M.y,6,0,Math.PI*2); c.fill();
+ c.font='bold 15px Segoe UI'; c.fillStyle='#1e293b';
+ c.fillText('O',O.x-18,O.y+6); c.fillText('A',P.A.x-4,P.A.y-16);
+ c.fillText('B',P.B.x+2,P.B.y-46);
+ c.fillStyle='#7c3aed'; c.fillText('M',P.M.x+4,P.M.y-14);
+ // repères des pièces
+ c.font='bold 13px Segoe UI';
+ c.fillStyle='#dc2626'; c.fillText('1',(O.x+P.A.x)/2-14,(O.y+P.A.y)/2-10);
+ c.fillStyle='#0e7490'; c.fillText('2',(P.A.x+P.B.x)/2,(P.A.y+P.B.y)/2-14);
+ c.fillStyle='#b45309'; c.fillText('3',P.B.x,P.B.y+52);
+ return P;
+}
+/* ════════ trajectoires théoriques ════════ */
+function theoBM(pt){
+ const T=[];
+ for(let k=0;k<=220;k++){
+ const th=k/220*Math.PI*2, P=poseBM(th);
+ T.push(pt==='A'?P.A:(pt==='B'?P.B:P.M));
+ }
+ return T;
+}
+/* ════════ moteur de tracé ════════ */
+function creerTraceur(cvId, cfg){
+ const cv=document.getElementById(cvId), c=cv.getContext('2d');
+ const S={trace:[], dessine:false, anim:false, positions:false, th:0.6, valide:false, correction:null};
+ function pos(ev){
+ const r=cv.getBoundingClientRect();
+ return {x:(ev.clientX-r.left)*cv.width/r.width, y:(ev.clientY-r.top)*cv.height/r.height};
+ }
+ cv.addEventListener('pointerdown',ev=>{
+ if(S.valide)return;
+ ev.preventDefault(); S.dessine=true; S.trace.push(pos(ev));
+ try{ cv.setPointerCapture(ev.pointerId); }catch(e){}
+ });
+ cv.addEventListener('pointermove',ev=>{
+ if(!S.dessine||S.valide)return;
+ const p=pos(ev), d=S.trace[S.trace.length-1];
+ if(!d||Math.hypot(p.x-d.x,p.y-d.y)>3) S.trace.push(p);
+ });
+ ['pointerup','pointerleave','pointercancel'].forEach(e=>cv.addEventListener(e,()=>{S.dessine=false;}));
+ return {S,cv,c,cfg};
+}
+function evalTrace(pts, theo){
+ if(pts.length<12) return null;
+ let somme=0, pire=0;
+ pts.forEach(p=>{
+ let d=1e9;
+ theo.forEach(q=>{ const dd=Math.hypot(p.x-q.x,p.y-q.y); if(dd<d)d=dd; });
+ somme+=d; if(d>pire)pire=d;
+ });
+ let couv=0;
+ theo.forEach(q=>{
+ let d=1e9;
+ pts.forEach(p=>{ const dd=Math.hypot(p.x-q.x,p.y-q.y); if(dd<d)d=dd; });
+ if(d<20)couv++;
+ });
+ return {moy:somme/pts.length, pire:pire, couv:couv/theo.length};
+}
+function dessineTrace(c,S,coul){
+ if(S.trace.length<2)return;
+ c.strokeStyle=coul||'#7c3aed'; c.lineWidth=3.5; c.lineCap='round'; c.lineJoin='round';
+ c.beginPath(); c.moveTo(S.trace[0].x,S.trace[0].y);
+ S.trace.forEach(p=>c.lineTo(p.x,p.y));
+ c.stroke();
+}
+function dessineCorrection(c,theo){
+ c.strokeStyle='#16a34a'; c.lineWidth=3; c.setLineDash([10,7]);
+ c.beginPath(); c.moveTo(theo[0].x,theo[0].y);
+ theo.forEach(p=>c.lineTo(p.x,p.y));
+ c.stroke(); c.setLineDash([]);
+}
+/* ════════ ÉTAPE 0 : lecture du plan ════════ */
+const cv0=document.getElementById('cv0'), c0=cv0.getContext('2d');
+const PIECES=[
+ {id:'1', nom:'la manivelle 1', mvt:'ROTATION autour de l’axe fixe O (par rapport au bâti 0)',
+ detail:'Elle est articulée sur le bâti en O : elle ne peut que tourner autour de ce point.'},
+ {id:'2', nom:'la bielle 2', mvt:'MOUVEMENT PLAN QUELCONQUE (ni rotation pure, ni translation)',
+ detail:'Ses deux extrémités font des choses différentes : A tourne, B glisse. La bielle tourne ET se déplace en même temps.'},
+ {id:'3', nom:'le piston 3', mvt:'TRANSLATION RECTILIGNE dans la glissière du bâti',
+ detail:'Guidé par la glissière, il ne peut qu’aller et venir en ligne droite, sans jamais tourner.'},
+];
+let vus0=[], flash0=null, fini0=false, err0=0;
+cv0.addEventListener('click',ev=>{
+ if(fini0)return;
+ const r=cv0.getBoundingClientRect();
+ const x=(ev.clientX-r.left)*900/r.width, y=(ev.clientY-r.top)*440/r.height;
+ const P=poseBM(anim0.th);
+ let id=null;
+ if(Math.hypot(x-(O.x+P.A.x)/2,y-(O.y+P.A.y)/2)<52) id='1';
+ else if(Math.hypot(x-P.M.x,y-P.M.y)<70) id='2';
+ else if(Math.abs(x-P.B.x)<34 && Math.abs(y-P.B.y)<44) id='3';
+ if(!id)return;
+ const pc=PIECES.find(p=>p.id===id);
+ flash0={pc,x:x,y:y};
+ if(!vus0.includes(id)){
+ vus0.push(id);
+ document.getElementById('c0compte').textContent='('+vus0.length+'/3)';
+ if(vus0.length===3){
+ fini0=true;
+ setTimeout(()=>{
+ enAttente=()=>{ demarrerTrace(0); afficher(1); };
+ finir(0,3,'Plan lu et compris',
+ 'Tu as identifié les trois mouvements par rapport au bâti : la manivelle 1 est en ROTATION autour de O, le piston 3 en TRANSLATION RECTILIGNE dans sa glissière, et la bielle 2 a un MOUVEMENT PLAN QUELCONQUE puisque ses deux extrémités ne font pas la même chose. Cette lecture est toujours la première étape : sans elle, impossible de prévoir la forme d’une trajectoire.');
+ },1400);
+ }
+ }
+ setTimeout(()=>{ flash0=null; },2600);
+});
+const anim0={th:0.6};
+/* ════════ ÉTAPES 1-3 : tracés sur la bielle-manivelle ════════ */
+const TR1=creerTraceur('cv1');
+const CAS=[
+ {pt:'A', couleur:'#dc2626',
+ hist:'Le point <b>A</b>est l’articulation entre la manivelle 1 et la bielle 2. Il appartient à la <b>manivelle 1</b>, qui tourne autour de l’axe fixe O.',
+ cons:'Étape 2 — Trace la trajectoire du point <b>A</b>par rapport au bâti 0',
+ expl:'Le point A appartient à une pièce en ROTATION autour de l’axe fixe O : sa trajectoire est un CERCLE de centre O et de rayon OA. C’est le cas le plus simple et le plus fréquent : dès qu’une pièce tourne autour d’un axe fixe, tous ses points décrivent des cercles concentriques — d’autant plus grands qu’ils sont éloignés de l’axe.'},
+ {pt:'B', couleur:'#b45309',
+ hist:'Le point <b>B</b>est l’axe du piston 3. Il appartient au <b>piston</b>, guidé en translation rectiligne par la glissière du bâti.',
+ cons:'Étape 3 — Trace la trajectoire du point <b>B</b>par rapport au bâti 0',
+ expl:'Le point B appartient à une pièce en TRANSLATION RECTILIGNE : sa trajectoire est un SEGMENT DE DROITE, parallèle à la direction de la glissière. Sa longueur s’appelle la COURSE du piston, et elle vaut exactement deux fois le rayon de la manivelle. Retiens que dans une translation, TOUS les points de la pièce décrivent le même segment.'},
+ {pt:'M', couleur:'#7c3aed',
+ hist:'Le point <b>M</b>est le milieu de la <b>bielle 2</b>. Or la bielle n’est ni en rotation pure, ni en translation : c’est un mouvement plan quelconque. Attention, la réponse n’est ni un cercle ni un segment…',
+ cons:'Étape 4 — Trace la trajectoire du point <b>M</b>, milieu de la bielle (aide-toi des positions successives !)',
+ expl:'La bielle 2 a un MOUVEMENT PLAN QUELCONQUE : son point M décrit une COURBE COMPLEXE, sorte d’ovale aplati, qui n’est ni un cercle ni un segment. Aucune formule simple ne la donne : on la construit POINT PAR POINT, en dessinant le mécanisme dans plusieurs positions successives et en relevant M à chaque fois. C’est exactement la méthode graphique des bureaux d’études — et le bouton « positions successives » te l’a montrée.'},
+];
+function majCas(){
+ const K=CAS[sousEtape];
+ document.getElementById('hist1').innerHTML=K.hist;
+ document.getElementById('cons1').innerHTML=K.cons;
+ document.getElementById('numEt1').textContent=sousEtape+2;
+ document.getElementById('et1').textContent='☆☆☆';
+ document.getElementById('ast1').textContent='';
+ document.getElementById('mes1').innerHTML='';
+ majProg();
+}
+function demarrerTrace(i){
+ sousEtape=i; TR1.S.trace=[]; TR1.S.valide=false; TR1.S.correction=null;
+ TR1.S.positions=false; TR1.S.anim=false;
+ majCas();
+}
+document.getElementById('btnAnim1').addEventListener('click',()=>{ TR1.S.anim=!TR1.S.anim; });
+document.getElementById('btnPos1').addEventListener('click',()=>{ TR1.S.positions=!TR1.S.positions; });
+document.getElementById('btnEff1').addEventListener('click',()=>{ if(!TR1.S.valide) TR1.S.trace=[]; });
+document.getElementById('btnVal1').addEventListener('click',()=>{
+ if(TR1.S.valide)return;
+ const K=CAS[sousEtape];
+ const theo=theoBM(K.pt);
+ const r=evalTrace(TR1.S.trace,theo);
+ if(!r){ document.getElementById('ast1').textContent='Trace d’abord la trajectoire complète avec la souris ou le doigt.'; return; }
+ document.getElementById('mes1').innerHTML=
+ 'écart moyen : <b>'+r.moy.toFixed(1)+' px</b> · trajectoire couverte : <b>'+Math.round(r.couv*100)+' %</b>';
+ let nb;
+ if(r.moy<9 && r.couv>0.88) nb=3;
+ else if(r.moy<17 && r.couv>0.72) nb=2;
+ else if(r.moy<30 && r.couv>0.5) nb=1;
+ else {
+ document.getElementById('ast1').textContent='Tracé trop éloigné : observe les positions successives du point, puis efface et recommence.';
+ return;
+ }
+ TR1.S.valide=true; TR1.S.correction=theo;
+ document.getElementById('et1').textContent=etoiles(nb);
+ const suite=()=>{
+ if(sousEtape<2){ demarrerTrace(sousEtape+1); }
+ else { afficher(2); TR4.S.trace=[]; TR4.S.valide=false; }
+ };
+ enAttente=suite;
+ finir(sousEtape+1,nb, nb===3?'Tracé très précis':'Tracé validé', K.expl);
+});
+/* ════════ ÉTAPE 4 : table élévatrice (translation circulaire) ════════ */
+const O1={x:280,y:330}, O2={x:520,y:330}, Rb=120;
+function posePar(th){
+ const d={x:Rb*Math.cos(th), y:-Rb*Math.sin(th)};
+ const C1={x:O1.x+d.x,y:O1.y+d.y}, C2={x:O2.x+d.x,y:O2.y+d.y};
+ return {C1,C2,P:{x:C1.x+60,y:C1.y-26},Q:{x:C2.x+90,y:C2.y-26}};
+}
+function dessinePar(c,th,opts){
+ opts=opts||{};
+ const S2=posePar(th);
+ c.clearRect(0,0,900,440);
+ c.fillStyle='#e2e8f0'; c.fillRect(200,352,400,34); hachures(c,200,352,400,34);
+ c.strokeStyle='#64748b'; c.lineWidth=2.5; c.strokeRect(200,352,400,34);
+ c.font='bold 13px Segoe UI'; c.textAlign='center'; c.fillStyle='#475569';
+ c.fillText('bâti 0',400,376);
+ if(opts.positions){
+ for(let k=0;k<=8;k++){
+ const t2=0.35+k*(Math.PI-0.9)/8, Q2=posePar(t2);
+ c.globalAlpha=0.15;
+ c.strokeStyle='#dc2626'; c.lineWidth=8; c.lineCap='round';
+ c.beginPath(); c.moveTo(O1.x,O1.y); c.lineTo(Q2.C1.x,Q2.C1.y); c.stroke();
+ c.beginPath(); c.moveTo(O2.x,O2.y); c.lineTo(Q2.C2.x,Q2.C2.y); c.stroke();
+ c.fillStyle='#0e7490';
+ c.fillRect(Q2.C1.x-24,Q2.C1.y-30,340,22);
+ c.globalAlpha=1;
+ c.fillStyle='#7c3aed';
+ c.beginPath(); c.arc(Q2.P.x,Q2.P.y,3.5,0,Math.PI*2); c.fill();
+ }
+ }
+ c.strokeStyle='#dc2626'; c.lineWidth=10; c.lineCap='round';
+ c.beginPath(); c.moveTo(O1.x,O1.y); c.lineTo(S2.C1.x,S2.C1.y); c.stroke();
+ c.beginPath(); c.moveTo(O2.x,O2.y); c.lineTo(S2.C2.x,S2.C2.y); c.stroke();
+ c.fillStyle='#0e7490';
+ c.beginPath(); c.roundRect(S2.C1.x-30,S2.C1.y-34,360,26,5); c.fill();
+ c.fillStyle='#94a3b8';
+ c.fillRect(S2.C1.x+40,S2.C1.y-52,60,18);
+ [[O1],[O2],[S2.C1],[S2.C2]].forEach(([p])=>{
+ c.fillStyle='#fff'; c.strokeStyle='#1e293b'; c.lineWidth=2.5;
+ c.beginPath(); c.arc(p.x,p.y,7,0,Math.PI*2); c.fill(); c.stroke();
+ });
+ c.fillStyle='#7c3aed';
+ c.beginPath(); c.arc(S2.P.x,S2.P.y,7,0,Math.PI*2); c.fill();
+ c.fillStyle='#0891b2';
+ c.beginPath(); c.arc(S2.Q.x,S2.Q.y,6,0,Math.PI*2); c.fill();
+ c.font='bold 15px Segoe UI'; c.fillStyle='#7c3aed';
+ c.fillText('P',S2.P.x,S2.P.y-14);
+ c.fillStyle='#0891b2'; c.fillText('Q',S2.Q.x,S2.Q.y-14);
+ c.font='bold 13px Segoe UI'; c.fillStyle='#dc2626';
+ c.fillText('bras 1',(O1.x+S2.C1.x)/2-26,(O1.y+S2.C1.y)/2);
+ c.fillText('bras 1’',(O2.x+S2.C2.x)/2+30,(O2.y+S2.C2.y)/2);
+ c.fillStyle='#0e7490'; c.fillText('plateau 2',S2.C1.x+170,S2.C1.y-40);
+ return S2;
+}
+function theoPar(){
+ const T=[];
+ for(let k=0;k<=180;k++){ T.push(posePar(0.35+k/180*(Math.PI-0.9)).P); }
+ return T;
+}
+const TR4=creerTraceur('cv4');
+document.getElementById('btnAnim4').addEventListener('click',()=>{ TR4.S.anim=!TR4.S.anim; });
+document.getElementById('btnPos4').addEventListener('click',()=>{ TR4.S.positions=!TR4.S.positions; });
+document.getElementById('btnEff4').addEventListener('click',()=>{ if(!TR4.S.valide) TR4.S.trace=[]; });
+document.getElementById('btnVal4').addEventListener('click',()=>{
+ if(TR4.S.valide)return;
+ const theo=theoPar();
+ const r=evalTrace(TR4.S.trace,theo);
+ if(!r){ document.getElementById('ast4').textContent='Trace d’abord la trajectoire du point P.'; return; }
+ document.getElementById('mes4').innerHTML=
+ 'écart moyen : <b>'+r.moy.toFixed(1)+' px</b> · trajectoire couverte : <b>'+Math.round(r.couv*100)+' %</b>';
+ let nb;
+ if(r.moy<9 && r.couv>0.85) nb=3;
+ else if(r.moy<17 && r.couv>0.7) nb=2;
+ else if(r.moy<30 && r.couv>0.5) nb=1;
+ else { document.getElementById('ast4').textContent='Tracé trop éloigné : affiche les positions successives et recommence.'; return; }
+ TR4.S.valide=true; TR4.S.correction=theo;
+ document.getElementById('et4').textContent=etoiles(nb);
+ enAttente=()=>afficher(3);
+ finir(4,nb,'Translation circulaire identifiée',
+ 'Surprise : le plateau 2 n’est PAS en rotation (il ne bascule jamais) et pourtant le point P décrit un ARC DE CERCLE ! C’est une TRANSLATION CIRCULAIRE : la pièce se déplace sans tourner sur elle-même, et chacun de ses points décrit un arc de même rayon que les bras — mais autour d’un centre différent. Preuve visuelle : le point Q du même plateau décrit exactement le même arc, simplement décalé. Dans toute translation, tous les points ont des trajectoires superposables.');
+});
+/* ════════ boucle ════════ */
+let dernier=null;
+function boucle(ts){
+ if(dernier===null)dernier=ts;
+ const dt=Math.min(0.05,(ts-dernier)/1000); dernier=ts;
+ if(mCour===0){
+ anim0.th+=dt*1.1;
+ dessineBM(c0,anim0.th,{});
+ if(flash0){
+ const pc=flash0.pc;
+ c0.font='bold 14px Segoe UI'; c0.textAlign='left';
+ const l1=pc.nom.toUpperCase()+' : '+pc.mvt;
+ const w=Math.min(560,Math.max(c0.measureText(l1).width, 300)+28);
+ const bx=Math.max(10,Math.min(flash0.x-w/2,890-w)), by=30;
+ c0.fillStyle='rgba(255,255,255,.97)'; c0.strokeStyle='#0e7490'; c0.lineWidth=3;
+ c0.beginPath(); c0.roundRect(bx,by,w,64,12); c0.fill(); c0.stroke();
+ c0.fillStyle='#155e75'; c0.fillText(l1,bx+14,by+26);
+ c0.font='12.5px Segoe UI'; c0.fillStyle='#5b544a';
+ c0.fillText(pc.detail.slice(0,74),bx+14,by+48);
+ c0.textAlign='center';
+ }
+ if(vus0.length<3){
+ c0.font='bold 13px Segoe UI'; c0.textAlign='center'; c0.fillStyle='#b45309';
+ c0.fillText('clique sur la manivelle, la bielle puis le piston',450,420);
+ }
+ }
+ if(mCour===1){
+ const S=TR1.S;
+ if(S.anim) S.th+=dt*1.2;
+ dessineBM(TR1.c,S.th,{positions:S.positions, suivi:CAS[sousEtape].pt});
+ if(S.correction) dessineCorrection(TR1.c,S.correction);
+ dessineTrace(TR1.c,S,CAS[sousEtape].couleur);
+ if(S.trace.length<2 && !S.valide){
+ TR1.c.font='bold 13px Segoe UI'; TR1.c.textAlign='center'; TR1.c.fillStyle='#b45309';
+ TR1.c.fillText('dessine la trajectoire directement sur le plan, avec la souris ou le doigt',450,424);
+ }
+ }
+ if(mCour===2){
+ const S=TR4.S;
+ if(S.anim) S.th=0.35+(Math.sin(ts/1400)*0.5+0.5)*(Math.PI-0.9);
+ dessinePar(TR4.c,S.th,{positions:S.positions});
+ if(S.correction){
+ dessineCorrection(TR4.c,S.correction);
+ const dec=theoPar().map(p=>({x:p.x+(posePar(1).Q.x-posePar(1).P.x),y:p.y}));
+ TR4.c.strokeStyle='#0891b2'; TR4.c.lineWidth=2; TR4.c.setLineDash([6,6]);
+ TR4.c.beginPath(); TR4.c.moveTo(dec[0].x,dec[0].y);
+ dec.forEach(p=>TR4.c.lineTo(p.x,p.y)); TR4.c.stroke(); TR4.c.setLineDash([]);
+ TR4.c.font='bold 12.5px Segoe UI'; TR4.c.fillStyle='#0891b2'; TR4.c.textAlign='center';
+ TR4.c.fillText('trajectoire de Q : identique, simplement décalée',640,120);
+ }
+ dessineTrace(TR4.c,S,'#7c3aed');
+ if(S.trace.length<2 && !S.valide){
+ TR4.c.font='bold 13px Segoe UI'; TR4.c.textAlign='center'; TR4.c.fillStyle='#b45309';
+ TR4.c.fillText('dessine la trajectoire du point P sur le plan',450,424);
+ }
+ }
+ requestAnimationFrame(boucle);
+}
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

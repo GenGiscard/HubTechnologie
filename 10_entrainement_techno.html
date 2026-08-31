@@ -1,0 +1,386 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entraînement Techno — séance du jour · ESTIC</title><style>
+:root{--acc:#7c3aed;--accf:#5b21b6;--r1:#0ea5e9;--r2:#f59e0b;--r3:#16a34a;
+      --fond:#faf7ff;--carte:#fff;--encre:#3b3348}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);
+     display:flex;flex-direction:column;align-items:center;letter-spacing:.02em}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(760px,100%);padding:14px 14px 40px}
+h1{font-size:24px;text-align:center;color:var(--accf);margin:12px 0 2px}
+.sous{text-align:center;color:#8b82a0;font-size:13.5px;margin-bottom:14px}
+.reglages{display:flex;gap:8px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.reglages button{border:2px solid #e5ddf5;background:#fff;border-radius:999px;padding:7px 15px;
+  font-size:13.5px;font-weight:800;cursor:pointer;color:var(--encre);font-family:inherit}
+.reglages button.actif{border-color:var(--acc);background:#f3e8ff}
+body.lisible{font-size:1.14em;letter-spacing:.06em;word-spacing:.2em;line-height:1.9}
+body.lisible .mot{letter-spacing:.1em}
+.carte{background:var(--carte);border:1px solid #ece5fa;border-radius:20px;padding:20px;
+  box-shadow:0 4px 16px rgba(124,58,237,.07);margin-bottom:14px}
+.ecran{display:none}.ecran.on{display:block}
+/* ── accueil ── */
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:14px 0}
+.axe{border-radius:16px;padding:14px 16px;color:#fff}
+.axe h3{font-size:16px;margin-bottom:4px}
+.axe p{font-size:13.5px;line-height:1.6;opacity:.94}
+.axe .niv{margin-top:8px;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.25);
+  border-radius:999px;padding:3px 11px;display:inline-block}
+.gros{border:none;border-radius:14px;background:var(--acc);color:#fff;font-size:18px;font-weight:900;
+  padding:15px 34px;cursor:pointer;display:block;margin:16px auto 0;font-family:inherit}
+.gros:hover{filter:brightness(1.1)}
+.serie{text-align:center;font-size:14px;color:#8b82a0;margin-top:10px}
+.serie b{color:var(--acc);font-size:17px}
+/* ── séance ── */
+.entete{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:14px;font-weight:800}
+.jauge{height:9px;background:#ece5fa;border-radius:99px;overflow:hidden;margin-bottom:14px}
+.jauge div{height:100%;background:var(--acc);transition:width .3s}
+.titrejeu{font-size:19px;font-weight:900;margin-bottom:4px}
+.consigne{font-size:15.5px;line-height:1.7;color:#5f5775;margin-bottom:14px}
+.zone{min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.mot{font-size:38px;font-weight:900;letter-spacing:.05em;text-align:center;line-height:1.5}
+.mot .s1{color:#0ea5e9}.mot .s2{color:#7c3aed}
+.trou{display:inline-block;min-width:64px;border-bottom:4px solid var(--acc);margin:0 3px}
+.choix{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.choix button{border:3px solid #e5ddf5;background:#fff;border-radius:14px;padding:14px 26px;
+  font-size:24px;font-weight:900;cursor:pointer;font-family:inherit;color:var(--encre);min-width:92px}
+.choix button:hover{border-color:var(--acc)}
+.choix button.juste{border-color:var(--r3);background:#dcfce7}
+.choix button.faux{border-color:#dc2626;background:#fee2e2}
+canvas{border-radius:14px;background:#fdfcff;border:1px solid #ece5fa;display:block;width:100%}
+.tapzone{width:100%;height:150px;border-radius:16px;background:#f3e8ff;border:3px dashed #c4b5fd;
+  display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:var(--accf);
+  cursor:pointer;user-select:none}
+.tapzone.actif{background:#ddd6fe}
+.retour{min-height:30px;text-align:center;font-size:16px;font-weight:800;margin-top:12px}
+.retour.ok{color:var(--r3)}.retour.ko{color:#b45309}
+/* ── bilan ── */
+.resultat{text-align:center}
+.resultat .score{font-size:52px;font-weight:900;color:var(--acc);line-height:1.1}
+.barres{margin:16px 0}
+.ligne{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:14px}
+.ligne span:first-child{min-width:150px;font-weight:800}
+.ligne .b{flex:1;height:13px;background:#ece5fa;border-radius:99px;overflow:hidden}
+.ligne .b div{height:100%;border-radius:99px}
+.badge{display:inline-block;background:#f3e8ff;color:var(--accf);border-radius:999px;
+  padding:6px 16px;font-size:13.5px;font-weight:800;margin:4px}
+.note{font-size:13px;color:#8b82a0;text-align:center;margin-top:16px;line-height:1.7}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<h1>Entraînement Techno</h1>
+<div class="sous">Une séance courte par jour · trois axes · la difficulté s’adapte à toi</div>
+<div class="reglages">
+  <button id="btnAa">Aa + confort de lecture</button>
+  <button id="btnRaz">Recommencer à zéro</button>
+</div>
+
+<!-- ═══ ACCUEIL ═══ -->
+<section class="carte ecran on" id="accueil">
+  <p style="font-size:15.5px;line-height:1.75">Chaque séance dure <b>10 minutes maximum</b> et enchaîne trois petits jeux,
+  un par axe. Ce qui compte n’est pas de tout réussir, mais de <b>revenir régulièrement</b> : la difficulté monte
+  toute seule quand tu progresses, et redescend si c’est trop dur.</p>
+  <div class="axes" id="axes"></div>
+  <div class="serie" id="serie"></div>
+  <button class="gros" id="btnStart">Commencer la séance du jour</button>
+</section>
+
+<!-- ═══ SÉANCE ═══ -->
+<section class="carte ecran" id="seance">
+  <div class="entete">
+    <span id="etiquette">Jeu 1 sur 3</span>
+    <span id="chrono">10:00</span>
+  </div>
+  <div class="jauge"><div id="progres" style="width:0%"></div></div>
+  <div class="titrejeu" id="titrejeu"></div>
+  <div class="consigne" id="consigne"></div>
+  <div class="zone" id="zone"></div>
+  <div class="retour" id="retour"></div>
+</section>
+
+<!-- ═══ BILAN ═══ -->
+<section class="carte ecran" id="bilan">
+  <div class="resultat">
+    <div class="score" id="scoreFin">0</div>
+    <div style="font-size:15px;color:#8b82a0">points gagnés aujourd’hui</div>
+  </div>
+  <div class="barres" id="barres"></div>
+  <div style="text-align:center" id="badges"></div>
+  <button class="gros" id="btnRetour">Revenir à l’accueil</button>
+  <div class="note">Cet entraînement s’inspire de la <b>forme</b> des applications de remédiation
+  (séances courtes, difficulté adaptative, suivi des progrès). Ce n’est pas un dispositif médical :
+  il travaille le vocabulaire et les repères de la technologie, pas la rééducation du langage.</div>
+</section>
+</main>
+<script>
+'use strict';
+const CLE='entrainement_techno';
+/* ═══ état persistant ═══ */
+const def={niv:[1,1,1], jours:0, dernier:'', total:0, hist:[]};
+let S=def;
+try{ const v=localStorage.getItem(CLE); if(v) S=Object.assign({},def,JSON.parse(v)); }catch(e){}
+function sauver(){ try{ localStorage.setItem(CLE,JSON.stringify(S)); }catch(e){} }
+document.getElementById('btnAa').addEventListener('click',function(){
+  document.body.classList.toggle('lisible'); this.classList.toggle('actif'); });
+document.getElementById('btnRaz').addEventListener('click',function(){
+  S=JSON.parse(JSON.stringify(def)); sauver(); majAccueil(); });
+/* ═══ contenu ═══ */
+const MOTS=[
+ {m:'alésage',syl:['a','lé','sage'],d:'le trou usiné dans une pièce'},
+ {m:'coussinet',syl:['cous','si','net'],d:'la bague qui guide un arbre'},
+ {m:'anémomètre',syl:['a','né','mo','mètre'],d:'il mesure la vitesse du vent'},
+ {m:'engrenage',syl:['en','gre','nage'],d:'deux roues dentées qui s’entraînent'},
+ {m:'capteur',syl:['cap','teur'],d:'il mesure une grandeur physique'},
+ {m:'actionneur',syl:['ac','tion','neur'],d:'il agit sur la matière'},
+ {m:'nomenclature',syl:['no','men','cla','ture'],d:'la liste des pièces d’un plan'},
+ {m:'hachures',syl:['ha','chures'],d:'les traits qui marquent la matière coupée'},
+ {m:'trajectoire',syl:['tra','jec','toire'],d:'le chemin suivi par un point'},
+ {m:'rendement',syl:['ren','de','ment'],d:'ce qui sort divisé par ce qui entre'},
+ {m:'pignon',syl:['pi','gnon'],d:'la petite roue dentée'},
+ {m:'alternateur',syl:['al','ter','na','teur'],d:'il produit du courant alternatif'},
+ {m:'échelle',syl:['é','chelle'],d:'le rapport entre dessin et réalité'},
+ {m:'cotation',syl:['co','ta','tion'],d:'l’indication des dimensions'},
+ {m:'bielle',syl:['bielle'],d:'elle relie la manivelle au piston'},
+];
+const PAIRES=[['b','d'],['p','q'],['m','n'],['u','n'],['a','e'],['f','t'],['i','l']];
+/* ═══ écrans ═══ */
+function montrer(id){ document.querySelectorAll('.ecran').forEach(e=>e.classList.toggle('on',e.id===id)); }
+const NOMAXE=['Le mot juste','L’œil du technicien','Le rythme du geste'];
+const DESCAXE=['Reconnaître et reconstruire le vocabulaire technique, syllabe par syllabe.',
+ 'Saisir un schéma d’un seul coup d’œil et retenir ce qu’on a vu.',
+ 'Tenir une cadence régulière : la base de toute mesure de fréquence.'];
+const COULAXE=['var(--r1)','var(--r2)','var(--r3)'];
+function majAccueil(){
+  const z=document.getElementById('axes'); z.innerHTML='';
+  NOMAXE.forEach((n,i)=>{
+    const d=document.createElement('div'); d.className='axe'; d.style.background=COULAXE[i];
+    d.innerHTML='<h3>'+n+'</h3><p>'+DESCAXE[i]+'</p><span class="niv">niveau '+S.niv[i]+' sur 5</span>';
+    z.appendChild(d);
+  });
+  document.getElementById('serie').innerHTML = S.jours
+    ? 'Séances réalisées : <b>'+S.jours+'</b> · points cumulés : <b>'+S.total+'</b>'
+    : 'Première séance : bienvenue !';
+}
+majAccueil();
+/* ═══ séance ═══ */
+let jeu=0, pts=[0,0,0], t0=0, chrono=null, fini=false;
+document.getElementById('btnStart').addEventListener('click',()=>{
+  jeu=0; pts=[0,0,0]; fini=false; t0=Date.now();
+  montrer('seance');
+  clearInterval(chrono);
+  chrono=setInterval(()=>{
+    const r=600-Math.floor((Date.now()-t0)/1000);
+    document.getElementById('chrono').textContent=
+      Math.max(0,Math.floor(r/60))+':'+String(Math.max(0,r%60)).padStart(2,'0');
+    if(r<=0 && !fini){ terminer(); }
+  },500);
+  lancerJeu();
+});
+function lancerJeu(){
+  document.getElementById('etiquette').textContent='Jeu '+(jeu+1)+' sur 3 — '+NOMAXE[jeu];
+  document.getElementById('progres').style.width=(jeu/3*100)+'%';
+  document.getElementById('titrejeu').textContent=NOMAXE[jeu];
+  document.getElementById('retour').textContent='';
+  document.getElementById('retour').className='retour';
+  [jeuMots,jeuOeil,jeuRythme][jeu]();
+}
+function finJeu(gagnes,total){
+  pts[jeu]=gagnes;
+  const r=gagnes/total;
+  if(r>=0.8 && S.niv[jeu]<5) S.niv[jeu]++;
+  else if(r<0.4 && S.niv[jeu]>1) S.niv[jeu]--;
+  jeu++;
+  document.getElementById('progres').style.width=(jeu/3*100)+'%';
+  setTimeout(()=>{ if(jeu<3) lancerJeu(); else terminer(); },1400);
+}
+function terminer(){
+  if(fini)return; fini=true;
+  clearInterval(chrono);
+  const tot=pts.reduce((a,b)=>a+b,0);
+  S.jours++; S.total+=tot; S.hist.push(pts.slice()); if(S.hist.length>30)S.hist.shift();
+  sauver();
+  document.getElementById('scoreFin').textContent=tot;
+  const bz=document.getElementById('barres'); bz.innerHTML='';
+  NOMAXE.forEach((n,i)=>{
+    const d=document.createElement('div'); d.className='ligne';
+    d.innerHTML='<span>'+n+'</span><span class="b"><div style="width:'+(pts[i]/6*100)+'%;background:'+COULAXE[i]+'"></div></span>'+
+      '<span>'+pts[i]+'/6 · niveau '+S.niv[i]+'</span>';
+    bz.appendChild(d);
+  });
+  const bd=document.getElementById('badges'); bd.innerHTML='';
+  const badges=[];
+  if(tot>=15) badges.push('Séance maîtrisée');
+  if(S.jours>=3) badges.push(S.jours+' séances réalisées');
+  if(S.niv.some(n=>n>=3)) badges.push('Niveau 3 atteint');
+  if(S.niv.every(n=>n>=2)) badges.push('Les trois axes progressent');
+  if(!badges.length) badges.push('C’est un début — reviens demain');
+  badges.forEach(b=>{ const s=document.createElement('span'); s.className='badge'; s.textContent=b; bd.appendChild(s); });
+  montrer('bilan');
+}
+document.getElementById('btnRetour').addEventListener('click',()=>{ majAccueil(); montrer('accueil'); });
+/* ═══ JEU 1 — LE MOT JUSTE ═══ */
+function jeuMots(){
+  const niv=S.niv[0];
+  document.getElementById('consigne').textContent=
+    niv<=2 ? 'Quelle syllabe manque ? Le mot est découpé en couleurs pour t’aider.'
+           : 'Quelle syllabe manque ? À toi de reconstituer le mot technique.';
+  const zone=document.getElementById('zone');
+  let n=0, bons=0;
+  const lot=MOTS.filter(m=>m.syl.length<=1+niv).sort(()=>Math.random()-0.5).slice(0,6);
+  function tour(){
+    if(n>=6){ finJeu(bons,6); return; }
+    const M=lot[n%lot.length];
+    const k=Math.floor(Math.random()*M.syl.length);
+    zone.innerHTML='';
+    const d=document.createElement('div'); d.className='mot';
+    M.syl.forEach((s,i)=>{
+      if(i===k){ const t=document.createElement('span'); t.className='trou'; t.innerHTML='&nbsp;'; d.appendChild(t); }
+      else { const t=document.createElement('span'); t.className= niv<=2 ? (i%2?'s2':'s1') : ''; t.textContent=s; d.appendChild(t); }
+    });
+    zone.appendChild(d);
+    const ind=document.createElement('div');
+    ind.style.cssText='font-size:15px;color:#8b82a0;text-align:center';
+    ind.textContent=M.d;
+    zone.appendChild(ind);
+    const ch=document.createElement('div'); ch.className='choix';
+    const leurres=MOTS.flatMap(x=>x.syl).filter(s=>s!==M.syl[k]);
+    const props=[M.syl[k]].concat(leurres.sort(()=>Math.random()-0.5).slice(0,1+Math.min(3,niv)))
+      .sort(()=>Math.random()-0.5);
+    props.forEach(p=>{
+      const b=document.createElement('button'); b.textContent=p;
+      b.onclick=()=>{
+        ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+        const R=document.getElementById('retour');
+        if(p===M.syl[k]){ b.classList.add('juste'); bons++;
+          R.className='retour ok'; R.textContent='Oui : '+M.m; }
+        else { b.classList.add('faux');
+          R.className='retour ko'; R.textContent='Le mot était : '+M.m; }
+        n++; setTimeout(tour,1100);
+      };
+      ch.appendChild(b);
+    });
+    zone.appendChild(ch);
+  }
+  tour();
+}
+/* ═══ JEU 2 — L’ŒIL DU TECHNICIEN ═══ */
+function jeuOeil(){
+  const niv=S.niv[1];
+  const duree=Math.max(500,1500-niv*180);
+  document.getElementById('consigne').textContent=
+    'Un schéma apparaît très brièvement. Mémorise-le, puis réponds.';
+  const zone=document.getElementById('zone');
+  let n=0, bons=0;
+  function tour(){
+    if(n>=6){ finJeu(bons,6); return; }
+    zone.innerHTML='';
+    const cv=document.createElement('canvas'); cv.width=560; cv.height=200;
+    zone.appendChild(cv);
+    const c=cv.getContext('2d');
+    const nbF=2+Math.min(4,niv);
+    const formes=[];
+    for(let k=0;k<nbF;k++){
+      formes.push({x:60+Math.random()*440, y:40+Math.random()*120,
+        t:Math.floor(Math.random()*3), r:16+Math.random()*10});
+    }
+    const cible=Math.floor(Math.random()*3);
+    c.fillStyle='#fdfcff'; c.fillRect(0,0,560,200);
+    formes.forEach(f=>{
+      c.fillStyle=['#0ea5e9','#f59e0b','#16a34a'][f.t];
+      c.beginPath();
+      if(f.t===0) c.arc(f.x,f.y,f.r,0,6.284);
+      else if(f.t===1){ c.rect(f.x-f.r,f.y-f.r,f.r*2,f.r*2); }
+      else { c.moveTo(f.x,f.y-f.r); c.lineTo(f.x+f.r,f.y+f.r); c.lineTo(f.x-f.r,f.y+f.r); c.closePath(); }
+      c.fill();
+    });
+    const compte=formes.filter(f=>f.t===cible).length;
+    setTimeout(()=>{
+      c.fillStyle='#fdfcff'; c.fillRect(0,0,560,200);
+      c.fillStyle='#8b82a0'; c.font='bold 17px Segoe UI'; c.textAlign='center';
+      c.fillText('Combien de '+['ronds bleus','carrés orange','triangles verts'][cible]+' ?',280,105);
+      const ch=document.createElement('div'); ch.className='choix';
+      const props=[compte];
+      while(props.length<4){ const v=Math.max(0,compte+Math.floor(Math.random()*5)-2);
+        if(!props.includes(v))props.push(v); }
+      props.sort(()=>Math.random()-0.5).forEach(p=>{
+        const b=document.createElement('button'); b.textContent=p;
+        b.onclick=()=>{
+          ch.querySelectorAll('button').forEach(x=>x.disabled=true);
+          const R=document.getElementById('retour');
+          if(p===compte){ b.classList.add('juste'); bons++; R.className='retour ok'; R.textContent='Exact.'; }
+          else { b.classList.add('faux'); R.className='retour ko'; R.textContent='Il y en avait '+compte+'.'; }
+          n++; setTimeout(tour,1000);
+        };
+        ch.appendChild(b);
+      });
+      zone.appendChild(ch);
+    },duree);
+  }
+  tour();
+}
+/* ═══ JEU 3 — LE RYTHME DU GESTE ═══ */
+function jeuRythme(){
+  const niv=S.niv[2];
+  const bpm=[60,72,84,96,110][niv-1];
+  const per=60000/bpm;
+  document.getElementById('consigne').textContent=
+    'Regarde le point battre la mesure, puis tape en rythme dans le cadre : '+bpm+' battements par minute.';
+  const zone=document.getElementById('zone');
+  zone.innerHTML='';
+  const cv=document.createElement('canvas'); cv.width=560; cv.height=120; zone.appendChild(cv);
+  const c=cv.getContext('2d');
+  const tap=document.createElement('div'); tap.className='tapzone';
+  tap.textContent='observe d’abord…'; zone.appendChild(tap);
+  let phase='demo', debut=Date.now(), taps=[], bons=0;
+  const anim=setInterval(()=>{
+    const e=Date.now()-debut;
+    const p=(e%per)/per;
+    c.fillStyle='#fdfcff'; c.fillRect(0,0,560,120);
+    c.fillStyle='#ece5fa'; c.fillRect(40,58,480,4);
+    const x=40+((e/per)%8)/8*480;
+    const r=phase==='demo'? 14+10*Math.max(0,1-p*4) : 12;
+    c.fillStyle= phase==='demo'? '#16a34a':'#c4b5fd';
+    c.beginPath(); c.arc(x,60,r,0,6.284); c.fill();
+    if(phase==='demo' && e>per*8){
+      phase='tap'; debut=Date.now(); taps=[];
+      tap.textContent='à toi : tape en rythme (8 fois)';
+      tap.classList.add('actif');
+    }
+    if(phase==='tap' && taps.length>=8){
+      clearInterval(anim);
+      let ok=0;
+      for(let k=1;k<taps.length;k++){
+        const d=taps[k]-taps[k-1];
+        if(Math.abs(d-per)<per*(0.30-niv*0.02)) ok++;
+      }
+      bons=Math.round(ok/7*6);
+      const R=document.getElementById('retour');
+      R.className='retour '+(bons>=4?'ok':'ko');
+      R.textContent = bons>=5 ? 'Cadence très régulière.'
+        : (bons>=3 ? 'Cadence correcte, encore un peu irrégulière.'
+                   : 'Cadence irrégulière : regarde bien le point avant de taper.');
+      tap.classList.remove('actif'); tap.textContent='terminé';
+      finJeu(bons,6);
+    }
+  },30);
+  tap.addEventListener('pointerdown',ev=>{
+    ev.preventDefault();
+    if(phase!=='tap')return;
+    taps.push(Date.now());
+    tap.textContent='tape encore : '+(8-taps.length)+' fois';
+  });
+}
+</script></body></html>

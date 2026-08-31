@@ -6,9 +6,9 @@
 <title>Évaluation 5ème — Habitat & Ouvrages · ESTIC</title>
 <style>
 :root{
-  --ink:#1e3a5f; --niv:#1d4ed8; --niv-fonce:#1e40af; --orange:#ea580c;
-  --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
-  --ombre:0 4px 14px rgba(30,58,95,.10);
+ --ink:#1e3a5f; --niv:#1d4ed8; --niv-fonce:#1e40af; --orange:#ea580c;
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
+ --ombre:0 4px 14px rgba(30,58,95,.10);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);min-height:100vh;padding-bottom:60px}
@@ -99,94 +99,371 @@ svg .cliquable:hover{opacity:.75}
 .num-rep input{width:160px;font-size:20px;font-weight:800;text-align:center;padding:12px;border:3px solid var(--niv);border-radius:12px}
 .num-rep .unite{font-size:18px;font-weight:900;color:var(--niv-fonce)}
 .rappel-formule{text-align:center;font-weight:800;color:var(--niv-fonce);background:#f1f5f9;border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:15.5px}
+.cc.choisi{outline:3px solid #94a3b8;font-weight:800}
 </style>
 </head>
 <body>
 
 <!-- Logo ESTIC Don Bosco (officiel) -->
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
 
-<button id="calcToggle" title="Ouvrir / fermer la calculatrice" aria-label="Calculatrice">🧮</button>
+<button id="calcToggle" title="Ouvrir / fermer la calculatrice" aria-label="Calculatrice"></button>
 <div id="calcPanel" role="region" aria-label="Calculatrice">
-  <div class="titrecalc"><span>🧮 Calculatrice</span><span style="cursor:pointer" id="calcFermer">✕</span></div>
-  <div id="calcAff">0</div>
-  <div class="calcbtns" id="calcBtns"></div>
+ <div class="titrecalc"><span>Calculatrice</span><span style="cursor:pointer" id="calcFermer"></span></div>
+ <div id="calcAff">0</div>
+ <div class="calcbtns" id="calcBtns"></div>
 </div>
 
 <div class="conteneur">
 
  <!-- IDENTIFICATION -->
  <div class="panneau" id="ecranLogin">
-  <!-- ===CONFIG_TITRE=== -->
-  <h1>🏗️ Évaluation — Habitat & Ouvrages</h1>
-  <div class="sous">7 activités variées : schémas à compléter, structures à juger, animations à interpréter… Montre ce que tu sais faire, pas seulement ce que tu sais réciter !</div>
-  <!-- ===FIN CONFIG_TITRE=== -->
-  <div class="rassure">🕐 <b>Aucune limite de temps.</b> · 👆 Tout se fait en cliquant. · 🔍 Tu peux zoomer la page si besoin. ·
-  💬 Après chaque activité, la bonne réponse t'est expliquée. · ⭐ Ta note est calculée sur l'ensemble : une activité ratée ne fait pas tout perdre.</div>
-  <label>Nom</label><input id="fNom" autocomplete="off">
-  <label>Prénom</label><input id="fPrenom" autocomplete="off">
-  <label>Classe</label>
-  <select id="fClasse">
-    <option value="">— Choisis ta classe —</option>
-    <option>5A</option><option>5B</option><option>5C</option><option>5D</option><option>5E</option>
-  </select>
-  <button class="btn" id="btnCommencer">🚀 C'est parti !</button>
-  <div class="lienprof" id="lienProf">Espace professeur</div>
+ <!-- ===CONFIG_TITRE=== -->
+ <h1>Évaluation — Habitat & Ouvrages</h1>
+ <div class="sous">7 activités variées : schémas à compléter, structures à juger, animations à interpréter… Montre ce que tu sais faire, pas seulement ce que tu sais réciter !</div>
+ <!-- ===FIN CONFIG_TITRE=== -->
+ <div class="rassure"> <b>Aucune limite de temps.</b> · Tout se fait en cliquant. · Tu peux zoomer la page si besoin. ·
+ Après chaque activité, la bonne réponse t'est expliquée. · ★ Ta note est calculée sur l'ensemble : une activité ratée ne fait pas tout perdre.</div>
+ <label>Nom</label><input id="fNom" autocomplete="off">
+ <label>Prénom</label><input id="fPrenom" autocomplete="off">
+ <label>Classe</label>
+ <select id="fClasse">
+ <option value="">— Choisis ta classe —</option>
+ <option>5A</option><option>5B</option><option>5C</option><option>5D</option><option>5E</option>
+ </select>
+ <button class="btn" id="btnCommencer">C'est parti !</button>
+ <div class="lienprof" id="lienProf">Espace professeur</div>
  </div>
 
  <!-- ACTIVITÉ -->
  <div class="panneau cache" id="ecranAct">
-  <div class="barre"><div id="barreP"></div></div>
-  <div class="entete-act"><span class="numa" id="numAct"></span><span class="ptsmax" id="ptsMaxAct"></span></div>
-  <div class="titre-act" id="titreAct"></div>
-  <div class="consigne-act" id="consigneAct"></div>
-  <div class="zone-act" id="zoneAct"></div>
-  <div class="feedback" id="fbAct"></div>
-  <div class="pied-act">
-    <span class="gain cache" id="gainAct"></span>
-    <button class="btn bleu cache" id="btnSuivant" style="margin:0 0 0 auto">Suivant ➜</button>
-  </div>
+ <div class="barre"><div id="barreP"></div></div>
+ <div class="entete-act"><span class="numa" id="numAct"></span><span class="ptsmax" id="ptsMaxAct"></span></div>
+ <div class="titre-act" id="titreAct"></div>
+ <div class="consigne-act" id="consigneAct"></div>
+ <div class="zone-act" id="zoneAct"></div>
+ <div class="feedback" id="fbAct"></div>
+ <div class="pied-act">
+ <span class="gain cache" id="gainAct"></span>
+ <button class="btn bleu cache" id="btnSuivant" style="margin:0 0 0 auto">Suivant ➜</button>
+ </div>
  </div>
 
  <!-- RÉSULTAT -->
  <div class="panneau cache" id="ecranFin">
-  <h1>🎓 Résultat</h1>
-  <div class="notefinale"><span class="gros" id="note20"></span><span class="sur"> / 20</span>
-    <div class="sous" id="scoreBrut"></div></div>
-  <div class="etat-envoi" id="etatEnvoi"></div>
-  <div class="detail" id="detailRep"></div>
+ <h1>Résultat</h1>
+ <div class="notefinale"><span class="gros" id="note20"></span><span class="sur"> / 20</span>
+ <div class="sous" id="scoreBrut"></div></div>
+ <div class="etat-envoi" id="etatEnvoi"></div>
+ <div class="detail" id="detailRep"></div>
  </div>
 
  <!-- ESPACE PROF -->
  <div class="panneau cache" id="ecranProf">
-  <h1>👨‍🏫 Tableau de bord professeur</h1>
-  <div id="profLogin">
-    <label>Mot de passe</label><input id="fMdp" type="password">
-    <button class="btn bleu" id="btnProf">Accéder</button>
-    <div class="etat-envoi ko cache" id="errMdp">Mot de passe incorrect.</div>
-  </div>
-  <div class="cache" id="profContenu">
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <select id="filtreClasse" style="max-width:160px"><option value="">Toutes les classes</option>
-        <option>5A</option><option>5B</option><option>5C</option><option>5D</option><option>5E</option></select>
-      <button class="btn bleu" id="btnRafraichir" style="margin-top:0">⟳ Actualiser</button>
-      <button class="btn gris" id="btnCSV" style="margin-top:0">⬇ Export CSV</button>
-    </div>
-    <div class="kpis" id="kpis"></div>
-    <h2 style="font-size:16px;color:var(--niv-fonce);margin-top:20px">Réussite par activité</h2>
-    <div id="statsQ"></div>
-    <h2 style="font-size:16px;color:var(--niv-fonce);margin-top:20px">Résultats individuels</h2>
-    <div style="max-height:380px;overflow:auto"><table class="res" id="tableRes"></table></div>
-  </div>
+ <h1>Tableau de bord professeur</h1>
+ <div id="profLogin">
+ <label>Mot de passe</label><input id="fMdp" type="password">
+ <button class="btn bleu" id="btnProf">Accéder</button>
+ <div class="etat-envoi ko cache" id="errMdp">Mot de passe incorrect.</div>
+ </div>
+ <div class="cache" id="profContenu">
+ <div style="display:flex;gap:10px;flex-wrap:wrap">
+ <select id="filtreClasse" style="max-width:160px"><option value="">Toutes les classes</option>
+ <option>5A</option><option>5B</option><option>5C</option><option>5D</option><option>5E</option></select>
+ <button class="btn bleu" id="btnRafraichir" style="margin-top:0">⟳ Actualiser</button>
+ <button class="btn gris" id="btnCSV" style="margin-top:0">⬇ Export CSV</button>
+ </div>
+ <div class="kpis" id="kpis"></div>
+ <h2 style="font-size:16px;color:var(--niv-fonce);margin-top:20px">Réussite par activité</h2>
+ <div id="statsQ"></div>
+ <h2 style="font-size:16px;color:var(--niv-fonce);margin-top:20px">Résultats individuels</h2>
+ <div style="max-height:380px;overflow:auto"><table class="res" id="tableRes"></table></div>
+ </div>
  </div>
 
 </div>
 
 <script>
+
+/* ===== SCHEMAS : dessins vectoriels remplaçant les anciens pictogrammes =====
+   SCHEMA(ctx,'nom',x,y,T) dessine le symbole centré en (x,y), taille T.
+   La couleur courante (ctx.fillStyle) sert de teinte principale.          */
+const SCHEMA=(function(){
+  function P(c,pts,rempli){
+    c.beginPath();
+    pts.forEach((p,i)=> i? c.lineTo(p[0],p[1]) : c.moveTo(p[0],p[1]));
+    c.closePath(); rempli? c.fill() : c.stroke();
+  }
+  const D={
+  maison(c,u,t){ c.fillRect(-.32*u,-.05*u,.64*u,.42*u);
+    P(c,[[-.44*u,-.05*u],[0,-.42*u],[.44*u,-.05*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.1*u,.12*u,.2*u,.25*u); c.restore(); },
+  batiment(c,u){ c.fillRect(-.3*u,-.42*u,.6*u,.84*u);
+    c.save(); c.fillStyle='#fff';
+    for(let i=0;i<4;i++)for(let j=0;j<3;j++) c.fillRect(-.22*u+j*.16*u,-.34*u+i*.19*u,.09*u,.11*u);
+    c.restore(); },
+  usine(c,u){ c.fillRect(-.42*u,0,.84*u,.4*u);
+    P(c,[[-.42*u,0],[-.14*u,-.2*u],[-.14*u,0]],true);
+    P(c,[[-.14*u,0],[.14*u,-.2*u],[.14*u,0]],true);
+    c.fillRect(.22*u,-.44*u,.14*u,.44*u); },
+  ville(c,u){ [[-.42,.5],[-.18,.78],[.08,.42],[.3,.66]].forEach(([bx,bh])=>
+      c.fillRect(bx*u,(.42-bh*.84)*u,.2*u,bh*.84*u)); },
+  soleil(c,u){ c.beginPath(); c.arc(0,0,.24*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.4,.055*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<8;k++){ const a=k*.785;
+      c.beginPath(); c.moveTo(.32*u*Math.cos(a),.32*u*Math.sin(a));
+      c.lineTo(.45*u*Math.cos(a),.45*u*Math.sin(a)); c.stroke(); } c.lineWidth=w; },
+  nuage(c,u){ c.beginPath();
+    c.arc(-.18*u,.04*u,.19*u,0,6.284); c.arc(.03*u,-.1*u,.24*u,0,6.284);
+    c.arc(.26*u,.05*u,.18*u,0,6.284); c.fill();
+    c.fillRect(-.18*u,-.02*u,.44*u,.24*u); },
+  pluie(c,u){ D.nuage(c,u*.85);
+    const w=c.lineWidth; c.lineWidth=Math.max(1.4,.05*u); c.strokeStyle=c.fillStyle;
+    [-.2,0,.2].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,.2*u); c.lineTo(dx*u-.05*u,.44*u); c.stroke(); });
+    c.lineWidth=w; },
+  goutte(c,u){ c.beginPath(); c.moveTo(0,-.42*u);
+    c.quadraticCurveTo(.34*u,.06*u,0,.4*u); c.quadraticCurveTo(-.34*u,.06*u,0,-.42*u); c.fill(); },
+  vent(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.075*u); c.strokeStyle=c.fillStyle;
+    [-.22,0,.22].forEach((dy,i)=>{ c.beginPath(); c.moveTo(-.44*u,dy*u);
+      c.lineTo((.2-i*.12)*u,dy*u); c.quadraticCurveTo(.42*u,dy*u,.3*u,(dy-.14)*u); c.stroke(); });
+    c.lineWidth=w; },
+  flocon(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.4,.055*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ const a=k*1.047;
+      c.beginPath(); c.moveTo(-.42*u*Math.cos(a),-.42*u*Math.sin(a));
+      c.lineTo(.42*u*Math.cos(a),.42*u*Math.sin(a)); c.stroke();
+      [-1,1].forEach(s=>{ c.beginPath();
+        c.moveTo(s*.42*u*Math.cos(a),s*.42*u*Math.sin(a));
+        c.lineTo(s*.26*u*Math.cos(a)+.12*u*Math.cos(a+2.1),s*.26*u*Math.sin(a)+.12*u*Math.sin(a+2.1)); c.stroke(); }); }
+    c.lineWidth=w; },
+  feu(c,u){ c.beginPath(); c.moveTo(0,.42*u);
+    c.quadraticCurveTo(-.4*u,.06*u,-.1*u,-.42*u);
+    c.quadraticCurveTo(-.04*u,-.12*u,.14*u,-.28*u);
+    c.quadraticCurveTo(.1*u,-.02*u,.36*u,.1*u);
+    c.quadraticCurveTo(.4*u,.34*u,0,.42*u); c.fill(); },
+  eclair(c,u){ P(c,[[.06*u,-.44*u],[-.28*u,.06*u],[-.02*u,.06*u],[-.1*u,.44*u],[.28*u,-.08*u],[.02*u,-.08*u]],true); },
+  choc(c,u){ const p=[]; for(let k=0;k<12;k++){ const a=k*.5236, r=(k%2? .2:.46)*u;
+      p.push([r*Math.cos(a),r*Math.sin(a)]); } P(c,p,true); },
+  pile(c,u){ c.fillRect(-.34*u,-.22*u,.6*u,.44*u); c.fillRect(.26*u,-.09*u,.08*u,.18*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.28*u,-.15*u,.12*u,.3*u); c.restore(); },
+  ampoule(c,u){ c.beginPath(); c.arc(0,-.1*u,.27*u,0,6.284); c.fill();
+    c.fillRect(-.11*u,.16*u,.22*u,.16*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.11*u,.21*u,.22*u,.03*u); c.restore(); },
+  engrenage(c,u){ const p=[]; for(let k=0;k<24;k++){ const a=k*.2618, r=(k%2? .3:.44)*u;
+      p.push([r*Math.cos(a),r*Math.sin(a)]); } P(c,p,true);
+    c.save(); c.globalCompositeOperation='destination-out';
+    c.beginPath(); c.arc(0,0,.15*u,0,6.284); c.fill(); c.restore(); },
+  vis(c,u){ c.fillRect(-.1*u,-.12*u,.2*u,.5*u);
+    c.fillRect(-.26*u,-.4*u,.52*u,.28*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.18*u,-.29*u,.36*u,.06*u); c.restore(); },
+  atome(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.3,.05*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ c.save(); c.rotate(k*1.047);
+      c.beginPath(); c.ellipse(0,0,.44*u,.17*u,0,0,6.284); c.stroke(); c.restore(); }
+    c.lineWidth=w; c.beginPath(); c.arc(0,0,.1*u,0,6.284); c.fill(); },
+  thermometre(c,u){ c.fillRect(-.07*u,-.4*u,.14*u,.5*u);
+    c.beginPath(); c.arc(0,.24*u,.17*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1,.03*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<4;k++){ c.beginPath(); c.moveTo(.09*u,(-.3+k*.13)*u); c.lineTo(.2*u,(-.3+k*.13)*u); c.stroke(); }
+    c.lineWidth=w; },
+  coeur(c,u){ c.beginPath(); c.moveTo(0,.4*u);
+    c.bezierCurveTo(-.62*u,-.02*u,-.3*u,-.46*u,0,-.16*u);
+    c.bezierCurveTo(.3*u,-.46*u,.62*u,-.02*u,0,.4*u); c.fill(); },
+  personne(c,u){ c.beginPath(); c.arc(0,-.3*u,.14*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.09*u); c.strokeStyle=c.fillStyle; c.lineCap='round';
+    c.beginPath(); c.moveTo(0,-.15*u); c.lineTo(0,.14*u); c.stroke();
+    c.beginPath(); c.moveTo(-.16*u,0); c.lineTo(.16*u,0); c.stroke();
+    c.beginPath(); c.moveTo(0,.14*u); c.lineTo(-.14*u,.42*u); c.moveTo(0,.14*u); c.lineTo(.14*u,.42*u); c.stroke();
+    c.lineWidth=w; },
+  marcheur(c,u){ c.beginPath(); c.arc(.02*u,-.3*u,.13*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.085*u); c.strokeStyle=c.fillStyle; c.lineCap='round';
+    c.beginPath(); c.moveTo(.02*u,-.16*u); c.lineTo(-.02*u,.12*u); c.stroke();
+    c.beginPath(); c.moveTo(-.02*u,.12*u); c.lineTo(-.2*u,.4*u); c.moveTo(-.02*u,.12*u); c.lineTo(.2*u,.36*u); c.stroke();
+    c.beginPath(); c.moveTo(.02*u,-.08*u); c.lineTo(.22*u,-.16*u); c.stroke();
+    c.lineWidth=w; },
+  main(c,u){ c.fillRect(-.09*u,-.44*u,.18*u,.4*u);
+    c.beginPath(); c.arc(0,.12*u,.24*u,0,6.284); c.fill(); },
+  voiture(c,u){ c.fillRect(-.44*u,-.02*u,.88*u,.24*u);
+    P(c,[[-.28*u,-.02*u],[-.16*u,-.28*u],[.18*u,-.28*u],[.3*u,-.02*u]],true);
+    c.beginPath(); c.arc(-.24*u,.24*u,.12*u,0,6.284); c.arc(.24*u,.24*u,.12*u,0,6.284); c.fill(); },
+  velo(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.28*u,.16*u,.22*u,0,6.284); c.stroke();
+    c.beginPath(); c.arc(.28*u,.16*u,.22*u,0,6.284); c.stroke();
+    c.beginPath(); c.moveTo(-.28*u,.16*u); c.lineTo(0,.16*u); c.lineTo(-.06*u,-.16*u);
+    c.lineTo(.2*u,-.16*u); c.lineTo(.28*u,.16*u); c.moveTo(0,.16*u); c.lineTo(.2*u,-.16*u); c.stroke();
+    c.lineWidth=w; },
+  satellite(c,u){ c.fillRect(-.13*u,-.16*u,.26*u,.32*u);
+    c.fillRect(-.46*u,-.11*u,.28*u,.22*u); c.fillRect(.18*u,-.11*u,.28*u,.22*u);
+    c.save(); c.fillStyle='#fff';
+    [-.4,-.3,.22,.32].forEach(dx=> c.fillRect(dx*u,-.09*u,.04*u,.18*u)); c.restore(); },
+  terre(c,u){ c.beginPath(); c.arc(0,0,.42*u,0,6.284); c.fill();
+    c.save(); c.fillStyle='#fff'; c.globalAlpha=.55;
+    c.beginPath(); c.ellipse(-.12*u,-.1*u,.16*u,.1*u,.4,0,6.284); c.fill();
+    c.beginPath(); c.ellipse(.14*u,.12*u,.13*u,.08*u,-.4,0,6.284); c.fill(); c.restore(); },
+  telephone(c,u){ c.fillRect(-.24*u,-.44*u,.48*u,.88*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.18*u,-.34*u,.36*u,.62*u); c.restore(); },
+  ecran(c,u){ c.fillRect(-.42*u,-.34*u,.84*u,.54*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.36*u,-.28*u,.72*u,.42*u); c.restore();
+    c.fillRect(-.12*u,.2*u,.24*u,.08*u); c.fillRect(-.26*u,.28*u,.52*u,.08*u); },
+  document(c,u){ c.fillRect(-.28*u,-.42*u,.56*u,.84*u);
+    c.save(); c.fillStyle='#fff';
+    for(let k=0;k<4;k++) c.fillRect(-.2*u,(-.3+k*.18)*u,.4*u,.06*u); c.restore(); },
+  colis(c,u){ c.fillRect(-.4*u,-.3*u,.8*u,.6*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.07*u,-.3*u,.14*u,.6*u);
+    c.fillRect(-.4*u,-.05*u,.8*u,.1*u); c.restore(); },
+  enveloppe(c,u){ c.fillRect(-.4*u,-.28*u,.8*u,.56*u);
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.4,.05*u);
+    c.beginPath(); c.moveTo(-.4*u,-.28*u); c.lineTo(0,.04*u); c.lineTo(.4*u,-.28*u); c.stroke(); c.restore(); },
+  antenne(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,.42*u); c.lineTo(0,-.1*u); c.stroke();
+    for(let k=1;k<=3;k++){ c.beginPath(); c.arc(0,-.1*u,k*.13*u,-2.4,-.74); c.stroke(); }
+    c.lineWidth=w; },
+  reseau(c,u){ c.beginPath(); c.arc(0,-.22*u,.1*u,0,6.284);
+    c.arc(-.3*u,.24*u,.1*u,0,6.284); c.arc(.3*u,.24*u,.1*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.2,.045*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,-.22*u); c.lineTo(-.3*u,.24*u); c.lineTo(.3*u,.24*u); c.lineTo(0,-.22*u); c.stroke();
+    c.lineWidth=w; },
+  lien(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.16*u,0,.2*u,-1.1,1.1,true); c.stroke();
+    c.beginPath(); c.arc(.16*u,0,.2*u,2.04,4.24,true); c.stroke();
+    c.beginPath(); c.moveTo(-.12*u,0); c.lineTo(.12*u,0); c.stroke(); c.lineWidth=w; },
+  cadenas(c,u){ c.fillRect(-.28*u,-.06*u,.56*u,.44*u);
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(0,-.08*u,.18*u,Math.PI,0); c.stroke(); c.lineWidth=w; },
+  robot(c,u){ c.fillRect(-.3*u,-.2*u,.6*u,.5*u);
+    c.save(); c.fillStyle='#fff';
+    c.beginPath(); c.arc(-.12*u,-.02*u,.06*u,0,6.284); c.arc(.12*u,-.02*u,.06*u,0,6.284); c.fill();
+    c.fillRect(-.14*u,.12*u,.28*u,.05*u); c.restore();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,-.2*u); c.lineTo(0,-.36*u); c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.arc(0,-.4*u,.07*u,0,6.284); c.fill(); },
+  cerveau(c,u){ c.beginPath();
+    c.arc(-.16*u,-.08*u,.2*u,0,6.284); c.arc(.16*u,-.08*u,.2*u,0,6.284);
+    c.arc(0,.14*u,.2*u,0,6.284); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    c.beginPath(); c.moveTo(0,-.26*u); c.lineTo(0,.3*u); c.stroke(); c.restore(); },
+  poubelle(c,u){ c.fillRect(-.26*u,-.2*u,.52*u,.6*u);
+    c.fillRect(-.34*u,-.3*u,.68*u,.1*u); c.fillRect(-.12*u,-.4*u,.24*u,.1*u);
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    [-.1,0,.1].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,-.1*u); c.lineTo(dx*u,.3*u); c.stroke(); }); c.restore(); },
+  recyclage(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.075*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ c.save(); c.rotate(k*2.094);
+      c.beginPath(); c.arc(0,0,.32*u,-1.9,-.5); c.stroke();
+      c.restore(); } c.lineWidth=w; },
+  feuille(c,u){ c.beginPath(); c.moveTo(-.34*u,.34*u);
+    c.quadraticCurveTo(-.1*u,-.44*u,.36*u,-.3*u);
+    c.quadraticCurveTo(.3*u,.3*u,-.34*u,.34*u); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    c.beginPath(); c.moveTo(-.3*u,.3*u); c.lineTo(.28*u,-.26*u); c.stroke(); c.restore(); },
+  arbre(c,u){ c.fillRect(-.07*u,.06*u,.14*u,.36*u);
+    c.beginPath(); c.arc(0,-.14*u,.3*u,0,6.284); c.fill(); },
+  plot(c,u){ P(c,[[0,-.4*u],[-.3*u,.34*u],[.3*u,.34*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.17*u,-.02*u,.34*u,.09*u); c.restore(); },
+  balle(c,u){ c.beginPath(); c.arc(0,0,.36*u,0,6.284); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.4,.05*u);
+    c.beginPath(); c.arc(-.34*u,0,.3*u,-.9,.9); c.stroke();
+    c.beginPath(); c.arc(.34*u,0,.3*u,2.24,4.04); c.stroke(); c.restore(); },
+  tortue(c,u){ c.beginPath(); c.ellipse(0,0,.34*u,.24*u,0,0,6.284); c.fill();
+    c.beginPath(); c.arc(.36*u,-.04*u,.11*u,0,6.284); c.fill();
+    [-.2,.14].forEach(dx=>{ c.beginPath(); c.ellipse(dx*u,.22*u,.09*u,.06*u,0,0,6.284); c.fill(); }); },
+  escargot(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath();
+    for(let a=0;a<12;a+=.15){ const r=.05*u+a*.028*u;
+      const px=-.05*u+r*Math.cos(a), py=r*Math.sin(a);
+      if(a===0) c.moveTo(px,py); else c.lineTo(px,py); }
+    c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.ellipse(.3*u,.2*u,.16*u,.07*u,0,0,6.284); c.fill(); },
+  oiseau(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.065*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.16*u,.06*u,.2*u,-2.2,-.5); c.stroke();
+    c.beginPath(); c.arc(.16*u,.06*u,.2*u,-2.64,-.94); c.stroke(); c.lineWidth=w; },
+  crane(c,u){ c.beginPath(); c.arc(0,-.08*u,.3*u,0,6.284); c.fill();
+    c.fillRect(-.16*u,.14*u,.32*u,.16*u);
+    c.save(); c.fillStyle='#fff';
+    c.beginPath(); c.arc(-.12*u,-.1*u,.08*u,0,6.284); c.arc(.12*u,-.1*u,.08*u,0,6.284); c.fill(); c.restore(); },
+  loupe(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.075*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.08*u,-.08*u,.26*u,0,6.284); c.stroke();
+    c.beginPath(); c.moveTo(.11*u,.11*u); c.lineTo(.38*u,.38*u); c.stroke(); c.lineWidth=w; },
+  microscope(c,u){ c.fillRect(-.3*u,.3*u,.6*u,.1*u);
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.05*u,.3*u); c.lineTo(-.05*u,-.02*u); c.stroke();
+    c.beginPath(); c.moveTo(-.05*u,-.02*u); c.lineTo(.2*u,-.34*u); c.stroke(); c.lineWidth=w;
+    c.fillRect(-.26*u,.06*u,.42*u,.07*u); },
+  graphique(c,u){ c.fillRect(-.34*u,.02*u,.16*u,.36*u); c.fillRect(-.08*u,-.18*u,.16*u,.56*u);
+    c.fillRect(.18*u,-.34*u,.16*u,.72*u); },
+  baignoire(c,u){ c.beginPath(); c.moveTo(-.4*u,-.06*u); c.lineTo(-.34*u,.28*u);
+    c.lineTo(.34*u,.28*u); c.lineTo(.4*u,-.06*u); c.closePath(); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.28*u,-.06*u); c.lineTo(-.28*u,-.3*u); c.lineTo(-.06*u,-.3*u); c.stroke();
+    c.lineWidth=w; },
+  canape(c,u){ c.fillRect(-.42*u,-.06*u,.84*u,.3*u);
+    c.fillRect(-.42*u,-.28*u,.14*u,.24*u); c.fillRect(.28*u,-.28*u,.14*u,.24*u);
+    c.fillRect(-.3*u,-.22*u,.6*u,.18*u); },
+  flacon(c,u){ c.fillRect(-.16*u,-.16*u,.32*u,.56*u); c.fillRect(-.08*u,-.4*u,.16*u,.24*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.1*u,0,.2*u,.14*u); c.restore(); },
+  bouteille(c,u){ c.beginPath(); c.moveTo(-.16*u,.4*u); c.lineTo(-.16*u,-.06*u);
+    c.lineTo(-.06*u,-.24*u); c.lineTo(-.06*u,-.4*u); c.lineTo(.06*u,-.4*u); c.lineTo(.06*u,-.24*u);
+    c.lineTo(.16*u,-.06*u); c.lineTo(.16*u,.4*u); c.closePath(); c.fill(); },
+  chaussure(c,u){ c.beginPath(); c.moveTo(-.4*u,.3*u); c.lineTo(-.4*u,-.1*u);
+    c.lineTo(-.12*u,-.1*u); c.quadraticCurveTo(.1*u,.06*u,.4*u,.12*u);
+    c.lineTo(.4*u,.3*u); c.closePath(); c.fill(); },
+  hache(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.09*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.28*u,.4*u); c.lineTo(.2*u,-.28*u); c.stroke(); c.lineWidth=w;
+    P(c,[[.06*u,-.18*u],[.34*u,-.42*u],[.44*u,-.16*u],[.2*u,-.02*u]],true); },
+  cloche(c,u){ c.beginPath(); c.moveTo(-.3*u,.2*u);
+    c.quadraticCurveTo(-.3*u,-.34*u,0,-.34*u); c.quadraticCurveTo(.3*u,-.34*u,.3*u,.2*u);
+    c.closePath(); c.fill(); c.fillRect(-.36*u,.2*u,.72*u,.08*u);
+    c.beginPath(); c.arc(0,.34*u,.08*u,0,6.284); c.fill(); },
+  alerte(c,u){ P(c,[[0,-.42*u],[.44*u,.34*u],[-.44*u,.34*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.05*u,-.16*u,.1*u,.3*u);
+    c.beginPath(); c.arc(0,.24*u,.06*u,0,6.284); c.fill(); c.restore(); },
+  chantier(c,u){ P(c,[[0,-.34*u],[.36*u,.3*u],[-.36*u,.3*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.3*u,.06*u,.6*u,.1*u); c.restore(); },
+  ciseaux(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.3*u,-.34*u); c.lineTo(.2*u,.16*u); c.stroke();
+    c.beginPath(); c.moveTo(.3*u,-.34*u); c.lineTo(-.2*u,.16*u); c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.arc(-.24*u,.3*u,.12*u,0,6.284); c.arc(.24*u,.3*u,.12*u,0,6.284); c.fill(); },
+  melange(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.065*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.4*u,-.16*u); c.lineTo(.1*u,-.16*u); c.stroke();
+    c.beginPath(); c.moveTo(-.4*u,.16*u); c.lineTo(.1*u,.16*u); c.stroke(); c.lineWidth=w;
+    P(c,[[.1*u,-.3*u],[.4*u,-.16*u],[.1*u,-.02*u]],true);
+    P(c,[[.1*u,.02*u],[.4*u,.16*u],[.1*u,.3*u]],true); },
+  boucle(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(0,0,.3*u,.5,5.6); c.stroke(); c.lineWidth=w;
+    P(c,[[.16*u,-.34*u],[.38*u,-.1*u],[.08*u,-.06*u]],true); },
+  fleche(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.36*u,0); c.lineTo(.14*u,0); c.stroke(); c.lineWidth=w;
+    P(c,[[.14*u,-.2*u],[.42*u,0],[.14*u,.2*u]],true); },
+  vapeur(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    [-.2,0,.2].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,.36*u);
+      c.bezierCurveTo((dx+.14)*u,.1*u,(dx-.14)*u,-.1*u,dx*u,-.36*u); c.stroke(); });
+    c.lineWidth=w; },
+  sommeil(c,u){ c.font='bold '+(.5*u)+'px Segoe UI'; c.textAlign='center';
+    c.fillText('z',-.14*u,.1*u); c.fillText('z',.14*u,-.16*u); },
+  point(c,u){ c.beginPath(); c.arc(0,0,.3*u,0,6.284); c.fill(); },
+  valide(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.1*u); c.strokeStyle=c.fillStyle;
+    c.lineCap='round'; c.beginPath(); c.moveTo(-.32*u,.02*u); c.lineTo(-.08*u,.28*u);
+    c.lineTo(.34*u,-.26*u); c.stroke(); c.lineWidth=w; },
+  };
+  return function(c,nom,x,y,T){
+    const f=D[nom]; if(!f) return false;
+    c.save(); c.translate(x,y);
+    f(c,T||24,T||24);
+    c.restore(); return true;
+  };
+})();
+
+/* Remplace un ancien pictogramme dessiné : reprend la taille de police et
+   l'alignement courants pour caler le schéma exactement où était le symbole. */
+function SPRITE(c,nom,x,y){
+  const m=/([\d.]+)px/.exec(c.font||''); const T=m?parseFloat(m[1]):24;
+  let cx=x; const al=c.textAlign||'start';
+  if(al==='left'||al==='start') cx=x+T*0.5;
+  else if(al==='right'||al==='end') cx=x-T*0.5;
+  SCHEMA(c,nom,cx,y-T*0.34,T);
+}
+
 /* ===CONFIG=== */
 const FIREBASE='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/evaluations/habitat_5e_v2';
 const MDP_PROF='Agostini2025';
@@ -194,527 +471,548 @@ const CSV_NOM='resultats_habitat_5e.csv';
 /* ===FIN CONFIG=== */
 
 /* ============================================================
-   BOÎTE À OUTILS DES ACTIVITÉS (inclusif : clic uniquement,
-   pas de chrono, feedback explicatif, symboles + couleurs)
-   ============================================================ */
+ BOÎTE À OUTILS DES ACTIVITÉS (inclusif : clic uniquement,
+ pas de chrono, feedback explicatif, symboles + couleurs)
+ ============================================================ */
 const SVGNS='http://www.w3.org/2000/svg';
 function el(tag,attrs={},parent=null,texte=''){
-  const e=document.createElement(tag);
-  Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
-  if(texte) e.textContent=texte;
-  if(parent) parent.appendChild(e);
-  return e;
+ const e=document.createElement(tag);
+ Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+ if(texte) e.textContent=texte;
+ if(parent) parent.appendChild(e);
+ return e;
 }
 function svgEl(tag,attrs={},parent=null,texte=''){
-  const e=document.createElementNS(SVGNS,tag);
-  Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
-  if(texte) e.textContent=texte;
-  if(parent) parent.appendChild(e);
-  return e;
+ const e=document.createElementNS(SVGNS,tag);
+ Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+ if(texte) e.textContent=texte;
+ if(parent) parent.appendChild(e);
+ return e;
 }
 function boutonValider(zone,cb){
-  const b=el('button',{class:'btn'},zone,'✔ Valider ma réponse');
-  b.disabled=true; b.onclick=cb; return b;
+ const b=el('button',{class:'btn'},zone,'✓ Valider ma réponse');
+ b.disabled=true; b.onclick=cb; return b;
 }
 function feedback(type,html){
-  const fb=document.getElementById('fbAct');
-  fb.className='feedback '+type; fb.innerHTML=html;
+ /* ÉVALUATION : aucune correction pendant l'épreuve.
+ Le commentaire est mis de côté et n'apparaîtra qu'à la fin, avec la note. */
+ CORRECTIONS.push({type:type, html:html, activite: (typeof idx==='number'? idx : -1)});
+ const fb=document.getElementById('fbAct');
+ fb.className='feedback';
+ fb.innerHTML='<b>Réponse enregistrée.</b>La correction détaillée sera donnée à la fin de l\u2019évaluation.';
+}
+const CORRECTIONS=[];
+function afficherCorrections(){
+ const zone=document.getElementById('detailRep');
+ if(!zone||!CORRECTIONS.length) return;
+ const bloc=document.createElement('div');
+ bloc.style.cssText='margin-top:18px;text-align:left';
+ bloc.innerHTML='<h2 style="font-size:17px;color:var(--niv-fonce);margin-bottom:8px">Correction détaillée</h2>';
+ CORRECTIONS.forEach((c,i)=>{
+ const a=(typeof ACTIVITES!=='undefined' && ACTIVITES[c.activite]) ? ACTIVITES[c.activite] : null;
+ const d=document.createElement('div');
+ d.className='feedback '+c.type;
+ d.style.cssText='margin-bottom:8px';
+ d.innerHTML=(a? '<b style="display:block;margin-bottom:3px">'+(a.titre||('Activité '+(c.activite+1)))+'</b>' : '')+c.html;
+ bloc.appendChild(d);
+ });
+ zone.appendChild(bloc);
 }
 /* ===== Calculatrice : évaluateur maison (sans eval), gère , × ÷ − et parenthèses ===== */
 function calcEval(expr){
-  expr=String(expr).replace(/,/g,'.').replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/\s/g,'');
-  let i=0;
-  function expre(){ let v=terme();
-    while(expr[i]==='+'||expr[i]==='-'){ const op=expr[i++]; const r=terme(); v= op==='+'? v+r : v-r; }
-    return v; }
-  function terme(){ let v=fact();
-    while(expr[i]==='*'||expr[i]==='/'){ const op=expr[i++]; const r=fact(); v= op==='*'? v*r : v/r; }
-    return v; }
-  function fact(){
-    if(expr[i]==='('){ i++; const v=expre(); if(expr[i]===')') i++; return v; }
-    if(expr[i]==='-'){ i++; return -fact(); }
-    const s=i; while(i<expr.length && /[0-9.]/.test(expr[i])) i++;
-    return parseFloat(expr.slice(s,i));
-  }
-  const v=expre();
-  return (i===expr.length && isFinite(v)) ? v : null;
+ expr=String(expr).replace(/,/g,'.').replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/\s/g,'');
+ let i=0;
+ function expre(){ let v=terme();
+ while(expr[i]==='+'||expr[i]==='-'){ const op=expr[i++]; const r=terme(); v= op==='+'? v+r : v-r; }
+ return v; }
+ function terme(){ let v=fact();
+ while(expr[i]==='*'||expr[i]==='/'){ const op=expr[i++]; const r=fact(); v= op==='*'? v*r : v/r; }
+ return v; }
+ function fact(){
+ if(expr[i]==='('){ i++; const v=expre(); if(expr[i]===')') i++; return v; }
+ if(expr[i]==='-'){ i++; return -fact(); }
+ const s=i; while(i<expr.length && /[0-9.]/.test(expr[i])) i++;
+ return parseFloat(expr.slice(s,i));
+ }
+ const v=expre();
+ return (i===expr.length && isFinite(v)) ? v : null;
 }
 (function initCalculatrice(){
-  const aff=document.getElementById('calcAff');
-  const grille=document.getElementById('calcBtns');
-  let saisie='';
-  function maj(){ aff.textContent = saisie===''? '0' : saisie; }
-  const touches=['7','8','9','÷','4','5','6','×','1','2','3','−','0',',','(',')','C','⌫','+','='];
-  touches.forEach(t=>{
-    const b=document.createElement('button');
-    b.textContent=t;
-    if('÷×−+'.includes(t)) b.className='op';
-    if(t==='=') b.className='eg';
-    b.onclick=()=>{
-      if(t==='C'){ saisie=''; }
-      else if(t==='⌫'){ saisie=saisie.slice(0,-1); }
-      else if(t==='='){
-        const r=calcEval(saisie);
-        saisie = (r===null)? '' : String(Math.round(r*1e6)/1e6).replace('.',',');
-        if(r===null) aff.textContent='Erreur';
-        maj(); return;
-      }
-      else saisie+=t;
-      maj();
-    };
-    grille.appendChild(b);
-  });
-  document.getElementById('calcToggle').onclick=()=>document.getElementById('calcPanel').classList.toggle('ouvert');
-  document.getElementById('calcFermer').onclick=()=>document.getElementById('calcPanel').classList.remove('ouvert');
+ const aff=document.getElementById('calcAff');
+ const grille=document.getElementById('calcBtns');
+ let saisie='';
+ function maj(){ aff.textContent = saisie===''? '0' : saisie; }
+ const touches=['7','8','9','÷','4','5','6','×','1','2','3','−','0',',','(',')','C','⌫','+','='];
+ touches.forEach(t=>{
+ const b=document.createElement('button');
+ b.textContent=t;
+ if('÷×−+'.includes(t)) b.className='op';
+ if(t==='=') b.className='eg';
+ b.onclick=()=>{
+ if(t==='C'){ saisie=''; }
+ else if(t==='⌫'){ saisie=saisie.slice(0,-1); }
+ else if(t==='='){
+ const r=calcEval(saisie);
+ saisie = (r===null)? '' : String(Math.round(r*1e6)/1e6).replace('.',',');
+ if(r===null) aff.textContent='Erreur';
+ maj(); return;
+ }
+ else saisie+=t;
+ maj();
+ };
+ grille.appendChild(b);
+ });
+ document.getElementById('calcToggle').onclick=()=>document.getElementById('calcPanel').classList.toggle('ouvert');
+ document.getElementById('calcFermer').onclick=()=>document.getElementById('calcPanel').classList.remove('ouvert');
 })();
 function ouvrirCalculatrice(){ document.getElementById('calcPanel').classList.add('ouvert'); }
 /* Widget « question de calcul » : schéma optionnel, rappel de formule, saisie numérique (virgule acceptée), tolérance */
 function activiteCalcul(zone,done,cfg){
-  ouvrirCalculatrice();
-  if(cfg.schema){ const s=cfg.schema(); if(s) zone.appendChild(s); }
-  if(cfg.rappel) el('div',{class:'rappel-formule'},zone,'📐 '+cfg.rappel);
-  const rang=el('div',{class:'num-rep'},zone);
-  el('span',{style:'font-weight:800;font-size:16px'},rang,'Réponse :');
-  const inp=el('input',{type:'text',inputmode:'decimal',placeholder:'…','aria-label':'ta réponse'},rang);
-  el('span',{class:'unite'},rang,cfg.unite);
-  inp.addEventListener('input',()=>{ valider.disabled=inp.value.trim()===''; });
-  const valider=boutonValider(zone,()=>{
-    const v=parseFloat(inp.value.replace(',','.'));
-    valider.disabled=true; inp.disabled=true;
-    const ok=isFinite(v) && Math.abs(v-cfg.bonne)<=(cfg.tol!==undefined?cfg.tol:0.001);
-    inp.style.borderColor= ok?'#16a34a':'#dc2626';
-    feedback(ok?'ok':'ko',(ok?'✓ Calcul exact ! ':'✗ Ce n\u2019est pas la bonne valeur. ')+cfg.solution);
-    done(ok?cfg.max:0);
-  });
+ ouvrirCalculatrice();
+ if(cfg.schema){ const s=cfg.schema(); if(s) zone.appendChild(s); }
+ /* la formule n'est PAS donnee ici : l'eleve doit retrouver le raisonnement */
+ const rang=el('div',{class:'num-rep'},zone);
+ el('span',{style:'font-weight:800;font-size:16px'},rang,'Réponse :');
+ const inp=el('input',{type:'text',inputmode:'decimal',placeholder:'…','aria-label':'ta réponse'},rang);
+ el('span',{class:'unite'},rang,cfg.unite);
+ inp.addEventListener('input',()=>{ valider.disabled=inp.value.trim()===''; });
+ const valider=boutonValider(zone,()=>{
+ const v=parseFloat(inp.value.replace(',','.'));
+ valider.disabled=true; inp.disabled=true;
+ const ok=isFinite(v) && Math.abs(v-cfg.bonne)<=(cfg.tol!==undefined?cfg.tol:0.001);
+ inp.style.borderColor= ok?'#16a34a':'#dc2626';
+ feedback(ok?'ok':'ko',(ok?'\u2713 Calcul exact. ':'\u2717 Ce n\u2019est pas la bonne valeur. ')+cfg.solution+(cfg.rappel? ' <span class="rappel-formule" style="display:inline-block;margin-top:7px">\u00c0 retenir \u2014 '+cfg.rappel+'</span>' : ''));
+ done(ok?cfg.max:0);
+ });
 }
 /* Widget « étiquettes à poser » : clique une étiquette, puis sa zone sur le schéma */
 function widgetEtiquettes(zone, svg, zonesDef, etiquettesDef, bonnes, aideCorrection, done, maxPts){
-  let etiqChoisie=null; const poses={};
-  const rangEtiq=el('div',{class:'etiqs'},zone);
-  const btns={};
-  etiquettesDef.forEach(nom=>{
-    const b=el('button',{},rangEtiq,nom);
-    btns[nom]=b;
-    b.onclick=()=>{ if(b.classList.contains('pose'))return;
-      Object.values(btns).forEach(x=>x.classList.remove('choisi'));
-      etiqChoisie=nom; b.classList.add('choisi'); };
-  });
-  zone.appendChild(svg);
-  const textesPoses={};
-  zonesDef.forEach(z=>{
-    z.forme.classList.add('cliquable');
-    z.forme.addEventListener('click',()=>{
-      if(!etiqChoisie) return;
-      // retirer l'étiquette de son ancienne zone éventuelle
-      Object.keys(poses).forEach(k=>{ if(poses[k]===etiqChoisie){ delete poses[k]; textesPoses[k].textContent='?'; } });
-      poses[z.id]=etiqChoisie;
-      textesPoses[z.id].textContent=etiqChoisie;
-      btns[etiqChoisie].classList.remove('choisi'); btns[etiqChoisie].classList.add('pose');
-      etiqChoisie=null;
-      // toutes posées ?
-      valider.disabled = Object.keys(poses).length<zonesDef.length;
-    });
-    const t=svgEl('text',{x:z.tx,y:z.ty,'text-anchor':'middle','font-size':'14','font-weight':'bold',fill:'#ea580c','font-family':'Segoe UI'},svg,'?');
-    textesPoses[z.id]=t;
-  });
-  const valider=boutonValider(zone,()=>{
-    valider.disabled=true;
-    let pts=0;
-    zonesDef.forEach(z=>{
-      const ok=poses[z.id]===bonnes[z.id];
-      if(ok) pts++;
-      textesPoses[z.id].setAttribute('fill', ok?'#16a34a':'#dc2626');
-      textesPoses[z.id].textContent=(ok?'✓ ':'✗ ')+bonnes[z.id];
-    });
-    const p=Math.round(pts/zonesDef.length*maxPts*10)/10;
-    feedback(pts===zonesDef.length?'ok':(pts>0?'moyen':'ko'),
-      (pts===zonesDef.length?'👏 Toutes les étiquettes sont bien placées !':'Les bonnes réponses sont affichées en vert sur le schéma. ')+aideCorrection);
-    done(p);
-  });
+ let etiqChoisie=null; const poses={};
+ const rangEtiq=el('div',{class:'etiqs'},zone);
+ const btns={};
+ etiquettesDef.forEach(nom=>{
+ const b=el('button',{},rangEtiq,nom);
+ btns[nom]=b;
+ b.onclick=()=>{ if(b.classList.contains('pose'))return;
+ Object.values(btns).forEach(x=>x.classList.remove('choisi'));
+ etiqChoisie=nom; b.classList.add('choisi'); };
+ });
+ zone.appendChild(svg);
+ const textesPoses={};
+ zonesDef.forEach(z=>{
+ z.forme.classList.add('cliquable');
+ z.forme.addEventListener('click',()=>{
+ if(!etiqChoisie) return;
+ // retirer l'étiquette de son ancienne zone éventuelle
+ Object.keys(poses).forEach(k=>{ if(poses[k]===etiqChoisie){ delete poses[k]; textesPoses[k].textContent='?'; } });
+ poses[z.id]=etiqChoisie;
+ textesPoses[z.id].textContent=etiqChoisie;
+ btns[etiqChoisie].classList.remove('choisi'); btns[etiqChoisie].classList.add('pose');
+ etiqChoisie=null;
+ // toutes posées ?
+ valider.disabled = Object.keys(poses).length<zonesDef.length;
+ });
+ const t=svgEl('text',{x:z.tx,y:z.ty,'text-anchor':'middle','font-size':'14','font-weight':'bold',fill:'#ea580c','font-family':'Segoe UI'},svg,'?');
+ textesPoses[z.id]=t;
+ });
+ const valider=boutonValider(zone,()=>{
+ valider.disabled=true;
+ let pts=0;
+ zonesDef.forEach(z=>{
+ const ok=poses[z.id]===bonnes[z.id];
+ if(ok) pts++;
+ textesPoses[z.id].setAttribute('fill', ok?'#16a34a':'#dc2626');
+ textesPoses[z.id].textContent=(ok?'✓ ':'✗ ')+bonnes[z.id];
+ });
+ const p=Math.round(pts/zonesDef.length*maxPts*10)/10;
+ feedback(pts===zonesDef.length?'ok':(pts>0?'moyen':'ko'),
+ (pts===zonesDef.length?' Toutes les étiquettes sont bien placées !':'Les bonnes réponses sont affichées en vert sur le schéma. ')+aideCorrection);
+ done(p);
+ });
 }
 
 /* ============================================================
-   MOTEUR : enchaîne les activités, score, envoi Firebase
-   ============================================================ */
+ MOTEUR : enchaîne les activités, score, envoi Firebase
+ ============================================================ */
 /* ===ACTIVITES=== */
 const ACTIVITES=[
 
 /* ---- 1. Schéma cliquable : la poutre qui fléchit ---- */
-{ titre:'La poutre sous la loupe', icone:'🔍', max:3,
-  consigne:'Cette poutre fléchit sous la charge. Réponds aux 3 questions en CLIQUANT directement sur le schéma.',
-  render(zone,done){
-    const svg=svgEl('svg',{viewBox:'0 0 560 300',width:'560'});
-    // appuis
-    [[80,205],[480,205]].forEach(([x,y])=>{
-      svgEl('polygon',{points:`${x},${y} ${x-20},${y+34} ${x+20},${y+34}`,fill:'#94a3b8','data-z':'appui',class:'czone'},svg);
-    });
-    // poutre courbée : deux bandes cliquables (haut / bas)
-    svgEl('path',{d:'M80 205 Q280 285 480 205',stroke:'#cbd5e1','stroke-width':'40',fill:'none','stroke-linecap':'round'},svg);
-    const haut=svgEl('path',{d:'M80 195 Q280 275 480 195',stroke:'#475569','stroke-width':'18',fill:'none','stroke-linecap':'round','data-z':'haut',class:'czone'},svg);
-    const bas=svgEl('path',{d:'M80 217 Q280 297 480 217',stroke:'#64748b','stroke-width':'18',fill:'none','stroke-linecap':'round','data-z':'bas',class:'czone'},svg);
-    // charge
-    svgEl('rect',{x:250,y:90,width:60,height:36,fill:'#dc2626',rx:6},svg);
-    svgEl('line',{x1:280,y1:130,x2:280,y2:190,stroke:'#dc2626','stroke-width':'6'},svg);
-    svgEl('polygon',{points:'280,200 270,184 290,184',fill:'#dc2626'},svg);
-    svgEl('text',{x:280,y:80,'text-anchor':'middle','font-size':'15','font-weight':'bold',fill:'#dc2626','font-family':'Segoe UI'},svg,'CHARGE');
-    const question=el('div',{class:'consigne-act',style:'margin-top:14px'},null);
-    zone.appendChild(svg); zone.appendChild(question);
-    const etapes=[
-      {q:'👉 Question 1/3 — Clique sur la zone de la poutre qui est ÉCRASÉE (compression).', bonne:'haut',
-       expl:'Le DESSUS de la poutre est comprimé : la matière s\u2019y rapproche.'},
-      {q:'👉 Question 2/3 — Clique sur la zone qui est ÉTIRÉE (traction).', bonne:'bas',
-       expl:'Le DESSOUS est étiré : c\u2019est là que le béton casserait sans acier.'},
-      {q:'👉 Question 3/3 — Clique sur un APPUI (ce qui porte la poutre).', bonne:'appui',
-       expl:'Les appuis reçoivent toute la charge et la transmettent au sol.'},
-    ];
-    let i=0, pts=0;
-    question.textContent=etapes[0].q;
-    svg.querySelectorAll('.czone').forEach(f=>{
-      f.classList.add('cliquable');
-      f.addEventListener('click',()=>{
-        if(i>=etapes.length) return;
-        const ok=f.getAttribute('data-z')===etapes[i].bonne;
-        if(ok){ pts++; f.setAttribute('stroke','#16a34a'); if(f.tagName==='polygon')f.setAttribute('fill','#16a34a'); }
-        feedback(ok?'ok':'ko',(ok?'✓ Exact ! ':'✗ Non — ')+etapes[i].expl);
-        i++;
-        if(i<etapes.length) question.textContent=etapes[i].q;
-        else { question.textContent='Activité terminée !'; done(pts); }
-      });
-    });
-  }
+{ titre:'La poutre sous la loupe', icone:'', max:3,
+ consigne:'Cette poutre fléchit sous la charge. Réponds aux 3 questions en CLIQUANT directement sur le schéma.',
+ render(zone,done){
+ const svg=svgEl('svg',{viewBox:'0 0 560 300',width:'560'});
+ // appuis
+ [[80,205],[480,205]].forEach(([x,y])=>{
+ svgEl('polygon',{points:`${x},${y} ${x-20},${y+34} ${x+20},${y+34}`,fill:'#94a3b8','data-z':'appui',class:'czone'},svg);
+ });
+ // poutre courbée : deux bandes cliquables (haut / bas)
+ svgEl('path',{d:'M80 205 Q280 285 480 205',stroke:'#cbd5e1','stroke-width':'40',fill:'none','stroke-linecap':'round'},svg);
+ const haut=svgEl('path',{d:'M80 195 Q280 275 480 195',stroke:'#475569','stroke-width':'18',fill:'none','stroke-linecap':'round','data-z':'haut',class:'czone'},svg);
+ const bas=svgEl('path',{d:'M80 217 Q280 297 480 217',stroke:'#64748b','stroke-width':'18',fill:'none','stroke-linecap':'round','data-z':'bas',class:'czone'},svg);
+ // charge
+ svgEl('rect',{x:250,y:90,width:60,height:36,fill:'#dc2626',rx:6},svg);
+ svgEl('line',{x1:280,y1:130,x2:280,y2:190,stroke:'#dc2626','stroke-width':'6'},svg);
+ svgEl('polygon',{points:'280,200 270,184 290,184',fill:'#dc2626'},svg);
+ svgEl('text',{x:280,y:80,'text-anchor':'middle','font-size':'15','font-weight':'bold',fill:'#dc2626','font-family':'Segoe UI'},svg,'CHARGE');
+ const question=el('div',{class:'consigne-act',style:'margin-top:14px'},null);
+ zone.appendChild(svg); zone.appendChild(question);
+ const etapes=[
+ {q:' Question 1/3 — Clique sur la zone de la poutre qui est ÉCRASÉE (compression).', bonne:'haut',
+ expl:'Le DESSUS de la poutre est comprimé : la matière s\u2019y rapproche.'},
+ {q:' Question 2/3 — Clique sur la zone qui est ÉTIRÉE (traction).', bonne:'bas',
+ expl:'Le DESSOUS est étiré : c\u2019est là que le béton casserait sans acier.'},
+ {q:' Question 3/3 — Clique sur un APPUI (ce qui porte la poutre).', bonne:'appui',
+ expl:'Les appuis reçoivent toute la charge et la transmettent au sol.'},
+ ];
+ let i=0, pts=0;
+ question.textContent=etapes[0].q;
+ svg.querySelectorAll('.czone').forEach(f=>{
+ f.classList.add('cliquable');
+ f.addEventListener('click',()=>{
+ if(i>=etapes.length) return;
+ const ok=f.getAttribute('data-z')===etapes[i].bonne;
+ if(ok){ pts++; f.setAttribute('stroke','#16a34a'); if(f.tagName==='polygon')f.setAttribute('fill','#16a34a'); }
+ feedback(ok?'ok':'ko',(ok?'✓ Exact ! ':'✗ Non — ')+etapes[i].expl);
+ i++;
+ if(i<etapes.length) question.textContent=etapes[i].q;
+ else { question.textContent='Activité terminée !'; done(pts); }
+ });
+ });
+ }
 },
 
 /* ---- 2. Étiquettes : le pont suspendu ---- */
-{ titre:'Habille le pont suspendu', icone:'🌉', max:3,
-  consigne:'Clique sur une étiquette, puis clique sur la partie du pont qui lui correspond. Place les 3 étiquettes, puis valide.',
-  render(zone,done){
-    const svg=svgEl('svg',{viewBox:'0 0 620 300',width:'620'});
-    svgEl('rect',{x:0,y:250,width:620,height:50,fill:'#e7e5e4'},svg);
-    // tablier
-    const tablier=svgEl('rect',{x:50,y:190,width:520,height:14,fill:'#475569',rx:4},svg);
-    // pylônes
-    const py1=svgEl('rect',{x:185,y:60,width:16,height:190,fill:'#64748b'},svg);
-    const py2=svgEl('rect',{x:419,y:60,width:16,height:190,fill:'#64748b'},svg);
-    // câble
-    const cable=svgEl('path',{d:'M50 184 Q120 66 193 62 Q310 170 427 62 Q500 66 570 184',stroke:'#1d4ed8','stroke-width':'8',fill:'none'},svg);
-    // suspentes
-    for(let k=1;k<7;k++){ const x=193+(427-193)*k/7;
-      const yc=170-108*Math.pow(Math.abs(k/7-0.5)*2,2)-0; // approx
-      svgEl('line',{x1:x,y1:62+ (170-62)*(1-Math.pow(Math.abs(k/7-0.5)*2,2)) ,x2:x,y2:190,stroke:'#93c5fd','stroke-width':'3'},svg);
-    }
-    widgetEtiquettes(zone,svg,
-      [{id:'tablier',forme:tablier,tx:310,ty:225},
-       {id:'pylone',forme:py1,tx:193,ty:45},
-       {id:'cable',forme:cable,tx:520,ty:110}],
-      ['Tablier','Pylône','Câble porteur'],
-      {tablier:'Tablier',pylone:'Pylône',cable:'Câble porteur'},
-      'Rappel : le tablier porte la route, les pylônes travaillent en compression, le câble en traction.',
-      done,3);
-  }
+{ titre:'Habille le pont suspendu', icone:'', max:3,
+ consigne:'Clique sur une étiquette, puis clique sur la partie du pont qui lui correspond. Place les 3 étiquettes, puis valide.',
+ render(zone,done){
+ const svg=svgEl('svg',{viewBox:'0 0 620 300',width:'620'});
+ svgEl('rect',{x:0,y:250,width:620,height:50,fill:'#e7e5e4'},svg);
+ // tablier
+ const tablier=svgEl('rect',{x:50,y:190,width:520,height:14,fill:'#475569',rx:4},svg);
+ // pylônes
+ const py1=svgEl('rect',{x:185,y:60,width:16,height:190,fill:'#64748b'},svg);
+ const py2=svgEl('rect',{x:419,y:60,width:16,height:190,fill:'#64748b'},svg);
+ // câble
+ const cable=svgEl('path',{d:'M50 184 Q120 66 193 62 Q310 170 427 62 Q500 66 570 184',stroke:'#1d4ed8','stroke-width':'8',fill:'none'},svg);
+ // suspentes
+ for(let k=1;k<7;k++){ const x=193+(427-193)*k/7;
+ const yc=170-108*Math.pow(Math.abs(k/7-0.5)*2,2)-0; // approx
+ svgEl('line',{x1:x,y1:62+ (170-62)*(1-Math.pow(Math.abs(k/7-0.5)*2,2)) ,x2:x,y2:190,stroke:'#93c5fd','stroke-width':'3'},svg);
+ }
+ widgetEtiquettes(zone,svg,
+ [{id:'tablier',forme:tablier,tx:310,ty:225},
+ {id:'pylone',forme:py1,tx:193,ty:45},
+ {id:'cable',forme:cable,tx:520,ty:110}],
+ ['Tablier','Pylône','Câble porteur'],
+ {tablier:'Tablier',pylone:'Pylône',cable:'Câble porteur'},
+ 'Rappel : le tablier porte la route, les pylônes travaillent en compression, le câble en traction.',
+ done,3);
+ }
 },
 
 /* ---- 3. Juge les structures : triangulées ou pas ? ---- */
-{ titre:'Inspecteur des structures', icone:'🕵️', max:3,
-  consigne:'Trois charpentes te sont présentées. Pour chacune, décide : est-elle RIGIDE (bien triangulée) ou DÉFORMABLE ? Clique ton verdict sous chaque structure, puis valide.',
-  render(zone,done){
-    const defs=[
-      {stable:true,  dessin:s=>{ // triangle simple
-        svgEl('polygon',{points:'20,110 80,20 140,110',fill:'none',stroke:'#475569','stroke-width':'8','stroke-linejoin':'round'},s); }},
-      {stable:false, dessin:s=>{ // carré sans diagonale
-        svgEl('rect',{x:30,y:25,width:100,height:85,fill:'none',stroke:'#475569','stroke-width':'8'},s); }},
-      {stable:true,  dessin:s=>{ // carré + diagonale
-        svgEl('rect',{x:30,y:25,width:100,height:85,fill:'none',stroke:'#475569','stroke-width':'8'},s);
-        svgEl('line',{x1:30,y1:110,x2:130,y2:25,stroke:'#16a34a','stroke-width':'8'},s); }},
-    ];
-    const grille=el('div',{class:'choix-cartes'},zone);
-    const verdicts=[null,null,null];
-    defs.forEach((d,i)=>{
-      const carte=el('div',{class:'cc',style:'cursor:default'},grille);
-      const s=svgEl('svg',{viewBox:'0 0 160 130',width:'160',style:'border:none;background:none'},carte);
-      d.dessin(s);
-      const rang=el('div',{style:'display:flex;gap:8px;justify-content:center;margin-top:8px'},carte);
-      const bR=el('button',{class:'btn bleu',style:'margin:0;padding:8px 12px;font-size:13px'},rang,'💪 Rigide');
-      const bD=el('button',{class:'btn gris',style:'margin:0;padding:8px 12px;font-size:13px'},rang,'〰️ Déformable');
-      bR.onclick=()=>{ verdicts[i]=true; bR.style.outline='4px solid #ea580c'; bD.style.outline='none'; maj(); };
-      bD.onclick=()=>{ verdicts[i]=false; bD.style.outline='4px solid #ea580c'; bR.style.outline='none'; maj(); };
-    });
-    const valider=boutonValider(zone,()=>{
-      valider.disabled=true;
-      let pts=0;
-      [...grille.children].forEach((carte,i)=>{
-        const ok=verdicts[i]===defs[i].stable;
-        if(ok) pts++;
-        carte.classList.add(ok?'bon':'faux');
-        el('div',{style:'font-size:13px;margin-top:6px;font-weight:800;color:'+(ok?'#14532d':'#7f1d1d')},carte,
-          (ok?'✓ ':'✗ ')+(defs[i].stable?'Rigide (triangulée)':'Déformable (pas de triangle !)'));
-      });
-      feedback(pts===3?'ok':(pts>0?'moyen':'ko'),
-        'La règle d\u2019or : sans TRIANGLE, un cadre articulé se déforme. Le carré n°2 s\u2019écraserait en parallélogramme.');
-      done(pts);
-    });
-    function maj(){ valider.disabled=verdicts.some(v=>v===null); }
-  }
+{ titre:'Inspecteur des structures', icone:'', max:3,
+ consigne:'Trois charpentes te sont présentées. Pour chacune, décide : est-elle RIGIDE (bien triangulée) ou DÉFORMABLE ? Clique ton verdict sous chaque structure, puis valide.',
+ render(zone,done){
+ const defs=[
+ {stable:true, dessin:s=>{ // triangle simple
+ svgEl('polygon',{points:'20,110 80,20 140,110',fill:'none',stroke:'#475569','stroke-width':'8','stroke-linejoin':'round'},s); }},
+ {stable:false, dessin:s=>{ // carré sans diagonale
+ svgEl('rect',{x:30,y:25,width:100,height:85,fill:'none',stroke:'#475569','stroke-width':'8'},s); }},
+ {stable:true, dessin:s=>{ // carré + diagonale
+ svgEl('rect',{x:30,y:25,width:100,height:85,fill:'none',stroke:'#475569','stroke-width':'8'},s);
+ svgEl('line',{x1:30,y1:110,x2:130,y2:25,stroke:'#16a34a','stroke-width':'8'},s); }},
+ ];
+ const grille=el('div',{class:'choix-cartes'},zone);
+ const verdicts=[null,null,null];
+ defs.forEach((d,i)=>{
+ const carte=el('div',{class:'cc',style:'cursor:default'},grille);
+ const s=svgEl('svg',{viewBox:'0 0 160 130',width:'160',style:'border:none;background:none'},carte);
+ d.dessin(s);
+ const rang=el('div',{style:'display:flex;gap:8px;justify-content:center;margin-top:8px'},carte);
+ const bR=el('button',{class:'btn bleu',style:'margin:0;padding:8px 12px;font-size:13px'},rang,' Rigide');
+ const bD=el('button',{class:'btn gris',style:'margin:0;padding:8px 12px;font-size:13px'},rang,'〰 Déformable');
+ bR.onclick=()=>{ verdicts[i]=true; bR.style.outline='4px solid #ea580c'; bD.style.outline='none'; maj(); };
+ bD.onclick=()=>{ verdicts[i]=false; bD.style.outline='4px solid #ea580c'; bR.style.outline='none'; maj(); };
+ });
+ const valider=boutonValider(zone,()=>{
+ valider.disabled=true;
+ let pts=0;
+ [...grille.children].forEach((carte,i)=>{
+ const ok=verdicts[i]===defs[i].stable;
+ if(ok) pts++;
+ carte.classList.add(ok?'bon':'faux');
+ el('div',{style:'font-size:13px;margin-top:6px;font-weight:800;color:'+(ok?'#14532d':'#7f1d1d')},carte,
+ (ok?'✓ ':'✗ ')+(defs[i].stable?'Rigide (triangulée)':'Déformable (pas de triangle !)'));
+ });
+ feedback(pts===3?'ok':(pts>0?'moyen':'ko'),
+ 'La règle d\u2019or : sans TRIANGLE, un cadre articulé se déforme. Le carré n°2 s\u2019écraserait en parallélogramme.');
+ done(pts);
+ });
+ function maj(){ valider.disabled=verdicts.some(v=>v===null); }
+ }
 },
 
 /* ---- 4. Associer matériau → point fort ---- */
-{ titre:'Le bon matériau au bon endroit', icone:'🧱', max:3,
-  consigne:'Clique un MATÉRIAU (colonne de gauche), puis la MISSION qui lui convient le mieux (colonne de droite). Forme les 3 paires, puis valide.',
-  render(zone,done){
-    const paires={ '⛓️ Acier':'Câble de pont suspendu (traction)',
-                   '🪨 Pierre':'Arche du pont du Gard (compression)',
-                   '🏗️ Béton armé':'Poutre de parking (compression ET traction)'};
-    const gauche=Object.keys(paires), droite=Object.values(paires).slice().sort(()=>0.5-Math.random());
-    const conteneur=el('div',{style:'display:grid;grid-template-columns:1fr 1fr;gap:12px'},zone);
-    const colG=el('div',{},conteneur), colD=el('div',{},conteneur);
-    let matChoisi=null; const assoc={};
-    const btnsG={}, btnsD={};
-    gauche.forEach(m=>{
-      const b=el('button',{class:'btn bleu',style:'display:block;width:100%;margin:6px 0'},colG,m);
-      btnsG[m]=b;
-      b.onclick=()=>{ if(assoc[m])return;
-        Object.values(btnsG).forEach(x=>x.style.outline='none');
-        matChoisi=m; b.style.outline='4px solid #ea580c'; };
-    });
-    droite.forEach(mi=>{
-      const b=el('button',{class:'btn gris',style:'display:block;width:100%;margin:6px 0;font-size:13.5px'},colD,mi);
-      btnsD[mi]=b;
-      b.onclick=()=>{ if(!matChoisi||b.dataset.pris)return;
-        assoc[matChoisi]=mi; b.dataset.pris='1';
-        b.textContent=matChoisi+' → '+mi;
-        btnsG[matChoisi].style.opacity='.35'; btnsG[matChoisi].style.outline='none';
-        matChoisi=null;
-        valider.disabled=Object.keys(assoc).length<3; };
-    });
-    const valider=boutonValider(zone,()=>{
-      valider.disabled=true;
-      let pts=0;
-      Object.entries(assoc).forEach(([m,mi])=>{
-        const ok=paires[m]===mi;
-        if(ok) pts++;
-        btnsD[mi].style.background= ok?'#16a34a':'#dc2626';
-        btnsD[mi].textContent=(ok?'✓ ':'✗ ')+btnsD[mi].textContent;
-      });
-      feedback(pts===3?'ok':(pts>0?'moyen':'ko'),
-        'Correction : acier → traction (les câbles), pierre → compression (les arches romaines tiennent depuis 2000 ans !), béton armé → les deux à la fois.');
-      done(pts);
-    });
-  }
+{ titre:'Le bon matériau au bon endroit', icone:'', max:3,
+ consigne:'Clique un MATÉRIAU (colonne de gauche), puis la MISSION qui lui convient le mieux (colonne de droite). Forme les 3 paires, puis valide.',
+ render(zone,done){
+ const paires={ ' Acier':'Câble de pont suspendu (traction)',
+ ' Pierre':'Arche du pont du Gard (compression)',
+ ' Béton armé':'Poutre de parking (compression ET traction)'};
+ const gauche=Object.keys(paires), droite=Object.values(paires).slice().sort(()=>0.5-Math.random());
+ const conteneur=el('div',{style:'display:grid;grid-template-columns:1fr 1fr;gap:12px'},zone);
+ const colG=el('div',{},conteneur), colD=el('div',{},conteneur);
+ let matChoisi=null; const assoc={};
+ const btnsG={}, btnsD={};
+ gauche.forEach(m=>{
+ const b=el('button',{class:'btn bleu',style:'display:block;width:100%;margin:6px 0'},colG,m);
+ btnsG[m]=b;
+ b.onclick=()=>{ if(assoc[m])return;
+ Object.values(btnsG).forEach(x=>x.style.outline='none');
+ matChoisi=m; b.style.outline='4px solid #ea580c'; };
+ });
+ droite.forEach(mi=>{
+ const b=el('button',{class:'btn gris',style:'display:block;width:100%;margin:6px 0;font-size:13.5px'},colD,mi);
+ btnsD[mi]=b;
+ b.onclick=()=>{ if(!matChoisi||b.dataset.pris)return;
+ assoc[matChoisi]=mi; b.dataset.pris='1';
+ b.textContent=matChoisi+' → '+mi;
+ btnsG[matChoisi].style.opacity='.35'; btnsG[matChoisi].style.outline='none';
+ matChoisi=null;
+ valider.disabled=Object.keys(assoc).length<3; };
+ });
+ const valider=boutonValider(zone,()=>{
+ valider.disabled=true;
+ let pts=0;
+ Object.entries(assoc).forEach(([m,mi])=>{
+ const ok=paires[m]===mi;
+ if(ok) pts++;
+ btnsD[mi].style.background= ok?'#16a34a':'#dc2626';
+ btnsD[mi].textContent=(ok?'✓ ':'✗ ')+btnsD[mi].textContent;
+ });
+ feedback(pts===3?'ok':(pts>0?'moyen':'ko'),
+ 'Correction : acier → traction (les câbles), pierre → compression (les arches romaines tiennent depuis 2000 ans !), béton armé → les deux à la fois.');
+ done(pts);
+ });
+ }
 },
 
 /* ---- 5. Animation comparative : quel mur isole le mieux ? ---- */
-{ titre:'Le duel des murs', icone:'🌡️', max:3,
-  consigne:'Regarde l\u2019animation : la chaleur (points rouges) s\u2019échappe de deux maisons identiques, mais un seul mur est isolé. Clique sur la maison qui GARDE le mieux sa chaleur. (L\u2019animation tourne en boucle, prends ton temps.)',
-  render(zone,done){
-    const cv=el('canvas',{width:640,height:300},zone);
-    const ctx=cv.getContext('2d');
-    const parts=Array.from({length:16},()=>({x:Math.random(),y:40+Math.random()*200,v:0.4+Math.random()*0.5}));
-    let t=0, fini=false, raf;
-    function maison(x,isole,fuite){
-      ctx.fillStyle='#fef3c7'; ctx.fillRect(x,90,180,170);
-      ctx.strokeStyle='#78716c'; ctx.lineWidth=3; ctx.strokeRect(x,90,180,170);
-      ctx.fillStyle='#b91c1c';
-      ctx.beginPath(); ctx.moveTo(x-14,90); ctx.lineTo(x+90,36); ctx.lineTo(x+194,90); ctx.closePath(); ctx.fill();
-      // mur droit (sortie de chaleur)
-      ctx.fillStyle='#a8a29e'; ctx.fillRect(x+168,90,12,170);
-      if(isole){ ctx.fillStyle='#fbbf24'; ctx.fillRect(x+156,90,12,170); }
-      ctx.font='16px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e3a5f';
-      ctx.fillText('🔥 20 °C', x+80, 180);
-      // particules
-      ctx.fillStyle='#ef4444';
-      parts.forEach(p=>{
-        let px=x+40+ p.x*200*fuite + ((t*p.v*40)%(200*fuite||1));
-        let lim= isole? x+150 : x+300;
-        px=Math.min(px,lim);
-        ctx.beginPath(); ctx.arc(px, 100+ (p.y%150), 5,0,7); ctx.fill();
-      });
-    }
-    function boucle(){
-      if(fini) return;
-      t+=0.016;
-      ctx.clearRect(0,0,640,300);
-      ctx.font='bold 15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e40af';
-      ctx.fillText('MAISON A',110,26); ctx.fillText('MAISON B',430,26);
-      maison(30,false,1); maison(350,true,0.15);
-      ctx.fillStyle='#64748b'; ctx.font='13px Segoe UI';
-      ctx.fillText('❄️ dehors : 5 °C',320,290);
-      raf=requestAnimationFrame(boucle);
-    }
-    boucle();
-    const rang=el('div',{class:'choix-cartes'},zone);
-    [['🏠 Maison A','A'],['🏠 Maison B','B']].forEach(([lbl,id])=>{
-      const c=el('div',{class:'cc'},rang,lbl);
-      c.onclick=()=>{
-        if(fini) return; fini=true; cancelAnimationFrame(raf);
-        const ok=id==='B';
-        c.classList.add(ok?'bon':'faux');
-        feedback(ok?'ok':'ko',(ok?'✓ Bien vu !':'✗ Regarde à nouveau :')+' la maison B possède une couche d\u2019ISOLANT (en jaune) qui bloque les points rouges : la chaleur reste dedans. Sans isolant (maison A), elle s\u2019échappe en continu — et la facture grimpe.');
-        done(ok?3:0);
-      };
-    });
-  }
+{ titre:'Le duel des murs', icone:'', max:3,
+ consigne:'Regarde l\u2019animation : la chaleur (points rouges) s\u2019échappe de deux maisons identiques, mais un seul mur est isolé. Clique sur la maison qui GARDE le mieux sa chaleur. (L\u2019animation tourne en boucle, prends ton temps.)',
+ render(zone,done){
+ const cv=el('canvas',{width:640,height:300},zone);
+ const ctx=cv.getContext('2d');
+ const parts=Array.from({length:16},()=>({x:Math.random(),y:40+Math.random()*200,v:0.4+Math.random()*0.5}));
+ let t=0, fini=false, raf;
+ function maison(x,isole,fuite){
+ ctx.fillStyle='#fef3c7'; ctx.fillRect(x,90,180,170);
+ ctx.strokeStyle='#78716c'; ctx.lineWidth=3; ctx.strokeRect(x,90,180,170);
+ ctx.fillStyle='#b91c1c';
+ ctx.beginPath(); ctx.moveTo(x-14,90); ctx.lineTo(x+90,36); ctx.lineTo(x+194,90); ctx.closePath(); ctx.fill();
+ // mur droit (sortie de chaleur)
+ ctx.fillStyle='#a8a29e'; ctx.fillRect(x+168,90,12,170);
+ if(isole){ ctx.fillStyle='#fbbf24'; ctx.fillRect(x+156,90,12,170); }
+ ctx.font='16px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e3a5f';
+ ctx.fillText('20 °C', x+80, 180);
+ // particules
+ ctx.fillStyle='#ef4444';
+ parts.forEach(p=>{
+ let px=x+40+ p.x*200*fuite + ((t*p.v*40)%(200*fuite||1));
+ let lim= isole? x+150 : x+300;
+ px=Math.min(px,lim);
+ ctx.beginPath(); ctx.arc(px, 100+ (p.y%150), 5,0,7); ctx.fill();
+ });
+ }
+ function boucle(){
+ if(fini) return;
+ t+=0.016;
+ ctx.clearRect(0,0,640,300);
+ ctx.font='bold 15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e40af';
+ ctx.fillText('MAISON A',110,26); ctx.fillText('MAISON B',430,26);
+ maison(30,false,1); maison(350,true,0.15);
+ ctx.fillStyle='#64748b'; ctx.font='13px Segoe UI';
+ ctx.fillText('dehors : 5 °C',320,290);
+ raf=requestAnimationFrame(boucle);
+ }
+ boucle();
+ const rang=el('div',{class:'choix-cartes'},zone);
+ [[' Maison A','A'],[' Maison B','B']].forEach(([lbl,id])=>{
+ const c=el('div',{class:'cc'},rang,lbl);
+ c.onclick=()=>{
+ if(fini) return; fini=true; cancelAnimationFrame(raf);
+ const ok=id==='B';
+ c.classList.add(ok?'bon':'faux');
+ feedback(ok?'ok':'ko',(ok?'✓ Bien vu !':'✗ Regarde à nouveau :')+' la maison B possède une couche d\u2019ISOLANT (en jaune) qui bloque les points rouges : la chaleur reste dedans. Sans isolant (maison A), elle s\u2019échappe en continu — et la facture grimpe.');
+ done(ok?3:0);
+ };
+ });
+ }
 },
 
 /* ---- 6. Choisir la poutre qui tient ---- */
-{ titre:'Mission ingénieur : choisis ta poutre', icone:'📐', max:3,
-  consigne:'Un camion doit franchir 20 m. Trois poutres en BOIS te sont proposées, dessinées à l\u2019échelle. Souviens-toi du TP : la hauteur d\u2019une poutre change ÉNORMÉMENT sa résistance. Clique sur la poutre la plus SÛRE.',
-  render(zone,done){
-    const rang=el('div',{class:'choix-cartes'},zone);
-    const options=[
-      {h:0.4, lbl:'Poutre fine · h = 0,4 m', ok:false, expl:'beaucoup trop souple : flèche énorme, rupture assurée.'},
-      {h:0.9, lbl:'Poutre moyenne · h = 0,9 m', ok:false, expl:'encore insuffisante pour 20 m en bois.'},
-      {h:1.6, lbl:'Poutre haute · h = 1,6 m', ok:true, expl:'doubler la hauteur divise la flèche par 8 : c\u2019est elle la plus sûre !'},
-    ];
-    let repondu=false;
-    options.forEach(o=>{
-      const c=el('div',{class:'cc'},rang);
-      const s=svgEl('svg',{viewBox:'0 0 180 90',width:'180',style:'border:none;background:none'},c);
-      const ep=6+o.h*22;
-      svgEl('rect',{x:10,y:45-ep/2,width:160,height:ep,fill:'#92610e',rx:4,opacity:.85},s);
-      el('div',{style:'margin-top:6px'},c,o.lbl);
-      c.onclick=()=>{
-        if(repondu) return; repondu=true;
-        [...rang.children].forEach((cc,i)=>{ if(options[i].ok) cc.classList.add('bon'); });
-        if(!o.ok) c.classList.add('faux');
-        feedback(o.ok?'ok':'ko',(o.ok?'✓ Excellent réflexe d\u2019ingénieur ! ':'✗ Pas celle-ci : '+o.expl+' ')+
-          'La flèche diminue avec le CUBE de la hauteur : une poutre 2× plus haute fléchit 8× moins.');
-        done(o.ok?3:0);
-      };
-    });
-  }
+{ titre:'Mission ingénieur : choisis ta poutre', icone:'', max:3,
+ consigne:'Un camion doit franchir 20 m. Trois poutres en BOIS te sont proposées, dessinées à l\u2019échelle. Souviens-toi du TP : la hauteur d\u2019une poutre change ÉNORMÉMENT sa résistance. Clique sur la poutre la plus SÛRE.',
+ render(zone,done){
+ const rang=el('div',{class:'choix-cartes'},zone);
+ const options=[
+ {h:0.4, lbl:'Poutre fine · h = 0,4 m', ok:false, expl:'beaucoup trop souple : flèche énorme, rupture assurée.'},
+ {h:0.9, lbl:'Poutre moyenne · h = 0,9 m', ok:false, expl:'encore insuffisante pour 20 m en bois.'},
+ {h:1.6, lbl:'Poutre haute · h = 1,6 m', ok:true, expl:'doubler la hauteur divise la flèche par 8 : c\u2019est elle la plus sûre !'},
+ ];
+ let repondu=false;
+ options.forEach(o=>{
+ const c=el('div',{class:'cc'},rang);
+ const s=svgEl('svg',{viewBox:'0 0 180 90',width:'180',style:'border:none;background:none'},c);
+ const ep=6+o.h*22;
+ svgEl('rect',{x:10,y:45-ep/2,width:160,height:ep,fill:'#92610e',rx:4,opacity:.85},s);
+ el('div',{style:'margin-top:6px'},c,o.lbl);
+ c.onclick=()=>{
+ if(repondu) return; repondu=true;
+ /* correction différée : la bonne réponse n'est pas montrée ici */
+ if(!o.ok) c.classList.add('choisi');
+ feedback(o.ok?'ok':'ko',(o.ok?'✓ Excellent réflexe d\u2019ingénieur ! ':'✗ Pas celle-ci : '+o.expl+' ')+
+ 'La flèche diminue avec le CUBE de la hauteur : une poutre 2× plus haute fléchit 8× moins.');
+ done(o.ok?3:0);
+ };
+ });
+ }
 },
 
 /* ---- 7. L'animation mystère : quelle légende ? ---- */
-{ titre:'L\u2019animation mystère', icone:'🎬', max:2,
-  consigne:'Regarde bien cette animation (elle tourne en boucle)… puis clique sur la légende qui la décrit correctement.',
-  render(zone,done){
-    const cv=el('canvas',{width:620,height:260},zone);
-    const ctx=cv.getContext('2d');
-    let t=0, fini=false, raf;
-    function boucle(){
-      if(fini) return;
-      t+=0.012; const p=(Math.sin(t)+1)/2;
-      ctx.clearRect(0,0,620,260);
-      const y=140,xg=110,xd=510;
-      ctx.fillStyle='#94a3b8';
-      [[xg,y+10],[xd,y+10]].forEach(([x,yy])=>{ctx.beginPath();ctx.moveTo(x,yy);ctx.lineTo(x-16,yy+26);ctx.lineTo(x+16,yy+26);ctx.closePath();ctx.fill();});
-      ctx.strokeStyle='#475569'; ctx.lineWidth=20; ctx.lineCap='round';
-      ctx.beginPath(); ctx.moveTo(xg,y); ctx.quadraticCurveTo(310,y+120*p,xd,y); ctx.stroke();
-      ctx.fillStyle='#dc2626'; ctx.globalAlpha=.3+.5*p;
-      ctx.fillRect(280,50,60,32); ctx.globalAlpha=1;
-      ctx.strokeStyle='#dc2626'; ctx.lineWidth=5;
-      ctx.beginPath(); ctx.moveTo(310,86); ctx.lineTo(310,110+20*p); ctx.stroke();
-      raf=requestAnimationFrame(boucle);
-    }
-    boucle();
-    const rang=el('div',{class:'choix-cartes'},zone);
-    const legs=[
-      {t:'Une poutre en TRACTION : elle s\u2019allonge.', ok:false},
-      {t:'Une poutre en FLEXION : elle plie sous la charge.', ok:true},
-      {t:'Une poutre en TORSION : elle se tord sur elle-même.', ok:false},
-    ];
-    let repondu=false;
-    legs.forEach(L=>{
-      const c=el('div',{class:'cc'},rang,L.t);
-      c.onclick=()=>{
-        if(repondu)return; repondu=true; fini=true; cancelAnimationFrame(raf);
-        [...rang.children].forEach((cc,i)=>{ if(legs[i].ok) cc.classList.add('bon'); });
-        if(!L.ok) c.classList.add('faux');
-        feedback(L.ok?'ok':'ko',(L.ok?'✓ Exactement !':'✗ Pas tout à fait :')+' la charge appuie au milieu et la poutre PLIE : c\u2019est la FLEXION (compression dessus + traction dessous).');
-        done(L.ok?2:0);
-      };
-    });
-  }
+{ titre:'L\u2019animation mystère', icone:'', max:2,
+ consigne:'Regarde bien cette animation (elle tourne en boucle)… puis clique sur la légende qui la décrit correctement.',
+ render(zone,done){
+ const cv=el('canvas',{width:620,height:260},zone);
+ const ctx=cv.getContext('2d');
+ let t=0, fini=false, raf;
+ function boucle(){
+ if(fini) return;
+ t+=0.012; const p=(Math.sin(t)+1)/2;
+ ctx.clearRect(0,0,620,260);
+ const y=140,xg=110,xd=510;
+ ctx.fillStyle='#94a3b8';
+ [[xg,y+10],[xd,y+10]].forEach(([x,yy])=>{ctx.beginPath();ctx.moveTo(x,yy);ctx.lineTo(x-16,yy+26);ctx.lineTo(x+16,yy+26);ctx.closePath();ctx.fill();});
+ ctx.strokeStyle='#475569'; ctx.lineWidth=20; ctx.lineCap='round';
+ ctx.beginPath(); ctx.moveTo(xg,y); ctx.quadraticCurveTo(310,y+120*p,xd,y); ctx.stroke();
+ ctx.fillStyle='#dc2626'; ctx.globalAlpha=.3+.5*p;
+ ctx.fillRect(280,50,60,32); ctx.globalAlpha=1;
+ ctx.strokeStyle='#dc2626'; ctx.lineWidth=5;
+ ctx.beginPath(); ctx.moveTo(310,86); ctx.lineTo(310,110+20*p); ctx.stroke();
+ raf=requestAnimationFrame(boucle);
+ }
+ boucle();
+ const rang=el('div',{class:'choix-cartes'},zone);
+ const legs=[
+ {t:'Une poutre en TRACTION : elle s\u2019allonge.', ok:false},
+ {t:'Une poutre en FLEXION : elle plie sous la charge.', ok:true},
+ {t:'Une poutre en TORSION : elle se tord sur elle-même.', ok:false},
+ ];
+ let repondu=false;
+ legs.forEach(L=>{
+ const c=el('div',{class:'cc'},rang,L.t);
+ c.onclick=()=>{
+ if(repondu)return; repondu=true; fini=true; cancelAnimationFrame(raf);
+ /* correction différée : la bonne réponse n'est pas montrée ici */
+ if(!L.ok) c.classList.add('choisi');
+ feedback(L.ok?'ok':'ko',(L.ok?'✓ Exactement !':'✗ Pas tout à fait :')+' la charge appuie au milieu et la poutre PLIE : c\u2019est la FLEXION (compression dessus + traction dessous).');
+ done(L.ok?2:0);
+ };
+ });
+ }
 },
 
 /* ---- 8. Étiquettes : reconnais les 3 types de ponts ---- */
-{ titre:'Reconnais les ponts', icone:'🏷️', max:3,
-  consigne:'Trois silhouettes de ponts. Clique une étiquette, puis la silhouette correspondante. Place les 3, puis valide.',
-  render(zone,done){
-    const svg=svgEl('svg',{viewBox:'0 0 660 190',width:'660'});
-    function cadreZone(x){ return svgEl('rect',{x:x,y:20,width:190,height:120,fill:'transparent'},svg); }
-    // silhouette 1 : poutre
-    svgEl('line',{x1:30,y1:70,x2:190,y2:70,stroke:'#475569','stroke-width':'9'},svg);
-    svgEl('rect',{x:75,y:70,width:10,height:60,fill:'#64748b'},svg);
-    svgEl('rect',{x:135,y:70,width:10,height:60,fill:'#64748b'},svg);
-    // silhouette 2 : arc
-    svgEl('line',{x1:250,y1:70,x2:410,y2:70,stroke:'#475569','stroke-width':'9'},svg);
-    svgEl('path',{d:'M255 130 Q330 40 405 130',stroke:'#78716c','stroke-width':'9',fill:'none'},svg);
-    // silhouette 3 : suspendu
-    svgEl('line',{x1:470,y1:80,x2:630,y2:80,stroke:'#475569','stroke-width':'9'},svg);
-    svgEl('rect',{x:508,y:30,width:8,height:70,fill:'#64748b'},svg);
-    svgEl('rect',{x:584,y:30,width:8,height:70,fill:'#64748b'},svg);
-    svgEl('path',{d:'M470 74 Q490 34 512 32 Q550 68 588 32 Q610 34 630 74',stroke:'#1d4ed8','stroke-width':'5',fill:'none'},svg);
-    const z1=cadreZone(20), z2=cadreZone(240), z3=cadreZone(460);
-    widgetEtiquettes(zone,svg,
-      [{id:'poutre',forme:z1,tx:115,ty:170},
-       {id:'arc',forme:z2,tx:330,ty:170},
-       {id:'suspendu',forme:z3,tx:550,ty:170}],
-      ['Pont poutre','Pont en arc','Pont suspendu'],
-      {poutre:'Pont poutre',arc:'Pont en arc',suspendu:'Pont suspendu'},
-      'Repères : des piles verticales → poutre ; une courbe qui pousse vers le bas → arc ; des câbles et des pylônes → suspendu.',
-      done,3);
-  }
+{ titre:'Reconnais les ponts', icone:'', max:3,
+ consigne:'Trois silhouettes de ponts. Clique une étiquette, puis la silhouette correspondante. Place les 3, puis valide.',
+ render(zone,done){
+ const svg=svgEl('svg',{viewBox:'0 0 660 190',width:'660'});
+ function cadreZone(x){ return svgEl('rect',{x:x,y:20,width:190,height:120,fill:'transparent'},svg); }
+ // silhouette 1 : poutre
+ svgEl('line',{x1:30,y1:70,x2:190,y2:70,stroke:'#475569','stroke-width':'9'},svg);
+ svgEl('rect',{x:75,y:70,width:10,height:60,fill:'#64748b'},svg);
+ svgEl('rect',{x:135,y:70,width:10,height:60,fill:'#64748b'},svg);
+ // silhouette 2 : arc
+ svgEl('line',{x1:250,y1:70,x2:410,y2:70,stroke:'#475569','stroke-width':'9'},svg);
+ svgEl('path',{d:'M255 130 Q330 40 405 130',stroke:'#78716c','stroke-width':'9',fill:'none'},svg);
+ // silhouette 3 : suspendu
+ svgEl('line',{x1:470,y1:80,x2:630,y2:80,stroke:'#475569','stroke-width':'9'},svg);
+ svgEl('rect',{x:508,y:30,width:8,height:70,fill:'#64748b'},svg);
+ svgEl('rect',{x:584,y:30,width:8,height:70,fill:'#64748b'},svg);
+ svgEl('path',{d:'M470 74 Q490 34 512 32 Q550 68 588 32 Q610 34 630 74',stroke:'#1d4ed8','stroke-width':'5',fill:'none'},svg);
+ const z1=cadreZone(20), z2=cadreZone(240), z3=cadreZone(460);
+ widgetEtiquettes(zone,svg,
+ [{id:'poutre',forme:z1,tx:115,ty:170},
+ {id:'arc',forme:z2,tx:330,ty:170},
+ {id:'suspendu',forme:z3,tx:550,ty:170}],
+ ['Pont poutre','Pont en arc','Pont suspendu'],
+ {poutre:'Pont poutre',arc:'Pont en arc',suspendu:'Pont suspendu'},
+ 'Repères : des piles verticales → poutre ; une courbe qui pousse vers le bas → arc ; des câbles et des pylônes → suspendu.',
+ done,3);
+ }
 },
 
 /* ---- 9. Où placer les armatures d'acier ? ---- */
-{ titre:'Place les armatures', icone:'🏗️', max:2,
-  consigne:'Une poutre en béton armé va porter cette charge. L\u2019ingénieur doit placer les ARMATURES D\u2019ACIER dans la zone qui sera ÉTIRÉE. Clique sur cette zone.',
-  render(zone,done){
-    const svg=svgEl('svg',{viewBox:'0 0 560 240',width:'560'});
-    [[110,175],[450,175]].forEach(([x,y])=>{
-      svgEl('polygon',{points:`${x},${y} ${x-18},${y+30} ${x+18},${y+30}`,fill:'#94a3b8'},svg);
-    });
-    svgEl('rect',{x:90,y:115,width:380,height:60,fill:'#d6d3d1',stroke:'#78716c','stroke-width':'2.5'},svg);
-    const haut=svgEl('rect',{x:95,y:120,width:370,height:24,fill:'#e7e5e4',class:'cliquable','data-z':'haut'},svg);
-    const bas=svgEl('rect',{x:95,y:146,width:370,height:24,fill:'#e7e5e4',class:'cliquable','data-z':'bas'},svg);
-    svgEl('rect',{x:250,y:40,width:60,height:34,fill:'#dc2626',rx:6},svg);
-    svgEl('line',{x1:280,y1:78,x2:280,y2:108,stroke:'#dc2626','stroke-width':'6'},svg);
-    svgEl('polygon',{points:'280,115 271,100 289,100',fill:'#dc2626'},svg);
-    svgEl('text',{x:280,y:32,'text-anchor':'middle','font-size':'14','font-weight':'bold',fill:'#dc2626','font-family':'Segoe UI'},svg,'CHARGE');
-    svgEl('text',{x:280,y:225,'text-anchor':'middle','font-size':'13',fill:'#64748b','font-family':'Segoe UI'},svg,'la poutre vue en coupe : clique la bande HAUTE ou la bande BASSE');
-    let fait=false;
-    zone.appendChild(svg);
-    [haut,bas].forEach(b=>{
-      b.addEventListener('click',()=>{
-        if(fait)return; fait=true;
-        const ok=b.getAttribute('data-z')==='bas';
-        bas.setAttribute('fill','#fca5a5');
-        // dessiner les armatures dans le bas
-        for(let k=0;k<2;k++) svgEl('line',{x1:110,y1:154+k*10,x2:450,y2:154+k*10,stroke:'#b91c1c','stroke-width':'5','stroke-linecap':'round'},svg);
-        if(!ok) b.setAttribute('stroke','#dc2626');
-        feedback(ok?'ok':'ko',(ok?'✓ Exactement ce que fait l\u2019ingénieur !':'✗ Non — regarde la correction :')+' quand la poutre fléchit, le BAS est étiré (traction) et le béton seul y casserait. On y noie donc les barres d\u2019acier, champion de la traction. Le HAUT, comprimé, est l\u2019affaire du béton.');
-        done(ok?2:0);
-      });
-    });
-  }
+{ titre:'Place les armatures', icone:'', max:2,
+ consigne:'Une poutre en béton armé va porter cette charge. L\u2019ingénieur doit placer les ARMATURES D\u2019ACIER dans la zone qui sera ÉTIRÉE. Clique sur cette zone.',
+ render(zone,done){
+ const svg=svgEl('svg',{viewBox:'0 0 560 240',width:'560'});
+ [[110,175],[450,175]].forEach(([x,y])=>{
+ svgEl('polygon',{points:`${x},${y} ${x-18},${y+30} ${x+18},${y+30}`,fill:'#94a3b8'},svg);
+ });
+ svgEl('rect',{x:90,y:115,width:380,height:60,fill:'#d6d3d1',stroke:'#78716c','stroke-width':'2.5'},svg);
+ const haut=svgEl('rect',{x:95,y:120,width:370,height:24,fill:'#e7e5e4',class:'cliquable','data-z':'haut'},svg);
+ const bas=svgEl('rect',{x:95,y:146,width:370,height:24,fill:'#e7e5e4',class:'cliquable','data-z':'bas'},svg);
+ svgEl('rect',{x:250,y:40,width:60,height:34,fill:'#dc2626',rx:6},svg);
+ svgEl('line',{x1:280,y1:78,x2:280,y2:108,stroke:'#dc2626','stroke-width':'6'},svg);
+ svgEl('polygon',{points:'280,115 271,100 289,100',fill:'#dc2626'},svg);
+ svgEl('text',{x:280,y:32,'text-anchor':'middle','font-size':'14','font-weight':'bold',fill:'#dc2626','font-family':'Segoe UI'},svg,'CHARGE');
+ svgEl('text',{x:280,y:225,'text-anchor':'middle','font-size':'13',fill:'#64748b','font-family':'Segoe UI'},svg,'la poutre vue en coupe : clique la bande HAUTE ou la bande BASSE');
+ let fait=false;
+ zone.appendChild(svg);
+ [haut,bas].forEach(b=>{
+ b.addEventListener('click',()=>{
+ if(fait)return; fait=true;
+ const ok=b.getAttribute('data-z')==='bas';
+ bas.setAttribute('fill','#fca5a5');
+ // dessiner les armatures dans le bas
+ for(let k=0;k<2;k++) svgEl('line',{x1:110,y1:154+k*10,x2:450,y2:154+k*10,stroke:'#b91c1c','stroke-width':'5','stroke-linecap':'round'},svg);
+ if(!ok) b.setAttribute('stroke','#dc2626');
+ feedback(ok?'ok':'ko',(ok?'✓ Exactement ce que fait l\u2019ingénieur !':'✗ Non — regarde la correction :')+' quand la poutre fléchit, le BAS est étiré (traction) et le béton seul y casserait. On y noie donc les barres d\u2019acier, champion de la traction. Le HAUT, comprimé, est l\u2019affaire du béton.');
+ done(ok?2:0);
+ });
+ });
+ }
 },
 
 /* ---- 10. CALCUL : la flèche limite ---- */
-{ titre:'Calcule la flèche limite', icone:'🧮', max:2,
-  consigne:'Un pont poutre franchit une rivière de 48 mètres. La règle de l\u2019ingénieur (vue en TP) est rappelée ci-dessous. Calcule la flèche maximale autorisée et donne-la en CENTIMÈTRES. La calculatrice est ouverte à droite !',
-  render(zone,done){
-    activiteCalcul(zone,done,{max:2,unite:'cm',bonne:24,tol:0.01,
-      rappel:'Flèche maximale = portée ÷ 200 · et 1 m = 100 cm',
-      schema(){
-        const s=svgEl('svg',{viewBox:'0 0 560 130',width:'560'});
-        svgEl('line',{x1:60,y1:50,x2:500,y2:50,stroke:'#475569','stroke-width':'10'},s);
-        [[60,58],[500,58]].forEach(([x,y])=>svgEl('polygon',{points:`${x},${y} ${x-16},${y+26} ${x+16},${y+26}`,fill:'#94a3b8'},s));
-        svgEl('line',{x1:60,y1:108,x2:500,y2:108,stroke:'#94a3b8','stroke-width':'2'},s);
-        svgEl('text',{x:280,y:100,'text-anchor':'middle','font-size':'16','font-weight':'bold',fill:'#1e40af','font-family':'Segoe UI'},s,'portée = 48 m');
-        return s;
-      },
-      solution:'Le calcul : 48 ÷ 200 = 0,24 m. Puis on convertit : 0,24 m × 100 = 24 cm. La poutre ne doit jamais descendre de plus de 24 cm au centre.'});
-  }
+{ titre:'Calcule la flèche limite', icone:'', max:2,
+ consigne:'Un pont poutre franchit une rivière de 48 mètres. La règle de l\u2019ingénieur (vue en TP) est rappelée ci-dessous. Calcule la flèche maximale autorisée et donne-la en CENTIMÈTRES. La calculatrice est ouverte à droite !',
+ render(zone,done){
+ activiteCalcul(zone,done,{max:2,unite:'cm',bonne:24,tol:0.01,
+ rappel:'Flèche maximale = portée ÷ 200 · et 1 m = 100 cm',
+ schema(){
+ const s=svgEl('svg',{viewBox:'0 0 560 130',width:'560'});
+ svgEl('line',{x1:60,y1:50,x2:500,y2:50,stroke:'#475569','stroke-width':'10'},s);
+ [[60,58],[500,58]].forEach(([x,y])=>svgEl('polygon',{points:`${x},${y} ${x-16},${y+26} ${x+16},${y+26}`,fill:'#94a3b8'},s));
+ svgEl('line',{x1:60,y1:108,x2:500,y2:108,stroke:'#94a3b8','stroke-width':'2'},s);
+ svgEl('text',{x:280,y:100,'text-anchor':'middle','font-size':'16','font-weight':'bold',fill:'#1e40af','font-family':'Segoe UI'},s,'portée = 48 m');
+ return s;
+ },
+ solution:'Le calcul : 48 ÷ 200 = 0,24 m. Puis on convertit : 0,24 m × 100 = 24 cm. La poutre ne doit jamais descendre de plus de 24 cm au centre.'});
+ }
 },
 
 /* ---- 11. CALCUL : les économies de l'isolation ---- */
-{ titre:'Les économies de l\u2019isolation', icone:'💶', max:2,
-  consigne:'La famille Perrin dépense 1 200 € de chauffage par an. En isolant les combles de sa maison, elle réduit sa facture de 25 %. Combien d\u2019euros économise-t-elle CHAQUE ANNÉE ? Utilise la calculatrice.',
-  render(zone,done){
-    activiteCalcul(zone,done,{max:2,unite:'€ / an',bonne:300,tol:0.01,
-      rappel:'Prendre 25 % d\u2019un nombre = nombre × 25 ÷ 100',
-      solution:'Le calcul : 1 200 × 25 ÷ 100 = 300 €. Isoler = moins chauffer = 300 € économisés chaque année (et l\u2019isolation est vite remboursée !).'});
-  }
+{ titre:'Les économies de l\u2019isolation', icone:'', max:2,
+ consigne:'La famille Perrin dépense 1 200 € de chauffage par an. En isolant les combles de sa maison, elle réduit sa facture de 25 %. Combien d\u2019euros économise-t-elle CHAQUE ANNÉE ? Utilise la calculatrice.',
+ render(zone,done){
+ activiteCalcul(zone,done,{max:2,unite:'€ / an',bonne:300,tol:0.01,
+ rappel:'Prendre 25 % d\u2019un nombre = nombre × 25 ÷ 100',
+ solution:'Le calcul : 1 200 × 25 ÷ 100 = 300 €. Isoler = moins chauffer = 300 € économisés chaque année (et l\u2019isolation est vite remboursée !).'});
+ }
 },
 
 ];
@@ -727,120 +1025,121 @@ const $=id=>document.getElementById(id);
 function montrer(id){ ['ecranLogin','ecranAct','ecranFin','ecranProf'].forEach(e=>$(e).classList.add('cache')); $(id).classList.remove('cache'); }
 
 $('btnCommencer').onclick=()=>{
-  const nom=$('fNom').value.trim(), prenom=$('fPrenom').value.trim(), classe=$('fClasse').value;
-  if(!nom||!prenom||!classe){ alert('Complète ton nom, ton prénom et ta classe !'); return; }
-  eleve={nom,prenom,classe}; idx=0; pts=[]; t0=Date.now();
-  montrer('ecranAct'); lancerActivite();
+ const nom=$('fNom').value.trim(), prenom=$('fPrenom').value.trim(), classe=$('fClasse').value;
+ if(!nom||!prenom||!classe){ alert('Complète ton nom, ton prénom et ta classe !'); return; }
+ eleve={nom,prenom,classe}; idx=0; pts=[]; t0=Date.now();
+ montrer('ecranAct'); lancerActivite();
 };
 function lancerActivite(){
-  const a=ACTIVITES[idx];
-  $('barreP').style.width=(idx/ACTIVITES.length*100)+'%';
-  $('numAct').textContent='Activité '+(idx+1)+' / '+ACTIVITES.length;
-  $('ptsMaxAct').textContent=a.max+' pt'+(a.max>1?'s':'');
-  $('titreAct').textContent=a.icone+' '+a.titre;
-  $('consigneAct').textContent=a.consigne;
-  $('fbAct').className='feedback';
-  $('gainAct').classList.add('cache');
-  $('btnSuivant').classList.add('cache');
-  const zone=$('zoneAct'); zone.innerHTML='';
-  a.render(zone, p=>{
-    pts[idx]=p;
-    $('gainAct').textContent='➜ '+String(p).replace('.',',')+' / '+a.max+' pt'+(a.max>1?'s':'');
-    $('gainAct').classList.remove('cache');
-    $('btnSuivant').textContent = idx<ACTIVITES.length-1 ? 'Suivant ➜' : 'Voir mon résultat 🎓';
-    $('btnSuivant').classList.remove('cache');
-  });
+ const a=ACTIVITES[idx];
+ $('barreP').style.width=(idx/ACTIVITES.length*100)+'%';
+ $('numAct').textContent='Activité '+(idx+1)+' / '+ACTIVITES.length;
+ $('ptsMaxAct').textContent=a.max+' pt'+(a.max>1?'s':'');
+ $('titreAct').textContent=a.icone+' '+a.titre;
+ $('consigneAct').textContent=a.consigne;
+ $('fbAct').className='feedback';
+ $('gainAct').classList.add('cache');
+ $('btnSuivant').classList.add('cache');
+ const zone=$('zoneAct'); zone.innerHTML='';
+ a.render(zone, p=>{
+ pts[idx]=p;
+ $('gainAct').textContent='➜ '+String(p).replace('.',',')+' / '+a.max+' pt'+(a.max>1?'s':'');
+ $('gainAct').classList.remove('cache');
+ $('btnSuivant').textContent = idx<ACTIVITES.length-1 ? 'Suivant ➜' : 'Voir mon résultat ';
+ $('btnSuivant').classList.remove('cache');
+ });
 }
 $('btnSuivant').onclick=()=>{
-  idx++;
-  if(idx<ACTIVITES.length) lancerActivite(); else terminer();
+ idx++;
+ if(idx<ACTIVITES.length) lancerActivite(); else terminer();
 };
 function terminer(){
-  montrer('ecranFin');
-  const total=pts.reduce((s,p)=>s+p,0);
-  const note=Math.round(total/MAXTOT*20*10)/10;
-  $('note20').textContent=String(note).replace('.',',');
-  $('note20').style.color= note>=10?'var(--vert)':'var(--rouge)';
-  $('scoreBrut').textContent=String(Math.round(total*10)/10).replace('.',',')+' points sur '+MAXTOT;
-  const zone=$('detailRep'); zone.innerHTML='';
-  ACTIVITES.forEach((a,i)=>{
-    const l=el('div',{class:'ligne'},zone);
-    el('b',{},l,a.icone+' '+a.titre);
-    const bar=el('div',{class:'bar'},l);
-    el('div',{style:'width:'+(pts[i]/a.max*100)+'%'},bar);
-    el('span',{style:'font-weight:800;min-width:64px;text-align:right'},l,String(pts[i]).replace('.',',')+'/'+a.max);
-  });
-  envoyer(note,total);
+ montrer('ecranFin');
+ const total=pts.reduce((s,p)=>s+p,0);
+ const note=Math.round(total/MAXTOT*20*10)/10;
+ $('note20').textContent=String(note).replace('.',',');
+ $('note20').style.color= note>=10?'var(--vert)':'var(--rouge)';
+ $('scoreBrut').textContent=String(Math.round(total*10)/10).replace('.',',')+' points sur '+MAXTOT;
+ const zone=$('detailRep'); zone.innerHTML='';
+ ACTIVITES.forEach((a,i)=>{
+ const l=el('div',{class:'ligne'},zone);
+ el('b',{},l,a.icone+' '+a.titre);
+ const bar=el('div',{class:'bar'},l);
+ el('div',{style:'width:'+(pts[i]/a.max*100)+'%'},bar);
+ el('span',{style:'font-weight:800;min-width:64px;text-align:right'},l,String(pts[i]).replace('.',',')+'/'+a.max);
+ });
+ afficherCorrections();
+ envoyer(note,total);
 }
 async function envoyer(note,total){
-  const elx=$('etatEnvoi');
-  elx.className='etat-envoi'; elx.textContent='⏳ Transmission au professeur…';
-  const donnees={ nom:eleve.nom, prenom:eleve.prenom, classe:eleve.classe,
-    score:Math.round(total*10)/10, sur:MAXTOT, note20:note,
-    duree_s:Math.round((Date.now()-t0)/1000),
-    date:new Date().toISOString(),
-    reponses:pts };
-  try{
-    const rep=await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(donnees)});
-    if(!rep.ok) throw new Error(rep.status);
-    elx.className='etat-envoi ok'; elx.textContent='✅ Résultat transmis au professeur.';
-  }catch(e){
-    elx.className='etat-envoi ko'; elx.textContent='⚠️ Résultat non transmis (pas de connexion ?). Montre cet écran à ton professeur.';
-  }
+ const elx=$('etatEnvoi');
+ elx.className='etat-envoi'; elx.textContent='⏳ Transmission au professeur…';
+ const donnees={ nom:eleve.nom, prenom:eleve.prenom, classe:eleve.classe,
+ score:Math.round(total*10)/10, sur:MAXTOT, note20:note,
+ duree_s:Math.round((Date.now()-t0)/1000),
+ date:new Date().toISOString(),
+ reponses:pts };
+ try{
+ const rep=await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(donnees)});
+ if(!rep.ok) throw new Error(rep.status);
+ elx.className='etat-envoi ok'; elx.textContent='✓ Résultat transmis au professeur.';
+ }catch(e){
+ elx.className='etat-envoi ko'; elx.textContent=' Résultat non transmis (pas de connexion ?). Montre cet écran à ton professeur.';
+ }
 }
 
 /* ============ Espace prof ============ */
 let cacheRes={};
 $('lienProf').onclick=()=>montrer('ecranProf');
 $('btnProf').onclick=()=>{
-  if($('fMdp').value===MDP_PROF){ $('profLogin').classList.add('cache'); $('profContenu').classList.remove('cache'); chargerRes(); }
-  else $('errMdp').classList.remove('cache');
+ if($('fMdp').value===MDP_PROF){ $('profLogin').classList.add('cache'); $('profContenu').classList.remove('cache'); chargerRes(); }
+ else $('errMdp').classList.remove('cache');
 };
 $('fMdp').addEventListener('keydown',e=>{ if(e.key==='Enter') $('btnProf').click(); });
 $('btnRafraichir').onclick=chargerRes;
 $('filtreClasse').onchange=afficherRes;
 async function chargerRes(){
-  try{ const rep=await fetch(FIREBASE+'.json'); cacheRes=await rep.json()||{}; }
-  catch(e){ cacheRes={}; alert('Impossible de charger les résultats (connexion ?).'); }
-  afficherRes();
+ try{ const rep=await fetch(FIREBASE+'.json'); cacheRes=await rep.json()||{}; }
+ catch(e){ cacheRes={}; alert('Impossible de charger les résultats (connexion ?).'); }
+ afficherRes();
 }
 function lignesFiltrees(){
-  const f=$('filtreClasse').value;
-  return Object.values(cacheRes).filter(r=>!f||r.classe===f)
-    .sort((a,b)=>(a.classe+a.nom).localeCompare(b.classe+b.nom));
+ const f=$('filtreClasse').value;
+ return Object.values(cacheRes).filter(r=>!f||r.classe===f)
+ .sort((a,b)=>(a.classe+a.nom).localeCompare(b.classe+b.nom));
 }
 function afficherRes(){
-  const lignes=lignesFiltrees(), n=lignes.length;
-  const moy=n?(lignes.reduce((s,r)=>s+r.note20,0)/n):0;
-  const reussite=n?Math.round(lignes.filter(r=>r.note20>=10).length/n*100):0;
-  $('kpis').innerHTML=
-    '<div class="kpi"><b>'+n+'</b><span>copies</span></div>'+
-    '<div class="kpi"><b>'+moy.toFixed(1).replace('.',',')+'</b><span>moyenne / 20</span></div>'+
-    '<div class="kpi"><b>'+reussite+' %</b><span>élèves ≥ 10</span></div>';
-  const stats=ACTIVITES.map((a,i)=>{
-    const rep=lignes.filter(r=>Array.isArray(r.reponses)&&r.reponses.length===ACTIVITES.length);
-    if(!rep.length) return 0;
-    return Math.round(rep.reduce((s,r)=>s+r.reponses[i]/a.max,0)/rep.length*100);
-  });
-  $('statsQ').innerHTML=stats.map((s,i)=>
-    '<div class="statq"><b>'+ACTIVITES[i].icone+' '+ACTIVITES[i].titre+'</b><div class="bq"><div style="width:'+s+'%;background:'+(s>=60?'#16a34a':(s>=40?'#f59e0b':'#dc2626'))+'"></div></div><span style="width:44px;text-align:right">'+s+' %</span></div>').join('');
-  let html='<tr><th>Classe</th><th>Nom</th><th>Prénom</th><th>Score</th><th>Note /20</th><th>Durée</th><th>Date</th></tr>';
-  lignes.forEach(r=>{
-    html+='<tr><td>'+r.classe+'</td><td>'+r.nom+'</td><td>'+r.prenom+'</td><td>'+String(r.score).replace('.',',')+'/'+r.sur+
-      '</td><td style="font-weight:800;color:'+(r.note20>=10?'#16a34a':'#dc2626')+'">'+String(r.note20).replace('.',',')+
-      '</td><td>'+(r.duree_s?Math.floor(r.duree_s/60)+'min'+String(r.duree_s%60).padStart(2,'0'):'—')+
-      '</td><td>'+new Date(r.date).toLocaleDateString('fr-FR')+' '+new Date(r.date).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</td></tr>';
-  });
-  $('tableRes').innerHTML=html;
+ const lignes=lignesFiltrees(), n=lignes.length;
+ const moy=n?(lignes.reduce((s,r)=>s+r.note20,0)/n):0;
+ const reussite=n?Math.round(lignes.filter(r=>r.note20>=10).length/n*100):0;
+ $('kpis').innerHTML=
+ '<div class="kpi"><b>'+n+'</b><span>copies</span></div>'+
+ '<div class="kpi"><b>'+moy.toFixed(1).replace('.',',')+'</b><span>moyenne / 20</span></div>'+
+ '<div class="kpi"><b>'+reussite+' %</b><span>élèves ≥ 10</span></div>';
+ const stats=ACTIVITES.map((a,i)=>{
+ const rep=lignes.filter(r=>Array.isArray(r.reponses)&&r.reponses.length===ACTIVITES.length);
+ if(!rep.length) return 0;
+ return Math.round(rep.reduce((s,r)=>s+r.reponses[i]/a.max,0)/rep.length*100);
+ });
+ $('statsQ').innerHTML=stats.map((s,i)=>
+ '<div class="statq"><b>'+ACTIVITES[i].icone+' '+ACTIVITES[i].titre+'</b><div class="bq"><div style="width:'+s+'%;background:'+(s>=60?'#16a34a':(s>=40?'#f59e0b':'#dc2626'))+'"></div></div><span style="width:44px;text-align:right">'+s+' %</span></div>').join('');
+ let html='<tr><th>Classe</th><th>Nom</th><th>Prénom</th><th>Score</th><th>Note /20</th><th>Durée</th><th>Date</th></tr>';
+ lignes.forEach(r=>{
+ html+='<tr><td>'+r.classe+'</td><td>'+r.nom+'</td><td>'+r.prenom+'</td><td>'+String(r.score).replace('.',',')+'/'+r.sur+
+ '</td><td style="font-weight:800;color:'+(r.note20>=10?'#16a34a':'#dc2626')+'">'+String(r.note20).replace('.',',')+
+ '</td><td>'+(r.duree_s?Math.floor(r.duree_s/60)+'min'+String(r.duree_s%60).padStart(2,'0'):'—')+
+ '</td><td>'+new Date(r.date).toLocaleDateString('fr-FR')+' '+new Date(r.date).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</td></tr>';
+ });
+ $('tableRes').innerHTML=html;
 }
 $('btnCSV').onclick=()=>{
-  const lignes=lignesFiltrees();
-  let csv='Classe;Nom;Prenom;Score;Sur;Note20;Duree_s;Date;'+ACTIVITES.map((a,i)=>'Act'+(i+1)).join(';')+'\n';
-  lignes.forEach(r=>{ csv+=[r.classe,r.nom,r.prenom,String(r.score).replace('.',','),r.sur,String(r.note20).replace('.',','),r.duree_s||'',r.date,
-    ...(Array.isArray(r.reponses)?r.reponses.map(p=>String(p).replace('.',',')):[])].join(';')+'\n'; });
-  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=CSV_NOM; a.click(); URL.revokeObjectURL(a.href);
+ const lignes=lignesFiltrees();
+ let csv='Classe;Nom;Prenom;Score;Sur;Note20;Duree_s;Date;'+ACTIVITES.map((a,i)=>'Act'+(i+1)).join(';')+'\n';
+ lignes.forEach(r=>{ csv+=[r.classe,r.nom,r.prenom,String(r.score).replace('.',','),r.sur,String(r.note20).replace('.',','),r.duree_s||'',r.date,
+ ...(Array.isArray(r.reponses)?r.reponses.map(p=>String(p).replace('.',',')):[])].join(';')+'\n'; });
+ const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
+ const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+ a.download=CSV_NOM; a.click(); URL.revokeObjectURL(a.href);
 };
 </script>
 </body>

@@ -1,0 +1,203 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sujet type DNB — La roue de tramway · ESTIC</title><style>
+:root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(900px,100%);padding:14px 14px 50px}
+.entete{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:14px 18px;margin-bottom:14px}
+.entete h1{font-size:20px;color:var(--accf);margin-bottom:4px}
+.entete .info{font-size:13.5px;color:#64748b;line-height:1.7}
+.consignes{background:#eff6ff;border-left:5px solid var(--acc);border-radius:10px;padding:11px 15px;font-size:14px;line-height:1.75;margin-bottom:16px}
+.doc{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.doc h3{font-size:14px;color:var(--accf);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.doc canvas{width:100%;display:block;border-radius:8px;background:#fdfdfe;border:1px solid #e2e8f0}
+.doc table{width:100%;border-collapse:collapse;font-size:14px}
+.doc th,.doc td{border:1px solid #cbd5e1;padding:7px 9px;text-align:left}
+.doc th{background:#f1f5f9}
+.q{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q .num{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.q .num b{font-size:16px;color:var(--accf)}
+.q .num span{font-size:13px;font-weight:800;color:#64748b}
+.q p{font-size:15px;line-height:1.7}
+.q .aide{font-size:13px;color:#64748b;margin-top:5px;font-style:italic}
+.q input,.q textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px;font-size:15px;font-family:inherit;margin-top:9px}
+.q textarea{min-height:74px;resize:vertical}
+.q .court{width:150px;text-align:center;font-weight:700}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;padding:13px 28px;cursor:pointer;font-family:inherit}
+.btn.sec{background:#e2e8f0;color:var(--encre)}
+.centre{text-align:center;margin:18px 0}
+#resultat{display:none;background:#fff;border:2px solid var(--acc);border-radius:14px;padding:18px;margin-top:16px}
+#resultat h2{color:var(--accf);font-size:20px;text-align:center}
+.note{text-align:center;font-size:44px;font-weight:900;color:var(--acc);margin:6px 0}
+.corr{border-left:4px solid #16a34a;background:#f0fdf4;border-radius:8px;padding:10px 14px;margin:9px 0;font-size:14.5px;line-height:1.7}
+.corr b{color:#15803d}
+.pts{float:right;font-weight:900;color:#64748b;font-size:13px}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<div class="entete">
+  <h1>Sujet type DNB — Épreuve de sciences</h1>
+  <div class="info"><b>Partie technologie</b> · durée conseillée : 30 minutes · noté sur 25 points<br>
+  Support : le guidage des roues d’un tramway</div>
+</div>
+<div class="consignes">Tu disposes de trois documents. Réponds aux six questions : certaines demandent une
+<b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
+Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
+
+<div class="doc"><h3>Document 1 — Coupe d’un essieu de tramway</h3>
+<canvas id="d1" width="860" height="250"></canvas></div>
+
+<div class="doc"><h3>Document 2 — Relevé effectué en virage</h3>
+<table>
+<tr><th>Grandeur mesurée</th><th>Roue intérieure au virage</th><th>Roue extérieure au virage</th></tr>
+<tr><td>Rayon de roulement</td><td>0,412 m</td><td>0,448 m</td></tr>
+<tr><td>Vitesse de rotation de l’essieu</td><td colspan="2" style="text-align:center">120 tours par minute (identique : roues solidaires)</td></tr>
+<tr><td>Longueur du rail sur ce virage</td><td>94,0 m</td><td>102,2 m</td></tr>
+</table></div>
+
+<div class="doc"><h3>Document 3 — Position latérale de l’essieu après une perturbation</h3>
+<canvas id="d3" width="860" height="220"></canvas></div>
+
+<div id="questions"></div>
+<div class="centre"><button class="btn" id="rendre">Rendre ma copie</button></div>
+<div id="resultat"></div>
+</main>
+<script>
+'use strict';
+function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+function nb(v){return parseFloat(String(v||'').replace(',','.'));}
+const Q=[
+ {n:'1',pts:3,t:'Sur le document 1, trois éléments sont repérés A, B et C. Nomme chacun d’eux.',
+  aide:'un mot ou deux par élément',champs:[
+   {id:'a',l:'A :',rep:['essieu','axe','arbre']},
+   {id:'b',l:'B :',rep:['tabledroulement','table','tablederoulement','roulement','conicite','partieconique']},
+   {id:'c',l:'C :',rep:['boudin','rebord']}],
+  corr:'<b>A</b> l’essieu, <b>B</b> la table de roulement (conique), <b>C</b> le boudin. Les deux roues sont solidaires de l’essieu : elles ne peuvent pas tourner l’une par rapport à l’autre.'},
+ {n:'2',pts:4,t:'Explique pourquoi les deux roues tournent obligatoirement à la même vitesse de rotation.',
+  redac:{id:'r2',cles:['solidaire','soude','fixe','memeessieu','memeaxe','encastr','liees','pasindependante']},
+  corr:'Les deux roues sont <b>encastrées sur le même essieu</b> : il n’y a aucune liaison mobile entre elles. Elles forment un seul ensemble, donc une seule vitesse de rotation. C’est ce qui rend le problème du virage intéressant : sans différentiel, les deux roues devraient parcourir la même distance.'},
+ {n:'3',pts:7,t:'À l’aide du document 2, calcule la distance parcourue par chaque roue en un tour, puis le nombre de tours nécessaires pour parcourir son rail. Conclus.',
+  aide:'rappel : le périmètre d’un cercle vaut 2 × π × rayon — arrondis au centième',champs:[
+   {id:'p1',l:'Périmètre roue intérieure (m) :',rep:2.59,tol:0.03},
+   {id:'p2',l:'Périmètre roue extérieure (m) :',rep:2.81,tol:0.03},
+   {id:'t1',l:'Nombre de tours, roue intérieure :',rep:36.3,tol:0.6},
+   {id:'t2',l:'Nombre de tours, roue extérieure :',rep:36.3,tol:0.6}],
+  redac:{id:'r3',cles:['meme','identique','egal','memenombre','simultane','ensemble','sansglisse','pasdeglissement']},
+  corr:'Périmètres : 2 × π × 0,412 ≈ <b>2,59 m</b> et 2 × π × 0,448 ≈ <b>2,81 m</b>. Nombres de tours : 94,0 ÷ 2,59 ≈ <b>36,3</b> et 102,2 ÷ 2,81 ≈ <b>36,3</b>. Les deux valeurs sont <b>égales</b> : les roues effectuent le même nombre de tours tout en parcourant des longueurs de rail différentes. La conicité résout donc le problème du virage <b>sans aucun glissement</b> et sans différentiel.'},
+ {n:'4',pts:4,t:'Un élève affirme : « c’est le boudin qui guide le tramway dans les virages ». Cette affirmation est-elle exacte ? Justifie.',
+  redac:{id:'r4',cles:['non','faux','securite','touchepas','netouche','conicite','conique','jeu','rarement','urgence']},
+  corr:'<b>Non.</b> En marche normale, le boudin ne touche pas le rail : un jeu de plusieurs millimètres subsiste. Le guidage est assuré par la <b>conicité</b> de la table de roulement. Le boudin est un organe de <b>sécurité</b>, qui n’intervient qu’en cas de virage très serré ou de défaut — et son contact provoque alors le crissement caractéristique.'},
+ {n:'5',pts:4,t:'Le document 3 montre la position de l’essieu après une perturbation. Décris le mouvement observé et donne le nom de ce phénomène.',
+  champs:[{id:'m5',l:'Nom du phénomène :',rep:['lacet','mouvementdelacet','mvtlacet']}],
+  redac:{id:'r5',cles:['oscill','revient','centre','amorti','diminue','stabilise','autocentr','recentre','ondul']},
+  corr:'L’essieu <b>oscille de part et d’autre du centre de la voie</b>, avec une amplitude qui <b>diminue</b> jusqu’à se stabiliser : c’est l’<b>auto-centrage</b>. Ce mouvement d’oscillation porte le nom de <b>mouvement de lacet</b>. Aucun capteur ni calculateur n’intervient : la géométrie de la roue suffit.'},
+ {n:'6',pts:3,t:'Le tramway ne consomme aucune énergie pour se guider, contrairement à un véhicule qui doit être dirigé en permanence. Cite un autre avantage du tramway sur le bus du point de vue du développement durable.',
+  redac:{id:'r6',cles:['electr','pollu','emission','co2','bruit','silencieux','capacite','voyageur','usure','duree','local']},
+  corr:'Plusieurs réponses acceptées : <b>traction électrique</b> sans émission locale de polluants, <b>faible bruit</b>, <b>grande capacité</b> de transport par rame (donc moins de véhicules), <b>faible résistance au roulement</b> de l’acier sur l’acier, <b>longue durée de vie</b> du matériel. Une seule justification correcte suffisait.'},
+];
+const z=document.getElementById('questions');
+Q.forEach(q=>{
+ const d=document.createElement('div'); d.className='q';
+ let html='<div class="num"><b>Question '+q.n+'</b><span>'+q.pts+' points</span></div><p>'+q.t+'</p>';
+ if(q.aide) html+='<div class="aide">'+q.aide+'</div>';
+ (q.champs||[]).forEach(c=>{ html+='<div style="margin-top:8px;font-size:14.5px">'+c.l+
+   ' <input class="court" id="'+c.id+'" autocomplete="off"></div>'; });
+ if(q.redac) html+='<textarea id="'+q.redac.id+'" placeholder="rédige ta réponse en une ou deux phrases"></textarea>';
+ d.innerHTML=html; z.appendChild(d);
+});
+document.getElementById('rendre').addEventListener('click',()=>{
+ let total=0, max=0, det='';
+ Q.forEach(q=>{
+  max+=q.pts;
+  let obtenu=0, parts=0, ok=0;
+  (q.champs||[]).forEach(c=>{
+   parts++;
+   const v=document.getElementById(c.id).value;
+   const bon = typeof c.rep==='number'
+     ? (isFinite(nb(v)) && Math.abs(nb(v)-c.rep)<=c.tol)
+     : c.rep.some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+   if(bon)ok++;
+  });
+  if(q.redac){ parts++;
+   const v=norm(document.getElementById(q.redac.id).value);
+   if(v.length>14 && q.redac.cles.some(k=>v.includes(k))) ok++;
+  }
+  obtenu = Math.round(q.pts*ok/parts*2)/2;
+  total+=obtenu;
+  det+='<div class="corr"><span class="pts">'+obtenu+' / '+q.pts+'</span><b>Question '+q.n+'</b><br>'+q.corr+'</div>';
+ });
+ const r=document.getElementById('resultat');
+ r.innerHTML='<h2>Copie rendue</h2><div class="note">'+total+' / '+max+'</div>'+
+  '<p style="text-align:center;font-size:14px;color:#64748b;margin-bottom:12px">Corrigé détaillé — compare avec ce que tu as écrit sur ton cahier</p>'+det;
+ r.style.display='block';
+ document.getElementById('rendre').disabled=true;
+ r.scrollIntoView({behavior:'smooth'});
+});
+/* ═══ documents ═══ */
+function txt(c,s,x,y,t,coul,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=coul||'#1e293b';c.textAlign=al||'center';c.fillText(s,x,y);}
+(function(){
+ const c=document.getElementById('d1').getContext('2d');
+ c.fillStyle='#fdfdfe'; c.fillRect(0,0,860,250);
+ const cy=120, e=200, cx=430;
+ // rails
+ c.fillStyle='#94a3b8';
+ [cx-e,cx+e].forEach(x=>{ c.fillRect(x-44,cy+62,88,11); c.fillRect(x-9,cy+73,18,26); });
+ // roues : table conique, plus grand rayon côté intérieur
+ [[-1,cx-e],[1,cx+e]].forEach(([sg,x])=>{
+  c.fillStyle='#475569'; c.beginPath();
+  c.moveTo(x-50,cy-30); c.lineTo(x+50,cy-30);
+  if(sg<0){ c.lineTo(x+50,cy+66); c.lineTo(x-50,cy+56); } else { c.lineTo(x+50,cy+56); c.lineTo(x-50,cy+66); }
+  c.closePath(); c.fill();
+  const bx = sg<0 ? x+40 : x-50;
+  c.fillRect(bx,cy-30,10,118);
+ });
+ c.fillStyle='#475569'; c.fillRect(cx-e,cy-30,e*2,18);
+ // repères
+ c.strokeStyle='#1d4ed8'; c.lineWidth=1.4;
+ [[cx,cy-21,'A',cx,cy-60],[cx-e+10,cy+56,'B',cx-e-30,cy+16],[cx+e-45,cy+40,'C',cx+e+66,cy+20]].forEach(([px,py,n,lx,ly])=>{
+  c.beginPath(); c.moveTo(px,py); c.lineTo(lx,ly); c.stroke();
+  c.fillStyle='#fff'; c.beginPath(); c.arc(lx,ly,14,0,6.284); c.fill();
+  c.strokeStyle='#1d4ed8'; c.stroke();
+  txt(c,n,lx,ly+5,15,'#1d4ed8');
+  c.strokeStyle='#1d4ed8';
+ });
+ txt(c,'coupe vue de face — les deux roues et leur essieu',cx,232,13.5,'#64748b');
+ txt(c,'rail',cx-e,cy+118,12,'#94a3b8'); txt(c,'rail',cx+e,cy+118,12,'#94a3b8');
+})();
+(function(){
+ const c=document.getElementById('d3').getContext('2d');
+ c.fillStyle='#fdfdfe'; c.fillRect(0,0,860,220);
+ c.strokeStyle='#cbd5e1'; c.lineWidth=1.2; c.setLineDash([5,5]);
+ c.beginPath(); c.moveTo(70,110); c.lineTo(820,110); c.stroke(); c.setLineDash([]);
+ c.strokeStyle='#94a3b8'; c.lineWidth=1.6;
+ c.beginPath(); c.moveTo(70,20); c.lineTo(70,200); c.moveTo(70,200); c.lineTo(820,200); c.stroke();
+ c.strokeStyle='#1d4ed8'; c.lineWidth=2.4; c.beginPath();
+ for(let i=0;i<=740;i+=4){
+  const t=i/120, v=7*Math.exp(-t*0.34)*Math.cos(t*2.1);
+  const y=110-v*7.5;
+  if(i===0)c.moveTo(70+i,y); else c.lineTo(70+i,y);
+ }
+ c.stroke();
+ txt(c,'écart au centre de la voie (mm)',70,14,12.5,'#64748b','left');
+ txt(c,'temps (s)',820,216,12.5,'#64748b','right');
+ txt(c,'centre de la voie',76,106,12,'#94a3b8','left');
+ [0,2,4,6].forEach((s,k)=>{ const x=70+k*185;
+  c.strokeStyle='#94a3b8'; c.beginPath(); c.moveTo(x,200); c.lineTo(x,206); c.stroke();
+  txt(c,s,x,220,12,'#64748b'); });
+})();
+</script></body></html>
