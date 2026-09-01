@@ -1,490 +1,372 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Technologie Collège — Portail des séquences · ESTIC</title>
-<style>
-:root{ --ink:#1e3a5f; --gris:#64748b; --papier:#f8fafc;
-  --c5:#16a34a; --c5f:#15803d; --c4:#7c3aed; --c4f:#6d28d9; --c3:#1d4ed8; --c3f:#1e40af;
-  --orange:#ea580c; --ombre:0 4px 14px rgba(30,58,95,.10);}
+<title>Tableau de bord — résultats des évaluations · ESTIC</title><style>
+:root{--acc:#0e7490;--accf:#155e75;--fond:#F8F4EC;--encre:#3f3a34;--ok:#16a34a;--moy:#f59e0b;--ko:#dc2626}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);min-height:100vh}
-.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--ink);padding:10px 22px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.estic-bar img{height:44px}
-.estic-bar .id b{color:var(--ink);font-size:15px}
-.estic-bar .id span{display:block;font-size:12px;color:var(--gris)}
-.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
-header.portail{max-width:1080px;margin:38px auto 6px;padding:0 24px;text-align:center}
-header.portail .eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:700}
-header.portail h1{font-size:44px;margin:8px 0 8px}
-header.portail p{color:var(--gris);font-size:17px;max-width:720px;margin:0 auto}
-.stats{display:flex;justify-content:center;gap:14px;margin:22px 0 8px;flex-wrap:wrap}
-.stats .s{background:#fff;border-radius:12px;box-shadow:var(--ombre);padding:10px 20px;font-size:14px;font-weight:700;color:var(--gris)}
-.stats .s b{display:block;font-size:24px;color:var(--ink)}
-section.niveau{max-width:1080px;margin:34px auto 0;padding:0 24px}
-section.niveau .bandeau{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-section.niveau .bandeau .pastille{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:900;color:#fff}
-section.niveau .bandeau h2{font-size:26px}
-section.niveau .bandeau .fil{flex:1;height:3px;border-radius:2px;opacity:.25}
-.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:20px}
-.seq{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:22px;border-top:5px solid var(--accent)}
-.seq .haut{display:flex;align-items:flex-start;gap:12px}
-.seq .ic{font-size:38px}
-.seq h3{font-size:20px;color:var(--accent)}
-.seq h3 a{color:inherit;text-decoration:none}
-.seq h3 a:hover{text-decoration:underline}
-.seq .desc{font-size:13.5px;color:var(--gris);line-height:1.5;margin-top:3px}
-.ressources{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
-.ressources a{font-size:12.5px;font-weight:700;text-decoration:none;color:var(--accent);border:1.5px solid var(--accent);border-radius:18px;padding:5px 12px;transition:.13s}
-.ressources a:hover{background:var(--accent);color:#fff}
-.ressources a.hub{background:var(--accent);color:#fff}
-.ressources a.hub:hover{filter:brightness(1.12)}
-.prof{max-width:1080px;margin:44px auto 60px;padding:0 24px}
-.prof .boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);border-left:6px solid var(--orange);padding:20px 24px}
-.prof h2{font-size:19px;color:var(--orange);margin-bottom:8px}
-.prof p{font-size:14px;color:var(--gris);line-height:1.65}
-.prof b{color:var(--ink)}
-footer{padding:18px;text-align:center;font-size:12px;color:var(--gris)}
-@media (max-width:880px){.duo{grid-template-columns:1fr}header.portail h1{font-size:32px}}
-</style>
-</head>
-<body>
-<!-- LOGO_ESTIC_BASE64 : remplacer le src par le logo officiel -->
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(1180px,100%);padding:14px 14px 50px}
+h1{font-size:25px;color:var(--accf);text-align:center;margin:14px 0 4px}
+.sous{text-align:center;color:#8a8378;font-size:13.5px;margin-bottom:14px}
+#login{background:#fff;border:1px solid #eee4d0;border-radius:16px;padding:22px;max-width:420px;margin:30px auto;text-align:center}
+#login input{width:100%;padding:11px;border:1px solid #d8cdb4;border-radius:10px;font-size:16px;margin:10px 0;text-align:center}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-weight:900;font-size:15px;padding:11px 20px;cursor:pointer}
+.btn.sec{background:#e7dcc4;color:var(--encre)}
+#appli{display:none}
+.filtres{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.filtres select,.filtres input{padding:9px 12px;border:1px solid #d8cdb4;border-radius:10px;font-size:14px;font-family:inherit}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.stat{background:#fff;border:1px solid #eee4d0;border-radius:14px;padding:12px 18px;min-width:130px}
+.stat b{display:block;font-size:24px;color:var(--accf)}
+.stat span{font-size:12.5px;color:#8a8378}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;font-size:14px}
+th,td{padding:9px 11px;text-align:left;border-bottom:1px solid #f0e9db}
+th{background:#f3ecdd;color:var(--accf);font-size:12.5px;cursor:pointer;user-select:none}
+th:hover{background:#e9dfc8}
+tr:hover td{background:#fbf8f1}
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:800;color:#fff}
+.note{font-weight:900}
+.jauge{height:7px;background:#eee4d0;border-radius:99px;overflow:hidden;min-width:70px}
+.jauge div{height:100%}
+.vide{text-align:center;color:#8a8378;padding:26px;font-size:14.5px}
+.lien{color:var(--acc);text-decoration:none;font-weight:700}
+.lien:hover{text-decoration:underline}
+</style></head><body>
 <div class="estic-bar">
-  <img alt="Logo ESTIC" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Crect width='88' height='44' rx='8' fill='%231e3a5f'/%3E%3Ctext x='44' y='29' font-family='Segoe UI' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EESTIC%3C/text%3E%3C/svg%3E">
-  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC — Saint-Dizier</span></div>
-  <div class="copy">© ESTIC — Tous droits réservés</div>
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<h1>Tableau de bord des évaluations</h1>
+<div class="sous">Toutes les séquences · résultats consolidés depuis Firebase</div>
+
+<div id="login">
+ <p style="font-size:14.5px">Espace réservé à l’enseignant.</p>
+ <input id="mdp" type="password" placeholder="mot de passe" autocomplete="off">
+ <button class="btn" id="entrer">Accéder</button>
+ <div id="err" style="color:var(--ko);font-size:13px;margin-top:8px;min-height:18px"></div>
 </div>
 
-<header class="portail">
-  <div class="eyebrow">Technologie · Cycle 4 · Collège</div>
-  <h1>🧰 Le portail des séquences</h1>
-  <p>Six séquences complètes, du cours animé au jeu de stratégie. Chaque parcours suit le même chemin :
-  <b>📖 cours projeté → 🔧 TP à missions → 🎮 jeux de révision → 📝 évaluation notée</b>.</p>
-  <div class="stats">
-    <div class="s"><b>27</b>séquences</div>
-    <div class="s"><b>81</b>animations pédagogiques</div>
-    <div class="s"><b>54</b>jeux (arcade + gestion)</div>
-    <div class="s"><b>27</b>évaluations Firebase</div>
-  </div>
-</header>
-
-<!-- ================= 5ème ================= -->
-<section class="niveau">
-  <div class="bandeau">
-    <div class="pastille" style="background:var(--c5)">5e</div>
-    <h2 style="color:var(--c5f)">Cinquième</h2>
-    <div class="fil" style="background:var(--c5)"></div>
-  </div>
-  <div class="duo">
-    <div class="seq" style="--accent:var(--c5f)">
-      <div class="haut"><div class="ic">🌉</div><div>
-        <h3><a href="00_hub_habitat_5e.html">Habitat & Ouvrages</a></h3>
-        <div class="desc">Ponts, barrages, tours : pourquoi ça tient debout ? Forces, triangulation et inspection d'ouvrages.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_habitat_5e.html">🏠 Hub</a>
-        <a href="01_cours_habitat_ouvrages.html">📖 Cours</a>
-        <a href="02_tp_ponts.html">🔧 TP Ponts</a>
-        <a href="03_jeu_batisseur.html">🎮 Bâtisseur</a>
-        <a href="03b_jeu_inspecteur.html">🕹 Inspecteur</a>
-        <a href="04_evaluation_habitat.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:var(--c5)">
-      <div class="haut"><div class="ic">⚡</div><div>
-        <h3><a href="00_hub_energies_5e.html">Les Énergies</a></h3>
-        <div class="desc">Sources, chaînes d'énergie et mix électrique : alimenter une ville sans blackout ni excès de CO₂.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_energies_5e.html">🏠 Hub</a>
-        <a href="01_cours_energies.html">📖 Cours</a>
-        <a href="02_tp_energies.html">🔧 TP Mix</a>
-        <a href="03_jeu_energie_panic.html">🎮 Énergie Panic</a>
-        <a href="03b_jeu_gardien_reseau.html">🕹 Gardien du réseau</a>
-        <a href="04_evaluation_energies.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#b45309">
-      <div class="haut"><div class="ic">🕰️</div><div>
-        <h3><a href="00_hub_evolution_5e.html">L'évolution des objets techniques</a></h3>
-        <div class="desc">Lignées, invention et innovation : du grand-bi au smartphone, pourquoi et comment les objets changent.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_evolution_5e.html">🏠 Hub</a>
-        <a href="01_cours_evolution.html">📖 Cours</a>
-        <a href="02_tp_lignees.html">🔧 TP Lignées</a>
-        <a href="03_jeu_chrono_rush.html">🎮 Chrono Rush</a>
-        <a href="03b_jeu_bureau_inventions.html">🕹 Bureau des inventions</a>
-        <a href="04_evaluation_evolution.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#db2777">
-      <div class="haut"><div class="ic">🎯</div><div>
-        <h3><a href="00_hub_besoin_5e.html">Le besoin & le cahier des charges</a></h3>
-        <div class="desc">Bête à cornes, fonctions d'usage et d'estime, critères et niveaux : formuler le besoin et contrôler un prototype.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_besoin_5e.html">🏠 Hub</a>
-        <a href="01_cours_besoin.html">📖 Cours</a>
-        <a href="02_tp_bureau_projets.html">🔧 TP Bureau des projets</a>
-        <a href="03_jeu_fonction_rush.html">🎮 Fonction Rush</a>
-        <a href="03b_jeu_bureau_etudes.html">🕹 Bureau d'études</a>
-        <a href="04_evaluation_besoin.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#0284c7">
-      <div class="haut"><div class="ic">💾</div><div>
-        <h3><a href="00_hub_environnement_num_5e.html">L'environnement numérique</a></h3>
-        <div class="desc">Fichiers, dossiers, serveur du collège, sessions et tailles Ko/Mo/Go : ne plus jamais perdre un exposé.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_environnement_num_5e.html">🏠 Hub</a>
-        <a href="01_cours_environnement_num.html">📖 Cours</a>
-        <a href="02_tp_salle_info.html">🔧 TP Salle info</a>
-        <a href="03_jeu_extension_rush.html">🎮 Extension Rush</a>
-        <a href="03b_jeu_salle_info.html">🕹 SOS Salle info</a>
-        <a href="04_evaluation_environnement_num.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#d97706">
-      <div class="haut"><div class="ic">🎨</div><div>
-        <h3><a href="00_hub_design_5e.html">Design & ergonomie</a></h3>
-        <div class="desc">La poignée qui épouse la main, la porte de Norman, la chaise aux bonnes mesures : penser comme un designer.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_design_5e.html">🏠 Hub</a>
-        <a href="01_cours_design.html">📖 Cours</a>
-        <a href="02_tp_bureau_design.html">🔧 TP Bureau design</a>
-        <a href="03_jeu_design_rush.html">🎮 Design Rush</a>
-        <a href="03b_jeu_bureau_etude.html">🕹 Bureau d'étude</a>
-        <a href="04_evaluation_design.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#b91c1c">
-      <div class="haut"><div class="ic">🚦</div><div>
-        <h3><a href="00_hub_transports_5e.html">Transports & mobilité</a></h3>
-        <div class="desc">Quatre familles, des critères pour choisir (temps, CO₂, capacité) et la multimodalité : décoder le système qui déplace le monde.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_transports_5e.html">🏠 Hub</a>
-        <a href="01_cours_transports.html">📖 Cours</a>
-        <a href="02_tp_pc_mobilite.html">🔧 TP PC mobilité</a>
-        <a href="03_jeu_transport_rush.html">🎮 Transport Rush</a>
-        <a href="03b_jeu_pc_mobilite.html">🕹 PC Mobilité</a>
-        <a href="04_evaluation_transports.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#15803d">
-      <div class="haut"><div class="ic">🚲</div><div>
-        <h3><a href="00_hub_velo_5e.html">Le vélo, objet technique</a></h3>
-        <div class="desc">Fonction d'usage, fonctions techniques, solutions : 200 pièces pour apprendre à analyser n'importe quel objet — transmission et freinage compris.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_velo_5e.html">🏠 Hub</a>
-        <a href="01_cours_velo.html">📖 Cours</a>
-        <a href="02_tp_atelier_velo.html">🔧 TP atelier vélo</a>
-        <a href="03_jeu_velo_rush.html">🎮 Vélo Rush</a>
-        <a href="03b_jeu_atelier_velo.html">🕹 Atelier réparation</a>
-        <a href="04_evaluation_velo.html">📝 Évaluation</a>
-      </div>
-    </div>
-      <div class="seq" style="--accent:#155e75">
-        <div class="tete"><span class="ic">🚰</span><div><h3>L’eau dans la ville</h3><span class="niv">5ème</span></div></div>
-        <p>Le château d’eau et sa pression venue de la gravité, le circuit complet de la rivière à la rivière, la station d’épuration et la chasse aux fuites.</p>
-        <div class="liens">
-          <a href="00_hub_eau_5e.html">🏠 Hub</a>
-          <a href="01_cours_eau.html">📖 Cours</a>
-          <a href="02_tp_regie_eaux.html">🔧 TP</a>
-          <a href="03_jeu_aqua_rush.html">🎮 Jeu</a>
-          <a href="03b_jeu_regie_eaux.html">🕹 Jeu 2</a>
-          <a href="04_evaluation_eau.html">📝 Évaluation</a>
-        </div>
-      </div>
-  </div>
-</section>
-
-<!-- ================= 4ème ================= -->
-<section class="niveau">
-  <div class="bandeau">
-    <div class="pastille" style="background:var(--c4)">4e</div>
-    <h2 style="color:var(--c4f)">Quatrième</h2>
-    <div class="fil" style="background:var(--c4)"></div>
-  </div>
-  <div class="duo">
-    <div class="seq" style="--accent:var(--c4f)">
-      <div class="haut"><div class="ic">🏠</div><div>
-        <h3><a href="00_hub_domotique_4e.html">La Domotique</a></h3>
-        <div class="desc">Capteurs, actionneurs et logique SI/ALORS : la maison connectée décortiquée et programmée.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_domotique_4e.html">🏠 Hub</a>
-        <a href="01_cours_domotique.html">📖 Cours</a>
-        <a href="02_tp_maison_connectee.html">🔧 TP Maison</a>
-        <a href="03_jeu_signal_rush.html">🎮 Signal Rush</a>
-        <a href="03b_jeu_nuit_de_garde.html">🕹 Nuit de garde</a>
-        <a href="04_evaluation_domotique.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:var(--c4)">
-      <div class="haut"><div class="ic">⚙️</div><div>
-        <h3><a href="00_hub_transmissions_4e.html">Transmissions de mouvement</a></h3>
-        <div class="desc">Engrenages, courroies, pignon-crémaillère : sens de rotation et rapports N₂ = N₁ × Z₁ ÷ Z₂.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_transmissions_4e.html">🏠 Hub</a>
-        <a href="01_cours_transmissions.html">📖 Cours</a>
-        <a href="02_tp_engrenages.html">🔧 TP Engrenages</a>
-        <a href="03_jeu_gear_rush.html">🎮 Gear Rush</a>
-        <a href="03b_jeu_atelier_meca.html">🕹 Atelier Méca</a>
-        <a href="04_evaluation_transmissions.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#059669">
-      <div class="haut"><div class="ic">⚡</div><div>
-        <h3><a href="00_hub_chaine_energie_4e.html">La chaîne d'énergie</a></h3>
-        <div class="desc">Alimenter, distribuer, convertir, transmettre : le voyage de l'énergie dans le vélo électrique, rendement et pertes compris.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_chaine_energie_4e.html">🏠 Hub</a>
-        <a href="01_cours_chaine_energie.html">📖 Cours</a>
-        <a href="02_tp_garage_vae.html">🔧 TP Garage VAE</a>
-        <a href="03_jeu_watt_rush.html">🎮 Watt Rush</a>
-        <a href="03b_jeu_sos_depannage.html">🕹 SOS Dépannage</a>
-        <a href="04_evaluation_chaine_energie.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#7c3aed">
-      <div class="haut"><div class="ic">🖨️</div><div>
-        <h3><a href="00_hub_impression3d_4e.html">Modélisation & impression 3D</a></h3>
-        <div class="desc">La chaîne numérique : modéliser par volumes, exporter en STL, trancher en couches, imprimer — et diagnostiquer les ratés.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_impression3d_4e.html">🏠 Hub</a>
-        <a href="01_cours_impression3d.html">📖 Cours</a>
-        <a href="02_tp_fablab.html">🔧 TP Fab lab</a>
-        <a href="03_jeu_procede_rush.html">🎮 Procédé Rush</a>
-        <a href="03b_jeu_ferme_impression.html">🕹 Ferme d'impression</a>
-        <a href="04_evaluation_impression3d.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#059669">
-      <div class="haut"><div class="ic">🌐</div><div>
-        <h3><a href="00_hub_reseaux_4e.html">Les réseaux informatiques</a></h3>
-        <div class="desc">Switch, box, serveur, adresses IP : comprendre le réseau local et diagnostiquer les pannes de proche en proche.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_reseaux_4e.html">🏠 Hub</a>
-        <a href="01_cours_reseaux.html">📖 Cours</a>
-        <a href="02_tp_admin_reseau.html">🔧 TP Admin réseau</a>
-        <a href="03_jeu_reseau_rush.html">🎮 Réseau Rush</a>
-        <a href="03b_jeu_admin_reseau.html">🕹 Admin Réseau</a>
-        <a href="04_evaluation_reseaux.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#65a30d">
-      <div class="haut"><div class="ic">📏</div><div>
-        <h3><a href="00_hub_dessin_4e.html">Dessin technique & représentation</a></h3>
-        <div class="desc">Vues, cotes, échelle, cartouche : le langage universel qui transforme une idée en pièce fabricable, sans ambiguïté.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_dessin_4e.html">🏠 Hub</a>
-        <a href="01_cours_dessin.html">📖 Cours</a>
-        <a href="02_tp_bureau_methodes.html">🔧 TP Bureau des méthodes</a>
-        <a href="03_jeu_plan_rush.html">🎮 Plan Rush</a>
-        <a href="03b_jeu_bureau_methodes.html">🕹 Contrôle des plans</a>
-        <a href="04_evaluation_dessin.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#0369a1">
-      <div class="haut"><div class="ic">✈️</div><div>
-        <h3><a href="00_hub_aero_4e.html">Aéronautique — comment vole un avion</a></h3>
-        <div class="desc">Portance, poids, traction, traînée : le duel des forces, l'aile qui fabrique la portance et les trois gouvernes du pilotage.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_aero_4e.html">🏠 Hub</a>
-        <a href="01_cours_aero.html">📖 Cours</a>
-        <a href="02_tp_bureau_aero.html">🔧 TP Bureau d'études aéro</a>
-        <a href="03_jeu_aero_rush.html">🎮 Aéro Rush</a>
-        <a href="03b_jeu_tour_controle.html">🕹 Tour de contrôle</a>
-        <a href="04_evaluation_aero.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#92400e">
-      <div class="haut"><div class="ic">🚗</div><div>
-        <h3><a href="00_hub_auto_4e.html">Automobile & sécurité routière</a></h3>
-        <div class="desc">Distance d'arrêt, sécurité active et passive, la ceinture face à l'inertie : la technologie qui garde les occupants en vie.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_auto_4e.html">🏠 Hub</a>
-        <a href="01_cours_auto.html">📖 Cours</a>
-        <a href="02_tp_securite_routiere.html">🔧 TP sécurité routière</a>
-        <a href="03_jeu_securite_rush.html">🎮 Sécurité Rush</a>
-        <a href="03b_jeu_controle_technique.html">🕹 Contrôle technique</a>
-        <a href="04_evaluation_auto.html">📝 Évaluation</a>
-      </div>
-    </div>
-      <div class="seq" style="--accent:#334155">
-        <div class="tete"><span class="ic">📱</span><div><h3>Le smartphone décortiqué</h3><span class="niv">4ème</span></div></div>
-        <p>200 g, 60 matériaux : l’écorché du téléphone, la grille invisible de l’écran tactile, la batterie pièce d’usure et le réflexe réparer plutôt que jeter.</p>
-        <div class="liens">
-          <a href="00_hub_smartphone_4e.html">🏠 Hub</a>
-          <a href="01_cours_smartphone.html">📖 Cours</a>
-          <a href="02_tp_labo_demontage.html">🔧 TP</a>
-          <a href="03_jeu_tactile_rush.html">🎮 Jeu</a>
-          <a href="03b_jeu_sav_telephone.html">🕹 Jeu 2</a>
-          <a href="04_evaluation_smartphone.html">📝 Évaluation</a>
-        </div>
-      </div>
-  </div>
-</section>
-
-<!-- ================= 3ème ================= -->
-<section class="niveau">
-  <div class="bandeau">
-    <div class="pastille" style="background:var(--c3)">3e</div>
-    <h2 style="color:var(--c3f)">Troisième</h2>
-    <div class="fil" style="background:var(--c3)"></div>
-  </div>
-  <div class="duo">
-    <div class="seq" style="--accent:var(--c3f)">
-      <div class="haut"><div class="ic">🤖</div><div>
-        <h3><a href="00_hub_robotique_3e.html">La Robotique</a></h3>
-        <div class="desc">Chaîne d'information, capteurs et programmation : du robot suiveur de ligne à la gestion d'entrepôt.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_robotique_3e.html">🏠 Hub</a>
-        <a href="01_cours_robotique.html">📖 Cours</a>
-        <a href="02_tp_robot.html">🔧 TP Robot</a>
-        <a href="03_jeu_robo_race.html">🎮 Robo Race</a>
-        <a href="03b_jeu_entrepot.html">🕹 Entrepôt</a>
-        <a href="04_evaluation_robotique.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:var(--c3)">
-      <div class="haut"><div class="ic">🌐</div><div>
-        <h3><a href="00_hub_internet_3e.html">Internet & Cybersécurité</a></h3>
-        <div class="desc">Paquets, routeurs, DNS, chiffrement : le voyage des données — et comment les défendre.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_internet_3e.html">🏠 Hub</a>
-        <a href="01_cours_internet.html">📖 Cours</a>
-        <a href="02_tp_reseau.html">🔧 TP Routeur</a>
-        <a href="03_jeu_phishing_hunter.html">🎮 Phishing Hunter</a>
-        <a href="03b_jeu_cyberdefense.html">🕹 Cyberdéfense</a>
-        <a href="04_evaluation_internet.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#0d9488">
-      <div class="haut"><div class="ic">♻️</div><div>
-        <h3><a href="00_hub_cycle_vie_3e.html">Éco-conception & cycle de vie</a></h3>
-        <div class="desc">ACV, économie circulaire, éco-conception : la vie cachée des objets, du minerai à la borne de recyclage.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_cycle_vie_3e.html">🏠 Hub</a>
-        <a href="01_cours_cycle_vie.html">📖 Cours</a>
-        <a href="02_tp_mission_acv.html">🔧 TP Mission ACV</a>
-        <a href="03_jeu_tri_rush.html">🎮 Tri Rush</a>
-        <a href="03b_jeu_centre_valorisation.html">🕹 Centre de valorisation</a>
-        <a href="04_evaluation_cycle_vie.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#4f46e5">
-      <div class="haut"><div class="ic">🤖</div><div>
-        <h3><a href="00_hub_algo_3e.html">Algorithmes & programmation</a></h3>
-        <div class="desc">Variables, conditions, boucles : lire un programme, prévoir sa sortie et traquer les bugs — objectif brevet.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_algo_3e.html">🏠 Hub</a>
-        <a href="01_cours_algo.html">📖 Cours</a>
-        <a href="02_tp_studio_code.html">🔧 TP Studio de code</a>
-        <a href="03_jeu_bloc_rush.html">🎮 Bloc Rush</a>
-        <a href="03b_jeu_studio_debug.html">🕹 Studio Debug</a>
-        <a href="04_evaluation_algo.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#c026d3">
-      <div class="haut"><div class="ic">📲</div><div>
-        <h3><a href="00_hub_objets_connectes_3e.html">Les objets connectés</a></h3>
-        <div class="desc">Capteurs, actionneurs, voyage de la donnée jusqu'au cloud et boucles automatiques — sans oublier la vie privée.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_objets_connectes_3e.html">🏠 Hub</a>
-        <a href="01_cours_objets_connectes.html">📖 Cours</a>
-        <a href="02_tp_objets_connectes.html">🔧 TP Laboratoire</a>
-        <a href="03_jeu_capteur_rush.html">🎮 Capteur Rush</a>
-        <a href="03b_jeu_maison_connectee.html">🕹 Maison connectée</a>
-        <a href="04_evaluation_objets_connectes.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#e11d48">
-      <div class="haut"><div class="ic">🖥️</div><div>
-        <h3><a href="00_hub_simulation_3e.html">Modélisation & simulation</a></h3>
-        <div class="desc">Casser des ponts dans l'ordinateur : modèle, simulation, coefficient de sécurité… et l'essai réel qui prouve.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_simulation_3e.html">🏠 Hub</a>
-        <a href="01_cours_simulation.html">📖 Cours</a>
-        <a href="02_tp_bureau_simulation.html">🔧 TP Bureau simulation</a>
-        <a href="03_jeu_simu_rush.html">🎮 Simu Rush</a>
-        <a href="03b_jeu_labo_simulation.html">🕹 Labo de simulation</a>
-        <a href="04_evaluation_simulation.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#9333ea">
-      <div class="haut"><div class="ic">🧠</div><div>
-        <h3><a href="00_hub_ia_3e.html">Intelligence artificielle & données</a></h3>
-        <div class="desc">Données étiquetées, entraînement, prédiction, biais : comment une machine apprend — et pourquoi on ne la croit jamais les yeux fermés.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_ia_3e.html">🏠 Hub</a>
-        <a href="01_cours_ia.html">📖 Cours</a>
-        <a href="02_tp_centre_ia.html">🔧 TP Centre d'entraînement</a>
-        <a href="03_jeu_ia_rush.html">🎮 IA Rush</a>
-        <a href="03b_jeu_centre_ia.html">🕹 Centre IA</a>
-        <a href="04_evaluation_ia.html">📝 Évaluation</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#0c4a6e">
-      <div class="haut"><div class="ic">🛰️</div><div>
-        <h3><a href="00_hub_espace_3e.html">Espace & satellites</a></h3>
-        <div class="desc">Action-réaction, l'orbite comme chute permanente, le GPS décodé et les débris spatiaux : l'espace que tu utilises 50 fois par jour.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_espace_3e.html">🏠 Hub</a>
-        <a href="01_cours_espace.html">📖 Cours</a>
-        <a href="02_tp_centre_spatial.html">🔧 TP centre spatial</a>
-        <a href="03_jeu_orbite_rush.html">🎮 Orbite Rush</a>
-        <a href="03b_jeu_centre_spatial.html">🕹 Centre spatial</a>
-        <a href="04_evaluation_espace.html">📝 Évaluation</a>
-      </div>
-    </div>
-      <div class="seq" style="--accent:#9d174d">
-        <div class="tete"><span class="ic">🩺</span><div><h3>Santé & technologie</h3><span class="niv">3ème</span></div></div>
-        <p>La prothèse sur mesure du scan à l’impression 3D, le pacemaker chaîne d’information dans le corps, l’imagerie qui voit sans ouvrir.</p>
-        <div class="liens">
-          <a href="00_hub_sante_3e.html">🏠 Hub</a>
-          <a href="01_cours_sante.html">📖 Cours</a>
-          <a href="02_tp_labo_biomedical.html">🔧 TP</a>
-          <a href="03_jeu_bio_rush.html">🎮 Jeu</a>
-          <a href="03b_jeu_labo_biomedical.html">🕹 Jeu 2</a>
-          <a href="04_evaluation_sante.html">📝 Évaluation</a>
-        </div>
-      </div>
-  </div>
-</section>
-
-<div class="prof">
-  <div class="boite">
-    <h2>👨‍🏫 Coin professeur</h2>
-    <p>Chaque <b>évaluation</b> enregistre automatiquement les résultats (note /20, durée, détail par activité) et embarque un
-    <b>tableau de bord protégé par mot de passe</b> avec export CSV — accessible depuis le bouton discret en bas de page de chaque évaluation.
-    Les <b>TP</b> sauvegardent la progression des élèves sur le poste (localStorage) et délivrent en mission finale le <b>code de déverrouillage des deux jeux</b> :
-    la révision devient une récompense. Tous les fichiers sont autonomes et fonctionnent hors-ligne — seules les évaluations nécessitent Internet pour la remontée des résultats.</p>
-  </div>
+<div id="appli">
+ <div class="filtres">
+ <select id="fNiv"><option value="">Tous les niveaux</option><option>5e</option><option>4e</option><option>3e</option></select>
+ <select id="fSeq"><option value="">Toutes les séquences</option></select>
+ <select id="fClasse"><option value="">Toutes les classes</option></select>
+ <input id="fNom" placeholder="rechercher un élève…" style="flex:1;min-width:180px">
+ <button class="btn sec" id="rafraichir">Rafraîchir</button>
+ <button class="btn sec" id="csv">Exporter CSV</button>
+ </div>
+ <div class="stats" id="stats"></div>
+ <div id="etat" class="vide">Chargement des résultats…</div>
+ <table id="tab" style="display:none">
+ <thead><tr>
+ <th data-tri="nom">Élève</th><th data-tri="classe">Classe</th><th data-tri="seq">Séquence</th>
+ <th data-tri="niv">Niveau</th><th data-tri="note">Note /20</th><th>Réussite</th>
+ <th data-tri="duree">Durée</th><th data-tri="date">Date</th>
+ </tr></thead><tbody id="corps"></tbody>
+ </table>
 </div>
-
-<footer>Portail Technologie · Cycle 4 · ESTIC Don Bosco — Saint-Dizier</footer>
-</body>
-</html>
+</main>
+<script>
+'use strict';
+const BASE='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/evaluations/';
+const MDP='Agostini2025';
+const EVALS=[
+ {
+ "f": "04_evaluation_design.html",
+ "fb": "design_5e",
+ "titre": "Design & ergonomie",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_habitat.html",
+ "fb": "habitat_5e_v2",
+ "titre": "Habitat & Ouvrages",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_environnement_num.html",
+ "fb": "envnum_5e",
+ "titre": "L'environnement numérique",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_evolution.html",
+ "fb": "evolution_5e",
+ "titre": "L'évolution des objets techniques",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_besoin.html",
+ "fb": "besoin_5e",
+ "titre": "Le besoin & le cahier des charges",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_velo.html",
+ "fb": "velo_5e",
+ "titre": "Le vélo",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_energies.html",
+ "fb": "energies_5e",
+ "titre": "Les Énergies",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_eau.html",
+ "fb": "eau_5e",
+ "titre": "L’eau dans la ville",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_meteo.html",
+ "fb": "meteo_5e",
+ "titre": "Météo & instruments de mesure",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_transports.html",
+ "fb": "transports_5e",
+ "titre": "Transports & mobilité",
+ "niv": "5e"
+ },
+ {
+ "f": "04_evaluation_auto.html",
+ "fb": "auto_4e",
+ "titre": "Automobile & sécurité",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_aero.html",
+ "fb": "aero_4e",
+ "titre": "Aéronautique",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_dessin.html",
+ "fb": "dessin_4e",
+ "titre": "Dessin technique",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_domotique.html",
+ "fb": "domotique_4e_v2",
+ "titre": "Habitat & Ouvrages",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_chaine_energie.html",
+ "fb": "chaine_energie_4e",
+ "titre": "La chaîne d'énergie",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_smartphone.html",
+ "fb": "smartphone_4e",
+ "titre": "Le smartphone décortiqué",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_reseaux.html",
+ "fb": "reseau_4e",
+ "titre": "Les réseaux informatiques",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_ascenseur.html",
+ "fb": "ascenseur_4e",
+ "titre": "L’ascenseur",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_impression3d.html",
+ "fb": "impression3d_4e",
+ "titre": "Modélisation & impression 3D",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_transmissions.html",
+ "fb": "transmissions_4e",
+ "titre": "Transmissions de mouvement",
+ "niv": "4e"
+ },
+ {
+ "f": "04_evaluation_algo.html",
+ "fb": "algo_3e",
+ "titre": "Algorithmes & programmation",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_espace.html",
+ "fb": "espace_3e",
+ "titre": "Espace & satellites",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_robotique.html",
+ "fb": "robotique_3e_v2",
+ "titre": "Habitat & Ouvrages",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_ia.html",
+ "fb": "ia_3e",
+ "titre": "Intelligence artificielle",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_internet.html",
+ "fb": "internet_3e",
+ "titre": "Internet & Cybersécurité",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_energie.html",
+ "fb": "energie_3e",
+ "titre": "Le réseau électrique intelligent",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_objets_connectes.html",
+ "fb": "objets_3e",
+ "titre": "Les objets connectés",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_simulation.html",
+ "fb": "simulation_3e",
+ "titre": "Modélisation & simulation",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_sante.html",
+ "fb": "sante_3e",
+ "titre": "Santé & technologie",
+ "niv": "3e"
+ },
+ {
+ "f": "04_evaluation_cycle_vie.html",
+ "fb": "cycle_vie_3e",
+ "titre": "Éco-conception & cycle de vie",
+ "niv": "3e"
+ }
+];
+const ERREURS=new Set();
+let DONNEES=[], tri={col:'date',sens:-1};
+document.getElementById('entrer').addEventListener('click',connexion);
+document.getElementById('mdp').addEventListener('keydown',e=>{ if(e.key==='Enter')connexion(); });
+function connexion(){
+ if(document.getElementById('mdp').value!==MDP){
+ document.getElementById('err').textContent='Mot de passe incorrect.'; return;
+ }
+ document.getElementById('login').style.display='none';
+ document.getElementById('appli').style.display='block';
+ const s=document.getElementById('fSeq');
+ EVALS.forEach(e=>{ const o=document.createElement('option'); o.value=e.fb; o.textContent=e.titre+' ('+e.niv+')'; s.appendChild(o); });
+ charger();
+}
+async function charger(){
+ document.getElementById('etat').textContent='Chargement des résultats…';
+ document.getElementById('etat').style.display='block';
+ document.getElementById('tab').style.display='none';
+ DONNEES=[]; ERREURS.clear();
+ const lots=await Promise.all(EVALS.map(async ev=>{
+ try{
+ const r=await fetch(BASE+ev.fb+'.json');
+ const j=await r.json();
+ if(j && typeof j==='object' && j.error){ ERREURS.add(j.error); return []; }
+ if(!r.ok){ ERREURS.add('HTTP '+r.status); return []; }
+ if(!j) return [];
+ return Object.entries(j)
+ .filter(([,v])=>v && typeof v==='object' && (v.nom!==undefined||v.classe!==undefined))
+ .map(([cle,v])=>({
+ cle, seq:ev.titre, fb:ev.fb, niv:ev.niv, fichier:ev.f,
+ nom:((v.nom||'')+' '+(v.prenom||'')).trim()||'(anonyme)',
+ classe:v.classe||'—',
+ note:parseFloat(v.note20!==undefined?v.note20:v.note)||0,
+ score:v.score||0,
+ duree:v.duree_s?Math.floor(v.duree_s/60)+' min '+String(v.duree_s%60).padStart(2,'0'):(v.duree||''),
+ date:v.date?new Date(v.date).toLocaleDateString('fr-FR'):''
+ }));
+ }catch(e){ return []; }
+ }));
+ lots.forEach(l=>DONNEES=DONNEES.concat(l));
+ afficher();
+}
+function filtres(){
+ const n=document.getElementById('fNiv').value, s=document.getElementById('fSeq').value,
+ c=document.getElementById('fClasse').value, q=document.getElementById('fNom').value.toLowerCase();
+ return DONNEES.filter(d=> (!n||d.niv===n) && (!s||d.fb===s) && (!c||d.classe===c) && (!q||d.nom.toLowerCase().includes(q)));
+}
+function afficher(){
+ const classes=[...new Set(DONNEES.map(d=>d.classe))].filter(c=>c&&c!=='—').sort();
+ const sc=document.getElementById('fClasse'), av=sc.value;
+ sc.innerHTML='<option value="">Toutes les classes</option>'+classes.map(c=>'<option>'+c+'</option>').join('');
+ sc.value=av;
+ const L=filtres();
+ const corps=document.getElementById('corps');
+ const stats=document.getElementById('stats');
+ if(!DONNEES.length){
+ document.getElementById('etat').innerHTML = ERREURS.size
+  ? '<b style="color:#dc2626">Lecture refusée par Firebase</b><br>Message renvoyé : « '+[...ERREURS].join(' / ')+
+    ' ».<br>Ajoute une règle autorisant la lecture du chemin /evaluations dans la console Firebase.'
+  : 'Aucun résultat pour l’instant.<br>Les résultats apparaîtront ici dès qu’un élève aura terminé une évaluation.';
+ document.getElementById('etat').style.display='block';
+ stats.innerHTML=''; return;
+ }
+ document.getElementById('etat').style.display='none';
+ document.getElementById('tab').style.display='table';
+ const moy=L.length? L.reduce((s,d)=>s+d.note,0)/L.length : 0;
+ const reussite=L.length? L.filter(d=>d.note>=10).length/L.length*100 : 0;
+ const seqs=new Set(L.map(d=>d.fb)).size;
+ stats.innerHTML=
+ '<div class="stat"><b>'+L.length+'</b><span>copies</span></div>'+
+ '<div class="stat"><b>'+moy.toFixed(1).replace('.',',')+'</b><span>moyenne /20</span></div>'+
+ '<div class="stat"><b>'+Math.round(reussite)+' %</b><span>au-dessus de 10</span></div>'+
+ '<div class="stat"><b>'+seqs+'</b><span>séquences évaluées</span></div>'+
+ '<div class="stat"><b>'+new Set(L.map(d=>d.nom)).size+'</b><span>élèves</span></div>';
+ L.sort((a,b)=>{
+ const x=a[tri.col], y=b[tri.col];
+ if(typeof x==='number') return (x-y)*tri.sens;
+ return String(x).localeCompare(String(y))*tri.sens;
+ });
+ corps.innerHTML=L.map(d=>{
+ const coul = d.note>=14?'var(--ok)':(d.note>=10?'var(--moy)':'var(--ko)');
+ return '<tr><td>'+d.nom+'</td><td>'+d.classe+'</td>'+
+ '<td><a class="lien" href="'+d.fichier+'">'+d.seq+'</a></td>'+
+ '<td><span class="badge" style="background:'+(d.niv==='5e'?'#16a34a':(d.niv==='4e'?'#b45309':'#1d4ed8'))+'">'+d.niv+'</span></td>'+
+ '<td class="note" style="color:'+coul+'">'+String(d.note).replace('.',',')+'</td>'+
+ '<td><div class="jauge"><div style="width:'+Math.min(100,d.note/20*100)+'%;background:'+coul+'"></div></div></td>'+
+ '<td>'+(d.duree||'—')+'</td><td>'+(d.date||'—')+'</td></tr>';
+ }).join('');
+}
+document.querySelectorAll('th[data-tri]').forEach(th=>th.addEventListener('click',()=>{
+ const c=th.dataset.tri;
+ tri = tri.col===c ? {col:c,sens:-tri.sens} : {col:c,sens:1};
+ afficher();
+}));
+['fNiv','fSeq','fClasse'].forEach(id=>document.getElementById(id).addEventListener('change',afficher));
+document.getElementById('fNom').addEventListener('input',afficher);
+document.getElementById('rafraichir').addEventListener('click',charger);
+document.getElementById('csv').addEventListener('click',()=>{
+ const L=filtres();
+ const lignes=[['Nom','Classe','Sequence','Niveau','Note/20','Duree','Date']]
+ .concat(L.map(d=>[d.nom,d.classe,d.seq,d.niv,String(d.note).replace('.',','),d.duree,d.date]));
+ const csv=lignes.map(l=>l.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');
+ const a=document.createElement('a');
+ a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
+ a.download='resultats_toutes_sequences.csv'; a.click();
+});
+</script></body></html>
