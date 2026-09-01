@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Grand Défi des Matériaux — Révision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #F8F4EC;
+  --bg-elev: #FFFFFF;
+  --bg-soft: #EFE8DA;
+  --bg-card-hi: #F5EFE0;
+  --ink: #1A2332;
+  --ink-soft: #4A5A6B;
+  --ink-mute: #8A9AA9;
+  --copper: #B85C2E;
+  --copper-soft: #D67D3E;
+  --steel: #2E6A8E;
+  --green: #3D7E5F;
+  --red: #D9534F;
+  --warn: #C9931E;
+  --gold: #E5B547;
+  --line: #E0D6C2;
+  --shadow: 0 2px 12px rgba(26,35,50,0.06);
+  --shadow-lg: 0 12px 40px rgba(26,35,50,0.14);
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  min-height: 100vh;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    radial-gradient(ellipse at 15% 10%, rgba(184,92,46,0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 90%, rgba(46,106,142,0.06) 0%, transparent 45%);
+  pointer-events: none; z-index: 0;
+}
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.screen { display: none; }
+.screen.active { display: block; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ ACCUEIL ============ */
+.home {
+  text-align: center;
+}
+.home-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--copper);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  background: rgba(184,92,46,0.1);
+  padding: 8px 16px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+.home h1 {
+  font-weight: 800;
+  font-size: 52px;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+.home h1 .hi { color: var(--copper); }
+.home-sub {
+  font-size: 18px;
+  color: var(--ink-soft);
+  max-width: 480px;
+  margin: 0 auto 32px;
+  line-height: 1.5;
+}
+.rules {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+.rules-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.rule-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 0;
+  font-size: 15px;
+}
+.rule-ic {
+  font-size: 24px;
+  width: 40px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.btn-play {
+  background: linear-gradient(135deg, var(--copper), var(--copper-soft));
+  color: white;
+  border: none;
+  padding: 20px 48px;
+  border-radius: 14px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 28px rgba(184,92,46,0.32);
+  transition: all 0.2s;
+}
+.btn-play:hover { transform: translateY(-3px); box-shadow: 0 14px 38px rgba(184,92,46,0.42); }
+.btn-play:active { transform: translateY(-1px); }
+
+/* ============ JEU ============ */
+.hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  gap: 16px;
+}
+.hearts { display: flex; gap: 4px; font-size: 26px; }
+.heart { transition: all 0.3s; }
+.heart.lost { opacity: 0.25; filter: grayscale(1); transform: scale(0.8); }
+.heart.breaking { animation: heartBreak 0.5s ease; }
+@keyframes heartBreak {
+  0% { transform: scale(1.3); }
+  50% { transform: scale(0.6) rotate(-15deg); }
+  100% { transform: scale(0.8); }
+}
+.score-box { text-align: right; }
+.score-num {
+  font-weight: 800;
+  font-size: 32px;
+  color: var(--copper);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.score-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.theme-banner {
+  background: var(--bg-soft);
+  border-radius: 10px;
+  padding: 8px 16px;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-soft);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.theme-banner strong { color: var(--copper); }
+
+.timer-bar {
+  height: 6px;
+  background: var(--bg-soft);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.timer-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), var(--gold));
+  width: 100%;
+  border-radius: 3px;
+}
+.timer-fill.warn { background: linear-gradient(90deg, var(--gold), var(--red)); }
+
+.q-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+.q-card.shake { animation: shakeCard 0.4s; }
+@keyframes shakeCard {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-7px); }
+  80% { transform: translateX(7px); }
+}
+.q-num-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.q-text {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+.q-emoji { font-size: 48px; margin-bottom: 12px; }
+.options { display: grid; gap: 12px; }
+.options.vf { grid-template-columns: 1fr 1fr; }
+.opt {
+  background: var(--bg-soft);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 16px 22px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: left;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  transition: all 0.12s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.options.vf .opt { justify-content: center; font-weight: 700; font-size: 18px; }
+.opt:hover:not(:disabled) { background: var(--bg-card-hi); transform: translateY(-2px); }
+.opt:disabled { cursor: default; }
+.opt .letter {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 13px;
+  color: var(--ink-mute);
+  flex-shrink: 0;
+}
+.opt.ok { background: rgba(91,160,136,0.18); border-color: var(--green); color: var(--green); }
+.opt.ok .letter { background: var(--green); color: white; border-color: var(--green); }
+.opt.ko { background: rgba(217,83,79,0.12); border-color: var(--red); color: var(--red); }
+.opt.ko .letter { background: var(--red); color: white; border-color: var(--red); }
+
+/* MINI-CALCULATRICE intégrée */
+.mini-calc {
+  margin-top: 18px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.mc-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.mc-display {
+  background: var(--bg-elev);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: right;
+  min-height: 48px;
+  margin-bottom: 8px;
+  word-break: break-all;
+  display: flex; align-items: center; justify-content: flex-end;
+}
+.mc-keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+.mc-key {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 11px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--ink);
+  transition: all 0.1s;
+}
+.mc-key:hover { background: var(--bg-card-hi); }
+.mc-key:active { transform: translateY(1px); }
+.mc-key.op { color: var(--copper); }
+.mc-key.eq { background: var(--copper); color: white; border-color: var(--copper); grid-column: span 2; }
+.mc-key.eq:hover { background: var(--copper-soft); }
+.mc-key.clear { color: var(--red); }
+
+/* COMBO popup */
+.combo-pop {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 800;
+  font-size: 48px;
+  color: var(--gold);
+  text-shadow: 0 4px 16px rgba(229,181,71,0.5);
+  pointer-events: none;
+  z-index: 200;
+  opacity: 0;
+}
+.combo-pop.show { animation: comboPop 0.9s ease; }
+@keyframes comboPop {
+  0% { opacity: 0; transform: translateX(-50%) scale(0.4); }
+  30% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+  60% { opacity: 1; transform: translateX(-50%) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) scale(1) translateY(-40px); }
+}
+
+.points-pop {
+  position: absolute;
+  font-weight: 800;
+  font-size: 24px;
+  color: var(--green);
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+}
+.points-pop.show { animation: pointsFly 1s ease; }
+@keyframes pointsFly {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  30% { opacity: 1; transform: translateY(-20px) scale(1.1); }
+  100% { opacity: 0; transform: translateY(-60px) scale(1); }
+}
+
+/* ============ FIN ============ */
+.end {
+  text-align: center;
+}
+.medal {
+  font-size: 110px;
+  line-height: 1;
+  margin-bottom: 12px;
+  animation: medalPop 0.8s ease;
+}
+@keyframes medalPop {
+  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+  60% { transform: scale(1.25) rotate(8deg); }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+.end h2 {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.end-score {
+  font-weight: 800;
+  font-size: 64px;
+  color: var(--copper);
+  line-height: 1;
+  margin: 16px 0 4px;
+  font-variant-numeric: tabular-nums;
+}
+.end-score-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.end-stats {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 28px 0;
+  flex-wrap: wrap;
+}
+.end-stat {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 24px;
+  box-shadow: var(--shadow);
+}
+.end-stat .v { font-weight: 800; font-size: 24px; color: var(--ink); }
+.end-stat .l {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+.end-msg {
+  font-size: 17px;
+  color: var(--ink-soft);
+  max-width: 460px;
+  margin: 0 auto 28px;
+  line-height: 1.5;
+}
+.end-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-replay {
+  background: var(--copper);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-replay:hover { background: var(--copper-soft); transform: translateY(-2px); }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  padding: 16px 28px;
+  border-radius: 12px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.btn-ghost:hover { background: var(--bg-soft); color: var(--ink); }
+
+/* CONFETTIS */
+#confetti {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 150;
+}
+
+@media (max-width: 600px) {
+  .home h1 { font-size: 38px; }
+  .q-text { font-size: 20px; }
+  .options.vf { grid-template-columns: 1fr; }
+  .end h2 { font-size: 30px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="wrap">
+
+  <!-- ============ ACCUEIL ============ -->
+  <div class="screen active" id="screenHome">
+    <div class="home">
+      <div class="home-badge">Révision · Technologie</div>
+      <h1>Le Grand Défi<br><span class="hi">des Matériaux</span></h1>
+      <p class="home-sub">Teste tes connaissances dans un défi à manches. Garde tes vies, enchaîne les combos, décroche la médaille d'or !</p>
+
+      <div class="rules">
+        <div class="rules-title">Comment jouer</div>
+        <div class="rule-row"><span class="rule-ic">❤️</span><span>Tu as <strong>3 vies</strong>. Chaque mauvaise réponse (ou temps écoulé) t'en coûte une.</span></div>
+        <div class="rule-row"><span class="rule-ic">⏱</span><span>Tu as <strong>15 secondes</strong> par question (<strong>45 s</strong> pour les calculs). Plus tu réponds vite, plus tu gagnes de points.</span></div>
+        <div class="rule-row"><span class="rule-ic">🔥</span><span>Enchaîne les bonnes réponses pour faire monter ton <strong>combo</strong> et multiplier ton score.</span></div>
+        <div class="rule-row"><span class="rule-ic">🏅</span><span>6 manches thématiques (dont une de <strong>calculs</strong> avec calculatrice). Va au bout pour décrocher ta <strong>médaille</strong> !</span></div>
+      </div>
+
+      <button class="btn-play" id="btnPlay">🎮 Lancer le défi</button>
+    </div>
+  </div>
+
+  <!-- ============ JEU ============ -->
+  <div class="screen" id="screenGame">
+    <div class="hud">
+      <div class="hearts" id="hearts"></div>
+      <div class="score-box">
+        <div class="score-num" id="scoreNum">0</div>
+        <div class="score-label">Points</div>
+      </div>
+    </div>
+    <div class="theme-banner" id="themeBanner">Manche 1 · <strong>Familles</strong></div>
+    <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+    <div class="q-card" id="qCard"></div>
+  </div>
+
+  <!-- ============ FIN ============ -->
+  <div class="screen" id="screenEnd">
+    <div class="end">
+      <div class="medal" id="medal">🏅</div>
+      <h2 id="endTitle">Défi terminé !</h2>
+      <div class="end-score" id="endScore">0</div>
+      <div class="end-score-label">Score final</div>
+      <div class="end-stats">
+        <div class="end-stat"><div class="v" id="statCorrect">0</div><div class="l">Bonnes réponses</div></div>
+        <div class="end-stat"><div class="v" id="statCombo">0</div><div class="l">Meilleur combo</div></div>
+        <div class="end-stat"><div class="v" id="statLives">0</div><div class="l">Vies restantes</div></div>
+      </div>
+      <p class="end-msg" id="endMsg"></p>
+      <div class="end-actions">
+        <button class="btn-replay" id="btnReplay">↻ Rejouer</button>
+        <a class="btn-ghost" href="00_hub_materiaux.html">← Accueil</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="combo-pop" id="comboPop"></div>
+
+<script>
+// ============ QUESTIONS PAR THÈME ============
+const themes = [
+  {
+    name: 'Familles',
+    questions: [
+      { q: 'Le verre fait partie de quelle famille ?', emoji: '🪟', opts: ['Métaux', 'Polymères', 'Céramiques', 'Composites'], correct: 2 },
+      { q: 'L\u2019acier est un alliage de…', emoji: '⚙', opts: ['Fer + carbone', 'Fer + cuivre', 'Alu + zinc', 'Fer + plomb'], correct: 0 },
+      { q: 'Quelle famille vient directement du vivant ?', emoji: '🌿', opts: ['Métaux', 'Organiques naturels', 'Polymères', 'Céramiques'], correct: 1 },
+      { q: 'Fibre de carbone + résine, c\u2019est un…', emoji: '🚲', opts: ['Métal', 'Polymère', 'Céramique', 'Composite'], correct: 3 },
+      { q: 'Les bouteilles d\u2019eau transparentes sont en…', emoji: '🍶', opts: ['PET (polymère)', 'Verre', 'Aluminium', 'Polystyrène'], correct: 0 },
+      { q: 'Le cuivre des fils électriques est un…', emoji: '🔌', opts: ['Métal', 'Polymère', 'Céramique', 'Composite'], correct: 0 },
+      { q: 'Une assiette en porcelaine est une…', emoji: '🍽', opts: ['Polymère', 'Céramique', 'Métal', 'Composite'], correct: 1 },
+      { q: 'Le bois fait partie des matériaux…', emoji: '🪵', opts: ['Composites', 'Métalliques', 'Organiques naturels', 'Céramiques'], correct: 2 },
+      { q: 'Quel matériau est fabriqué à partir du pétrole ?', emoji: '🛢', opts: ['Le verre', 'Le plastique', 'L\u2019acier', 'Le bois'], correct: 1 },
+      { q: 'La coque d\u2019un bateau de course en fibre de verre est un…', emoji: '⛵', opts: ['Métal', 'Composite', 'Céramique', 'Organique'], correct: 1 }
+    ]
+  },
+  {
+    name: 'Propriétés',
+    questions: [
+      { q: 'Revient à sa forme après une force : c\u2019est…', emoji: '🪀', opts: ['Plastique', 'Élastique', 'Fragile', 'Dur'], correct: 1 },
+      { q: 'Reste déformé pour toujours : c\u2019est…', emoji: '📎', opts: ['Élastique', 'Plastique', 'Réversible', 'Souple'], correct: 1 },
+      { q: 'Quel matériau conduit le mieux l\u2019électricité ?', emoji: '⚡', opts: ['Bois', 'Verre', 'PVC', 'Cuivre'], correct: 3 },
+      { q: 'Le point Re sur la courbe σ-ε, c\u2019est…', emoji: '📈', opts: ['La rupture', 'La limite élastique', 'La densité', 'La dureté'], correct: 1 },
+      { q: 'La biodégradabilité est une propriété…', emoji: '🌍', opts: ['Mécanique', 'Physique', 'Esthétique', 'Environnementale'], correct: 3 },
+      { q: 'La masse volumique se mesure en…', emoji: '⚖', opts: ['g/cm³', 'newtons', 'MPa', '°C'], correct: 0 },
+      { q: 'Un matériau qui casse net sans se déformer est…', emoji: '🥃', opts: ['Élastique', 'Ductile', 'Fragile', 'Souple'], correct: 2 },
+      { q: 'La capacité à conduire la chaleur est une propriété…', emoji: '🌡', opts: ['Physique', 'Mécanique', 'Esthétique', 'Chimique'], correct: 0 },
+      { q: 'Le point Rm sur la courbe représente…', emoji: '📊', opts: ['Le repos', 'La résistance maximale', 'La limite élastique', 'La masse'], correct: 1 },
+      { q: 'Un ressort qui reprend sa forme est un bon exemple de…', emoji: '🌀', opts: ['Plasticité', 'Élasticité', 'Fragilité', 'Dureté'], correct: 1 }
+    ]
+  },
+  {
+    name: 'Sollicitations',
+    questions: [
+      { q: 'Un câble d\u2019ascenseur subit…', emoji: '🔗', opts: ['Compression', 'Traction', 'Flexion', 'Torsion'], correct: 1 },
+      { q: 'Un pilier de bâtiment subit…', emoji: '🏛', opts: ['Traction', 'Compression', 'Flexion', 'Cisaillement'], correct: 1 },
+      { q: 'Une étagère chargée au milieu subit…', emoji: '📚', opts: ['Traction', 'Flexion', 'Torsion', 'Cisaillement'], correct: 1 },
+      { q: 'Serrer une vis avec un tournevis : la tige est en…', emoji: '🔩', opts: ['Traction', 'Flexion', 'Torsion', 'Compression'], correct: 2 },
+      { q: 'Les ciseaux qui coupent du papier exercent…', emoji: '✂️', opts: ['Traction', 'Flexion', 'Torsion', 'Cisaillement'], correct: 3 },
+      { q: 'Une corde de tir à la corde subit…', emoji: '🪢', opts: ['Compression', 'Traction', 'Torsion', 'Flexion'], correct: 1 },
+      { q: 'Un plongeoir quand on saute au bout subit…', emoji: '🏊', opts: ['Traction', 'Compression', 'Flexion', 'Cisaillement'], correct: 2 },
+      { q: 'L\u2019arbre de transmission d\u2019une voiture subit…', emoji: '🚗', opts: ['Flexion', 'Torsion', 'Traction', 'Compression'], correct: 1 },
+      { q: 'Dans une poutre qui fléchit, le milieu s\u2019appelle…', emoji: '➖', opts: ['La fibre neutre', 'La zone plastique', 'Le point Re', 'La section'], correct: 0 },
+      { q: 'Les pieds d\u2019une chaise sous ton poids subissent…', emoji: '🪑', opts: ['Traction', 'Compression', 'Torsion', 'Cisaillement'], correct: 1 }
+    ]
+  },
+  {
+    name: 'Dureté',
+    questions: [
+      { q: 'L\u2019échelle qui classe la dureté de 1 à 10 s\u2019appelle…', emoji: '🪨', opts: ['Échelle de Mohs', 'Échelle de Richter', 'Échelle de Celsius', 'Échelle de Newton'], correct: 0 },
+      { q: 'Le matériau le plus dur (10/10) est…', emoji: '💎', opts: ['L\u2019acier', 'Le verre', 'Le diamant', 'Le quartz'], correct: 2 },
+      { q: 'VRAI ou FAUX : un matériau dur est forcément résistant.', emoji: '🤔', opts: ['Vrai', 'Faux'], correct: 1, vf: true },
+      { q: 'Quel matériau peut rayer le verre ?', emoji: '🔧', opts: ['L\u2019ongle', 'Le cuivre', 'L\u2019acier trempé', 'Le plâtre'], correct: 2 },
+      { q: 'Le talc, le plus tendre, a une dureté Mohs de…', emoji: '🧴', opts: ['1', '5', '7', '10'], correct: 0 },
+      { q: 'Le test industriel à bille qui mesure une empreinte s\u2019appelle…', emoji: '⚙', opts: ['Mohs', 'Rockwell', 'Celsius', 'Pascal'], correct: 1 },
+      { q: 'VRAI ou FAUX : le diamant peut rayer presque tous les matériaux.', emoji: '💍', opts: ['Vrai', 'Faux'], correct: 0, vf: true },
+      { q: 'La dureté mesure la résistance à…', emoji: '🪛', opts: ['La rayure', 'La chaleur', 'L\u2019électricité', 'La rouille'], correct: 0 }
+    ]
+  },
+  {
+    name: 'Environnement',
+    questions: [
+      { q: 'L\u2019indice de réparabilité est une note sur…', emoji: '🔧', opts: ['5', '10', '20', '100'], correct: 1 },
+      { q: 'Recycler l\u2019aluminium économise environ…', emoji: '♻️', opts: ['10 % d\u2019énergie', '30 %', '95 %', '0 %'], correct: 2 },
+      { q: 'Une bouteille plastique se dégrade en environ…', emoji: '🍾', opts: ['10 ans', '50 ans', '450 ans', '5000 ans'], correct: 2 },
+      { q: 'Dans un casque vélo, quel matériau absorbe le choc ?', emoji: '🪖', opts: ['L\u2019ABS (coque)', 'L\u2019EPS (mousse)', 'Le métal', 'Le tissu'], correct: 1 },
+      { q: 'VRAI ou FAUX : le bois est un matériau biodégradable.', emoji: '🍂', opts: ['Vrai', 'Faux'], correct: 0, vf: true },
+      { q: 'Quel matériau est le plus facilement recyclable à l\u2019infini ?', emoji: '🥫', opts: ['Le plastique', 'Le verre', 'Le bois', 'Le composite'], correct: 1 },
+      { q: 'Réduire, réutiliser, recycler : combien de « R » au total avec réparer ?', emoji: '🔄', opts: ['2', '3', '4', '5'], correct: 2 },
+      { q: 'La coque ABS d\u2019un casque sert surtout à…', emoji: '🪖', opts: ['Absorber le choc', 'Répartir le choc et résister', 'Décorer', 'Alléger'], correct: 1 }
+    ]
+  },
+  {
+    name: 'Calculs',
+    questions: [
+      { q: 'Une pièce d\u2019aluminium de 200 cm³ (ρ = 2,7 g/cm³). Quelle est sa masse ? (m = V × ρ)', emoji: '🧮', opts: ['540 g', '74 g', '270 g', '400 g'], correct: 0, calc: true, time: 45 },
+      { q: 'Une vis subit 1000 N sur une section de 25 mm². Quelle contrainte σ ? (σ = F ÷ S, en MPa)', emoji: '🧮', opts: ['25 MPa', '40 MPa', '4 MPa', '1025 MPa'], correct: 1, calc: true, time: 45 },
+      { q: 'Une éprouvette passe de 100 mm à 103 mm. Quel allongement ? (% = (Lf − Li) ÷ Li × 100)', emoji: '🧮', opts: ['3 %', '1,03 %', '30 %', '0,3 %'], correct: 0, calc: true, time: 45 },
+      { q: 'Alu neuf = 200 kWh/kg, recyclé = 10 kWh/kg. Quelle économie ? (% = (200 − 10) ÷ 200 × 100)', emoji: '🧮', opts: ['90 %', '95 %', '50 %', '10 %'], correct: 1, calc: true, time: 45 },
+      { q: 'Une plaque de cuivre de 50 cm³ (ρ = 8,9 g/cm³). Quelle masse ? (m = V × ρ)', emoji: '🧮', opts: ['445 g', '58,9 g', '178 g', '500 g'], correct: 0, calc: true, time: 45 },
+      { q: 'Un câble supporte 600 N sur 12 mm². Quelle contrainte σ ? (σ = F ÷ S)', emoji: '🧮', opts: ['50 MPa', '5 MPa', '72 MPa', '588 MPa'], correct: 0, calc: true, time: 45 },
+      { q: 'Une barre de fer de 0,5 dm³ (= 500 cm³), ρ = 7,8 g/cm³. Quelle masse ? (m = V × ρ)', emoji: '🧮', opts: ['3900 g', '390 g', '1560 g', '7800 g'], correct: 0, calc: true, time: 45 }
+    ]
+  }
+];
+
+// ============ ÉTAT ============
+const MAX_LIVES = 3;
+const TIME_PER_Q = 15; // secondes (défaut, surchargé par q.time)
+let lives, score, combo, bestCombo, correctCount, queue, qIndex, timerInterval, timeLeft, answered, currentQTime, mcBuffer;
+
+// ============ DÉMARRAGE ============
+document.getElementById('btnPlay').addEventListener('click', startGame);
+document.getElementById('btnReplay').addEventListener('click', startGame);
+
+function startGame() {
+  lives = MAX_LIVES;
+  score = 0;
+  combo = 0;
+  bestCombo = 0;
+  correctCount = 0;
+  qIndex = 0;
+  // Construire la file : toutes les questions, par thème, mélangées dans chaque thème
+  queue = [];
+  themes.forEach(theme => {
+    const qs = [...theme.questions].sort(() => Math.random() - 0.5);
+    qs.forEach(q => queue.push({ ...q, theme: theme.name }));
+  });
+  showScreen('screenGame');
+  renderHearts();
+  updateScore();
+  showQuestion();
+}
+
+function renderHearts() {
+  const h = document.getElementById('hearts');
+  h.innerHTML = '';
+  for (let i = 0; i < MAX_LIVES; i++) {
+    const span = document.createElement('span');
+    span.className = 'heart' + (i >= lives ? ' lost' : '');
+    span.textContent = '❤️';
+    h.appendChild(span);
+  }
+}
+
+function updateScore() {
+  document.getElementById('scoreNum').textContent = score;
+}
+
+function showQuestion() {
+  if (qIndex >= queue.length) { endGame(true); return; }
+  answered = false;
+  const q = queue[qIndex];
+  document.getElementById('themeBanner').innerHTML =
+    'Question ' + (qIndex + 1) + ' / ' + queue.length + ' · <strong>' + q.theme + '</strong>';
+
+  const card = document.getElementById('qCard');
+  let html = '<div class="q-num-tag">Manche : ' + q.theme + '</div>';
+  if (q.emoji) html += '<div class="q-emoji">' + q.emoji + '</div>';
+  html += '<div class="q-text">' + q.q + '</div>';
+  html += '<div class="options' + (q.vf ? ' vf' : '') + '">';
+  q.opts.forEach((opt, i) => {
+    const letter = q.vf ? '' : '<div class="letter">' + String.fromCharCode(65 + i) + '</div>';
+    html += '<button class="opt" data-i="' + i + '">' + letter + '<span>' + opt + '</span></button>';
+  });
+  html += '</div>';
+  // Calculatrice intégrée pour les questions de calcul
+  if (q.calc) {
+    html += '<div class="mini-calc">' +
+      '<div class="mc-head">🧮 Calculatrice</div>' +
+      '<div class="mc-display" id="mcDisplay">0</div>' +
+      '<div class="mc-keys" id="mcKeys">' +
+        '<button class="mc-key clear" data-k="C">C</button>' +
+        '<button class="mc-key" data-k="(">(</button>' +
+        '<button class="mc-key" data-k=")">)</button>' +
+        '<button class="mc-key op" data-k="/">÷</button>' +
+        '<button class="mc-key" data-k="7">7</button>' +
+        '<button class="mc-key" data-k="8">8</button>' +
+        '<button class="mc-key" data-k="9">9</button>' +
+        '<button class="mc-key op" data-k="*">×</button>' +
+        '<button class="mc-key" data-k="4">4</button>' +
+        '<button class="mc-key" data-k="5">5</button>' +
+        '<button class="mc-key" data-k="6">6</button>' +
+        '<button class="mc-key op" data-k="-">−</button>' +
+        '<button class="mc-key" data-k="1">1</button>' +
+        '<button class="mc-key" data-k="2">2</button>' +
+        '<button class="mc-key" data-k="3">3</button>' +
+        '<button class="mc-key op" data-k="+">+</button>' +
+        '<button class="mc-key" data-k="0">0</button>' +
+        '<button class="mc-key" data-k=".">,</button>' +
+        '<button class="mc-key eq" data-k="=">=</button>' +
+      '</div>' +
+    '</div>';
+  }
+  card.innerHTML = html;
+  card.classList.remove('shake');
+
+  card.querySelectorAll('.opt').forEach(btn => {
+    btn.addEventListener('click', () => handleAnswer(parseInt(btn.dataset.i), btn));
+  });
+  if (q.calc) setupMiniCalc();
+
+  startTimer();
+}
+
+function startTimer() {
+  const q = queue[qIndex];
+  currentQTime = q.time || TIME_PER_Q;
+  timeLeft = currentQTime;
+  const fill = document.getElementById('timerFill');
+  fill.style.width = '100%';
+  fill.classList.remove('warn');
+  clearInterval(timerInterval);
+  const start = Date.now();
+  timerInterval = setInterval(() => {
+    const elapsed = (Date.now() - start) / 1000;
+    timeLeft = Math.max(0, currentQTime - elapsed);
+    const pct = (timeLeft / currentQTime) * 100;
+    fill.style.width = pct + '%';
+    if (pct < 33) fill.classList.add('warn');
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      if (!answered) handleTimeout();
+    }
+  }, 50);
+}
+
+function handleAnswer(choice, btn) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+  const q = queue[qIndex];
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach(o => o.disabled = true);
+
+  if (choice === q.correct) {
+    btn.classList.add('ok');
+    // Points : base 100 + bonus temps (jusqu'à 100) + bonus combo
+    const timeBonus = Math.round((timeLeft / currentQTime) * 100);
+    combo++;
+    if (combo > bestCombo) bestCombo = combo;
+    const comboMult = 1 + (combo - 1) * 0.25; // x1, x1.25, x1.5...
+    const gained = Math.round((100 + timeBonus) * comboMult);
+    score += gained;
+    correctCount++;
+    updateScore();
+    showPointsPop('+' + gained, btn);
+    if (combo >= 2) showComboPop(combo);
+    setTimeout(nextQuestion, 1100);
+  } else {
+    btn.classList.add('ko');
+    // Montrer la bonne réponse
+    opts[q.correct].classList.add('ok');
+    combo = 0;
+    loseLife();
+    document.getElementById('qCard').classList.add('shake');
+    setTimeout(nextQuestion, 1500);
+  }
+}
+
+function handleTimeout() {
+  answered = true;
+  const q = queue[qIndex];
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach(o => o.disabled = true);
+  if (opts[q.correct]) opts[q.correct].classList.add('ok');
+  combo = 0;
+  loseLife();
+  document.getElementById('qCard').classList.add('shake');
+  setTimeout(nextQuestion, 1500);
+}
+
+function loseLife() {
+  lives--;
+  const hearts = document.querySelectorAll('.heart');
+  if (hearts[lives]) {
+    hearts[lives].classList.add('breaking');
+    setTimeout(() => {
+      hearts[lives].classList.remove('breaking');
+      hearts[lives].classList.add('lost');
+    }, 500);
+  }
+}
+
+function nextQuestion() {
+  if (lives <= 0) { endGame(false); return; }
+  qIndex++;
+  showQuestion();
+}
+
+function showPointsPop(text, btn) {
+  const pop = document.createElement('div');
+  pop.className = 'points-pop';
+  pop.textContent = text;
+  const rect = btn.getBoundingClientRect();
+  pop.style.left = (rect.left + rect.width / 2 - 20) + 'px';
+  pop.style.top = (rect.top - 10) + 'px';
+  pop.style.position = 'fixed';
+  document.body.appendChild(pop);
+  requestAnimationFrame(() => pop.classList.add('show'));
+  setTimeout(() => pop.remove(), 1000);
+}
+
+function showComboPop(c) {
+  const pop = document.getElementById('comboPop');
+  pop.textContent = '🔥 COMBO ×' + c;
+  pop.classList.remove('show');
+  void pop.offsetWidth; // reflow
+  pop.classList.add('show');
+}
+
+// ============ CALCULATRICE INTÉGRÉE ============
+function setupMiniCalc() {
+  mcBuffer = '';
+  const disp = document.getElementById('mcDisplay');
+  if (!disp) return;
+  document.querySelectorAll('#mcKeys .mc-key').forEach(b => {
+    b.addEventListener('click', () => {
+      const k = b.dataset.k;
+      if (k === 'C') { mcBuffer = ''; disp.textContent = '0'; return; }
+      if (k === '=') {
+        try {
+          const clean = mcBuffer.replace(/,/g, '.').replace(/[^0-9+\-*/().]/g, '');
+          if (!clean) return;
+          const r = Function('"use strict";return (' + clean + ')')();
+          if (isFinite(r)) {
+            const rounded = Math.round(r * 10000) / 10000;
+            disp.textContent = String(rounded);
+            mcBuffer = String(rounded);
+          } else { disp.textContent = 'Erreur'; mcBuffer = ''; }
+        } catch (e) { disp.textContent = 'Erreur'; mcBuffer = ''; }
+        return;
+      }
+      mcBuffer += k;
+      disp.textContent = mcBuffer.replace(/\*/g, '×').replace(/\//g, '÷').replace(/-/g, '−');
+    });
+  });
+}
+
+// ============ FIN ============
+function endGame(won) {
+  clearInterval(timerInterval);
+  document.getElementById('endScore').textContent = score;
+  document.getElementById('statCorrect').textContent = correctCount + '/' + queue.length;
+  document.getElementById('statCombo').textContent = '×' + bestCombo;
+  document.getElementById('statLives').textContent = Math.max(0, lives);
+
+  let medal, title, msg;
+  const ratio = correctCount / queue.length;
+  if (!won) {
+    medal = '💔';
+    title = 'Game Over';
+    msg = 'Tu as perdu tes 3 vies ! Reprends le cours sur les notions qui t\u2019ont posé problème, puis retente le défi.';
+  } else if (ratio >= 0.9 && lives === MAX_LIVES) {
+    medal = '🥇';
+    title = 'Médaille d\u2019OR !';
+    msg = 'Sans-faute ou presque ! Tu maîtrises parfaitement les matériaux. Champion(ne) !';
+  } else if (ratio >= 0.75) {
+    medal = '🥈';
+    title = 'Médaille d\u2019argent';
+    msg = 'Très bon score ! Encore quelques notions à peaufiner et l\u2019or est à toi.';
+  } else if (ratio >= 0.5) {
+    medal = '🥉';
+    title = 'Médaille de bronze';
+    msg = 'Pas mal ! Tu as les bases. Relis le cours et retente pour faire mieux.';
+  } else {
+    medal = '📖';
+    title = 'Défi terminé';
+    msg = 'Il reste du travail. Reprends le cours tranquillement, puis reviens relever le défi !';
+  }
+  document.getElementById('medal').textContent = medal;
+  document.getElementById('endTitle').textContent = title;
+  document.getElementById('endMsg').textContent = msg;
+
+  showScreen('screenEnd');
+  if (won && ratio >= 0.75) launchConfetti();
+}
+
+// ============ CONFETTIS ============
+function launchConfetti() {
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const colors = ['#B85C2E', '#E5B547', '#3D7E5F', '#2E6A8E', '#D67D3E'];
+  const parts = [];
+  for (let i = 0; i < 120; i++) {
+    parts.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * canvas.height * 0.5,
+      vx: (Math.random() - 0.5) * 4,
+      vy: 2 + Math.random() * 4,
+      size: 6 + Math.random() * 8,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * Math.PI,
+      vrot: (Math.random() - 0.5) * 0.3
+    });
+  }
+  let frames = 0;
+  function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    parts.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.vrot; p.vy += 0.04;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+      ctx.restore();
+    });
+    frames++;
+    if (frames < 240) requestAnimationFrame(loop);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  loop();
+}
+
+// ============ UTILS ============
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+}
+</script>
+
+</body>
+</html>

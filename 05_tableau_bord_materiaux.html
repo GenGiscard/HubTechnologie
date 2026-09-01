@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tableau de bord — Résultats matériaux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #F8F4EC;
+  --bg-elev: #FFFFFF;
+  --bg-soft: #EFE8DA;
+  --bg-card-hi: #F5EFE0;
+  --ink: #1A2332;
+  --ink-soft: #4A5A6B;
+  --ink-mute: #8A9AA9;
+  --copper: #B85C2E;
+  --copper-soft: #D67D3E;
+  --steel: #2E6A8E;
+  --green: #3D7E5F;
+  --red: #D9534F;
+  --warn: #C9931E;
+  --line: #E0D6C2;
+  --shadow: 0 2px 12px rgba(26,35,50,0.06);
+  --shadow-lg: 0 8px 32px rgba(26,35,50,0.10);
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(184,92,46,0.05) 0%, transparent 40%),
+    radial-gradient(ellipse at 90% 100%, rgba(46,106,142,0.05) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* HEADER */
+header {
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--line);
+  padding: 16px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.head-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.head-title { font-weight: 800; font-size: 17px; }
+.head-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--copper);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+.head-actions { display: flex; gap: 10px; align-items: center; }
+.btn {
+  background: var(--copper);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn:hover { background: var(--copper-soft); }
+.btn.ghost {
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+}
+.btn.ghost:hover { background: var(--bg-soft); color: var(--ink); }
+.btn.danger { background: var(--red); }
+.btn.danger:hover { background: #C44643; }
+
+/* CONTAINER */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+/* LOCK SCREEN */
+.lock-screen {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lock-screen.hidden { display: none; }
+.lock-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 380px;
+  width: 100%;
+  margin: 20px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+.lock-card h2 { font-size: 26px; margin-bottom: 8px; }
+.lock-card p { color: var(--ink-soft); margin-bottom: 22px; }
+.lock-card input {
+  width: 100%;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 15px;
+  text-align: center;
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+}
+.lock-card input:focus { outline: 2px solid var(--copper); outline-offset: -1px; }
+.lock-err {
+  display: none;
+  font-size: 13px;
+  color: var(--red);
+  margin-top: 10px;
+}
+.lock-err.show { display: block; }
+
+/* STATS BAR */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.stat {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.stat::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--st-c);
+}
+.stat-num {
+  font-weight: 800;
+  font-size: 36px;
+  line-height: 1;
+  color: var(--st-c);
+  letter-spacing: -0.02em;
+}
+.stat-num .small { font-size: 18px; color: var(--ink-mute); }
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+.stat.s1 { --st-c: var(--copper); }
+.stat.s2 { --st-c: var(--steel); }
+.stat.s3 { --st-c: var(--green); }
+.stat.s4 { --st-c: var(--warn); }
+
+/* FILTERS */
+.filters {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow);
+}
+.filter-group { display: flex; align-items: center; gap: 8px; }
+.filter-group label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.filter-group select,
+.filter-group input {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+}
+.results-count {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+
+/* TABLE */
+.table-wrap {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th {
+  background: var(--bg-soft);
+  padding: 12px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  user-select: none;
+}
+th:hover { background: var(--bg-card-hi); color: var(--ink); }
+th.sorted { color: var(--copper); }
+td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg-soft); }
+
+.cell-score {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 15px;
+}
+.score-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.score-pill.high { background: rgba(91,160,136,0.15); color: var(--green); }
+.score-pill.mid { background: rgba(201,147,30,0.15); color: var(--warn); }
+.score-pill.low { background: rgba(217,83,79,0.15); color: var(--red); }
+
+.cell-classe {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--steel);
+}
+
+.actions { display: flex; gap: 6px; }
+.action-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  width: 30px; height: 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s;
+}
+.action-btn:hover { background: var(--bg-soft); color: var(--ink); }
+.action-btn.del:hover { background: rgba(217,83,79,0.1); color: var(--red); border-color: var(--red); }
+
+.empty {
+  text-align: center;
+  padding: 64px 20px;
+  color: var(--ink-mute);
+}
+.empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+
+/* MODAL DETAILS */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(26,35,50,0.5);
+  z-index: 50;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 20px;
+  overflow-y: auto;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: white;
+  border-radius: 14px;
+  max-width: 760px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.modal-head {
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-head h3 { font-size: 20px; }
+.modal-head .close {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--ink-mute);
+}
+.modal-body { padding: 24px 28px; }
+.modal-info {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.modal-info-cell {
+  background: var(--bg-soft);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.modal-info-cell .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-mute);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.modal-info-cell .val {
+  font-weight: 600;
+  font-size: 15px;
+  margin-top: 4px;
+  color: var(--ink);
+}
+.q-detail {
+  padding: 14px 16px;
+  background: var(--bg-soft);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--c, var(--copper));
+}
+.q-detail.ok { --c: var(--green); }
+.q-detail.ko { --c: var(--red); }
+.q-detail-head {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.q-detail .question { font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 6px; }
+.q-detail .answer { font-size: 13px; line-height: 1.5; }
+.q-detail .answer .you { color: var(--c, var(--ink)); font-weight: 600; }
+.q-detail .answer .good { color: var(--green); font-weight: 600; }
+
+/* AUTO REFRESH */
+.refresh-indic {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+.refresh-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@media (max-width: 900px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .container { padding: 20px 14px; }
+  th, td { padding: 10px 12px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-card">
+    <h2>🔒 Accès protégé</h2>
+    <p>Tableau de bord des résultats — réservé au professeur.</p>
+    <input type="password" id="pwd" placeholder="Mot de passe" autofocus>
+    <button class="btn" style="width:100%" onclick="checkPwd()">Accéder</button>
+    <div class="lock-err" id="lockErr">Mot de passe incorrect.</div>
+  </div>
+</div>
+
+<header>
+  <div class="head-inner">
+    <div>
+      <div class="head-title">Tableau de bord · Matériaux</div>
+      <div class="head-sub">Évaluation — M. Agostini</div>
+    </div>
+    <div class="head-actions">
+      <div class="refresh-indic"><span class="refresh-dot"></span>Auto-actualisation</div>
+      <button class="btn ghost" onclick="loadResults()">↻ Actualiser</button>
+      <button class="btn ghost" onclick="exportCSV()">⬇ Export CSV</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat s1">
+      <div class="stat-num"><span id="statTotal">0</span></div>
+      <div class="stat-label">Groupes ayant passé</div>
+    </div>
+    <div class="stat s2">
+      <div class="stat-num"><span id="statMoyenne">—</span><span class="small">/20</span></div>
+      <div class="stat-label">Moyenne générale</div>
+    </div>
+    <div class="stat s3">
+      <div class="stat-num"><span id="statMax">—</span><span class="small">/20</span></div>
+      <div class="stat-label">Meilleur score</div>
+    </div>
+    <div class="stat s4">
+      <div class="stat-num"><span id="statClasses">0</span></div>
+      <div class="stat-label">Classes représentées</div>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters">
+    <div class="filter-group">
+      <label>Classe</label>
+      <select id="filterClasse">
+        <option value="">Toutes</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Score min</label>
+      <input type="number" id="filterScore" min="0" max="20" step="0.5" placeholder="0">
+    </div>
+    <div class="filter-group">
+      <label>Recherche</label>
+      <input type="text" id="filterText" placeholder="prénom…">
+    </div>
+    <div class="results-count" id="resultsCount">0 résultat</div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-sort="timestamp">Date / Heure</th>
+          <th data-sort="groupe">Groupe</th>
+          <th data-sort="classe">Classe</th>
+          <th data-sort="score">Note</th>
+          <th data-sort="duree_sec">Durée</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="6" class="empty">
+          <div class="empty-icon">⏳</div>
+          Chargement des résultats…
+        </td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- MODAL DETAILS -->
+<div class="modal-overlay" id="modalDetails">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="mdTitle">Détail des réponses</h3>
+      <button class="close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="mdBody"></div>
+  </div>
+</div>
+
+<script>
+const FIREBASE_URL = 'https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app';
+const NODE = 'resultats_materiaux';
+const PASSWORD = 'Agostini2025';
+
+let allResults = [];
+let sortBy = 'timestamp';
+let sortDir = -1; // -1 = desc, 1 = asc
+let autoRefreshInterval = null;
+
+// ============= LOCK =============
+function checkPwd() {
+  const v = document.getElementById('pwd').value;
+  if (v === PASSWORD) {
+    document.getElementById('lockScreen').classList.add('hidden');
+    sessionStorage.setItem('mat_dash_ok', '1');
+    loadResults();
+    autoRefreshInterval = setInterval(loadResults, 30000); // toutes les 30s
+  } else {
+    document.getElementById('lockErr').classList.add('show');
+    document.getElementById('pwd').value = '';
+  }
+}
+document.getElementById('pwd').addEventListener('keypress', e => {
+  if (e.key === 'Enter') checkPwd();
+});
+if (sessionStorage.getItem('mat_dash_ok') === '1') {
+  document.getElementById('lockScreen').classList.add('hidden');
+  loadResults();
+  autoRefreshInterval = setInterval(loadResults, 30000);
+}
+
+// ============= LOAD =============
+async function loadResults() {
+  try {
+    const resp = await fetch(FIREBASE_URL + '/' + NODE + '.json');
+    if (!resp.ok) throw new Error('Erreur ' + resp.status);
+    const data = await resp.json();
+    if (!data) {
+      allResults = [];
+    } else {
+      // Firebase renvoie un objet { -Nxyz: {...}, -Nxyz2: {...} }
+      allResults = Object.entries(data).map(([key, val]) => ({ _key: key, ...val }));
+    }
+    refreshUI();
+  } catch (e) {
+    console.error('Erreur chargement:', e);
+    document.getElementById('tbody').innerHTML =
+      '<tr><td colspan="6" class="empty"><div class="empty-icon">⚠</div>Impossible de charger les résultats : ' + e.message + '</td></tr>';
+  }
+}
+
+function refreshUI() {
+  // Stats
+  document.getElementById('statTotal').textContent = allResults.length;
+  if (allResults.length > 0) {
+    const moy = allResults.reduce((s, r) => s + (r.score || 0), 0) / allResults.length;
+    document.getElementById('statMoyenne').textContent = moy.toFixed(1);
+    const max = Math.max(...allResults.map(r => r.score || 0));
+    document.getElementById('statMax').textContent = max.toFixed(1);
+    const classes = new Set(allResults.map(r => r.classe).filter(Boolean));
+    document.getElementById('statClasses').textContent = classes.size;
+    // Remplir le filtre classes
+    const sel = document.getElementById('filterClasse');
+    const currentClasse = sel.value;
+    sel.innerHTML = '<option value="">Toutes</option>';
+    Array.from(classes).sort().forEach(c => {
+      sel.innerHTML += '<option value="' + c + '"' + (c === currentClasse ? ' selected' : '') + '>' + c + '</option>';
+    });
+  } else {
+    document.getElementById('statMoyenne').textContent = '—';
+    document.getElementById('statMax').textContent = '—';
+    document.getElementById('statClasses').textContent = '0';
+  }
+  renderTable();
+}
+
+function renderTable() {
+  let rows = [...allResults];
+  // Filtres
+  const fClasse = document.getElementById('filterClasse').value;
+  const fScore = parseFloat(document.getElementById('filterScore').value);
+  const fText = document.getElementById('filterText').value.toLowerCase().trim();
+
+  if (fClasse) rows = rows.filter(r => r.classe === fClasse);
+  if (!isNaN(fScore)) rows = rows.filter(r => (r.score || 0) >= fScore);
+  if (fText) rows = rows.filter(r => (r.groupe || '').toLowerCase().includes(fText));
+
+  // Tri
+  rows.sort((a, b) => {
+    let va = a[sortBy], vb = b[sortBy];
+    if (typeof va === 'string') {
+      va = va.toLowerCase(); vb = (vb || '').toLowerCase();
+    } else {
+      va = va || 0; vb = vb || 0;
+    }
+    if (va < vb) return -1 * sortDir;
+    if (va > vb) return 1 * sortDir;
+    return 0;
+  });
+
+  document.getElementById('resultsCount').textContent = rows.length + ' résultat' + (rows.length > 1 ? 's' : '');
+
+  const tbody = document.getElementById('tbody');
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty"><div class="empty-icon">📭</div>Aucun résultat pour ces filtres.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = rows.map(r => {
+    const date = r.timestamp ? new Date(r.timestamp) : null;
+    const dateStr = date ? date.toLocaleDateString('fr-FR') + ' ' + date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '—';
+    const score = r.score || 0;
+    const pillCls = score >= 14 ? 'high' : (score >= 10 ? 'mid' : 'low');
+    const mins = Math.floor((r.duree_sec || 0) / 60);
+    const secs = (r.duree_sec || 0) % 60;
+    return '<tr>' +
+      '<td>' + dateStr + '</td>' +
+      '<td><strong>' + (r.groupe || '—') + '</strong></td>' +
+      '<td><span class="cell-classe">' + (r.classe || '—') + '</span></td>' +
+      '<td><span class="score-pill ' + pillCls + '">' + score.toFixed(1) + '/20</span></td>' +
+      '<td>' + mins + ' min ' + String(secs).padStart(2, '0') + 's</td>' +
+      '<td><div class="actions">' +
+        '<button class="action-btn" onclick="showDetails(\'' + r._key + '\')" title="Voir détails">👁</button>' +
+        '<button class="action-btn del" onclick="deleteResult(\'' + r._key + '\')" title="Supprimer">×</button>' +
+      '</div></td>' +
+    '</tr>';
+  }).join('');
+}
+
+// ============= TRI =============
+document.querySelectorAll('th[data-sort]').forEach(th => {
+  th.addEventListener('click', () => {
+    const key = th.dataset.sort;
+    if (sortBy === key) sortDir *= -1;
+    else { sortBy = key; sortDir = -1; }
+    document.querySelectorAll('th').forEach(t => t.classList.toggle('sorted', t.dataset.sort === sortBy));
+    renderTable();
+  });
+});
+
+// ============= FILTRES =============
+['filterClasse', 'filterScore', 'filterText'].forEach(id => {
+  document.getElementById(id).addEventListener('input', renderTable);
+  document.getElementById(id).addEventListener('change', renderTable);
+});
+
+// ============= DETAILS =============
+function showDetails(key) {
+  const r = allResults.find(x => x._key === key);
+  if (!r) return;
+  const date = new Date(r.timestamp);
+  document.getElementById('mdTitle').textContent = 'Détail · ' + (r.groupe || '—');
+
+  let html = '<div class="modal-info">' +
+    '<div class="modal-info-cell"><div class="lbl">Groupe</div><div class="val">' + (r.groupe || '—') + '</div></div>' +
+    '<div class="modal-info-cell"><div class="lbl">Classe</div><div class="val">' + (r.classe || '—') + '</div></div>' +
+    '<div class="modal-info-cell"><div class="lbl">Note</div><div class="val" style="color:var(--copper)">' + (r.score || 0).toFixed(1) + '/20</div></div>' +
+    '<div class="modal-info-cell"><div class="lbl">Durée</div><div class="val">' + Math.floor((r.duree_sec || 0) / 60) + ' min ' + String((r.duree_sec || 0) % 60).padStart(2, '0') + 's</div></div>' +
+  '</div>';
+  html += '<div style="font-family:JetBrains Mono;font-size:11px;color:var(--ink-mute);margin-bottom:12px;letter-spacing:0.15em;text-transform:uppercase">' +
+    'Passée le ' + date.toLocaleString('fr-FR') + '</div>';
+  
+  html += '<div style="margin-bottom:10px;font-family:JetBrains Mono;font-size:10px;color:var(--ink-mute);letter-spacing:0.18em;text-transform:uppercase">Réponses détaillées</div>';
+
+  (r.reponses || []).forEach(q => {
+    const okClass = q.ok ? 'ok' : 'ko';
+    html += '<div class="q-detail ' + okClass + '">' +
+      '<div class="q-detail-head">' +
+        '<span>Q' + q.q + ' · ' + q.type + '</span>' +
+        '<span>' + (q.ok ? '✓ Correct' : '✗ Erreur') + '</span>' +
+      '</div>' +
+      '<div class="question">' + q.txt + '</div>' +
+      '<div class="answer">' +
+        'Réponse du groupe : <span class="you">' + q.rep_eleve + '</span>' +
+        (!q.ok ? ' · Bonne réponse : <span class="good">' + q.bonne_rep + '</span>' : '') +
+      '</div>' +
+    '</div>';
+  });
+
+  document.getElementById('mdBody').innerHTML = html;
+  document.getElementById('modalDetails').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modalDetails').classList.remove('show');
+}
+
+// ============= DELETE =============
+async function deleteResult(key) {
+  if (!confirm('Supprimer définitivement ce résultat ?')) return;
+  try {
+    const resp = await fetch(FIREBASE_URL + '/' + NODE + '/' + key + '.json', { method: 'DELETE' });
+    if (!resp.ok) throw new Error('Erreur ' + resp.status);
+    loadResults();
+  } catch (e) {
+    alert('Erreur lors de la suppression : ' + e.message);
+  }
+}
+
+// ============= EXPORT CSV =============
+function exportCSV() {
+  if (allResults.length === 0) {
+    alert('Aucun résultat à exporter.');
+    return;
+  }
+  const headers = ['Date', 'Heure', 'Groupe', 'Classe', 'Note /20', 'Points', 'Max points', 'Durée (sec)'];
+  const lines = [headers.join(';')];
+  allResults.forEach(r => {
+    const d = new Date(r.timestamp);
+    lines.push([
+      d.toLocaleDateString('fr-FR'),
+      d.toLocaleTimeString('fr-FR'),
+      '"' + (r.groupe || '').replace(/"/g, '""') + '"',
+      r.classe || '',
+      (r.score || 0).toFixed(1),
+      r.points || 0,
+      r.max_points || 0,
+      r.duree_sec || 0
+    ].join(';'));
+  });
+  const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'resultats_materiaux_' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>

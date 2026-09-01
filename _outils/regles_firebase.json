@@ -1,0 +1,92 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "evaluations": {
+      "$sequence": {
+        ".read": "now < 1817078400000",
+        "$copie": {
+          ".write": "now < 1817078400000 && !data.exists() && newData.exists()",
+          ".validate": "newData.hasChildren(['nom','classe','score','sur','note20'])",
+          "nom":     { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 60" },
+          "prenom":  { ".validate": "newData.isString() && newData.val().length <= 60" },
+          "classe":  { ".validate": "newData.isString() && newData.val().length <= 40" },
+          "score":   { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000" },
+          "sur":     { ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 1000" },
+          "note20":  { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 20" },
+          "duree_s": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 86400" },
+          "date":    { ".validate": "newData.isString() && newData.val().length <= 40" },
+          "reponses": {
+            "$i": { ".validate": "newData.isNumber() || newData.isBoolean() || newData.isString() || newData.hasChildren()" }
+          },
+          "$autre":  { ".validate": false }
+        }
+      }
+    },
+
+    "resultats_langage_bloc": {
+      ".read": "now < 1817078400000",
+      "$copie": { ".write": "now < 1817078400000 && !data.exists() && newData.exists()" }
+    },
+    "resultats_sysml": {
+      ".read": "now < 1817078400000",
+      "$copie": { ".write": "now < 1817078400000 && !data.exists() && newData.exists()" }
+    },
+    "resultats_req_sysml": {
+      ".read": "now < 1817078400000",
+      "$copie": { ".write": "now < 1817078400000 && !data.exists() && newData.exists()" }
+    },
+    "resultats_dd_carnet": {
+      ".read": "now < 1817078400000",
+      "$copie": { ".write": "now < 1817078400000 && !data.exists() && newData.exists()" }
+    },
+    "resultats_bdd": {
+      ".read": "now < 1817078400000",
+      "$copie": { ".write": "now < 1817078400000 && !data.exists() && newData.exists()" }
+    },
+    "resultats_perceuse": {
+      ".read": "now < 1817078400000",
+      "$copie": { ".write": "now < 1817078400000 && !data.exists() && newData.exists()" }
+    },
+    "resultats_tableur": {
+      ".read": "now < 1817078400000",
+      "$copie": { ".write": "now < 1817078400000 && !data.exists() && newData.exists()" }
+    },
+    "resultats_materiaux": {
+      ".read": "now < 1817078400000",
+      "$copie": { ".write": "now < 1817078400000 && !data.exists() && newData.exists()" }
+    },
+    "resultats_jugement_decision": {
+      ".read": true,
+      "$copie": { ".write": "!data.exists() && newData.exists()" }
+    },
+    "resultats_jugement_decision_counter": {
+      ".read": true,
+      ".write": "newData.exists() && (!data.exists() || (newData.isNumber() && data.isNumber() && newData.val() > data.val()))"
+    },
+    "tp_binaire": {
+      ".read": true,
+      "$copie": { ".write": "!data.exists() && newData.exists()" }
+    },
+    "tp_binaire_eval": {
+      ".read": true,
+      "$copie": { ".write": "!data.exists() && newData.exists()" }
+    },
+
+    "$eval_si": {
+      ".read": "$eval_si.beginsWith('eval_') || $eval_si.beginsWith('resultats_si_')",
+      "$copie": {
+        ".write": "($eval_si.beginsWith('eval_') || $eval_si.beginsWith('resultats_si_')) && !data.exists() && newData.exists()",
+        ".validate": "newData.hasChildren(['nom','classe','score','total']) && newData.child('nom').isString() && newData.child('nom').val().length > 0 && newData.child('nom').val().length <= 60 && newData.child('classe').isString() && newData.child('classe').val().length <= 40 && newData.child('score').isNumber() && newData.child('total').isNumber() && newData.child('score').val() >= 0 && newData.child('score').val() <= newData.child('total').val() && newData.child('total').val() <= 100",
+        "detail":      { "$i": { ".validate": "newData.isNumber() || newData.isBoolean() || newData.hasChildren()" } },
+        "defi":        { ".validate": "newData.isNumber()" },
+        "pourcentage": { ".validate": "newData.isNumber()" },
+        "note":        { ".validate": "newData.isNumber() || newData.isString()" },
+        "ts":          { ".validate": "newData.isNumber()" },
+        "date":        { ".validate": "newData.isString() && newData.val().length <= 40" },
+        "$autre":      { ".validate": false }
+      }
+    }
+  }
+}

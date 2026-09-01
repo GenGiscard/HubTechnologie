@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moteur Rush — Technologie 4ème · ESTIC</title>
+<style>
+:root{ --fond:#0f172a; --neon:#f97316; --or:#fb923c; --vert:#4ade80; --rouge:#f87171; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar .id b{color:var(--neon);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+h1{margin:16px 0 4px;font-size:30px;color:var(--or);text-shadow:0 0 18px rgba(249,115,22,.4)}
+.sous{color:#94a3b8;font-size:14px;margin-bottom:12px;text-align:center;max-width:520px;line-height:1.5}
+.hud{display:flex;gap:22px;margin:8px 0;font-weight:800;font-size:16px}
+.hud .v{color:var(--or)}
+#scene{position:relative;width:520px;min-height:470px}
+#tempo{height:10px;background:#1e293b;border-radius:6px;overflow:hidden;margin-bottom:10px;border:1px solid #334155}
+#tempo div{height:100%;background:var(--vert);width:100%}
+#chaine{display:block;margin:0 auto 10px;border-radius:10px;background:#111c33}
+#action{background:#1e293b;border:2px solid var(--neon);border-radius:14px;padding:10px;text-align:center;margin-bottom:12px}
+#cvPiece{display:block;margin:0 auto}
+#action .txt{font-size:19px;font-weight:900;color:#fff;margin-top:2px;min-height:26px}
+#choix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#choix button{border:3px solid #475569;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:13px 6px;font-size:14px;font-weight:900;cursor:pointer;transition:.1s;line-height:1.4}
+#choix button small{display:block;font-size:10.5px;color:#94a3b8;font-weight:600}
+#choix button:hover{border-color:var(--neon)}
+#choix button:active{transform:scale(.95)}
+#flash{min-height:40px;text-align:center;font-weight:700;font-size:13.5px;margin-top:10px;line-height:1.45}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.94);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px;text-align:center;z-index:5}
+.overlay h2{color:var(--neon);font-size:25px}
+.overlay p{color:#cbd5e1;font-size:14.5px;max-width:430px;line-height:1.55}
+.overlay input{padding:12px 16px;font-size:20px;letter-spacing:4px;text-align:center;border-radius:10px;border:2px solid var(--neon);background:#0f172a;color:#fff;width:230px;text-transform:uppercase}
+.overlay button{border:none;border-radius:12px;padding:13px 26px;font-size:17px;font-weight:900;cursor:pointer;background:var(--or);color:#0f172a}
+.err{color:var(--rouge);font-weight:700;min-height:20px;font-size:14px}
+footer{margin:14px;font-size:12px;color:#64748b}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco (officiel) -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<h1>MOTEUR RUSH</h1>
+<div class="sous">Un composant arrive sur l’établi : à quel maillon de la chaîne d’énergie appartient-il ? Classe-le avant la fin du chrono.</div>
+
+<div class="hud">
+ <div>Classés : <span class="v" id="hSerie">0</span></div>
+ <div>Score : <span class="v" id="hScore">0</span></div>
+ <div>Vies : <span class="v" id="hVies">●●●</span></div>
+ <div>Record : <span class="v" id="hRecord">0</span></div>
+</div>
+
+<div id="scene">
+ <div id="tempo"><div id="tempofill"></div></div>
+ <canvas id="chaine" width="500" height="62"></canvas>
+ <div id="action">
+  <canvas id="cvPiece" width="240" height="140"></canvas>
+  <div class="txt" id="eTxt"></div>
+ </div>
+ <div id="choix">
+  <button data-f="alimenter">ALIMENTER / STOCKER<small>fournir l’énergie au départ</small></button>
+  <button data-f="distribuer">DISTRIBUER<small>doser, laisser passer ou couper</small></button>
+  <button data-f="convertir">CONVERTIR<small>changer l’énergie de forme</small></button>
+  <button data-f="transmettre">TRANSMETTRE<small>amener le mouvement plus loin</small></button>
+ </div>
+ <div id="flash"></div>
+
+ <div class="overlay" id="ovCode">
+  <h2>Établi verrouillé</h2>
+  <p>Entre le code obtenu à la fin du <b>TP Le garage à VAE</b>.</p>
+  <input id="inCode" maxlength="10" placeholder="CODE">
+  <div class="err" id="errCode"></div>
+  <button id="btnCode">Déverrouiller</button>
+ </div>
+
+ <div class="overlay cache" id="ovIntro">
+  <h2>Les règles de l’établi</h2>
+  <p>Un composant s’affiche : trouve sa fonction dans la chaîne d’énergie.<br>
+  ALIMENTER ou STOCKER, DISTRIBUER, CONVERTIR, TRANSMETTRE.<br>
+  Erreur ou chrono écoulé = une vie. Ça accélère.<br>
+  Quatre bonnes réponses des quatre maillons d’affilée : chaîne complète, gros bonus.</p>
+  <button id="btnGo">Ouvrir l’établi</button>
+ </div>
+
+ <div class="overlay cache" id="ovFin">
+  <h2 id="finTitre">Établi fermé</h2>
+  <p id="finTexte"></p>
+  <button id="btnRejouer">Rejouer</button>
+ </div>
+</div>
+
+<footer>Jeu de révision · Séquence La chaîne d’énergie · 4ème</footer>
+
+<script>
+/* ================== DÉVERROUILLAGE ================== */
+const CODE='MOTEUR80';
+function dejaOuvert(){ try{ return localStorage.getItem('moteurrush_ok')==='1'; }catch(e){ return false; } }
+document.getElementById('btnCode').onclick=verifCode;
+document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verifCode(); });
+function verifCode(){
+ const v=document.getElementById('inCode').value.trim().toUpperCase();
+ if(v===CODE){ try{ localStorage.setItem('moteurrush_ok','1'); }catch(e){}
+  document.getElementById('ovCode').classList.add('cache');
+  document.getElementById('ovIntro').classList.remove('cache');
+ } else document.getElementById('errCode').textContent='Code incorrect… termine le TP !';
+}
+if(dejaOuvert()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+
+/* ===== SCHEMAS : dessins vectoriels remplaçant les anciens pictogrammes =====
+   SCHEMA(ctx,'nom',x,y,T) dessine le symbole centré en (x,y), taille T.
+   La couleur courante (ctx.fillStyle) sert de teinte principale.          */
+const SCHEMA=(function(){
+ function P(c,pts,rempli){
+  c.beginPath();
+  pts.forEach((p,i)=> i? c.lineTo(p[0],p[1]) : c.moveTo(p[0],p[1]));
+  c.closePath(); rempli? c.fill() : c.stroke();
+ }
+ const D={
+ /* --- ALIMENTER / STOCKER --- */
+ batterie(c,u){ c.fillRect(-.42*u,-.24*u,.7*u,.48*u); c.fillRect(.28*u,-.1*u,.09*u,.2*u);
+   c.save(); c.fillStyle='#fff';
+   c.fillRect(-.31*u,-.03*u,.18*u,.06*u); c.fillRect(-.25*u,-.12*u,.06*u,.24*u);
+   c.fillRect(.04*u,-.03*u,.18*u,.06*u); c.restore(); },
+ prise(c,u){ c.fillRect(-.1*u,-.28*u,.42*u,.56*u);
+   c.fillRect(-.34*u,-.17*u,.24*u,.09*u); c.fillRect(-.34*u,.08*u,.24*u,.09*u);
+   const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+   c.beginPath(); c.moveTo(.32*u,0); c.quadraticCurveTo(.46*u,.2*u,.28*u,.36*u); c.stroke();
+   c.lineWidth=w; },
+ reservoir(c,u){ c.fillRect(-.3*u,-.2*u,.6*u,.54*u); c.fillRect(-.08*u,-.34*u,.16*u,.14*u);
+   c.save(); c.fillStyle='#fff';
+   c.beginPath(); c.moveTo(0,-.04*u); c.quadraticCurveTo(.15*u,.11*u,0,.2*u);
+   c.quadraticCurveTo(-.15*u,.11*u,0,-.04*u); c.fill(); c.restore(); },
+ bouteille(c,u){ c.fillRect(-.2*u,-.16*u,.4*u,.5*u);
+   c.beginPath(); c.arc(0,-.16*u,.2*u,Math.PI,0); c.fill();
+   c.fillRect(-.06*u,-.44*u,.12*u,.14*u); c.fillRect(-.13*u,-.35*u,.26*u,.06*u); },
+ /* --- DISTRIBUER --- */
+ interrupteur(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.2,.08*u); c.strokeStyle=c.fillStyle;
+   c.beginPath(); c.moveTo(-.44*u,.16*u); c.lineTo(-.24*u,.16*u); c.stroke();
+   c.beginPath(); c.moveTo(.24*u,.16*u); c.lineTo(.44*u,.16*u); c.stroke();
+   c.beginPath(); c.moveTo(-.24*u,.16*u); c.lineTo(.16*u,-.2*u); c.stroke();
+   c.lineWidth=w;
+   c.beginPath(); c.arc(-.24*u,.16*u,.07*u,0,6.284); c.fill();
+   c.beginPath(); c.arc(.24*u,.16*u,.07*u,0,6.284); c.fill(); },
+ variateur(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+   c.beginPath(); c.arc(0,.06*u,.42*u,Math.PI*1.15,Math.PI*1.85); c.stroke(); c.lineWidth=w;
+   c.beginPath(); c.arc(0,.06*u,.26*u,0,6.284); c.fill();
+   c.save(); c.fillStyle='#fff';
+   P(c,[[-.035*u,.06*u],[.035*u,.06*u],[.012*u,-.15*u],[-.012*u,-.15*u]],true); c.restore(); },
+ poignee(c,u){ c.fillRect(-.44*u,-.06*u,.32*u,.12*u); c.fillRect(-.12*u,-.14*u,.4*u,.28*u);
+   c.save(); c.fillStyle='#fff';
+   for(let k=0;k<3;k++) c.fillRect((-.04+k*.11)*u,-.14*u,.035*u,.28*u);
+   c.restore();
+   const w=c.lineWidth; c.lineWidth=Math.max(1.8,.055*u); c.strokeStyle=c.fillStyle;
+   const ae=Math.PI*1.76, cx=.08*u, r=.3*u;
+   c.beginPath(); c.arc(cx,0,r,Math.PI*1.22,ae); c.stroke(); c.lineWidth=w;
+   const ex=cx+r*Math.cos(ae), ey=r*Math.sin(ae);
+   const tx=-Math.sin(ae), ty=Math.cos(ae), nx=-ty, ny=tx;
+   P(c,[[ex+tx*.11*u,ey+ty*.11*u],
+        [ex-tx*.04*u+nx*.075*u,ey-ty*.04*u+ny*.075*u],
+        [ex-tx*.04*u-nx*.075*u,ey-ty*.04*u-ny*.075*u]],true); },
+ vanne(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.09*u); c.strokeStyle=c.fillStyle;
+   c.beginPath(); c.moveTo(-.44*u,.14*u); c.lineTo(.44*u,.14*u); c.stroke(); c.lineWidth=w;
+   P(c,[[-.2*u,-.04*u],[.2*u,.32*u],[.2*u,-.04*u],[-.2*u,.32*u]],true);
+   c.fillRect(-.03*u,-.34*u,.06*u,.3*u); c.fillRect(-.22*u,-.42*u,.44*u,.1*u); },
+ /* --- CONVERTIR --- */
+ moteur(c,u){ c.beginPath(); c.arc(-.06*u,0,.3*u,0,6.284); c.fill();
+   c.fillRect(.22*u,-.05*u,.24*u,.1*u);
+   c.save(); c.fillStyle='#fff'; c.font='bold '+(.32*u)+'px Segoe UI';
+   c.textAlign='center'; c.textBaseline='middle'; c.fillText('M',-.06*u,.01*u); c.restore(); },
+ led(c,u){ c.beginPath(); c.arc(0,-.1*u,.22*u,Math.PI,0); c.fill();
+   c.fillRect(-.22*u,-.1*u,.44*u,.2*u);
+   c.fillRect(-.15*u,.1*u,.06*u,.2*u); c.fillRect(.09*u,.1*u,.06*u,.2*u);
+   const w=c.lineWidth; c.lineWidth=Math.max(1.6,.05*u); c.strokeStyle=c.fillStyle;
+   [[-.7,-.7],[0,-1],[.7,-.7]].forEach(([dx,dy])=>{ c.beginPath();
+     c.moveTo(dx*.28*u,-.1*u+dy*.28*u); c.lineTo(dx*.42*u,-.1*u+dy*.42*u); c.stroke(); });
+   c.lineWidth=w; },
+ resistance(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.09*u); c.strokeStyle=c.fillStyle;
+   c.beginPath(); c.moveTo(-.44*u,.16*u); c.lineTo(-.3*u,.16*u);
+   for(let k=0;k<4;k++){ c.lineTo((-.3+k*.15+.075)*u,(k%2? .32:.0)*u); c.lineTo((-.3+(k+1)*.15)*u,.16*u); }
+   c.lineTo(.44*u,.16*u); c.stroke();
+   c.lineWidth=Math.max(1.6,.055*u);
+   [-.24,0,.24].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,-.08*u);
+     c.bezierCurveTo((dx+.1)*u,-.2*u,(dx-.1)*u,-.3*u,dx*u,-.44*u); c.stroke(); });
+   c.lineWidth=w; },
+ hautparleur(c,u){ c.fillRect(-.42*u,-.14*u,.18*u,.28*u);
+   P(c,[[-.24*u,-.14*u],[.02*u,-.4*u],[.02*u,.4*u],[-.24*u,.14*u]],true);
+   const w=c.lineWidth; c.lineWidth=Math.max(1.8,.06*u); c.strokeStyle=c.fillStyle;
+   [.18,.32].forEach(r=>{ c.beginPath(); c.arc(.06*u,0,r*u,-1,1); c.stroke(); });
+   c.lineWidth=w; },
+ dynamo(c,u){ c.beginPath(); c.arc(0,-.26*u,.13*u,0,6.284); c.fill();
+   P(c,[[-.16*u,-.16*u],[.16*u,-.16*u],[.11*u,.28*u],[-.11*u,.28*u]],true);
+   c.fillRect(-.17*u,.28*u,.34*u,.08*u);
+   const w=c.lineWidth; c.lineWidth=Math.max(1.8,.06*u); c.strokeStyle=c.fillStyle;
+   c.beginPath(); c.moveTo(.14*u,.3*u); c.quadraticCurveTo(.42*u,.32*u,.42*u,.06*u); c.stroke();
+   c.lineWidth=w; },
+ /* --- TRANSMETTRE --- */
+ chaine(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+   for(let k=0;k<5;k++){ const cx=(-.34+k*.17)*u;
+     c.beginPath();
+     if(k%2) c.ellipse(cx,0,.07*u,.13*u,0,0,6.284);
+     else c.ellipse(cx,0,.12*u,.075*u,0,0,6.284);
+     c.stroke(); }
+   c.lineWidth=w; },
+ courroie(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.09*u); c.strokeStyle=c.fillStyle;
+   c.beginPath(); c.moveTo(-.26*u,-.22*u); c.lineTo(.26*u,-.13*u); c.stroke();
+   c.beginPath(); c.moveTo(-.26*u,.22*u); c.lineTo(.26*u,.13*u); c.stroke(); c.lineWidth=w;
+   c.beginPath(); c.arc(-.26*u,0,.22*u,0,6.284); c.fill();
+   c.beginPath(); c.arc(.26*u,0,.13*u,0,6.284); c.fill();
+   c.save(); c.fillStyle='#fff';
+   c.beginPath(); c.arc(-.26*u,0,.07*u,0,6.284); c.fill();
+   c.beginPath(); c.arc(.26*u,0,.045*u,0,6.284); c.fill(); c.restore(); },
+ engrenages(c,u){
+   function roue(cx,cy,r,n){ const p=[];
+     for(let k=0;k<n*2;k++){ const a=k*Math.PI/n, rr=(k%2? r*.78:r);
+       p.push([cx+rr*Math.cos(a),cy+rr*Math.sin(a)]); } P(c,p,true); }
+   roue(-.18*u,-.04*u,.26*u,10); roue(.2*u,.1*u,.18*u,8);
+   c.save(); c.fillStyle='#fff';
+   c.beginPath(); c.arc(-.18*u,-.04*u,.08*u,0,6.284); c.fill();
+   c.beginPath(); c.arc(.2*u,.1*u,.055*u,0,6.284); c.fill(); c.restore(); },
+ roue(c,u){ const w=c.lineWidth; c.strokeStyle=c.fillStyle;
+   c.lineWidth=Math.max(2.4,.09*u);
+   c.beginPath(); c.arc(0,-.06*u,.3*u,0,6.284); c.stroke();
+   c.lineWidth=Math.max(1.2,.035*u);
+   for(let k=0;k<6;k++){ const a=k*Math.PI/3;
+     c.beginPath(); c.moveTo(0,-.06*u);
+     c.lineTo(.3*u*Math.cos(a),-.06*u+.3*u*Math.sin(a)); c.stroke(); }
+   c.lineWidth=Math.max(2,.07*u);
+   c.beginPath(); c.moveTo(-.44*u,.34*u); c.lineTo(.44*u,.34*u); c.stroke();
+   c.lineWidth=w;
+   c.beginPath(); c.arc(0,-.06*u,.07*u,0,6.284); c.fill(); },
+ cardan(c,u){ c.fillRect(-.44*u,-.05*u,.24*u,.1*u); c.fillRect(.2*u,-.05*u,.24*u,.1*u);
+   c.fillRect(-.2*u,-.2*u,.08*u,.4*u);
+   c.fillRect(-.12*u,-.2*u,.09*u,.08*u); c.fillRect(-.12*u,.12*u,.09*u,.08*u);
+   c.fillRect(.12*u,-.2*u,.08*u,.4*u);
+   c.fillRect(.03*u,-.2*u,.09*u,.08*u); c.fillRect(.03*u,.12*u,.09*u,.08*u);
+   c.beginPath(); c.arc(0,0,.075*u,0,6.284); c.fill(); },
+ };
+ return function(c,nom,x,y,T){
+  const f=D[nom]; if(!f) return false;
+  c.save(); c.translate(x,y); f(c,T||24); c.restore(); return true;
+ };
+})();
+
+/* ================== DONNÉES ================== */
+const NOMS_F={alimenter:'ALIMENTER ou STOCKER',distribuer:'DISTRIBUER',
+              convertir:'CONVERTIR',transmettre:'TRANSMETTRE'};
+const ORDRE=['alimenter','distribuer','convertir','transmettre'];
+const COULEURS={alimenter:'#fbbf24',distribuer:'#38bdf8',convertir:'#f97316',transmettre:'#4ade80'};
+
+const PIECES=[
+ {s:'batterie',    n:'Batterie de VAE',        f:'alimenter',  exp:'elle garde l\u2019énergie et la fournit au départ.'},
+ {s:'prise',       n:'Prise secteur',          f:'alimenter',  exp:'l\u2019énergie entre dans l\u2019objet par là.'},
+ {s:'reservoir',   n:'Réservoir de carburant', f:'alimenter',  exp:'une réserve d\u2019énergie chimique, tout au début.'},
+ {s:'bouteille',   n:'Bouteille de gaz',       f:'alimenter',  exp:'elle stocke l\u2019énergie avant toute la chaîne.'},
+ {s:'interrupteur',n:'Interrupteur',           f:'distribuer', exp:'il laisse passer l\u2019énergie… ou pas du tout.'},
+ {s:'variateur',   n:'Variateur',              f:'distribuer', exp:'il dose la quantité d\u2019énergie envoyée.'},
+ {s:'poignee',     n:'Poignée d\u2019accélération', f:'distribuer', exp:'elle règle ce que le contrôleur laisse passer.'},
+ {s:'vanne',       n:'Vanne',                  f:'distribuer', exp:'le robinet du circuit : elle dose le débit.'},
+ {s:'moteur',      n:'Moteur électrique',      f:'convertir',  exp:'électrique en entrée, mécanique en sortie.'},
+ {s:'led',         n:'Ampoule LED',            f:'convertir',  exp:'électrique en entrée, lumière en sortie.'},
+ {s:'resistance',  n:'Résistance chauffante',  f:'convertir',  exp:'électrique en entrée, chaleur en sortie.'},
+ {s:'hautparleur', n:'Haut-parleur',           f:'convertir',  exp:'électrique en entrée, son en sortie.'},
+ {s:'dynamo',      n:'Dynamo de vélo',         f:'convertir',  exp:'mécanique en entrée, électrique en sortie.'},
+ {s:'chaine',      n:'Chaîne',                 f:'transmettre',exp:'elle amène le mouvement sans le transformer.'},
+ {s:'courroie',    n:'Courroie et poulies',    f:'transmettre',exp:'même énergie mécanique, transportée plus loin.'},
+ {s:'engrenages',  n:'Engrenages',             f:'transmettre',exp:'ils transmettent en changeant la vitesse.'},
+ {s:'roue',        n:'Roue',                   f:'transmettre',exp:'dernier maillon : elle transmet à la route.'},
+ {s:'cardan',      n:'Arbre de transmission',  f:'transmettre',exp:'il porte la rotation jusqu\u2019à la roue.'},
+];
+
+/* ================== BANDEAU CHAÎNE ================== */
+const cvC=document.getElementById('chaine'), ctxC=cvC.getContext('2d');
+function dessinerChaine(actif){
+ ctxC.clearRect(0,0,500,62);
+ const L=108, H=34, y=12, ecart=18;
+ ORDRE.forEach((f,i)=>{
+  const x=7+i*(L+ecart), on=(f===actif);
+  ctxC.fillStyle= on? COULEURS[f] : '#1e293b';
+  ctxC.strokeStyle= on? COULEURS[f] : '#334155';
+  ctxC.lineWidth=2;
+  ctxC.beginPath(); ctxC.roundRect(x,y,L,H,9); ctxC.fill(); ctxC.stroke();
+  ctxC.fillStyle= on? '#0f172a' : '#94a3b8';
+  ctxC.font='bold 12px Segoe UI'; ctxC.textAlign='center'; ctxC.textBaseline='middle';
+  ctxC.fillText(f.toUpperCase(),x+L/2,y+H/2+1);
+  if(i<3){ ctxC.strokeStyle='#475569'; ctxC.lineWidth=2;
+   ctxC.beginPath(); ctxC.moveTo(x+L+3,y+H/2); ctxC.lineTo(x+L+ecart-4,y+H/2); ctxC.stroke();
+   ctxC.fillStyle='#475569'; ctxC.beginPath();
+   ctxC.moveTo(x+L+ecart-2,y+H/2); ctxC.lineTo(x+L+ecart-8,y+H/2-4);
+   ctxC.lineTo(x+L+ecart-8,y+H/2+4); ctxC.closePath(); ctxC.fill(); }
+ });
+ ctxC.fillStyle='#64748b'; ctxC.font='11px Segoe UI'; ctxC.textAlign='center';
+ ctxC.fillText('La chaîne d\u2019énergie, dans l\u2019ordre',250,55);
+}
+dessinerChaine(null);
+
+/* ================== PIÈCE ================== */
+const cvP=document.getElementById('cvPiece'), ctxP=cvP.getContext('2d');
+function dessinerPiece(piece){
+ ctxP.clearRect(0,0,240,140);
+ if(!piece) return;
+ ctxP.fillStyle='#e2e8f0';
+ ctxP.lineWidth=2;
+ SCHEMA(ctxP,piece.s,120,70,120);
+}
+
+/* ================== JEU ================== */
+let J=null, record=0, dernierTs=null;
+try{ record=+localStorage.getItem('moteurrush_record')||0; }catch(e){}
+document.getElementById('hRecord').textContent=record;
+
+function majHUD(){
+ document.getElementById('hSerie').textContent=J.serie;
+ document.getElementById('hScore').textContent=J.score;
+ document.getElementById('hVies').textContent='●'.repeat(Math.max(0,J.vies));
+}
+function nouveauJeu(){
+ J={serie:0,score:0,vies:3,duree:9,reste:9,fini:false,pioche:[],piece:null,combo:[]};
+ window.J_DEBUG=J;
+ dessinerChaine(null);
+ document.getElementById('flash').textContent='';
+ majHUD(); nouvellePiece(); dernierTs=null;
+}
+function nouvellePiece(){
+ if(J.pioche.length===0) J.pioche=PIECES.map((_,i)=>i).sort(()=>0.5-Math.random());
+ J.piece=PIECES[J.pioche.pop()];
+ J.reste=J.duree;
+ document.getElementById('eTxt').textContent=J.piece.n;
+ dessinerPiece(J.piece);
+}
+function repondre(f){
+ if(!J||J.fini) return;
+ const flash=document.getElementById('flash');
+ if(f===J.piece.f){
+  J.serie++; J.score+=15+Math.round(J.reste*3);
+  flash.textContent='Oui : '+J.piece.n+' → '+NOMS_F[f]+', '+J.piece.exp;
+  flash.style.color='#4ade80';
+  dessinerChaine(f);
+  if(J.combo.indexOf(f)<0) J.combo.push(f);
+  if(J.combo.length===4){
+   J.score+=60; J.combo=[];
+   flash.textContent='Chaîne complète : les quatre maillons enchaînés. Bonus 60 points.';
+   flash.style.color='#fb923c';
+  }
+  J.duree=Math.max(4.2,J.duree-0.3);
+  majHUD(); nouvellePiece();
+ } else {
+  J.vies--; J.combo=[];
+  flash.textContent='Non, c\u2019était '+NOMS_F[J.piece.f]+' : '+J.piece.exp;
+  flash.style.color='#f87171';
+  dessinerChaine(J.piece.f);
+  majHUD();
+  if(J.vies<=0) return finPartie('L\u2019établi ferme. Retiens l\u2019ordre : ALIMENTER ou STOCKER, puis DISTRIBUER, puis CONVERTIR, puis TRANSMETTRE.');
+  nouvellePiece();
+ }
+}
+document.querySelectorAll('#choix button').forEach(b=>b.onclick=()=>repondre(b.dataset.f));
+
+function finPartie(raison){
+ J.fini=true;
+ if(J.score>record){ record=J.score; try{ localStorage.setItem('moteurrush_record',record); }catch(e){} }
+ document.getElementById('hRecord').textContent=record;
+ document.getElementById('finTitre').textContent= J.serie>=15 ? 'Chef d\u2019atelier !' : 'Établi fermé';
+ document.getElementById('finTexte').innerHTML=raison+'<br><br>Composants classés : <b>'+J.serie+'</b> · Score : <b>'+J.score+'</b>';
+ document.getElementById('ovFin').classList.remove('cache');
+}
+function boucle(ts){
+ requestAnimationFrame(boucle);
+ if(!J||J.fini){ dernierTs=null; return; }
+ if(dernierTs===null) dernierTs=ts;
+ const dt=Math.min(0.05,(ts-dernierTs)/1000); dernierTs=ts;
+ J.reste-=dt;
+ const f=document.getElementById('tempofill');
+ f.style.width=Math.max(0,J.reste/J.duree*100)+'%';
+ f.style.background= J.reste/J.duree>0.5?'#4ade80':(J.reste/J.duree>0.25?'#fbbf24':'#f87171');
+ if(J.reste<=0){
+  J.vies--; J.combo=[]; majHUD();
+  const fl=document.getElementById('flash');
+  fl.textContent='Trop lent. C\u2019était '+NOMS_F[J.piece.f]+' : '+J.piece.exp;
+  fl.style.color='#f87171';
+  dessinerChaine(J.piece.f);
+  if(J.vies<=0) return finPartie('Le chrono a gagné : au garage, un diagnostic se pose vite.');
+  nouvellePiece();
+ }
+}
+document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro').classList.add('cache'); nouveauJeu(); };
+document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>
