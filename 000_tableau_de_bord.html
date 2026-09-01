@@ -42,7 +42,7 @@ tr:hover td{background:#fbf8f1}
 .lien:hover{text-decoration:underline}
 </style></head><body>
 <div class="estic-bar">
- <img alt="Logo ESTIC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABaCAMAAADD74vbAAAASFBMVEX////+/////v78/f39/P338PHX29/etbnaZm2ObXvaUlvWUVrWUFnWUFjTUFnWTlfURk9QSFsVQ1wTQFoRP1oRP1kMPlgENVGGAjgOAAAC4UlEQVR42u2Y2xabKhBAEVBEtN6q/P+fdhA1XAYk6VptzzqZ18QdtpmbkuU59rlT3UOolmzPAaQfw0OMXQFpNaQ+H2ps/y+kNRmGpFLxzpk2nfnvxiEifZpPKiCtWjTpqDMhJhWQGvJZICSWDpoMTrEzsQ9OxMmX9G+RwizgYfzpM1FSyyBEGBy+9UxipNFBzJMfqi4lLWvUC5zo+raclO2ZcNWX9CUBqaj7opkZkHh2IuSqJSB1D1MqXcFyDPaC7OTMdRX7u05kpnmu03EWkfr0hpE7E4/PlNl6vqS/S8I3GzQJ1O9l5uANmgyJ4xugU3fu7Mv3giBk2AtoaS/Ydjc2Hfen14rw1Omizf47Ef4jpH1dc6ShKyNRWs96X5IkNU4tpyUkUhEmFv06lkdS/dSKqnRjhS/WctfLGpGUmgZxq5XsvjBjm1vxJikjVhMHVLBFU2CB4rY4JDWAmLmPbz4jMHopWhKIKSNGn/dxxqKuaxXts/kUitnv4LtKiKLsUDxIsdh5EyLSPjeHkR8Ar+UKm70yjwURh5JKtKNPgkNpaVgEU5wxseOjdhpV+L5gXfUia0TRXHBcFh2oFuMUzZbj3cOmF2FuYqhIU2JTr5x559TqusD6hvx+lRW7Sdqte1DcMMXgQMQVO0mKSH0XWE7RE2Oi8zmQbeJVFDdrRxWdA/lits8c/3stF19x0TsoUpYQa6fwQJ19CIULmlDxJyjSOFFBjMdio7iyzfx447dJVPHoD7gYd4qC4YpO0nNEzDZQL9sQRZP0gl0ZcYgpTCzM2iqjWF1iQ07M6yH+JLBJL5tLbPQONBxiibxj/iS46xoSJRbrETGSmAQvxUBMnQ2UZ0uKR0kPiubNQyCWLahwEuAz+JgMPCeGTAKEpBKToUzRncFjmVg0CWxGODPY1mo551I8k/4kvSmGKZ4zOJnShYqQ9Pb9E4ixd8WiugaS04Q+C2ozYv5czFNkUoZNCItfVaPmhLx4TEYAAAAASUVORK5CYII=">
+ <img alt="Logo ESTIC" src="logo_estic.png">
  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
  <div class="copy">© ESTIC — Tous droits réservés</div>
 </div>
@@ -263,6 +263,7 @@ const EVALS=[
  "niv": "3e"
  }
 ];
+const ERREURS=new Set();
 let DONNEES=[], tri={col:'date',sens:-1};
 document.getElementById('entrer').addEventListener('click',connexion);
 document.getElementById('mdp').addEventListener('keydown',e=>{ if(e.key==='Enter')connexion(); });
@@ -280,18 +281,24 @@ async function charger(){
  document.getElementById('etat').textContent='Chargement des résultats…';
  document.getElementById('etat').style.display='block';
  document.getElementById('tab').style.display='none';
- DONNEES=[];
+ DONNEES=[]; ERREURS.clear();
  const lots=await Promise.all(EVALS.map(async ev=>{
  try{
  const r=await fetch(BASE+ev.fb+'.json');
- if(!r.ok) return [];
  const j=await r.json();
+ if(j && typeof j==='object' && j.error){ ERREURS.add(j.error); return []; }
+ if(!r.ok){ ERREURS.add('HTTP '+r.status); return []; }
  if(!j) return [];
- return Object.entries(j).map(([cle,v])=>({
+ return Object.entries(j)
+ .filter(([,v])=>v && typeof v==='object' && (v.nom!==undefined||v.classe!==undefined))
+ .map(([cle,v])=>({
  cle, seq:ev.titre, fb:ev.fb, niv:ev.niv, fichier:ev.f,
  nom:((v.nom||'')+' '+(v.prenom||'')).trim()||'(anonyme)',
- classe:v.classe||'—', note:parseFloat(v.note)||0, score:v.score||0,
- duree:v.duree||v.temps||'', date:v.date||v.horodatage||''
+ classe:v.classe||'—',
+ note:parseFloat(v.note20!==undefined?v.note20:v.note)||0,
+ score:v.score||0,
+ duree:v.duree_s?Math.floor(v.duree_s/60)+' min '+String(v.duree_s%60).padStart(2,'0'):(v.duree||''),
+ date:v.date?new Date(v.date).toLocaleDateString('fr-FR'):''
  }));
  }catch(e){ return []; }
  }));
@@ -312,8 +319,11 @@ function afficher(){
  const corps=document.getElementById('corps');
  const stats=document.getElementById('stats');
  if(!DONNEES.length){
- document.getElementById('etat').innerHTML='Aucun résultat pour l’instant — ou pas de connexion à Firebase.<br>'+
- 'Les résultats apparaîtront ici dès que des élèves auront terminé une évaluation.';
+ document.getElementById('etat').innerHTML = ERREURS.size
+  ? '<b style="color:#dc2626">Lecture refusée par Firebase</b><br>Message renvoyé : « '+[...ERREURS].join(' / ')+
+    ' ».<br>Ajoute une règle autorisant la lecture du chemin /evaluations dans la console Firebase.'
+  : 'Aucun résultat pour l’instant.<br>Les résultats apparaîtront ici dès qu’un élève aura terminé une évaluation.';
+ document.getElementById('etat').style.display='block';
  stats.innerHTML=''; return;
  }
  document.getElementById('etat').style.display='none';
