@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les matériaux et leurs propriétés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #F8F4EC;
+  --bg-elev: #FFFFFF;
+  --ink: #1A2332;
+  --ink-soft: #4A5A6B;
+  --ink-mute: #8A9AA9;
+  --copper: #B85C2E;
+  --green: #3D7E5F;
+  --line: #E0D6C2;
+  --shadow: 0 2px 12px rgba(26,35,50,0.06);
+  --shadow-lg: 0 8px 32px rgba(26,35,50,0.10);
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(184,92,46,0.05) 0%, transparent 45%),
+    radial-gradient(ellipse at 80% 90%, rgba(61,126,95,0.05) 0%, transparent 45%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============= HEADER ============= */
+header.site-header {
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--line);
+  padding: 18px 32px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 1px 0 rgba(26,35,50,0.03);
+}
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.logo-estic {
+  width: 48px; height: 48px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--copper), #933F1A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+/* Remplacer le SVG par <img src="logo_estic.png"> si tu veux utiliser le vrai logo */
+.logo-estic svg { display: block; }
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.brand-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+.brand-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+.teacher {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  line-height: 1.2;
+}
+.teacher-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.teacher-role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--copper);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* ============= CONTAINER PRINCIPAL ============= */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 64px 32px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+.cards-row { margin-bottom: 22px; }
+.cards-row:last-child { margin-bottom: 0; }
+.dash-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+}
+
+.card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--c, var(--copper));
+}
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--c, var(--copper));
+}
+
+.card-icon {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  background: var(--icon-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card h2 {
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.15;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+.card p {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  flex: 1;
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+.card-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+
+.card-cta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--c, var(--copper));
+  margin-top: 6px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line);
+}
+.card-cta svg { transition: transform 0.15s; }
+.card:hover .card-cta svg { transform: translateX(4px); }
+
+.card.c1 { --c: var(--copper); --icon-bg: rgba(184,92,46,0.12); }
+.card.c2 { --c: var(--green); --icon-bg: rgba(61,126,95,0.12); }
+.card.c3 { --c: #C9931E; --icon-bg: rgba(201,147,30,0.12); }
+.card.c4 { --c: var(--steel, #2E6A8E); --icon-bg: rgba(46,106,142,0.12); }
+.card.c5 { --c: #7C5CBF; --icon-bg: rgba(124,92,191,0.12); }
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 8px 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ============= FOOTER ============= */
+footer.site-footer {
+  background: var(--bg-elev);
+  border-top: 1px solid var(--line);
+  padding: 24px 32px;
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+.footer-inner .copy {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+}
+.footer-inner .copy strong {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.footer-inner .links {
+  display: flex;
+  gap: 16px;
+}
+.footer-inner a {
+  color: var(--copper);
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+}
+.footer-inner a:hover { text-decoration: underline; }
+
+@media (max-width: 760px) {
+  header.site-header { padding: 14px 20px; }
+  .header-inner { gap: 14px; }
+  .teacher { align-items: flex-start; text-align: left; }
+  .container { padding: 40px 20px; }
+  .cards { grid-template-columns: 1fr; }
+  .card { padding: 24px; }
+  .card h2 { font-size: 22px; }
+  footer.site-footer { padding: 18px 20px; }
+  .footer-inner { justify-content: center; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============= HEADER ============= -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <!-- Pour remplacer par votre logo, mettez : <img src="logo_estic.png" alt="ESTIC" style="width:48px;height:48px;border-radius:10px"> -->
+      <div class="logo-estic" aria-label="Collège ESTIC Don Bosco">
+        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <text x="16" y="22" text-anchor="middle"
+                font-family="Bricolage Grotesque, sans-serif"
+                font-size="16" font-weight="800" fill="white"
+                letter-spacing="-0.5">E</text>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">Collège ESTIC Don Bosco</div>
+        <div class="brand-sub">Saint-Dizier · Technologie</div>
+      </div>
+    </div>
+
+    <div class="teacher">
+      <div class="teacher-name">Mathieu Agostini</div>
+      <div class="teacher-role">Professeur de technologie</div>
+    </div>
+  </div>
+</header>
+
+<!-- ============= CONTENU ============= -->
+<div class="container">
+
+  <div class="section-label">Pour les élèves</div>
+
+  <div class="cards cards-row">
+
+    <a class="card c1" href="01_cours_materiaux.html">
+      <div class="card-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#B85C2E" stroke-width="2">
+          <rect x="3" y="4" width="18" height="13" rx="1.5"/>
+          <path d="M8,21 L16,21 M12,17 L12,21"/>
+          <circle cx="12" cy="10.5" r="2.5"/>
+        </svg>
+      </div>
+      <h2>Cours projeté en classe</h2>
+      <p>21 slides interactives à vidéo-projeter : 5 familles, propriétés, élasticité, courbe σ-ε, 5 sollicitations détaillées, étude de cas, environnement, réparabilité. Avec animations pédagogiques.</p>
+      <div class="card-meta">
+        <span class="card-meta-item">👥 Classe entière</span>
+        <span class="card-meta-item">🖥 Vidéoprojection</span>
+      </div>
+      <div class="card-cta">
+        Ouvrir le cours
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M3,7 L11,7 M8,4 L11,7 L8,10"/>
+        </svg>
+      </div>
+    </a>
+
+    <a class="card c2" href="02_tp_materiaux.html">
+      <div class="card-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3D7E5F" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <path d="M8,11 L11,14 L16,8"/>
+        </svg>
+      </div>
+      <h2>Activités d'entraînement</h2>
+      <p>10 activités auto-correctives (tri, calculs avec calculatrice, courbe σ-ε, recherche internet, détective, vocabulaire…) et 8 jeux bonus. Progression bloquante : 80% pour passer à la suite.</p>
+      <div class="card-meta">
+        <span class="card-meta-item">👤 Élève (binôme)</span>
+        <span class="card-meta-item">⏱ 2 heures</span>
+      </div>
+      <div class="card-cta">
+        Lancer les activités
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M3,7 L11,7 M8,4 L11,7 L8,10"/>
+        </svg>
+      </div>
+    </a>
+
+    <a class="card c5" href="03_jeu_defi_materiaux.html" style="grid-column:1 / -1">
+      <div class="card-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7C5CBF" stroke-width="2">
+          <rect x="2" y="6" width="20" height="12" rx="3"/>
+          <path d="M7,10 L7,14 M5,12 L9,12"/>
+          <circle cx="16" cy="11" r="1.2" fill="#7C5CBF"/>
+          <circle cx="18.5" cy="13.5" r="1.2" fill="#7C5CBF"/>
+        </svg>
+      </div>
+      <h2>🎮 Réviser en jouant — Le Grand Défi</h2>
+      <p>Un quiz-arcade pour réviser toutes les notions : 3 vies, chrono de 15 s par question, combos qui multiplient le score et médaille finale (or, argent, bronze). 5 manches thématiques à enchaîner.</p>
+      <div class="card-meta">
+        <span class="card-meta-item">❤️ 3 vies</span>
+        <span class="card-meta-item">🔥 Combos</span>
+        <span class="card-meta-item">🏅 Médailles</span>
+        <span class="card-meta-item">👤 En solo</span>
+      </div>
+      <div class="card-cta">
+        Lancer le défi
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M3,7 L11,7 M8,4 L11,7 L8,10"/>
+        </svg>
+      </div>
+    </a>
+
+    <a class="card c3" href="04_evaluation_materiaux.html" style="grid-column:1 / -1">
+      <div class="card-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9931E" stroke-width="2">
+          <path d="M9,11 L11,13 L15,9"/>
+          <rect x="5,3 L19,3 L21,5 L21,21 L5,21 Z" x="5" y="3" width="16" height="18" rx="1"/>
+          <path d="M9,3 L9,5 L15,5 L15,3"/>
+        </svg>
+      </div>
+      <h2>★ Évaluation notée (en groupe)</h2>
+      <p>Évaluation de 20 questions sur 30 minutes en groupe de 2 à 4 élèves. Note sur 20. Les résultats sont envoyés en direct au professeur via Internet.</p>
+      <div class="card-meta">
+        <span class="card-meta-item">👥 Groupe 2-4 élèves</span>
+        <span class="card-meta-item">⏱ 30 min</span>
+        <span class="card-meta-item">📊 Note /20 envoyée</span>
+        <span class="card-meta-item">🌐 Firebase</span>
+      </div>
+      <div class="card-cta">
+        Commencer l'évaluation
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M3,7 L11,7 M8,4 L11,7 L8,10"/>
+        </svg>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="section-label">Espace professeur</div>
+
+  <div class="dash-row">
+
+    <a class="card c4" href="05_tableau_bord_materiaux.html">
+      <div class="card-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2E6A8E" stroke-width="2">
+          <rect x="3" y="3" width="7" height="9" rx="1"/>
+          <rect x="14" y="3" width="7" height="5" rx="1"/>
+          <rect x="14" y="12" width="7" height="9" rx="1"/>
+          <rect x="3" y="16" width="7" height="5" rx="1"/>
+        </svg>
+      </div>
+      <h2>📊 Tableau de bord des résultats</h2>
+      <p>Consulter les résultats de l'évaluation en direct depuis n'importe quel ordinateur. Vue par classe, détails des réponses, export CSV. Protégé par mot de passe.</p>
+      <div class="card-meta">
+        <span class="card-meta-item">🔒 Réservé professeur</span>
+        <span class="card-meta-item">↻ Actualisation auto</span>
+        <span class="card-meta-item">⬇ Export CSV</span>
+      </div>
+      <div class="card-cta">
+        Accéder au tableau de bord
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M3,7 L11,7 M8,4 L11,7 L8,10"/>
+        </svg>
+      </div>
+    </a>
+
+  </div>
+
+</div>
+
+<!-- ============= FOOTER ============= -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="copy">© 2026 <strong>Mathieu Agostini</strong> — Tous droits réservés</div>
+    <div class="links">
+      <a href="https://github.com/gengiscard" target="_blank" rel="noopener">github.com/gengiscard</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
