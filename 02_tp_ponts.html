@@ -106,6 +106,13 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 #calcGr button.op{background:#dbeafe;color:#1e40af}
 @media print{#calcBtn,#calcPan{display:none!important}}
 .rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -119,18 +126,12 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 
 <header class="tp">
  <h1>TP — Ingénieur des ponts</h1>
-<div id="blocObj" style="background:#fff;border:1px solid #e9e2d4;border-left:6px solid #0e7490;border-radius:16px;padding:15px 19px;margin:14px 0;font-size:14.5px;line-height:1.7">
-<div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#8a8378;margin-bottom:6px">OBJECTIFS DE CE TP</div>
-<ul style="margin:0 0 12px 20px;line-height:1.8"><li>Nommer les trois efforts subis par une structure : compression, traction, flexion.</li><li>Expliquer pourquoi une structure triangulée ne se déforme pas.</li><li>Choisir un type de pont adapté à une portée donnée et le justifier.</li></ul>
-<div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#8a8378;margin-bottom:4px">COMPÉTENCES TRAVAILLÉES — BO n° 9 du 29 février 2024</div>
-<table style="width:100%;border-collapse:collapse;font-size:14px"><tr><td style="white-space:nowrap;font-weight:800;color:#155e75;padding:5px 9px;border-bottom:1px solid #e9e2d4">T2 · C4</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Décrire et caractériser l’organisation interne d’un objet ou d’un système technique et ses échanges avec son environnement (énergies, données)</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#155e75;padding:5px 9px;border-bottom:1px solid #e9e2d4">T1 · C3</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Caractériser et choisir un objet ou un système technique selon différents critères</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#155e75;padding:5px 9px;border-bottom:1px solid #e9e2d4">T3 · C8</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Valider les solutions techniques par des simulations ou par des protocoles de tests</td></tr></table>
-<div style="margin-top:9px;font-size:13.5px;color:#5b544a"><b>Repère de progressivité :</b> 5e — Associer des solutions techniques à des fonctions techniques ; identifier les principaux matériaux et leurs propriétés.</div>
-</div> <p>7 missions progressives. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Bâtisseur Fou</b> !</p>
+ <p>7 missions progressives. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Bâtisseur Fou</b> !</p>
 </header>
 
 <div class="progression" id="prog">
  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
- <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div>
  <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
@@ -257,9 +258,34 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 </div>
 
 <!-- ============ A7 : BILAN ============ -->
+
+<!-- ============ A7 : EXPLIQUER ============ -->
+<!-- ============ A8 : CALCULER ============ -->
 <div class="acti" id="a7">
  <div class="boite">
- <h2><span class="badge">7</span>Bilan d'ingénieur</h2>
+  <h2><span class="badge">7</span>Calculer une charge de pont</h2>
+  <div class="consigne">Un pont supporte <b>8 camions</b> de <b>12 t</b> chacun. Sa charge maximale annoncée est de <b>150 t</b>. On prend <b>g = 10 N/kg</b>.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
+  <div id="champs8"></div>
+  <div class="btnrow"><button class="btn" id="verif8">Valider mes calculs</button></div>
+  <div id="verd8"></div>
+ </div>
+</div>
+<!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
+<div class="acti" id="a8">
+ <div class="boite">
+  <h2><span class="badge">8</span>Tracer une poutre en treillis</h2>
+  <div class="consigne">Tu as testé la triangulation pendant le TP. Reproduis une structure solide sur ton cahier.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — trace une poutre en treillis formée de 4 triangles accolés. Repasse en rouge les barres qui travaillent en traction et en bleu celles qui travaillent en compression, quand la charge est appliquée au milieu par le dessus.</div>
+  <div id="champs9"></div>
+  <div class="btnrow"><button class="btn" id="verif9">Valider mon travail</button></div>
+  <div id="verd9"></div>
+ </div>
+</div>
+
+<div class="acti" id="a9">
+ <div class="boite">
+ <h2><span class="badge">9</span>Bilan d'ingénieur</h2>
  <div class="consigne">Dernière ligne droite : au moins <b>3 bonnes réponses sur 4</b>pour obtenir le code du jeu.</div>
  <div id="quiz5"></div>
  <div class="codefinal" id="codefinal">
@@ -557,7 +583,7 @@ function majProgression(){
  seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
  });
  document.getElementById('scoreTot').textContent = etat.score;
- for(let n=2;n<=7;n++){
+ for(let n=2;n<=9;n++){
  const acti=document.getElementById('a'+n);
  let v=acti.querySelector('.verrou');
  if(n>etat.debloque){
@@ -571,7 +597,7 @@ function reussir(n, pts, message){
  etat.score += pts;
  if(etat.debloque === n) etat.debloque = n+1;
  sauver(); majProgression();
- if(n<7) setTimeout(()=>document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}), 900);
+ if(n<9) setTimeout(()=>document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}), 900);
 }
 
 /* ================= A1 : QUIZ EFFORTS ================= */
@@ -899,7 +925,7 @@ majUI4();
  [330,260,190,120].forEach(px=>{ ctx.beginPath(); ctx.moveTo(430,50); ctx.lineTo(px,206); ctx.stroke(); });
  const vx=80+((t*46)%700);
  ctx.font='22px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
- ctx.fillText('\ud83d\ude97',vx,202);
+ SCHEMA(ctx,'voiture',vx,(202)-8,24);
  ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
  ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
  requestAnimationFrame(dessiner);
@@ -962,7 +988,7 @@ majUI4();
  ctx.font='11px Segoe UI'; ctx.textAlign='left'; ctx.fillStyle='#f59e0b';
  ctx.fillText('limite de flèche', 592, 186);
  ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
- ctx.fillText('\ud83d\ude9a',350,158+sag);
+ SCHEMA(ctx,'voiture',350,(158+sag)-8,24);
  ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#64748b';
  ctx.fillText('portée : 20 m', 350, 268);
  ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#334155';
@@ -1049,7 +1075,7 @@ const Q5=[
  sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
  ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
  document.getElementById('codefinal').style.display='block';
- reussir(7, tentative===1?2:(tentative===2?1:0));
+ reussir(9, tentative===1?2:(tentative===2?1:0));
  } else {
  sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
  ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
@@ -1137,15 +1163,6 @@ charger(); majProgression();
  aff();
 })();
 </script>
-
-<div class="acti" id="aTrace" style="display:block">
- <div class="boite">
-  <h2>Trace écrite</h2>
-  <div class="consigne">À recopier sur le cahier, schéma compris.</div>
-  <canvas class="canvatp" id="cvTrace" width="860" height="200" style="cursor:default"></canvas>
-  <ul style="margin:12px 0 0 20px;line-height:1.95;font-size:15.5px"><li>Un ouvrage doit <b>transmettre les charges jusqu’au sol</b> sans se rompre ni se déformer.</li><li>Trois efforts : la <b>compression</b> écrase, la <b>traction</b> étire, la <b>flexion</b> plie.</li><li>Un carré se déforme, un <b>triangle</b> non : la <b>triangulation</b> rigidifie une structure.</li><li>Plus la <b>portée</b> est grande, plus la solution est élaborée : poutre, puis arc, puis haubans.</li></ul>
- </div>
-</div>
 <script>
 /* ── schéma de la trace écrite ── */
 (function(){
@@ -1169,6 +1186,59 @@ charger(); majProgression();
   }
  });
  T('compression = écraser · traction = étirer · flexion = plier',430,168,13.5,'#5b544a');
+})();
+</script>
+
+
+<script>
+/* ============ A7-A9 : expliquer, calculer, tracer ============ */
+(function(){
+  function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function nbv(v){return parseFloat(String(v||'').replace(',','.'));}
+  function champs(zone,liste,grand){
+    const z=document.getElementById(zone); if(!z) return;
+    liste.forEach(c=>{
+      const d=document.createElement('div'); d.className='chp';
+      const l=document.createElement('label'); l.innerHTML=c.lbl; d.appendChild(l);
+      const i=document.createElement('input'); i.id=c.id; i.autocomplete='off';
+      if(grand){ i.className='large'; i.placeholder='rédige une phrase complète'; }
+      d.appendChild(i);
+      if(c.u){ const u=document.createElement('span'); u.className='u'; u.textContent=c.u; d.appendChild(u); }
+      z.appendChild(d);
+    });
+  }
+  const REDAC=[{"id":"q71","lbl":"a) Pourquoi un triangle est-il indéformable, contrairement à un carré ?","cles":["triangle","cote","fixe","deforme","rigide","angle","indeformable","carre","bouge","losange"]},{"id":"q72","lbl":"b) Quelle est la différence entre une pièce en traction et une pièce en compression ?","cles":["tire","etire","allonge","traction","ecrase","comprime","raccourci","pousse","sens","oppose"]},{"id":"q73","lbl":"c) Pourquoi un pont doit-il pouvoir se dilater ?","cles":["chaleur","temperature","dilate","allonge","joint","fissure","casse","froid","varie","saison"]}];
+  const CALC=[{"id":"c81","lbl":"a) Masse totale des camions","rep":96,"u":"t"},{"id":"c82","lbl":"b) Pourcentage de la charge maximale utilisé","rep":64,"tol":0.5,"u":"%"},{"id":"c83","lbl":"c) Poids total des camions, en newtons","rep":960000,"tol":100,"u":"N"}];
+  const TRACE=[{"id":"t91","lbl":"a) Combien de triangles ton treillis comporte-t-il ?","rep":"4","num":true},{"id":"t92","lbl":"b) Quelle figure géométrique rend la structure indéformable ?","rep":["triangle","letriangle","triangulation"]},{"id":"t93","lbl":"c) La barre du dessus, écrasée par la charge, travaille en quoi ?","rep":["compression","comprimee","compresse"]},{"id":"t94","lbl":"d) Et celle du dessous, qui est étirée ?","rep":["traction","tractionnee","etiree","tendue"]}];
+  champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  let e7=0,e8=0,e9=0;
+  function verdict(id,html,ok){
+    const v=document.getElementById(id); if(!v) return;
+    v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
+  }
+  document.getElementById('verif8').addEventListener('click',()=>{
+    let faux=0;
+    CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
+      if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
+    if(faux===0){
+      verdict('verd8','\u2713 Tous les calculs sont justes. '+"8 × 12 = 96 t. Soit 96 ÷ 150 = 64 % de la charge maximale. En newtons : 96 000 kg × 10 = 960 000 N. Attention à la conversion : une tonne fait 1000 kg, une erreur de facteur 1000 est vite arrivée.",true);
+      reussir(7, e8===0?3:2);
+    } else { e8++;
+      verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
+        '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
+  });
+  document.getElementById('verif9').addEventListener('click',()=>{
+    let faux=0;
+    TRACE.forEach(c=>{ const v=document.getElementById(c.id).value;
+      const bon = c.num ? String(nbv(v))===String(nbv(c.rep))
+        : (Array.isArray(c.rep)?c.rep:[c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+      if(!bon) faux++; });
+    if(faux===0){
+      verdict('verd9','\u2713 Ton tracé est conforme. '+"Quatre triangles, et deux familles de barres : celles du dessus écrasées, celles du dessous étirées. Reconnaître qui travaille en traction et qui travaille en compression, c’est savoir où renforcer.",true);
+      reussir(8, e9===0?3:2);
+    } else { e9++;
+      verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
+  });
 })();
 </script>
 

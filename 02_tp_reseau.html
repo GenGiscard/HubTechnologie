@@ -126,7 +126,7 @@ canvas.net{width:100%;max-width:640px;height:auto;background:#fdfdfd;border:1px 
 
 <div class="progression" id="prog">
  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
- <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div><div class="seg" data-a="10"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div>
  <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
@@ -216,20 +216,10 @@ canvas.net{width:100%;max-width:640px;height:auto;background:#fdfdfd;border:1px 
 
 
 <!-- ============ A7 : EXPLIQUER ============ -->
+<!-- ============ A8 : CALCULER ============ -->
 <div class="acti" id="a7">
   <div class="boite">
-    <h2><span class="badge">7</span>Expliquer le trajet d’une donnée</h2>
-    <div class="consigne">Trois questions de raisonnement. Réponds par une <b>phrase complète</b>.</div>
-    <div class="cahiernote"><b>SUR TON CAHIER</b> — réponds d’abord au brouillon, puis recopie à l’écran.</div>
-    <div id="champs7"></div>
-    <div class="btnrow"><button class="btn" id="verif7">Valider mes explications</button></div>
-    <div id="verd7"></div>
-  </div>
-</div>
-<!-- ============ A8 : CALCULER ============ -->
-<div class="acti" id="a8">
-  <div class="boite">
-    <h2><span class="badge">8</span>Calculer un temps de transfert</h2>
+    <h2><span class="badge">7</span>Calculer un temps de transfert</h2>
     <div class="consigne">Un fichier de <b>24 Mo</b> est téléchargé sur une ligne de <b>8 Mo/s</b>. Il est découpé en paquets de <b>2 Mo</b>, et chaque paquet ajoute <b>0,05 Mo</b> d’en-tête.</div>
     <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
     <div id="champs8"></div>
@@ -238,9 +228,9 @@ canvas.net{width:100%;max-width:640px;height:auto;background:#fdfdfd;border:1px 
   </div>
 </div>
 <!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
-<div class="acti" id="a9">
+<div class="acti" id="a8">
   <div class="boite">
-    <h2><span class="badge">9</span>Tracer le schéma du réseau</h2>
+    <h2><span class="badge">8</span>Tracer le schéma du réseau</h2>
     <div class="consigne">Le schéma animé de la mission 5 t’a montré le trajet d’une requête. Reproduis-le à ta façon sur le cahier.</div>
     <div class="cahiernote"><b>SUR TON CAHIER</b> — trace le schéma du chemin d’une requête web : le poste élève, la box, le serveur DNS, le routeur et le serveur web. Relie-les par des flèches numérotées de 1 à 4 dans l’ordre chronologique, et légende chaque flèche par ce qui circule.</div>
     <canvas class="canvatp" id="cv9" width="860" height="300" style="cursor:default"></canvas>
@@ -251,9 +241,9 @@ canvas.net{width:100%;max-width:640px;height:auto;background:#fdfdfd;border:1px 
 </div>
 
 <!-- ============ A10 : BILAN ============ -->
-<div class="acti" id="a10">
+<div class="acti" id="a9">
  <div class="boite">
- <h2><span class="badge">10</span>Bilan de l'agent réseau</h2>
+ <h2><span class="badge">9</span>Bilan de l'agent réseau</h2>
  <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
  <div id="quiz5"></div>
  <div class="codefinal" id="codefinal">
@@ -551,7 +541,7 @@ function majProgression(){
  seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
  });
  document.getElementById('scoreTot').textContent=etat.score;
- for(let n=2;n<=10;n++){
+ for(let n=2;n<=9;n++){
  const acti=document.getElementById('a'+n);
  let v=acti.querySelector('.verrou');
  if(n>etat.debloque){
@@ -565,7 +555,7 @@ function reussir(n,pts){
  etat.score+=pts;
  if(etat.debloque===n) etat.debloque=n+1;
  sauver(); majProgression();
- if(n<10) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ if(n<9) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -791,7 +781,7 @@ document.getElementById('verif4').onclick=()=>{
  // serveur DNS (annuaire)
  ctx.fillStyle='#fff'; ctx.strokeStyle='#b45309'; ctx.lineWidth=2.5;
  ctx.beginPath(); ctx.roundRect(344,40,72,62,8); ctx.fill(); ctx.stroke();
- ctx.font='18px Segoe UI'; ctx.fillText('\ud83d\udcd6',380,72);
+ ctx.font='18px Segoe UI'; SCHEMA(ctx,'document',380,(72)-8,24);
  ctx.font='bold 9px Segoe UI'; ctx.fillStyle='#b45309';
  ctx.fillText('estic.fr = 92.44.\u2026',380,92);
  // serveur web (tour à LEDs)
@@ -876,7 +866,7 @@ document.getElementById('verif4').onclick=()=>{
  const y=100, x0=90, x1=770;
  ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2;
  ctx.beginPath(); ctx.moveTo(x0,y+26); ctx.lineTo(x1,y+26); ctx.stroke();
- ctx.font='22px Segoe UI'; ctx.fillText('\ud83d\udcbb',60,y+16); ctx.fillText('\ud83d\uddc4\ufe0f',800,y+16);
+ ctx.font='22px Segoe UI'; SCHEMA(ctx,'ecran',60,(y+16)-8,24); SCHEMA(ctx,'document',800,(y+16)-8,24);
  const n=Math.min(v,14);
  const wP=Math.max(10,Math.min(52,300/n));
  const perdu=Math.floor(n/2);
@@ -986,7 +976,7 @@ const Q5=[
  sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
  ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
  document.getElementById('codefinal').style.display='block';
- reussir(10, tentative===1?2:(tentative===2?1:0));
+ reussir(9, tentative===1?2:(tentative===2?1:0));
  } else {
  sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
  ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
@@ -1104,30 +1094,19 @@ charger(); majProgression();
   {id:'t92',lbl:'b) Quel équipement est interrogé en tout premier, avant même le serveur web ?',rep:['dns','serveurdns','annuaire']},
   {id:'t93',lbl:'c) Quel équipement fait la frontière entre le réseau du collège et Internet ?',rep:['routeur','box','labox','leroutuer','routeurbox']},
   {id:'t94',lbl:'d) Que renvoie le serveur web à la fin ?',rep:['page','lapage','pageweb','contenu','donnees','html']}];
-  champs('champs7',REDAC,true); champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  champs('champs8',CALC,false); champs('champs9',TRACE,false);
   let e7=0,e8=0,e9=0;
   function verdict(id,html,ok){
     const v=document.getElementById(id);
     v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
   }
-  document.getElementById('verif7').addEventListener('click',()=>{
-    let bons=0;
-    REDAC.forEach(c=>{ const v=norm(document.getElementById(c.id).value);
-      if(v.length>12 && c.cles.some(k=>v.includes(k))) bons++; });
-    if(bons===REDAC.length){
-      verdict('verd7','\u2713 Explications convaincantes. '+'Découper permet de ne renvoyer qu’un petit morceau quand un paquet se perd, au lieu de tout recommencer : la perte devient un incident banal. Le DNS est l’annuaire qui traduit un nom lisible en adresse IP ; sans lui, il faudrait retenir des suites de chiffres pour chaque site. Et deux machines avec la même adresse, c’est comme deux maisons au même numéro : le facteur ne sait plus à qui livrer, et les deux perdent le réseau.',true);
-      reussir(7, e7===0?3:2);
-    } else { e7++;
-      verdict('verd7','\u2717 Réponse(s) convaincante(s) : '+bons+' sur '+REDAC.length+
-        '. Rédige une phrase complète et nomme précisément la cause ou la fonction.',false); }
-  });
   document.getElementById('verif8').addEventListener('click',()=>{
     let faux=0;
     CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
       if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
     if(faux===0){
       verdict('verd8','\u2713 Tous les calculs sont justes. '+'24 ÷ 2 = 12 paquets. Chacun ajoute 0,05 Mo, soit 0,6 Mo d’en-têtes : 24,6 Mo transmis pour 24 Mo utiles. À 8 Mo/s, cela fait 24,6 ÷ 8 = 3,1 s. Retiens que le débit annoncé par un opérateur est toujours du volume BRUT : une partie sert au protocole, jamais à tes données.',true);
-      reussir(8, e8===0?3:2);
+      reussir(7, e8===0?3:2);
     } else { e8++;
       verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
         '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
@@ -1140,12 +1119,38 @@ charger(); majProgression();
       if(!bon) faux++; });
     if(faux===0){
       verdict('verd9','\u2713 Ton tracé est conforme. '+'Cinq équipements, et surtout un ordre : le DNS d’abord, pour traduire le nom en adresse, puis le routeur qui fait la frontière avec l’extérieur, enfin le serveur web qui renvoie la page. Ce trajet, invisible et long de milliers de kilomètres parfois, se déroule en quelques centièmes de seconde à chaque clic.',true);
-      reussir(9, e9===0?3:2);
+      reussir(8, e9===0?3:2);
     } else { e9++;
       verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
   });
   
 })();
 </script>
+<script>
+/* ── schéma de la trace écrite ── */
+(function(){
+ const cv=document.getElementById('cvTrace'); if(!cv)return;
+ const c=cv.getContext('2d');
+ function T(s,x,y,t,coul,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=coul||'#3f3a34';c.textAlign=al||'center';c.fillText(s,x,y);}
+ const B=[["LA REQUÊTE","le navigateur demande"],["LE DNS","le nom devient une IP"],["LES PAQUETS","la donnée est découpée"],["LA RÉPONSE","la page se reconstitue"]], A='#1d4ed8', F='#1d4ed8';
+ c.fillStyle='#fff'; c.fillRect(0,0,860,200);
+ T("INTERNET ET LA CYBERSÉCURITÉ",430,28,14.5,F);
+ const n=B.length, marge=24, esp=18;
+ const w=Math.floor((860-2*marge-(n-1)*esp)/n);
+ B.forEach((b,i)=>{
+  const x=marge+i*(w+esp);
+  c.fillStyle='#fff'; c.strokeStyle=A; c.lineWidth=2.4;
+  c.beginPath(); c.roundRect(x,58,w,68,12); c.fill(); c.stroke();
+  T(b[0],x+w/2,88,13,F); T(b[1],x+w/2,108,11.5,'#5b544a');
+  if(i<n-1){
+   c.strokeStyle=A; c.fillStyle=A; c.lineWidth=3;
+   c.beginPath(); c.moveTo(x+w,92); c.lineTo(x+w+esp-8,92); c.stroke();
+   c.beginPath(); c.moveTo(x+w+esp,92); c.lineTo(x+w+esp-9,86); c.lineTo(x+w+esp-9,98); c.closePath(); c.fill();
+  }
+ });
+ T("requête → DNS → paquets → réponse : la donnée est découpée, jamais envoyée d’un bloc",430,168,13.5,'#5b544a');
+})();
+</script>
+
 </body>
 </html>

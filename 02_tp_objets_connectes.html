@@ -134,16 +134,17 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <div class="progression" id="prog">
  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
- <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div><div class="seg" data-a="10"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div>
  <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ============ A1 : QUI SUIS-JE ============ -->
 <div class="acti" id="a1">
  <div class="boite">
- <h2><span class="badge">1</span>Le vocabulaire de l'expert</h2>
- <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! <b>Attention : une seule tentative par question</b> — lis bien avant de cliquer ! (1 pt par bonne réponse)</div>
- <div class="minicas" id="cas1"></div>
+  <h2><span class="badge">1</span>L’objet connecté en direct</h2>
+  <div class="consigne">Visite guidée : clique sur chaque fonction pour découvrir ce qu’elle apporte à la chaîne. <b id="cpt1">(0/4)</b></div>
+  <canvas class="canvatp" id="cv1" width="860" height="300"></canvas>
+  <div id="verd1"></div>
  </div>
 </div>
 
@@ -167,10 +168,10 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <!-- ============ A3 : EXPERTISES ============ -->
 <div class="acti" id="a3">
  <div class="boite">
- <h2><span class="badge">3</span>Trois objets sur la table de dissection !</h2>
- <div class="consigne">Trois objets connectés déraillent. Pour chacun, identifie l'organe fautif et clique la <b>bonne intervention</b>. <b>Une seule tentative par expertise</b> : observe et réfléchis avant de cliquer !</div>
- <div id="pannes3"></div>
- <div class="verdict" id="verd3"></div>
+  <h2><span class="badge">3</span>Trois objets connectés en défaut</h2>
+  <div class="consigne">Un utilisateur décrit le symptôme : observe le schéma, puis clique sur la fonction en cause. <b id="cpt3">(1/3)</b></div>
+  <canvas class="canvatp" id="cv3" width="860" height="340"></canvas>
+  <div id="verd3"></div>
  </div>
 </div>
 
@@ -219,20 +220,10 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 
 <!-- ============ A7 : EXPLIQUER ============ -->
+<!-- ============ A8 : CALCULER ============ -->
 <div class="acti" id="a7">
   <div class="boite">
-    <h2><span class="badge">7</span>Expliquer la chaîne de l’objet connecté</h2>
-    <div class="consigne">Trois questions de raisonnement. Réponds par une <b>phrase complète</b>.</div>
-    <div class="cahiernote"><b>SUR TON CAHIER</b> — rédige au brouillon avant de recopier.</div>
-    <div id="champs7"></div>
-    <div class="btnrow"><button class="btn" id="verif7">Valider mes explications</button></div>
-    <div id="verd7"></div>
-  </div>
-</div>
-<!-- ============ A8 : CALCULER ============ -->
-<div class="acti" id="a8">
-  <div class="boite">
-    <h2><span class="badge">8</span>Calculer l’autonomie du capteur</h2>
+    <h2><span class="badge">7</span>Calculer l’autonomie du capteur</h2>
     <div class="consigne">Le capteur envoie <b>8 mesures par heure</b>. Chaque envoi consomme <b>0,05 mAh</b>, et la veille consomme <b>0,4 mAh par jour</b>. Sa pile contient <b>620 mAh</b>.</div>
     <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
     <div id="champs8"></div>
@@ -241,9 +232,9 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
   </div>
 </div>
 <!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
-<div class="acti" id="a9">
+<div class="acti" id="a8">
   <div class="boite">
-    <h2><span class="badge">9</span>Tracer la chaîne IoT</h2>
+    <h2><span class="badge">8</span>Tracer la chaîne IoT</h2>
     <div class="consigne">Reconstruis de mémoire la chaîne que tu as légendée à la mission 5.</div>
     <div class="cahiernote"><b>SUR TON CAHIER</b> — trace la chaîne complète de l’objet connecté, de la mesure à la notification : quatre cadres reliés par des flèches, avec au-dessus de chaque flèche le moyen de transmission utilisé (radio, internet, notification). Ajoute sous chaque cadre ce qu’il fait en un verbe.</div>
     <canvas class="canvatp" id="cv9" width="860" height="300" style="cursor:default"></canvas>
@@ -254,9 +245,9 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 </div>
 
 <!-- ============ A10 : BILAN ============ -->
-<div class="acti" id="a10">
+<div class="acti" id="a9">
  <div class="boite">
- <h2><span class="badge">10</span>Bilan de l'expert</h2>
+ <h2><span class="badge">9</span>Bilan de l'expert</h2>
  <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
  <div id="quiz5"></div>
  <div class="codefinal" id="codefinal">
@@ -278,7 +269,7 @@ function majProgression(){
  seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
  });
  document.getElementById('scoreTot').textContent=etat.score;
- for(let n=2;n<=10;n++){
+ for(let n=2;n<=9;n++){
  const acti=document.getElementById('a'+n);
  let v=acti.querySelector('.verrou');
  if(n>etat.debloque){
@@ -292,7 +283,7 @@ function reussir(n,pts){
  etat.score+=pts;
  if(etat.debloque===n) etat.debloque=n+1;
  sauver(); majProgression();
- if(n<10) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ if(n<9) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -304,6 +295,7 @@ const CAS1=[
 ];
 (function initA1(){
  const zone=document.getElementById('cas1');
+ if(!zone) return; /* chantier 5 : activité remplacée par le schéma animé */
  CAS1.forEach(cas=>{
  const d=document.createElement('div'); d.className='cas';
  d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
@@ -393,6 +385,7 @@ const REMEDES=[
 let diag3=0, a3fait=false;
 (function initA3(){
  const zone=document.getElementById('pannes3');
+ if(!zone) return; /* chantier 5 : activité remplacée par le schéma animé */
  const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
  ordre3.forEach(pi=>{
  const P=PANNES[pi];
@@ -666,7 +659,7 @@ const Q5=[
  sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
  ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
  document.getElementById('codefinal').style.display='block';
- reussir(10, tentative===1?2:(tentative===2?1:0));
+ reussir(9, tentative===1?2:(tentative===2?1:0));
  } else {
  sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
  ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
@@ -785,30 +778,19 @@ charger(); majProgression();
   {id:'t92',lbl:'b) Quel maillon relie le capteur à Internet ?',rep:['passerelle','box','labox','lapasserelle']},
   {id:'t93',lbl:'c) Où la décision d’alerter est-elle prise ?',rep:['cloud','serveur','lecloud','leserveur']},
   {id:'t94',lbl:'d) Combien de maillons peux-tu supprimer sans casser la chaîne ?',rep:'0',num:true}];
-  champs('champs7',REDAC,true); champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  champs('champs8',CALC,false); champs('champs9',TRACE,false);
   let e7=0,e8=0,e9=0;
   function verdict(id,html,ok){
     const v=document.getElementById(id);
     v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
   }
-  document.getElementById('verif7').addEventListener('click',()=>{
-    let bons=0;
-    REDAC.forEach(c=>{ const v=norm(document.getElementById(c.id).value);
-      if(v.length>12 && c.cles.some(k=>v.includes(k))) bons++; });
-    if(bons===REDAC.length){
-      verdict('verd7','\u2713 Explications convaincantes. '+'Non : la passerelle est un maillon obligatoire. Le capteur a beau mesurer, sans box la donnée n’atteint jamais le cloud et l’alerte n’arrive pas — couper UN maillon suffit à casser toute la chaîne. La radio évite de tirer un câble jusque sous l’évier et permet de déplacer le capteur. Enfin, décider dans le cloud épargne la pile du capteur : lui se contente de mesurer et d’envoyer, l’intelligence est ailleurs. C’est le principe de tous les objets connectés — un objet bête, un service intelligent.',true);
-      reussir(7, e7===0?3:2);
-    } else { e7++;
-      verdict('verd7','\u2717 Réponse(s) convaincante(s) : '+bons+' sur '+REDAC.length+
-        '. Rédige une phrase complète et nomme précisément la cause ou la fonction.',false); }
-  });
   document.getElementById('verif8').addEventListener('click',()=>{
     let faux=0;
     CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
       if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
     if(faux===0){
       verdict('verd8','\u2713 Tous les calculs sont justes. '+'192 envois par jour à 0,05 mAh font 9,6 mAh, plus 0,4 de veille : 10 mAh par jour, soit 62 jours d’autonomie. En divisant la fréquence par deux, la consommation tombe à 5,2 mAh et l’autonomie grimpe à 118 jours — presque le double. Voilà pourquoi le réglage de la fréquence est LE paramètre décisif d’un objet sur pile : chaque envoi se paie en jours d’autonomie.',true);
-      reussir(8, e8===0?3:2);
+      reussir(7, e8===0?3:2);
     } else { e8++;
       verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
         '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
@@ -821,12 +803,178 @@ charger(); majProgression();
       if(!bon) faux++; });
     if(faux===0){
       verdict('verd9','\u2713 Ton tracé est conforme. '+'Quatre maillons : capteur, passerelle, cloud, application. Aucun n’est superflu — c’est la réponse à la dernière question, et c’est le point essentiel. Un objet connecté n’est pas un objet, c’est une chaîne de services. Quand une alerte n’arrive pas, le diagnostic consiste justement à remonter cette chaîne maillon par maillon.',true);
-      reussir(9, e9===0?3:2);
+      reussir(8, e9===0?3:2);
     } else { e9++;
       verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
   });
   
 })();
 </script>
+<script>
+/* ── schéma de la trace écrite ── */
+(function(){
+ const cv=document.getElementById('cvTrace'); if(!cv)return;
+ const c=cv.getContext('2d');
+ function T(s,x,y,t,coul,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=coul||'#3f3a34';c.textAlign=al||'center';c.fillText(s,x,y);}
+ const B=[["MESURER","le capteur relève"],["TRAITER","le microcontrôleur décide"],["TRANSMETTRE","la donnée part au réseau"],["EXPLOITER","l’application affiche"]], A='#c026d3', F='#c026d3';
+ c.fillStyle='#fff'; c.fillRect(0,0,860,200);
+ T("LA CHAÎNE DE L’OBJET CONNECTÉ",430,28,14.5,F);
+ const n=B.length, marge=24, esp=18;
+ const w=Math.floor((860-2*marge-(n-1)*esp)/n);
+ B.forEach((b,i)=>{
+  const x=marge+i*(w+esp);
+  c.fillStyle='#fff'; c.strokeStyle=A; c.lineWidth=2.4;
+  c.beginPath(); c.roundRect(x,58,w,68,12); c.fill(); c.stroke();
+  T(b[0],x+w/2,88,13,F); T(b[1],x+w/2,108,11.5,'#5b544a');
+  if(i<n-1){
+   c.strokeStyle=A; c.fillStyle=A; c.lineWidth=3;
+   c.beginPath(); c.moveTo(x+w,92); c.lineTo(x+w+esp-8,92); c.stroke();
+   c.beginPath(); c.moveTo(x+w+esp,92); c.lineTo(x+w+esp-9,86); c.lineTo(x+w+esp-9,98); c.closePath(); c.fill();
+  }
+ });
+ T("mesurer → traiter → transmettre → exploiter : chaque envoi coûte de l’énergie",430,168,13.5,'#5b544a');
+})();
+</script>
+
+
+<script>
+/* ===== A1 et A3 : schéma animé cliquable + diagnostic visuel (chantier 5) ===== */
+(function(){
+  const cv1=document.getElementById('cv1'), cv3=document.getElementById('cv3');
+  if(!cv1||!cv3) return;
+  const c1=cv1.getContext('2d'), c3=cv3.getContext('2d');
+  const Z=[{"id":"mesurer","nom":"Mesurer","court":"le capteur","role":"Le capteur transforme une grandeur physique — température, lumière, mouvement — en signal électrique exploitable."},{"id":"traiter","nom":"Traiter","court":"le microcontrôleur","role":"Le programme compare la mesure à un seuil et décide. C’est ici que la donnée devient une décision."},{"id":"transmettre","nom":"Transmettre","court":"le réseau","role":"La donnée part vers un serveur, souvent sans fil. C’est l’étape qui consomme le plus d’énergie de toute la chaîne."},{"id":"exploiter","nom":"Exploiter","court":"l’application","role":"L’application affiche, archive ou déclenche une action. Chaque donnée transmise est aussi une donnée stockée quelque part."}];
+  const INC=[{"titre":"CAPTEUR 1 — température absurde","sous":"L’application affiche 87 °C dans le salon, valeur qui ne bouge plus depuis hier. Tout le reste fonctionne.","bon":"mesurer","ok":"La donnée arrive jusqu’à l’application, donc traitement et transmission fonctionnent. C’est la mesure elle-même qui est fausse : capteur en panne ou mal placé.","ko":"Non. L’application affiche bien une valeur : toute la chaîne achemine correctement. Le problème est à la source."},{"titre":"CAPTEUR 2 — plus aucune mise à jour","sous":"La dernière valeur reçue date de trois jours. Le voyant de l’objet clignote pourtant normalement.","bon":"transmettre","ok":"L’objet vit toujours, puisque son voyant clignote : il mesure et traite. Ce qui ne passe plus, c’est l’envoi vers le serveur.","ko":"Non. Le voyant clignote : l’objet fonctionne et mesure. C’est le trajet vers le serveur qui est rompu."},{"titre":"CAPTEUR 3 — le volet ne réagit jamais","sous":"La luminosité s’affiche correctement et se met à jour en direct, mais le volet ne se ferme jamais, même en pleine nuit.","bon":"traiter","ok":"La mesure est juste et arrive en direct : capteur et transmission vont bien. C’est la décision qui ne se prend pas — seuil mal réglé.","ko":"Non. La luminosité s’affiche et se met à jour : mesure et transmission fonctionnent. Cherche qui devait décider d’agir."}];
+  const ACC="#0e7490";
+
+  /* mise en page automatique : une rangée de blocs reliés par des flèches */
+  const n=Z.length, marge=30, esp=Math.max(16, Math.round(120/n));
+  const bw=Math.floor((860-2*marge-(n-1)*esp)/n), bh=86;
+  Z.forEach((z,i)=>{ z.x=marge+i*(bw+esp); z.w=bw; z.h=bh; });
+
+  function ligne(c,txt,x,y,max,taille,coul){
+    c.font=taille+'px Segoe UI'; c.fillStyle=coul; c.textAlign='center';
+    const mots=String(txt).split(' '); let l='', yy=y;
+    mots.forEach(m=>{ if(c.measureText(l+' '+m).width>max){ c.fillText(l,x,yy); l=m; yy+=15; } else l=l?l+' '+m:m; });
+    c.fillText(l,x,yy); return yy;
+  }
+  function dessine(c,H,yb,surbrillance,t){
+    c.clearRect(0,0,860,H);
+    c.fillStyle='#fff'; c.fillRect(0,0,860,H);
+    Z.forEach((z,i)=>{
+      const on = surbrillance && surbrillance.includes(z.id);
+      c.fillStyle= on? ACC : '#fff';
+      c.strokeStyle=ACC; c.lineWidth= on? 3.4 : 2.4;
+      c.beginPath(); c.roundRect(z.x,yb,z.w,z.h,12); c.fill(); c.stroke();
+      c.font='bold 13px Segoe UI'; c.fillStyle= on? '#fff' : ACC; c.textAlign='center';
+      ligne(c,z.nom.toUpperCase(),z.x+z.w/2,yb+26,z.w-14,13,on?'#fff':ACC);
+      ligne(c,z.court||'',z.x+z.w/2,yb+52,z.w-14,11.5,on?'#e2e8f0':'#5b544a');
+      if(i<n-1){
+        /* flèche + point d'énergie qui circule */
+        const x0=z.x+z.w, x1=z.x+z.w+esp;
+        c.strokeStyle=ACC; c.fillStyle=ACC; c.lineWidth=2.6;
+        c.beginPath(); c.moveTo(x0+2,yb+bh/2); c.lineTo(x1-7,yb+bh/2); c.stroke();
+        c.beginPath(); c.moveTo(x1-1,yb+bh/2); c.lineTo(x1-8,yb+bh/2-5); c.lineTo(x1-8,yb+bh/2+5); c.closePath(); c.fill();
+        const p=(t/1400+i/n)%1;
+        c.beginPath(); c.arc(x0+2+(x1-x0-4)*p, yb+bh/2, 3.4, 0, 6.284); c.fill();
+      }
+    });
+  }
+  function bulle(c,z,l1,l2,yb){
+    /* Hauteur CALCULEE d'apres le nombre de lignes reellement necessaires.
+       L'ancienne version imposait 62 px : au-dela de deux lignes le texte
+       debordait du rectangle. */
+    const w=460, pad=15, lh=16;
+    c.font='12.5px Segoe UI';
+    const mots=String(l2).split(' '); const lignes=[]; let l='';
+    mots.forEach(m=>{ if(c.measureText(l+' '+m).width>w-2*pad){ lignes.push(l); l=m; }
+                      else l=l?l+' '+m:m; });
+    if(l) lignes.push(l);
+    const h=34+lignes.length*lh+10;
+    const bx=Math.max(8,Math.min(z.x+z.w/2-w/2,852-w));
+    const by=Math.max(6,yb-h-12);
+    c.fillStyle='rgba(255,251,235,.97)'; c.strokeStyle='#f59e0b'; c.lineWidth=3;
+    c.beginPath(); c.roundRect(bx,by,w,h,12); c.fill(); c.stroke();
+    c.textAlign='left'; c.font='bold 13px Segoe UI'; c.fillStyle='#78350f';
+    c.fillText(l1,bx+pad,by+23);
+    c.font='12.5px Segoe UI'; c.fillStyle='#a16207';
+    lignes.forEach((t,i)=>c.fillText(t,bx+pad,by+44+i*lh));
+    c.textAlign='center';
+  }
+  function cible(cv,ev,H,yb){
+    const r=cv.getBoundingClientRect();
+    const x=(ev.clientX-r.left)*860/r.width, y=(ev.clientY-r.top)*H/r.height;
+    return Z.find(z=>x>=z.x&&x<=z.x+z.w&&y>=yb&&y<=yb+z.h)||null;
+  }
+
+  /* ---------- A1 : visite guidée ---------- */
+  const YB1=150;
+  let vus=[], flash1=null, fini1=false;
+  cv1.addEventListener('click',ev=>{
+    if(fini1||flash1) return;
+    const z=cible(cv1,ev,300,YB1); if(!z) return;
+    flash1={z,l1:z.nom.toUpperCase(),l2:z.role};
+    if(!vus.includes(z.id)){
+      vus.push(z.id);
+      document.getElementById('cpt1').textContent='('+vus.length+'/'+n+')';
+      if(vus.length===n){ fini1=true;
+        setTimeout(()=>{ flash1=null;
+          const v=document.getElementById('verd1');
+          v.className='verdict ok'; v.innerHTML='\u2713 '+"Mesurer, traiter, transmettre, exploiter : quatre fonctions, dans cet ordre. Retiens que c’est la TRANSMISSION qui vide la batterie, pas la mesure — d’où l’intérêt de ne pas émettre trop souvent.";
+          reussir(1,2);
+        },2100); return;
+      }
+    }
+    setTimeout(()=>{ flash1=null; },2300);
+  });
+
+  /* ---------- A3 : diagnostic visuel ---------- */
+  const YB3=190;
+  let i3=0, err3=0, flash3=null, fini3=false;
+  cv3.addEventListener('click',ev=>{
+    if(fini3||flash3) return;
+    const z=cible(cv3,ev,340,YB3); if(!z) return;
+    const inc=INC[i3], juste = z.id===inc.bon;
+    if(!juste) err3++;
+    flash3={z,l1: juste?'\u2713 Bon diagnostic':'\u2717 Mauvais bloc', l2: juste?inc.ok:inc.ko};
+    setTimeout(()=>{
+      flash3=null; i3++;
+      if(i3>=INC.length){ fini3=true;
+        const v=document.getElementById('verd3');
+        v.className='verdict '+(err3===0?'ok':'ko');
+        v.innerHTML=(err3===0?'\u2713 Trois diagnostics justes. ':'Trois diagnostics posés, '+err3+' erreur(s). ')+"Une donnée qui arrive mais fausse accuse le capteur ; une donnée qui n’arrive plus accuse la transmission ; une donnée juste sans action accuse le programme. Le symptôme dit toujours où couper la chaîne.";
+        reussir(3, err3===0?3:(err3===1?2:1));
+      } else { document.getElementById('cpt3').textContent='('+(i3+1)+'/'+INC.length+')'; }
+    },3000);
+  });
+
+  /* ---------- boucle d'animation ---------- */
+  let t=0;
+  function boucle(){
+    t+=16;
+    dessine(c1,300,YB1,vus,t);
+    c1.font='bold 15px Segoe UI'; c1.fillStyle=ACC; c1.textAlign='center';
+    c1.fillText("Du capteur à l’application",430,40);
+    if(flash1) bulle(c1,flash1.z,flash1.l1,flash1.l2,YB1);
+
+    dessine(c3,340,YB3,fini3?[]:[],t);
+    const inc=INC[Math.min(i3,INC.length-1)];
+    c3.textAlign='center';
+    c3.fillStyle= fini3? '#16a34a' : '#b91c1c';
+    c3.font='bold 15px Segoe UI';
+    c3.fillText(fini3?'Tous les diagnostics sont posés':inc.titre,430,42);
+    c3.font='13px Segoe UI'; c3.fillStyle='#5b544a';
+    ligne(c3, fini3?'':inc.sous, 430, 68, 780, 13, '#5b544a');
+    if(!fini3){
+      c3.font='12.5px Segoe UI'; c3.fillStyle=ACC;
+      c3.fillText('Clique sur le bloc responsable de la panne',430,120);
+    }
+    if(flash3) bulle(c3,flash3.z,flash3.l1,flash3.l2,YB3);
+    requestAnimationFrame(boucle);
+  }
+  requestAnimationFrame(boucle);
+})();
+</script>
+
 </body>
 </html>

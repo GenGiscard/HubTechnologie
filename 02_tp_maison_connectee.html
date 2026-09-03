@@ -119,6 +119,13 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 #calcGr button.op{background:#dbeafe;color:#1e40af}
 @media print{#calcBtn,#calcPan{display:none!important}}
 .rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -132,20 +139,12 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 
 <header class="tp">
  <h1>TP — Programme ta maison connectée</h1>
-<div id="blocObj" style="background:#fff;border:1px solid #e9e2d4;border-left:6px solid #0e7490;border-radius:16px;padding:15px 19px;margin:14px 0;font-size:14.5px;line-height:1.7">
-<div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#8a8378;margin-bottom:6px">OBJECTIFS DE CE TP</div>
-<ul style="margin:0 0 12px 20px;line-height:1.8"><li>Distinguer un capteur d’un actionneur dans un objet connecté.</li><li>Décrire la chaîne d’information : acquérir, traiter, communiquer, puis agir.</li><li>Modifier un programme pour qu’un dispositif réagisse à un seuil donné.</li></ul>
-<div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#8a8378;margin-bottom:4px">COMPÉTENCES TRAVAILLÉES — BO n° 9 du 29 février 2024</div>
-<table style="width:100%;border-collapse:collapse;font-size:14px"><tr><td style="white-space:nowrap;font-weight:800;color:#0e7490;padding:5px 9px;border-bottom:1px solid #e9e2d4">T2 · C4</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Décrire et caractériser l’organisation interne d’un objet ou d’un système technique et ses échanges avec son environnement (énergies, données)</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#0e7490;padding:5px 9px;border-bottom:1px solid #e9e2d4">T2 · C6</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Comprendre et modifier un programme associé à une fonctionnalité d’un objet ou d’un système technique</td></tr></table>
-<div style="margin-top:9px;font-size:13.5px;color:#5b544a"><b>Repère de progressivité :</b> 4e — identifier les constituants de la chaîne d’information d’un objet connecté.</div>
-</div>
-
  <p>7 missions progressives. Chaque mission réussie déverrouille la suivante. À la fin : le code du jeu <b>Signal Rush</b> !</p>
 </header>
 
 <div class="progression" id="prog">
  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
- <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div>
  <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
@@ -244,9 +243,34 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 </div>
 
 <!-- ============ A7 : BILAN ============ -->
+
+<!-- ============ A7 : EXPLIQUER ============ -->
+<!-- ============ A8 : CALCULER ============ -->
 <div class="acti" id="a7">
  <div class="boite">
- <h2><span class="badge">7</span>Bilan de domoticien</h2>
+  <h2><span class="badge">7</span>Calculer un seuil de luminosité</h2>
+  <div class="consigne">Un capteur renvoie une valeur de <b>0 à 1023</b>. Le volet doit se fermer en dessous de <b>20 %</b> de luminosité. Le capteur est interrogé toutes les <b>5 s</b>.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
+  <div id="champs8"></div>
+  <div class="btnrow"><button class="btn" id="verif8">Valider mes calculs</button></div>
+  <div id="verd8"></div>
+ </div>
+</div>
+<!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
+<div class="acti" id="a8">
+ <div class="boite">
+  <h2><span class="badge">8</span>Tracer la chaîne d’information</h2>
+  <div class="consigne">Tu as programmé un automatisme. Représente sa chaîne complète sur le cahier.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — trace la chaîne d’information du volet automatique : quatre blocs reliés par des flèches. Sous chaque bloc, écris le composant réel qui assure la fonction.</div>
+  <div id="champs9"></div>
+  <div class="btnrow"><button class="btn" id="verif9">Valider mon travail</button></div>
+  <div id="verd9"></div>
+ </div>
+</div>
+
+<div class="acti" id="a9">
+ <div class="boite">
+ <h2><span class="badge">9</span>Bilan de domoticien</h2>
  <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
  <div id="quiz5"></div>
  <div class="codefinal" id="codefinal">
@@ -544,7 +568,7 @@ function majProgression(){
  seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
  });
  document.getElementById('scoreTot').textContent=etat.score;
- for(let n=2;n<=7;n++){
+ for(let n=2;n<=9;n++){
  const acti=document.getElementById('a'+n);
  let v=acti.querySelector('.verrou');
  if(n>etat.debloque){
@@ -558,7 +582,7 @@ function reussir(n,pts){
  etat.score+=pts;
  if(etat.debloque===n) etat.debloque=n+1;
  sauver(); majProgression();
- if(n<7) setTimeout(()=>document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}),900);
+ if(n<9) setTimeout(()=>document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}),900);
 }
 
 /* ================= A1 : TRI CAPTEUR / ACTIONNEUR ================= */
@@ -830,7 +854,7 @@ document.getElementById('test4').onclick=()=>lancerTests([
  // passant devant la maison
  const px=60+30*Math.sin(t*0.8);
  ctx.font='26px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
- ctx.fillText('\ud83d\udeb6',px,270);
+ SCHEMA(ctx,'marcheur',px,(270)-8,24);
  // capteur PIR sur poteau + cône de détection
  ctx.fillStyle='#fff'; ctx.strokeStyle='#dc2626'; ctx.lineWidth=2.5;
  ctx.beginPath(); ctx.roundRect(100,108,44,34,8); ctx.fill(); ctx.stroke();
@@ -854,7 +878,7 @@ document.getElementById('test4').onclick=()=>lancerTests([
  ctx.fillStyle='#0f172a';
  ctx.beginPath(); ctx.roundRect(742,182,56,100,10); ctx.fill();
  ctx.fillStyle='#38bdf8'; ctx.fillRect(748,190,44,84);
- ctx.font='15px Segoe UI'; ctx.fillText('\ud83c\udfe0',770,236);
+ ctx.font='15px Segoe UI'; SCHEMA(ctx,'maison',770,(236)-8,24);
  // signal : capteur ->box ->volet, et box <->phone (wifi)
  ctx.fillStyle='#ea580c';
  for(let i=0;i<3;i++){ const p=((t*0.5)+i/3)%1;
@@ -917,7 +941,7 @@ document.getElementById('test4').onclick=()=>lancerTests([
  ctx.strokeRect(90,80,260,150);
  ctx.beginPath(); ctx.moveTo(70,80); ctx.lineTo(220,26); ctx.lineTo(370,80); ctx.stroke();
  ctx.font='24px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#000';
- ctx.fillText('\ud83d\udecc',170,180);
+ SCHEMA(ctx,'sommeil',170,(180)-8,24);
  // radiateur dont l'intensité suit la consigne
  const chauffe=(v-12)/14;
  ctx.fillStyle='rgba(234,88,12,'+(0.25+0.6*chauffe)+')';
@@ -939,7 +963,7 @@ document.getElementById('test4').onclick=()=>lancerTests([
  ctx.fillStyle='#e2e8f0'; ctx.fillRect(470,80,180,16);
  ctx.fillStyle= (v>=18&&v<=20) ? '#16a34a' : '#f59e0b';
  ctx.fillRect(470,80,180*conf,16);
- if(v<16){ ctx.font='15px Segoe UI'; ctx.fillText('\ud83e\udd76',668,94); }
+ if(v<16){ ctx.font='15px Segoe UI'; SCHEMA(ctx,'flocon',668,(94)-8,24); }
  // jauge facture (croît fort au-delà de 19)
  const fact=Math.min(1,Math.max(0.1,(v-12)/14 + Math.max(0,v-19)*0.08));
  ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
@@ -947,7 +971,7 @@ document.getElementById('test4').onclick=()=>lancerTests([
  ctx.fillStyle='#e2e8f0'; ctx.fillRect(470,150,180,16);
  ctx.fillStyle= v>20 ? '#dc2626' : '#16a34a';
  ctx.fillRect(470,150,180*fact,16);
- if(v>22){ ctx.font='15px Segoe UI'; ctx.fillText('\ud83d\udcb8',668,164); }
+ if(v>22){ ctx.font='15px Segoe UI'; SCHEMA(ctx,'colis',668,(164)-8,24); }
  ctx.fillStyle='#64748b'; ctx.font='12.5px Segoe UI';
  ctx.fillText('+1 \u00b0C au-dessus de 19 \u2248 +7 % de consommation',560,210);
  requestAnimationFrame(dessiner);
@@ -1025,7 +1049,7 @@ const Q5=[
  sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
  ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
  document.getElementById('codefinal').style.display='block';
- reussir(7, tentative===1?2:(tentative===2?1:0));
+ reussir(9, tentative===1?2:(tentative===2?1:0));
  } else {
  sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
  ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
@@ -1114,15 +1138,6 @@ charger(); majProgression(); simuler();
  aff();
 })();
 </script>
-
-<div class="acti" id="aTrace" style="display:block">
- <div class="boite">
-  <h2>Trace écrite</h2>
-  <div class="consigne">À recopier sur le cahier, schéma compris.</div>
-  <canvas class="canvatp" id="cvTrace" width="860" height="200" style="cursor:default"></canvas>
-  <ul style="margin:12px 0 0 20px;line-height:1.95;font-size:15.5px"><li>Un <b>capteur</b> mesure une grandeur ; un <b>actionneur</b> produit une action.</li><li>La chaîne d’information : <b>acquérir</b>, <b>traiter</b>, <b>communiquer</b>, puis commander l’action.</li><li>Un <b>seuil</b> transforme une mesure continue en une décision : au-dessus, en dessous.</li><li>La chaîne d’information <b>commande</b> la chaîne d’énergie : elle ne fournit pas la puissance.</li></ul>
- </div>
-</div>
 <script>
 /* ── schéma de la trace écrite ── */
 (function(){
@@ -1146,6 +1161,59 @@ charger(); majProgression(); simuler();
   }
  });
  T("acquérir → traiter → communiquer → agir : mesurer d’abord, décider ensuite",430,168,13.5,'#5b544a');
+})();
+</script>
+
+
+<script>
+/* ============ A7-A9 : expliquer, calculer, tracer ============ */
+(function(){
+  function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function nbv(v){return parseFloat(String(v||'').replace(',','.'));}
+  function champs(zone,liste,grand){
+    const z=document.getElementById(zone); if(!z) return;
+    liste.forEach(c=>{
+      const d=document.createElement('div'); d.className='chp';
+      const l=document.createElement('label'); l.innerHTML=c.lbl; d.appendChild(l);
+      const i=document.createElement('input'); i.id=c.id; i.autocomplete='off';
+      if(grand){ i.className='large'; i.placeholder='rédige une phrase complète'; }
+      d.appendChild(i);
+      if(c.u){ const u=document.createElement('span'); u.className='u'; u.textContent=c.u; d.appendChild(u); }
+      z.appendChild(d);
+    });
+  }
+  const REDAC=[{"id":"q71","lbl":"a) Quelle est la différence entre un capteur et un actionneur ?","cles":["mesure","capteur","actionneur","agit","action","grandeur","transforme","entree","sortie","releve"]},{"id":"q72","lbl":"b) Pourquoi la chaîne d’information ne peut-elle pas alimenter directement un moteur puissant ?","cles":["puissance","courant","faible","commande","relais","transistor","pasassez","energie","brule","signal"]},{"id":"q73","lbl":"c) À quoi sert un seuil dans un programme domotique ?","cles":["seuil","limite","declenche","decision","audessus","endessous","compare","choisit","valeur"]}];
+  const CALC=[{"id":"c81","lbl":"a) Valeur du capteur correspondant au seuil de 20 %","rep":204.6,"tol":1,"u":""},{"id":"c82","lbl":"b) Nombre de mesures effectuées en une heure","rep":720,"u":"mesures"},{"id":"c83","lbl":"c) Durée pendant laquelle le volet peut rester ouvert à tort, au maximum","rep":5,"u":"s"}];
+  const TRACE=[{"id":"t91","lbl":"a) Combien de blocs ton schéma comporte-t-il ?","rep":"4","num":true},{"id":"t92","lbl":"b) Quelle est la première fonction de la chaîne ?","rep":["acquerir","mesurer","acquisition"]},{"id":"t93","lbl":"c) Quel composant assure la fonction ACQUÉRIR ?","rep":["capteur","lecapteur","photoresistance","capteurdeluminosite"]},{"id":"t94","lbl":"d) Quelle fonction vient juste après le traitement ?","rep":["communiquer","transmettre","communication"]}];
+  champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  let e7=0,e8=0,e9=0;
+  function verdict(id,html,ok){
+    const v=document.getElementById(id); if(!v) return;
+    v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
+  }
+  document.getElementById('verif8').addEventListener('click',()=>{
+    let faux=0;
+    CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
+      if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
+    if(faux===0){
+      verdict('verd8','\u2713 Tous les calculs sont justes. '+"20 % de 1023 = 204,6. En une heure : 3600 ÷ 5 = 720 mesures. Et comme le capteur n’est lu que toutes les 5 s, le volet peut rester ouvert à tort pendant 5 s au pire. Mesurer plus souvent réduirait ce délai, mais consommerait davantage.",true);
+      reussir(7, e8===0?3:2);
+    } else { e8++;
+      verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
+        '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
+  });
+  document.getElementById('verif9').addEventListener('click',()=>{
+    let faux=0;
+    TRACE.forEach(c=>{ const v=document.getElementById(c.id).value;
+      const bon = c.num ? String(nbv(v))===String(nbv(c.rep))
+        : (Array.isArray(c.rep)?c.rep:[c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+      if(!bon) faux++; });
+    if(faux===0){
+      verdict('verd9','\u2713 Ton tracé est conforme. '+"Quatre blocs : acquérir, traiter, communiquer, agir. Le capteur ne décide rien, il mesure. C’est le programme qui décide, et l’actionneur qui exécute.",true);
+      reussir(8, e9===0?3:2);
+    } else { e9++;
+      verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
+  });
 })();
 </script>
 
