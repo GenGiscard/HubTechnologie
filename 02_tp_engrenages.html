@@ -106,6 +106,13 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 #calcGr button.op{background:#dbeafe;color:#1e40af}
 @media print{#calcBtn,#calcPan{display:none!important}}
 .rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -118,20 +125,12 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 
 <header class="tp">
  <h1>TP — L'atelier des engrenages</h1>
-<div id="blocObj" style="background:#fff;border:1px solid #e9e2d4;border-left:6px solid #7c3aed;border-radius:16px;padding:15px 19px;margin:14px 0;font-size:14.5px;line-height:1.7">
-<div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#8a8378;margin-bottom:6px">OBJECTIFS DE CE TP</div>
-<ul style="margin:0 0 12px 20px;line-height:1.8"><li>Déterminer le sens de rotation dans un train d’engrenages et dans une transmission par chaîne.</li><li>Calculer un rapport de transmission à partir des nombres de dents.</li><li>Choisir un rapport adapté selon que l’on cherche la force ou la vitesse.</li></ul>
-<div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#8a8378;margin-bottom:4px">COMPÉTENCES TRAVAILLÉES — BO n° 9 du 29 février 2024</div>
-<table style="width:100%;border-collapse:collapse;font-size:14px"><tr><td style="white-space:nowrap;font-weight:800;color:#7c3aed;padding:5px 9px;border-bottom:1px solid #e9e2d4">T2 · C4</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Décrire et caractériser l’organisation interne d’un objet ou d’un système technique et ses échanges avec son environnement (énergies, données)</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#7c3aed;padding:5px 9px;border-bottom:1px solid #e9e2d4">T1 · C3</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Caractériser et choisir un objet ou un système technique selon différents critères</td></tr></table>
-<div style="margin-top:9px;font-size:13.5px;color:#5b544a"><b>Repère de progressivité :</b> 4e — caractériser les mécanismes de transmission de mouvement et leurs effets sur la vitesse.</div>
-</div>
-
  <p>L'atelier Méca d'Esticville a reçu des commandes. 7 missions pour devenir chef d'atelier — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
- <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div>
  <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
@@ -224,9 +223,34 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 </div>
 
 <!-- ============ A7 : BILAN ============ -->
+
+<!-- ============ A7 : EXPLIQUER ============ -->
+<!-- ============ A8 : CALCULER ============ -->
 <div class="acti" id="a7">
  <div class="boite">
- <h2><span class="badge">7</span>Bilan de chef d'atelier</h2>
+  <h2><span class="badge">7</span>Calculer un rapport de transmission</h2>
+  <div class="consigne">Un pignon menant de <b>36 dents</b> entraîne un pignon mené de <b>12 dents</b>. Le moteur tourne à <b>300 tr/min</b>.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
+  <div id="champs8"></div>
+  <div class="btnrow"><button class="btn" id="verif8">Valider mes calculs</button></div>
+  <div id="verd8"></div>
+ </div>
+</div>
+<!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
+<div class="acti" id="a8">
+ <div class="boite">
+  <h2><span class="badge">8</span>Tracer un train d’engrenages</h2>
+  <div class="consigne">Reprends le mécanisme étudié et représente-le proprement sur ton cahier.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — trace un train de trois roues dentées en contact. Numérote-les de 1 à 3, indique par une flèche le sens de rotation de chacune, et écris sous le schéma le sens de la roue 3 si la roue 1 tourne dans le sens horaire.</div>
+  <div id="champs9"></div>
+  <div class="btnrow"><button class="btn" id="verif9">Valider mon travail</button></div>
+  <div id="verd9"></div>
+ </div>
+</div>
+
+<div class="acti" id="a9">
+ <div class="boite">
+ <h2><span class="badge">9</span>Bilan de chef d'atelier</h2>
  <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
  <div id="quiz5"></div>
  <div class="codefinal" id="codefinal">
@@ -248,7 +272,7 @@ function majProgression(){
  seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
  });
  document.getElementById('scoreTot').textContent=etat.score;
- for(let n=2;n<=7;n++){
+ for(let n=2;n<=9;n++){
  const acti=document.getElementById('a'+n);
  let v=acti.querySelector('.verrou');
  if(n>etat.debloque){
@@ -262,7 +286,7 @@ function reussir(n,pts){
  etat.score+=pts;
  if(etat.debloque===n) etat.debloque=n+1;
  sauver(); majProgression();
- if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ if(n<9) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ============ dessin d'une roue dentée ============ */
@@ -663,7 +687,7 @@ const Q5=[
  sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
  ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
  document.getElementById('codefinal').style.display='block';
- reussir(7, tentative===1?2:(tentative===2?1:0));
+ reussir(9, tentative===1?2:(tentative===2?1:0));
  } else {
  sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
  ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
@@ -751,15 +775,6 @@ charger(); majProgression();
  aff();
 })();
 </script>
-
-<div class="acti" id="aTrace" style="display:block">
- <div class="boite">
-  <h2>Trace écrite</h2>
-  <div class="consigne">À recopier sur le cahier, schéma compris.</div>
-  <canvas class="canvatp" id="cvTrace" width="860" height="200" style="cursor:default"></canvas>
-  <ul style="margin:12px 0 0 20px;line-height:1.95;font-size:15.5px"><li>Deux roues dentées en contact tournent en <b>sens inverse</b> ; une <b>chaîne</b> conserve le sens.</li><li>Rapport de transmission = <b>dents du menant ÷ dents du mené</b>.</li><li>Un grand pignon menant fait tourner le mené <b>plus vite</b>, mais avec <b>moins de force</b>.</li><li>On ne gagne jamais les deux : <b>vitesse et force s’échangent</b>.</li></ul>
- </div>
-</div>
 <script>
 /* ── schéma de la trace écrite ── */
 (function(){
@@ -783,6 +798,59 @@ charger(); majProgression();
   }
  });
  T("gagner en vitesse, c’est perdre en force — et réciproquement",430,168,13.5,'#5b544a');
+})();
+</script>
+
+
+<script>
+/* ============ A7-A9 : expliquer, calculer, tracer ============ */
+(function(){
+  function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function nbv(v){return parseFloat(String(v||'').replace(',','.'));}
+  function champs(zone,liste,grand){
+    const z=document.getElementById(zone); if(!z) return;
+    liste.forEach(c=>{
+      const d=document.createElement('div'); d.className='chp';
+      const l=document.createElement('label'); l.innerHTML=c.lbl; d.appendChild(l);
+      const i=document.createElement('input'); i.id=c.id; i.autocomplete='off';
+      if(grand){ i.className='large'; i.placeholder='rédige une phrase complète'; }
+      d.appendChild(i);
+      if(c.u){ const u=document.createElement('span'); u.className='u'; u.textContent=c.u; d.appendChild(u); }
+      z.appendChild(d);
+    });
+  }
+  const REDAC=[{"id":"q71","lbl":"a) Pourquoi deux roues dentées en contact tournent-elles en sens inverse ?","cles":["dents","poussent","contact","sensinverse","opposees","engrenent","pousse","cote"]},{"id":"q72","lbl":"b) Pourquoi une chaîne conserve-t-elle le sens de rotation, contrairement aux engrenages ?","cles":["chaine","relie","meme","tire","entraine","nepasencontact","distance","memesens"]},{"id":"q73","lbl":"c) Pourquoi ne peut-on pas gagner à la fois en vitesse et en force ?","cles":["energie","conserve","echange","compromis","perd","gagne","lunelautre","puissance"]}];
+  const CALC=[{"id":"c81","lbl":"a) Rapport de transmission (menant ÷ mené)","rep":3,"tol":0.01,"u":""},{"id":"c82","lbl":"b) Vitesse de rotation du pignon mené","rep":900,"tol":1,"u":"tr/min"},{"id":"c83","lbl":"c) Nombre de dents à donner au mené pour que sa vitesse soit exactement celle du moteur","rep":36,"u":"dents"}];
+  const TRACE=[{"id":"t91","lbl":"a) Combien de roues ton schéma comporte-t-il ?","rep":"3","num":true},{"id":"t92","lbl":"b) Si la roue 1 tourne dans le sens horaire, dans quel sens tourne la roue 2 ?","rep":["antihoraire","inverse","senscontraire","trigonometrique","sensinverse"]},{"id":"t93","lbl":"c) Et la roue 3 ?","rep":["horaire","memesens","commela1","sensdela1"]},{"id":"t94","lbl":"d) Comment appelle-t-on la roue qui reçoit le mouvement ?","rep":["menee","lamenee","pignonmene","mene"]}];
+  champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  let e7=0,e8=0,e9=0;
+  function verdict(id,html,ok){
+    const v=document.getElementById(id); if(!v) return;
+    v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
+  }
+  document.getElementById('verif8').addEventListener('click',()=>{
+    let faux=0;
+    CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
+      if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
+    if(faux===0){
+      verdict('verd8','\u2713 Tous les calculs sont justes. '+"36 ÷ 12 = 3. Le mené tourne 3 fois plus vite : 300 × 3 = 900 tr/min. Pour une vitesse identique au moteur, il faut un mené de 36 dents, soit un rapport de 1. Retiens qu’un rapport de 1 transmet sans rien changer : ni vitesse, ni force.",true);
+      reussir(7, e8===0?3:2);
+    } else { e8++;
+      verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
+        '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
+  });
+  document.getElementById('verif9').addEventListener('click',()=>{
+    let faux=0;
+    TRACE.forEach(c=>{ const v=document.getElementById(c.id).value;
+      const bon = c.num ? String(nbv(v))===String(nbv(c.rep))
+        : (Array.isArray(c.rep)?c.rep:[c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+      if(!bon) faux++; });
+    if(faux===0){
+      verdict('verd9','\u2713 Ton tracé est conforme. '+"Trois roues en contact : les sens alternent. La roue 3 tourne donc comme la roue 1. C’est le principe de la roue folle, qu’on intercale justement pour rétablir un sens sans changer le rapport.",true);
+      reussir(8, e9===0?3:2);
+    } else { e9++;
+      verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
+  });
 })();
 </script>
 

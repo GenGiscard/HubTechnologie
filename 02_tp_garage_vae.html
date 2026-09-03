@@ -110,6 +110,13 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 #calcGr button.op{background:#dbeafe;color:#1e40af}
 @media print{#calcBtn,#calcPan{display:none!important}}
 .rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -122,29 +129,22 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
  <h1>TP — Le garage à VAE</h1>
-<div id="blocObj" style="background:#fff;border:1px solid #e9e2d4;border-left:6px solid #059669;border-radius:16px;padding:15px 19px;margin:14px 0;font-size:14.5px;line-height:1.7">
-<div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#8a8378;margin-bottom:6px">OBJECTIFS DE CE TP</div>
-<ul style="margin:0 0 12px 20px;line-height:1.8"><li>Nommer les quatre maillons de la chaîne d’énergie : alimenter ou stocker, distribuer, convertir, transmettre.</li><li>Situer un composant en panne dans la chaîne à partir d’un symptôme.</li><li>Calculer le rendement d’un moteur et expliquer où part l’énergie perdue.</li></ul>
-<div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#8a8378;margin-bottom:4px">COMPÉTENCES TRAVAILLÉES — BO n° 9 du 29 février 2024</div>
-<table style="width:100%;border-collapse:collapse;font-size:14px"><tr><td style="white-space:nowrap;font-weight:800;color:#059669;padding:5px 9px;border-bottom:1px solid #e9e2d4">T2 · C4</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Décrire et caractériser l’organisation interne d’un objet ou d’un système technique et ses échanges avec son environnement (énergies, données)</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#059669;padding:5px 9px;border-bottom:1px solid #e9e2d4">T2 · C5</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Identifier un dysfonctionnement d’un objet technique et y remédier</td></tr></table>
-<div style="margin-top:9px;font-size:13.5px;color:#5b544a"><b>Repère de progressivité :</b> 4e — repérer les transformations et les flux d’énergie au sein d’un objet technique.</div>
-</div>
-
  <p>Le garage d'Esticville croule sous les vélos électriques en panne. 7 missions pour devenir chef mécano — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
- <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div>
  <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ============ A1 : QUI SUIS-JE ============ -->
 <div class="acti" id="a1">
  <div class="boite">
- <h2><span class="badge">1</span>Qui suis-je dans la chaîne ?</h2>
- <div class="consigne">Quatre composants du VAE se présentent. À quelle FONCTION de la chaîne d'énergie appartient chacun ? <b>Attention : une seule tentative par question</b> — lis bien avant de cliquer ! (1 pt par bonne réponse)</div>
- <div class="minicas" id="cas1"></div>
+  <h2><span class="badge">1</span>La chaîne d’énergie du VAE en direct</h2>
+  <div class="consigne">Visite guidée : clique sur chaque bloc du schéma pour découvrir son rôle et le composant réel qui l’assure. <b id="cpt1">(0/4)</b></div>
+  <canvas class="canvatp" id="cv1" width="860" height="300"></canvas>
+  <div id="verd1"></div>
  </div>
 </div>
 
@@ -168,20 +168,10 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <!-- ============ A3 : DIAGNOSTICS ============ -->
 <div class="acti" id="a3">
  <div class="boite">
- <h2><span class="badge">3</span>Diagnostique les VAE en panne !</h2>
- <div class="consigne">Trois clients arrivent avec des symptômes différents. Pour chacun, clique sur le BLOC de la chaîne qui est en panne. Un bon mécano écoute d'abord, démonte ensuite !</div>
- <div class="compteur">Diagnostics réussis : <span id="diagOk">0</span> / 3</div>
- <div class="symptome" id="symptome3"></div>
- <div class="chaineblocs" id="blocs3">
- <button data-b="alimenter"><span class="ic"></span>ALIMENTER<small>batterie</small></button>
- <span class="fl">→</span>
- <button data-b="distribuer"><span class="ic"></span>DISTRIBUER<small>variateur</small></button>
- <span class="fl">→</span>
- <button data-b="convertir"><span class="ic"></span>CONVERTIR<small>moteur</small></button>
- <span class="fl">→</span>
- <button data-b="transmettre"><span class="ic"></span>TRANSMETTRE<small>chaîne + roue</small></button>
- </div>
- <div class="verdict" id="verd3"></div>
+  <h2><span class="badge">3</span>Trois VAE en panne à l’atelier</h2>
+  <div class="consigne">Un client décrit son symptôme : observe le schéma, puis clique directement sur le bloc de la chaîne responsable de la panne. <b id="cpt3">(1/3)</b></div>
+  <canvas class="canvatp" id="cv3" width="860" height="340"></canvas>
+  <div id="verd3"></div>
  </div>
 </div>
 
@@ -229,9 +219,34 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 </div>
 
 <!-- ============ A7 : BILAN ============ -->
+
+<!-- ============ A7 : EXPLIQUER ============ -->
+<!-- ============ A8 : CALCULER ============ -->
 <div class="acti" id="a7">
  <div class="boite">
- <h2><span class="badge">7</span>Bilan du chef mécano</h2>
+  <h2><span class="badge">7</span>Calculer le rendement du moteur</h2>
+  <div class="consigne">Un moteur de VAE absorbe <b>250 W</b> et restitue <b>200 W</b> de puissance mécanique. La batterie stocke <b>400 Wh</b>.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
+  <div id="champs8"></div>
+  <div class="btnrow"><button class="btn" id="verif8">Valider mes calculs</button></div>
+  <div id="verd8"></div>
+ </div>
+</div>
+<!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
+<div class="acti" id="a8">
+ <div class="boite">
+  <h2><span class="badge">8</span>Tracer la chaîne d’énergie du VAE</h2>
+  <div class="consigne">Tu as manipulé les quatre maillons tout au long du TP. Reproduis la chaîne complète sur ton cahier.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — trace la chaîne d’énergie du VAE : quatre blocs reliés par des flèches, dans l’ordre. Sous chaque bloc, écris le composant réel du vélo qui assure cette fonction.</div>
+  <div id="champs9"></div>
+  <div class="btnrow"><button class="btn" id="verif9">Valider mon travail</button></div>
+  <div id="verd9"></div>
+ </div>
+</div>
+
+<div class="acti" id="a9">
+ <div class="boite">
+ <h2><span class="badge">9</span>Bilan du chef mécano</h2>
  <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
  <div id="quiz5"></div>
  <div class="codefinal" id="codefinal">
@@ -253,7 +268,7 @@ function majProgression(){
  seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
  });
  document.getElementById('scoreTot').textContent=etat.score;
- for(let n=2;n<=7;n++){
+ for(let n=2;n<=9;n++){
  const acti=document.getElementById('a'+n);
  let v=acti.querySelector('.verrou');
  if(n>etat.debloque){
@@ -267,7 +282,7 @@ function reussir(n,pts){
  etat.score+=pts;
  if(etat.debloque===n) etat.debloque=n+1;
  sauver(); majProgression();
- if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ if(n<9) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -279,6 +294,7 @@ const CAS1=[
 ];
 (function initA1(){
  const zone=document.getElementById('cas1');
+ if(!zone) return; /* chantier 5 : activité remplacée par le schéma animé */
  CAS1.forEach(cas=>{
  const d=document.createElement('div'); d.className='cas';
  d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
@@ -363,6 +379,7 @@ let diagIdx=0, a3fait=false;
 const ordre3=[0,1,2].sort(()=>0.5-Math.random());
 function afficherPanne(){
  const p=PANNES[ordre3[diagIdx]];
+ if(!document.getElementById('symptome3')) return; /* chantier 5 : activité remplacée par le schéma animé */
  document.getElementById('symptome3').innerHTML='<div class="num">Symptôme '+(diagIdx+1)+'/3</div>'+p.sym;
 }
 document.querySelectorAll('#blocs3 button').forEach(b=>{
@@ -406,6 +423,24 @@ document.getElementById('verif4').onclick=()=>{
  verd.textContent='✗ Pas ça. Divise l\u2019utile par l\u2019absorbée : 200 ÷ 250, puis multiplie par 100 pour avoir des %.';
  }
 };
+
+
+/* pictogramme vectoriel de vélo (remplace un emoji : convention du corpus) */
+function VELO(c,x,y,T,coul){
+ const u=T||24, w=Math.max(1.6,.07*u);
+ c.save(); c.translate(x,y);
+ c.strokeStyle=coul||'#334155'; c.fillStyle=coul||'#334155'; c.lineWidth=w;
+ c.beginPath(); c.arc(-.30*u,.16*u,.20*u,0,6.284); c.stroke();
+ c.beginPath(); c.arc(.30*u,.16*u,.20*u,0,6.284); c.stroke();
+ c.beginPath();
+ c.moveTo(-.30*u,.16*u); c.lineTo(-.02*u,.16*u); c.lineTo(-.14*u,-.16*u);
+ c.lineTo(.14*u,-.16*u); c.lineTo(.30*u,.16*u); c.moveTo(-.02*u,.16*u); c.lineTo(.14*u,-.16*u);
+ c.stroke();
+ c.beginPath(); c.moveTo(.14*u,-.16*u); c.lineTo(.24*u,-.24*u); c.stroke();
+ c.beginPath(); c.moveTo(-.20*u,-.20*u); c.lineTo(-.08*u,-.20*u); c.stroke();
+ c.beginPath(); c.arc(-.02*u,.16*u,.05*u,0,6.284); c.fill();
+ c.restore();
+}
 
 /* ================= A5 : SCHEMA A LEGENDER ================= */
 (function(){
@@ -455,8 +490,7 @@ document.getElementById('verif4').onclick=()=>{
  ctx.strokeStyle='#334155'; ctx.lineWidth=3;
  ctx.beginPath(); ctx.moveTo(470,148); ctx.lineTo(500,130); ctx.moveTo(486,130) ; ctx.lineTo(516,130); ctx.stroke();
  // cycliste
- ctx.font='28px Segoe UI'; ctx.fillStyle='#000';
- ctx.fillText('\ud83d\udeb4',430,150);
+ VELO(ctx,430,142,34,'#334155');
  // flux d'énergie : batterie ->contrôleur ->moteur ->roue arrière? roue avant. points verts
  ctx.fillStyle='#22c55e';
  for(let i=0;i<3;i++){ const p=((t*0.55)+i/3)%1;
@@ -523,7 +557,7 @@ document.getElementById('verif4').onclick=()=>{
  // point de panne éventuel
  if(autonomie<40){
  const px=80+autonomie/40*560;
- ctx.font='20px Segoe UI'; ctx.fillText('\ud83e\udea6',px,150);
+ ctx.fillStyle='#7c3aed'; ctx.beginPath(); ctx.arc(px,148,6,0,6.284); ctx.fill();
  ctx.fillStyle='#dc2626'; ctx.font='bold 12px Segoe UI';
  ctx.fillText('batterie vide à '+Math.round(autonomie)+' km !',px,132);
  } else {
@@ -533,8 +567,7 @@ document.getElementById('verif4').onclick=()=>{
  // vélo qui roule sur le profil
  const bp=((t*0.06)%1)*560;
  const by=200-26*Math.sin(bp/60)-14*Math.sin(bp/23);
- ctx.font='22px Segoe UI'; ctx.fillStyle='#000';
- ctx.fillText('\ud83d\udeb4',80+bp,by-10);
+ VELO(ctx,80+bp,by-18,26,'#334155');
  // jauge batterie consommée sur 40 km
  const reste=Math.max(0,1-40/autonomie);
  ctx.fillStyle='#334155'; ctx.font='bold 13px Segoe UI';
@@ -549,7 +582,7 @@ document.getElementById('verif4').onclick=()=>{
  ctx.fillStyle='#e2e8f0'; ctx.fillRect(690,160,80,18);
  ctx.fillStyle= v<30 ? '#dc2626' : '#16a34a';
  ctx.fillRect(690,160,80*jambes,18);
- if(v<30){ ctx.font='15px Segoe UI'; ctx.fillText('\ud83e\udd75',782,175); }
+ if(v<30){ ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#dc2626'; ctx.textAlign='left'; ctx.fillText('effort excessif',786,175); ctx.textAlign='center'; }
  ctx.fillStyle='#64748b'; ctx.font='12px Segoe UI';
  ctx.fillText('batterie 400 Wh \u00b7 40 km vallonnés',730,220);
  requestAnimationFrame(dessiner);
@@ -627,7 +660,7 @@ const Q5=[
  sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
  ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
  document.getElementById('codefinal').style.display='block';
- reussir(7, tentative===1?2:(tentative===2?1:0));
+ reussir(9, tentative===1?2:(tentative===2?1:0));
  } else {
  sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
  ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
@@ -715,15 +748,6 @@ charger(); majProgression();
  aff();
 })();
 </script>
-
-<div class="acti" id="aTrace" style="display:block">
- <div class="boite">
-  <h2>Trace écrite</h2>
-  <div class="consigne">À recopier sur le cahier, schéma compris.</div>
-  <canvas class="canvatp" id="cvTrace" width="860" height="200" style="cursor:default"></canvas>
-  <ul style="margin:12px 0 0 20px;line-height:1.95;font-size:15.5px"><li>Toute chaîne d’énergie suit le même ordre : <b>alimenter ou stocker</b>, <b>distribuer</b>, <b>convertir</b>, <b>transmettre</b>.</li><li><b>Convertir</b>, c’est changer l’énergie de <b>forme</b> ; <b>transmettre</b>, c’est la déplacer sans la changer.</li><li>Une panne se situe dans <b>un seul maillon</b> : le symptôme indique lequel.</li><li>Le <b>rendement</b> = énergie utile ÷ énergie absorbée ; le reste part surtout en <b>chaleur</b>.</li></ul>
- </div>
-</div>
 <script>
 /* ── schéma de la trace écrite ── */
 (function(){
@@ -747,6 +771,199 @@ charger(); majProgression();
   }
  });
  T("alimenter → distribuer → convertir → transmettre : l’énergie ne saute jamais un maillon",430,168,13.5,'#5b544a');
+})();
+</script>
+
+
+<script>
+/* ============ A7-A9 : expliquer, calculer, tracer ============ */
+(function(){
+  function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function nbv(v){return parseFloat(String(v||'').replace(',','.'));}
+  function champs(zone,liste,grand){
+    const z=document.getElementById(zone); if(!z) return;
+    liste.forEach(c=>{
+      const d=document.createElement('div'); d.className='chp';
+      const l=document.createElement('label'); l.innerHTML=c.lbl; d.appendChild(l);
+      const i=document.createElement('input'); i.id=c.id; i.autocomplete='off';
+      if(grand){ i.className='large'; i.placeholder='rédige une phrase complète'; }
+      d.appendChild(i);
+      if(c.u){ const u=document.createElement('span'); u.className='u'; u.textContent=c.u; d.appendChild(u); }
+      z.appendChild(d);
+    });
+  }
+  const REDAC=[{"id":"q71","lbl":"a) Pourquoi une panne se situe-t-elle toujours dans un seul maillon de la chaîne d’énergie ?","cles":["maillon","fonction","chacun","role","precis","isole","unseul","separe","etape","bloque"]},{"id":"q72","lbl":"b) Le moteur ne tourne pas, mais le phare éclaire. Que peux-tu déjà éliminer, et pourquoi ?","cles":["batterie","alimenter","fournit","courant","chargee","eliminer","phare","preuve","donc","fonctionne"]},{"id":"q73","lbl":"c) Pourquoi un moteur chauffe-t-il alors qu’il doit produire du mouvement ?","cles":["rendement","perte","chaleur","frottement","pastoute","energieperdue","dissipe","jamais100"]}];
+  const CALC=[{"id":"c81","lbl":"a) Puissance perdue par le moteur","rep":50,"u":"W"},{"id":"c82","lbl":"b) Rendement du moteur, en pourcentage","rep":80,"tol":0.5,"u":"%"},{"id":"c83","lbl":"c) Autonomie de la batterie à cette puissance absorbée (arrondie au dixième d’heure)","rep":1.6,"tol":0.06,"u":"h"}];
+  const TRACE=[{"id":"t91","lbl":"a) Combien de blocs ton schéma comporte-t-il ?","rep":"4","num":true},{"id":"t92","lbl":"b) Quel est le premier maillon de la chaîne ?","rep":["alimenter","stocker","alimenterstocker"]},{"id":"t93","lbl":"c) Quel composant assure la fonction CONVERTIR ?","rep":["moteur","lemoteur","moteurelectrique"]},{"id":"t94","lbl":"d) Quel composant assure la fonction TRANSMETTRE ?","rep":["chaine","lachaine","courroie","pignon"]}];
+  champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  let e7=0,e8=0,e9=0;
+  function verdict(id,html,ok){
+    const v=document.getElementById(id); if(!v) return;
+    v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
+  }
+  document.getElementById('verif8').addEventListener('click',()=>{
+    let faux=0;
+    CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
+      if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
+    if(faux===0){
+      verdict('verd8','\u2713 Tous les calculs sont justes. '+"250 − 200 = 50 W perdus. Rendement = 200 ÷ 250 = 0,8, soit 80 %. Autonomie = 400 ÷ 250 = 1,6 h. Retiens que l’autonomie se calcule sur la puissance ABSORBÉE, pas sur la puissance utile : c’est bien 250 W que la batterie doit fournir.",true);
+      reussir(7, e8===0?3:2);
+    } else { e8++;
+      verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
+        '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
+  });
+  document.getElementById('verif9').addEventListener('click',()=>{
+    let faux=0;
+    TRACE.forEach(c=>{ const v=document.getElementById(c.id).value;
+      const bon = c.num ? String(nbv(v))===String(nbv(c.rep))
+        : (Array.isArray(c.rep)?c.rep:[c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+      if(!bon) faux++; });
+    if(faux===0){
+      verdict('verd9','\u2713 Ton tracé est conforme. '+"Quatre blocs, et surtout un ordre : la batterie alimente, le contrôleur distribue, le moteur convertit, la chaîne transmet. L’énergie ne saute jamais un maillon, et c’est pour cela qu’une panne se localise.",true);
+      reussir(8, e9===0?3:2);
+    } else { e9++;
+      verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
+  });
+})();
+</script>
+
+
+<script>
+/* ===== A1 et A3 : schéma animé cliquable + diagnostic visuel (chantier 5) ===== */
+(function(){
+  const cv1=document.getElementById('cv1'), cv3=document.getElementById('cv3');
+  if(!cv1||!cv3) return;
+  const c1=cv1.getContext('2d'), c3=cv3.getContext('2d');
+  const Z=[{"id":"alimenter","nom":"Alimenter","court":"la batterie","role":"La batterie stocke l’énergie chimique et la fournit en électricité à tout le vélo. C’est le point de départ : sans elle, rien ne circule."},{"id":"distribuer","nom":"Distribuer","court":"le contrôleur","role":"Selon la poignée, le contrôleur laisse passer beaucoup, un peu ou pas du tout d’énergie vers le moteur. C’est le robinet de la chaîne."},{"id":"convertir","nom":"Convertir","court":"le moteur","role":"Le moteur reçoit de l’électricité et la ressort en mouvement. L’énergie CHANGE DE FORME ici, et une partie part en chaleur."},{"id":"transmettre","nom":"Transmettre","court":"la chaîne","role":"La chaîne amène le mouvement du moteur jusqu’à la roue, sans rien changer à sa forme. Elle transporte, elle ne transforme pas."}];
+  const INC=[{"titre":"CLIENT 1 — le moteur ne reçoit rien","sous":"La batterie est chargée à bloc, le témoin s’allume, mais quand je tourne la poignée : rien du tout.","bon":"distribuer","ok":"L’énergie est bien là, puisque le témoin s’allume : la batterie n’est pas en cause. C’est le robinet qui ne s’ouvre plus, le contrôleur est mort.","ko":"Non. Le témoin s’allume, donc l’énergie est disponible et arrive au vélo. Cherche le maillon qui devait la laisser passer vers le moteur."},{"titre":"CLIENT 2 — le moteur tourne, le vélo n’avance pas","sous":"Quand j’accélère, le moteur bourdonne et vibre, mais la roue arrière ne reçoit rien.","bon":"transmettre","ok":"Le moteur convertit bien, puisqu’il tourne. Le mouvement existe mais n’arrive plus à la roue : la chaîne a déraillé ou cassé.","ko":"Non. Le moteur tourne : la conversion se fait correctement. Le problème est plus loin, entre le moteur et la roue."},{"titre":"CLIENT 3 — plus rien ne s’allume","sous":"Aucun témoin, aucun bruit, l’écran reste noir même après une nuit de charge.","bon":"alimenter","ok":"Aucun maillon ne peut fonctionner si le premier ne fournit rien. La batterie ne tient plus la charge : c’est le bloc ALIMENTER.","ko":"Non. Ici RIEN ne fonctionne, pas même l’écran. Quand toute la chaîne est morte, c’est le premier maillon qu’il faut soupçonner."}];
+  const ACC="#059669";
+
+  /* mise en page automatique : une rangée de blocs reliés par des flèches */
+  const n=Z.length, marge=30, esp=Math.max(16, Math.round(120/n));
+  const bw=Math.floor((860-2*marge-(n-1)*esp)/n), bh=86;
+  Z.forEach((z,i)=>{ z.x=marge+i*(bw+esp); z.w=bw; z.h=bh; });
+
+  function ligne(c,txt,x,y,max,taille,coul){
+    c.font=taille+'px Segoe UI'; c.fillStyle=coul; c.textAlign='center';
+    const mots=String(txt).split(' '); let l='', yy=y;
+    mots.forEach(m=>{ if(c.measureText(l+' '+m).width>max){ c.fillText(l,x,yy); l=m; yy+=15; } else l=l?l+' '+m:m; });
+    c.fillText(l,x,yy); return yy;
+  }
+  function dessine(c,H,yb,surbrillance,t){
+    c.clearRect(0,0,860,H);
+    c.fillStyle='#fff'; c.fillRect(0,0,860,H);
+    Z.forEach((z,i)=>{
+      const on = surbrillance && surbrillance.includes(z.id);
+      c.fillStyle= on? ACC : '#fff';
+      c.strokeStyle=ACC; c.lineWidth= on? 3.4 : 2.4;
+      c.beginPath(); c.roundRect(z.x,yb,z.w,z.h,12); c.fill(); c.stroke();
+      c.font='bold 13px Segoe UI'; c.fillStyle= on? '#fff' : ACC; c.textAlign='center';
+      ligne(c,z.nom.toUpperCase(),z.x+z.w/2,yb+26,z.w-14,13,on?'#fff':ACC);
+      ligne(c,z.court||'',z.x+z.w/2,yb+52,z.w-14,11.5,on?'#e2e8f0':'#5b544a');
+      if(i<n-1){
+        /* flèche + point d'énergie qui circule */
+        const x0=z.x+z.w, x1=z.x+z.w+esp;
+        c.strokeStyle=ACC; c.fillStyle=ACC; c.lineWidth=2.6;
+        c.beginPath(); c.moveTo(x0+2,yb+bh/2); c.lineTo(x1-7,yb+bh/2); c.stroke();
+        c.beginPath(); c.moveTo(x1-1,yb+bh/2); c.lineTo(x1-8,yb+bh/2-5); c.lineTo(x1-8,yb+bh/2+5); c.closePath(); c.fill();
+        const p=(t/1400+i/n)%1;
+        c.beginPath(); c.arc(x0+2+(x1-x0-4)*p, yb+bh/2, 3.4, 0, 6.284); c.fill();
+      }
+    });
+  }
+  function bulle(c,z,l1,l2,yb){
+    /* Hauteur CALCULEE d'apres le nombre de lignes reellement necessaires.
+       L'ancienne version imposait 62 px : au-dela de deux lignes le texte
+       debordait du rectangle. */
+    const w=460, pad=15, lh=16;
+    c.font='12.5px Segoe UI';
+    const mots=String(l2).split(' '); const lignes=[]; let l='';
+    mots.forEach(m=>{ if(c.measureText(l+' '+m).width>w-2*pad){ lignes.push(l); l=m; }
+                      else l=l?l+' '+m:m; });
+    if(l) lignes.push(l);
+    const h=34+lignes.length*lh+10;
+    const bx=Math.max(8,Math.min(z.x+z.w/2-w/2,852-w));
+    const by=Math.max(6,yb-h-12);
+    c.fillStyle='rgba(255,251,235,.97)'; c.strokeStyle='#f59e0b'; c.lineWidth=3;
+    c.beginPath(); c.roundRect(bx,by,w,h,12); c.fill(); c.stroke();
+    c.textAlign='left'; c.font='bold 13px Segoe UI'; c.fillStyle='#78350f';
+    c.fillText(l1,bx+pad,by+23);
+    c.font='12.5px Segoe UI'; c.fillStyle='#a16207';
+    lignes.forEach((t,i)=>c.fillText(t,bx+pad,by+44+i*lh));
+    c.textAlign='center';
+  }
+  function cible(cv,ev,H,yb){
+    const r=cv.getBoundingClientRect();
+    const x=(ev.clientX-r.left)*860/r.width, y=(ev.clientY-r.top)*H/r.height;
+    return Z.find(z=>x>=z.x&&x<=z.x+z.w&&y>=yb&&y<=yb+z.h)||null;
+  }
+
+  /* ---------- A1 : visite guidée ---------- */
+  const YB1=150;
+  let vus=[], flash1=null, fini1=false;
+  cv1.addEventListener('click',ev=>{
+    if(fini1||flash1) return;
+    const z=cible(cv1,ev,300,YB1); if(!z) return;
+    flash1={z,l1:z.nom.toUpperCase(),l2:z.role};
+    if(!vus.includes(z.id)){
+      vus.push(z.id);
+      document.getElementById('cpt1').textContent='('+vus.length+'/'+n+')';
+      if(vus.length===n){ fini1=true;
+        setTimeout(()=>{ flash1=null;
+          const v=document.getElementById('verd1');
+          v.className='verdict ok'; v.innerHTML='\u2713 '+"Tu connais les quatre maillons. L’énergie suit toujours cet ordre : la batterie ALIMENTE, le contrôleur DISTRIBUE, le moteur CONVERTIT, la chaîne TRANSMET. Elle ne saute jamais un maillon — et c’est précisément ce qui rend un diagnostic possible.";
+          reussir(1,2);
+        },2100); return;
+      }
+    }
+    setTimeout(()=>{ flash1=null; },2300);
+  });
+
+  /* ---------- A3 : diagnostic visuel ---------- */
+  const YB3=190;
+  let i3=0, err3=0, flash3=null, fini3=false;
+  cv3.addEventListener('click',ev=>{
+    if(fini3||flash3) return;
+    const z=cible(cv3,ev,340,YB3); if(!z) return;
+    const inc=INC[i3], juste = z.id===inc.bon;
+    if(!juste) err3++;
+    flash3={z,l1: juste?'\u2713 Bon diagnostic':'\u2717 Mauvais bloc', l2: juste?inc.ok:inc.ko};
+    setTimeout(()=>{
+      flash3=null; i3++;
+      if(i3>=INC.length){ fini3=true;
+        const v=document.getElementById('verd3');
+        v.className='verdict '+(err3===0?'ok':'ko');
+        v.innerHTML=(err3===0?'\u2713 Trois diagnostics justes. ':'Trois diagnostics posés, '+err3+' erreur(s). ')+"Retiens la méthode du mécano : ce qui fonctionne encore te dit où NE PAS chercher. Un témoin allumé disculpe la batterie, un moteur qui tourne disculpe la conversion. On remonte la chaîne maillon par maillon, on ne démonte pas au hasard.";
+        reussir(3, err3===0?3:(err3===1?2:1));
+      } else { document.getElementById('cpt3').textContent='('+(i3+1)+'/'+INC.length+')'; }
+    },3000);
+  });
+
+  /* ---------- boucle d'animation ---------- */
+  let t=0;
+  function boucle(){
+    t+=16;
+    dessine(c1,300,YB1,vus,t);
+    c1.font='bold 15px Segoe UI'; c1.fillStyle=ACC; c1.textAlign='center';
+    c1.fillText("La chaîne d’énergie du vélo à assistance électrique",430,40);
+    if(flash1) bulle(c1,flash1.z,flash1.l1,flash1.l2,YB1);
+
+    dessine(c3,340,YB3,fini3?[]:[],t);
+    const inc=INC[Math.min(i3,INC.length-1)];
+    c3.textAlign='center';
+    c3.fillStyle= fini3? '#16a34a' : '#b91c1c';
+    c3.font='bold 15px Segoe UI';
+    c3.fillText(fini3?'Tous les diagnostics sont posés':inc.titre,430,42);
+    c3.font='13px Segoe UI'; c3.fillStyle='#5b544a';
+    ligne(c3, fini3?'':inc.sous, 430, 68, 780, 13, '#5b544a');
+    if(!fini3){
+      c3.font='12.5px Segoe UI'; c3.fillStyle=ACC;
+      c3.fillText('Clique sur le bloc responsable de la panne',430,120);
+    }
+    if(flash3) bulle(c3,flash3.z,flash3.l1,flash3.l2,YB3);
+    requestAnimationFrame(boucle);
+  }
+  requestAnimationFrame(boucle);
 })();
 </script>
 

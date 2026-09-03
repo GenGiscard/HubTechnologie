@@ -110,6 +110,13 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 #calcGr button.op{background:#dbeafe;color:#1e40af}
 @media print{#calcBtn,#calcPan{display:none!important}}
 .rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -127,16 +134,17 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <div class="progression" id="prog">
  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
- <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div>
  <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ============ A1 : QUI SUIS-JE ============ -->
 <div class="acti" id="a1">
  <div class="boite">
- <h2><span class="badge">1</span>Le vocabulaire du mécano</h2>
- <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! <b>Attention : une seule tentative par question</b> — lis bien avant de cliquer ! (1 pt par bonne réponse)</div>
- <div class="minicas" id="cas1"></div>
+  <h2><span class="badge">1</span>La transmission du vélo en direct</h2>
+  <div class="consigne">Visite guidée : clique sur chaque élément pour découvrir sa fonction technique. <b id="cpt1">(0/4)</b></div>
+  <canvas class="canvatp" id="cv1" width="860" height="300"></canvas>
+  <div id="verd1"></div>
  </div>
 </div>
 
@@ -160,10 +168,10 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <!-- ============ A3 : EXPERTISES ============ -->
 <div class="acti" id="a3">
  <div class="boite">
- <h2><span class="badge">3</span>Trois vélos en panne !</h2>
- <div class="consigne">Trois vélos arrivent à l'atelier. <b>Observe le schéma animé</b>de chacun : il montre exactement ce qui se passe. Identifie la fonction en panne, puis clique la <b>bonne réparation</b>. <b>Une seule tentative par expertise</b> : observe et réfléchis avant de cliquer !</div>
- <div id="pannes3"></div>
- <div class="verdict" id="verd3"></div>
+  <h2><span class="badge">3</span>Trois vélos à l’atelier</h2>
+  <div class="consigne">Un client décrit son problème : observe le schéma, puis clique sur l’élément en cause. <b id="cpt3">(1/3)</b></div>
+  <canvas class="canvatp" id="cv3" width="860" height="340"></canvas>
+  <div id="verd3"></div>
  </div>
 </div>
 
@@ -211,9 +219,34 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 </div>
 
 <!-- ============ A7 : BILAN ============ -->
+
+<!-- ============ A7 : EXPLIQUER ============ -->
+<!-- ============ A8 : CALCULER ============ -->
 <div class="acti" id="a7">
  <div class="boite">
- <h2><span class="badge">7</span>Bilan du mécano junior</h2>
+  <h2><span class="badge">7</span>Calculer un développement</h2>
+  <div class="consigne">Un plateau de <b>48 dents</b> entraîne un pignon de <b>16 dents</b>. La roue mesure <b>2,10 m</b> de circonférence.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
+  <div id="champs8"></div>
+  <div class="btnrow"><button class="btn" id="verif8">Valider mes calculs</button></div>
+  <div id="verd8"></div>
+ </div>
+</div>
+<!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
+<div class="acti" id="a8">
+ <div class="boite">
+  <h2><span class="badge">8</span>Tracer la transmission du vélo</h2>
+  <div class="consigne">Tu as réparé et réglé un vélo. Représente sa transmission sur ton cahier.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — trace la transmission du vélo vue de côté : le pédalier avec son plateau, la chaîne, le pignon arrière et la roue. Indique par une flèche le sens de rotation de chaque élément.</div>
+  <div id="champs9"></div>
+  <div class="btnrow"><button class="btn" id="verif9">Valider mon travail</button></div>
+  <div id="verd9"></div>
+ </div>
+</div>
+
+<div class="acti" id="a9">
+ <div class="boite">
+ <h2><span class="badge">9</span>Bilan du mécano junior</h2>
  <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
  <div id="quiz5"></div>
  <div class="codefinal" id="codefinal">
@@ -235,7 +268,7 @@ function majProgression(){
  seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
  });
  document.getElementById('scoreTot').textContent=etat.score;
- for(let n=2;n<=7;n++){
+ for(let n=2;n<=9;n++){
  const acti=document.getElementById('a'+n);
  let v=acti.querySelector('.verrou');
  if(n>etat.debloque){
@@ -249,7 +282,7 @@ function reussir(n,pts){
  etat.score+=pts;
  if(etat.debloque===n) etat.debloque=n+1;
  sauver(); majProgression();
- if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ if(n<9) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -261,6 +294,7 @@ const CAS1=[
 ];
 (function initA1(){
  const zone=document.getElementById('cas1');
+ if(!zone) return; /* chantier 5 : activité remplacée par le schéma animé */
  CAS1.forEach(cas=>{
  const d=document.createElement('div'); d.className='cas';
  d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
@@ -483,6 +517,7 @@ let diag3=0, a3fait=false;
 })();
 (function initA3(){
  const zone=document.getElementById('pannes3');
+ if(!zone) return; /* chantier 5 : activité remplacée par le schéma animé */
  const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
  ordre3.forEach(pi=>{
  const P=PANNES[pi];
@@ -869,7 +904,7 @@ const Q5=[
  sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
  ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
  document.getElementById('codefinal').style.display='block';
- reussir(7, tentative===1?2:(tentative===2?1:0));
+ reussir(9, tentative===1?2:(tentative===2?1:0));
  } else {
  sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
  ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
@@ -957,5 +992,224 @@ charger(); majProgression();
  aff();
 })();
 </script>
+<script>
+/* ── schéma de la trace écrite ── */
+(function(){
+ const cv=document.getElementById('cvTrace'); if(!cv)return;
+ const c=cv.getContext('2d');
+ function T(s,x,y,t,coul,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=coul||'#3f3a34';c.textAlign=al||'center';c.fillText(s,x,y);}
+ const B=[["LE CYCLISTE","il fournit l’effort"],["LE PÉDALIER","il reçoit et transmet"],["LA CHAÎNE","elle relie les pignons"],["LA ROUE","elle avance sur la route"]], A='#15803d', F='#15803d';
+ c.fillStyle='#fff'; c.fillRect(0,0,860,200);
+ T("LE VÉLO, OBJET TECHNIQUE",430,28,14.5,F);
+ const n=B.length, marge=24, esp=18;
+ const w=Math.floor((860-2*marge-(n-1)*esp)/n);
+ B.forEach((b,i)=>{
+  const x=marge+i*(w+esp);
+  c.fillStyle='#fff'; c.strokeStyle=A; c.lineWidth=2.4;
+  c.beginPath(); c.roundRect(x,58,w,68,12); c.fill(); c.stroke();
+  T(b[0],x+w/2,88,13,F); T(b[1],x+w/2,108,11.5,'#5b544a');
+  if(i<n-1){
+   c.strokeStyle=A; c.fillStyle=A; c.lineWidth=3;
+   c.beginPath(); c.moveTo(x+w,92); c.lineTo(x+w+esp-8,92); c.stroke();
+   c.beginPath(); c.moveTo(x+w+esp,92); c.lineTo(x+w+esp-9,86); c.lineTo(x+w+esp-9,98); c.closePath(); c.fill();
+  }
+ });
+ T("cycliste → pédalier → chaîne → roue : l’effort devient du mouvement",430,168,13.5,'#5b544a');
+})();
+</script>
+
+
+<script>
+/* ============ A7-A9 : expliquer, calculer, tracer ============ */
+(function(){
+  function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function nbv(v){return parseFloat(String(v||'').replace(',','.'));}
+  function champs(zone,liste,grand){
+    const z=document.getElementById(zone); if(!z) return;
+    liste.forEach(c=>{
+      const d=document.createElement('div'); d.className='chp';
+      const l=document.createElement('label'); l.innerHTML=c.lbl; d.appendChild(l);
+      const i=document.createElement('input'); i.id=c.id; i.autocomplete='off';
+      if(grand){ i.className='large'; i.placeholder='rédige une phrase complète'; }
+      d.appendChild(i);
+      if(c.u){ const u=document.createElement('span'); u.className='u'; u.textContent=c.u; d.appendChild(u); }
+      z.appendChild(d);
+    });
+  }
+  const REDAC=[{"id":"q71","lbl":"a) Pourquoi chaque pièce du vélo assure-t-elle une fonction technique précise ?","cles":["fonction","role","precis","chacune","sert","guider","freiner","transmettre","utile","besoin"]},{"id":"q72","lbl":"b) Pourquoi change-t-on de vitesse en montée ?","cles":["force","facile","moins","effort","pedaler","monte","petit","braquet","plusfacile","couple"]},{"id":"q73","lbl":"c) Pourquoi la chaîne doit-elle être entretenue et lubrifiée ?","cles":["frottement","usure","rouille","saute","casse","glisse","rendement","perte","huile","use"]}];
+  const CALC=[{"id":"c81","lbl":"a) Rapport de transmission (plateau ÷ pignon)","rep":3,"tol":0.01,"u":""},{"id":"c82","lbl":"b) Distance parcourue pour un tour de pédalier","rep":6.3,"tol":0.1,"u":"m"},{"id":"c83","lbl":"c) Nombre de tours de pédalier pour parcourir 1 km (arrondi à l’unité)","rep":159,"tol":1.5,"u":"tours"}];
+  const TRACE=[{"id":"t91","lbl":"a) Combien d’éléments ton schéma comporte-t-il ?","rep":"4","num":true},{"id":"t92","lbl":"b) La chaîne fait-elle tourner le pignon dans le même sens que le plateau ?","rep":["oui","memesens","memessens","ouilememesens","meme"]},{"id":"t93","lbl":"c) Pour monter une côte plus facilement, faut-il un grand ou un petit plateau ?","rep":["petit","petitplateau","pluspetit"]},{"id":"t94","lbl":"d) Quelle pièce transmet le mouvement du pédalier à la roue ?","rep":["chaine","lachaine"]}];
+  champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  let e7=0,e8=0,e9=0;
+  function verdict(id,html,ok){
+    const v=document.getElementById(id); if(!v) return;
+    v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
+  }
+  document.getElementById('verif8').addEventListener('click',()=>{
+    let faux=0;
+    CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
+      if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
+    if(faux===0){
+      verdict('verd8','\u2713 Tous les calculs sont justes. '+"48 ÷ 16 = 3 : la roue fait 3 tours par tour de pédalier. Distance = 3 × 2,10 = 6,3 m. Pour 1 km : 1000 ÷ 6,3 ≈ 159 tours de pédalier. Ce rapport de 3 est un grand braquet : rapide sur le plat, dur en côte.",true);
+      reussir(7, e8===0?3:2);
+    } else { e8++;
+      verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
+        '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
+  });
+  document.getElementById('verif9').addEventListener('click',()=>{
+    let faux=0;
+    TRACE.forEach(c=>{ const v=document.getElementById(c.id).value;
+      const bon = c.num ? String(nbv(v))===String(nbv(c.rep))
+        : (Array.isArray(c.rep)?c.rep:[c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+      if(!bon) faux++; });
+    if(faux===0){
+      verdict('verd9','\u2713 Ton tracé est conforme. '+"Quatre éléments, et un sens conservé du plateau au pignon — c’est le propre de la chaîne, à la différence des engrenages. Le choix du braquet, lui, arbitre entre vitesse et force.",true);
+      reussir(8, e9===0?3:2);
+    } else { e9++;
+      verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
+  });
+})();
+</script>
+
+
+<script>
+/* ===== A1 et A3 : schéma animé cliquable + diagnostic visuel (chantier 5) ===== */
+(function(){
+  const cv1=document.getElementById('cv1'), cv3=document.getElementById('cv3');
+  if(!cv1||!cv3) return;
+  const c1=cv1.getContext('2d'), c3=cv3.getContext('2d');
+  const Z=[{"id":"cycliste","nom":"Cycliste","court":"il fournit l’effort","role":"Les jambes fournissent l’énergie musculaire. C’est le point de départ : sur un vélo classique, il n’y a pas d’autre source."},{"id":"pedalier","nom":"Pédalier","court":"il reçoit","role":"Les manivelles et le plateau transforment le mouvement des jambes en rotation. Le nombre de dents du plateau fixe le braquet."},{"id":"chaine","nom":"Chaîne","court":"elle relie","role":"La chaîne transmet la rotation au pignon arrière, sans changer le sens ni la forme de l’énergie. Elle transporte, elle ne transforme pas."},{"id":"roue","nom":"Roue","court":"elle avance","role":"La roue transmet enfin le mouvement à la route. Sa circonférence détermine la distance parcourue à chaque tour."}];
+  const INC=[{"titre":"CLIENT 1 — les pédales tournent dans le vide","sous":"Je pédale sans résistance, les pédales tournent tout seules et le vélo n’avance pas d’un mètre.","bon":"chaine","ok":"Le pédalier tourne, donc l’effort passe. Mais rien n’arrive à la roue : la chaîne a déraillé ou cassé.","ko":"Non. Les pédales tournent : le cycliste et le pédalier font leur travail. Le mouvement se perd plus loin."},{"titre":"CLIENT 2 — impossible de monter les côtes","sous":"Tout fonctionne, la chaîne est en place, mais je dois pousser très fort dès que ça monte un peu.","bon":"pedalier","ok":"Rien n’est cassé : c’est un problème de réglage. Le braquet est trop grand, il faut un plateau plus petit pour monter.","ko":"Non. Rien n’est cassé et la chaîne est en place. Cherche ce qui règle la force nécessaire à chaque tour de pédale."},{"titre":"CLIENT 3 — le vélo vibre et freine tout seul","sous":"La transmission est parfaite, mais la roue arrière frotte et le vélo ralentit dès que je cesse de pédaler.","bon":"roue","ok":"La transmission fonctionne : l’effort arrive bien jusqu’au bout. C’est le dernier maillon qui est voilé ou mal réglé.","ko":"Non. La transmission est parfaite selon le client : le mouvement arrive. Le défaut est sur le tout dernier élément."}];
+  const ACC="#0e7490";
+
+  /* mise en page automatique : une rangée de blocs reliés par des flèches */
+  const n=Z.length, marge=30, esp=Math.max(16, Math.round(120/n));
+  const bw=Math.floor((860-2*marge-(n-1)*esp)/n), bh=86;
+  Z.forEach((z,i)=>{ z.x=marge+i*(bw+esp); z.w=bw; z.h=bh; });
+
+  function ligne(c,txt,x,y,max,taille,coul){
+    c.font=taille+'px Segoe UI'; c.fillStyle=coul; c.textAlign='center';
+    const mots=String(txt).split(' '); let l='', yy=y;
+    mots.forEach(m=>{ if(c.measureText(l+' '+m).width>max){ c.fillText(l,x,yy); l=m; yy+=15; } else l=l?l+' '+m:m; });
+    c.fillText(l,x,yy); return yy;
+  }
+  function dessine(c,H,yb,surbrillance,t){
+    c.clearRect(0,0,860,H);
+    c.fillStyle='#fff'; c.fillRect(0,0,860,H);
+    Z.forEach((z,i)=>{
+      const on = surbrillance && surbrillance.includes(z.id);
+      c.fillStyle= on? ACC : '#fff';
+      c.strokeStyle=ACC; c.lineWidth= on? 3.4 : 2.4;
+      c.beginPath(); c.roundRect(z.x,yb,z.w,z.h,12); c.fill(); c.stroke();
+      c.font='bold 13px Segoe UI'; c.fillStyle= on? '#fff' : ACC; c.textAlign='center';
+      ligne(c,z.nom.toUpperCase(),z.x+z.w/2,yb+26,z.w-14,13,on?'#fff':ACC);
+      ligne(c,z.court||'',z.x+z.w/2,yb+52,z.w-14,11.5,on?'#e2e8f0':'#5b544a');
+      if(i<n-1){
+        /* flèche + point d'énergie qui circule */
+        const x0=z.x+z.w, x1=z.x+z.w+esp;
+        c.strokeStyle=ACC; c.fillStyle=ACC; c.lineWidth=2.6;
+        c.beginPath(); c.moveTo(x0+2,yb+bh/2); c.lineTo(x1-7,yb+bh/2); c.stroke();
+        c.beginPath(); c.moveTo(x1-1,yb+bh/2); c.lineTo(x1-8,yb+bh/2-5); c.lineTo(x1-8,yb+bh/2+5); c.closePath(); c.fill();
+        const p=(t/1400+i/n)%1;
+        c.beginPath(); c.arc(x0+2+(x1-x0-4)*p, yb+bh/2, 3.4, 0, 6.284); c.fill();
+      }
+    });
+  }
+  function bulle(c,z,l1,l2,yb){
+    /* Hauteur CALCULEE d'apres le nombre de lignes reellement necessaires.
+       L'ancienne version imposait 62 px : au-dela de deux lignes le texte
+       debordait du rectangle. */
+    const w=460, pad=15, lh=16;
+    c.font='12.5px Segoe UI';
+    const mots=String(l2).split(' '); const lignes=[]; let l='';
+    mots.forEach(m=>{ if(c.measureText(l+' '+m).width>w-2*pad){ lignes.push(l); l=m; }
+                      else l=l?l+' '+m:m; });
+    if(l) lignes.push(l);
+    const h=34+lignes.length*lh+10;
+    const bx=Math.max(8,Math.min(z.x+z.w/2-w/2,852-w));
+    const by=Math.max(6,yb-h-12);
+    c.fillStyle='rgba(255,251,235,.97)'; c.strokeStyle='#f59e0b'; c.lineWidth=3;
+    c.beginPath(); c.roundRect(bx,by,w,h,12); c.fill(); c.stroke();
+    c.textAlign='left'; c.font='bold 13px Segoe UI'; c.fillStyle='#78350f';
+    c.fillText(l1,bx+pad,by+23);
+    c.font='12.5px Segoe UI'; c.fillStyle='#a16207';
+    lignes.forEach((t,i)=>c.fillText(t,bx+pad,by+44+i*lh));
+    c.textAlign='center';
+  }
+  function cible(cv,ev,H,yb){
+    const r=cv.getBoundingClientRect();
+    const x=(ev.clientX-r.left)*860/r.width, y=(ev.clientY-r.top)*H/r.height;
+    return Z.find(z=>x>=z.x&&x<=z.x+z.w&&y>=yb&&y<=yb+z.h)||null;
+  }
+
+  /* ---------- A1 : visite guidée ---------- */
+  const YB1=150;
+  let vus=[], flash1=null, fini1=false;
+  cv1.addEventListener('click',ev=>{
+    if(fini1||flash1) return;
+    const z=cible(cv1,ev,300,YB1); if(!z) return;
+    flash1={z,l1:z.nom.toUpperCase(),l2:z.role};
+    if(!vus.includes(z.id)){
+      vus.push(z.id);
+      document.getElementById('cpt1').textContent='('+vus.length+'/'+n+')';
+      if(vus.length===n){ fini1=true;
+        setTimeout(()=>{ flash1=null;
+          const v=document.getElementById('verd1');
+          v.className='verdict ok'; v.innerHTML='\u2713 '+"Chaque pièce assure une fonction et une seule. La chaîne conserve le sens de rotation, contrairement à deux roues dentées en contact : c’est la différence à retenir.";
+          reussir(1,2);
+        },2100); return;
+      }
+    }
+    setTimeout(()=>{ flash1=null; },2300);
+  });
+
+  /* ---------- A3 : diagnostic visuel ---------- */
+  const YB3=190;
+  let i3=0, err3=0, flash3=null, fini3=false;
+  cv3.addEventListener('click',ev=>{
+    if(fini3||flash3) return;
+    const z=cible(cv3,ev,340,YB3); if(!z) return;
+    const inc=INC[i3], juste = z.id===inc.bon;
+    if(!juste) err3++;
+    flash3={z,l1: juste?'\u2713 Bon diagnostic':'\u2717 Mauvais bloc', l2: juste?inc.ok:inc.ko};
+    setTimeout(()=>{
+      flash3=null; i3++;
+      if(i3>=INC.length){ fini3=true;
+        const v=document.getElementById('verd3');
+        v.className='verdict '+(err3===0?'ok':'ko');
+        v.innerHTML=(err3===0?'\u2713 Trois diagnostics justes. ':'Trois diagnostics posés, '+err3+' erreur(s). ')+"Distingue toujours une PANNE d’un RÉGLAGE. Pédales dans le vide ou roue qui frotte : quelque chose est cassé. Difficulté en côte alors que tout est intact : c’est le braquet qu’il faut changer, pas une pièce.";
+        reussir(3, err3===0?3:(err3===1?2:1));
+      } else { document.getElementById('cpt3').textContent='('+(i3+1)+'/'+INC.length+')'; }
+    },3000);
+  });
+
+  /* ---------- boucle d'animation ---------- */
+  let t=0;
+  function boucle(){
+    t+=16;
+    dessine(c1,300,YB1,vus,t);
+    c1.font='bold 15px Segoe UI'; c1.fillStyle=ACC; c1.textAlign='center';
+    c1.fillText("Du cycliste à la roue",430,40);
+    if(flash1) bulle(c1,flash1.z,flash1.l1,flash1.l2,YB1);
+
+    dessine(c3,340,YB3,fini3?[]:[],t);
+    const inc=INC[Math.min(i3,INC.length-1)];
+    c3.textAlign='center';
+    c3.fillStyle= fini3? '#16a34a' : '#b91c1c';
+    c3.font='bold 15px Segoe UI';
+    c3.fillText(fini3?'Tous les diagnostics sont posés':inc.titre,430,42);
+    c3.font='13px Segoe UI'; c3.fillStyle='#5b544a';
+    ligne(c3, fini3?'':inc.sous, 430, 68, 780, 13, '#5b544a');
+    if(!fini3){
+      c3.font='12.5px Segoe UI'; c3.fillStyle=ACC;
+      c3.fillText('Clique sur le bloc responsable de la panne',430,120);
+    }
+    if(flash3) bulle(c3,flash3.z,flash3.l1,flash3.l2,YB3);
+    requestAnimationFrame(boucle);
+  }
+  requestAnimationFrame(boucle);
+})();
+</script>
+
 </body>
 </html>

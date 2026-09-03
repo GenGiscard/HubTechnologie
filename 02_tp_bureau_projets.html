@@ -112,6 +112,13 @@ table.cdc tr.faux td{background:#fef2f2}
 #calcGr button.op{background:#dbeafe;color:#1e40af}
 @media print{#calcBtn,#calcPan{display:none!important}}
 .rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -129,7 +136,7 @@ table.cdc tr.faux td{background:#fef2f2}
 
 <div class="progression" id="prog">
  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
- <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div>
  <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
@@ -216,9 +223,34 @@ table.cdc tr.faux td{background:#fef2f2}
 </div>
 
 <!-- ============ A7 : BILAN ============ -->
+
+<!-- ============ A7 : EXPLIQUER ============ -->
+<!-- ============ A8 : CALCULER ============ -->
 <div class="acti" id="a7">
  <div class="boite">
- <h2><span class="badge">7</span>Bilan du contrôleur qualité</h2>
+  <h2><span class="badge">7</span>Contrôler un prototype</h2>
+  <div class="consigne">Le cahier des charges exige une masse <b>inférieure à 300 g</b> et une hauteur de <b>25 cm ± 2 cm</b>. Le prototype pèse <b>318 g</b> et mesure <b>26,5 cm</b>.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
+  <div id="champs8"></div>
+  <div class="btnrow"><button class="btn" id="verif8">Valider mes calculs</button></div>
+  <div id="verd8"></div>
+ </div>
+</div>
+<!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
+<div class="acti" id="a8">
+ <div class="boite">
+  <h2><span class="badge">8</span>Tracer une bête à cornes</h2>
+  <div class="consigne">Tu as formulé un besoin pendant le TP. Reproduis l’outil sur ton cahier.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — trace la bête à cornes d’un objet de ton choix : deux cornes en haut, le produit au centre, et la question du but en dessous. Écris une réponse dans chaque case.</div>
+  <div id="champs9"></div>
+  <div class="btnrow"><button class="btn" id="verif9">Valider mon travail</button></div>
+  <div id="verd9"></div>
+ </div>
+</div>
+
+<div class="acti" id="a9">
+ <div class="boite">
+ <h2><span class="badge">9</span>Bilan du contrôleur qualité</h2>
  <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
  <div id="quiz5"></div>
  <div class="codefinal" id="codefinal">
@@ -240,7 +272,7 @@ function majProgression(){
  seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
  });
  document.getElementById('scoreTot').textContent=etat.score;
- for(let n=2;n<=7;n++){
+ for(let n=2;n<=9;n++){
  const acti=document.getElementById('a'+n);
  let v=acti.querySelector('.verrou');
  if(n>etat.debloque){
@@ -254,7 +286,7 @@ function reussir(n,pts){
  etat.score+=pts;
  if(etat.debloque===n) etat.debloque=n+1;
  sauver(); majProgression();
- if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ if(n<9) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -595,7 +627,7 @@ const Q5=[
  sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
  ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
  document.getElementById('codefinal').style.display='block';
- reussir(7, tentative===1?2:(tentative===2?1:0));
+ reussir(9, tentative===1?2:(tentative===2?1:0));
  } else {
  sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
  ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
@@ -683,5 +715,84 @@ charger(); majProgression();
  aff();
 })();
 </script>
+<script>
+/* ── schéma de la trace écrite ── */
+(function(){
+ const cv=document.getElementById('cvTrace'); if(!cv)return;
+ const c=cv.getContext('2d');
+ function T(s,x,y,t,coul,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=coul||'#3f3a34';c.textAlign=al||'center';c.fillText(s,x,y);}
+ const B=[["LE BESOIN","à qui, dans quel but"],["LES FONCTIONS","usage et estime"],["LES CRITÈRES","chacun a un niveau"],["LE CONTRÔLE","on mesure, on valide"]], A='#db2777', F='#db2777';
+ c.fillStyle='#fff'; c.fillRect(0,0,860,200);
+ T("DU BESOIN AU CAHIER DES CHARGES",430,28,14.5,F);
+ const n=B.length, marge=24, esp=18;
+ const w=Math.floor((860-2*marge-(n-1)*esp)/n);
+ B.forEach((b,i)=>{
+  const x=marge+i*(w+esp);
+  c.fillStyle='#fff'; c.strokeStyle=A; c.lineWidth=2.4;
+  c.beginPath(); c.roundRect(x,58,w,68,12); c.fill(); c.stroke();
+  T(b[0],x+w/2,88,13,F); T(b[1],x+w/2,108,11.5,'#5b544a');
+  if(i<n-1){
+   c.strokeStyle=A; c.fillStyle=A; c.lineWidth=3;
+   c.beginPath(); c.moveTo(x+w,92); c.lineTo(x+w+esp-8,92); c.stroke();
+   c.beginPath(); c.moveTo(x+w+esp,92); c.lineTo(x+w+esp-9,86); c.lineTo(x+w+esp-9,98); c.closePath(); c.fill();
+  }
+ });
+ T("besoin → fonctions → critères → contrôle : ce qui n’est pas mesurable n’est pas un critère",430,168,13.5,'#5b544a');
+})();
+</script>
+
+
+<script>
+/* ============ A7-A9 : expliquer, calculer, tracer ============ */
+(function(){
+  function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function nbv(v){return parseFloat(String(v||'').replace(',','.'));}
+  function champs(zone,liste,grand){
+    const z=document.getElementById(zone); if(!z) return;
+    liste.forEach(c=>{
+      const d=document.createElement('div'); d.className='chp';
+      const l=document.createElement('label'); l.innerHTML=c.lbl; d.appendChild(l);
+      const i=document.createElement('input'); i.id=c.id; i.autocomplete='off';
+      if(grand){ i.className='large'; i.placeholder='rédige une phrase complète'; }
+      d.appendChild(i);
+      if(c.u){ const u=document.createElement('span'); u.className='u'; u.textContent=c.u; d.appendChild(u); }
+      z.appendChild(d);
+    });
+  }
+  const REDAC=[{"id":"q71","lbl":"a) Quelle est la différence entre une fonction d’usage et une fonction d’estime ?","cles":["usage","sert","service","utile","estime","plait","gout","apparence","beau","couleur","style"]},{"id":"q72","lbl":"b) Pourquoi un critère doit-il toujours être accompagné d’un niveau ?","cles":["mesure","chiffre","verifier","precis","controle","valeur","sinon","vague","comparer","objectif"]},{"id":"q73","lbl":"c) À quoi sert la bête à cornes ?","cles":["besoin","aqui","surquoi","but","exprime","formule","troisquestions","clarifie","definit"]}];
+  const CALC=[{"id":"c81","lbl":"a) Écart de masse par rapport à la limite","rep":18,"u":"g"},{"id":"c82","lbl":"b) Dépassement de masse en pourcentage de la limite","rep":6,"tol":0.3,"u":"%"},{"id":"c83","lbl":"c) Nombre de critères respectés sur les deux","rep":1,"u":"critère"}];
+  const TRACE=[{"id":"t91","lbl":"a) Combien de questions la bête à cornes pose-t-elle ?","rep":"3","num":true},{"id":"t92","lbl":"b) Que demande la corne de gauche ?","rep":["aqui","aquiilrendservice","utilisateur","aquirendservice","personne"]},{"id":"t93","lbl":"c) Que demande la corne de droite ?","rep":["surquoi","surquoiilagit","matiere","objet","surquoiagit"]},{"id":"t94","lbl":"d) Que demande la question du bas ?","rep":["dansquelbut","but","pourquoi","quelbut","dansquelbutexiste"]}];
+  champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  let e7=0,e8=0,e9=0;
+  function verdict(id,html,ok){
+    const v=document.getElementById(id); if(!v) return;
+    v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
+  }
+  document.getElementById('verif8').addEventListener('click',()=>{
+    let faux=0;
+    CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
+      if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
+    if(faux===0){
+      verdict('verd8','\u2713 Tous les calculs sont justes. '+"318 − 300 = 18 g de trop, soit 18 ÷ 300 = 6 % au-dessus. La hauteur, elle, est acceptée : 26,5 cm est bien dans l’intervalle 23 à 27 cm. Un seul critère sur deux est donc respecté — et un prototype non conforme sur un seul critère reste non conforme.",true);
+      reussir(7, e8===0?3:2);
+    } else { e8++;
+      verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
+        '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
+  });
+  document.getElementById('verif9').addEventListener('click',()=>{
+    let faux=0;
+    TRACE.forEach(c=>{ const v=document.getElementById(c.id).value;
+      const bon = c.num ? String(nbv(v))===String(nbv(c.rep))
+        : (Array.isArray(c.rep)?c.rep:[c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+      if(!bon) faux++; });
+    if(faux===0){
+      verdict('verd9','\u2713 Ton tracé est conforme. '+"Trois questions, et elles viennent avant tout le reste : à qui, sur quoi, dans quel but. Un objet qui ne répond à aucun besoin identifié n’a pas de raison d’exister.",true);
+      reussir(8, e9===0?3:2);
+    } else { e9++;
+      verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
+  });
+})();
+</script>
+
 </body>
 </html>

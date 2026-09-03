@@ -92,6 +92,14 @@ table.mat tr:nth-child(even) td{background:#f8fafc}
  <p class="sous" style="margin-top:16px">Une gourde, un cartable, un vélo : chacun a été inventé pour répondre à un <b>BESOIN</b> —
  quelque chose de nécessaire ou de désiré par quelqu'un. Avant de fabriquer quoi que ce soit,
  l'ingénieur commence TOUJOURS par la même question : <b>« à quoi ça sert, pour qui, et pour agir sur quoi ? »</b></p>
+
+ <div id="sObj" style="background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.10);border-left:5px solid #0e7490;border-radius:14px;padding:18px 22px;margin-top:26px;text-align:left;font-size:15px;line-height:1.7">
+  <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:6px">OBJECTIFS DE LA SÉQUENCE</div>
+  <ul style="margin:0 0 14px 20px;line-height:1.85"><li>Formuler un besoin avec la bête à cornes : à qui, sur quoi, dans quel but.</li><li>Distinguer une fonction d’usage d’une fonction d’estime.</li><li>Vérifier qu’un prototype respecte les critères et les niveaux du cahier des charges.</li></ul>
+  <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:5px">COMPÉTENCES TRAVAILLÉES — BO n° 9 du 29 février 2024</div>
+  <table style="width:100%;border-collapse:collapse;font-size:14px"><tr><td style="white-space:nowrap;font-weight:800;color:#0e7490;padding:5px 9px;border-bottom:1px solid #e2e8f0;vertical-align:top">T1 · C2</td><td style="padding:5px 9px;border-bottom:1px solid #e2e8f0">Décrire les interactions entre un objet ou un système technique, son environnement et les utilisateurs</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#0e7490;padding:5px 9px;border-bottom:1px solid #e2e8f0;vertical-align:top">T3 · C7</td><td style="padding:5px 9px;border-bottom:1px solid #e2e8f0">Imaginer, concevoir et réaliser une ou des solutions en réponse à un besoin, à des exigences (de développement durable, par exemple) ou à la nécessité d’améliorations dans une démarche de créativité</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#0e7490;padding:5px 9px;border-bottom:1px solid #e2e8f0;vertical-align:top">T3 · C8</td><td style="padding:5px 9px;border-bottom:1px solid #e2e8f0">Valider les solutions techniques par des simulations ou par des protocoles de tests</td></tr></table>
+  <div style="margin-top:10px;font-size:13.5px;color:#64748b"><b>Repère de progressivité :</b> 5e — identifier le besoin et énoncer les fonctions d’un objet technique sous forme de cahier des charges simple.</div>
+ </div>
 </section>
 
 <section class="slide" id="s2">
@@ -178,6 +186,35 @@ table.mat tr:nth-child(even) td{background:#f8fafc}
  <li>La démarche de projet : <b>besoin → cahier des charges → solutions → prototype testé</b>. On ne fabrique jamais avant d'avoir écrit le contrat.</li>
  </ul>
  </div>
+
+ <div id="sTrace" style="margin-top:30px;text-align:left">
+  <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:8px">TRACE ÉCRITE — À RECOPIER SUR LE CAHIER</div>
+  <canvas id="cvTrace" width="860" height="200" style="width:100%;max-width:860px;height:auto;display:block;margin:0 auto 14px;background:#fff;border:1px solid #e2e8f0;border-radius:12px"></canvas>
+  <ul style="margin:0 0 0 20px;line-height:1.95;font-size:16px"><li>La <b>bête à cornes</b> répond à trois questions : à qui l’objet rend-il service, sur quoi agit-il, dans quel but.</li><li>Une <b>fonction d’usage</b> dit ce que l’objet fait ; une <b>fonction d’estime</b> dit ce qu’il plaît.</li><li>Un <b>critère</b> se mesure et reçoit un <b>niveau</b> : « masse inférieure à 300 g ».</li><li>Contrôler un prototype, c’est comparer le <b>mesuré</b> à l’<b>exigé</b>, critère par critère.</li></ul>
+ </div>
+<script>
+(function(){
+  var cv=document.getElementById("cvTrace"); if(!cv) return;
+  var c=cv.getContext("2d");
+  function T(s,x,y,t,co){c.font="bold "+(t||13)+"px Segoe UI";c.fillStyle=co||"#3f3a34";c.textAlign="center";c.fillText(s,x,y);}
+  var B=[["LE BESOIN", "à qui, dans quel but"], ["LES FONCTIONS", "usage et estime"], ["LES CRITÈRES", "chacun a un niveau"], ["LE CONTRÔLE", "on mesure, on valide"]], A="#0e7490", F="#155e75";
+  c.fillStyle="#fff"; c.fillRect(0,0,860,200);
+  T("DU BESOIN AU CAHIER DES CHARGES",430,28,14.5,F);
+  var n=B.length, m=24, e=18, w=Math.floor((860-2*m-(n-1)*e)/n);
+  B.forEach(function(b,i){
+    var x=m+i*(w+e);
+    c.fillStyle="#fff"; c.strokeStyle=A; c.lineWidth=2.4;
+    c.beginPath(); c.roundRect(x,58,w,68,12); c.fill(); c.stroke();
+    T(b[0],x+w/2,88,13,F); T(b[1],x+w/2,108,11.5,"#5b544a");
+    if(i<n-1){
+      c.strokeStyle=A; c.fillStyle=A; c.lineWidth=3; c.lineCap="butt";
+      c.beginPath(); c.moveTo(x+w+2,92); c.lineTo(x+w+e-9,92); c.stroke();
+      c.beginPath(); c.moveTo(x+w+e,92); c.lineTo(x+w+e-9,86); c.lineTo(x+w+e-9,98); c.closePath(); c.fill();
+    }
+  });
+  T("besoin → fonctions → critères → contrôle : ce qui n’est pas mesurable n’est pas un critère",430,168,13.5,"#5b544a");
+})();
+</script>
 </section>
 
 </main>

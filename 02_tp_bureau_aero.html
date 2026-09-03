@@ -110,6 +110,13 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 #calcGr button.op{background:#dbeafe;color:#1e40af}
 @media print{#calcBtn,#calcPan{display:none!important}}
 .rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -122,29 +129,22 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 
 <header class="tp">
  <h1>TP — Le bureau d'études aéro</h1>
-<div id="blocObj" style="background:#fff;border:1px solid #e9e2d4;border-left:6px solid #0369a1;border-radius:16px;padding:15px 19px;margin:14px 0;font-size:14.5px;line-height:1.7">
-<div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#8a8378;margin-bottom:6px">OBJECTIFS DE CE TP</div>
-<ul style="margin:0 0 12px 20px;line-height:1.8"><li>Nommer les quatre forces qui s’exercent sur un avion en vol.</li><li>Expliquer l’origine de la portance et le rôle de l’angle d’incidence.</li><li>Interpréter la finesse d’un planeur pour prévoir sa distance de plané.</li></ul>
-<div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#8a8378;margin-bottom:4px">COMPÉTENCES TRAVAILLÉES — BO n° 9 du 29 février 2024</div>
-<table style="width:100%;border-collapse:collapse;font-size:14px"><tr><td style="white-space:nowrap;font-weight:800;color:#0369a1;padding:5px 9px;border-bottom:1px solid #e9e2d4">T2 · C4</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Décrire et caractériser l’organisation interne d’un objet ou d’un système technique et ses échanges avec son environnement (énergies, données)</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#0369a1;padding:5px 9px;border-bottom:1px solid #e9e2d4">T3 · C8</td><td style="padding:5px 9px;border-bottom:1px solid #e9e2d4">Valider les solutions techniques par des simulations ou par des protocoles de tests</td></tr></table>
-<div style="margin-top:9px;font-size:13.5px;color:#5b544a"><b>Repère de progressivité :</b> 4e — comparer quantitativement plusieurs objets ou systèmes techniques répondant au même besoin.</div>
-</div>
-
  <p>Le bureau d'études aéronautique t'embauche : des incidents de vol arrivent sur ton pupitre. 7 missions — à la fin : le code des jeux !</p>
 </header>
 
 <div class="progression" id="prog">
  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
- <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div>
  <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
 <!-- ============ A1 : QUI SUIS-JE ============ -->
 <div class="acti" id="a1">
  <div class="boite">
- <h2><span class="badge">1</span>Le vocabulaire de l'aviateur</h2>
- <div class="consigne">Quatre notions du cours se présentent masquées. Démasque chacune ! <b>Attention : une seule tentative par question</b> — lis bien avant de cliquer ! (1 pt par bonne réponse)</div>
- <div class="minicas" id="cas1"></div>
+  <h2><span class="badge">1</span>Les forces en vol</h2>
+  <div class="consigne">Visite guidée : clique sur chaque force pour découvrir son origine et son effet. <b id="cpt1">(0/4)</b></div>
+  <canvas class="canvatp" id="cv1" width="860" height="300"></canvas>
+  <div id="verd1"></div>
  </div>
 </div>
 
@@ -168,10 +168,10 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 <!-- ============ A3 : EXPERTISES ============ -->
 <div class="acti" id="a3">
  <div class="boite">
- <h2><span class="badge">3</span>Trois incidents de vol !</h2>
- <div class="consigne">Trois rapports d'incident arrivent au bureau. Pour chacun, identifie la cause et clique la <b>bonne action de pilotage</b>. <b>Une seule tentative par expertise</b> : observe et réfléchis avant de cliquer !</div>
- <div id="pannes3"></div>
- <div class="verdict" id="verd3"></div>
+  <h2><span class="badge">3</span>Trois situations en vol</h2>
+  <div class="consigne">Le pilote décrit ce qu’il ressent : observe le schéma, puis clique sur la force dominante. <b id="cpt3">(1/3)</b></div>
+  <canvas class="canvatp" id="cv3" width="860" height="340"></canvas>
+  <div id="verd3"></div>
  </div>
 </div>
 
@@ -219,9 +219,34 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 </div>
 
 <!-- ============ A7 : BILAN ============ -->
+
+<!-- ============ A7 : EXPLIQUER ============ -->
+<!-- ============ A8 : CALCULER ============ -->
 <div class="acti" id="a7">
  <div class="boite">
- <h2><span class="badge">7</span>Bilan du pilote junior</h2>
+  <h2><span class="badge">7</span>Calculer une distance de plané</h2>
+  <div class="consigne">Un planeur a une <b>finesse de 40</b> : il avance 40 m pour 1 m de perte d’altitude. Il est à <b>2400 m</b> d’altitude. Sa masse est de <b>500 kg</b> et sa vitesse de <b>108 km/h</b>.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
+  <div id="champs8"></div>
+  <div class="btnrow"><button class="btn" id="verif8">Valider mes calculs</button></div>
+  <div id="verd8"></div>
+ </div>
+</div>
+<!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
+<div class="acti" id="a8">
+ <div class="boite">
+  <h2><span class="badge">8</span>Tracer le bilan des forces</h2>
+  <div class="consigne">Représente l’avion en vol stabilisé et les forces qui s’exercent sur lui.</div>
+  <div class="cahiernote"><b>SUR TON CAHIER</b> — trace la silhouette d’un avion vu de profil, puis les quatre forces sous forme de flèches partant du centre : poids, portance, traction, traînée. Donne à chaque flèche la bonne direction et nomme-la.</div>
+  <div id="champs9"></div>
+  <div class="btnrow"><button class="btn" id="verif9">Valider mon travail</button></div>
+  <div id="verd9"></div>
+ </div>
+</div>
+
+<div class="acti" id="a9">
+ <div class="boite">
+ <h2><span class="badge">9</span>Bilan du pilote junior</h2>
  <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
  <div id="quiz5"></div>
  <div class="codefinal" id="codefinal">
@@ -233,6 +258,268 @@ header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
 </div>
 
 <script>
+const SCHEMA=(function(){
+  function P(c,pts,rempli){
+    c.beginPath();
+    pts.forEach((p,i)=> i? c.lineTo(p[0],p[1]) : c.moveTo(p[0],p[1]));
+    c.closePath(); rempli? c.fill() : c.stroke();
+  }
+  const D={
+  maison(c,u,t){ c.fillRect(-.32*u,-.05*u,.64*u,.42*u);
+    P(c,[[-.44*u,-.05*u],[0,-.42*u],[.44*u,-.05*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.1*u,.12*u,.2*u,.25*u); c.restore(); },
+  batiment(c,u){ c.fillRect(-.3*u,-.42*u,.6*u,.84*u);
+    c.save(); c.fillStyle='#fff';
+    for(let i=0;i<4;i++)for(let j=0;j<3;j++) c.fillRect(-.22*u+j*.16*u,-.34*u+i*.19*u,.09*u,.11*u);
+    c.restore(); },
+  usine(c,u){ c.fillRect(-.42*u,0,.84*u,.4*u);
+    P(c,[[-.42*u,0],[-.14*u,-.2*u],[-.14*u,0]],true);
+    P(c,[[-.14*u,0],[.14*u,-.2*u],[.14*u,0]],true);
+    c.fillRect(.22*u,-.44*u,.14*u,.44*u); },
+  ville(c,u){ [[-.42,.5],[-.18,.78],[.08,.42],[.3,.66]].forEach(([bx,bh])=>
+      c.fillRect(bx*u,(.42-bh*.84)*u,.2*u,bh*.84*u)); },
+  soleil(c,u){ c.beginPath(); c.arc(0,0,.24*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.4,.055*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<8;k++){ const a=k*.785;
+      c.beginPath(); c.moveTo(.32*u*Math.cos(a),.32*u*Math.sin(a));
+      c.lineTo(.45*u*Math.cos(a),.45*u*Math.sin(a)); c.stroke(); } c.lineWidth=w; },
+  nuage(c,u){ c.beginPath();
+    c.arc(-.18*u,.04*u,.19*u,0,6.284); c.arc(.03*u,-.1*u,.24*u,0,6.284);
+    c.arc(.26*u,.05*u,.18*u,0,6.284); c.fill();
+    c.fillRect(-.18*u,-.02*u,.44*u,.24*u); },
+  pluie(c,u){ D.nuage(c,u*.85);
+    const w=c.lineWidth; c.lineWidth=Math.max(1.4,.05*u); c.strokeStyle=c.fillStyle;
+    [-.2,0,.2].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,.2*u); c.lineTo(dx*u-.05*u,.44*u); c.stroke(); });
+    c.lineWidth=w; },
+  goutte(c,u){ c.beginPath(); c.moveTo(0,-.42*u);
+    c.quadraticCurveTo(.34*u,.06*u,0,.4*u); c.quadraticCurveTo(-.34*u,.06*u,0,-.42*u); c.fill(); },
+  vent(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.075*u); c.strokeStyle=c.fillStyle;
+    [-.22,0,.22].forEach((dy,i)=>{ c.beginPath(); c.moveTo(-.44*u,dy*u);
+      c.lineTo((.2-i*.12)*u,dy*u); c.quadraticCurveTo(.42*u,dy*u,.3*u,(dy-.14)*u); c.stroke(); });
+    c.lineWidth=w; },
+  flocon(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.4,.055*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ const a=k*1.047;
+      c.beginPath(); c.moveTo(-.42*u*Math.cos(a),-.42*u*Math.sin(a));
+      c.lineTo(.42*u*Math.cos(a),.42*u*Math.sin(a)); c.stroke();
+      [-1,1].forEach(s=>{ c.beginPath();
+        c.moveTo(s*.42*u*Math.cos(a),s*.42*u*Math.sin(a));
+        c.lineTo(s*.26*u*Math.cos(a)+.12*u*Math.cos(a+2.1),s*.26*u*Math.sin(a)+.12*u*Math.sin(a+2.1)); c.stroke(); }); }
+    c.lineWidth=w; },
+  feu(c,u){ c.beginPath(); c.moveTo(0,.42*u);
+    c.quadraticCurveTo(-.4*u,.06*u,-.1*u,-.42*u);
+    c.quadraticCurveTo(-.04*u,-.12*u,.14*u,-.28*u);
+    c.quadraticCurveTo(.1*u,-.02*u,.36*u,.1*u);
+    c.quadraticCurveTo(.4*u,.34*u,0,.42*u); c.fill(); },
+  eclair(c,u){ P(c,[[.06*u,-.44*u],[-.28*u,.06*u],[-.02*u,.06*u],[-.1*u,.44*u],[.28*u,-.08*u],[.02*u,-.08*u]],true); },
+  choc(c,u){ const p=[]; for(let k=0;k<12;k++){ const a=k*.5236, r=(k%2? .2:.46)*u;
+      p.push([r*Math.cos(a),r*Math.sin(a)]); } P(c,p,true); },
+  pile(c,u){ c.fillRect(-.34*u,-.22*u,.6*u,.44*u); c.fillRect(.26*u,-.09*u,.08*u,.18*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.28*u,-.15*u,.12*u,.3*u); c.restore(); },
+  ampoule(c,u){ c.beginPath(); c.arc(0,-.1*u,.27*u,0,6.284); c.fill();
+    c.fillRect(-.11*u,.16*u,.22*u,.16*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.11*u,.21*u,.22*u,.03*u); c.restore(); },
+  engrenage(c,u){ const p=[]; for(let k=0;k<24;k++){ const a=k*.2618, r=(k%2? .3:.44)*u;
+      p.push([r*Math.cos(a),r*Math.sin(a)]); } P(c,p,true);
+    c.save(); c.globalCompositeOperation='destination-out';
+    c.beginPath(); c.arc(0,0,.15*u,0,6.284); c.fill(); c.restore(); },
+  vis(c,u){ c.fillRect(-.1*u,-.12*u,.2*u,.5*u);
+    c.fillRect(-.26*u,-.4*u,.52*u,.28*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.18*u,-.29*u,.36*u,.06*u); c.restore(); },
+  atome(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.3,.05*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ c.save(); c.rotate(k*1.047);
+      c.beginPath(); c.ellipse(0,0,.44*u,.17*u,0,0,6.284); c.stroke(); c.restore(); }
+    c.lineWidth=w; c.beginPath(); c.arc(0,0,.1*u,0,6.284); c.fill(); },
+  thermometre(c,u){ c.fillRect(-.07*u,-.4*u,.14*u,.5*u);
+    c.beginPath(); c.arc(0,.24*u,.17*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1,.03*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<4;k++){ c.beginPath(); c.moveTo(.09*u,(-.3+k*.13)*u); c.lineTo(.2*u,(-.3+k*.13)*u); c.stroke(); }
+    c.lineWidth=w; },
+  coeur(c,u){ c.beginPath(); c.moveTo(0,.4*u);
+    c.bezierCurveTo(-.62*u,-.02*u,-.3*u,-.46*u,0,-.16*u);
+    c.bezierCurveTo(.3*u,-.46*u,.62*u,-.02*u,0,.4*u); c.fill(); },
+  personne(c,u){ c.beginPath(); c.arc(0,-.3*u,.14*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.09*u); c.strokeStyle=c.fillStyle; c.lineCap='round';
+    c.beginPath(); c.moveTo(0,-.15*u); c.lineTo(0,.14*u); c.stroke();
+    c.beginPath(); c.moveTo(-.16*u,0); c.lineTo(.16*u,0); c.stroke();
+    c.beginPath(); c.moveTo(0,.14*u); c.lineTo(-.14*u,.42*u); c.moveTo(0,.14*u); c.lineTo(.14*u,.42*u); c.stroke();
+    c.lineWidth=w; },
+  marcheur(c,u){ c.beginPath(); c.arc(.02*u,-.3*u,.13*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.085*u); c.strokeStyle=c.fillStyle; c.lineCap='round';
+    c.beginPath(); c.moveTo(.02*u,-.16*u); c.lineTo(-.02*u,.12*u); c.stroke();
+    c.beginPath(); c.moveTo(-.02*u,.12*u); c.lineTo(-.2*u,.4*u); c.moveTo(-.02*u,.12*u); c.lineTo(.2*u,.36*u); c.stroke();
+    c.beginPath(); c.moveTo(.02*u,-.08*u); c.lineTo(.22*u,-.16*u); c.stroke();
+    c.lineWidth=w; },
+  main(c,u){ c.fillRect(-.09*u,-.44*u,.18*u,.4*u);
+    c.beginPath(); c.arc(0,.12*u,.24*u,0,6.284); c.fill(); },
+  voiture(c,u){ c.fillRect(-.44*u,-.02*u,.88*u,.24*u);
+    P(c,[[-.28*u,-.02*u],[-.16*u,-.28*u],[.18*u,-.28*u],[.3*u,-.02*u]],true);
+    c.beginPath(); c.arc(-.24*u,.24*u,.12*u,0,6.284); c.arc(.24*u,.24*u,.12*u,0,6.284); c.fill(); },
+  velo(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.28*u,.16*u,.22*u,0,6.284); c.stroke();
+    c.beginPath(); c.arc(.28*u,.16*u,.22*u,0,6.284); c.stroke();
+    c.beginPath(); c.moveTo(-.28*u,.16*u); c.lineTo(0,.16*u); c.lineTo(-.06*u,-.16*u);
+    c.lineTo(.2*u,-.16*u); c.lineTo(.28*u,.16*u); c.moveTo(0,.16*u); c.lineTo(.2*u,-.16*u); c.stroke();
+    c.lineWidth=w; },
+  satellite(c,u){ c.fillRect(-.13*u,-.16*u,.26*u,.32*u);
+    c.fillRect(-.46*u,-.11*u,.28*u,.22*u); c.fillRect(.18*u,-.11*u,.28*u,.22*u);
+    c.save(); c.fillStyle='#fff';
+    [-.4,-.3,.22,.32].forEach(dx=> c.fillRect(dx*u,-.09*u,.04*u,.18*u)); c.restore(); },
+  terre(c,u){ c.beginPath(); c.arc(0,0,.42*u,0,6.284); c.fill();
+    c.save(); c.fillStyle='#fff'; c.globalAlpha=.55;
+    c.beginPath(); c.ellipse(-.12*u,-.1*u,.16*u,.1*u,.4,0,6.284); c.fill();
+    c.beginPath(); c.ellipse(.14*u,.12*u,.13*u,.08*u,-.4,0,6.284); c.fill(); c.restore(); },
+  telephone(c,u){ c.fillRect(-.24*u,-.44*u,.48*u,.88*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.18*u,-.34*u,.36*u,.62*u); c.restore(); },
+  ecran(c,u){ c.fillRect(-.42*u,-.34*u,.84*u,.54*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.36*u,-.28*u,.72*u,.42*u); c.restore();
+    c.fillRect(-.12*u,.2*u,.24*u,.08*u); c.fillRect(-.26*u,.28*u,.52*u,.08*u); },
+  document(c,u){ c.fillRect(-.28*u,-.42*u,.56*u,.84*u);
+    c.save(); c.fillStyle='#fff';
+    for(let k=0;k<4;k++) c.fillRect(-.2*u,(-.3+k*.18)*u,.4*u,.06*u); c.restore(); },
+  colis(c,u){ c.fillRect(-.4*u,-.3*u,.8*u,.6*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.07*u,-.3*u,.14*u,.6*u);
+    c.fillRect(-.4*u,-.05*u,.8*u,.1*u); c.restore(); },
+  enveloppe(c,u){ c.fillRect(-.4*u,-.28*u,.8*u,.56*u);
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.4,.05*u);
+    c.beginPath(); c.moveTo(-.4*u,-.28*u); c.lineTo(0,.04*u); c.lineTo(.4*u,-.28*u); c.stroke(); c.restore(); },
+  antenne(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,.42*u); c.lineTo(0,-.1*u); c.stroke();
+    for(let k=1;k<=3;k++){ c.beginPath(); c.arc(0,-.1*u,k*.13*u,-2.4,-.74); c.stroke(); }
+    c.lineWidth=w; },
+  reseau(c,u){ c.beginPath(); c.arc(0,-.22*u,.1*u,0,6.284);
+    c.arc(-.3*u,.24*u,.1*u,0,6.284); c.arc(.3*u,.24*u,.1*u,0,6.284); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.2,.045*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,-.22*u); c.lineTo(-.3*u,.24*u); c.lineTo(.3*u,.24*u); c.lineTo(0,-.22*u); c.stroke();
+    c.lineWidth=w; },
+  lien(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.16*u,0,.2*u,-1.1,1.1,true); c.stroke();
+    c.beginPath(); c.arc(.16*u,0,.2*u,2.04,4.24,true); c.stroke();
+    c.beginPath(); c.moveTo(-.12*u,0); c.lineTo(.12*u,0); c.stroke(); c.lineWidth=w; },
+  cadenas(c,u){ c.fillRect(-.28*u,-.06*u,.56*u,.44*u);
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(0,-.08*u,.18*u,Math.PI,0); c.stroke(); c.lineWidth=w; },
+  robot(c,u){ c.fillRect(-.3*u,-.2*u,.6*u,.5*u);
+    c.save(); c.fillStyle='#fff';
+    c.beginPath(); c.arc(-.12*u,-.02*u,.06*u,0,6.284); c.arc(.12*u,-.02*u,.06*u,0,6.284); c.fill();
+    c.fillRect(-.14*u,.12*u,.28*u,.05*u); c.restore();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(0,-.2*u); c.lineTo(0,-.36*u); c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.arc(0,-.4*u,.07*u,0,6.284); c.fill(); },
+  cerveau(c,u){ c.beginPath();
+    c.arc(-.16*u,-.08*u,.2*u,0,6.284); c.arc(.16*u,-.08*u,.2*u,0,6.284);
+    c.arc(0,.14*u,.2*u,0,6.284); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    c.beginPath(); c.moveTo(0,-.26*u); c.lineTo(0,.3*u); c.stroke(); c.restore(); },
+  poubelle(c,u){ c.fillRect(-.26*u,-.2*u,.52*u,.6*u);
+    c.fillRect(-.34*u,-.3*u,.68*u,.1*u); c.fillRect(-.12*u,-.4*u,.24*u,.1*u);
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    [-.1,0,.1].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,-.1*u); c.lineTo(dx*u,.3*u); c.stroke(); }); c.restore(); },
+  recyclage(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.075*u); c.strokeStyle=c.fillStyle;
+    for(let k=0;k<3;k++){ c.save(); c.rotate(k*2.094);
+      c.beginPath(); c.arc(0,0,.32*u,-1.9,-.5); c.stroke();
+      c.restore(); } c.lineWidth=w; },
+  feuille(c,u){ c.beginPath(); c.moveTo(-.34*u,.34*u);
+    c.quadraticCurveTo(-.1*u,-.44*u,.36*u,-.3*u);
+    c.quadraticCurveTo(.3*u,.3*u,-.34*u,.34*u); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.2,.04*u);
+    c.beginPath(); c.moveTo(-.3*u,.3*u); c.lineTo(.28*u,-.26*u); c.stroke(); c.restore(); },
+  arbre(c,u){ c.fillRect(-.07*u,.06*u,.14*u,.36*u);
+    c.beginPath(); c.arc(0,-.14*u,.3*u,0,6.284); c.fill(); },
+  plot(c,u){ P(c,[[0,-.4*u],[-.3*u,.34*u],[.3*u,.34*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.17*u,-.02*u,.34*u,.09*u); c.restore(); },
+  balle(c,u){ c.beginPath(); c.arc(0,0,.36*u,0,6.284); c.fill();
+    c.save(); c.strokeStyle='#fff'; c.lineWidth=Math.max(1.4,.05*u);
+    c.beginPath(); c.arc(-.34*u,0,.3*u,-.9,.9); c.stroke();
+    c.beginPath(); c.arc(.34*u,0,.3*u,2.24,4.04); c.stroke(); c.restore(); },
+  tortue(c,u){ c.beginPath(); c.ellipse(0,0,.34*u,.24*u,0,0,6.284); c.fill();
+    c.beginPath(); c.arc(.36*u,-.04*u,.11*u,0,6.284); c.fill();
+    [-.2,.14].forEach(dx=>{ c.beginPath(); c.ellipse(dx*u,.22*u,.09*u,.06*u,0,0,6.284); c.fill(); }); },
+  escargot(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath();
+    for(let a=0;a<12;a+=.15){ const r=.05*u+a*.028*u;
+      const px=-.05*u+r*Math.cos(a), py=r*Math.sin(a);
+      if(a===0) c.moveTo(px,py); else c.lineTo(px,py); }
+    c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.ellipse(.3*u,.2*u,.16*u,.07*u,0,0,6.284); c.fill(); },
+  oiseau(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.065*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.16*u,.06*u,.2*u,-2.2,-.5); c.stroke();
+    c.beginPath(); c.arc(.16*u,.06*u,.2*u,-2.64,-.94); c.stroke(); c.lineWidth=w; },
+  crane(c,u){ c.beginPath(); c.arc(0,-.08*u,.3*u,0,6.284); c.fill();
+    c.fillRect(-.16*u,.14*u,.32*u,.16*u);
+    c.save(); c.fillStyle='#fff';
+    c.beginPath(); c.arc(-.12*u,-.1*u,.08*u,0,6.284); c.arc(.12*u,-.1*u,.08*u,0,6.284); c.fill(); c.restore(); },
+  loupe(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.075*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(-.08*u,-.08*u,.26*u,0,6.284); c.stroke();
+    c.beginPath(); c.moveTo(.11*u,.11*u); c.lineTo(.38*u,.38*u); c.stroke(); c.lineWidth=w; },
+  microscope(c,u){ c.fillRect(-.3*u,.3*u,.6*u,.1*u);
+    const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.05*u,.3*u); c.lineTo(-.05*u,-.02*u); c.stroke();
+    c.beginPath(); c.moveTo(-.05*u,-.02*u); c.lineTo(.2*u,-.34*u); c.stroke(); c.lineWidth=w;
+    c.fillRect(-.26*u,.06*u,.42*u,.07*u); },
+  graphique(c,u){ c.fillRect(-.34*u,.02*u,.16*u,.36*u); c.fillRect(-.08*u,-.18*u,.16*u,.56*u);
+    c.fillRect(.18*u,-.34*u,.16*u,.72*u); },
+  baignoire(c,u){ c.beginPath(); c.moveTo(-.4*u,-.06*u); c.lineTo(-.34*u,.28*u);
+    c.lineTo(.34*u,.28*u); c.lineTo(.4*u,-.06*u); c.closePath(); c.fill();
+    const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.28*u,-.06*u); c.lineTo(-.28*u,-.3*u); c.lineTo(-.06*u,-.3*u); c.stroke();
+    c.lineWidth=w; },
+  canape(c,u){ c.fillRect(-.42*u,-.06*u,.84*u,.3*u);
+    c.fillRect(-.42*u,-.28*u,.14*u,.24*u); c.fillRect(.28*u,-.28*u,.14*u,.24*u);
+    c.fillRect(-.3*u,-.22*u,.6*u,.18*u); },
+  flacon(c,u){ c.fillRect(-.16*u,-.16*u,.32*u,.56*u); c.fillRect(-.08*u,-.4*u,.16*u,.24*u);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.1*u,0,.2*u,.14*u); c.restore(); },
+  bouteille(c,u){ c.beginPath(); c.moveTo(-.16*u,.4*u); c.lineTo(-.16*u,-.06*u);
+    c.lineTo(-.06*u,-.24*u); c.lineTo(-.06*u,-.4*u); c.lineTo(.06*u,-.4*u); c.lineTo(.06*u,-.24*u);
+    c.lineTo(.16*u,-.06*u); c.lineTo(.16*u,.4*u); c.closePath(); c.fill(); },
+  chaussure(c,u){ c.beginPath(); c.moveTo(-.4*u,.3*u); c.lineTo(-.4*u,-.1*u);
+    c.lineTo(-.12*u,-.1*u); c.quadraticCurveTo(.1*u,.06*u,.4*u,.12*u);
+    c.lineTo(.4*u,.3*u); c.closePath(); c.fill(); },
+  hache(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.09*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.28*u,.4*u); c.lineTo(.2*u,-.28*u); c.stroke(); c.lineWidth=w;
+    P(c,[[.06*u,-.18*u],[.34*u,-.42*u],[.44*u,-.16*u],[.2*u,-.02*u]],true); },
+  cloche(c,u){ c.beginPath(); c.moveTo(-.3*u,.2*u);
+    c.quadraticCurveTo(-.3*u,-.34*u,0,-.34*u); c.quadraticCurveTo(.3*u,-.34*u,.3*u,.2*u);
+    c.closePath(); c.fill(); c.fillRect(-.36*u,.2*u,.72*u,.08*u);
+    c.beginPath(); c.arc(0,.34*u,.08*u,0,6.284); c.fill(); },
+  alerte(c,u){ P(c,[[0,-.42*u],[.44*u,.34*u],[-.44*u,.34*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.05*u,-.16*u,.1*u,.3*u);
+    c.beginPath(); c.arc(0,.24*u,.06*u,0,6.284); c.fill(); c.restore(); },
+  chantier(c,u){ P(c,[[0,-.34*u],[.36*u,.3*u],[-.36*u,.3*u]],true);
+    c.save(); c.fillStyle='#fff'; c.fillRect(-.3*u,.06*u,.6*u,.1*u); c.restore(); },
+  ciseaux(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.06*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.3*u,-.34*u); c.lineTo(.2*u,.16*u); c.stroke();
+    c.beginPath(); c.moveTo(.3*u,-.34*u); c.lineTo(-.2*u,.16*u); c.stroke(); c.lineWidth=w;
+    c.beginPath(); c.arc(-.24*u,.3*u,.12*u,0,6.284); c.arc(.24*u,.3*u,.12*u,0,6.284); c.fill(); },
+  melange(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.8,.065*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.4*u,-.16*u); c.lineTo(.1*u,-.16*u); c.stroke();
+    c.beginPath(); c.moveTo(-.4*u,.16*u); c.lineTo(.1*u,.16*u); c.stroke(); c.lineWidth=w;
+    P(c,[[.1*u,-.3*u],[.4*u,-.16*u],[.1*u,-.02*u]],true);
+    P(c,[[.1*u,.02*u],[.4*u,.16*u],[.1*u,.3*u]],true); },
+  boucle(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.07*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.arc(0,0,.3*u,.5,5.6); c.stroke(); c.lineWidth=w;
+    P(c,[[.16*u,-.34*u],[.38*u,-.1*u],[.08*u,-.06*u]],true); },
+  fleche(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2,.08*u); c.strokeStyle=c.fillStyle;
+    c.beginPath(); c.moveTo(-.36*u,0); c.lineTo(.14*u,0); c.stroke(); c.lineWidth=w;
+    P(c,[[.14*u,-.2*u],[.42*u,0],[.14*u,.2*u]],true); },
+  vapeur(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(1.6,.055*u); c.strokeStyle=c.fillStyle;
+    [-.2,0,.2].forEach(dx=>{ c.beginPath(); c.moveTo(dx*u,.36*u);
+      c.bezierCurveTo((dx+.14)*u,.1*u,(dx-.14)*u,-.1*u,dx*u,-.36*u); c.stroke(); });
+    c.lineWidth=w; },
+  sommeil(c,u){ c.font='bold '+(.5*u)+'px Segoe UI'; c.textAlign='center';
+    c.fillText('z',-.14*u,.1*u); c.fillText('z',.14*u,-.16*u); },
+  point(c,u){ c.beginPath(); c.arc(0,0,.3*u,0,6.284); c.fill(); },
+  valide(c,u){ const w=c.lineWidth; c.lineWidth=Math.max(2.4,.1*u); c.strokeStyle=c.fillStyle;
+    c.lineCap='round'; c.beginPath(); c.moveTo(-.32*u,.02*u); c.lineTo(-.08*u,.28*u);
+    c.lineTo(.34*u,-.26*u); c.stroke(); c.lineWidth=w; },
+  };
+  return function(c,nom,x,y,T){
+    const f=D[nom]; if(!f) return false;
+    c.save(); c.translate(x,y);
+    f(c,T||24,T||24);
+    c.restore(); return true;
+  };
+})();
+
 /* ================= ÉTAT & PROGRESSION ================= */
 const etat={debloque:1,score:0,q1ok:0,q5ok:0,q5rep:0};
 function sauver(){ try{ localStorage.setItem('tp_aero_4e_v2',JSON.stringify({d:etat.debloque,s:etat.score})); }catch(e){} }
@@ -243,7 +530,7 @@ function majProgression(){
  seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
  });
  document.getElementById('scoreTot').textContent=etat.score;
- for(let n=2;n<=7;n++){
+ for(let n=2;n<=9;n++){
  const acti=document.getElementById('a'+n);
  let v=acti.querySelector('.verrou');
  if(n>etat.debloque){
@@ -257,7 +544,7 @@ function reussir(n,pts){
  etat.score+=pts;
  if(etat.debloque===n) etat.debloque=n+1;
  sauver(); majProgression();
- if(n<7) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ if(n<9) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : QUI SUIS-JE ================= */
@@ -269,6 +556,7 @@ const CAS1=[
 ];
 (function initA1(){
  const zone=document.getElementById('cas1');
+ if(!zone) return; /* chantier 5 : activité remplacée par le schéma animé */
  CAS1.forEach(cas=>{
  const d=document.createElement('div'); d.className='cas';
  d.innerHTML='<div class="devinette">'+cas.devinette+'</div>';
@@ -358,6 +646,7 @@ const REMEDES=[
 let diag3=0, a3fait=false;
 (function initA3(){
  const zone=document.getElementById('pannes3');
+ if(!zone) return; /* chantier 5 : activité remplacée par le schéma animé */
  const ordre3=PANNES.map((_,i)=>i).sort(()=>0.5-Math.random());
  ordre3.forEach(pi=>{
  const P=PANNES[pi];
@@ -432,8 +721,8 @@ document.getElementById('verif4').onclick=()=>{
  ctx.clearRect(0,0,860,300);
  // nuages qui défilent
  ctx.font='24px Segoe UI'; ctx.textAlign='center';
- ctx.fillText('\u2601\ufe0f',(820-(t*24)%900),60);
- ctx.fillText('\u2601\ufe0f',(860-(t*16+300)%900),230);
+ SCHEMA(ctx,'nuage',(820-(t*24)%900),(60)-8,24);
+ SCHEMA(ctx,'nuage',(860-(t*16+300)%900),(230)-8,24);
  // avion au centre (fuselage + aile + dérive + hélice qui tourne)
  ctx.strokeStyle='#334155'; ctx.lineWidth=3; ctx.fillStyle='#f8fafc';
  ctx.beginPath(); ctx.ellipse(430,150,88,20,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
@@ -447,7 +736,7 @@ document.getElementById('verif4').onclick=()=>{
  const pu=1+0.1*Math.sin(t*2);
  function fleche(x1,y1,x2,y2,coul){
  ctx.strokeStyle=coul; ctx.fillStyle=coul; ctx.lineWidth=6;
- ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2-14.4*Math.cos(Math.atan2(y2-y1,x2-x1)),y2-14.4*Math.sin(Math.atan2(y2-y1,x2-x1))); ctx.stroke(); /*fleche-ok*/
  const a=Math.atan2(y2-y1,x2-x1);
  ctx.beginPath(); ctx.moveTo(x2,y2);
  ctx.lineTo(x2-16*Math.cos(a-0.45),y2-16*Math.sin(a-0.45));
@@ -532,7 +821,7 @@ document.getElementById('verif4').onclick=()=>{
  ctx.stroke();
  }
  if(decro && Math.sin(t*5)>0){
- ctx.font='20px Segoe UI'; ctx.textAlign='center'; ctx.fillText('\ud83c\udf00',400,96);
+ ctx.font='20px Segoe UI'; ctx.textAlign='center'; SCHEMA(ctx,'boucle',400,(96)-8,24);
  }
  ctx.font='bold 13px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#334155';
  ctx.fillText('angle : '+v+'\u00b0',300,236);
@@ -622,7 +911,7 @@ const Q5=[
  sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
  ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
  document.getElementById('codefinal').style.display='block';
- reussir(7, tentative===1?2:(tentative===2?1:0));
+ reussir(9, tentative===1?2:(tentative===2?1:0));
  } else {
  sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
  ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
@@ -710,15 +999,6 @@ charger(); majProgression();
  aff();
 })();
 </script>
-
-<div class="acti" id="aTrace" style="display:block">
- <div class="boite">
-  <h2>Trace écrite</h2>
-  <div class="consigne">À recopier sur le cahier, schéma compris.</div>
-  <canvas class="canvatp" id="cvTrace" width="860" height="200" style="cursor:default"></canvas>
-  <ul style="margin:12px 0 0 20px;line-height:1.95;font-size:15.5px"><li>Quatre forces agissent en vol : <b>poids</b>, <b>portance</b>, <b>traction</b>, <b>traînée</b>.</li><li>En vol stabilisé, ces forces <b>s’équilibrent</b> deux à deux.</li><li>La <b>portance</b> naît de la différence de pression entre l’extrados et l’intrados.</li><li>Trop augmenter l’<b>angle d’incidence</b> provoque le <b>décrochage</b> : la portance s’effondre.</li></ul>
- </div>
-</div>
 <script>
 /* ── schéma de la trace écrite ── */
 (function(){
@@ -742,6 +1022,200 @@ charger(); majProgression();
   }
  });
  T("poids et portance, traction et traînée : deux couples à équilibrer",430,168,13.5,'#5b544a');
+})();
+</script>
+
+
+<script>
+/* ============ A7-A9 : expliquer, calculer, tracer ============ */
+(function(){
+  function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function nbv(v){return parseFloat(String(v||'').replace(',','.'));}
+  function champs(zone,liste,grand){
+    const z=document.getElementById(zone); if(!z) return;
+    liste.forEach(c=>{
+      const d=document.createElement('div'); d.className='chp';
+      const l=document.createElement('label'); l.innerHTML=c.lbl; d.appendChild(l);
+      const i=document.createElement('input'); i.id=c.id; i.autocomplete='off';
+      if(grand){ i.className='large'; i.placeholder='rédige une phrase complète'; }
+      d.appendChild(i);
+      if(c.u){ const u=document.createElement('span'); u.className='u'; u.textContent=c.u; d.appendChild(u); }
+      z.appendChild(d);
+    });
+  }
+  const REDAC=[{"id":"q71","lbl":"a) D’où vient la portance d’une aile ?","cles":["pression","difference","dessus","dessous","extrados","intrados","depression","air","vitesse","aspire"]},{"id":"q72","lbl":"b) Pourquoi un avion en vol stabilisé ne monte-t-il ni ne descend-il ?","cles":["equilibre","egale","compense","poids","portance","forces","annulent","stable","opposees"]},{"id":"q73","lbl":"c) Que se passe-t-il si l’angle d’incidence devient trop grand ?","cles":["decrochage","decroche","chute","portance","perd","seffondre","airsedetache","turbulence","tombe"]}];
+  const CALC=[{"id":"c81","lbl":"a) Distance qu’il peut parcourir sans ascendance","rep":96,"tol":0.5,"u":"km"},{"id":"c82","lbl":"b) Sa vitesse en mètres par seconde","rep":30,"tol":0.2,"u":"m/s"},{"id":"c83","lbl":"c) Valeur de la portance en vol stabilisé (avec g = 10 N/kg)","rep":5000,"tol":10,"u":"N"}];
+  const TRACE=[{"id":"t91","lbl":"a) Combien de forces ton schéma comporte-t-il ?","rep":"4","num":true},{"id":"t92","lbl":"b) Quelle force s’oppose au poids ?","rep":["portance","laportance"]},{"id":"t93","lbl":"c) Quelle force s’oppose à la traction ?","rep":["trainee","latrainee","resistance"]},{"id":"t94","lbl":"d) En vol stabilisé, que vaut la somme de toutes ces forces ?","rep":["zero","nulle","0","rien","equilibre"]}];
+  champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  let e7=0,e8=0,e9=0;
+  function verdict(id,html,ok){
+    const v=document.getElementById(id); if(!v) return;
+    v.className='verdict '+(ok?'ok':'ko'); v.innerHTML=html;
+  }
+  document.getElementById('verif8').addEventListener('click',()=>{
+    let faux=0;
+    CALC.forEach(c=>{ const v=nbv(document.getElementById(c.id).value);
+      if(!(isFinite(v)&&Math.abs(v-c.rep)<=(c.tol!==undefined?c.tol:0.001))) faux++; });
+    if(faux===0){
+      verdict('verd8','\u2713 Tous les calculs sont justes. '+"2400 × 40 = 96 000 m, soit 96 km. 108 ÷ 3,6 = 30 m/s. En vol stabilisé la portance égale le poids : 500 × 10 = 5000 N. Une finesse de 40 est remarquable — un avion de ligne tourne autour de 17.",true);
+      reussir(7, e8===0?3:2);
+    } else { e8++;
+      verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
+        '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
+  });
+  document.getElementById('verif9').addEventListener('click',()=>{
+    let faux=0;
+    TRACE.forEach(c=>{ const v=document.getElementById(c.id).value;
+      const bon = c.num ? String(nbv(v))===String(nbv(c.rep))
+        : (Array.isArray(c.rep)?c.rep:[c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+      if(!bon) faux++; });
+    if(faux===0){
+      verdict('verd9','\u2713 Ton tracé est conforme. '+"Quatre forces, deux couples opposés, et une somme nulle. C’est cette nullité qui définit le vol stabilisé : l’avion ne s’arrête pas de subir des forces, elles se compensent.",true);
+      reussir(8, e9===0?3:2);
+    } else { e9++;
+      verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
+  });
+})();
+</script>
+
+
+<script>
+/* ===== A1 et A3 : schéma animé cliquable + diagnostic visuel (chantier 5) ===== */
+(function(){
+  const cv1=document.getElementById('cv1'), cv3=document.getElementById('cv3');
+  if(!cv1||!cv3) return;
+  const c1=cv1.getContext('2d'), c3=cv3.getContext('2d');
+  const Z=[{"id":"poids","nom":"Poids","court":"vers le bas","role":"Le poids attire l’avion vers le sol. Il dépend de la masse et ne disparaît jamais, même en vol stabilisé."},{"id":"portance","nom":"Portance","court":"vers le haut","role":"L’air passe plus vite sur l’extrados que sous l’intrados : la pression y est plus faible et l’aile est aspirée vers le haut."},{"id":"traction","nom":"Traction","court":"vers l’avant","role":"Fournie par l’hélice ou le réacteur, elle fait avancer l’avion. Sans vitesse, pas de portance."},{"id":"trainee","nom":"Traînée","court":"vers l’arrière","role":"C’est la résistance de l’air au déplacement. Elle freine, et elle augmente très vite avec la vitesse."}];
+  const INC=[{"titre":"SITUATION 1 — l’avion descend malgré tout","sous":"Moteur à pleine puissance, vitesse correcte, mais l’appareil perd régulièrement de l’altitude. Il transporte une charge inhabituelle.","bon":"poids","ok":"La traction est là et la vitesse est bonne : ce n’est pas la propulsion. La charge embarquée a augmenté la force qui tire vers le sol.","ko":"Non. Le moteur tourne à pleine puissance et la vitesse est correcte. Cherche ce qu’une charge inhabituelle a modifié."},{"titre":"SITUATION 2 — chute brutale en virage serré","sous":"En cabrant fortement, l’avion s’est mis à trembler puis a brutalement chuté du nez, alors que le moteur tournait normalement.","bon":"portance","ok":"Au-delà d’un certain angle d’incidence, l’air ne suit plus le profil de l’aile : c’est le décrochage, et la force qui soutenait l’avion s’effondre d’un coup.","ko":"Non. Le moteur tournait normalement. C’est un cabrage excessif qui a supprimé une force. Laquelle soutenait l’avion ?"},{"titre":"SITUATION 3 — vitesse qui s’effondre","sous":"Train d’atterrissage sorti par erreur en croisière : la vitesse chute alors que rien d’autre n’a changé.","bon":"trainee","ok":"Sortir le train ajoute une énorme résistance à l’air. La force qui freine l’avion a augmenté, sans que la traction change.","ko":"Non. Rien d’autre n’a changé : ni la masse, ni le moteur. Un élément sorti dans le vent a augmenté une force de freinage."}];
+  const ACC="#0e7490";
+
+  /* mise en page automatique : une rangée de blocs reliés par des flèches */
+  const n=Z.length, marge=30, esp=Math.max(16, Math.round(120/n));
+  const bw=Math.floor((860-2*marge-(n-1)*esp)/n), bh=86;
+  Z.forEach((z,i)=>{ z.x=marge+i*(bw+esp); z.w=bw; z.h=bh; });
+
+  function ligne(c,txt,x,y,max,taille,coul){
+    c.font=taille+'px Segoe UI'; c.fillStyle=coul; c.textAlign='center';
+    const mots=String(txt).split(' '); let l='', yy=y;
+    mots.forEach(m=>{ if(c.measureText(l+' '+m).width>max){ c.fillText(l,x,yy); l=m; yy+=15; } else l=l?l+' '+m:m; });
+    c.fillText(l,x,yy); return yy;
+  }
+  function dessine(c,H,yb,surbrillance,t){
+    c.clearRect(0,0,860,H);
+    c.fillStyle='#fff'; c.fillRect(0,0,860,H);
+    Z.forEach((z,i)=>{
+      const on = surbrillance && surbrillance.includes(z.id);
+      c.fillStyle= on? ACC : '#fff';
+      c.strokeStyle=ACC; c.lineWidth= on? 3.4 : 2.4;
+      c.beginPath(); c.roundRect(z.x,yb,z.w,z.h,12); c.fill(); c.stroke();
+      c.font='bold 13px Segoe UI'; c.fillStyle= on? '#fff' : ACC; c.textAlign='center';
+      ligne(c,z.nom.toUpperCase(),z.x+z.w/2,yb+26,z.w-14,13,on?'#fff':ACC);
+      ligne(c,z.court||'',z.x+z.w/2,yb+52,z.w-14,11.5,on?'#e2e8f0':'#5b544a');
+      if(i<n-1){
+        /* flèche + point d'énergie qui circule */
+        const x0=z.x+z.w, x1=z.x+z.w+esp;
+        c.strokeStyle=ACC; c.fillStyle=ACC; c.lineWidth=2.6;
+        c.beginPath(); c.moveTo(x0+2,yb+bh/2); c.lineTo(x1-7,yb+bh/2); c.stroke();
+        c.beginPath(); c.moveTo(x1-1,yb+bh/2); c.lineTo(x1-8,yb+bh/2-5); c.lineTo(x1-8,yb+bh/2+5); c.closePath(); c.fill();
+        const p=(t/1400+i/n)%1;
+        c.beginPath(); c.arc(x0+2+(x1-x0-4)*p, yb+bh/2, 3.4, 0, 6.284); c.fill();
+      }
+    });
+  }
+  function bulle(c,z,l1,l2,yb){
+    /* Hauteur CALCULEE d'apres le nombre de lignes reellement necessaires.
+       L'ancienne version imposait 62 px : au-dela de deux lignes le texte
+       debordait du rectangle. */
+    const w=460, pad=15, lh=16;
+    c.font='12.5px Segoe UI';
+    const mots=String(l2).split(' '); const lignes=[]; let l='';
+    mots.forEach(m=>{ if(c.measureText(l+' '+m).width>w-2*pad){ lignes.push(l); l=m; }
+                      else l=l?l+' '+m:m; });
+    if(l) lignes.push(l);
+    const h=34+lignes.length*lh+10;
+    const bx=Math.max(8,Math.min(z.x+z.w/2-w/2,852-w));
+    const by=Math.max(6,yb-h-12);
+    c.fillStyle='rgba(255,251,235,.97)'; c.strokeStyle='#f59e0b'; c.lineWidth=3;
+    c.beginPath(); c.roundRect(bx,by,w,h,12); c.fill(); c.stroke();
+    c.textAlign='left'; c.font='bold 13px Segoe UI'; c.fillStyle='#78350f';
+    c.fillText(l1,bx+pad,by+23);
+    c.font='12.5px Segoe UI'; c.fillStyle='#a16207';
+    lignes.forEach((t,i)=>c.fillText(t,bx+pad,by+44+i*lh));
+    c.textAlign='center';
+  }
+
+  function cible(cv,ev,H,yb){
+    const r=cv.getBoundingClientRect();
+    const x=(ev.clientX-r.left)*860/r.width, y=(ev.clientY-r.top)*H/r.height;
+    return Z.find(z=>x>=z.x&&x<=z.x+z.w&&y>=yb&&y<=yb+z.h)||null;
+  }
+
+  /* ---------- A1 : visite guidée ---------- */
+  const YB1=150;
+  let vus=[], flash1=null, fini1=false;
+  cv1.addEventListener('click',ev=>{
+    if(fini1||flash1) return;
+    const z=cible(cv1,ev,300,YB1); if(!z) return;
+    flash1={z,l1:z.nom.toUpperCase(),l2:z.role};
+    if(!vus.includes(z.id)){
+      vus.push(z.id);
+      document.getElementById('cpt1').textContent='('+vus.length+'/'+n+')';
+      if(vus.length===n){ fini1=true;
+        setTimeout(()=>{ flash1=null;
+          const v=document.getElementById('verd1');
+          v.className='verdict ok'; v.innerHTML='\u2713 '+"Quatre forces, deux couples opposés. En vol stabilisé elles s’équilibrent deux à deux : l’avion ne cesse pas de subir des forces, elles se compensent. C’est cette compensation qui définit le vol en palier.";
+          reussir(1,2);
+        },2100); return;
+      }
+    }
+    setTimeout(()=>{ flash1=null; },2300);
+  });
+
+  /* ---------- A3 : diagnostic visuel ---------- */
+  const YB3=190;
+  let i3=0, err3=0, flash3=null, fini3=false;
+  cv3.addEventListener('click',ev=>{
+    if(fini3||flash3) return;
+    const z=cible(cv3,ev,340,YB3); if(!z) return;
+    const inc=INC[i3], juste = z.id===inc.bon;
+    if(!juste) err3++;
+    flash3={z,l1: juste?'\u2713 Bon diagnostic':'\u2717 Mauvais bloc', l2: juste?inc.ok:inc.ko};
+    setTimeout(()=>{
+      flash3=null; i3++;
+      if(i3>=INC.length){ fini3=true;
+        const v=document.getElementById('verd3');
+        v.className='verdict '+(err3===0?'ok':'ko');
+        v.innerHTML=(err3===0?'\u2713 Trois diagnostics justes. ':'Trois diagnostics posés, '+err3+' erreur(s). ')+"Chaque symptôme désigne la force qui a varié. Une charge ajoutée agit sur le poids, un cabrage excessif détruit la portance, un élément sorti dans le vent augmente la traînée. Isole ce qui a changé, tu tiens la force en cause.";
+        reussir(3, err3===0?3:(err3===1?2:1));
+      } else { document.getElementById('cpt3').textContent='('+(i3+1)+'/'+INC.length+')'; }
+    },3000);
+  });
+
+  /* ---------- boucle d'animation ---------- */
+  let t=0;
+  function boucle(){
+    t+=16;
+    dessine(c1,300,YB1,vus,t);
+    c1.font='bold 15px Segoe UI'; c1.fillStyle=ACC; c1.textAlign='center';
+    c1.fillText("Les quatre forces qui s’exercent sur un avion en vol",430,40);
+    if(flash1) bulle(c1,flash1.z,flash1.l1,flash1.l2,YB1);
+
+    dessine(c3,340,YB3,fini3?[]:[],t);
+    const inc=INC[Math.min(i3,INC.length-1)];
+    c3.textAlign='center';
+    c3.fillStyle= fini3? '#16a34a' : '#b91c1c';
+    c3.font='bold 15px Segoe UI';
+    c3.fillText(fini3?'Tous les diagnostics sont posés':inc.titre,430,42);
+    c3.font='13px Segoe UI'; c3.fillStyle='#5b544a';
+    ligne(c3, fini3?'':inc.sous, 430, 68, 780, 13, '#5b544a');
+    if(!fini3){
+      c3.font='12.5px Segoe UI'; c3.fillStyle=ACC;
+      c3.fillText('Clique sur le bloc responsable de la panne',430,120);
+    }
+    if(flash3) bulle(c3,flash3.z,flash3.l1,flash3.l2,YB3);
+    requestAnimationFrame(boucle);
+  }
+  requestAnimationFrame(boucle);
 })();
 </script>
 

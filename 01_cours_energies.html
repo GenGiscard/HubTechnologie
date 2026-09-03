@@ -251,8 +251,8 @@ function creerAnim(nom,canvasId,capId,ptsId,phases){
 }
 const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
 function fleche(ctx,x1,y1,x2,y2,coul,ep=4){
- ctx.strokeStyle=coul;ctx.fillStyle=coul;ctx.lineWidth=ep;
- ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+ ctx.strokeStyle=coul;ctx.fillStyle=coul;ctx.lineWidth=ep;ctx.lineCap='butt';
+ ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2-9.9*Math.cos(Math.atan2(y2-y1,x2-x1)),y2-9.9*Math.sin(Math.atan2(y2-y1,x2-x1)));ctx.stroke(); /*fleche-ok*/
  const a=Math.atan2(y2-y1,x2-x1),L=11;
  ctx.beginPath();ctx.moveTo(x2,y2);
  ctx.lineTo(x2-L*Math.cos(a-0.45),y2-L*Math.sin(a-0.45));
