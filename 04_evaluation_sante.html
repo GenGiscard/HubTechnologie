@@ -998,5 +998,62 @@ $('btnCSV').onclick=()=>{
  a.download=CSV_NOM; a.click(); URL.revokeObjectURL(a.href);
 };
 </script>
+
+<!-- ===== VERROU D'ÉVALUATION — code redemandé à chaque ouverture ===== -->
+<div id="verrouEval" role="dialog" aria-modal="true" aria-labelledby="verrouTitre">
+ <div class="vbox">
+  <div class="vlogo"><img alt="Logo ESTIC" src="logo_estic.png"></div>
+  <h2 id="verrouTitre">Évaluation verrouillée</h2>
+  <p>Entre le code donné par ton professeur pour commencer.</p>
+  <input id="verrouCode" type="text" maxlength="10" autocomplete="off"
+         autocapitalize="characters" spellcheck="false" placeholder="CODE" aria-label="Code d’accès">
+  <div class="verr" id="verrouErr" role="alert"></div>
+  <button type="button" id="verrouBtn">Commencer</button>
+ </div>
+</div>
+<style>
+#verrouEval{position:fixed;inset:0;z-index:99999;background:#0f172a;display:flex;
+ align-items:center;justify-content:center;padding:24px;font-family:'Segoe UI',system-ui,sans-serif}
+#verrouEval .vbox{background:#fff;border-radius:18px;padding:32px 30px;max-width:430px;width:100%;
+ text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+#verrouEval .vlogo img{height:52px;margin-bottom:14px}
+#verrouEval h2{font-size:23px;color:#1e3a5f;margin:0 0 8px}
+#verrouEval p{font-size:15px;color:#5b6472;margin:0 0 18px;line-height:1.55}
+#verrouEval input{width:100%;padding:14px 16px;font-size:23px;letter-spacing:5px;text-align:center;
+ border:2px solid #cbd5e1;border-radius:12px;text-transform:uppercase;color:#1e3a5f;box-sizing:border-box}
+#verrouEval input:focus{outline:none;border-color:#0e7490}
+#verrouEval .verr{min-height:22px;color:#b91c1c;font-weight:700;font-size:14px;margin:10px 0 4px}
+#verrouEval button{width:100%;padding:14px;font-size:17px;font-weight:800;border:none;border-radius:12px;
+ background:#0e7490;color:#fff;cursor:pointer}
+#verrouEval button:hover{background:#0b5c72}
+@media print{#verrouEval{display:none}}
+</style>
+<script>
+/* Verrou d’évaluation. Aucune persistance : rechargement = code redemandé. */
+(function(){
+  var CODE = "GREFF79";
+  var boite = document.getElementById('verrouEval');
+  if (!boite) return;
+  var champ = document.getElementById('verrouCode');
+  var err   = document.getElementById('verrouErr');
+
+  document.documentElement.style.overflow = 'hidden';
+  if (champ) { try { champ.focus(); } catch(e){} }
+
+  function ouvrir(){
+    if (champ.value.trim().toUpperCase() === CODE) {
+      document.documentElement.style.overflow = '';
+      boite.parentNode.removeChild(boite);
+    } else {
+      err.textContent = 'Code incorrect. Redemande-le à ton professeur.';
+      champ.value = '';
+      try { champ.focus(); } catch(e){}
+    }
+  }
+  document.getElementById('verrouBtn').addEventListener('click', ouvrir);
+  champ.addEventListener('keydown', function(e){ if (e.key === 'Enter') ouvrir(); });
+})();
+</script>
+
 </body>
 </html>
