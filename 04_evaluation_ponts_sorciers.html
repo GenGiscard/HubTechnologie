@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Évaluation des sorciers — Les ponts · ESTIC</title>
+<style>
+:root{--ink:#1e3a5f;--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.6}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.ev{max-width:880px;margin:0 auto;padding:26px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 8px}
+.sous{color:#5b544a;font-size:16px;max-width:700px;margin:0 auto}
+.video{max-width:880px;margin:18px auto;background:#fff;border:1px solid var(--bord);
+ border-left:6px solid var(--or);border-radius:16px;padding:16px 20px}
+.video .lab{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--or);font-weight:800}
+.video a{display:inline-block;margin-top:8px;background:var(--or);color:#fff;text-decoration:none;
+ font-weight:800;padding:11px 20px;border-radius:10px;font-size:16px}
+.video p{font-size:15px;color:#5b544a;margin-top:9px}
+main{max-width:880px;margin:0 auto;padding:0 20px 40px}
+.q{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:18px 22px;margin:14px 0}
+.q h2{font-size:17.5px;color:var(--accf);margin-bottom:11px}
+.q h2 .n{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 9px;font-size:15px;margin-right:8px}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.sel{border-color:var(--acc);background:#ecfeff;font-weight:700}
+.rep button:disabled{cursor:default;opacity:.85}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.ident{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:18px 22px;margin:14px 0}
+.ident label{display:block;font-size:13px;font-weight:800;color:var(--gris);margin:9px 0 3px}
+.ident input{width:100%;padding:10px 12px;font-size:16px;font-family:inherit;
+ border:2px solid var(--bord);border-radius:10px}
+.gros{display:block;width:100%;background:var(--acc);color:#fff;border:none;border-radius:12px;
+ padding:15px;font-size:18px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:16px}
+.gros:disabled{background:#94a3b8;cursor:default}
+#bilan{display:none;background:#fff;border:2px solid var(--vert);border-radius:16px;padding:22px;margin-top:16px;text-align:center}
+#bilan .note{font-size:44px;font-weight:900;color:var(--vert)}
+.verr{color:var(--rouge);font-weight:700;font-size:14px;min-height:20px}
+footer{text-align:center;padding:20px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="ev">
+ <div class="eyebrow">Séquence 5ème · Habitat &amp; Ouvrages</div>
+ <h1>Évaluation des sorciers — Les ponts</h1>
+ <p class="sous">Douze questions sur l’épisode. Une seule réponse par question, et
+ <b>une seule tentative</b> : lis bien avant de cliquer.</p>
+</header>
+
+<div class="video">
+ <div class="lab">À regarder avant de commencer</div>
+ <a href="https://youtu.be/ujwYjL1OdQc" target="_blank" rel="noopener">Voir l’épisode « C’est pas sorcier » sur les ponts</a>
+ <p>Prends des notes pendant la vidéo : les <b>familles de ponts</b>, les <b>forces</b> qui
+ s’exercent sur chaque partie, et le nom des <b>éléments</b> d’un ouvrage.</p>
+</div>
+
+<main>
+ <div class="ident">
+  <label for="inNom">Nom</label><input id="inNom" autocomplete="off">
+  <label for="inPrenom">Prénom</label><input id="inPrenom" autocomplete="off">
+  <label for="inClasse">Classe</label><input id="inClasse" autocomplete="off" placeholder="5eA">
+ </div>
+ <div id="questions"></div>
+ <button class="gros" id="envoyer">Terminer et envoyer</button>
+ <div id="bilan"></div>
+</main>
+
+<footer>Évaluation · Séquence Habitat &amp; Ouvrages · Technologie 5ème · ESTIC Don Bosco</footer>
+
+<script>
+/* ===== VERROU — code redemandé à chaque ouverture, aucune persistance ===== */
+(function(){
+ const CODE='SORCIER7';
+ const d=document.createElement('div');
+ d.id='verrouEval';
+ d.innerHTML='<div class="vbox"><img alt="Logo ESTIC" src="logo_estic.png">'+
+  '<h2>Évaluation verrouillée</h2><p>Entre le code donné par ton professeur.</p>'+
+  '<input id="vc" maxlength="10" autocomplete="off" placeholder="CODE">'+
+  '<div class="verr" id="ve"></div><button type="button" id="vb">Commencer</button></div>';
+ const s=document.createElement('style');
+ s.textContent='#verrouEval{position:fixed;inset:0;z-index:99999;background:#0f172a;display:flex;'+
+  'align-items:center;justify-content:center;padding:24px}'+
+  '#verrouEval .vbox{background:#fff;border-radius:18px;padding:30px;max-width:420px;width:100%;text-align:center}'+
+  '#verrouEval img{height:50px;margin-bottom:12px}'+
+  '#verrouEval h2{font-size:22px;color:#1e3a5f;margin-bottom:6px}'+
+  '#verrouEval p{font-size:15px;color:#5b6472;margin-bottom:16px}'+
+  '#verrouEval input{width:100%;padding:13px;font-size:22px;letter-spacing:4px;text-align:center;'+
+  'border:2px solid #cbd5e1;border-radius:12px;text-transform:uppercase;box-sizing:border-box}'+
+  '#verrouEval button{width:100%;padding:13px;margin-top:10px;font-size:17px;font-weight:800;'+
+  'border:none;border-radius:12px;background:#0e7490;color:#fff;cursor:pointer;font-family:inherit}';
+ document.head.appendChild(s); document.body.appendChild(d);
+ document.documentElement.style.overflow='hidden';
+ const ch=document.getElementById('vc');
+ try{ ch.focus(); }catch(e){}
+ function ouvrir(){
+  if(ch.value.trim().toUpperCase()===CODE){
+   document.documentElement.style.overflow='';
+   d.parentNode.removeChild(d);
+  } else { document.getElementById('ve').textContent='Code incorrect.'; ch.value=''; }
+ }
+ document.getElementById('vb').addEventListener('click',ouvrir);
+ ch.addEventListener('keydown',e=>{ if(e.key==='Enter') ouvrir(); });
+})();
+
+/* ===== QUESTIONS ===== */
+const Q=[
+ {q:"Dans un pont en arc, la pierre de l’arc travaille surtout…",
+  r:["en traction : elle est étirée","en compression : elle est écrasée","elle ne subit aucun effort"],b:1,
+  ex:"L’arc reporte la charge vers les appuis en écrasant la pierre. C’est pour cela qu’on a pu bâtir des ponts en arc bien avant de savoir fabriquer de l’acier : la pierre résiste très bien à la compression, mais mal à la traction."},
+ {q:"Dans un pont suspendu, les grands câbles travaillent…",
+  r:["en compression","en traction : ils sont tirés","en torsion"],b:1,
+  ex:"Un câble ne peut que tirer. Il porte le tablier en se tendant entre les pylônes, et il est parfait pour cela car l’acier résiste très bien à la traction."},
+ {q:"Comment s’appelle la partie du pont sur laquelle on circule ?",
+  r:["la pile","le tablier","la culée"],b:1,
+  ex:"Le tablier est la surface portante. Il repose sur les piles, et ses extrémités s’appuient sur les culées, aux deux rives."},
+ {q:"Comment s’appellent les appuis intermédiaires, plantés entre les deux rives ?",
+  r:["les culées","les piles","les haubans"],b:1,
+  ex:"Les piles sont les appuis intermédiaires. Les culées, elles, sont les appuis situés aux deux extrémités, sur la terre ferme."},
+ {q:"Qu’appelle-t-on la « portée » d’un pont ?",
+  r:["sa longueur totale","la distance entre deux appuis successifs","sa largeur"],b:1,
+  ex:"La portée est la distance franchie entre deux appuis. Plus la portée est grande, plus la structure doit être ingénieuse : c’est le vrai défi de tout constructeur de pont."},
+ {q:"Dans un pont à haubans, les câbles obliques sont accrochés…",
+  r:["directement aux pylônes","à un grand câble porteur tendu entre les pylônes","aux piles seulement"],b:0,
+  ex:"C’est la différence essentielle avec le pont suspendu. Dans un pont à haubans, chaque câble relie directement le tablier au pylône. Dans un pont suspendu, les câbles verticaux pendent d’un grand câble porteur."},
+ {q:"Pourquoi laisse-t-on des joints de dilatation dans un pont ?",
+  r:["pour laisser passer l’eau de pluie","parce que les matériaux s’allongent quand il fait chaud","pour alléger l’ouvrage"],b:1,
+  ex:"Un tablier d’acier ou de béton s’allonge sous la chaleur et se rétracte au froid. Sans joint pour absorber ce mouvement, l’ouvrage se fissurerait."},
+ {q:"Le béton armé associe le béton à des barres d’acier. Pourquoi ?",
+  r:["pour le rendre moins cher","parce que le béton résiste mal à la traction, et l’acier très bien","pour qu’il sèche plus vite"],b:1,
+  ex:"Chaque matériau fait ce qu’il sait faire : le béton encaisse la compression, l’acier reprend la traction. Ensemble, ils résistent aux deux."},
+ {q:"Pourquoi retrouve-t-on des triangles dans les poutres métalliques en treillis ?",
+  r:["pour faire joli","parce que le triangle est indéformable","pour économiser de la peinture"],b:1,
+  ex:"Trois côtés de longueur fixée ne laissent aucun jeu : le triangle ne peut pas se déformer sans que l’un de ses côtés change de longueur. Un carré, lui, s’affaisse en losange."},
+ {q:"Avant de construire les piles, il faut d’abord…",
+  r:["poser le tablier","descendre des fondations jusqu’au sol résistant","tendre les câbles"],b:1,
+  ex:"Une pile ne tient que si elle repose sur un terrain capable de la porter. On creuse donc jusqu’au sol résistant, parfois très profond sous l’eau."},
+ {q:"Sur un pont, le « poids propre » désigne…",
+  r:["le poids des véhicules qui passent","le poids de l’ouvrage lui-même","le poids maximal autorisé"],b:1,
+  ex:"Le poids propre est celui de la structure. Il s’y ajoute les charges d’exploitation — véhicules, piétons — et les efforts du vent. L’ouvrage doit encaisser les trois."},
+ {q:"Pour franchir une très grande portée, quel type de pont choisit-on plutôt ?",
+  r:["un pont à poutre droite","un pont suspendu ou à haubans","un pont en arc de pierre"],b:1,
+  ex:"Une poutre droite fléchit vite et limite la portée. Les câbles, eux, permettent de franchir de très grandes distances : ce sont eux qu’on retrouve sur les ponts records."}
+];
+
+const FIREBASE='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/evaluations/ponts_sorciers';
+const rep=new Array(Q.length).fill(-1);
+const debut=Date.now();
+let envoye=false;
+
+(function(){
+ const z=document.getElementById('questions');
+ Q.forEach((o,i)=>{
+  const d=document.createElement('div'); d.className='q';
+  const h=document.createElement('h2');
+  h.innerHTML='<span class="n">'+(i+1)+'</span>'+o.q;
+  d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach((txt,j)=>{
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',()=>{
+    if(envoye) return;
+    rep[i]=j;
+    [...r.children].forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+})();
+
+document.getElementById('envoyer').addEventListener('click',async()=>{
+ if(envoye) return;
+ const nom=document.getElementById('inNom').value.trim();
+ const prenom=document.getElementById('inPrenom').value.trim();
+ const classe=document.getElementById('inClasse').value.trim();
+ if(!nom || !classe){ alert('Indique au moins ton nom et ta classe.'); return; }
+ const sansRep=rep.filter(v=>v<0).length;
+ if(sansRep>0 && !window.confirm) { }
+ envoye=true;
+ document.getElementById('envoyer').disabled=true;
+
+ let score=0;
+ document.querySelectorAll('.q').forEach((d,i)=>{
+  const bts=[...d.querySelectorAll('.rep button')];
+  bts.forEach((b,j)=>{
+   b.disabled=true;
+   if(j===Q[i].b) b.classList.add('bon');
+   else if(rep[i]===j) b.classList.add('faux');
+  });
+  if(rep[i]===Q[i].b) score++;
+  const e=document.createElement('div');
+  e.style.cssText='margin-top:10px;font-size:14.5px;color:#5b544a;border-left:4px solid #0e7490;padding-left:12px';
+  e.textContent=Q[i].ex;
+  d.appendChild(e);
+ });
+
+ const note=Math.round(score/Q.length*20*10)/10;
+ const duree=Math.round((Date.now()-debut)/1000);
+ const b=document.getElementById('bilan');
+ b.style.display='block';
+ b.innerHTML='<div class="note">'+String(note).replace('.',',')+' / 20</div>'+
+  '<div style="font-size:16px;color:#5b544a">'+score+' bonnes réponses sur '+Q.length+'</div>'+
+  '<div id="etatEnvoi" style="margin-top:10px;font-size:14px;color:#64748b">Envoi en cours…</div>';
+ b.scrollIntoView({behavior:'smooth'});
+
+ try{
+  await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({nom:nom,prenom:prenom,classe:classe,score:score,sur:Q.length,
+    note20:note,duree_s:duree,date:new Date().toISOString(),reponses:rep})});
+  document.getElementById('etatEnvoi').textContent='Résultat envoyé au professeur.';
+ }catch(e){
+  document.getElementById('etatEnvoi').textContent=
+   'Envoi impossible (réseau). Montre ton écran au professeur.';
+ }
+});
+</script>
+</body>
+</html>
