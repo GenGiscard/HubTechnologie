@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suivi des classes — Avancement des séquences · ESTIC</title>
+<style>
+:root{--ink:#1e3a5f;--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;
+      --ambre:#f59e0b;--gris:#64748b;--fond:#f8fafc;--bord:#e2e8f0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#334155;line-height:1.55}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header{max-width:1220px;margin:0 auto;padding:22px 18px 6px}
+h1{font-size:28px;color:var(--accf)}
+.sous{color:var(--gris);font-size:14.5px;margin-top:3px}
+main{max-width:1220px;margin:0 auto;padding:0 18px 40px}
+.carte{background:#fff;border:1px solid var(--bord);border-radius:14px;padding:16px 18px;margin:14px 0}
+.barre{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.champ{display:flex;flex-direction:column;gap:3px}
+.champ label{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--gris)}
+select,input[type=text]{padding:8px 11px;font-size:14.5px;font-family:inherit;
+ border:2px solid var(--bord);border-radius:9px;background:#fff;color:#334155}
+button{font-family:inherit;cursor:pointer}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:9px;padding:9px 15px;font-size:14.5px;font-weight:700}
+.btn.sec{background:#fff;color:var(--accf);border:2px solid var(--acc)}
+.btn.rouge{background:#fff;color:#b91c1c;border:2px solid #fecaca}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{border:1px solid var(--bord);padding:0}
+th{background:#f1f5f9;color:var(--accf);font-size:12.5px;padding:8px 9px;text-align:center;position:sticky;top:0}
+th.seq{text-align:left;min-width:250px}
+td.seq{text-align:left;padding:8px 10px;background:#fff}
+td.seq .niv{display:inline-block;background:var(--acc);color:#fff;border-radius:6px;
+ padding:0 7px;font-size:11px;font-weight:800;margin-right:7px}
+td.cell{padding:0}
+td.cell button{width:100%;height:38px;border:none;background:#fff;font-size:12px;font-weight:700;color:#94a3b8}
+td.cell button:hover{filter:brightness(.96)}
+td.cell button.encours{background:#fef3c7;color:#92400e}
+td.cell button.fait{background:#dcfce7;color:#166534}
+.jauge{height:9px;background:var(--bord);border-radius:5px;overflow:hidden;margin-top:5px}
+.jauge div{height:100%;background:var(--vert)}
+.chiffres{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:8px}
+.chiffre{background:#f8fafc;border:1px solid var(--bord);border-radius:10px;padding:9px 12px}
+.chiffre .lab{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--gris)}
+.chiffre .val{font-size:19px;font-weight:900;color:var(--accf)}
+.legende{font-size:13px;color:var(--gris);margin-top:8px}
+.pastille{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin:0 4px 0 10px}
+#etat{font-size:13px;color:var(--gris);margin-left:auto}
+#login{max-width:400px;margin:70px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:16px;padding:28px;text-align:center}
+#login input{width:100%;text-align:center;font-size:19px;letter-spacing:2px;margin:12px 0}
+#appli{display:none}
+.err{color:#b91c1c;font-weight:700;font-size:13.5px;min-height:19px}
+footer{text-align:center;padding:20px;font-size:12px;color:var(--gris)}
+.tablebox{overflow:auto;max-height:70vh}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div id="login">
+ <h1 style="font-size:22px">Suivi des classes</h1>
+ <p style="font-size:14px;color:#64748b;margin-top:6px">Espace professeur.</p>
+ <input id="mdp" type="password" placeholder="Mot de passe">
+ <div class="err" id="errMdp"></div>
+ <button class="btn" id="btnLogin" style="width:100%">Entrer</button>
+</div>
+
+<div id="appli">
+<header>
+ <h1>Avancement des séquences par classe</h1>
+ <div class="sous">Clique sur une case pour faire tourner son état :
+  à faire, puis en cours, puis terminé. L'enregistrement est automatique.</div>
+</header>
+
+<main>
+ <div class="carte">
+  <div class="barre">
+   <div class="champ"><label for="fNiv">Niveau</label>
+    <select id="fNiv"><option value="">Tous</option><option>5e</option><option>4e</option>
+     <option>3e</option><option>SI</option></select></div>
+   <div class="champ"><label for="fClasse">Classe</label>
+    <select id="fClasse"><option value="">Toutes</option></select></div>
+   <div class="champ"><label for="fEtat">État</label>
+    <select id="fEtat"><option value="">Tous</option><option value="0">À faire</option>
+     <option value="1">En cours</option><option value="2">Terminé</option></select></div>
+   <div class="champ"><label for="fTexte">Rechercher</label>
+    <input type="text" id="fTexte" placeholder="nom de séquence"></div>
+   <button class="btn sec" id="btnRaz">Réinitialiser les filtres</button>
+   <div id="etat">—</div>
+  </div>
+  <div class="legende">
+   <span class="pastille" style="background:#fff;border:1px solid #cbd5e1"></span>à faire
+   <span class="pastille" style="background:#fef3c7"></span>en cours
+   <span class="pastille" style="background:#dcfce7"></span>terminé
+  </div>
+ </div>
+
+ <div class="carte">
+  <div class="barre">
+   <div class="champ"><label for="nvClasse">Ajouter une classe</label>
+    <input type="text" id="nvClasse" placeholder="5eA"></div>
+   <button class="btn" id="btnAdd">Ajouter</button>
+   <button class="btn rouge" id="btnDel">Retirer une classe…</button>
+   <button class="btn sec" id="btnCsv">Exporter en CSV</button>
+  </div>
+ </div>
+
+ <div class="carte" id="resume"></div>
+
+ <div class="carte">
+  <div class="tablebox"><table id="tbl"></table></div>
+ </div>
+</main>
+</div>
+
+<footer>Suivi des classes · Technologie · ESTIC Don Bosco</footer>
+
+<script>
+const MDP='Agostini2025';
+const BASE='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/suivi_classes';
+const ETATS=['','encours','fait'];
+const NOMS=['à faire','en cours','terminé'];
+
+/* Liste des séquences, reprise du portail. Pour la mettre à jour après ajout
+   d'une séquence, réextraire depuis index.html (voir le journal de bord). */
+const SEQS=[
+{"niv":"5e","titre":"Habitat & Ouvrages"},
+{"niv":"5e","titre":"Les Énergies"},
+{"niv":"5e","titre":"Développement durable & cycle de vie"},
+{"niv":"5e","titre":"Les matériaux et leurs propriétés"},
+{"niv":"5e","titre":"L'évolution des objets techniques"},
+{"niv":"5e","titre":"Le besoin & le cahier des charges"},
+{"niv":"5e","titre":"L'environnement numérique"},
+{"niv":"5e","titre":"Design & ergonomie"},
+{"niv":"5e","titre":"L'eau dans la ville"},
+{"niv":"5e","titre":"Le vélo, objet technique"},
+{"niv":"5e","titre":"Météo & instruments de mesure"},
+{"niv":"5e","titre":"Transports & mobilité"},
+{"niv":"4e","titre":"La chaîne d'énergie"},
+{"niv":"4e","titre":"Transmissions de mouvement"},
+{"niv":"4e","titre":"L'ascenseur"},
+{"niv":"4e","titre":"Le binaire, le langage des machines"},
+{"niv":"4e","titre":"Domotique & Objets connectés"},
+{"niv":"4e","titre":"Les réseaux informatiques"},
+{"niv":"4e","titre":"Le smartphone décortiqué"},
+{"niv":"4e","titre":"Modélisation & impression 3D"},
+{"niv":"4e","titre":"Dessin technique & représentation"},
+{"niv":"4e","titre":"Aéronautique"},
+{"niv":"4e","titre":"Automobile & sécurité routière"},
+{"niv":"3e","titre":"Le réseau électrique intelligent"},
+{"niv":"3e","titre":"Les objets connectés"},
+{"niv":"3e","titre":"Algorithmes & programmation"},
+{"niv":"3e","titre":"Robotique & Projet"},
+{"niv":"3e","titre":"Intelligence artificielle & données"},
+{"niv":"3e","titre":"Internet & Cybersécurité"},
+{"niv":"3e","titre":"Modélisation & simulation numérique"},
+{"niv":"3e","titre":"Espace & satellites"},
+{"niv":"3e","titre":"Santé & technologie"},
+{"niv":"3e","titre":"Éco-conception & cycle de vie"},
+{"niv":"SI","titre":"Lire un plan d'ensemble"},
+{"niv":"SI","titre":"Trajectoires et analyse graphique"}
+];
+
+let CLASSES=[];
+let ETAT={};          /* ETAT[classe][index de séquence] = 0 | 1 | 2 */
+let sauveEnCours=false, aResauver=false;
+
+/* ---------- connexion ---------- */
+document.getElementById('btnLogin').addEventListener('click',entrer);
+document.getElementById('mdp').addEventListener('keydown',e=>{ if(e.key==='Enter') entrer(); });
+function entrer(){
+ if(document.getElementById('mdp').value!==MDP){
+  document.getElementById('errMdp').textContent='Mot de passe incorrect.'; return; }
+ document.getElementById('login').style.display='none';
+ document.getElementById('appli').style.display='block';
+ charger();
+}
+
+/* ---------- Firebase ---------- */
+async function charger(){
+ majEtat('Chargement…');
+ try{
+  const r=await fetch(BASE+'.json');
+  const j=await r.json();
+  if(j && typeof j==='object'){
+   CLASSES=Array.isArray(j.classes)? j.classes.slice() : [];
+   ETAT=(j.etat && typeof j.etat==='object')? j.etat : {};
+  }
+  majEtat('Données chargées');
+ }catch(e){
+  majEtat('Lecture impossible — vérifie la règle Firebase suivi_classes');
+ }
+ dessiner();
+}
+async function sauver(){
+ if(sauveEnCours){ aResauver=true; return; }
+ sauveEnCours=true; majEtat('Enregistrement…');
+ try{
+  await fetch(BASE+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({classes:CLASSES,etat:ETAT,maj:new Date().toISOString()})});
+  majEtat('Enregistré');
+ }catch(e){ majEtat('Enregistrement impossible'); }
+ sauveEnCours=false;
+ if(aResauver){ aResauver=false; sauver(); }
+}
+function majEtat(t){ document.getElementById('etat').textContent=t; }
+
+/* ---------- classes ---------- */
+document.getElementById('btnAdd').addEventListener('click',()=>{
+ const i=document.getElementById('nvClasse');
+ const v=i.value.trim();
+ if(!v) return;
+ if(CLASSES.indexOf(v)>=0){ majEtat('Cette classe existe déjà'); return; }
+ CLASSES.push(v); CLASSES.sort();
+ ETAT[v]=ETAT[v]||{};
+ i.value=''; dessiner(); sauver();
+});
+document.getElementById('btnDel').addEventListener('click',()=>{
+ if(!CLASSES.length) return;
+ const v=window.prompt ? null : null;   /* pas de prompt : on passe par un select */
+ const sel=document.getElementById('fClasse').value;
+ if(!sel){ majEtat('Choisis d\u2019abord la classe à retirer dans le filtre Classe'); return; }
+ if(!confirmer('Retirer la classe '+sel+' et tout son avancement ?')) return;
+ CLASSES=CLASSES.filter(c=>c!==sel); delete ETAT[sel];
+ document.getElementById('fClasse').value='';
+ dessiner(); sauver();
+});
+function confirmer(msg){ return window.confirm ? window.confirm(msg) : true; }
+
+/* ---------- filtres ---------- */
+['fNiv','fClasse','fEtat'].forEach(id=>
+ document.getElementById(id).addEventListener('change',dessiner));
+document.getElementById('fTexte').addEventListener('input',dessiner);
+document.getElementById('btnRaz').addEventListener('click',()=>{
+ document.getElementById('fNiv').value='';
+ document.getElementById('fClasse').value='';
+ document.getElementById('fEtat').value='';
+ document.getElementById('fTexte').value='';
+ dessiner();
+});
+
+function etatDe(cl,i){ return (ETAT[cl] && ETAT[cl][i]) || 0; }
+
+/* ---------- affichage ---------- */
+function dessiner(){
+ /* le filtre Classe se remplit d'après les classes existantes */
+ const fc=document.getElementById('fClasse'), garde=fc.value;
+ fc.innerHTML='<option value="">Toutes</option>';
+ CLASSES.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; fc.appendChild(o); });
+ fc.value=CLASSES.indexOf(garde)>=0? garde : '';
+
+ const fNiv=document.getElementById('fNiv').value;
+ const fCl=document.getElementById('fClasse').value;
+ const fEt=document.getElementById('fEtat').value;
+ const fTx=document.getElementById('fTexte').value.trim().toLowerCase();
+ const cols=fCl? [fCl] : CLASSES;
+
+ /* lignes retenues : niveau, texte, et au moins une case à l'état demandé */
+ const lignes=[];
+ SEQS.forEach((s,i)=>{
+  if(fNiv && s.niv!==fNiv) return;
+  if(fTx && s.titre.toLowerCase().indexOf(fTx)<0) return;
+  if(fEt!==''){ 
+   const ok=cols.some(c=>String(etatDe(c,i))===fEt);
+   if(!ok) return;
+  }
+  lignes.push(i);
+ });
+
+ const t=document.getElementById('tbl');
+ t.innerHTML='';
+ if(!CLASSES.length){
+  t.innerHTML='<tr><td class="seq" style="padding:16px;color:#64748b">'+
+   'Aucune classe pour le moment. Ajoute-en une ci-dessus pour commencer le suivi.</td></tr>';
+  document.getElementById('resume').innerHTML='';
+  return;
+ }
+ const thead=document.createElement('tr');
+ thead.innerHTML='<th class="seq">Séquence</th>'+cols.map(c=>'<th>'+c+'</th>').join('');
+ t.appendChild(thead);
+
+ lignes.forEach(i=>{
+  const s=SEQS[i];
+  const tr=document.createElement('tr');
+  const td=document.createElement('td'); td.className='seq';
+  td.innerHTML='<span class="niv">'+s.niv+'</span>'+s.titre;
+  tr.appendChild(td);
+  cols.forEach(c=>{
+   const cell=document.createElement('td'); cell.className='cell';
+   const b=document.createElement('button'); b.type='button';
+   const e=etatDe(c,i);
+   b.className=ETATS[e]; b.textContent=NOMS[e];
+   b.addEventListener('click',()=>{
+    const n=(etatDe(c,i)+1)%3;
+    ETAT[c]=ETAT[c]||{}; ETAT[c][i]=n;
+    b.className=ETATS[n]; b.textContent=NOMS[n];
+    resume(); sauver();
+   });
+   cell.appendChild(b); tr.appendChild(cell);
+  });
+  t.appendChild(tr);
+ });
+ if(!lignes.length){
+  const tr=document.createElement('tr');
+  tr.innerHTML='<td class="seq" colspan="'+(cols.length+1)+'" style="padding:14px;color:#64748b">'+
+   'Aucune séquence ne correspond aux filtres.</td>';
+  t.appendChild(tr);
+ }
+ resume();
+}
+
+function resume(){
+ const fNiv=document.getElementById('fNiv').value;
+ const idx=SEQS.map((s,i)=>({s:s,i:i})).filter(o=>!fNiv||o.s.niv===fNiv).map(o=>o.i);
+ const z=document.getElementById('resume');
+ if(!CLASSES.length){ z.innerHTML=''; return; }
+ let html='<div class="chiffres">';
+ CLASSES.forEach(c=>{
+  let f=0,e=0;
+  idx.forEach(i=>{ const v=etatDe(c,i); if(v===2)f++; else if(v===1)e++; });
+  const pc=idx.length? Math.round(f/idx.length*100):0;
+  html+='<div class="chiffre"><div class="lab">'+c+'</div>'+
+   '<div class="val">'+f+' / '+idx.length+'</div>'+
+   '<div style="font-size:12px;color:#64748b">'+pc+' % terminé'+(e? ' · '+e+' en cours':'')+'</div>'+
+   '<div class="jauge"><div style="width:'+pc+'%"></div></div></div>';
+ });
+ z.innerHTML=html+'</div>';
+}
+
+/* ---------- export CSV ---------- */
+document.getElementById('btnCsv').addEventListener('click',()=>{
+ if(!CLASSES.length) return;
+ const L=[['Niveau','Sequence'].concat(CLASSES).join(';')];
+ SEQS.forEach((s,i)=>{
+  L.push([s.niv,'"'+s.titre.replace(/"/g,'""')+'"']
+   .concat(CLASSES.map(c=>NOMS[etatDe(c,i)])).join(';'));
+ });
+ const b=new Blob([L.join('\n')],{type:'text/csv;charset=utf-8'});
+ const a=document.createElement('a');
+ a.href=URL.createObjectURL(b);
+ a.download='suivi_classes_'+new Date().toISOString().split('T')[0]+'.csv';
+ a.click();
+});
+</script>
+</body>
+</html>

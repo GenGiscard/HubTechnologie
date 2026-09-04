@@ -302,22 +302,30 @@ const ETAPES_PROJ=[
  ['','AMÉLIORATION','on corrige… et on reboucle','#16a34a'],
 ];
 function dessinerCycle(ctx,W,H,visibles,surbrillance=-1,rot=0){
- const cx=W/2,cy=H/2+8,R=132;
+ /* Disposition en ELLIPSE, boites plus etroites : sur un cercle de 132 avec des
+    boites de 176 px, les six cadres se chevauchaient deux a deux. */
+ const cx=W/2,cy=H/2+8,RX=245,RY=112,BW=150,BH=62;
  ETAPES_PROJ.forEach((e,i)=>{
  if(i>=visibles)return;
  const a=-Math.PI/2+i*Math.PI*2/6+rot;
- const x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);
+ const x=cx+RX*Math.cos(a),y=cy+RY*Math.sin(a);
  // flèche vers l'étape suivante visible
  if(i<visibles-1||visibles===7){
  const a2=-Math.PI/2+((i+1)%6)*Math.PI*2/6+rot;
- const mx=cx+R*Math.cos((a+a2)/2+(i===5?Math.PI:0)),my=cy+R*Math.sin((a+a2)/2+(i===5?Math.PI:0));
+ const mx=cx+RX*Math.cos((a+a2)/2+(i===5?Math.PI:0)),my=cy+RY*Math.sin((a+a2)/2+(i===5?Math.PI:0));
  }
  ctx.fillStyle= i===surbrillance? e[3] : '#fff';
  ctx.strokeStyle=e[3];ctx.lineWidth=3;
- ctx.beginPath();ctx.roundRect(x-88,y-34,176,68,12);ctx.fill();ctx.stroke();
- ctx.font='22px Segoe UI';ctx.textAlign='center';ctx.fillStyle=i===surbrillance?'#fff':e[3];
- ctx.fillText(e[0]+' '+e[1],x,y-6);
- ctx.font='12px Segoe UI';ctx.fillStyle=i===surbrillance?'rgba(255,255,255,.9)':'#64748b';
+ ctx.beginPath();ctx.roundRect(x-BW/2,y-BH/2,BW,BH,12);ctx.fill();ctx.stroke();
+ ctx.textAlign='center';ctx.fillStyle=i===surbrillance?'#fff':e[3];
+ /* Taille ajustee a la largeur de la boite : « CAHIER DES CHARGES » en 22 px
+    mesurait environ 200 px pour un cadre de 176 px, et debordait. */
+ let tl=22; ctx.font=tl+'px Segoe UI';
+ while(tl>10 && ctx.measureText(e[1]).width>BW-16){ tl-=1; ctx.font=tl+'px Segoe UI'; }
+ ctx.fillText(e[1],x,y-4);
+ let ts=12; ctx.font=ts+'px Segoe UI';
+ while(ts>8 && ctx.measureText(e[2]).width>BW-14){ ts-=0.5; ctx.font=ts+'px Segoe UI'; }
+ ctx.fillStyle=i===surbrillance?'rgba(255,255,255,.9)':'#64748b';
  ctx.fillText(e[2],x,y+16);
  });
  // flèches circulaires
@@ -326,8 +334,8 @@ function dessinerCycle(ctx,W,H,visibles,surbrillance=-1,rot=0){
  if(i===visibles-1&&visibles<7)continue;
  const a1=-Math.PI/2+i*Math.PI*2/6+0.42, a2=-Math.PI/2+(i+1)*Math.PI*2/6-0.42;
  ctx.beginPath();ctx.arc(cx,cy,R,a1,a2);ctx.stroke();
- const fx=cx+R*Math.cos(a2),fy=cy+R*Math.sin(a2);
- fleche(ctx,cx+R*Math.cos(a2-0.06),cy+R*Math.sin(a2-0.06),fx,fy,'#94a3b8',2.5);
+ const fx=cx+RX*Math.cos(a2),fy=cy+RY*Math.sin(a2);
+ fleche(ctx,cx+RX*Math.cos(a2-0.06),cy+RY*Math.sin(a2-0.06),fx,fy,'#94a3b8',2.5);
  }
 }
 creerAnim('projet','cvProjet','capProjet','ptsProjet',[
@@ -405,7 +413,9 @@ creerAnim('seq','cvSeq','capSeq','ptsSeq',[
 const B_PROG=['répéter 4 fois :',' avancer',' avancer',' tourner à droite'];
 function posBoucle(k){ // position après k pas élémentaires (0..12)
  const chemin=[[0,3,0],[1,3,0],[2,3,0],[2,3,1],[2,3,1]]; // simplifié via calcul
- let c=0,l=3,d=0;
+ let c=0,l=1,d=0;   /* depart ligne 1 : le carre descend de 2 cases et reste
+                      dans le quadrillage 4x4. Depuis la ligne 3, derniere du
+                      quadrillage, le trace sortait par le bas. */
  for(let i=0;i<k;i++){
  const instr=i%3;
  if(instr<2){ if(d===0)c++; if(d===1)l++; if(d===2)c--; if(d===3)l--; }

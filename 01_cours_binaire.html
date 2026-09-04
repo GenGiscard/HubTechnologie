@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Le binaire, le langage des machines · ESTIC</title>
+<style>
+:root{--ink:#1e3a5f;--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;
+      --viol:#7c3aed;--gris:#64748b;--fond:#F8F4EC;--carte:#fff;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.65}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:30px 22px 6px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:38px;color:var(--accf);margin:6px 0 10px;line-height:1.2}
+.sous{font-size:16.5px;color:#5b544a;max-width:760px;margin:0 auto}
+section.bloc{max-width:920px;margin:26px auto;background:var(--carte);border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:14px}
+p{margin:9px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:860px;height:auto;margin:14px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.bits{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:16px 0 6px}
+.bit{width:74px;text-align:center}
+.bit button{width:100%;height:56px;font-size:24px;font-weight:900;font-family:inherit;
+ border:2px solid var(--acc);background:#fff;color:var(--gris);border-radius:10px;cursor:pointer}
+.bit button.on{background:var(--acc);color:#fff}
+.bit .poids{font-size:12px;color:var(--gris);margin-top:3px}
+.sorties{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+.sortie{background:#f8fafc;border:1px solid var(--bord);border-radius:10px;padding:9px 12px;text-align:center}
+.sortie .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gris);font-weight:800}
+.sortie .val{font-size:21px;font-weight:900;color:var(--accf);font-family:'Courier New',monospace}
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:6px 9px;text-align:left}
+th{background:#f8fafc;color:var(--accf)}
+code{background:#f1f5f9;padding:1px 6px;border-radius:5px;font-size:14.5px}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Séquence 4ème · Information &amp; programmation</div>
+ <h1>Le binaire,<br>le langage des machines</h1>
+ <p class="sous">Ton téléphone, ta console, l’ordinateur de la salle de techno : aucun ne comprend
+ nos chiffres. Tous ne connaissent que deux signes, <b>0</b> et <b>1</b>. Ce cours explique comment,
+ à partir de ces deux signes seulement, une machine représente des nombres, du texte, des couleurs
+ et même la position d’un capteur.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>Pourquoi seulement des 0 et des 1 ?</h2>
+ <div class="chapo">À l’intérieur d’un circuit, il n’y a pas de nuances.</div>
+ <p>Dans un circuit électronique, une information se transporte par le <b>courant</b>. Or un
+ interrupteur n’a que deux états possibles : le courant <b>passe</b>, ou il <b>ne passe pas</b>.
+ On note ces deux états <code>1</code> et <code>0</code>.</p>
+ <p>C’est un choix de <b>fiabilité</b>. Distinguer deux états est facile, même si la tension varie
+ un peu ou si le composant vieillit. Distinguer dix niveaux différents serait bien plus fragile.</p>
+ <canvas id="cvEtat" width="860" height="180"></canvas>
+ <div class="retenir">Un <b>bit</b> (de l’anglais <i>binary digit</i>) est la plus petite information
+ possible : un 0 ou un 1. Un <b>octet</b> est un groupe de <b>8 bits</b>. C’est l’unité de base de
+ la mémoire, celle qui donne les kilooctets, mégaoctets et gigaoctets.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Le binaire naturel : une histoire de poids</h2>
+ <div class="chapo">Chaque bit vaut quelque chose, selon sa place.</div>
+ <p>Dans un octet, chaque bit porte un <b>poids</b>. En partant de la droite, les poids doublent à
+ chaque fois : 1, 2, 4, 8, 16, 32, 64, 128. Pour lire un nombre binaire, il suffit
+ d’<b>additionner les poids des bits allumés</b>.</p>
+ <canvas id="cvPoids" width="860" height="200"></canvas>
+ <p>Essaie toi-même : allume et éteins les bits, et observe la même information écrite dans
+ plusieurs codes à la fois.</p>
+ <div class="bits" id="bits"></div>
+ <div class="sorties">
+  <div class="sortie"><div class="lab">Binaire</div><div class="val" id="oBin">0000 0000</div></div>
+  <div class="sortie"><div class="lab">Décimal</div><div class="val" id="oDec">0</div></div>
+  <div class="sortie"><div class="lab">Hexadécimal</div><div class="val" id="oHex">00</div></div>
+  <div class="sortie"><div class="lab">DCB</div><div class="val" id="oDcb">0000 0000</div></div>
+ </div>
+ <div class="retenir">Avec 8 bits, on peut écrire <b>256</b> nombres différents, de 0 à 255.
+ Chaque bit ajouté <b>double</b> le nombre de possibilités.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>L’hexadécimal : écrire plus court</h2>
+ <div class="chapo">Huit bits, c’est long. Deux symboles suffisent.</div>
+ <p>Écrire <code>11010110</code> est pénible et source d’erreurs. On regroupe alors les bits par
+ <b>paquets de 4</b>. Chaque paquet vaut de 0 à 15, et on lui donne <b>un seul symbole</b> :
+ les chiffres 0 à 9, puis les lettres A, B, C, D, E et F pour 10 à 15.</p>
+ <canvas id="cvHexa" width="860" height="200"></canvas>
+ <table>
+  <tr><th>Décimal</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td>
+      <td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td></tr>
+  <tr><th>Hexa</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td>
+      <td>8</td><td>9</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td></tr>
+ </table>
+ <div class="retenir">Un octet s’écrit toujours avec <b>exactement deux symboles</b> hexadécimaux.
+ L’hexadécimal ne change rien à l’information : c’est la même chose, écrite plus court.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Le code ASCII : coder du texte</h2>
+ <div class="chapo">Une lettre est un nombre, donc un octet.</div>
+ <p>Une machine ne sait pas ce qu’est une lettre. On a donc fixé une <b>table</b> qui associe un
+ nombre à chaque caractère : c’est le code <b>ASCII</b>. La lettre A vaut 65, B vaut 66, et ainsi de
+ suite. Les minuscules commencent à 97, les chiffres à 48.</p>
+ <canvas id="cvAscii" width="860" height="180"></canvas>
+ <div class="retenir">Un texte n’est rien d’autre qu’une <b>longue suite d’octets</b>. Ouvrir un
+ fichier texte, c’est lire ces octets et afficher les caractères correspondants.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Les couleurs : trois octets par pixel</h2>
+ <div class="chapo">Rouge, vert, bleu — et tout le reste en découle.</div>
+ <p>Un pixel d’écran est fait de trois lumières minuscules : une <b>rouge</b>, une <b>verte</b> et
+ une <b>bleue</b>. Pour chacune, on code une dose de 0 à 255, donc <b>un octet</b>. Un pixel
+ occupe ainsi trois octets, qu’on écrit souvent en hexadécimal sous la forme
+ <code>#RRVVBB</code>.</p>
+ <canvas id="cvRvb" width="860" height="210"></canvas>
+ <div class="retenir">Trois octets donnent 256 × 256 × 256, soit plus de <b>16 millions</b> de
+ couleurs. <code>#FF0000</code> est un rouge pur, <code>#000000</code> le noir,
+ <code>#FFFFFF</code> le blanc.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Deux codes pour des besoins particuliers</h2>
+ <div class="chapo">Le binaire naturel n’est pas toujours le plus pratique.</div>
+ <p>Le <b>DCB</b> (décimal codé binaire) code <b>chaque chiffre séparément</b> sur 4 bits, au lieu
+ de coder le nombre entier. Le nombre 27 devient <code>0010 0111</code> : le 2, puis le 7. C’est
+ moins compact, mais un afficheur d’horloge ou de calculatrice peut piloter directement chaque
+ chiffre sans calcul.</p>
+ <p>Le <b>code Gray</b>, ou binaire réfléchi, est construit pour qu’<b>un seul bit change</b> d’un
+ nombre au suivant. On l’utilise dans les <b>capteurs de position</b> : si plusieurs bits changeaient
+ en même temps, une lecture prise au mauvais instant donnerait une position complètement fausse.</p>
+ <canvas id="cvGray" width="860" height="215"></canvas>
+ <div class="retenir">On ne choisit pas un code au hasard : chacun répond à un <b>besoin</b>.
+ Compact pour le calcul, lisible pour l’affichage, sûr pour la mesure.</div>
+</section>
+
+<footer>Cours — Le binaire · Technologie 4ème · ESTIC Don Bosco</footer>
+
+<script>
+/* ═══ utilitaires de dessin ═══ */
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+/* Flèche : la pointe se place AU point d'arrivée, le trait s'arrête à la base. */
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+function cadre(c,x,y,w,h,coul,rempli){
+ c.fillStyle= rempli? coul : '#fff'; c.strokeStyle=coul; c.lineWidth=2.4;
+ c.beginPath(); c.roundRect(x,y,w,h,10); c.fill(); c.stroke();
+}
+
+/* ═══ 1 · le courant passe ou pas ═══ */
+(function(){
+ const c=document.getElementById('cvEtat').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,180);
+ T(c,'DEUX ÉTATS, ET RIEN ENTRE LES DEUX',430,30,15,'#155e75');
+ [[220,'#cbd5e1','0','le courant ne passe pas','#64748b'],
+  [640,'#fbbf24','1','le courant passe','#b45309']].forEach(([x,coul,chiffre,leg,ct])=>{
+  c.strokeStyle='#475569'; c.lineWidth=3; c.lineCap='butt';
+  c.beginPath(); c.moveTo(x-140,110); c.lineTo(x-46,110); c.stroke();
+  c.beginPath(); c.moveTo(x+46,110); c.lineTo(x+140,110); c.stroke();
+  if(chiffre==='0'){ c.beginPath(); c.moveTo(x-46,110); c.lineTo(x+20,78); c.stroke(); }
+  else { c.beginPath(); c.moveTo(x-46,110); c.lineTo(x+46,110); c.stroke(); }
+  c.fillStyle=coul; c.beginPath(); c.arc(x+95,110,26,0,6.284); c.fill();
+  c.strokeStyle='#475569'; c.lineWidth=2; c.stroke();
+  T(c,chiffre,x-95,84,30,ct);
+  T(c,leg,x,158,13.5,'#5b544a');
+ });
+})();
+
+/* ═══ 2 · les poids ═══ */
+const POIDS=[128,64,32,16,8,4,2,1];
+(function(){
+ const c=document.getElementById('cvPoids').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,200);
+ T(c,'CHAQUE BIT PORTE UN POIDS — ON ADDITIONNE LES BITS ALLUMÉS',430,28,14.5,'#155e75');
+ const ex=[1,0,1,1,0,1,1,0];                       // 182
+ const L=84, m=32, esp=14;
+ ex.forEach((b,i)=>{
+  const x=m+i*(L+esp);
+  cadre(c,x,58,L,52,'#0e7490',b===1);
+  T(c,String(b),x+L/2,92,26,b? '#fff':'#64748b');
+  T(c,String(POIDS[i]),x+L/2,130,14,b? '#0e7490':'#94a3b8');
+ });
+ T(c,'128 + 32 + 16 + 4 + 2  =  182',430,168,19,'#ea580c');
+})();
+
+/* ═══ convertisseur interactif ═══ */
+(function(){
+ let bits=[0,0,0,0,0,0,0,0];
+ const zone=document.getElementById('bits');
+ POIDS.forEach((p,i)=>{
+  const d=document.createElement('div'); d.className='bit';
+  const b=document.createElement('button'); b.type='button'; b.textContent='0';
+  b.addEventListener('click',()=>{ bits[i]=1-bits[i]; b.textContent=bits[i];
+   b.classList.toggle('on',bits[i]===1); maj(); });
+  const s=document.createElement('div'); s.className='poids'; s.textContent=p;
+  d.appendChild(b); d.appendChild(s); zone.appendChild(d);
+ });
+ function maj(){
+  const v=bits.reduce((s,b,i)=>s+b*POIDS[i],0);
+  const bin=bits.join('');
+  document.getElementById('oBin').textContent=bin.slice(0,4)+' '+bin.slice(4);
+  document.getElementById('oDec').textContent=v;
+  document.getElementById('oHex').textContent=v.toString(16).toUpperCase().padStart(2,'0');
+  const d=String(v).padStart(2,'0').slice(-2);
+  document.getElementById('oDcb').textContent=
+   (+d[0]).toString(2).padStart(4,'0')+' '+(+d[1]).toString(2).padStart(4,'0');
+ }
+ maj();
+})();
+
+/* ═══ 3 · hexadécimal ═══ */
+(function(){
+ const c=document.getElementById('cvHexa').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,200);
+ T(c,'ON REGROUPE LES BITS PAR PAQUETS DE 4',430,28,14.5,'#155e75');
+ const gauche='1101', droite='0110';
+ [[210,gauche,'D',13],[600,droite,'6',6]].forEach(([x,g,h,val])=>{
+  cadre(c,x-110,54,220,50,'#7c3aed');
+  T(c,g.split('').join('  '),x,86,24,'#7c3aed');
+  T(c,'= '+val,x,124,15,'#64748b');
+  FLECHE(c,x,132,x,158,3,'#7c3aed');
+  cadre(c,x-38,164,76,34,'#7c3aed',true);
+  T(c,h,x,190,21,'#fff');
+ });
+})();
+
+/* ═══ 4 · ASCII ═══ */
+(function(){
+ const c=document.getElementById('cvAscii').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,180);
+ T(c,'UNE LETTRE, UN NOMBRE, UN OCTET',430,28,14.5,'#155e75');
+ const et=[['A','#0e7490'],['65','#ea580c'],['01000001','#16a34a']];
+ const L=210, m=70, esp=54;
+ et.forEach(([txt,coul],i)=>{
+  const x=m+i*(L+esp);
+  cadre(c,x,66,L,58,coul);
+  T(c,txt,x+L/2,i===2?104:106,i===2?21:30,coul);
+  T(c,['le caractère','son numéro ASCII','son octet'][i],x+L/2,144,13,'#5b544a');
+  if(i<2) FLECHE(c,x+L+6,95,x+L+esp-6,95,3,'#94a3b8');
+ });
+})();
+
+/* ═══ 5 · RVB ═══ */
+(function(){
+ const c=document.getElementById('cvRvb').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,210);
+ T(c,'UN PIXEL = TROIS OCTETS',430,28,14.5,'#155e75');
+ const cx=[190,330,470];
+ [['R',255,'#dc2626'],['V',77,'#16a34a'],['B',13,'#2563eb']].forEach(([n,v,coul],i)=>{
+  cadre(c,cx[i]-56,58,112,96,coul);
+  T(c,n,cx[i],92,24,coul);
+  T(c,String(v),cx[i],126,26,coul);
+  T(c,v.toString(16).toUpperCase().padStart(2,'0'),cx[i],174,17,'#64748b');
+ });
+ T(c,'0 à 255 pour chaque lumière',330,196,13,'#5b544a');
+ FLECHE(c,545,106,610,106,3,'#94a3b8');
+ c.fillStyle='rgb(255,77,13)';
+ c.strokeStyle='#475569'; c.lineWidth=2.4;
+ c.beginPath(); c.roundRect(630,58,150,96,12); c.fill(); c.stroke();
+ T(c,'#FF4D0D',705,174,19,'#155e75');
+})();
+
+/* ═══ 6 · DCB et code Gray ═══ */
+(function(){
+ const c=document.getElementById('cvGray').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,215);
+ T(c,'DCB — CHAQUE CHIFFRE SÉPARÉMENT',215,26,14,'#155e75');
+ T(c,'CODE GRAY — UN SEUL BIT CHANGE',645,26,14,'#155e75');
+ // DCB : 27
+ T(c,'27',95,74,30,'#ea580c');
+ FLECHE(c,125,66,165,66,3,'#94a3b8');
+ [['2','0010',210],['7','0111',320]].forEach(([ch,bin,x])=>{
+  cadre(c,x-48,46,96,44,'#ea580c');
+  T(c,bin,x,74,17,'#ea580c');
+  T(c,'chiffre '+ch,x,106,12.5,'#5b544a');
+ });
+ T(c,'chaque chiffre sur 4 bits, jamais le nombre entier',215,150,13,'#5b544a');
+ T(c,'un afficheur pilote directement chaque digit',215,172,13,'#5b544a');
+ // Gray
+ const G=[['0','000'],['1','001'],['2','011'],['3','010']];
+ G.forEach(([n,g],i)=>{
+  const y=48+i*36;
+  T(c,n,505,y+15,15,'#64748b','right');
+  cadre(c,520,y,120,28,'#7c3aed');
+  T(c,g.split('').join(' '),580,y+20,15,'#7c3aed');
+  if(i>0){
+   T(c,'1 seul bit change',760,y+19,12.5,'#16a34a');
+   FLECHE(c,650,y-18+14,690,y+14,2.4,'#16a34a');
+  }
+ });
+ T(c,'utilisé dans les capteurs de position',645,206,13,'#5b544a');
+})();
+</script>
+</body>
+</html>
