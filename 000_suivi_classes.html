@@ -56,6 +56,11 @@ td.cell button.fait{background:#dcfce7;color:#166534}
 .err{color:#b91c1c;font-weight:700;font-size:13.5px;min-height:19px}
 footer{text-align:center;padding:20px;font-size:12px;color:var(--gris)}
 .tablebox{overflow:auto;max-height:70vh}
+.onglets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.onglets button{background:#fff;border:2px solid var(--bord);border-bottom-width:3px;
+ border-radius:11px 11px 0 0;padding:10px 22px;font-size:15.5px;font-weight:800;color:var(--gris)}
+.onglets button.actif{background:var(--acc);border-color:var(--acc);color:#fff}
+.onglets .compte{display:block;font-size:11px;font-weight:600;opacity:.85}
 tr.ligneSeq td{background:#f1f5f9}
 td.seqtitre{font-size:14.5px;color:var(--accf)}
 button.plier{width:22px;height:22px;border:1px solid var(--bord);background:#fff;
@@ -91,11 +96,9 @@ td.recap{padding:5px 8px;background:#f1f5f9}
 </header>
 
 <main>
+ <div class="onglets" id="onglets"></div>
  <div class="carte">
   <div class="barre">
-   <div class="champ"><label for="fNiv">Niveau</label>
-    <select id="fNiv"><option value="">Tous</option><option>5e</option><option>4e</option>
-     <option>3e</option><option>SI</option></select></div>
    <div class="champ"><label for="fClasse">Classe</label>
     <select id="fClasse"><option value="">Toutes</option></select></div>
    <div class="champ"><label for="fEtat">État</label>
@@ -103,6 +106,8 @@ td.recap{padding:5px 8px;background:#f1f5f9}
      <option value="1">En cours</option><option value="2">Terminé</option></select></div>
    <div class="champ"><label for="fTexte">Rechercher</label>
     <input type="text" id="fTexte" placeholder="nom de séquence"></div>
+   <button class="btn sec" id="btnPlier">Regrouper tout</button>
+   <button class="btn sec" id="btnDeplier">Développer tout</button>
    <button class="btn sec" id="btnRaz">Réinitialiser les filtres</button>
    <div id="etat">—</div>
   </div>
@@ -141,7 +146,7 @@ const NOMS=['à faire','en cours','terminé'];
 
 /* Liste des séquences, reprise du portail. Pour la mettre à jour après ajout
    d'une séquence, réextraire depuis index.html (voir le journal de bord). */
-const SEQS=[{"niv": "5e","seq": "Habitat & Ouvrages","mods": ["Cours","TP Ponts","Bâtisseur","Inspecteur","Chantier Express","Évaluation","Évaluation des sorciers"]},{"niv": "5e","seq": "Les Énergies","mods": ["Cours","TP Mix","Énergie Panic","Gardien du réseau","Pluie de Watts","Évaluation"]},{"niv": "5e","seq": "Développement durable & cycle de vie","mods": ["Cours","Carnet d'exercices","Simulateur"]},{"niv": "5e","seq": "Les matériaux et leurs propriétés","mods": ["Cours","Activités","Grand Défi","Évaluation","Tableau de bord"]},{"niv": "5e","seq": "L'évolution des objets techniques","mods": ["Cours","TP Lignées","Chrono Rush","Bureau des inventions","Couloirs du Temps","Évaluation"]},{"niv": "5e","seq": "Le besoin & le cahier des charges","mods": ["Cours","TP Bureau des projets","Fonction Rush","Bureau d'études","Drone du BE","Évaluation"]},{"niv": "5e","seq": "L'environnement numérique","mods": ["Cours","TP Salle info","Extension Rush","SOS Salle info","Data Runner","Évaluation"]},{"niv": "5e","seq": "Design & ergonomie","mods": ["Cours","TP Bureau design","Design Rush","Bureau d'étude","Rafle au Studio","Évaluation"]},{"niv": "5e","seq": "Transports & mobilité","mods": ["Cours","TP PC mobilité","Transport Rush","PC Mobilité","Trottinette Express","Évaluation"]},{"niv": "5e","seq": "Le vélo, objet technique","mods": ["Cours","TP atelier vélo","Vélo Rush","Atelier réparation","Échappée Peloton","Évaluation"]},{"niv": "4e","seq": "La Domotique","mods": ["Cours","TP Maison","Signal Rush","Nuit de garde","Évaluation"]},{"niv": "4e","seq": "Transmissions de mouvement","mods": ["Cours","TP Engrenages","Gear Rush","Atelier Méca","Évaluation"]},{"niv": "4e","seq": "La chaîne d'énergie","mods": ["Cours","TP Garage VAE","Moteur Rush","SOS Dépannage","Évaluation"]},{"niv": "4e","seq": "Modélisation & impression 3D","mods": ["Cours","TP Fab lab","Procédé Rush","Ferme d'impression","Évaluation"]},{"niv": "4e","seq": "Les réseaux informatiques","mods": ["Cours","TP Admin réseau","Réseau Rush","Admin Réseau","Évaluation"]},{"niv": "4e","seq": "Dessin technique & représentation","mods": ["Cours","TP Bureau des méthodes","Plan Rush","Contrôle des plans","Évaluation"]},{"niv": "4e","seq": "Aéronautique — comment vole un avion","mods": ["Cours","TP Bureau d'études aéro","Aéro Rush","Tour de contrôle","Évaluation"]},{"niv": "4e","seq": "Automobile & sécurité routière","mods": ["Cours","TP sécurité routière","Sécurité Rush","Contrôle technique","Évaluation"]},{"niv": "4e","seq": "Le binaire, le langage des machines","mods": ["Cours"]},{"niv": "3e","seq": "La Robotique","mods": ["Cours","TP Robot","Robo Race","Entrepôt","Évaluation"]},{"niv": "3e","seq": "Internet & Cybersécurité","mods": ["Cours","TP Routeur","Phishing Hunter","Cyberdéfense","Évaluation"]},{"niv": "3e","seq": "Éco-conception & cycle de vie","mods": ["Cours","TP Mission ACV","Tri Rush","Centre de valorisation","Évaluation"]},{"niv": "3e","seq": "Algorithmes & programmation","mods": ["Cours","TP Studio de code","Bloc Rush","Studio Debug","Évaluation"]},{"niv": "3e","seq": "Les objets connectés","mods": ["Cours","TP Laboratoire","Capteur Rush","Maison connectée","Évaluation"]},{"niv": "3e","seq": "Modélisation & simulation","mods": ["Cours","TP Bureau simulation","Simu Rush","Labo de simulation","Évaluation"]},{"niv": "3e","seq": "Intelligence artificielle & données","mods": ["Cours","TP Centre d'entraînement","IA Rush","Centre IA","Évaluation"]},{"niv": "3e","seq": "Espace & satellites","mods": ["Cours","TP centre spatial","Orbite Rush","Centre spatial","Évaluation"]},{"niv": "SI","seq": "Lire un plan d'ensemble","mods": ["Cours","Découverte guidée","TP · 5 exercices","Plan imprimable"]},{"niv": "SI","seq": "Trajectoires et analyse graphique","mods": ["Exercice de tracé","Séquence associée"]}];
+const SEQS=[{"niv": "5e","seq": "Habitat & Ouvrages","mods": ["Cours","TP Ponts","Bâtisseur","Inspecteur","Chantier Express","Évaluation","Évaluation des sorciers"]},{"niv": "5e","seq": "Les Énergies","mods": ["Cours","TP Mix","Énergie Panic","Gardien du réseau","Pluie de Watts","Évaluation"]},{"niv": "5e","seq": "Développement durable & cycle de vie","mods": ["Cours","Carnet d'exercices","Simulateur"]},{"niv": "5e","seq": "Les matériaux et leurs propriétés","mods": ["Présentation","Cours","Activités","Grand Défi","Évaluation","Tableau de bord"]},{"niv": "5e","seq": "L'évolution des objets techniques","mods": ["Cours","TP Lignées","Chrono Rush","Bureau des inventions","Couloirs du Temps","Évaluation"]},{"niv": "5e","seq": "Le besoin & le cahier des charges","mods": ["Cours","TP Bureau des projets","Fonction Rush","Bureau d'études","Drone du BE","Évaluation"]},{"niv": "5e","seq": "L'environnement numérique","mods": ["Cours","TP Salle info","Extension Rush","SOS Salle info","Data Runner","Évaluation"]},{"niv": "5e","seq": "Design & ergonomie","mods": ["Cours","TP Bureau design","Design Rush","Bureau d'étude","Rafle au Studio","Évaluation"]},{"niv": "5e","seq": "Transports & mobilité","mods": ["Cours","TP PC mobilité","Transport Rush","PC Mobilité","Trottinette Express","Évaluation"]},{"niv": "5e","seq": "Le vélo, objet technique","mods": ["Cours","TP atelier vélo","Vélo Rush","Atelier réparation","Échappée Peloton","Évaluation"]},{"niv": "5e","seq": "L’eau dans la ville","mods": ["Cours","TP","Jeu","Jeu 2","Torrent Propre","Évaluation"]},{"niv": "5e","seq": "Météo & instruments de mesure","mods": ["Cours","TP","Jeu","Jeu 2","Ballon-Sonde","Évaluation"]},{"niv": "4e","seq": "La Domotique","mods": ["Cours","TP Maison","Signal Rush","Nuit de garde","Évaluation"]},{"niv": "4e","seq": "Transmissions de mouvement","mods": ["Cours","TP Engrenages","Gear Rush","Atelier Méca","Évaluation"]},{"niv": "4e","seq": "La chaîne d'énergie","mods": ["Cours","TP Garage VAE","Moteur Rush","SOS Dépannage","Évaluation"]},{"niv": "4e","seq": "Modélisation & impression 3D","mods": ["Cours","TP Fab lab","Procédé Rush","Ferme d'impression","Évaluation"]},{"niv": "4e","seq": "Les réseaux informatiques","mods": ["Cours","TP Admin réseau","Réseau Rush","Admin Réseau","Évaluation"]},{"niv": "4e","seq": "Dessin technique & représentation","mods": ["Cours","TP Bureau des méthodes","Plan Rush","Contrôle des plans","Évaluation"]},{"niv": "4e","seq": "Aéronautique — comment vole un avion","mods": ["Cours","TP Bureau d'études aéro","Aéro Rush","Tour de contrôle","Évaluation"]},{"niv": "4e","seq": "Automobile & sécurité routière","mods": ["Cours","TP sécurité routière","Sécurité Rush","Contrôle technique","Évaluation"]},{"niv": "4e","seq": "Le smartphone décortiqué","mods": ["Cours","TP","Jeu","Jeu 2","Évaluation"]},{"niv": "4e","seq": "L’ascenseur","mods": ["Cours","TP","Jeu","Jeu 2","Évaluation"]},{"niv": "4e","seq": "Le binaire, le langage des machines","mods": ["Cours"]},{"niv": "3e","seq": "La Robotique","mods": ["Cours","TP Robot","Robo Race","Entrepôt","Évaluation"]},{"niv": "3e","seq": "Internet & Cybersécurité","mods": ["Cours","TP Routeur","Phishing Hunter","Cyberdéfense","Évaluation"]},{"niv": "3e","seq": "Éco-conception & cycle de vie","mods": ["Cours","TP Mission ACV","Tri Rush","Centre de valorisation","Évaluation"]},{"niv": "3e","seq": "Algorithmes & programmation","mods": ["Cours","TP Studio de code","Bloc Rush","Studio Debug","Évaluation"]},{"niv": "3e","seq": "Les objets connectés","mods": ["Cours","TP Laboratoire","Capteur Rush","Maison connectée","Évaluation"]},{"niv": "3e","seq": "Modélisation & simulation","mods": ["Cours","TP Bureau simulation","Simu Rush","Labo de simulation","Évaluation"]},{"niv": "3e","seq": "Intelligence artificielle & données","mods": ["Cours","TP Centre d'entraînement","IA Rush","Centre IA","Évaluation"]},{"niv": "3e","seq": "Espace & satellites","mods": ["Cours","TP centre spatial","Orbite Rush","Centre spatial","Évaluation"]},{"niv": "3e","seq": "Santé & technologie","mods": ["Cours","TP","Jeu","Jeu 2","Évaluation"]},{"niv": "3e","seq": "Le réseau électrique intelligent","mods": ["Cours","TP","Jeu","Jeu 2","Évaluation"]},{"niv": "SI","seq": "Lire un plan d'ensemble","mods": ["Cours","Découverte guidée","TP · 5 exercices","Plan imprimable"]},{"niv": "SI","seq": "Trajectoires et analyse graphique","mods": ["Exercice de tracé","Séquence associée"]}];
 
 /* Index à plat : une entrée par MODULE. La clé est « niveau|séquence|module »,
    stable même si l'ordre du portail change — contrairement à un simple numéro. */
@@ -149,6 +154,8 @@ const MODS=[];
 SEQS.forEach(s=>s.mods.forEach(m=>MODS.push({niv:s.niv,seq:s.seq,mod:m,
  cle:s.niv+'|'+s.seq+'|'+m})));
 
+let NIVEAU='5e';            /* onglet actif */
+const PLIEES={};            /* séquences repliées, mémorisées entre deux redessins */
 let CLASSES=[];
 let ETAT={};          /* ETAT[classe][index de séquence] = 0 | 1 | 2 */
 let sauveEnCours=false, aResauver=false;
@@ -216,11 +223,10 @@ document.getElementById('btnDel').addEventListener('click',()=>{
 function confirmer(msg){ return window.confirm ? window.confirm(msg) : true; }
 
 /* ---------- filtres ---------- */
-['fNiv','fClasse','fEtat'].forEach(id=>
+['fClasse','fEtat'].forEach(id=>
  document.getElementById(id).addEventListener('change',dessiner));
 document.getElementById('fTexte').addEventListener('input',dessiner);
 document.getElementById('btnRaz').addEventListener('click',()=>{
- document.getElementById('fNiv').value='';
  document.getElementById('fClasse').value='';
  document.getElementById('fEtat').value='';
  document.getElementById('fTexte').value='';
@@ -228,6 +234,33 @@ document.getElementById('btnRaz').addEventListener('click',()=>{
 });
 
 function etatDe(cl,cle){ return (ETAT[cl] && ETAT[cl][cle]) || 0; }
+
+/* ---------- onglets de niveau ---------- */
+const NIVEAUX=[...new Set(SEQS.map(s=>s.niv))];
+(function(){
+ const z=document.getElementById('onglets');
+ NIVEAUX.forEach(n=>{
+  const b=document.createElement('button'); b.type='button'; b.dataset.niv=n;
+  const nb=MODS.filter(m=>m.niv===n).length;
+  b.innerHTML=n+'<span class="compte">'+nb+' modules</span>';
+  b.addEventListener('click',()=>{ NIVEAU=n; dessiner(); });
+  z.appendChild(b);
+ });
+})();
+function majOnglets(){
+ document.querySelectorAll('#onglets button').forEach(b=>
+  b.classList.toggle('actif',b.dataset.niv===NIVEAU));
+}
+
+/* ---------- plier et déplier ---------- */
+document.getElementById('btnPlier').addEventListener('click',()=>{
+ SEQS.forEach(s=>{ if(s.niv===NIVEAU) PLIEES[s.niv+'|'+s.seq]=true; });
+ dessiner();
+});
+document.getElementById('btnDeplier').addEventListener('click',()=>{
+ SEQS.forEach(s=>{ if(s.niv===NIVEAU) delete PLIEES[s.niv+'|'+s.seq]; });
+ dessiner();
+});
 
 /* ---------- affichage ---------- */
 function dessiner(){
@@ -237,12 +270,13 @@ function dessiner(){
  CLASSES.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; fc.appendChild(o); });
  fc.value=CLASSES.indexOf(garde)>=0? garde : '';
 
- const fNiv=document.getElementById('fNiv').value;
+ const fNiv=NIVEAU;
  const fCl=document.getElementById('fClasse').value;
  const fEt=document.getElementById('fEtat').value;
  const fTx=document.getElementById('fTexte').value.trim().toLowerCase();
  const cols=fCl? [fCl] : CLASSES;
 
+ majOnglets();
  const t=document.getElementById('tbl');
  t.innerHTML='';
  if(!CLASSES.length){
@@ -272,7 +306,9 @@ function dessiner(){
   const tr=document.createElement('tr'); tr.className='ligneSeq';
   const td=document.createElement('td'); td.className='seq seqtitre';
   const bt=document.createElement('button'); bt.type='button'; bt.className='plier';
-  bt.textContent='–';
+  const cleSeq=s.niv+'|'+s.seq;
+  const replie=!!PLIEES[cleSeq];
+  bt.textContent=replie?'+':'–';
   td.appendChild(bt);
   const sp=document.createElement('span');
   sp.innerHTML='<span class="niv">'+s.niv+'</span><b>'+s.seq+'</b>'+
@@ -310,11 +346,13 @@ function dessiner(){
     });
     cell.appendChild(b); l.appendChild(cell);
    });
+   if(replie) l.style.display='none';
    t.appendChild(l); lignes.push(l);
   });
   bt.addEventListener('click',()=>{
    const ferme=bt.textContent==='+';
    bt.textContent=ferme?'–':'+';
+   if(ferme) delete PLIEES[cleSeq]; else PLIEES[cleSeq]=true;
    lignes.forEach(l=>l.style.display=ferme?'':'none');
   });
  });
@@ -329,7 +367,7 @@ function dessiner(){
 }
 
 function resume(){
- const fNiv=document.getElementById('fNiv').value;
+ const fNiv=NIVEAU;
  const lot=MODS.filter(m=>!fNiv||m.niv===fNiv);
  const z=document.getElementById('resume');
  if(!CLASSES.length){ z.innerHTML=''; return; }
