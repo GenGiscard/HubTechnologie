@@ -38,7 +38,7 @@ main{max-width:880px;margin:0 auto;padding:0 20px 40px}
 .rep button.faux{border-color:var(--rouge);background:#fef2f2}
 .ident{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:18px 22px;margin:14px 0}
 .ident label{display:block;font-size:13px;font-weight:800;color:var(--gris);margin:9px 0 3px}
-.ident input{width:100%;padding:10px 12px;font-size:16px;font-family:inherit;
+.ident input,.ident select{width:100%;padding:10px 12px;font-size:16px;font-family:inherit;
  border:2px solid var(--bord);border-radius:10px}
 .gros{display:block;width:100%;background:var(--acc);color:#fff;border:none;border-radius:12px;
  padding:15px;font-size:18px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:16px}
@@ -75,7 +75,7 @@ footer{text-align:center;padding:20px;font-size:12px;color:var(--gris)}
  <div class="ident">
   <label for="inNom">Nom</label><input id="inNom" autocomplete="off">
   <label for="inPrenom">Prénom</label><input id="inPrenom" autocomplete="off">
-  <label for="inClasse">Classe</label><input id="inClasse" autocomplete="off" placeholder="5eA">
+  <label for="inClasse">Classe</label><select id="inClasse"><option value="">— Choisis ta classe —</option><option>5A</option><option>5B</option><option>5C</option><option>5D</option><option>5E</option></select>
  </div>
  <div id="questions"></div>
  <button class="gros" id="envoyer">Terminer et envoyer</button>
@@ -125,37 +125,37 @@ const Q=[
   r:["en traction : elle est étirée","en compression : elle est écrasée","elle ne subit aucun effort"],b:1,
   ex:"L’arc reporte la charge vers les appuis en écrasant la pierre. C’est pour cela qu’on a pu bâtir des ponts en arc bien avant de savoir fabriquer de l’acier : la pierre résiste très bien à la compression, mais mal à la traction."},
  {q:"Dans un pont suspendu, les grands câbles travaillent…",
-  r:["en compression","en traction : ils sont tirés","en torsion"],b:1,
+  r:["en traction : ils sont tirés","en compression","en torsion"],b:0,
   ex:"Un câble ne peut que tirer. Il porte le tablier en se tendant entre les pylônes, et il est parfait pour cela car l’acier résiste très bien à la traction."},
  {q:"Comment s’appelle la partie du pont sur laquelle on circule ?",
-  r:["la pile","le tablier","la culée"],b:1,
+  r:["la pile","la culée","le tablier"],b:2,
   ex:"Le tablier est la surface portante. Il repose sur les piles, et ses extrémités s’appuient sur les culées, aux deux rives."},
  {q:"Comment s’appellent les appuis intermédiaires, plantés entre les deux rives ?",
   r:["les culées","les piles","les haubans"],b:1,
   ex:"Les piles sont les appuis intermédiaires. Les culées, elles, sont les appuis situés aux deux extrémités, sur la terre ferme."},
  {q:"Qu’appelle-t-on la « portée » d’un pont ?",
-  r:["sa longueur totale","la distance entre deux appuis successifs","sa largeur"],b:1,
+  r:["sa longueur totale","sa largeur","la distance entre deux appuis successifs"],b:2,
   ex:"La portée est la distance franchie entre deux appuis. Plus la portée est grande, plus la structure doit être ingénieuse : c’est le vrai défi de tout constructeur de pont."},
  {q:"Dans un pont à haubans, les câbles obliques sont accrochés…",
   r:["directement aux pylônes","à un grand câble porteur tendu entre les pylônes","aux piles seulement"],b:0,
   ex:"C’est la différence essentielle avec le pont suspendu. Dans un pont à haubans, chaque câble relie directement le tablier au pylône. Dans un pont suspendu, les câbles verticaux pendent d’un grand câble porteur."},
  {q:"Pourquoi laisse-t-on des joints de dilatation dans un pont ?",
-  r:["pour laisser passer l’eau de pluie","parce que les matériaux s’allongent quand il fait chaud","pour alléger l’ouvrage"],b:1,
+  r:["parce que les matériaux s’allongent quand il fait chaud","pour laisser passer l’eau de pluie","pour alléger l’ouvrage"],b:0,
   ex:"Un tablier d’acier ou de béton s’allonge sous la chaleur et se rétracte au froid. Sans joint pour absorber ce mouvement, l’ouvrage se fissurerait."},
  {q:"Le béton armé associe le béton à des barres d’acier. Pourquoi ?",
-  r:["pour le rendre moins cher","parce que le béton résiste mal à la traction, et l’acier très bien","pour qu’il sèche plus vite"],b:1,
+  r:["pour le rendre moins cher","pour qu’il sèche plus vite","parce que le béton résiste mal à la traction, et l’acier très bien"],b:2,
   ex:"Chaque matériau fait ce qu’il sait faire : le béton encaisse la compression, l’acier reprend la traction. Ensemble, ils résistent aux deux."},
  {q:"Pourquoi retrouve-t-on des triangles dans les poutres métalliques en treillis ?",
   r:["pour faire joli","parce que le triangle est indéformable","pour économiser de la peinture"],b:1,
   ex:"Trois côtés de longueur fixée ne laissent aucun jeu : le triangle ne peut pas se déformer sans que l’un de ses côtés change de longueur. Un carré, lui, s’affaisse en losange."},
  {q:"Avant de construire les piles, il faut d’abord…",
-  r:["poser le tablier","descendre des fondations jusqu’au sol résistant","tendre les câbles"],b:1,
+  r:["descendre des fondations jusqu’au sol résistant","poser le tablier","tendre les câbles"],b:0,
   ex:"Une pile ne tient que si elle repose sur un terrain capable de la porter. On creuse donc jusqu’au sol résistant, parfois très profond sous l’eau."},
  {q:"Sur un pont, le « poids propre » désigne…",
   r:["le poids des véhicules qui passent","le poids de l’ouvrage lui-même","le poids maximal autorisé"],b:1,
   ex:"Le poids propre est celui de la structure. Il s’y ajoute les charges d’exploitation — véhicules, piétons — et les efforts du vent. L’ouvrage doit encaisser les trois."},
  {q:"Pour franchir une très grande portée, quel type de pont choisit-on plutôt ?",
-  r:["un pont à poutre droite","un pont suspendu ou à haubans","un pont en arc de pierre"],b:1,
+  r:["un pont à poutre droite","un pont en arc de pierre","un pont suspendu ou à haubans"],b:2,
   ex:"Une poutre droite fléchit vite et limite la portée. Les câbles, eux, permettent de franchir de très grandes distances : ce sont eux qu’on retrouve sur les ponts records."}
 ];
 
