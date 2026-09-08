@@ -128,7 +128,7 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 
 <div class="progression" id="prog">
  <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div>
- <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div><div class="seg" data-a="9"></div>
+ <div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div><div class="seg" data-a="8"></div>
  <div class="score">★ <span id="scoreTot">0</span>pts</div>
 </div>
 
@@ -244,18 +244,7 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 <!-- ============ A9 : TRACER SUR LE CAHIER ============ -->
 <div class="acti" id="a8">
  <div class="boite">
-  <h2><span class="badge">8</span>Tracer la chaîne de l’électricité</h2>
-  <div class="consigne">Tu as géré le mix électrique d’une ville. Représente le trajet de l’électricité sur ton cahier.</div>
-  <div class="cahiernote"><b>SUR TON CAHIER</b> — trace le trajet de l’électricité, de la centrale jusqu’à la maison, en quatre étapes reliées par des flèches. Indique sous chaque étape si la tension y est élevée ou basse.</div>
-  <div id="champs9"></div>
-  <div class="btnrow"><button class="btn" id="verif9">Valider mon travail</button></div>
-  <div id="verd9"></div>
- </div>
-</div>
-
-<div class="acti" id="a9">
- <div class="boite">
- <h2><span class="badge">9</span>Bilan d'ingénieur de l'énergie</h2>
+ <h2><span class="badge">8</span>Bilan d'ingénieur de l'énergie</h2>
  <div class="consigne">Réponds aux <b>4 questions</b>, puis valide en une seule fois. <b>Aucune réponse ne sera corrigée avant la validation</b>, et il en faut au moins 3 justes. En cas d’échec, les questions sont remélangées : inutile de cliquer au hasard.</div>
  <div id="quiz5"></div>
  <div class="codefinal" id="codefinal">
@@ -539,7 +528,7 @@ function majProgression(){
  seg.className='seg'+(n<etat.debloque?' ok':(n===etat.debloque?' encours':''));
  });
  document.getElementById('scoreTot').textContent=etat.score;
- for(let n=2;n<=9;n++){
+ for(let n=2;n<=8;n++){
  const acti=document.getElementById('a'+n);
  let v=acti.querySelector('.verrou');
  if(n>etat.debloque){
@@ -553,7 +542,7 @@ function reussir(n,pts){
  etat.score+=pts;
  if(etat.debloque===n) etat.debloque=n+1;
  sauver(); majProgression();
- if(n<9) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
+ if(n<8) setTimeout(()=>{ const el=document.getElementById('a'+(n+1)); if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth'}); },900);
 }
 
 /* ================= A1 : TRI ================= */
@@ -981,7 +970,7 @@ const Q5=[
  sortie.innerHTML='<div class="verdict ok">'+bons+' bonnes réponses sur '+Q5.length+
  ' — bilan validé'+(tentative>1?' à la tentative '+tentative:' du premier coup')+' !</div>';
  document.getElementById('codefinal').style.display='block';
- reussir(9, tentative===1?2:(tentative===2?1:0));
+ reussir(8, tentative===1?2:(tentative===2?1:0));
  } else {
  sortie.innerHTML='<div class="verdict ko">Seulement '+bons+' bonne(s) réponse(s) sur '+Q5.length+
  ' : il en faut au moins 3. Les réponses ne sont pas données — retourne au cours, puis retente. '+
@@ -1116,7 +1105,7 @@ charger(); majProgression();
   const REDAC=[{"id":"q71","lbl":"a) Quelle est la différence entre une énergie renouvelable et une énergie fossile ?","cles":["renouvelle","epuise","reconstitue","stock","fini","naturel","rapidement","limite","reserve","siecle"]},{"id":"q72","lbl":"b) Pourquoi ne peut-on pas alimenter une ville uniquement avec du solaire et de l’éolien ?","cles":["intermittent","vent","nuit","soleil","pastoujours","variable","depend","meteo","stocker","irregulier"]},{"id":"q73","lbl":"c) Pourquoi doit-on produire exactement ce que l’on consomme, à chaque instant ?","cles":["stocke","pasfacile","equilibre","direct","instant","blackout","panne","reseau","egale","surplus"]}];
   const CALC=[{"id":"c81","lbl":"a) Énergie produite par l’éolienne en un an","rep":4000000,"tol":100,"u":"kWh"},{"id":"c82","lbl":"b) Nombre de foyers alimentés par cette éolienne","rep":1000,"u":"foyers"},{"id":"c83","lbl":"c) Nombre d’éoliennes nécessaires pour 25 000 foyers","rep":25,"u":"éoliennes"}];
   const TRACE=[{"id":"t91","lbl":"a) Combien d’étapes ton schéma comporte-t-il ?","rep":"4","num":true},{"id":"t92","lbl":"b) Quelle est la première étape ?","rep":["production","produire","centrale","laproduction"]},{"id":"t93","lbl":"c) Comment est la tension sur les grandes lignes de transport ?","rep":["elevee","haute","hautetension","tresharte","forte","grande"]},{"id":"t94","lbl":"d) Quel appareil abaisse la tension avant la maison ?","rep":["transformateur","letransformateur","transfo"]}];
-  champs('champs8',CALC,false); champs('champs9',TRACE,false);
+  champs('champs8',CALC,false); 
   let e7=0,e8=0,e9=0;
   function verdict(id,html,ok){
     const v=document.getElementById(id); if(!v) return;
@@ -1132,18 +1121,6 @@ charger(); majProgression();
     } else { e8++;
       verdict('verd8','\u2717 '+faux+' résultat(s) incorrect(s) sur '+CALC.length+
         '. Reprends tes calculs sur le cahier : aucune réponse ne te sera donnée.',false); }
-  });
-  document.getElementById('verif9').addEventListener('click',()=>{
-    let faux=0;
-    TRACE.forEach(c=>{ const v=document.getElementById(c.id).value;
-      const bon = c.num ? String(nbv(v))===String(nbv(c.rep))
-        : (Array.isArray(c.rep)?c.rep:[c.rep]).some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
-      if(!bon) faux++; });
-    if(faux===0){
-      verdict('verd9','\u2713 Ton tracé est conforme. '+"Quatre étapes, et une tension qui monte puis redescend. On transporte en haute tension parce que cela limite les pertes en ligne, et on l’abaisse juste avant d’entrer chez les gens, pour la sécurité.",true);
-      reussir(8, e9===0?3:2);
-    } else { e9++;
-      verdict('verd9','\u2717 '+faux+' réponse(s) ne correspond(ent) pas. Reprends ton schéma sur le cahier et recompte.',false); }
   });
 })();
 </script>
