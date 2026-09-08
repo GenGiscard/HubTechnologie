@@ -36,7 +36,17 @@ header.seq p{color:var(--gris);font-size:17px;max-width:640px;margin:0 auto}
 .etapes{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;align-items:center}
 .etapes .e{background:#fff;border:2px solid var(--bleu);color:var(--bleu-fonce);border-radius:24px;padding:7px 16px;font-size:14px;font-weight:600}
 .etapes .fl{color:var(--orange);font-weight:800}
-footer{padding:18px;text-align:center;font-size:12px;color:var(--gris)}
+footer{padding:18px;text-align:center;font-size:12px;color:var(--gris);position:relative}
+.codeprof{position:absolute;right:16px;bottom:14px;font-size:11px}
+.codeprof button{background:none;border:none;color:#cbd5e1;font-size:11px;font-family:inherit;
+ cursor:pointer;padding:2px 4px;text-decoration:underline dotted}
+.codeprof button:hover{color:var(--gris)}
+.codeprof .valeur{display:none;font-family:'Courier New',monospace;font-weight:800;
+ letter-spacing:2px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;
+ border-radius:6px;padding:2px 8px}
+.codeprof.ouvert button{display:none}
+.codeprof.ouvert .valeur{display:inline-block}
+@media print{.codeprof{display:none}}
 </style>
 </head>
 <body>
@@ -110,6 +120,13 @@ footer{padding:18px;text-align:center;font-size:12px;color:var(--gris)}
  </div>
 </div>
 
-<footer>Séquence « Habitat & Ouvrages » · Technologie 5ème · ESTIC Don Bosco</footer>
+<footer>Séquence « Habitat & Ouvrages » · Technologie 5ème · ESTIC Don Bosco<span class="codeprof" id="cp"><button type="button" id="cpBtn" title="Évaluation des sorciers — Les ponts">code prof</button><span class="valeur">SORCIER7</span></span></footer>
+<script>
+/* Code de l’évaluation des sorciers, révélé au clic : il ne doit pas
+   être lisible d’emblée par les élèves qui consultent le hub. */
+(function(){var b=document.getElementById('cpBtn');if(!b)return;
+ b.addEventListener('click',function(){document.getElementById('cp').classList.add('ouvert');});
+})();
+</script>
 </body>
 </html>
