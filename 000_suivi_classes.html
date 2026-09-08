@@ -233,6 +233,21 @@ document.getElementById('btnRaz').addEventListener('click',()=>{
  dessiner();
 });
 
+/* Rattache une classe à son niveau d'après son nom : « 5A » -> 5e, « 3PM » -> 3e.
+   Une classe dont le nom ne commence pas par 3, 4 ou 5 est affichée dans tous les
+   onglets, faute de pouvoir la situer. */
+function niveauDe(cl){
+ const m=/^\s*([345])/.exec(cl);
+ return m? m[1]+'e' : null;
+}
+function classesDu(niv){
+ const exactes=CLASSES.filter(c=>niveauDe(c)===niv);
+ if(exactes.length) return exactes;
+ /* Aucune classe ne correspond : on montre celles dont le nom ne permet pas de
+    déduire le niveau (lycée par exemple), plutôt qu'un tableau vide. */
+ return CLASSES.filter(c=>niveauDe(c)===null);
+}
+
 function etatDe(cl,cle){ return (ETAT[cl] && ETAT[cl][cle]) || 0; }
 
 /* ---------- onglets de niveau ---------- */
@@ -267,14 +282,16 @@ function dessiner(){
  /* le filtre Classe se remplit d'après les classes existantes */
  const fc=document.getElementById('fClasse'), garde=fc.value;
  fc.innerHTML='<option value="">Toutes</option>';
- CLASSES.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; fc.appendChild(o); });
- fc.value=CLASSES.indexOf(garde)>=0? garde : '';
+ const pourNiv=classesDu(NIVEAU);
+ pourNiv.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; fc.appendChild(o); });
+ fc.value=pourNiv.indexOf(garde)>=0? garde : '';
 
  const fNiv=NIVEAU;
  const fCl=document.getElementById('fClasse').value;
  const fEt=document.getElementById('fEtat').value;
  const fTx=document.getElementById('fTexte').value.trim().toLowerCase();
- const cols=fCl? [fCl] : CLASSES;
+ const dispo=classesDu(NIVEAU);
+ const cols=fCl? (dispo.indexOf(fCl)>=0? [fCl] : []) : dispo;
 
  majOnglets();
  const t=document.getElementById('tbl');
@@ -282,6 +299,13 @@ function dessiner(){
  if(!CLASSES.length){
   t.innerHTML='<tr><td class="seq" style="padding:16px;color:#64748b">'+
    'Aucune classe pour le moment. Ajoute-en une ci-dessus pour commencer le suivi.</td></tr>';
+  document.getElementById('resume').innerHTML='';
+  return;
+ }
+ if(!cols.length){
+  t.innerHTML='<tr><td class="seq" style="padding:16px;color:#64748b">'+
+   'Aucune classe de '+NIVEAU+' pour le moment. Ajoute-en une ci-dessus '+
+   '(le niveau est déduit du nom : « 5A » pour la 5e).</td></tr>';
   document.getElementById('resume').innerHTML='';
   return;
  }
@@ -372,7 +396,7 @@ function resume(){
  const z=document.getElementById('resume');
  if(!CLASSES.length){ z.innerHTML=''; return; }
  let html='<div class="chiffres">';
- CLASSES.forEach(c=>{
+ classesDu(NIVEAU).forEach(c=>{
   let f=0,e=0;
   lot.forEach(m=>{ const v=etatDe(c,m.cle); if(v===2)f++; else if(v===1)e++; });
   const pc=lot.length? Math.round(f/lot.length*100):0;
