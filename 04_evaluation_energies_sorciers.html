@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Évaluation des sorciers — Les énergies · ESTIC</title>
+<style>
+:root{--ink:#1e3a5f;--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.6}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.ev{max-width:880px;margin:0 auto;padding:26px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 8px}
+.sous{color:#5b544a;font-size:16px;max-width:700px;margin:0 auto}
+.video{max-width:880px;margin:18px auto;background:#fff;border:1px solid var(--bord);
+ border-left:6px solid var(--or);border-radius:16px;padding:16px 20px}
+.video .lab{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--or);font-weight:800}
+.video a{display:inline-block;margin-top:8px;background:var(--or);color:#fff;text-decoration:none;
+ font-weight:800;padding:11px 20px;border-radius:10px;font-size:16px}
+.video p{font-size:15px;color:#5b544a;margin-top:9px}
+main{max-width:880px;margin:0 auto;padding:0 20px 40px}
+.q{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:18px 22px;margin:14px 0}
+.q h2{font-size:17.5px;color:var(--accf);margin-bottom:11px}
+.q h2 .n{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 9px;font-size:15px;margin-right:8px}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.sel{border-color:var(--acc);background:#ecfeff;font-weight:700}
+.rep button:disabled{cursor:default;opacity:.85}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.ident{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:18px 22px;margin:14px 0}
+.ident label{display:block;font-size:13px;font-weight:800;color:var(--gris);margin:9px 0 3px}
+.ident input,.ident select{width:100%;padding:10px 12px;font-size:16px;font-family:inherit;
+ border:2px solid var(--bord);border-radius:10px}
+.gros{display:block;width:100%;background:var(--acc);color:#fff;border:none;border-radius:12px;
+ padding:15px;font-size:18px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:16px}
+.gros:disabled{background:#94a3b8;cursor:default}
+#bilan{display:none;background:#fff;border:2px solid var(--vert);border-radius:16px;padding:22px;margin-top:16px;text-align:center}
+#bilan .note{font-size:44px;font-weight:900;color:var(--vert)}
+.verr{color:var(--rouge);font-weight:700;font-size:14px;min-height:20px}
+footer{text-align:center;padding:20px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="ev">
+ <div class="eyebrow">Séquence 5ème · Les Énergies</div>
+ <h1>Évaluation des sorciers — Les énergies</h1>
+ <p class="sous">Douze questions sur l’épisode. Une seule réponse par question, et
+ <b>une seule tentative</b> : lis bien avant de cliquer.</p>
+</header>
+
+<div class="video">
+ <div class="lab">À regarder avant de commencer</div>
+ <a href="https://podeduc.apps.education.fr/media/videos/905d34e3e20cbac3f8b5374f661a26f218ee53412c1e472dcc62df1898dd492a/88110/360p.mp4" target="_blank" rel="noopener">Voir la vidéo sur les énergies</a>
+ <p>Prends des notes pendant la vidéo : les <b>sources d’énergie</b> et leur caractère renouvelable ou fossile, le trajet de l’<b>électricité</b> de la centrale à la maison, et le nom des <b>convertisseurs</b>.</p>
+</div>
+
+<main>
+ <div class="ident">
+  <label for="inNom">Nom</label><input id="inNom" autocomplete="off">
+  <label for="inPrenom">Prénom</label><input id="inPrenom" autocomplete="off">
+  <label for="inClasse">Classe</label><select id="inClasse"><option value="">— Choisis ta classe —</option><option>5A</option><option>5B</option><option>5C</option><option>5D</option><option>5E</option></select>
+ </div>
+ <div id="questions"></div>
+ <button class="gros" id="envoyer">Terminer et envoyer</button>
+ <div id="bilan"></div>
+</main>
+
+<footer>Évaluation · Séquence Les Énergies · Technologie 5ème · ESTIC Don Bosco</footer>
+
+<script>
+/* ===== VERROU — code redemandé à chaque ouverture, aucune persistance ===== */
+(function(){
+ const CODE='SORCIER2';
+ const d=document.createElement('div');
+ d.id='verrouEval';
+ d.innerHTML='<div class="vbox"><img alt="Logo ESTIC" src="logo_estic.png">'+
+  '<h2>Évaluation verrouillée</h2><p>Entre le code donné par ton professeur.</p>'+
+  '<input id="vc" maxlength="10" autocomplete="off" placeholder="CODE">'+
+  '<div class="verr" id="ve"></div><button type="button" id="vb">Commencer</button></div>';
+ const s=document.createElement('style');
+ s.textContent='#verrouEval{position:fixed;inset:0;z-index:99999;background:#0f172a;display:flex;'+
+  'align-items:center;justify-content:center;padding:24px}'+
+  '#verrouEval .vbox{background:#fff;border-radius:18px;padding:30px;max-width:420px;width:100%;text-align:center}'+
+  '#verrouEval img{height:50px;margin-bottom:12px}'+
+  '#verrouEval h2{font-size:22px;color:#1e3a5f;margin-bottom:6px}'+
+  '#verrouEval p{font-size:15px;color:#5b6472;margin-bottom:16px}'+
+  '#verrouEval input{width:100%;padding:13px;font-size:22px;letter-spacing:4px;text-align:center;'+
+  'border:2px solid #cbd5e1;border-radius:12px;text-transform:uppercase;box-sizing:border-box}'+
+  '#verrouEval button{width:100%;padding:13px;margin-top:10px;font-size:17px;font-weight:800;'+
+  'border:none;border-radius:12px;background:#0e7490;color:#fff;cursor:pointer;font-family:inherit}';
+ document.head.appendChild(s); document.body.appendChild(d);
+ document.documentElement.style.overflow='hidden';
+ const ch=document.getElementById('vc');
+ try{ ch.focus(); }catch(e){}
+ function ouvrir(){
+  if(ch.value.trim().toUpperCase()===CODE){
+   document.documentElement.style.overflow='';
+   d.parentNode.removeChild(d);
+  } else { document.getElementById('ve').textContent='Code incorrect.'; ch.value=''; }
+ }
+ document.getElementById('vb').addEventListener('click',ouvrir);
+ ch.addEventListener('keydown',e=>{ if(e.key==='Enter') ouvrir(); });
+})();
+
+/* ===== QUESTIONS ===== */
+const Q=[
+ {q:"Une énergie renouvelable est une énergie qui…",
+  r:["se reconstitue à l’échelle d’une vie humaine", "ne produit jamais de déchets", "est toujours moins chère"],b:0,
+  ex:"Le soleil, le vent, l’eau et la biomasse se renouvellent en permanence. Une énergie fossile, elle, a mis des millions d’années à se former : son stock est fini."},
+ {q:"Parmi ces sources, laquelle est une énergie fossile ?",
+  r:["l’éolien", "l’hydraulique", "le gaz naturel"],b:2,
+  ex:"Charbon, pétrole et gaz naturel sont les trois énergies fossiles. Elles proviennent de matière organique enfouie depuis des millions d’années."},
+ {q:"Dans une centrale, quel élément transforme le mouvement en électricité ?",
+  r:["la turbine", "l’alternateur", "le transformateur"],b:1,
+  ex:"La turbine reçoit le mouvement (eau, vapeur ou vent) et le transmet à l’alternateur, qui réalise la conversion en électricité."},
+ {q:"Pourquoi transporte-t-on l’électricité en très haute tension ?",
+  r:["pour aller plus vite", "pour limiter les pertes en ligne", "pour économiser du câble"],b:1,
+  ex:"À puissance égale, une tension élevée fait circuler moins de courant, et les pertes par échauffement dans les câbles diminuent d’autant."},
+ {q:"Quel appareil abaisse la tension avant l’arrivée chez l’habitant ?",
+  r:["l’alternateur", "le disjoncteur", "le transformateur"],b:2,
+  ex:"Le transformateur élève la tension à la sortie de la centrale, puis l’abaisse par étapes jusqu’aux 230 volts du domicile, pour la sécurité."},
+ {q:"Que signifie « énergie intermittente » ?",
+  r:["elle ne produit pas en permanence", "elle est réservée à l’industrie", "elle se transporte mal"],b:0,
+  ex:"L’éolien ne produit que s’il y a du vent, le solaire que s’il y a du soleil. Leur production dépend de la météo, pas de nos besoins."},
+ {q:"Sur le réseau électrique, à chaque instant…",
+  r:["on stocke le surplus dans de grandes batteries", "la production doit égaler la consommation", "on produit toujours le maximum possible"],b:1,
+  ex:"L’électricité ne se stocke pas facilement à grande échelle. Si l’équilibre est rompu, la fréquence dérive et le réseau peut disjoncter : c’est le blackout."},
+ {q:"Dans une centrale thermique, la chaleur sert d’abord à…",
+  r:["produire de la vapeur sous pression", "chauffer les bâtiments", "faire tourner directement l’alternateur"],b:0,
+  ex:"On brûle un combustible pour chauffer de l’eau. La vapeur produite fait tourner la turbine, qui entraîne l’alternateur."},
+ {q:"Dans un barrage hydraulique, d’où vient l’énergie ?",
+  r:["de la température de l’eau", "du courant de la rivière uniquement", "de la hauteur de chute de l’eau"],b:2,
+  ex:"Plus l’eau tombe de haut, plus elle arrive vite sur la turbine. C’est l’énergie de position, liée à la hauteur, qui est convertie."},
+ {q:"Quelle unité mesure une quantité d’énergie consommée ?",
+  r:["le kilowattheure (kWh)", "le watt (W)", "le volt (V)"],b:0,
+  ex:"Le watt mesure une puissance, c’est-à-dire un débit d’énergie. Le kilowattheure mesure une quantité : une puissance multipliée par une durée."},
+ {q:"Pourquoi parle-t-on d’un « mix » électrique ?",
+  r:["parce qu’on mélange les tensions", "parce qu’on combine plusieurs sources de production", "parce que le courant change de sens"],b:1,
+  ex:"Aucune source ne suffit seule : on combine le pilotable et l’intermittent pour couvrir la demande à toute heure."},
+ {q:"Le meilleur moyen de réduire l’impact de sa consommation, c’est…",
+  r:["produire plus d’électricité", "changer d’appareils chaque année", "consommer moins d’énergie"],b:2,
+  ex:"L’énergie la moins polluante est celle qu’on ne consomme pas. Sobriété et efficacité passent avant tout changement de source."}
+];
+
+const FIREBASE='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/evaluations/energies_sorciers';
+const rep=new Array(Q.length).fill(-1);
+const debut=Date.now();
+let envoye=false;
+
+(function(){
+ const z=document.getElementById('questions');
+ Q.forEach((o,i)=>{
+  const d=document.createElement('div'); d.className='q';
+  const h=document.createElement('h2');
+  h.innerHTML='<span class="n">'+(i+1)+'</span>'+o.q;
+  d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach((txt,j)=>{
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',()=>{
+    if(envoye) return;
+    rep[i]=j;
+    [...r.children].forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+})();
+
+document.getElementById('envoyer').addEventListener('click',async()=>{
+ if(envoye) return;
+ const nom=document.getElementById('inNom').value.trim();
+ const prenom=document.getElementById('inPrenom').value.trim();
+ const classe=document.getElementById('inClasse').value.trim();
+ if(!nom || !classe){ alert('Indique au moins ton nom et ta classe.'); return; }
+ const sansRep=rep.filter(v=>v<0).length;
+ if(sansRep>0 && !window.confirm) { }
+ envoye=true;
+ document.getElementById('envoyer').disabled=true;
+
+ let score=0;
+ document.querySelectorAll('.q').forEach((d,i)=>{
+  const bts=[...d.querySelectorAll('.rep button')];
+  bts.forEach((b,j)=>{
+   b.disabled=true;
+   if(j===Q[i].b) b.classList.add('bon');
+   else if(rep[i]===j) b.classList.add('faux');
+  });
+  if(rep[i]===Q[i].b) score++;
+  const e=document.createElement('div');
+  e.style.cssText='margin-top:10px;font-size:14.5px;color:#5b544a;border-left:4px solid #0e7490;padding-left:12px';
+  e.textContent=Q[i].ex;
+  d.appendChild(e);
+ });
+
+ const note=Math.round(score/Q.length*20*10)/10;
+ const duree=Math.round((Date.now()-debut)/1000);
+ const b=document.getElementById('bilan');
+ b.style.display='block';
+ b.innerHTML='<div class="note">'+String(note).replace('.',',')+' / 20</div>'+
+  '<div style="font-size:16px;color:#5b544a">'+score+' bonnes réponses sur '+Q.length+'</div>'+
+  '<div id="etatEnvoi" style="margin-top:10px;font-size:14px;color:#64748b">Envoi en cours…</div>';
+ b.scrollIntoView({behavior:'smooth'});
+
+ try{
+  await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({nom:nom,prenom:prenom,classe:classe,score:score,sur:Q.length,
+    note20:note,duree_s:duree,date:new Date().toISOString(),reponses:rep})});
+  document.getElementById('etatEnvoi').textContent='Résultat envoyé au professeur.';
+ }catch(e){
+  document.getElementById('etatEnvoi').textContent=
+   'Envoi impossible (réseau). Montre ton écran au professeur.';
+ }
+});
+</script>
+</body>
+</html>
