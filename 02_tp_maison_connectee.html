@@ -593,6 +593,8 @@ const ITEMS1=[
  {n:' Capteur d\u2019ouverture de porte',t:'C'},{n:' Radiateur électrique',t:'A'},
 ];
 (function initA1(){
+ let essais2=0; /* déclarée ici : elle était utilisée sans l'être, ce qui levait une ReferenceError
+    dans reussir() et empêchait le déverrouillage de la mission suivante. */
  const zone=document.getElementById('tri1');
  ITEMS1.forEach(it=>{
  const d=document.createElement('div'); d.className='item';
@@ -834,6 +836,8 @@ document.getElementById('test4').onclick=()=>lancerTests([
 
 /* ================= A5 : SCHEMA A LEGENDER ================= */
 (function(){
+ let err5=0; /* déclarée ici : elle était utilisée sans l'être, ce qui levait une ReferenceError
+    dans reussir() et empêchait le déverrouillage de la mission suivante. */
  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
  const ZONES=[
  {id:'capteur', x:80, y:96, w:90, h:80, lbl:'LE CAPTEUR DE MOUVEMENT', tx:125, ty:86},
@@ -922,6 +926,8 @@ document.getElementById('test4').onclick=()=>lancerTests([
 
 /* ================= A6 : MANIPULATION AU CURSEUR ================= */
 (function(){
+ let essais6=0; /* déclarée ici : elle était utilisée sans l'être, ce qui levait une ReferenceError
+    dans reussir() et empêchait le déverrouillage de la mission suivante. */
  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
  const SCEN=[

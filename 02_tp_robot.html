@@ -623,6 +623,8 @@ const CDC=[
 ];
 const FAMILLES=[[' Fonction d\u2019usage','FU'],[' Contrainte','CT'],[' Critère chiffré','CR']];
 (function initA1(){
+ let essais2=0; /* déclarée ici : elle était utilisée sans l'être, ce qui levait une ReferenceError
+    dans reussir() et empêchait le déverrouillage de la mission suivante. */
  const zone=document.getElementById('cdc1');
  CDC.forEach(it=>{
  const d=document.createElement('div'); d.className='item';
@@ -857,6 +859,8 @@ dessinerMonde(cv4,M4,{...M4.depart});
 
 /* ================= A5 : SCHEMA A LEGENDER ================= */
 (function(){
+ let err5=0; /* déclarée ici : elle était utilisée sans l'être, ce qui levait une ReferenceError
+    dans reussir() et empêchait le déverrouillage de la mission suivante. */
  const cv=document.getElementById('cv5'), ctx=cv.getContext('2d');
  const ZONES=[
  {id:'ultrason',x:530, y:130, w:90, h:70, lbl:'LE CAPTEUR ULTRASON', tx:575, ty:120},
@@ -941,6 +945,8 @@ dessinerMonde(cv4,M4,{...M4.depart});
 
 /* ================= A6 : MANIPULATION AU CURSEUR ================= */
 (function(){
+ let essais6=0; /* déclarée ici : elle était utilisée sans l'être, ce qui levait une ReferenceError
+    dans reussir() et empêchait le déverrouillage de la mission suivante. */
  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
  const SCEN=[

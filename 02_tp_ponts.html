@@ -906,7 +906,8 @@ majUI4();
  {id:'tablier',x:130, y:192, w:240, h:30, lbl:'LE TABLIER', tx:250, ty:250},
  {id:'culee', x:52, y:222, w:66, h:62, lbl:'LA CULÉE', tx:88, ty:310},
  ];
- const poses={}; let sel=null, t=0;
+ const poses={}; let sel=null, t=0, err5=0;   /* err5 etait utilisee sans etre declaree :
+    l'appel reussir(5,…) levait une ReferenceError et la mission 6 ne se debloquait jamais. */
  function dessiner(){
  t+=0.02;
  ctx.clearRect(0,0,860,330);
@@ -961,6 +962,8 @@ majUI4();
 
 /* ================= A6 : MANIPULATION AU CURSEUR ================= */
 (function(){
+ let essais6=0; /* déclarée ici : elle était utilisée sans l'être, ce qui levait une ReferenceError
+    dans reussir() et empêchait le déverrouillage de la mission suivante. */
  const cv=document.getElementById('cv6'), ctx=cv.getContext('2d');
  const slider=document.getElementById('slider6'), lecture=document.getElementById('val6');
  const SCEN=[
