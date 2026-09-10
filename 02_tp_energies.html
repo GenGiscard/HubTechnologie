@@ -234,7 +234,7 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 <div class="acti" id="a7">
  <div class="boite">
   <h2><span class="badge">7</span>Calculer une production</h2>
-  <div class="consigne">Une éolienne produit <b>2 MW</b> et tourne <b>2000 h</b> par an. Un foyer consomme <b>4000 kWh</b> par an. <b>1 MW = 1000 kW</b>.</div>
+  <div class="consigne">Une éolienne d’une puissance de <b>2 MW</b> produit <b>2 MWh chaque heure</b> de fonctionnement. Elle tourne <b>2000 h</b> par an. Un foyer consomme <b>4000 kWh</b> par an.<br><b style="color:#b45309">Rappel : 1 MW = 1000 kW, donc 1 MWh = 1000 kWh.</b></div>
   <div class="cahiernote"><b>SUR TON CAHIER</b> — pose chaque calcul en entier avant de saisir le résultat : opération, puis résultat avec son unité. Aucune formule ne t’est donnée.</div>
   <div id="champs8"></div>
   <div class="btnrow"><button class="btn" id="verif8">Valider mes calculs</button></div>
@@ -553,13 +553,14 @@ const ITEMS1=[
  {n:' Les marées',t:'R'},{n:' Le gaz naturel',t:'N'},
 ];
 (function initA1(){
+ let err1=0;
  const zone=document.getElementById('tri1');
  ITEMS1.forEach(it=>{
  const d=document.createElement('div'); d.className='item';
  d.innerHTML='<span>'+it.n+'</span><span class="choix"></span>';
  const ch=d.querySelector('.choix');
  let premier=true;
- [[' Renouvelable','R'],['⬇ Non renouvelable','N']].forEach(([lbl,code])=>{
+ [['Renouvelable','R'],['Non renouvelable','N']].forEach(([lbl,code])=>{
  const b=document.createElement('button'); b.textContent=lbl;
  b.onclick=()=>{
  if(code===it.t){
@@ -567,14 +568,13 @@ const ITEMS1=[
  ch.querySelectorAll('button').forEach(x=>x.disabled=true);
  if(premier){ etat.score++; document.getElementById('scoreTot').textContent=etat.score; }
  etat.q1ok++;
- if(etat.q1ok===ITEMS1.length) reussir(1,2);
+ if(etat.q1ok===ITEMS1.length) reussir(1, err1===0?3:(err1<=2?2:1));
  } else {
- premier=false;
+ /* L’item reste ACTIF : l’eleve doit trouver la bonne reponse pour avancer.
+    Avant, une erreur incrementait aussi q1ok : on pouvait tout rater et debloquer. */
+ premier=false; err1++;
  d.classList.add('faux'); b.classList.add('faux');
- ch.querySelectorAll('button').forEach(x=>{ x.disabled=true;
- if(x!==b) x.classList.add('bon'); });
- etat.q1ok++;
- if(etat.q1ok===ITEMS1.length) reussir(1,2);
+ setTimeout(function(){ d.classList.remove('faux'); b.classList.remove('faux'); },900);
  }
  };
  ch.appendChild(b);
