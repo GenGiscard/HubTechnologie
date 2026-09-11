@@ -424,14 +424,26 @@ function dessinerTrain(ts){
  const a2=-train.a1*train.Z1/train.Z2 + Math.PI/train.Z2;
  roueDentee(cT,x1,y,train.Z1,train.a1,'#7c3aed',e);
  roueDentee(cT,x2,y,train.Z2,a2,'#0e7490',e);
- cT.font='bold 14px Segoe UI'; cT.textAlign='center';
- cT.fillStyle='#6d28d9'; cT.fillText('MOTEUR · Z₁='+train.Z1+' · '+N1+' tr/min', x1, y+r1+34);
- cT.fillStyle='#0e7490'; cT.fillText('SORTIE · Z₂='+train.Z2, x2, y+r2+34);
+ /* Libellés COURTS et sur deux lignes : la version d'origine écrivait
+    « MOTEUR · Z₁=12 · 120 tr/min » (~190 px) sous des roues espacées de 83 px,
+    les deux textes se chevauchaient. La vitesse d'entrée est remontée dans le
+    bandeau du haut, où il y a la place. */
+ cT.textAlign='center';
+ cT.font='bold 13px Segoe UI'; cT.fillStyle='#6d28d9';
+ cT.fillText('MOTEUR', x1, y+r1+26);
+ cT.font='bold 12px Segoe UI';
+ cT.fillText('Z₁='+train.Z1, x1, y+r1+43);
+ cT.font='bold 13px Segoe UI'; cT.fillStyle='#0e7490';
+ cT.fillText('SORTIE', x2, y+r2+26);
+ cT.font='bold 12px Segoe UI';
+ cT.fillText('Z₂='+train.Z2, x2, y+r2+43);
  // compteur de sortie
  cT.fillStyle='rgba(255,255,255,.94)'; cT.fillRect(W/2-110,10,220,42);
  cT.strokeStyle='#cbd5e1'; cT.strokeRect(W/2-110,10,220,42);
- cT.font='bold 19px Segoe UI'; cT.fillStyle='#1e3a5f';
- cT.fillText('N₂ = '+(Math.round(N2()*10)/10)+' tr/min', W/2, 38);
+ cT.font='bold 18px Segoe UI'; cT.fillStyle='#1e3a5f';
+ cT.fillText('N₂ = '+(Math.round(N2()*10)/10)+' tr/min', W/2, 34);
+ cT.font='11.5px Segoe UI'; cT.fillStyle='#64748b';
+ cT.fillText('entrée : N₁ = '+N1+' tr/min', W/2, 48);
 }
 [['sZ1','Z1','vZ1'],['sZ2','Z2','vZ2']].forEach(([id,cle,vid])=>{
  document.getElementById(id).addEventListener('input',e=>{
@@ -500,11 +512,33 @@ requestAnimationFrame(dessinerTrain);
  roueDentee(210,180,24,3,'#b45309');
  roueDentee(330,180,58,-3*24/58,'#0e7490');
  // poulie sur l'axe de la roue + courroie vers le tambour
+ /* SENS DE DEFILEMENT DE LA COURROIE — corrige.
+    Les deux poulies tournent dans le sens ANTIHORAIRE (vitesse negative passee a
+    roueDentee). Sur une poulie antihoraire, le sommet part vers la GAUCHE : le brin
+    du HAUT doit donc defiler vers la gauche, et celui du BAS vers la droite.
+    Les deux lineDashOffset etaient inverses, la courroie remontait la charge a
+    l'envers par rapport aux roues. */
+ /* Les deux brins sont les TANGENTES EXTÉRIEURES aux poulies : une courroie
+    s'appuie sur le bord des poulies, elle ne les traverse pas. Les brins étaient
+    tracés à y=158 et y=202, donc À L'INTÉRIEUR de la roue (qui va de 122 à 238).
+    Les points de tangence sont recalculés d'après les rayons : si on change R1 ou
+    R2, la courroie reste correctement posée.
+    Sens : les poulies tournent en ANTIHORAIRE, donc le brin du haut défile vers la
+    gauche et celui du bas vers la droite. */
+ const P1={x:330,y:180,r:58}, P2={x:660,y:180,r:32};
+ const dxP=P2.x-P1.x, dyP=P2.y-P1.y, dP=Math.hypot(dxP,dyP);
+ const alP=Math.asin((P1.r-P2.r)/dP), angP=Math.atan2(dyP,dxP);
  ctx.strokeStyle='#475569'; ctx.lineWidth=4; ctx.setLineDash([8,6]);
- ctx.lineDashOffset=-t*20;
- ctx.beginPath(); ctx.moveTo(330,158); ctx.lineTo(660,162); ctx.stroke();
- ctx.lineDashOffset=t*20;
- ctx.beginPath(); ctx.moveTo(330,202); ctx.lineTo(660,198); ctx.stroke();
+ [[-1,t*20],[1,-t*20]].forEach(function(par){
+  const s=par[0], dec=par[1];
+  const nx=Math.sin(alP)*Math.cos(angP) - s*Math.cos(alP)*Math.sin(angP);
+  const ny=Math.sin(alP)*Math.sin(angP) + s*Math.cos(alP)*Math.cos(angP);
+  ctx.lineDashOffset=dec;
+  ctx.beginPath();
+  ctx.moveTo(P1.x+P1.r*nx, P1.y+P1.r*ny);
+  ctx.lineTo(P2.x+P2.r*nx, P2.y+P2.r*ny);
+  ctx.stroke();
+ });
  ctx.setLineDash([]);
  // tambour + câble + charge qui monte
  roueDentee(660,180,32,-3*24/58,'#7c3aed');
