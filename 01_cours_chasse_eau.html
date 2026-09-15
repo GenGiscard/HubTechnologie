@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — La chasse d'eau · ESTIC</title>
+<style>
+:root{--ink:#1e3a5f;--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.65}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:900px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:36px;color:var(--accf);margin:6px 0 10px;line-height:1.2}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:900px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:14px}
+p{margin:9px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:860px;height:auto;margin:14px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.cahier{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.btnrow{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.btn.sec{background:#fff;color:var(--accf);border:2px solid var(--acc)}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:10px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left}
+th{background:#f8fafc;color:var(--accf)}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Comment ça marche ? · Cycle 4</div>
+ <h1>La chasse d’eau</h1>
+ <p class="sous">Tu tires la chasse, le réservoir se vide… puis se remplit et s’arrête
+ exactement au bon niveau. Sans électricité, sans capteur électronique, sans personne pour
+ surveiller. Ce mécanisme de 1775 fait pourtant, tout seul, ce qu’un thermostat ou un
+ régulateur de vitesse font avec de l’électronique.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>L’énigme</h2>
+ <div class="chapo">Une question simple, dont la réponse ne l’est pas.</div>
+ <p>Le réservoir se remplit à chaque utilisation, et il s’arrête <b>toujours au même
+ niveau</b>. Il ne déborde jamais. Il ne s’arrête jamais à moitié plein.</p>
+ <div class="cahier"><b>SUR TON CAHIER — avant de lire la suite</b><br>
+ Écris ton hypothèse : <b>qui décide</b> que le réservoir est plein, et <b>qui ferme</b>
+ l’arrivée d’eau ? Une minuterie ? Un capteur de niveau ? Autre chose ?</div>
+ <p>Garde ton hypothèse : tu la compareras au mécanisme réel.</p>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Ce qu’il y a dedans</h2>
+ <div class="chapo">Quatre pièces, pas une de plus.</div>
+ <canvas id="cv1" width="860" height="350"></canvas>
+ <p>Le <b>flotteur</b> est un simple corps creux qui repose sur la surface de l’eau. Il est
+ fixé à une <b>tige</b> articulée sur un pivot. À l’autre extrémité de la tige, un
+ <b>clapet</b> vient boucher l’arrivée d’eau. Enfin, le <b>tube de trop-plein</b> évacue
+ l’excédent si jamais le clapet fuit.</p>
+ <div class="retenir">Aucun de ces éléments ne « mesure » un niveau au sens électronique.
+ Le flotteur <b>est</b> la mesure : sa position renseigne directement sur la hauteur d’eau.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Regarde-le fonctionner</h2>
+ <div class="chapo">Suis le flotteur, la tige et le clapet pendant un cycle complet.</div>
+ <canvas id="cv2" width="860" height="380"></canvas>
+ <div class="btnrow">
+  <button class="btn" id="btnChasse" type="button">Tirer la chasse</button>
+  <button class="btn sec" id="btnPause" type="button">Pause</button>
+  <button class="btn sec" id="btnFuite" type="button">Simuler un clapet qui fuit</button>
+ </div>
+ <p>Observe le moment précis où le clapet se referme : l’eau ne s’arrête pas d’un coup.
+ Plus le niveau monte, plus le clapet se ferme, et plus le débit diminue. L’arrêt est
+ <b>progressif</b>, jamais brutal.</p>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Le concept : la boucle de régulation</h2>
+ <div class="chapo">C’est ici que la chasse d’eau rejoint le programme.</div>
+ <p>Ce mécanisme réalise une <b>boucle fermée</b> : la sortie du système agit sur son
+ entrée. Le niveau d’eau commande le clapet, qui commande le débit, qui fait monter le
+ niveau, qui referme le clapet. Le système se corrige lui-même.</p>
+ <canvas id="cv3" width="860" height="250"></canvas>
+ <table>
+  <tr><th>Fonction</th><th>Dans la chasse d’eau</th><th>Dans un objet électronique</th></tr>
+  <tr><td>Mesurer (capteur)</td><td>le flotteur</td><td>une sonde, un capteur</td></tr>
+  <tr><td>Comparer, décider</td><td>la tige et son pivot</td><td>un programme, un seuil</td></tr>
+  <tr><td>Agir (actionneur)</td><td>le clapet</td><td>une vanne, un relais</td></tr>
+ </table>
+ <div class="retenir">Le <b>capteur</b> et l’<b>actionneur</b> existent bien ici : ils sont
+ simplement <b>mécaniques</b>. Une régulation n’a pas besoin d’électronique — elle a besoin
+ d’une information qui revient sur la commande.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Le même principe ailleurs</h2>
+ <div class="chapo">Une fois la boucle repérée, on la retrouve partout.</div>
+ <p>Le <b>thermostat de radiateur</b> : une cire se dilate quand la pièce chauffe et pousse
+ un pointeau qui ferme le robinet. Le <b>régulateur de vitesse</b> d’une voiture compare la
+ vitesse réelle à la consigne et ajuste l’accélérateur. Le <b>château d’eau</b> lui-même
+ fonctionne avec des pompes commandées par le niveau de la cuve.</p>
+ <div class="retenir">Trois objets très différents, un seul schéma : mesurer, comparer,
+ agir — et recommencer. C’est ce schéma qu’il faut savoir reconnaître, pas le détail des pièces.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Quatre questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div class="btnrow"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<footer>Comment ça marche ? · La chasse d’eau · Technologie · ESTIC Don Bosco</footer>
+
+<script>
+/* ═══════════ utilitaires de dessin ═══════════ */
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+/* Flèche : la pointe se place AU point d'arrivée, le trait s'arrête à sa base. */
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+function cadre(c,x,y,w,h,coul,rempli){
+ c.fillStyle= rempli? coul : '#fff'; c.strokeStyle=coul; c.lineWidth=2.4;
+ c.beginPath(); c.roundRect(x,y,w,h,10); c.fill(); c.stroke();
+}
+
+/* Dessine le réservoir. `niv` = 0 (vide) à 1 (plein). `ouv` = ouverture du clapet 0..1. */
+function reservoir(c,W,H,niv,ouv,legendes){
+ c.clearRect(0,0,W,H);
+ c.fillStyle='#fff'; c.fillRect(0,0,W,H);
+ const x=210, y=76, w=330, h=210;          // cuve (descendue : le titre occupe le haut)
+ const yEau=y+h-(h-16)*niv;
+ // eau
+ c.fillStyle='#bae6fd';
+ c.fillRect(x+3,yEau,w-6,y+h-yEau-3);
+ // parois
+ c.strokeStyle='#475569'; c.lineWidth=3; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x,y); c.lineTo(x,y+h); c.lineTo(x+w,y+h); c.lineTo(x+w,y); c.stroke();
+ // trop-plein
+ c.strokeStyle='#94a3b8'; c.lineWidth=2.5;
+ c.beginPath(); c.moveTo(x+w-70,y+h); c.lineTo(x+w-70,y+26); c.stroke();
+ // arrivee d'eau + clapet
+ const xa=x+46;
+ c.strokeStyle='#475569'; c.lineWidth=7;
+ c.beginPath(); c.moveTo(xa,y-34); c.lineTo(xa,y+12); c.stroke();
+ c.fillStyle= ouv>0.05? '#16a34a':'#dc2626';
+ c.beginPath(); c.arc(xa,y+18,8,0,6.284); c.fill();
+ // jet d'eau proportionnel a l'ouverture
+ if(ouv>0.05){
+  c.strokeStyle='#38bdf8'; c.lineWidth=2+4*ouv; c.lineCap='round';
+  c.beginPath(); c.moveTo(xa,y+26); c.lineTo(xa,yEau-2); c.stroke(); c.lineCap='butt';
+ }
+ // flotteur, tige, pivot
+ const xp=x+w-118, yf=yEau-12;
+ c.strokeStyle='#b45309'; c.lineWidth=4;
+ c.beginPath(); c.moveTo(xa+6,y+18); c.lineTo(xp,yf); c.stroke();
+ c.fillStyle='#78350f'; c.beginPath(); c.arc(xa+6,y+18,4,0,6.284); c.fill();
+ c.fillStyle='#fbbf24'; c.strokeStyle='#b45309'; c.lineWidth=2.5;
+ c.beginPath(); c.ellipse(xp,yf,30,17,0,0,6.284); c.fill(); c.stroke();
+ if(legendes){
+  T(c,'flotteur',xp,yf+40,13,'#b45309');
+  T(c,'clapet',xa,y+44,13, ouv>0.05?'#16a34a':'#dc2626');
+  T(c,'arrivée d’eau',xa-58,y-14,13,'#475569','right');
+  T(c,'tube de trop-plein',x+w-70,y+16,12,'#64748b');
+  T(c,'tige articulée',(xa+xp)/2,yf-26,13,'#b45309');
+ }
+ return {x:x,y:y,w:w,h:h,yEau:yEau};
+}
+
+/* ═══════════ 2 · schéma légendé ═══════════ */
+(function(){
+ const c=document.getElementById('cv1').getContext('2d');
+ /* reservoir() repeint le fond : le titre doit être tracé APRÈS, sinon il est effacé. */
+ reservoir(c,860,350,0.82,0,true);
+ /* titre a GAUCHE : centre, il touchait l'etiquette « arrivee d'eau » */
+ T(c,'LES QUATRE PIÈCES DU MÉCANISME',20,26,15,'#155e75','left');
+})();
+
+/* ═══════════ 3 · animation du cycle ═══════════ */
+(function(){
+ const cv=document.getElementById('cv2'), c=cv.getContext('2d');
+ let niv=0.85, phase='repos', t=0, pause=false, fuite=false;
+ const SEUIL=0.85;
+ function ouverture(){
+  /* Le clapet se ferme PROGRESSIVEMENT : plus le niveau approche du seuil,
+     plus l'ouverture diminue. C'est ce qui évite l'arrêt brutal. */
+  const e=(SEUIL-niv)/0.35;
+  return Math.max(0,Math.min(1,e));
+ }
+ document.getElementById('btnChasse').addEventListener('click',function(){
+  if(phase==='repos'){ phase='vidange'; }
+ });
+ document.getElementById('btnPause').addEventListener('click',function(){
+  pause=!pause; this.textContent=pause?'Reprendre':'Pause';
+ });
+ document.getElementById('btnFuite').addEventListener('click',function(){
+  fuite=!fuite; this.textContent=fuite?'Réparer le clapet':'Simuler un clapet qui fuit';
+ });
+ function boucle(){
+  requestAnimationFrame(boucle);
+  if(!pause){
+   t+=0.016;
+   if(phase==='vidange'){ niv-=0.012; if(niv<=0.05){ niv=0.05; phase='remplissage'; } }
+   else { niv+=0.0035*ouverture(); if(fuite) niv+=0.0016;
+          if(niv>=SEUIL && !fuite) phase='repos'; }
+   if(niv>0.97) niv=0.97;
+  }
+  const ouv= phase==='vidange'? 0 : ouverture();
+  const g=reservoir(c,860,380,niv,ouv,false);
+  T(c,'LE CYCLE COMPLET',430,28,15,'#155e75');
+  /* bandeau d'état */
+  const etat = phase==='vidange' ? 'Vidange : le réservoir se vide'
+            : (phase==='repos' ? 'Équilibre : le clapet est fermé, plus rien ne rentre'
+                               : 'Remplissage : le clapet se referme peu à peu');
+  T(c,etat,430,356,14, phase==='repos'?'#16a34a':'#b45309');
+  /* jauge d'ouverture */
+  const bx=620, by=110;
+  T(c,'ouverture du clapet',bx+60,by-14,12,'#64748b');
+  c.fillStyle='#e2e8f0'; c.fillRect(bx,by,120,14);
+  c.fillStyle= ouv>0.05?'#16a34a':'#dc2626'; c.fillRect(bx,by,120*ouv,14);
+  T(c,Math.round(ouv*100)+' %',bx+60,by+32,13,'#334155');
+  if(fuite){
+   T(c,'CLAPET QUI FUIT : le niveau ne se stabilise plus,',bx+60,by+70,12,'#dc2626');
+   T(c,'le trop-plein évacue en continu.',bx+60,by+88,12,'#dc2626');
+  }
+ }
+ requestAnimationFrame(boucle);
+})();
+
+/* ═══════════ 4 · la boucle de régulation ═══════════ */
+(function(){
+ const c=document.getElementById('cv3').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,250);
+ T(c,'UNE BOUCLE FERMÉE : LA SORTIE AGIT SUR L’ENTRÉE',430,28,15,'#155e75');
+ const B=[['NIVEAU D’EAU','la grandeur réglée',80],
+          ['FLOTTEUR','il mesure',280],
+          ['TIGE','elle transmet',480],
+          ['CLAPET','il agit',680]];
+ const w=150,h=60,y=90;
+ B.forEach(function(b,i){
+  const x=b[2];
+  cadre(c,x,y,w,h,'#0e7490');
+  T(c,b[0],x+w/2,y+26,12.5,'#155e75');
+  T(c,b[1],x+w/2,y+45,11.5,'#5b544a');
+  if(i<B.length-1) FLECHE(c,x+w+3,y+h/2,x+B[i+1][2]-3,y+h/2,3,'#0e7490');
+ });
+ /* retour : du clapet vers le niveau */
+ c.strokeStyle='#ea580c'; c.lineWidth=3; c.lineCap='butt';
+ c.beginPath(); c.moveTo(680+w/2,y+h); c.lineTo(680+w/2,200); c.lineTo(80+w/2,200); c.stroke();
+ FLECHE(c,80+w/2,200,80+w/2,y+h+3,3,'#ea580c');
+ T(c,'le clapet règle le débit, donc le niveau : la boucle est fermée',430,224,13,'#9a3412');
+})();
+
+/* ═══════════ 6 · exercices ═══════════ */
+const Q=[
+ {q:"Dans la chasse d’eau, quel élément joue le rôle de CAPTEUR ?",
+  r:["le clapet","le flotteur","le tube de trop-plein"],b:1,
+  ex:"Le flotteur suit la surface de l’eau : sa position renseigne directement sur le niveau. C’est un capteur mécanique."},
+ {q:"Pourquoi le remplissage ralentit-il avant de s’arrêter ?",
+  r:["parce que la pression de l’eau baisse","parce que le tube de trop-plein aspire l’eau","parce que le clapet se ferme peu à peu à mesure que le flotteur monte"],b:2,
+  ex:"L’ouverture du clapet dépend de la position du flotteur. Plus le niveau monte, moins le clapet est ouvert : l’arrêt est progressif, jamais brutal."},
+ {q:"Qu’appelle-t-on une boucle FERMÉE ?",
+  r:["un système où la sortie agit en retour sur la commande","un système étanche à l’eau","un système qui fonctionne en circuit d’eau fermé"],b:0,
+  ex:"Le niveau commande le clapet, qui règle le débit, qui fait monter le niveau. L’information revient sur la commande : le système se corrige tout seul."},
+ {q:"À quoi sert le tube de trop-plein ?",
+  r:["à régler le niveau normal du réservoir","à évacuer l’eau si le clapet ne ferme plus","à accélérer le remplissage"],b:1,
+  ex:"C’est une sécurité, pas un organe de réglage. Si le clapet fuit, l’eau part par le trop-plein au lieu d’inonder la pièce — d’où le bruit d’écoulement permanent des chasses défectueuses."}
+];
+(function(){
+ const z=document.getElementById('questions');
+ const choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',function(){
+    if(b.disabled) return;
+    choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';});
+    b.style.fontWeight='800';
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){
+    b.disabled=true;
+    if(j===Q[i].b) b.classList.add('bon');
+    else if(choix[i]===j) b.classList.add('faux');
+   });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div');
+   e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko');
+   e.textContent=Q[i].ex;
+   r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ');
+  b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+
+   (n===Q.length ? 'Tu as reconnu la boucle de régulation : c’est ce schéma qu’il faut savoir retrouver ailleurs.'
+                 : 'Relis la partie 4 : mesurer, comparer, agir — puis recommencer.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>
