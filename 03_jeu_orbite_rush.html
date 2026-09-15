@@ -196,5 +196,145 @@ document.getElementById('btnGo').onclick=()=>{ document.getElementById('ovIntro'
 document.getElementById('btnRejouer').onclick=()=>{ document.getElementById('ovFin').classList.add('cache'); nouveauJeu(); };
 requestAnimationFrame(boucle);
 </script>
+
+<!-- ===== CLASSEMENT EN LIGNE (module commun, voir _outils/ajouter_classement.py) ===== -->
+<style>
+#clsBtn{position:fixed;left:18px;bottom:18px;z-index:900;background:#0f172a;color:#fff;border:none;
+ border-radius:12px;padding:10px 16px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35)}
+#clsPan{position:fixed;inset:0;z-index:950;background:rgba(15,23,42,.72);display:none;
+ align-items:center;justify-content:center;padding:20px}
+#clsPan.on{display:flex}
+#clsBox{background:#fff;border-radius:18px;padding:22px;max-width:440px;width:100%;
+ font-family:'Segoe UI',system-ui,sans-serif;max-height:86vh;overflow:auto}
+#clsBox h3{font-size:20px;color:#155e75;margin-bottom:4px}
+#clsBox .sous{font-size:13px;color:#64748b;margin-bottom:12px}
+#clsBox ol{margin:0;padding-left:0;list-style:none}
+#clsBox li{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:9px;font-size:15px}
+#clsBox li:nth-child(odd){background:#f8fafc}
+#clsBox li .rg{width:26px;font-weight:900;color:#94a3b8;text-align:right}
+#clsBox li .nm{flex:1;font-weight:700;color:#1e3a5f;overflow:hidden;text-overflow:ellipsis}
+#clsBox li .sc{font-family:'Courier New',monospace;font-weight:800;color:#b45309}
+#clsBox li .del{border:1px solid #fecaca;background:#fff;color:#b91c1c;border-radius:7px;
+ font-size:11px;padding:2px 7px;cursor:pointer;font-family:inherit}
+#clsBox .barre{display:flex;gap:8px;margin-top:14px}
+#clsBox input{flex:1;padding:10px 12px;font-size:15px;font-family:inherit;
+ border:2px solid #e2e8f0;border-radius:10px}
+#clsBox button.p{background:#0e7490;color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-weight:800;font-family:inherit;cursor:pointer;font-size:14px}
+#clsBox .fermer{background:none;border:none;color:#64748b;font-size:13px;cursor:pointer;
+ font-family:inherit;text-decoration:underline;margin-top:12px}
+#clsBox .mod{font-size:11px;color:#cbd5e1;background:none;border:none;cursor:pointer;
+ font-family:inherit;text-decoration:underline dotted;float:right}
+#clsMsg{font-size:13px;min-height:18px;margin-top:8px;color:#64748b}
+@media print{#clsBtn,#clsPan{display:none!important}}
+</style>
+<button id="clsBtn" type="button">Classement</button>
+<div id="clsPan"><div id="clsBox">
+ <button class="mod" id="clsMod" type="button">moderation</button>
+ <h3>Classement</h3>
+ <div class="sous" id="clsSous">Les dix meilleurs scores de ce jeu.</div>
+ <ol id="clsListe"><li><span class="nm">Chargement…</span></li></ol>
+ <div id="clsSaisie" style="display:none">
+  <div class="barre">
+   <input id="clsNom" maxlength="16" autocomplete="off" placeholder="ton prénom">
+   <button class="p" id="clsEnv" type="button">Signer</button>
+  </div>
+ </div>
+ <div id="clsMsg"></div>
+ <button class="fermer" id="clsFermer" type="button">Fermer</button>
+</div></div>
+<script>
+(function(){
+ var BASE='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/highscores', JEU='orbiterush', MDP='Agostini2025';
+ var moderation=false, enAttente=null;
+ /* Filtre volontairement court : il arrête les pseudos les plus évidents et laisse
+    la modération traiter le reste. Une liste exhaustive serait illusoire. */
+ var INTERDITS=['con','pd','pute','ptn','salop','encul','encule','merde','bite','nique','niq',
+  'fdp','ntm','tg','couille','zizi','penis','sexe','sexo','viol','nazi','hitler','negr','pede',
+  'chatte','baise','bais','porn','cul','batard','suce','chier','foutre','nichon','anus','sperme',
+  'zob','teub','clito','pines','putain','salaud','abruti','debile','cretin','connard'];
+ function propre(n){
+  /* On normalise avant de comparer : accents retirés, chiffres « leet » remis en lettres,
+     lettres répétées réduites. « C0oonN » et « c o n » sont donc attrapés comme « con ».
+     Le filtre reste volontairement imparfait : c'est la modération qui tranche. */
+  var s=n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  s=s.replace(/0/g,'o').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a')
+     .replace(/5/g,'s').replace(/7/g,'t').replace(/@/g,'a').replace(/\$/g,'s');
+  s=s.replace(/[^a-z]/g,'').replace(/(.)\1+/g,'$1');
+  for(var i=0;i<INTERDITS.length;i++) if(s.indexOf(INTERDITS[i])>=0) return false;
+  return true;
+ }
+ function $(i){return document.getElementById(i);}
+ function ouvrir(){ $('clsPan').classList.add('on'); charger(); }
+ function fermer(){ $('clsPan').classList.remove('on'); }
+ $('clsBtn').addEventListener('click',ouvrir);
+ $('clsFermer').addEventListener('click',fermer);
+ $('clsPan').addEventListener('click',function(e){ if(e.target===$('clsPan')) fermer(); });
+ $('clsMod').addEventListener('click',function(){
+  var m=window.prompt('Mot de passe professeur');
+  if(m===MDP){ moderation=true; $('clsMsg').textContent='Mode modération actif.'; charger(); }
+ });
+
+ function charger(){
+  fetch(BASE+'/'+JEU+'.json').then(function(r){return r.json();}).then(function(j){
+   var L=[];
+   if(j) for(var k in j){ if(j[k]&&j[k].n) L.push({id:k,n:j[k].n,s:+j[k].s||0}); }
+   L.sort(function(a,b){return b.s-a.s;});
+   var ol=$('clsListe'); ol.innerHTML='';
+   if(!L.length){ ol.innerHTML='<li><span class="nm" style="color:#94a3b8;font-weight:400">'+
+     'Aucun score pour le moment. Sois le premier !</span></li>'; return; }
+   L.slice(0,moderation?100:10).forEach(function(e,i){
+    var li=document.createElement('li');
+    li.innerHTML='<span class="rg">'+(i+1)+'</span><span class="nm"></span><span class="sc">'+e.s+'</span>';
+    li.querySelector('.nm').textContent=e.n;
+    if(moderation){
+     var b=document.createElement('button'); b.className='del'; b.type='button'; b.textContent='retirer';
+     b.addEventListener('click',function(){
+      if(!window.confirm('Retirer « '+e.n+' » du classement ?')) return;
+      fetch(BASE+'/'+JEU+'/'+e.id+'.json',{method:'DELETE'}).then(function(){ charger(); });
+     });
+     li.appendChild(b);
+    }
+    ol.appendChild(li);
+   });
+  }).catch(function(){ $('clsListe').innerHTML='<li><span class="nm" style="font-weight:400">'+
+    'Classement indisponible (réseau).</span></li>'; });
+ }
+
+ function proposer(score){
+  enAttente=score;
+  $('clsSous').textContent='Nouveau record personnel : '+score+' points. Signe le classement !';
+  $('clsSaisie').style.display='block';
+  ouvrir();
+ }
+ $('clsEnv').addEventListener('click',function(){
+  var n=$('clsNom').value.trim();
+  if(n.length<2){ $('clsMsg').textContent='Indique au moins deux lettres.'; return; }
+  if(!propre(n)){ $('clsMsg').textContent='Ce pseudo n\u2019est pas accepté. Utilise ton prénom.'; return; }
+  if(enAttente===null) return;
+  $('clsEnv').disabled=true;
+  fetch(BASE+'/'+JEU+'.json',{method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({n:n,s:enAttente,d:new Date().toISOString()})})
+   .then(function(){ $('clsMsg').textContent='Score enregistré !'; $('clsSaisie').style.display='none';
+     enAttente=null; charger(); })
+   .catch(function(){ $('clsMsg').textContent='Envoi impossible (réseau).'; })
+   .then(function(){ $('clsEnv').disabled=false; });
+ });
+
+ /* Détection d'un nouveau record SANS toucher au code du jeu : on enveloppe
+    localStorage.setItem et on réagit aux deux conventions de clé du corpus. */
+ try{
+  var brut=localStorage.setItem.bind(localStorage);
+  localStorage.setItem=function(k,v){
+   brut(k,v);
+   if(/_record$|_rec3$/.test(k)){
+    var s=parseInt(v,10);
+    if(isFinite(s)&&s>0) setTimeout(function(){ proposer(s); },600);
+   }
+  };
+ }catch(e){}
+})();
+</script>
 </body>
 </html>
