@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sujet type DNB — La chasse d’eau · ESTIC</title><style>
+:root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(900px,100%);padding:14px 14px 50px}
+.entete{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:14px 18px;margin-bottom:14px}
+.entete h1{font-size:20px;color:var(--accf);margin-bottom:4px}
+.entete .info{font-size:13.5px;color:#64748b;line-height:1.7}
+.consignes{background:#eff6ff;border-left:5px solid var(--acc);border-radius:10px;padding:11px 15px;font-size:14px;line-height:1.75;margin-bottom:16px}
+.doc{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.doc h3{font-size:14px;color:var(--accf);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.doc canvas{width:100%;display:block;border-radius:8px;background:#fdfdfe;border:1px solid #e2e8f0}
+.doc table{width:100%;border-collapse:collapse;font-size:14px}
+.doc th,.doc td{border:1px solid #cbd5e1;padding:7px 9px;text-align:left}
+.doc th{background:#f1f5f9}
+.q{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q .num{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.q .num b{font-size:16px;color:var(--accf)}
+.q .num span{font-size:13px;font-weight:800;color:#64748b}
+.q p{font-size:15px;line-height:1.7}
+.q .aide{font-size:13px;color:#64748b;margin-top:5px;font-style:italic}
+.q input,.q textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px;font-size:15px;font-family:inherit;margin-top:9px}
+.q textarea{min-height:74px;resize:vertical}
+.q .court{width:150px;text-align:center;font-weight:700}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;padding:13px 28px;cursor:pointer;font-family:inherit}
+.btn.sec{background:#e2e8f0;color:var(--encre)}
+.centre{text-align:center;margin:18px 0}
+#resultat{display:none;background:#fff;border:2px solid var(--acc);border-radius:14px;padding:18px;margin-top:16px}
+#resultat h2{color:var(--accf);font-size:20px;text-align:center}
+.note{text-align:center;font-size:44px;font-weight:900;color:var(--acc);margin:6px 0}
+.corr{border-left:4px solid #16a34a;background:#f0fdf4;border-radius:8px;padding:10px 14px;margin:9px 0;font-size:14.5px;line-height:1.7}
+.corr b{color:#15803d}
+.pts{float:right;font-weight:900;color:#64748b;font-size:13px}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="logo_estic.png">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<div class="entete">
+  <h1>Sujet type DNB — Épreuve de sciences</h1>
+  <div class="info"><b>Partie technologie</b> · durée conseillée : 30 minutes · noté sur 25 points<br>
+  Support : le réservoir de chasse d’eau</div>
+</div>
+<div class="consignes">Tu disposes de trois documents. Réponds aux six questions : certaines demandent une
+<b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
+Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
+
+<div class="doc"><h2>Document 1 — Coupe du réservoir</h2>
+<canvas id="d1" width="860" height="330"></canvas>
+<p class="leg">Le flotteur suit la surface de l’eau. Il commande, par la tige articulée,
+l’ouverture du clapet qui laisse entrer l’eau. Le tube de trop-plein évacue l’excédent.</p>
+
+<h2>Document 2 — Relevé de remplissage</h2>
+<table>
+ <tr><th>Hauteur d’eau dans le réservoir</th><th>Ouverture du clapet</th><th>Débit d’entrée</th></tr>
+ <tr><td>0 cm (réservoir vide)</td><td>100 %</td><td>6,0 L/min</td></tr>
+ <tr><td>10 cm</td><td>60 %</td><td>3,6 L/min</td></tr>
+ <tr><td>15 cm</td><td>30 %</td><td>1,8 L/min</td></tr>
+ <tr><td>18 cm (niveau de consigne)</td><td>0 %</td><td>0 L/min</td></tr>
+</table>
+<p class="leg">Le réservoir a une base de 30 cm × 20 cm. Sa contenance utile est de 9,0 litres.</p>
+
+<h2>Document 3 — Consommation d’eau du foyer</h2>
+<table>
+ <tr><th>Nombre d’utilisations de la chasse par jour et par foyer</th><td>18</td></tr>
+ <tr><th>Volume d’un réservoir classique</th><td>9,0 L</td></tr>
+ <tr><th>Volume d’une chasse à double commande, petit volume</th><td>3,0 L</td></tr>
+ <tr><th>Part des utilisations en petit volume</th><td>2 sur 3</td></tr>
+</table>
+<div id="questions"></div>
+<div id="resultat" style="display:none"></div>
+<div class="centre"><button class="btn" id="rendre">Rendre ma copie</button></div>
+<div id="resultat"></div>
+</main>
+<script>
+'use strict';
+function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+function nb(v){return parseFloat(String(v||'').replace(',','.'));}
+const Q=[
+ {n:'1',pts:4,t:'Le document 2 montre que le débit d’entrée diminue au fur et à mesure du remplissage. Explique pourquoi, en nommant les pièces concernées.',
+  redac:{id:'r1',cles:['flotteur','monte','tige','clapet','ferme','referme','progress','ouverture','diminue','niveau']},
+  corr:'À mesure que l’eau monte, le <b>flotteur</b> monte avec elle. Par la <b>tige articulée</b>, il referme progressivement le <b>clapet</b>. L’ouverture diminue, donc le débit diminue aussi. L’arrêt est <b>progressif</b> : le réservoir ne s’arrête pas brutalement, il ralentit jusqu’à se fermer au niveau de consigne.'},
+ {n:'2',pts:5,t:'Calcule le volume d’eau contenu dans le réservoir au niveau de consigne, puis vérifie la cohérence avec la contenance annoncée.',
+  aide:'rappel : volume d’un pavé = longueur × largeur × hauteur — et 1 L = 1 dm³ = 1 000 cm³',
+  champs:[{id:'v1',l:'Volume en cm³ :',rep:10800,tol:50},
+          {id:'v2',l:'Volume en litres :',rep:10.8,tol:0.1}],
+  redac:{id:'r2',cles:['superieur','plus','ecart','9','utile','morte','fond','reste','tropplein','pasvide']},
+  corr:'Volume = 30 × 20 × 18 = <b>10 800 cm³</b>, soit <b>10,8 L</b>. C’est <b>plus</b> que les 9,0 L annoncés : l’écart s’explique par le fait que le réservoir ne se vide jamais complètement — une hauteur d’eau reste au fond, sous le niveau du siphon. La contenance <b>utile</b> est donc inférieure au volume géométrique.'},
+ {n:'3',pts:5,t:'Calcule la durée de remplissage si le débit restait constant à 6,0 L/min, puis explique pourquoi la durée réelle est plus longue.',
+  aide:'utilise la contenance utile de 9,0 litres',
+  champs:[{id:'t1',l:'Durée au débit maximal, en minutes :',rep:1.5,tol:0.05},
+          {id:'t2',l:'Durée au débit maximal, en secondes :',rep:90,tol:3}],
+  redac:{id:'r3',cles:['debit','diminue','baisse','ralent','ferme','progress','moyen','pasconstant','fin']},
+  corr:'9,0 ÷ 6,0 = <b>1,5 minute</b>, soit <b>90 secondes</b>. En réalité le débit <b>n’est pas constant</b> : il tombe à 3,6 puis 1,8 L/min à mesure que le clapet se referme. La fin du remplissage est donc beaucoup plus lente, et la durée réelle dépasse nettement 90 secondes.'},
+ {n:'4',pts:4,t:'Recopie et complète la boucle de régulation : indique quel élément joue le rôle de capteur, et lequel joue le rôle d’actionneur.',
+  champs:[{id:'c4',l:'Capteur :',rep:['flotteur','leflotteur']},
+          {id:'a4',l:'Actionneur :',rep:['clapet','leclapet','soupape','vanne']}],
+  redac:{id:'r4',cles:['boucle','ferme','retour','sortie','agit','corrige','luimeme','niveau','commande','regul']},
+  corr:'Le <b>flotteur</b> est le capteur : sa position renseigne sur le niveau. Le <b>clapet</b> est l’actionneur : il règle le débit. Le niveau commande le clapet, qui règle le débit, qui fait monter le niveau : la <b>sortie agit en retour sur la commande</b>. C’est une <b>boucle fermée</b>, et le système se corrige lui-même — sans électronique.'},
+ {n:'5',pts:4,t:'Le clapet d’un réservoir fuit légèrement. Décris ce que l’on observe et explique le rôle du tube de trop-plein dans cette situation.',
+  redac:{id:'r5',cles:['ecoule','coule','bruit','permanent','continu','tropplein','evacue','deborde','inond','gaspill']},
+  corr:'Le niveau ne se stabilise plus : l’eau continue d’entrer et atteint le <b>tube de trop-plein</b>, qui l’évacue en continu vers la cuvette. On entend alors un <b>écoulement permanent</b>. Le trop-plein est une <b>sécurité</b> : il évite l’inondation, mais il ne corrige pas la panne — l’eau est gaspillée tant que le clapet n’est pas réparé.'},
+ {n:'6',pts:3,t:'Calcule l’économie d’eau annuelle réalisée par un foyer qui remplace sa chasse classique par une chasse à double commande.',
+  aide:'document 3 — deux utilisations sur trois se font en petit volume ; compte 365 jours',
+  champs:[{id:'e1',l:'Volume économisé par jour, en litres :',rep:72,tol:2},
+          {id:'e2',l:'Volume économisé par an, en litres :',rep:26280,tol:800}],
+  corr:'Sur 18 utilisations, 12 se font en petit volume et économisent chacune 9,0 − 3,0 = 6,0 L, soit 12 × 6,0 = <b>72 L par jour</b>. Sur un an : 72 × 365 = <b>26 280 litres</b>, plus de 26 m³ pour un seul foyer. Un geste technique simple, répété, produit une économie considérable.'},
+];
+const z=document.getElementById('questions');
+Q.forEach(q=>{
+ const d=document.createElement('div'); d.className='q';
+ let html='<div class="num"><b>Question '+q.n+'</b><span>'+q.pts+' points</span></div><p>'+q.t+'</p>';
+ if(q.aide) html+='<div class="aide">'+q.aide+'</div>';
+ (q.champs||[]).forEach(c=>{ html+='<div style="margin-top:8px;font-size:14.5px">'+c.l+
+   ' <input class="court" id="'+c.id+'" autocomplete="off"></div>'; });
+ if(q.redac) html+='<textarea id="'+q.redac.id+'" placeholder="rédige ta réponse en une ou deux phrases"></textarea>';
+ d.innerHTML=html; z.appendChild(d);
+});
+document.getElementById('rendre').addEventListener('click',()=>{
+ let total=0, max=0, det='';
+ Q.forEach(q=>{
+  max+=q.pts;
+  let obtenu=0, parts=0, ok=0;
+  (q.champs||[]).forEach(c=>{
+   parts++;
+   const v=document.getElementById(c.id).value;
+   const bon = typeof c.rep==='number'
+     ? (isFinite(nb(v)) && Math.abs(nb(v)-c.rep)<=c.tol)
+     : c.rep.some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+   if(bon)ok++;
+  });
+  if(q.redac){ parts++;
+   const v=norm(document.getElementById(q.redac.id).value);
+   if(v.length>14 && q.redac.cles.some(k=>v.includes(k))) ok++;
+  }
+  obtenu = Math.round(q.pts*ok/parts*2)/2;
+  total+=obtenu;
+  det+='<div class="corr"><span class="pts">'+obtenu+' / '+q.pts+'</span><b>Question '+q.n+'</b><br>'+q.corr+'</div>';
+ });
+ const r=document.getElementById('resultat');
+ r.innerHTML='<h2>Copie rendue</h2><div class="note">'+total+' / '+max+'</div>'+
+  '<p style="text-align:center;font-size:14px;color:#64748b;margin-bottom:12px">Corrigé détaillé — compare avec ce que tu as écrit sur ton cahier</p>'+det;
+ r.style.display='block';
+ document.getElementById('rendre').disabled=true;
+ r.scrollIntoView({behavior:'smooth'});
+});
+/* ═══ Document 1 : coupe du réservoir ═══ */
+(function(){
+ const c=document.getElementById('d1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,330);
+ const x=230, y=80, w=340, h=200;
+ const niv=0.80, yEau=y+h-(h-14)*niv;
+ c.fillStyle='#bae6fd'; c.fillRect(x+3,yEau,w-6,y+h-yEau-3);
+ c.strokeStyle='#475569'; c.lineWidth=3; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x,y); c.lineTo(x,y+h); c.lineTo(x+w,y+h); c.lineTo(x+w,y); c.stroke();
+ c.strokeStyle='#94a3b8'; c.lineWidth=2.5;
+ c.beginPath(); c.moveTo(x+w-64,y+h); c.lineTo(x+w-64,y+24); c.stroke();
+ const xa=x+48;
+ c.strokeStyle='#475569'; c.lineWidth=7;
+ c.beginPath(); c.moveTo(xa,y-32); c.lineTo(xa,y+10); c.stroke();
+ c.fillStyle='#16a34a'; c.beginPath(); c.arc(xa,y+16,8,0,6.284); c.fill();
+ const xp=x+w-112, yf=yEau-11;
+ c.strokeStyle='#b45309'; c.lineWidth=4;
+ c.beginPath(); c.moveTo(xa+6,y+16); c.lineTo(xp,yf); c.stroke();
+ c.fillStyle='#fbbf24'; c.strokeStyle='#b45309'; c.lineWidth=2.5;
+ c.beginPath(); c.ellipse(xp,yf,30,17,0,0,6.284); c.fill(); c.stroke();
+ /* cotes */
+ c.strokeStyle='#0e7490'; c.lineWidth=1.6;
+ c.beginPath(); c.moveTo(x-26,yEau); c.lineTo(x-26,y+h); c.stroke();
+ c.beginPath(); c.moveTo(x-31,yEau); c.lineTo(x-21,yEau); c.stroke();
+ c.beginPath(); c.moveTo(x-31,y+h); c.lineTo(x-21,y+h); c.stroke();
+ c.font='bold 13px Segoe UI'; c.textAlign='right'; c.fillStyle='#0e7490';
+ c.fillText('18 cm',x-34,(yEau+y+h)/2+4);
+ c.textAlign='center';
+ c.fillText('30 cm',x+w/2,y+h+26);
+ c.fillStyle='#b45309'; c.fillText('flotteur',xp,yf+40);
+ c.fillStyle='#16a34a'; c.fillText('clapet',xa,y+42);
+ c.fillStyle='#475569'; c.textAlign='right'; c.fillText('arrivée d’eau',xa-14,y-12);
+ c.textAlign='center'; c.fillStyle='#64748b'; c.font='12.5px Segoe UI';
+ c.fillText('tube de trop-plein',x+w-64,y+16);
+ c.fillText('base du réservoir : 30 cm × 20 cm',430,318);
+})();
+</script>\n</body>\n</html>\n

@@ -1,0 +1,190 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sujet type DNB — La serrure à goupilles · ESTIC</title><style>
+:root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(900px,100%);padding:14px 14px 50px}
+.entete{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:14px 18px;margin-bottom:14px}
+.entete h1{font-size:20px;color:var(--accf);margin-bottom:4px}
+.entete .info{font-size:13.5px;color:#64748b;line-height:1.7}
+.consignes{background:#eff6ff;border-left:5px solid var(--acc);border-radius:10px;padding:11px 15px;font-size:14px;line-height:1.75;margin-bottom:16px}
+.doc{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.doc h3{font-size:14px;color:var(--accf);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.doc canvas{width:100%;display:block;border-radius:8px;background:#fdfdfe;border:1px solid #e2e8f0}
+.doc table{width:100%;border-collapse:collapse;font-size:14px}
+.doc th,.doc td{border:1px solid #cbd5e1;padding:7px 9px;text-align:left}
+.doc th{background:#f1f5f9}
+.q{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q .num{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.q .num b{font-size:16px;color:var(--accf)}
+.q .num span{font-size:13px;font-weight:800;color:#64748b}
+.q p{font-size:15px;line-height:1.7}
+.q .aide{font-size:13px;color:#64748b;margin-top:5px;font-style:italic}
+.q input,.q textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px;font-size:15px;font-family:inherit;margin-top:9px}
+.q textarea{min-height:74px;resize:vertical}
+.q .court{width:150px;text-align:center;font-weight:700}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;padding:13px 28px;cursor:pointer;font-family:inherit}
+.btn.sec{background:#e2e8f0;color:var(--encre)}
+.centre{text-align:center;margin:18px 0}
+#resultat{display:none;background:#fff;border:2px solid var(--acc);border-radius:14px;padding:18px;margin-top:16px}
+#resultat h2{color:var(--accf);font-size:20px;text-align:center}
+.note{text-align:center;font-size:44px;font-weight:900;color:var(--acc);margin:6px 0}
+.corr{border-left:4px solid #16a34a;background:#f0fdf4;border-radius:8px;padding:10px 14px;margin:9px 0;font-size:14.5px;line-height:1.7}
+.corr b{color:#15803d}
+.pts{float:right;font-weight:900;color:#64748b;font-size:13px}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="logo_estic.png">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<div class="entete">
+  <h1>Sujet type DNB — Épreuve de sciences</h1>
+  <div class="info"><b>Partie technologie</b> · durée conseillée : 30 minutes · noté sur 25 points<br>
+  Support : la serrure à goupilles</div>
+</div>
+<div class="consignes">Tu disposes de trois documents. Réponds aux six questions : certaines demandent une
+<b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
+Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
+
+<div class="doc"><h2>Document 1 — Coupe d’une serrure à goupilles</h2>
+<canvas id="d1" width="860" height="300"></canvas>
+<p class="leg">Cinq paires de goupilles. Chaque paire est coupée à une hauteur différente.
+La <b>ligne de césure</b> sépare le barillet (mobile) du cylindre fixe.</p>
+
+<h2>Document 2 — Hauteurs relevées sur trois clés</h2>
+<table>
+ <tr><th>Goupille</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+ <tr><th>Hauteur exigée par la serrure</th><td>3</td><td>5</td><td>1</td><td>4</td><td>2</td></tr>
+ <tr><th>Clé A</th><td>3</td><td>5</td><td>1</td><td>4</td><td>2</td></tr>
+ <tr><th>Clé B</th><td>3</td><td>5</td><td>1</td><td>4</td><td>6</td></tr>
+ <tr><th>Clé C</th><td>2</td><td>5</td><td>1</td><td>4</td><td>2</td></tr>
+</table>
+<p class="leg">Les hauteurs vont de 1 à 6. Une goupille est correctement positionnée
+lorsque la hauteur de la clé est exactement celle exigée.</p>
+
+<h2>Document 3 — Données du fabricant</h2>
+<table>
+ <tr><th>Nombre de goupilles</th><td>5</td></tr>
+ <tr><th>Hauteurs possibles par goupille</th><td>6</td></tr>
+ <tr><th>Durée moyenne d’un essai de clé</th><td>4 secondes</td></tr>
+ <tr><th>Matière des goupilles</th><td>laiton</td></tr>
+</table>
+<div id="questions"></div>
+<div id="resultat" style="display:none"></div>
+<div class="centre"><button class="btn" id="rendre">Rendre ma copie</button></div>
+<div id="resultat"></div>
+</main>
+<script>
+'use strict';
+function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+function nb(v){return parseFloat(String(v||'').replace(',','.'));}
+const Q=[
+ {n:'1',pts:4,t:'À quoi sert la ligne de césure ? Explique ce qui se passe quand toutes les goupilles sont correctement positionnées.',
+  redac:{id:'r1',cles:['barillet','tourne','tourner','separe','frontiere','align','coupure','libre','rotation','degage']},
+  corr:'La ligne de césure est la <b>frontière entre le barillet et le cylindre fixe</b>. Quand toutes les coupures des goupilles arrivent exactement sur cette ligne, plus aucune goupille ne traverse la frontière : le <b>barillet est libéré et peut tourner</b>. C’est la rotation du barillet qui entraîne le pêne et ouvre la porte.'},
+ {n:'2',pts:4,t:'D’après le document 2, quelle clé ouvre la serrure ? Pour les deux autres, indique le numéro de la goupille qui bloque.',
+  champs:[{id:'c2',l:'Clé qui ouvre :',rep:['a','clea','cléa']},
+          {id:'b2',l:'Goupille qui bloque avec la clé B :',rep:5,tol:0.01},
+          {id:'b3',l:'Goupille qui bloque avec la clé C :',rep:1,tol:0.01}],
+  corr:'Seule la <b>clé A</b> reprend exactement les cinq hauteurs exigées (3-5-1-4-2). La <b>clé B</b> diffère sur la goupille <b>5</b> (6 au lieu de 2) et la <b>clé C</b> sur la goupille <b>1</b> (2 au lieu de 3). Dans les deux cas, une seule goupille mal placée suffit à bloquer.'},
+ {n:'3',pts:5,t:'Calcule le nombre total de clés différentes possibles avec cette serrure, puis la durée nécessaire pour toutes les essayer.',
+  aide:'rappel : chaque goupille est indépendante des autres — pose le calcul sur ton cahier',
+  champs:[{id:'n3',l:'Nombre de combinaisons :',rep:7776,tol:1},
+          {id:'s3',l:'Durée totale, en secondes :',rep:31104,tol:10},
+          {id:'h3',l:'Durée totale, en heures (arrondie au dixième) :',rep:8.6,tol:0.2}],
+  corr:'Chaque goupille a 6 hauteurs possibles, et les 5 goupilles sont indépendantes : 6 × 6 × 6 × 6 × 6 = 6<sup>5</sup> = <b>7 776 combinaisons</b>. À 4 secondes par essai : 7 776 × 4 = <b>31 104 secondes</b>, soit 31 104 ÷ 3 600 ≈ <b>8,6 heures</b>. Essayer toutes les clés est donc long, mais pas impossible : c’est pourquoi une serrure n’est jamais la seule protection.'},
+ {n:'4',pts:4,t:'Un élève affirme : « si quatre goupilles sur cinq sont bien placées, la serrure s’ouvre presque. » Cette affirmation est-elle exacte ? Justifie.',
+  redac:{id:'r4',cles:['non','faux','toutes','uneseule','suffit','bloque','pasdouverture','aucun','nesouvrepas','et']},
+  corr:'<b>Non.</b> Il n’y a pas d’ouverture partielle : <b>une seule goupille mal placée traverse la ligne de césure et bloque entièrement le barillet</b>. Les cinq conditions doivent être remplies EN MÊME TEMPS — c’est un ET logique, pas un score. Quatre goupilles sur cinq n’ouvrent pas mieux qu’aucune.'},
+ {n:'5',pts:4,t:'Le fabricant veut rendre la serrure plus difficile à ouvrir au hasard. Propose une modification et explique son effet sur le nombre de combinaisons.',
+  redac:{id:'r5',cles:['goupille','hauteur','ajout','plus','augment','supplementaire','six','septieme','multipli']},
+  corr:'Deux solutions acceptées. <b>Ajouter une goupille</b> : on passe de 6<sup>5</sup> à 6<sup>6</sup> = 46 656, soit <b>6 fois plus</b> de combinaisons. <b>Ajouter une hauteur possible</b> : on passe à 7<sup>5</sup> = 16 807, soit environ <b>2 fois plus</b>. Ajouter une goupille est donc plus efficace, car c’est l’exposant qui augmente.'},
+ {n:'6',pts:4,t:'Les goupilles sont en laiton, un alliage tendre, alors que le reste de la serrure est en acier. Propose une explication technique à ce choix.',
+  redac:{id:'r6',cles:['usure','use','doux','tendre','abime','protege','cle','frotte','remplac','moinscher','grippe','corros']},
+  corr:'Plusieurs réponses acceptées : le laiton <b>s’use à la place de la clé</b> et de la serrure, il <b>ne grippe pas</b> et <b>résiste à la corrosion</b>, il se <b>fabrique et se remplace facilement</b>, et son frottement doux évite de rayer la clé. On accepte toute réponse reliant la matière tendre à l’usure ou au frottement.'},
+];
+const z=document.getElementById('questions');
+Q.forEach(q=>{
+ const d=document.createElement('div'); d.className='q';
+ let html='<div class="num"><b>Question '+q.n+'</b><span>'+q.pts+' points</span></div><p>'+q.t+'</p>';
+ if(q.aide) html+='<div class="aide">'+q.aide+'</div>';
+ (q.champs||[]).forEach(c=>{ html+='<div style="margin-top:8px;font-size:14.5px">'+c.l+
+   ' <input class="court" id="'+c.id+'" autocomplete="off"></div>'; });
+ if(q.redac) html+='<textarea id="'+q.redac.id+'" placeholder="rédige ta réponse en une ou deux phrases"></textarea>';
+ d.innerHTML=html; z.appendChild(d);
+});
+document.getElementById('rendre').addEventListener('click',()=>{
+ let total=0, max=0, det='';
+ Q.forEach(q=>{
+  max+=q.pts;
+  let obtenu=0, parts=0, ok=0;
+  (q.champs||[]).forEach(c=>{
+   parts++;
+   const v=document.getElementById(c.id).value;
+   const bon = typeof c.rep==='number'
+     ? (isFinite(nb(v)) && Math.abs(nb(v)-c.rep)<=c.tol)
+     : c.rep.some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+   if(bon)ok++;
+  });
+  if(q.redac){ parts++;
+   const v=norm(document.getElementById(q.redac.id).value);
+   if(v.length>14 && q.redac.cles.some(k=>v.includes(k))) ok++;
+  }
+  obtenu = Math.round(q.pts*ok/parts*2)/2;
+  total+=obtenu;
+  det+='<div class="corr"><span class="pts">'+obtenu+' / '+q.pts+'</span><b>Question '+q.n+'</b><br>'+q.corr+'</div>';
+ });
+ const r=document.getElementById('resultat');
+ r.innerHTML='<h2>Copie rendue</h2><div class="note">'+total+' / '+max+'</div>'+
+  '<p style="text-align:center;font-size:14px;color:#64748b;margin-bottom:12px">Corrigé détaillé — compare avec ce que tu as écrit sur ton cahier</p>'+det;
+ r.style.display='block';
+ document.getElementById('rendre').disabled=true;
+ r.scrollIntoView({behavior:'smooth'});
+});
+/* ═══ Document 1 : coupe de la serrure, AU REPOS (sans clé) ═══
+   Chaque paire est posée au fond du barillet. La jonction entre la goupille basse
+   (grise) et la goupille haute (brune) se trouve alors SOUS la césure : la goupille
+   haute la traverse, et le barillet est bloqué. C'est ce que la question 1 demande
+   d'expliquer. */
+(function(){
+ const c=document.getElementById('d1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,300);
+ const x=120, w=620, yC=140, hB=110;        // cesure et hauteur du barillet
+ c.fillStyle='#dbe3ec'; c.fillRect(x,44,w,yC-44);
+ c.fillStyle='#a8b6c6'; c.fillRect(x,yC,w,hB);
+ const H=[3,5,1,4,2];
+ for(let i=0;i<5;i++){
+  const cx=x+70+i*118;
+  const bas=40+H[i]*9;                      // goupille basse : hauteur variable
+  const yJ=yC+hB-bas;                       // jonction entre les deux goupilles
+  c.fillStyle='#475569'; c.fillRect(cx-9,yJ,18,bas);
+  c.fillStyle='#b45309'; c.fillRect(cx-9,yJ-64,18,64);
+  c.strokeStyle='#94a3b8'; c.lineWidth=2;   // ressort
+  c.beginPath(); c.moveTo(cx,52); c.lineTo(cx,yJ-64); c.stroke();
+  c.font='bold 13px Segoe UI'; c.fillStyle='#334155'; c.textAlign='center';
+  c.fillText(String(i+1),cx,288);
+ }
+ c.strokeStyle='#dc2626'; c.lineWidth=2.5;
+ c.beginPath(); c.moveTo(60,yC); c.lineTo(800,yC); c.stroke();
+ c.font='bold 13px Segoe UI'; c.textAlign='left';
+ c.fillStyle='#dc2626'; c.fillText('ligne de césure',60,yC-9);
+ c.fillStyle='#475569'; c.fillText('cylindre fixe',128,62);
+ c.fillText('barillet',128,yC+hB-10);
+ c.textAlign='center'; c.font='12.5px Segoe UI'; c.fillStyle='#64748b';
+ c.fillText('au repos, sans clé : les goupilles hautes (brunes) traversent la césure — le barillet est bloqué',430,268);
+ c.fillText('numéro de la goupille',430,300-1);
+})();
+</script></body></html>
