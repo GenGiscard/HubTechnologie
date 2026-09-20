@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Le thermostat de radiateur · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.6}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:900px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:36px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:680px;margin:0 auto}
+section.bloc{max-width:900px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:860px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.cahier{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Comment ça marche ? · Cycle 4</div>
+ <h1>Le thermostat de radiateur</h1>
+ <p class="sous">Tu règles sur 3, et la pièce reste à 20 °C. Sans pile, sans fil,
+ sans écran. Qui mesure la température ? Qui ferme le robinet ?</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>L’énigme</h2>
+ <div class="chapo">Le chiffre 3 n’est pas une puissance de chauffe.</div>
+ <canvas id="cv1" width="860" height="220"></canvas>
+ <div class="cahier"><b>SUR TON CAHIER — avant de lire la suite</b><br>
+ Le chiffre du thermostat règle-t-il la <b>puissance</b> du radiateur, ou autre chose ?</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Ce qu’il y a dedans</h2>
+ <div class="chapo">Une capsule de cire, un pointeau, un ressort.</div>
+ <canvas id="cv2" width="860" height="260"></canvas>
+ <div class="retenir">La <b>cire</b> se dilate en chauffant. Elle pousse le
+ <b>pointeau</b>, qui ferme le robinet. Le <b>ressort</b> le rouvre en refroidissant.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Change la température de la pièce</h2>
+ <div class="chapo">Fais varier la température et regarde le robinet.</div>
+ <canvas id="cv3" width="860" height="340"></canvas>
+ <div class="reglage">
+  <label for="sT">Température de la pièce</label>
+  <input type="range" id="sT" min="12" max="26" value="17" step="0.5">
+  <span id="vT" style="font-weight:800;color:var(--accf);min-width:80px">17,0 °C</span>
+ </div>
+ <div class="reglage">
+  <label for="sC">Consigne (le chiffre)</label>
+  <input type="range" id="sC" min="1" max="5" value="3" step="1">
+  <span id="vC" style="font-weight:800;color:var(--or);min-width:110px">3 — 20 °C</span>
+ </div>
+ <div class="retenir">Le robinet ne s’ouvre pas d’un coup : plus on approche de la
+ consigne, plus il se ferme. <b>C’est la même boucle que la chasse d’eau.</b></div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>La boucle de régulation</h2>
+ <div class="chapo">Le capteur et l’actionneur sont la même pièce.</div>
+ <canvas id="cv4" width="860" height="250"></canvas>
+ <div class="retenir">La cire <b>mesure</b> et <b>agit</b> en même temps. Aucun
+ programme, aucune électronique : la physique du matériau suffit.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Les erreurs classiques</h2>
+ <div class="chapo">Trois gestes qui empêchent le thermostat de fonctionner.</div>
+ <canvas id="cv5" width="860" height="230"></canvas>
+ <div class="cahier"><b>SUR TON CAHIER</b><br>
+ Explique pourquoi mettre le thermostat sur 5 ne chauffe pas la pièce plus vite.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Cinq questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<footer>Comment ça marche ? · Le thermostat de radiateur · Technologie · ESTIC Don Bosco</footer>
+
+<script>
+'use strict';
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+function cadre(c,x,y,w,h,coul,rempli){
+ c.fillStyle= rempli? coul : '#fff'; c.strokeStyle=coul; c.lineWidth=2.4;
+ c.beginPath(); c.roundRect(x,y,w,h,10); c.fill(); c.stroke();
+}
+/* Le thermostat en coupe. `dil` = dilatation de la cire (0 froid, 1 chaud).
+   Quand la cire se dilate, le pointeau DESCEND et ferme le clapet. */
+function thermostat(c,x,y,dil,legendes){
+ const course=30;
+ /* corps */
+ c.fillStyle='#f1f5f9'; c.strokeStyle='#475569'; c.lineWidth=2.6;
+ c.beginPath(); c.roundRect(x-52,y-96,104,116,12); c.fill(); c.stroke();
+ /* capsule de cire : elle grossit avec la dilatation */
+ const hc=26+dil*16;
+ c.fillStyle='#fbbf24'; c.strokeStyle='#b45309'; c.lineWidth=2.2;
+ c.beginPath(); c.roundRect(x-34,y-88,68,hc,7); c.fill(); c.stroke();
+ /* ressort de rappel */
+ c.strokeStyle='#64748b'; c.lineWidth=2.2;
+ for(let k=0;k<4;k++){
+  const yy=y-46+k*9;
+  c.beginPath(); c.moveTo(x-20,yy); c.lineTo(x+20,yy+5); c.stroke();
+ }
+ /* pointeau : il descend quand la cire se dilate */
+ const yp=y-6+dil*course;
+ c.strokeStyle='#334155'; c.lineWidth=8; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x,y-58); c.lineTo(x,yp); c.stroke();
+ c.fillStyle='#334155';
+ c.beginPath(); c.moveTo(x-13,yp); c.lineTo(x+13,yp); c.lineTo(x,yp+20); c.closePath(); c.fill();
+ /* siège du clapet + tuyau */
+ c.strokeStyle='#475569'; c.lineWidth=10;
+ c.beginPath(); c.moveTo(x-96,y+42); c.lineTo(x-18,y+42); c.stroke();
+ c.beginPath(); c.moveTo(x+18,y+42); c.lineTo(x+96,y+42); c.stroke();
+ /* eau chaude : le débit dépend de l'ouverture */
+ const ouv=1-dil;
+ if(ouv>0.04){
+  c.strokeStyle='#ef4444'; c.lineWidth=2+7*ouv; c.lineCap='round';
+  c.beginPath(); c.moveTo(x-90,y+42); c.lineTo(x+90,y+42); c.stroke(); c.lineCap='butt';
+ }
+ if(legendes){
+  T(c,'capsule de cire',x-64,y-78,12.5,'#b45309','right');
+  T(c,'ressort de rappel',x-64,y-38,12.5,'#64748b','right');
+  T(c,'pointeau',x+64,y-30,12.5,'#334155','left');
+  T(c,'arrivée d’eau chaude',x-96,y+70,12.5,'#b91c1c','left');
+ }
+ return ouv;
+}
+
+/* ═══ 1 · l'énigme ═══ */
+(function(){
+ const c=document.getElementById('cv1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,220);
+ T(c,'QUE RÈGLE VRAIMENT CE CHIFFRE ?',430,28,15,'#155e75');
+ /* molette graduée */
+ const cx=430, cy=118, R=56;
+ c.fillStyle='#fff'; c.strokeStyle='#475569'; c.lineWidth=3;
+ c.beginPath(); c.arc(cx,cy,R,0,6.284); c.fill(); c.stroke();
+ /* Graduations réparties sur 288°, de bas-gauche à bas-droite EN PASSANT PAR LE HAUT,
+    comme sur une molette réelle. L'ancien pas donnait un ordre incohérent. */
+ const A0=Math.PI*0.7, PAS=Math.PI*0.32;
+ for(let k=0;k<=5;k++){
+  const a=A0+k*PAS;
+  c.strokeStyle= k===3? '#ea580c':'#94a3b8'; c.lineWidth= k===3? 3:2;
+  c.beginPath();
+  c.moveTo(cx+(R-11)*Math.cos(a),cy+(R-11)*Math.sin(a));
+  c.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a)); c.stroke();
+  T(c,String(k),cx+(R-26)*Math.cos(a),cy+(R-26)*Math.sin(a)+5,13, k===3? '#ea580c':'#475569');
+ }
+ /* aiguille : arrêtée avant la graduation du 3, pour ne pas la masquer */
+ const a3=A0+3*PAS;
+ c.strokeStyle='#ea580c'; c.lineWidth=5; c.lineCap='butt';
+ c.beginPath(); c.moveTo(cx,cy); c.lineTo(cx+(R-36)*Math.cos(a3),cy+(R-36)*Math.sin(a3)); c.stroke();
+ c.fillStyle='#ea580c'; c.beginPath(); c.arc(cx,cy,6,0,6.284); c.fill();
+ cadre(c,90,88,210,60,'#dc2626');
+ T(c,'la PUISSANCE du radiateur ?',195,116,13,'#dc2626');
+ T(c,'hypothèse A',195,136,11.5,'#94a3b8');
+ cadre(c,560,88,210,60,'#16a34a');
+ T(c,'la TEMPÉRATURE visée ?',665,116,13,'#16a34a');
+ T(c,'hypothèse B',665,136,11.5,'#94a3b8');
+ T(c,'repère 3 ≈ 20 °C sur la plupart des modèles',430,200,12.5,'#5b544a');
+})();
+
+/* ═══ 2 · ce qu'il y a dedans ═══ */
+(function(){
+ const c=document.getElementById('cv2').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,260);
+ thermostat(c,470,128,0.35,true);
+ T(c,'LES TROIS PIÈCES',430,26,15,'#155e75');
+ T(c,'la cire pousse, le ressort rappelle : aucun fil, aucune pile',430,240,12.5,'#5b544a');
+})();
+
+/* ═══ 3 · simulateur ═══ */
+(function(){
+ const c=document.getElementById('cv3').getContext('2d');
+ const sT=document.getElementById('sT'), sC=document.getElementById('sC');
+ const vT=document.getElementById('vT'), vC=document.getElementById('vC');
+ const CONSIGNE={1:16,2:18,3:20,4:22,5:24};
+ function dessiner(){
+  const t=+sT.value, k=+sC.value, cible=CONSIGNE[k];
+  vT.textContent=t.toFixed(1).replace('.',',')+' °C';
+  vC.textContent=k+' — '+cible+' °C';
+  /* dilatation : nulle 2 °C sous la consigne, totale à la consigne */
+  const dil=Math.max(0,Math.min(1,(t-(cible-2))/2));
+  c.fillStyle='#fff'; c.fillRect(0,0,860,340);
+  T(c,'PLUS ON APPROCHE DE LA CONSIGNE, PLUS LE ROBINET SE FERME',430,26,14,'#155e75');
+  const ouv=thermostat(c,430,150,dil,false);
+  /* jauges */
+  const bx=640, by=214, w=180;
+  T(c,'OUVERTURE DU ROBINET',bx+w/2,by-10,12,'#64748b');
+  c.fillStyle='#e2e8f0'; c.fillRect(bx,by,w,18);
+  c.fillStyle= ouv>0.5? '#ef4444' : (ouv>0.05? '#f59e0b':'#94a3b8');
+  c.fillRect(bx,by,w*ouv,18);
+  T(c,Math.round(ouv*100)+' %',bx+w/2,by+40,20,'#155e75');
+  /* écart à la consigne */
+  const ec=t-cible;
+  T(c,'écart à la consigne : '+(ec>0?'+':'')+ec.toFixed(1).replace('.',',')+' °C',
+    220,by+8,13.5, Math.abs(ec)<0.6? '#16a34a':'#b45309');
+  T(c, dil>=0.99 ? 'consigne atteinte : le robinet est fermé'
+     : (dil<=0.01 ? 'pièce froide : le robinet est grand ouvert'
+                  : 'la pièce se réchauffe : le robinet se referme peu à peu'),
+    430, 318, 13.5, dil>=0.99? '#16a34a':'#b45309');
+ }
+ sT.addEventListener('input',dessiner);
+ sC.addEventListener('input',dessiner);
+ dessiner();
+})();
+
+/* ═══ 4 · la boucle ═══ */
+(function(){
+ const c=document.getElementById('cv4').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,250);
+ T(c,'UNE BOUCLE FERMÉE, SANS ÉLECTRONIQUE',430,28,15,'#155e75');
+ const B=[['TEMPÉRATURE','la grandeur réglée',70],
+          ['LA CIRE','elle mesure ET agit',280],
+          ['POINTEAU','il transmet',490],
+          ['ROBINET','il règle le débit',690]];
+ const w=150,h=60,y=90;
+ B.forEach(function(b,i){
+  const x=b[2];
+  cadre(c,x,y,w,h, i===1? '#b45309':'#0e7490');
+  T(c,b[0],x+w/2,y+26,12.5, i===1? '#b45309':'#155e75');
+  T(c,b[1],x+w/2,y+45,11, '#5b544a');
+  if(i<B.length-1) FLECHE(c,x+w+3,y+h/2,B[i+1][2]-3,y+h/2,3,'#0e7490');
+ });
+ c.strokeStyle='#ea580c'; c.lineWidth=3; c.lineCap='butt';
+ c.beginPath(); c.moveTo(690+w/2,y+h); c.lineTo(690+w/2,200); c.lineTo(70+w/2,200); c.stroke();
+ FLECHE(c,70+w/2,200,70+w/2,y+h+3,3,'#ea580c');
+ T(c,'le robinet règle le chauffage, donc la température : la boucle est fermée',430,224,13,'#9a3412');
+})();
+
+/* ═══ 5 · les erreurs classiques ═══ */
+(function(){
+ const c=document.getElementById('cv5').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,230);
+ T(c,'TROIS GESTES QUI EMPÊCHENT LA RÉGULATION',430,26,14,'#155e75');
+ const E=[['Rideau devant','la cire lit l’air du radiateur,','pas celui de la pièce'],
+          ['Thermostat sur 5','la pièce chauffe à la MÊME vitesse,','elle s’arrête juste plus tard'],
+          ['Fenêtre ouverte','la cire ne se dilate jamais :','le robinet reste grand ouvert']];
+ const w=252, m=30, esp=(860-2*m-3*w)/2;
+ E.forEach(function(k,i){
+  const x=m+i*(w+esp);
+  c.fillStyle='#fef2f2'; c.strokeStyle='#dc2626'; c.lineWidth=2.4;
+  c.beginPath(); c.roundRect(x,46,w,132,12); c.fill(); c.stroke();
+  T(c,k[0],x+w/2,74,13.5,'#dc2626');
+  T(c,k[1],x+w/2,112,12.5,'#5b544a');
+  T(c,k[2],x+w/2,132,12.5,'#5b544a');
+ });
+ T(c,'dans les trois cas, la cire ne mesure pas la bonne température',430,208,12.5,'#5b544a');
+})();
+
+/* ═══ 6 · exercices ═══ */
+const Q=[
+ {q:"Que règle le chiffre du thermostat ?",
+  r:["la puissance du radiateur","la température visée dans la pièce","la durée de chauffe"],b:1,
+  ex:"C’est une consigne de température, pas une puissance. Le repère 3 correspond à environ 20 °C sur la plupart des modèles."},
+ {q:"Quelle pièce mesure la température ?",
+  r:["la capsule de cire","le pointeau","le ressort"],b:0,
+  ex:"La cire se dilate quand l’air se réchauffe. Sa dilatation EST la mesure : c’est un capteur mécanique."},
+ {q:"Que se passe-t-il quand la pièce se refroidit ?",
+  r:["la cire se dilate et ferme le robinet","la cire se contracte, le ressort rouvre le robinet","rien, il faut tourner la molette"],b:1,
+  ex:"En refroidissant la cire se contracte. Le ressort de rappel repousse alors le pointeau et le robinet se rouvre : le chauffage repart tout seul."},
+ {q:"Pourquoi mettre le thermostat sur 5 ne chauffe-t-il pas plus vite ?",
+  r:["le robinet est déjà grand ouvert tant qu’il fait froid","le radiateur limite sa puissance","la cire bloque au-delà de 3"],b:0,
+  ex:"Tant que la pièce est froide, le robinet est ouvert au maximum quelle que soit la consigne. Mettre 5 ne change pas la vitesse : cela retarde seulement l’arrêt, et gaspille."},
+ {q:"Un rideau couvre le thermostat. Que se passe-t-il ?",
+  r:["rien de particulier","l’air derrière le rideau chauffe vite, le robinet ferme trop tôt","le robinet reste ouvert en permanence"],b:1,
+  ex:"La cire ne lit plus la température de la pièce mais celle de l’air chaud piégé près du radiateur. Elle ferme trop tôt, et la pièce reste froide."}
+];
+(function(){
+ const z=document.getElementById('questions');
+ const choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',function(){
+    if(b.disabled) return;
+    choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';});
+    b.style.fontWeight='800';
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){
+    b.disabled=true;
+    if(j===Q[i].b) b.classList.add('bon');
+    else if(choix[i]===j) b.classList.add('faux');
+   });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div');
+   e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko');
+   e.textContent=Q[i].ex;
+   r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ');
+  b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+
+   (n===Q.length ? 'Tu as reconnu la boucle : mesurer, agir, recommencer — comme la chasse d’eau.'
+                 : 'Revois la partie 4 : ici, la cire mesure ET agit.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>

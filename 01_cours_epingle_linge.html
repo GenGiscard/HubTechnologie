@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — L'épingle à linge · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.6}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:900px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:36px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:680px;margin:0 auto}
+section.bloc{max-width:900px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:860px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.cahier{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:220px}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Comment ça marche ? · Cycle 4</div>
+ <h1>L’épingle à linge</h1>
+ <p class="sous">Trois pièces, aucune électronique, et une force de serrage supérieure
+ à celle de tes doigts. Comment un objet aussi simple peut-il multiplier une force ?</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>L’énigme</h2>
+ <div class="chapo">Deux façons de tenir la même épingle.</div>
+ <canvas id="cv1" width="860" height="250"></canvas>
+ <div class="cahier"><b>SUR TON CAHIER — avant de lire la suite</b><br>
+ Dans quel cas l’épingle s’ouvre-t-elle le plus facilement ? Écris ton hypothèse.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Les trois pièces</h2>
+ <div class="chapo">Un ressort, deux branches, un pivot.</div>
+ <canvas id="cv2" width="860" height="260"></canvas>
+ <div class="retenir">Le <b>ressort</b> fournit la force. Le <b>pivot</b> est le point
+ d’appui. Chaque branche est un <b>levier</b>.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Déplace ton doigt</h2>
+ <div class="chapo">Change le point d’appui et regarde la force de serrage.</div>
+ <canvas id="cv3" width="860" height="330"></canvas>
+ <div class="reglage">
+  <label for="sPos">Position du doigt</label>
+  <input type="range" id="sPos" min="12" max="58" value="46" step="1">
+  <span id="vPos" style="font-weight:800;color:var(--accf);min-width:74px">46 mm</span>
+ </div>
+ <div class="retenir">Plus ton doigt s’éloigne du pivot, plus son <b>bras de levier</b>
+ est long, et plus la force de serrage augmente.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>La règle du levier</h2>
+ <div class="chapo">Une multiplication, rien de plus.</div>
+ <canvas id="cv4" width="860" height="230"></canvas>
+ <div class="retenir">Force de serrage = force du doigt × (bras du doigt ÷ bras de la
+ mâchoire). <b>Un bras long d’un côté, court de l’autre : la force est multipliée.</b></div>
+ <div class="cahier"><b>SUR TON CAHIER</b><br>
+ Bras du doigt 45 mm, bras de la mâchoire 15 mm, force du doigt 8 N.
+ Calcule la force de serrage.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Les trois familles de leviers</h2>
+ <div class="chapo">Ce qui change, c’est la place du pivot.</div>
+ <canvas id="cv5" width="860" height="250"></canvas>
+ <div class="retenir">L’épingle est un levier <b>inter-appui</b> : le pivot est entre la
+ force et la charge, comme les ciseaux ou la tenaille.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Cinq questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<footer>Comment ça marche ? · L’épingle à linge · Technologie · ESTIC Don Bosco</footer>
+
+<script>
+'use strict';
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+/* Flèche : pointe AU point d'arrivée, trait arrêté à sa base. */
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+/* Épingle vue de profil. `ouv` = écartement des mâchoires en degrés.
+   Le pivot est en (px,py) ; les mâchoires sont à GAUCHE, la prise à DROITE. */
+function epingle(c,px,py,ouv,coul){
+ const LM=118, LP=152;                 /* longueur mâchoire et longueur prise */
+ const a=ouv*Math.PI/180;
+ /* Chaque demi-épingle CROISE au pivot : la mâchoire d'un côté, la prise de l'autre.
+    Les mâchoires se rejoignent presque (l'épingle pince), les prises s'écartent. */
+ [1,-1].forEach(function(s){
+  c.strokeStyle=coul; c.lineWidth=13; c.lineCap='butt';
+  c.beginPath();
+  c.moveTo(px - LM, py + s*6);                       // pointe de mâchoire, presque jointive
+  c.lineTo(px, py - s*10);                           // passage au pivot : le brin croise
+  c.lineTo(px + LP, py - s*(10 + LP*Math.sin(a)));   // prise, nettement écartée
+  c.stroke();
+ });
+ /* le linge pincé entre les mâchoires : rend l'objet reconnaissable */
+ c.fillStyle='#e0f2fe'; c.strokeStyle='#7dd3fc'; c.lineWidth=2;
+ c.beginPath(); c.roundRect(px-LM-30, py-26, 34, 52, 5); c.fill(); c.stroke();
+ /* ressort : spires autour du pivot */
+ c.strokeStyle='#64748b'; c.lineWidth=2.6;
+ for(let k=0;k<3;k++){
+  c.beginPath(); c.arc(px, py, 11+k*4, 0, 6.284); c.stroke();
+ }
+ c.fillStyle='#334155'; c.beginPath(); c.arc(px,py,4,0,6.284); c.fill();
+}
+
+/* ═══ 1 · l'énigme ═══ */
+(function(){
+ const c=document.getElementById('cv1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,250);
+ T(c,'DEUX FAÇONS DE TENIR LA MÊME ÉPINGLE',430,26,14,'#155e75');
+ [[220,'#0e7490','tout au bout','A'],[640,'#ea580c','près du pivot','B']].forEach(function(q,i){
+  const px=q[0], py=132;
+  epingle(c,px,py,11,q[1]);
+  const xd = i===0 ? px+140 : px+48;
+  c.fillStyle='#fbbf24'; c.strokeStyle='#b45309'; c.lineWidth=2;
+  c.beginPath(); c.ellipse(xd,py-30,15,10,0,0,6.284); c.fill(); c.stroke();
+  c.beginPath(); c.ellipse(xd,py+30,15,10,0,0,6.284); c.fill(); c.stroke();
+  FLECHE(c,xd,py-58,xd,py-42,3,'#b45309');
+  FLECHE(c,xd,py+58,xd,py+42,3,'#b45309');
+  T(c,q[3]+' — '+q[2],px+40,214,14,q[1]);
+ });
+ T(c,'dans quel cas faut-il appuyer le moins fort ?',430,238,13,'#5b544a');
+})();
+
+/* ═══ 2 · les trois pièces ═══ */
+(function(){
+ const c=document.getElementById('cv2').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,260);
+ T(c,'LES TROIS PIÈCES',430,26,14,'#155e75');
+ const px=470, py=132;
+ epingle(c,px,py,11,'#0e7490');
+ FLECHE(c,300,62,px-8,py-26,2.6,'#64748b');
+ T(c,'le ressort : il fournit la force',292,58,13,'#64748b','right');
+ FLECHE(c,300,206,px-16,py+26,2.6,'#334155');
+ T(c,'le pivot : point d’appui',292,212,13,'#334155','right');
+ FLECHE(c,300,132,px-96,py-6,2.6,'#0e7490');
+ T(c,'les branches : deux leviers',292,136,13,'#0e7490','right');
+ T(c,'mâchoires',px-118,214,12.5,'#5b544a');
+ T(c,'prise',px+126,214,12.5,'#5b544a');
+})();
+
+/* ═══ 3 · simulateur du levier ═══ */
+(function(){
+ const cv=document.getElementById('cv3'), c=cv.getContext('2d');
+ const s=document.getElementById('sPos'), aff=document.getElementById('vPos');
+ const BRAS_M=15;              /* bras de la mâchoire, en mm : fixe */
+ const F_DOIGT=8;              /* force du doigt, en newtons */
+ function dessiner(){
+  const bras=+s.value;
+  aff.textContent=bras+' mm';
+  const F=F_DOIGT*bras/BRAS_M;
+  c.fillStyle='#fff'; c.fillRect(0,0,860,330);
+  T(c,'PLUS LE BRAS EST LONG, PLUS LA FORCE EST GRANDE',430,26,14,'#155e75');
+  const px=380, py=150;
+  epingle(c,px,py,11,'#0e7490');
+  /* position du doigt, proportionnelle au bras choisi */
+  const xd=px+bras*3.1;
+  c.fillStyle='#fbbf24'; c.strokeStyle='#b45309'; c.lineWidth=2;
+  c.beginPath(); c.ellipse(xd,py-34,16,11,0,0,6.284); c.fill(); c.stroke();
+  c.beginPath(); c.ellipse(xd,py+34,16,11,0,0,6.284); c.fill(); c.stroke();
+  /* cotes des deux bras */
+  c.strokeStyle='#7c3aed'; c.lineWidth=1.8;
+  c.beginPath(); c.moveTo(px,py+66); c.lineTo(xd,py+66); c.stroke();
+  T(c,'bras du doigt : '+bras+' mm',(px+xd)/2,py+86,12.5,'#7c3aed');
+  c.strokeStyle='#ea580c';
+  c.beginPath(); c.moveTo(px-BRAS_M*3.1,py+66); c.lineTo(px,py+66); c.stroke();
+  T(c,BRAS_M+' mm',px-BRAS_M*1.6,py+86,12.5,'#ea580c');
+  /* jauge de force */
+  const bx=620, by=228, w=200;
+  T(c,'FORCE DE SERRAGE',bx+w/2,by-10,12.5,'#64748b');
+  c.fillStyle='#e2e8f0'; c.fillRect(bx,by,w,18);
+  c.fillStyle= F>40? '#16a34a':'#f59e0b';
+  c.fillRect(bx,by,w*Math.min(1,F/50),18);
+  T(c,Math.round(F)+' N',bx+w/2,by+40,20,'#155e75');
+  T(c,'force du doigt : '+F_DOIGT+' N',180,by+8,13,'#5b544a');
+  T(c,'multipliée par '+(bras/BRAS_M).toFixed(1),180,by+30,13,'#5b544a');
+ }
+ s.addEventListener('input',dessiner);
+ dessiner();
+})();
+
+/* ═══ 4 · la règle du levier ═══ */
+(function(){
+ const c=document.getElementById('cv4').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,230);
+ T(c,'LA RÈGLE DU LEVIER',430,26,14,'#155e75');
+ const py=118, px=430;
+ /* barre et pivot */
+ c.strokeStyle='#334155'; c.lineWidth=9; c.lineCap='butt';
+ c.beginPath(); c.moveTo(160,py); c.lineTo(700,py); c.stroke();
+ c.fillStyle='#334155';
+ c.beginPath(); c.moveTo(px,py+6); c.lineTo(px-20,py+40); c.lineTo(px+20,py+40);
+ c.closePath(); c.fill();
+ T(c,'PIVOT',px,py+58,12.5,'#334155');
+ /* côté charge : bras court, grosse force */
+ FLECHE(c,250,58,250,py-10,5,'#ea580c');
+ c.strokeStyle='#ea580c'; c.lineWidth=1.8;
+ c.beginPath(); c.moveTo(250,py+24); c.lineTo(px,py+24); c.stroke();
+ T(c,'bras COURT',(250+px)/2,py+18,12.5,'#ea580c');
+ T(c,'grande force',250,46,13,'#ea580c');
+ /* côté effort : bras long, petite force */
+ FLECHE(c,640,74,640,py-10,2.6,'#0e7490');
+ c.strokeStyle='#0e7490'; c.lineWidth=1.8;
+ c.beginPath(); c.moveTo(px,py+24); c.lineTo(640,py+24); c.stroke();
+ T(c,'bras LONG',(px+640)/2,py+18,12.5,'#0e7490');
+ T(c,'petite force',640,62,13,'#0e7490');
+ T(c,'force × bras d’un côté  =  force × bras de l’autre',430,206,15,'#155e75');
+})();
+
+/* ═══ 5 · les trois familles ═══ */
+(function(){
+ const c=document.getElementById('cv5').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,250);
+ T(c,'TROIS FAMILLES DE LEVIERS',430,26,14,'#155e75');
+ const F=[['INTER-APPUI','le pivot au milieu','épingle, ciseaux, tenaille',0.5,'#16a34a'],
+          ['INTER-RÉSISTANT','la charge au milieu','brouette, casse-noix',0.78,'#0e7490'],
+          ['INTER-MOTEUR','la force au milieu','pince à épiler, canne à pêche',0.22,'#7c3aed']];
+ const w=250, m=30, esp=(860-2*m-3*w)/2;
+ F.forEach(function(k,i){
+  const x=m+i*(w+esp), py=118, coul=k[4];
+  c.fillStyle='#f8fafc'; c.strokeStyle=coul; c.lineWidth=2.4;
+  c.beginPath(); c.roundRect(x,44,w,150,12); c.fill(); c.stroke();
+  T(c,k[0],x+w/2,68,13,coul);
+  /* barre */
+  c.strokeStyle='#334155'; c.lineWidth=6; c.lineCap='butt';
+  c.beginPath(); c.moveTo(x+26,py); c.lineTo(x+w-26,py); c.stroke();
+  const L=w-52, xp=x+26+L*k[3];
+  /* pivot */
+  c.fillStyle='#334155';
+  c.beginPath(); c.moveTo(xp,py+4); c.lineTo(xp-13,py+26); c.lineTo(xp+13,py+26);
+  c.closePath(); c.fill();
+  /* force (bleu) et charge (orange) aux extrémités restantes */
+  const xf = i===2 ? x+26+L*0.55 : x+w-30;
+  const xc = i===1 ? x+26+L*0.5  : x+30;
+  FLECHE(c,xf,py-42,xf,py-8,3,'#0e7490');
+  FLECHE(c,xc,py-8,xc,py-42,3,'#ea580c');
+  T(c,k[1],x+w/2,162,12.5,'#5b544a');
+  T(c,k[2],x+w/2,180,11.5,'#94a3b8');
+ });
+ T(c,'force appliquée',176,236,12,'#0e7490');
+ T(c,'charge à vaincre',330,236,12,'#ea580c');
+ T(c,'pivot',470,236,12,'#334155');
+})();
+
+/* ═══ 6 · exercices ═══ */
+const Q=[
+ {q:"Où faut-il appuyer pour ouvrir l’épingle le plus facilement ?",
+  r:["tout au bout des branches","juste à côté du pivot","au milieu"],b:0,
+  ex:"Plus le doigt est loin du pivot, plus son bras de levier est long : il faut donc moins de force pour obtenir le même effet."},
+ {q:"Bras du doigt 45 mm, bras de la mâchoire 15 mm. Par combien la force est-elle multipliée ?",
+  r:["par 30","par 3","par 60"],b:1,
+  ex:"45 ÷ 15 = 3. La force du doigt est multipliée par 3 : c’est le rapport des deux bras de levier."},
+ {q:"Avec une force de doigt de 8 N et ce rapport, quelle est la force de serrage ?",
+  r:["24 N","8 N","3 N"],b:0,
+  ex:"8 × 3 = 24 N. Un objet sans moteur ni pile multiplie bien une force — au prix d’un déplacement plus grand du côté du doigt."},
+ {q:"Quelle pièce fournit réellement la force de serrage ?",
+  r:["le pivot","les mâchoires","le ressort"],b:2,
+  ex:"Le ressort est comprimé quand on ouvre l’épingle : il restitue cette énergie en refermant les mâchoires. Le levier, lui, ne fait que multiplier."},
+ {q:"L’épingle appartient à quelle famille de leviers ?",
+  r:["inter-appui, comme les ciseaux","inter-résistant, comme la brouette","inter-moteur, comme la pince à épiler"],b:0,
+  ex:"Le pivot est situé entre la force du doigt et la charge à serrer : c’est un levier inter-appui, comme les ciseaux et la tenaille."}
+];
+(function(){
+ const z=document.getElementById('questions');
+ const choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',function(){
+    if(b.disabled) return;
+    choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';});
+    b.style.fontWeight='800';
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){
+    b.disabled=true;
+    if(j===Q[i].b) b.classList.add('bon');
+    else if(choix[i]===j) b.classList.add('faux');
+   });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div');
+   e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko');
+   e.textContent=Q[i].ex;
+   r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ');
+  b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+
+   (n===Q.length ? 'Tu sais lire un levier : repère le pivot, mesure les deux bras.'
+                 : 'Revois la partie 4 : force × bras d’un côté = force × bras de l’autre.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>

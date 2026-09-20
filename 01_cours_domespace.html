@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — La maison qui suit le soleil · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.6}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:900px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:36px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:700px;margin:0 auto}
+section.bloc{max-width:900px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:860px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.cahier{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+#sObj{background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.10);border-left:5px solid var(--acc);
+ border-radius:14px;padding:16px 20px;margin:16px auto;max-width:900px;text-align:left;font-size:15px}
+#sObj .lab{font-size:12.5px;font-weight:900;letter-spacing:1px;color:var(--gris);margin-bottom:6px}
+#sObj table{width:100%;border-collapse:collapse;font-size:14px}
+#sObj td{padding:5px 9px;border-bottom:1px solid #e2e8f0;vertical-align:top}
+#sObj td:first-child{white-space:nowrap;font-weight:800;color:var(--accf)}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Séquence 3ème · d’après un sujet de DNB</div>
+ <h1>La maison qui suit le soleil</h1>
+ <p class="sous">Une maison ronde en bois, posée sur un rail, qui pivote lentement pour
+ présenter ses baies vitrées au soleil. Gagner de la chaleur en hiver, s’en protéger
+ en été — sans chauffage supplémentaire.</p>
+</header>
+
+<div id="sObj">
+ <div class="lab">OBJECTIFS DE LA SÉQUENCE</div>
+ <ul style="margin:0 0 14px 20px;line-height:1.85">
+  <li>Relier un besoin à une solution technique et à ses critères chiffrés.</li>
+  <li>Identifier les chaînes d’énergie et d’information d’un système automatisé.</li>
+  <li>Calculer une vitesse de rotation et estimer un gain énergétique.</li>
+ </ul>
+ <div class="lab">COMPÉTENCES TRAVAILLÉES — BO n° 9 du 29 février 2024</div>
+ <table>
+  <tr><td>T1 · C3</td><td>Caractériser et choisir un objet ou un système technique selon différents critères</td></tr>
+  <tr><td>T2 · C4</td><td>Décrire et caractériser l’organisation interne d’un objet ou d’un système technique</td></tr>
+  <tr><td>T3 · C2</td><td>Analyser le comportement attendu d’un système et traduire un besoin en programme</td></tr>
+ </table>
+ <div style="margin-top:10px;font-size:13.5px;color:var(--gris)">
+  <b>Repère de progressivité :</b> 3e — analyser un système pluritechnologique réel et
+  justifier les choix de conception par des données chiffrées.</div>
+</div>
+
+<section class="bloc">
+ <h2><span class="num">1</span>Le besoin</h2>
+ <div class="chapo">Le soleil ne reste pas à la même place.</div>
+ <canvas id="cv1" width="860" height="270"></canvas>
+ <div class="cahier"><b>SUR TON CAHIER — avant de lire la suite</b><br>
+ Comment capter le soleil du matin ET celui du soir avec les mêmes fenêtres ?</div>
+ <div class="retenir">Une maison fixe ne voit le soleil de face qu’une partie de la
+ journée. Une maison <b>orientable</b> le suit.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Fais tourner la maison</h2>
+ <div class="chapo">Oriente les baies vitrées et regarde les apports solaires.</div>
+ <canvas id="cv2" width="860" height="340"></canvas>
+ <div class="reglage">
+  <label for="sH">Heure</label>
+  <input type="range" id="sH" min="7" max="19" value="9" step="0.5">
+  <span id="vH" style="font-weight:800;color:var(--accf);min-width:62px">9 h 00</span>
+ </div>
+ <div class="reglage">
+  <label for="sR">Orientation de la maison</label>
+  <input type="range" id="sR" min="-90" max="90" value="0" step="5">
+  <span id="vR" style="font-weight:800;color:var(--or);min-width:62px">0°</span>
+ </div>
+ <div class="retenir">Le soleil se déplace de <b>15° par heure</b>. Pour rester face à
+ lui, la maison doit tourner à la même vitesse.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Comment elle tourne</h2>
+ <div class="chapo">Un moteur, un réducteur, un rail circulaire.</div>
+ <canvas id="cv3" width="860" height="260"></canvas>
+ <div class="retenir">Un moteur rapide et peu puissant devient, après le
+ <b>réducteur</b>, un mouvement très lent mais capable de déplacer 30 tonnes.</div>
+ <div class="cahier"><b>SUR TON CAHIER</b><br>
+ Le moteur tourne à 1500 tr/min, le réducteur a un rapport de 1/30 000.
+ Calcule la vitesse de sortie en tr/min, puis la durée d’un tour complet.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Qui décide de tourner</h2>
+ <div class="chapo">La chaîne d’information commande la chaîne d’énergie.</div>
+ <canvas id="cv4" width="860" height="280"></canvas>
+ <div class="retenir">L’<b>horloge</b> suffit : la position du soleil est prévisible.
+ Un capteur de luminosité serait trompé par un nuage.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Les limites</h2>
+ <div class="chapo">Aucune solution n’est bonne sur tous les critères.</div>
+ <canvas id="cv5" width="860" height="220"></canvas>
+ <div class="retenir">La rotation consomme peu, mais elle ajoute un mécanisme à
+ entretenir et un coût de construction plus élevé.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Cinq questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<footer>Séquence 3ème · La maison qui suit le soleil · Technologie · ESTIC Don Bosco</footer>
+
+<script>
+'use strict';
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+function cadre(c,x,y,w,h,coul,rempli){
+ c.fillStyle= rempli? coul : '#fff'; c.strokeStyle=coul; c.lineWidth=2.4;
+ c.beginPath(); c.roundRect(x,y,w,h,10); c.fill(); c.stroke();
+}
+/* Maison ronde vue de DESSUS. `rot` = orientation en degrés (0 = baies au sud).
+   Les baies vitrées occupent un secteur ; le reste du mur est aveugle et isolé. */
+function maison(c,cx,cy,R,rot){
+ const a=rot*Math.PI/180;
+ c.fillStyle='#f5f0e6'; c.strokeStyle='#8b6f47'; c.lineWidth=3;
+ c.beginPath(); c.arc(cx,cy,R,0,6.284); c.fill(); c.stroke();
+ /* secteur vitré, centré sur l'orientation, ouvert de 120° */
+ c.fillStyle='#bae6fd'; c.strokeStyle='#0284c7'; c.lineWidth=3;
+ c.beginPath(); c.moveTo(cx,cy);
+ c.arc(cx,cy,R, a-Math.PI/2-Math.PI/3, a-Math.PI/2+Math.PI/3);
+ c.closePath(); c.fill(); c.stroke();
+ /* rail */
+ c.strokeStyle='#94a3b8'; c.lineWidth=2; c.setLineDash([5,5]);
+ c.beginPath(); c.arc(cx,cy,R+13,0,6.284); c.stroke(); c.setLineDash([]);
+ c.fillStyle='#64748b'; c.beginPath(); c.arc(cx,cy,5,0,6.284); c.fill();
+}
+/* Soleil à l'heure h : de 7 h (est, -75°) à 19 h (ouest, +75°), 15°/h. */
+function angleSoleil(h){ return (h-13)*15; }
+function soleil(c,cx,cy,D,ang,coul){
+ const a=(ang-90)*Math.PI/180;
+ const x=cx+D*Math.cos(a), y=cy+D*Math.sin(a);
+ c.fillStyle=coul||'#fbbf24'; c.beginPath(); c.arc(x,y,17,0,6.284); c.fill();
+ c.strokeStyle=coul||'#fbbf24'; c.lineWidth=2.6; c.lineCap='butt';
+ for(let k=0;k<8;k++){
+  const b=k*Math.PI/4;
+  c.beginPath();
+  c.moveTo(x+21*Math.cos(b),y+21*Math.sin(b));
+  c.lineTo(x+29*Math.cos(b),y+29*Math.sin(b)); c.stroke();
+ }
+ return {x:x,y:y};
+}
+
+/* ═══ 1 · le besoin ═══ */
+(function(){
+ const c=document.getElementById('cv1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,270);
+ T(c,'UNE MAISON FIXE NE VOIT LE SOLEIL DE FACE QU’UNE FOIS PAR JOUR',430,26,14,'#155e75');
+ const cy=150;
+ [[180,'9 h',-60],[430,'13 h',0],[680,'17 h',60]].forEach(function(q){
+  const cx=q[0];
+  maison(c,cx,cy,44,0);                 /* maison TOUJOURS orientée au sud */
+  const s=soleil(c,cx,cy,96,q[2]);
+  c.strokeStyle='#fbbf24'; c.lineWidth=2; c.setLineDash([4,4]);
+  c.beginPath(); c.moveTo(s.x,s.y); c.lineTo(cx,cy); c.stroke(); c.setLineDash([]);
+  T(c,q[1],cx,238,13.5,'#5b544a');
+  T(c, q[2]===0? 'baies en plein soleil':'soleil de côté', cx,256,12, q[2]===0? '#16a34a':'#dc2626');
+ });
+})();
+
+/* ═══ 2 · simulateur ═══ */
+(function(){
+ const c=document.getElementById('cv2').getContext('2d');
+ const sH=document.getElementById('sH'), sR=document.getElementById('sR');
+ const vH=document.getElementById('vH'), vR=document.getElementById('vR');
+ function dessiner(){
+  const h=+sH.value, rot=+sR.value, as=angleSoleil(h);
+  const m=Math.round((h%1)*60);
+  vH.textContent=Math.floor(h)+' h '+(m<10?'0':'')+m;
+  vR.textContent=(rot>0?'+':'')+rot+'°';
+  /* écart entre l'orientation des baies et la direction du soleil */
+  const ec=Math.abs(as-rot);
+  const rend=Math.max(0,Math.cos(ec*Math.PI/180));
+  c.fillStyle='#fff'; c.fillRect(0,0,860,340);
+  T(c,'ORIENTE LES BAIES VERS LE SOLEIL',430,26,14,'#155e75');
+  const cx=350, cy=170;
+  maison(c,cx,cy,74,rot);
+  const s=soleil(c,cx,cy,132,as);
+  c.strokeStyle='#fbbf24'; c.lineWidth=2.4; c.setLineDash([5,5]);
+  c.beginPath(); c.moveTo(s.x,s.y); c.lineTo(cx,cy); c.stroke(); c.setLineDash([]);
+  T(c,'est',cx-176,cy+6,12.5,'#94a3b8'); T(c,'ouest',cx+176,cy+6,12.5,'#94a3b8');
+  /* jauge d'apport solaire */
+  const bx=620, by=150, w=190;
+  T(c,'APPORT SOLAIRE PAR LES BAIES',bx+w/2,by-14,12,'#64748b');
+  c.fillStyle='#e2e8f0'; c.fillRect(bx,by,w,20);
+  c.fillStyle= rend>0.9? '#16a34a' : (rend>0.5? '#f59e0b':'#dc2626');
+  c.fillRect(bx,by,w*rend,20);
+  T(c,Math.round(rend*100)+' %',bx+w/2,by+48,22,'#155e75');
+  T(c,'écart baies / soleil : '+Math.round(ec)+'°',bx+w/2,by+72,13,'#5b544a');
+  T(c, ec<8 ? 'la maison est bien orientée'
+     : 'tourne la maison de '+Math.round(as-rot)+'° pour viser le soleil',
+    430, 318, 13.5, ec<8? '#16a34a':'#b45309');
+ }
+ sH.addEventListener('input',dessiner);
+ sR.addEventListener('input',dessiner);
+ dessiner();
+})();
+
+/* ═══ 3 · la chaîne d'énergie ═══ */
+(function(){
+ const c=document.getElementById('cv3').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,260);
+ T(c,'LA CHAÎNE D’ÉNERGIE DE LA ROTATION',430,26,14,'#155e75');
+ const B=[['ALIMENTER','le réseau 230 V','#0e7490'],
+          ['DISTRIBUER','le contacteur','#0e7490'],
+          ['CONVERTIR','le moteur','#ea580c'],
+          ['TRANSMETTRE','le réducteur','#7c3aed'],
+          ['AGIR','la maison tourne','#16a34a']];
+ const w=142, m=24, esp=(860-2*m-5*w)/4, y=90;
+ B.forEach(function(b,i){
+  const x=m+i*(w+esp);
+  cadre(c,x,y,w,68,b[2]);
+  T(c,b[0],x+w/2,y+28,12.5,b[2]);
+  T(c,b[1],x+w/2,y+48,11.5,'#5b544a');
+  if(i<B.length-1) FLECHE(c,x+w+3,y+34,x+w+esp-3,y+34,3,'#94a3b8');
+ });
+ T(c,'1500 tr/min',m+2*(w+esp)+w/2,y+86,12.5,'#ea580c');
+ T(c,'rapport 1/30 000',m+3*(w+esp)+w/2,y+86,12.5,'#7c3aed');
+ T(c,'0,05 tr/min',m+4*(w+esp)+w/2,y+86,12.5,'#16a34a');
+ T(c,'le réducteur échange de la vitesse contre de la force',430,230,13,'#5b544a');
+})();
+
+/* ═══ 4 · la chaîne d'information ═══ */
+(function(){
+ const c=document.getElementById('cv4').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,280);
+ T(c,'LA CHAÎNE D’INFORMATION COMMANDE LA ROTATION',430,26,14,'#155e75');
+ const B=[['ACQUÉRIR','l’horloge','#0e7490',110],
+          ['TRAITER','l’automate','#7c3aed',360],
+          ['COMMUNIQUER','l’ordre de rotation','#ea580c',610]];
+ const w=172, y=86;
+ B.forEach(function(b,i){
+  cadre(c,b[3],y,w,66,b[2]);
+  T(c,b[0],b[3]+w/2,y+27,12.5,b[2]);
+  T(c,b[1],b[3]+w/2,y+47,11.5,'#5b544a');
+  if(i<B.length-1) FLECHE(c,b[3]+w+4,y+33,B[i+1][3]-4,y+33,3,'#94a3b8');
+ });
+ /* vers la chaîne d'énergie */
+ cadre(c,360,196,172,52,'#16a34a');
+ T(c,'CHAÎNE D’ÉNERGIE',446,222,12.5,'#16a34a');
+ T(c,'le moteur exécute',446,240,11.5,'#5b544a');
+ FLECHE(c,696,158,532,206,3,'#ea580c');
+ T(c,'pourquoi une horloge et non un capteur de lumière ?',430,272,13,'#5b544a');
+})();
+
+/* ═══ 5 · les limites ═══ */
+(function(){
+ const c=document.getElementById('cv5').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,220);
+ T(c,'DEUX FACES DE LA MÊME SOLUTION',430,26,14,'#155e75');
+ const AV=['chauffage réduit en hiver','ombre choisie en été','vue orientable'];
+ const IN=['mécanisme à entretenir','coût de construction','raccordements souples'];
+ [[70,'CE QU’ELLE APPORTE','#16a34a',AV],[460,'CE QU’ELLE COÛTE','#dc2626',IN]].forEach(function(q){
+  const x=q[0];
+  c.fillStyle= q[2]==='#16a34a'? '#f0fdf4':'#fef2f2';
+  c.strokeStyle=q[2]; c.lineWidth=2.4;
+  c.beginPath(); c.roundRect(x,48,330,132,12); c.fill(); c.stroke();
+  T(c,q[1],x+165,74,13,q[2]);
+  q[3].forEach(function(t,i){ T(c,t,x+165,102+i*24,12.5,'#5b544a'); });
+ });
+ T(c,'un choix technique se juge toujours sur PLUSIEURS critères',430,206,12.5,'#5b544a');
+})();
+
+/* ═══ 6 · exercices ═══ */
+const Q=[
+ {q:"De combien de degrés le soleil se déplace-t-il en une heure ?",
+  r:["15°","30°","45°"],b:0,
+  ex:"360° en 24 heures, soit 360 ÷ 24 = 15° par heure. La maison doit tourner à cette vitesse pour rester face au soleil."},
+ {q:"Le moteur tourne à 1500 tr/min et le réducteur a un rapport de 1/30 000. Quelle est la vitesse de sortie ?",
+  r:["0,05 tr/min","50 tr/min","4,5 tr/min"],b:0,
+  ex:"1500 ÷ 30 000 = 0,05 tr/min. Un tour complet demande donc 1 ÷ 0,05 = 20 minutes."},
+ {q:"À quoi sert le réducteur ?",
+  r:["à augmenter la vitesse","à échanger de la vitesse contre de la force","à produire de l’électricité"],b:1,
+  ex:"Un moteur rapide et peu puissant devient, après réduction, un mouvement très lent mais capable de déplacer plusieurs dizaines de tonnes."},
+ {q:"Pourquoi commander la rotation par une horloge plutôt que par un capteur de lumière ?",
+  r:["l’horloge coûte moins cher","la position du soleil est prévisible, un nuage tromperait le capteur","le capteur ne fonctionne pas l’hiver"],b:1,
+  ex:"La trajectoire du soleil se calcule à l’avance. Un capteur de luminosité ferait tourner la maison au premier nuage : l’information serait moins fiable."},
+ {q:"Dans la chaîne d’énergie, quel élément joue le rôle de CONVERTIR ?",
+  r:["le contacteur","le moteur","le réducteur"],b:1,
+  ex:"Le moteur transforme l’électricité en mouvement : l’énergie change de forme. Le réducteur, lui, transmet sans changer la forme."}
+];
+(function(){
+ const z=document.getElementById('questions');
+ const choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',function(){
+    if(b.disabled) return;
+    choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';});
+    b.style.fontWeight='800';
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){
+    b.disabled=true;
+    if(j===Q[i].b) b.classList.add('bon');
+    else if(choix[i]===j) b.classList.add('faux');
+   });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div');
+   e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko');
+   e.textContent=Q[i].ex;
+   r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ');
+  b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+
+   (n===Q.length ? 'Tu sais relier le besoin, la chaîne d’énergie et la chaîne d’information.'
+                 : 'Revois les parties 3 et 4 : qui décide, et qui exécute.');
+  this.disabled=true;
+ });
+})();
+</script>
+
+<div id="sTrace" style="max-width:900px;margin:34px auto;text-align:left;padding:0 20px">
+ <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:8px">
+  TRACE ÉCRITE — À RECOPIER SUR LE CAHIER</div>
+ <canvas id="cvTrace" width="860" height="200"></canvas>
+ <ul style="margin:0 0 0 20px;line-height:1.95;font-size:16px">
+  <li>Le soleil se déplace de <b>15° par heure</b> : une maison orientable le suit.</li>
+  <li>La <b>chaîne d’information</b> (horloge → automate) commande la <b>chaîne d’énergie</b> (moteur → réducteur).</li>
+  <li>Un <b>réducteur</b> échange de la vitesse contre de la force.</li>
+  <li>Un choix technique se juge sur <b>plusieurs critères</b> : gain, coût, entretien.</li>
+ </ul>
+</div>
+
+<script>
+(function(){
+ const cv=document.getElementById('cvTrace'); if(!cv) return;
+ const c=cv.getContext('2d');
+ const B=[['LE BESOIN','suivre le soleil'],['DÉCIDER','horloge, automate'],
+          ['ENTRAÎNER','moteur, réducteur'],['AGIR','la maison pivote']];
+ c.fillStyle='#fff'; c.fillRect(0,0,860,200);
+ T(c,'LA MAISON QUI SUIT LE SOLEIL',430,28,14.5,'#155e75');
+ const n=B.length, m=24, e=18, w=Math.floor((860-2*m-(n-1)*e)/n);
+ B.forEach(function(b,i){
+  const x=m+i*(w+e);
+  cadre(c,x,58,w,68,'#0e7490');
+  T(c,b[0],x+w/2,88,13,'#155e75');
+  T(c,b[1],x+w/2,108,11.5,'#5b544a');
+  if(i<n-1) FLECHE(c,x+w+3,92,x+w+e-3,92,3,'#0e7490');
+ });
+ T(c,'besoin → décider → entraîner → agir : 15° par heure, sans chauffage ajouté',430,168,13.5,'#5b544a');
+})();
+</script>
+</body>
+</html>

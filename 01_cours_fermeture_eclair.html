@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — La fermeture éclair · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.6}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:900px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:36px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:680px;margin:0 auto}
+section.bloc{max-width:900px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:860px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.cahier{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:220px}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.btn.sec{background:#fff;color:var(--accf);border:2px solid var(--acc)}
+.btn.actif{background:var(--or)}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Comment ça marche ? · Cycle 4</div>
+ <h1>La fermeture éclair</h1>
+ <p class="sous">Un seul geste, des dizaines de dents qui s’emboîtent une par une.
+ Et si tu tires du mauvais côté, tout se défait. Que fait vraiment le curseur ?</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>L’énigme</h2>
+ <div class="chapo">Le curseur ne contient ni moteur ni ressort.</div>
+ <canvas id="cv1" width="860" height="230"></canvas>
+ <div class="cahier"><b>SUR TON CAHIER — avant de lire la suite</b><br>
+ Comment un objet sans pièce mobile peut-il fermer dans un sens et ouvrir dans l’autre ?</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Ce qu’il y a dedans</h2>
+ <div class="chapo">Trois pièces seulement.</div>
+ <canvas id="cv2" width="860" height="250"></canvas>
+ <div class="retenir">Le curseur est une <b>came</b> : une forme fixe qui guide. C’est le
+ <b>coin central</b> qui fait tout le travail.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Fais glisser le curseur</h2>
+ <div class="chapo">Tire vers le haut ou vers le bas et observe les dents.</div>
+ <canvas id="cv3" width="860" height="360"></canvas>
+ <div class="reglage">
+  <label for="sPos">Position du curseur</label>
+  <input type="range" id="sPos" min="0" max="100" value="55" step="1">
+  <span id="vEtat" style="font-weight:800;color:var(--accf);min-width:110px">fermeture</span>
+ </div>
+ <div class="retenir">Même curseur, même forme, <b>deux effets opposés</b> : tout dépend
+ du sens dans lequel les dents traversent le Y.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Pourquoi ça tient</h2>
+ <div class="chapo">Une dent seule ne tient rien. Cent dents, si.</div>
+ <canvas id="cv4" width="860" height="240"></canvas>
+ <div class="retenir">Chaque dent a un <b>creux</b> et une <b>bosse</b>. La bosse de l’une
+ entre dans le creux de sa voisine : elles ne peuvent plus s’écarter latéralement.</div>
+ <div class="cahier"><b>SUR TON CAHIER</b><br>
+ Une fermeture de 60 cm avec 5 dents par centimètre. Combien d’emboîtements ?</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Le même principe ailleurs</h2>
+ <div class="chapo">La came transforme un mouvement en un autre.</div>
+ <canvas id="cv5" width="860" height="180"></canvas>
+ <div class="retenir">Partout, une <b>forme fixe</b> impose sa trajectoire à une pièce qui
+ la parcourt. Aucune énergie n’est produite : seul le mouvement est transformé.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Cinq questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<footer>Comment ça marche ? · La fermeture éclair · Technologie · ESTIC Don Bosco</footer>
+
+<script>
+'use strict';
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+/* Flèche : pointe AU point d'arrivée, trait arrêté à sa base. */
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+/* Une dent vue de dessus : un corps, une BOSSE devant, un CREUX derrière.
+   s = +1 : dent de la rangée gauche ; s = -1 : rangée droite (miroir). */
+function dent(c,x,y,s,coul){
+ const L=17, e=9;
+ c.fillStyle=coul; c.strokeStyle='#334155'; c.lineWidth=1.4;
+ c.beginPath();
+ c.moveTo(x, y-L/2); c.lineTo(x+s*e, y-L/2);
+ c.lineTo(x+s*e, y-4); c.lineTo(x+s*(e+6), y);   /* bosse */
+ c.lineTo(x+s*e, y+4); c.lineTo(x+s*e, y+L/2);
+ c.lineTo(x, y+L/2);
+ c.lineTo(x, y+3); c.lineTo(x-s*5, y); c.lineTo(x, y-3);  /* creux */
+ c.closePath(); c.fill(); c.stroke();
+}
+/* Deux rangées de dents. `eng` = fraction engagée (0 ouvert, 1 fermé) à partir du bas. */
+/* Partie OUVERTE : deux colonnes écartées, dents face à face.
+   Partie FERMÉE : une seule colonne où les dents ALTERNENT gauche/droite, comme sur
+   une vraie fermeture — c'est cette alternance qui rend l'emboîtement lisible.
+   La version précédente superposait les deux dents au même endroit : illisible. */
+function paire(c,cx,y,ferme,i){
+ if(ferme){
+  const s = (i%2===0)? 1 : -1;
+  dent(c, cx - s*3, y, s, s>0? '#0e7490':'#ea580c');
+ } else {
+  dent(c, cx-28, y, 1, '#94a3b8');
+  dent(c, cx+28, y, -1, '#cbd5e1');
+ }
+}
+function rangees(c,cx,y0,y1,eng,pasY){
+ const n=Math.floor((y1-y0)/pasY);
+ for(let i=0;i<n;i++){
+  paire(c, cx, y0+i*pasY, i >= n*(1-eng), i);
+ }
+}
+/* Curseur : le Y. Deux couloirs qui se rejoignent autour d'un coin central. */
+function curseur(c,cx,cy,coul){
+ c.strokeStyle=coul; c.lineWidth=4; c.lineCap='butt';
+ c.beginPath(); c.moveTo(cx-34,cy+34); c.lineTo(cx-12,cy-6); c.lineTo(cx-12,cy-36); c.stroke();
+ c.beginPath(); c.moveTo(cx+34,cy+34); c.lineTo(cx+12,cy-6); c.lineTo(cx+12,cy-36); c.stroke();
+ /* le coin central : c'est lui qui écarte ou rassemble */
+ c.fillStyle=coul;
+ c.beginPath(); c.moveTo(cx,cy+30); c.lineTo(cx-11,cy-2); c.lineTo(cx+11,cy-2);
+ c.closePath(); c.fill();
+ /* Tirette déportée sur le CÔTÉ : centrée sous le curseur, elle recouvrait
+    la zone fermée et la rendait invisible. */
+ c.strokeStyle=coul; c.lineWidth=3;
+ c.beginPath(); c.moveTo(cx+30,cy+12); c.lineTo(cx+52,cy+12); c.stroke();
+ c.beginPath(); c.roundRect(cx+52,cy+2,22,20,5); c.stroke();
+}
+
+/* ═══ 1 · l'énigme ═══ */
+(function(){
+ const c=document.getElementById('cv1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,230);
+ T(c,'LE MÊME OBJET FAIT DEUX CHOSES OPPOSÉES',430,26,14,'#155e75');
+ [[250,'#16a34a','on tire vers le HAUT','ça FERME',0.75],
+  [610,'#dc2626','on tire vers le BAS','ça OUVRE',0.25]].forEach(function(q){
+  const cx=q[0];
+  rangees(c,cx,60,178,q[4],17);
+  curseur(c,cx,116,q[1]);
+  FLECHE(c,cx+76,q[1]==='#16a34a'?150:78,cx+76,q[1]==='#16a34a'?76:152,3.4,q[1]);
+  T(c,q[2],cx,206,13,'#5b544a');
+  T(c,q[3],cx,224,13.5,q[1]);
+ });
+})();
+
+/* ═══ 2 · ce qu'il y a dedans ═══ */
+(function(){
+ const c=document.getElementById('cv2').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,250);
+ T(c,'LES TROIS PIÈCES',430,26,14,'#155e75');
+ const cx=470, cy=126;
+ rangees(c,cx,52,200,0.55,17);
+ curseur(c,cx,cy,'#7c3aed');
+ FLECHE(c,300,70,cx-46,84,2.6,'#0e7490');
+ T(c,'deux rangées de dents',292,66,13,'#0e7490','right');
+ FLECHE(c,300,140,cx-30,cy-4,2.6,'#7c3aed');
+ T(c,'le curseur : une came',292,136,13,'#7c3aed','right');
+ FLECHE(c,300,206,cx-8,cy+22,2.6,'#334155');
+ T(c,'le coin central',292,210,13,'#334155','right');
+ T(c,'aucune pièce ne bouge dans le curseur : sa FORME suffit',430,238,12.5,'#5b544a');
+})();
+
+/* ═══ 3 · simulateur ═══ */
+(function(){
+ const cv=document.getElementById('cv3'), c=cv.getContext('2d');
+ const s=document.getElementById('sPos'), aff=document.getElementById('vEtat');
+ let ancien=+s.value;
+ function dessiner(){
+  const p=+s.value;                       /* 0 = tout en bas, 100 = tout en haut */
+  const monte = p>=ancien;
+  ancien=p;
+  aff.textContent = monte? 'fermeture' : 'ouverture';
+  aff.style.color = monte? '#16a34a' : '#dc2626';
+  c.fillStyle='#fff'; c.fillRect(0,0,860,360);
+  T(c,'LE COIN CENTRAL RASSEMBLE OU SÉPARE, SELON LE SENS',430,26,14,'#155e75');
+  const cx=430, y0=54, y1=272, pasY=17;
+  const n=Math.floor((y1-y0)/pasY);
+  /* le curseur est à la hauteur choisie ; tout ce qui est SOUS lui est fermé */
+  const yc = y1 - (y1-y0-40)*p/100;
+  for(let i=0;i<n;i++){
+   const y=y0+i*pasY;
+   paire(c, cx, y, y > yc+22, i);
+  }
+  curseur(c, cx, yc, monte? '#16a34a':'#dc2626');
+  FLECHE(c, cx+92, monte? yc+40 : yc-14, cx+92, monte? yc-14 : yc+40, 3.4, monte? '#16a34a':'#dc2626');
+  T(c, monte? 'les dents entrent par les DEUX couloirs et ressortent EMBOÎTÉES'
+            : 'les dents entrent EMBOÎTÉES et le coin les SÉPARE',
+    430, 316, 13.5, monte? '#16a34a':'#dc2626');
+  T(c,'dents fermées : '+Math.round(p)+' %',430,340,12.5,'#5b544a');
+ }
+ s.addEventListener('input',dessiner);
+ dessiner();
+})();
+
+/* ═══ 4 · pourquoi ça tient ═══ */
+(function(){
+ const c=document.getElementById('cv4').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,240);
+ T(c,'CHAQUE BOSSE ENTRE DANS UN CREUX',430,26,14,'#155e75');
+ /* zoom sur trois paires emboîtées */
+ const cx=430, y0=70;
+ /* zoom : six dents alternées, emboîtées */
+ for(let i=0;i<6;i++){
+  const y=y0+i*20;
+  const s=(i%2===0)?1:-1;
+  dent(c, cx - s*3, y, s, s>0? '#0e7490':'#ea580c');
+ }
+ /* traction latérale : elle ne peut pas ouvrir */
+ FLECHE(c,cx-140,150,cx-56,150,3.4,'#dc2626');
+ FLECHE(c,cx+140,150,cx+56,150,3.4,'#dc2626');
+ T(c,'on tire de chaque côté…',cx-190,146,13,'#dc2626','right');
+ T(c,'…rien ne s’écarte',cx+190,146,13,'#dc2626','left');
+ T(c,'chaque bosse est prisonnière du creux voisin : la traction latérale ne peut rien',430,222,13,'#5b544a');
+})();
+
+/* ═══ 5 · le même principe ailleurs ═══ */
+(function(){
+ const c=document.getElementById('cv5').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,180);
+ T(c,'LA CAME : UNE FORME QUI GUIDE',430,26,14,'#155e75');
+ const A=[['Arbre à cames','il ouvre les soupapes'],['Aiguillage','il choisit la voie'],
+          ['Ouvre-boîte','il guide la molette'],['Rampe de garage','elle élève la voiture']];
+ const w=182, m=32, esp=(860-2*m-4*w)/3;
+ A.forEach(function(a,i){
+  const x=m+i*(w+esp), coul='#7c3aed';
+  c.fillStyle='#fff'; c.strokeStyle=coul; c.lineWidth=2.4;
+  c.beginPath(); c.roundRect(x,50,w,78,12); c.fill(); c.stroke();
+  /* petite came : profil en rampe, avec un galet dessus */
+  const gx=x+26, gy=104;
+  c.strokeStyle=coul; c.lineWidth=2.6; c.lineCap='butt';
+  c.beginPath(); c.moveTo(gx,gy); c.lineTo(gx+56,gy); c.lineTo(gx+100,gy-26); c.lineTo(gx+130,gy-26);
+  c.stroke();
+  c.fillStyle=coul; c.beginPath(); c.arc(gx+78,gy-20,7,0,6.284); c.fill();
+  T(c,a[0],x+w/2,144,12.5,coul);
+  T(c,a[1],x+w/2,160,11.5,'#64748b');
+ });
+})();
+
+/* ═══ 6 · exercices ═══ */
+const Q=[
+ {q:"Qu’est-ce qui, dans le curseur, emboîte ou sépare les dents ?",
+  r:["un petit moteur","le coin central, une forme fixe","un ressort caché"],b:1,
+  ex:"Rien ne bouge dans le curseur. C’est sa forme en Y et son coin central qui guident les dents : on appelle cela une came."},
+ {q:"Pourquoi le même curseur ferme dans un sens et ouvre dans l’autre ?",
+  r:["il change de forme","les dents traversent le Y dans l’autre sens","la tirette inverse un mécanisme"],b:1,
+  ex:"Dans un sens, les deux couloirs convergent et rassemblent les dents. Dans l’autre, le coin s’insère entre elles et les sépare. La forme, elle, ne change jamais."},
+ {q:"Qu’est-ce qui empêche les deux rangées de s’écarter une fois fermées ?",
+  r:["la bosse de chaque dent est prise dans le creux de sa voisine","la tirette les bloque","le tissu les retient"],b:0,
+  ex:"Chaque dent possède un creux et une bosse. Emboîtées, elles ne peuvent plus bouger latéralement — et il y en a des dizaines."},
+ {q:"Une fermeture de 60 cm avec 5 dents par centimètre : combien d’emboîtements ?",
+  r:["12","65","300"],b:2,
+  ex:"60 × 5 = 300 dents de chaque côté, donc 300 emboîtements. C’est leur nombre qui fait la solidité, pas la résistance d’une dent seule."},
+ {q:"Où retrouve-t-on une came ?",
+  r:["dans un arbre à cames de moteur","dans une pile","dans un thermomètre"],b:0,
+  ex:"L’arbre à cames ouvre les soupapes par la seule forme de ses bosses. Une came transforme un mouvement en un autre, sans produire d’énergie."}
+];
+(function(){
+ const z=document.getElementById('questions');
+ const choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',function(){
+    if(b.disabled) return;
+    choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';});
+    b.style.fontWeight='800';
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){
+    b.disabled=true;
+    if(j===Q[i].b) b.classList.add('bon');
+    else if(choix[i]===j) b.classList.add('faux');
+   });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div');
+   e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko');
+   e.textContent=Q[i].ex;
+   r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ');
+  b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+
+   (n===Q.length ? 'Tu as reconnu la came : une forme fixe qui impose un mouvement.'
+                 : 'Revois la partie 3 : c’est le sens de passage dans le Y qui change tout.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>
