@@ -1,0 +1,206 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sujet type DNB — La maison qui suit le soleil · ESTIC</title><style>
+:root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(900px,100%);padding:14px 14px 50px}
+.entete{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:14px 18px;margin-bottom:14px}
+.entete h1{font-size:20px;color:var(--accf);margin-bottom:4px}
+.entete .info{font-size:13.5px;color:#64748b;line-height:1.7}
+.consignes{background:#eff6ff;border-left:5px solid var(--acc);border-radius:10px;padding:11px 15px;font-size:14px;line-height:1.75;margin-bottom:16px}
+.doc{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.doc h3{font-size:14px;color:var(--accf);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.doc canvas{width:100%;display:block;border-radius:8px;background:#fdfdfe;border:1px solid #e2e8f0}
+.doc table{width:100%;border-collapse:collapse;font-size:14px}
+.doc th,.doc td{border:1px solid #cbd5e1;padding:7px 9px;text-align:left}
+.doc th{background:#f1f5f9}
+.q{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q .num{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.q .num b{font-size:16px;color:var(--accf)}
+.q .num span{font-size:13px;font-weight:800;color:#64748b}
+.q p{font-size:15px;line-height:1.7}
+.q .aide{font-size:13px;color:#64748b;margin-top:5px;font-style:italic}
+.q input,.q textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px;font-size:15px;font-family:inherit;margin-top:9px}
+.q textarea{min-height:74px;resize:vertical}
+.q .court{width:150px;text-align:center;font-weight:700}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;padding:13px 28px;cursor:pointer;font-family:inherit}
+.btn.sec{background:#e2e8f0;color:var(--encre)}
+.centre{text-align:center;margin:18px 0}
+#resultat{display:none;background:#fff;border:2px solid var(--acc);border-radius:14px;padding:18px;margin-top:16px}
+#resultat h2{color:var(--accf);font-size:20px;text-align:center}
+.note{text-align:center;font-size:44px;font-weight:900;color:var(--acc);margin:6px 0}
+.corr{border-left:4px solid #16a34a;background:#f0fdf4;border-radius:8px;padding:10px 14px;margin:9px 0;font-size:14.5px;line-height:1.7}
+.corr b{color:#15803d}
+.pts{float:right;font-weight:900;color:#64748b;font-size:13px}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="logo_estic.png">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<div class="entete">
+  <h1>Sujet type DNB — Épreuve de sciences</h1>
+  <div class="info"><b>Partie technologie</b> · durée conseillée : 30 minutes · noté sur 25 points<br>
+  Support : une maison à orientation pilotée</div>
+</div>
+<div class="consignes">Tu disposes de trois documents. Réponds aux six questions : certaines demandent une
+<b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
+Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
+
+<div class="doc"><h2>Document 1 — La maison vue de dessus</h2>
+<canvas id="d1" width="860" height="320"></canvas>
+<p class="leg">Les baies vitrées occupent un secteur de 120°. Le reste du mur est aveugle
+et isolé. La maison repose sur un rail circulaire et pivote autour de son centre.</p>
+
+<h2>Document 2 — Course du soleil le 21 mars</h2>
+<table>
+ <tr><th>Heure</th><th>7 h</th><th>10 h</th><th>13 h</th><th>16 h</th><th>19 h</th></tr>
+ <tr><th>Position du soleil</th><td>−90°</td><td>−45°</td><td>0°</td><td>+45°</td><td>+90°</td></tr>
+ <tr><th>Orientation à donner aux baies</th><td>−90°</td><td>−45°</td><td>0°</td><td>+45°</td><td>+90°</td></tr>
+</table>
+<p class="leg">L’angle 0° correspond au sud. Les valeurs négatives sont vers l’est,
+les positives vers l’ouest.</p>
+
+<h2>Document 3 — Caractéristiques techniques</h2>
+<table>
+ <tr><th>Masse de la maison</th><td>30 tonnes</td></tr>
+ <tr><th>Vitesse du moteur</th><td>1500 tr/min</td></tr>
+ <tr><th>Rapport du réducteur</th><td>1 / 30 000</td></tr>
+ <tr><th>Puissance du moteur</th><td>250 W</td></tr>
+ <tr><th>Durée de rotation par jour</th><td>20 minutes</td></tr>
+ <tr><th>Gain de chauffage annuel</th><td>1400 kWh</td></tr>
+ <tr><th>Prix du kilowattheure</th><td>0,25 €</td></tr>
+</table>
+<div id="questions"></div>
+<div id="resultat" style="display:none"></div>
+<div class="centre"><button class="btn" id="rendre">Rendre ma copie</button></div>
+<div id="resultat"></div>
+</main>
+<script>
+'use strict';
+function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+function nb(v){return parseFloat(String(v||'').replace(',','.'));}
+const Q=[
+ {n:'1',pts:4,t:'À l’aide du document 2, calcule de combien de degrés le soleil se déplace en une heure. Explique ensuite pourquoi cette valeur impose la vitesse de rotation de la maison.',
+  champs:[{id:'a1',l:'Déplacement du soleil, en degrés par heure :',rep:15,tol:0.2}],
+  redac:{id:'r1',cles:['meme','suivre','face','baies','rester','identique','vitesse','tourner']},
+  corr:'Entre 7 h et 19 h, soit 12 heures, le soleil passe de −90° à +90° : il parcourt 180°. Donc 180 ÷ 12 = <b>15° par heure</b>. Pour que les baies restent face au soleil, la maison doit tourner <b>à la même vitesse</b>, ni plus vite ni moins vite.'},
+ {n:'2',pts:4,t:'D’après le document 3, calcule la vitesse de rotation de la maison, puis la durée d’un tour complet.',
+  aide:'la vitesse de sortie vaut la vitesse du moteur multipliée par le rapport du réducteur',
+  champs:[{id:'a2',l:'Vitesse de la maison, en tours par minute :',rep:0.05,tol:0.005},
+          {id:'b2',l:'Durée d’un tour complet, en minutes :',rep:20,tol:0.5}],
+  corr:'1500 × 1/30 000 = <b>0,05 tr/min</b>. Un tour complet demande 1 ÷ 0,05 = <b>20 minutes</b>. C’est très lent : on ne voit pas la maison bouger.'},
+ {n:'3',pts:4,t:'Le document 3 indique une masse de 30 tonnes pour un moteur de 250 W seulement. Explique comment un moteur aussi peu puissant peut déplacer une telle masse.',
+  redac:{id:'r3',cles:['reducteur','reduit','vitesse','force','couple','lent','echange','multiplie','demultipli']},
+  corr:'Le <b>réducteur</b> divise la vitesse par 30 000 et multiplie d’autant la force disponible. Un moteur rapide et faible devient un mouvement très lent mais très puissant : c’est un <b>échange entre vitesse et force</b>. La maison tourne aussi sur un rail, ce qui limite les frottements.'},
+ {n:'4',pts:5,t:'Calcule l’énergie consommée chaque jour par la rotation, puis sur une année de 365 jours.',
+  aide:'énergie = puissance × durée — attention aux unités : 20 minutes, ce n’est pas 20 heures',
+  champs:[{id:'a4',l:'Énergie par jour, en wattheures :',rep:83,tol:2},
+          {id:'b4',l:'Énergie par an, en kilowattheures :',rep:30.4,tol:1.5}],
+  redac:{id:'r4',cles:['faible','peu','negligeable','petit','moins','1400','gain','rentable']},
+  corr:'20 min = 1/3 h. 250 × 1/3 ≈ <b>83 Wh par jour</b>. Sur un an : 83 × 365 ≈ 30 300 Wh, soit <b>30,4 kWh</b>. À comparer aux 1400 kWh de chauffage économisés : la rotation consomme environ <b>46 fois moins</b> qu’elle ne fait gagner.'},
+ {n:'5',pts:4,t:'À l’aide des documents 1 et 2, explique pourquoi les baies vitrées sont regroupées sur un seul secteur plutôt que réparties tout autour.',
+  redac:{id:'r5',cles:['choisir','orienter','isole','aveugle','ete','ombre','proteger','deperdition','perte','dos']},
+  corr:'Si les baies faisaient tout le tour, il n’y aurait plus rien à orienter : la rotation deviendrait inutile. En les regroupant, on peut <b>choisir</b> de les exposer au soleil en hiver ou de leur <b>tourner le dos</b> en été. Le reste du mur, aveugle et isolé, <b>limite les pertes de chaleur</b>.'},
+ {n:'6',pts:4,t:'Un constructeur propose de remplacer l’horloge par un capteur de luminosité. En t’appuyant sur le document 2, donne un argument contre cette solution.',
+  redac:{id:'r6',cles:['nuage','previsible','calcul','trompe','ombre','fiable','meteo','pluie','hiver','couvert']},
+  corr:'Le document 2 montre que la position du soleil est <b>entièrement prévisible</b> : elle se calcule à l’avance. Un capteur de luminosité, lui, serait <b>trompé par un nuage</b> ou un ciel couvert et ferait tourner la maison à contretemps. L’horloge est plus fiable et moins chère.'},
+];
+const z=document.getElementById('questions');
+Q.forEach(q=>{
+ const d=document.createElement('div'); d.className='q';
+ let html='<div class="num"><b>Question '+q.n+'</b><span>'+q.pts+' points</span></div><p>'+q.t+'</p>';
+ if(q.aide) html+='<div class="aide">'+q.aide+'</div>';
+ (q.champs||[]).forEach(c=>{ html+='<div style="margin-top:8px;font-size:14.5px">'+c.l+
+   ' <input class="court" id="'+c.id+'" autocomplete="off"></div>'; });
+ if(q.redac) html+='<textarea id="'+q.redac.id+'" placeholder="rédige ta réponse en une ou deux phrases"></textarea>';
+ d.innerHTML=html; z.appendChild(d);
+});
+document.getElementById('rendre').addEventListener('click',()=>{
+ let total=0, max=0, det='';
+ Q.forEach(q=>{
+  max+=q.pts;
+  let obtenu=0, parts=0, ok=0;
+  (q.champs||[]).forEach(c=>{
+   parts++;
+   const v=document.getElementById(c.id).value;
+   const bon = typeof c.rep==='number'
+     ? (isFinite(nb(v)) && Math.abs(nb(v)-c.rep)<=c.tol)
+     : c.rep.some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+   if(bon)ok++;
+  });
+  if(q.redac){ parts++;
+   const v=norm(document.getElementById(q.redac.id).value);
+   if(v.length>14 && q.redac.cles.some(k=>v.includes(k))) ok++;
+  }
+  obtenu = Math.round(q.pts*ok/parts*2)/2;
+  total+=obtenu;
+  det+='<div class="corr"><span class="pts">'+obtenu+' / '+q.pts+'</span><b>Question '+q.n+'</b><br>'+q.corr+'</div>';
+ });
+ const r=document.getElementById('resultat');
+ r.innerHTML='<h2>Copie rendue</h2><div class="note">'+total+' / '+max+'</div>'+
+  '<p style="text-align:center;font-size:14px;color:#64748b;margin-bottom:12px">Corrigé détaillé — compare avec ce que tu as écrit sur ton cahier</p>'+det;
+ r.style.display='block';
+ document.getElementById('rendre').disabled=true;
+ r.scrollIntoView({behavior:'smooth'});
+});
+/* ═══ Document 1 : la maison vue de dessus ═══
+   NORD EN HAUT, convention du plan. Le secteur vitré regarde donc le SUD,
+   c'est-à-dire vers le BAS de la figure : la version précédente le dessinait
+   vers le haut, en contradiction avec sa propre légende. */
+(function(){
+ const c=document.getElementById('d1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,320);
+ const cx=430, cy=154, R=92;
+ /* rail */
+ c.strokeStyle='#94a3b8'; c.lineWidth=2.5; c.setLineDash([6,6]);
+ c.beginPath(); c.arc(cx,cy,R+18,0,6.284); c.stroke(); c.setLineDash([]);
+ /* axes cardinaux */
+ c.strokeStyle='#e2e8f0'; c.lineWidth=1.6; c.setLineDash([4,4]);
+ c.beginPath(); c.moveTo(cx-R-46,cy); c.lineTo(cx+R+46,cy); c.stroke();
+ c.beginPath(); c.moveTo(cx,cy-R-40); c.lineTo(cx,cy+R+40); c.stroke(); c.setLineDash([]);
+ /* mur aveugle */
+ c.fillStyle='#f5f0e6'; c.strokeStyle='#8b6f47'; c.lineWidth=3.4;
+ c.beginPath(); c.arc(cx,cy,R,0,6.284); c.fill(); c.stroke();
+ /* secteur vitré de 120°, centré sur le SUD (vers le bas) */
+ c.fillStyle='#bae6fd'; c.strokeStyle='#0284c7'; c.lineWidth=3.4;
+ c.beginPath(); c.moveTo(cx,cy);
+ c.arc(cx,cy,R, Math.PI/2-Math.PI/3, Math.PI/2+Math.PI/3);
+ c.closePath(); c.fill(); c.stroke();
+ /* cotation de l'ouverture */
+ c.strokeStyle='#dc2626'; c.lineWidth=2;
+ c.beginPath(); c.arc(cx,cy,46,Math.PI/2-Math.PI/3,Math.PI/2+Math.PI/3); c.stroke();
+ c.font='bold 14px Segoe UI'; c.fillStyle='#dc2626'; c.textAlign='center';
+ c.fillText('120°',cx,cy+38);
+ /* etiquettes dans les zones, pour eviter tout chevauchement */
+ c.font='bold 13px Segoe UI';
+ c.fillStyle='#075985'; c.fillText('baies vitrées',cx,cy+78);
+ c.fillStyle='#78350f'; c.fillText('mur aveugle isolé',cx,cy-52);
+ /* points cardinaux */
+ c.font='bold 13px Segoe UI'; c.fillStyle='#64748b';
+ c.fillText('NORD',cx,cy-R-24);
+ c.fillText('SUD',cx,cy+R+34);
+ c.textAlign='right'; c.fillText('EST',cx-R-24,cy+5);
+ c.textAlign='left';  c.fillText('OUEST',cx+R+24,cy+5);
+ /* rail, en retrait pour ne croiser aucun texte */
+ c.font='12.5px Segoe UI'; c.fillStyle='#94a3b8'; c.textAlign='left';
+ c.fillText('rail circulaire',cx+R+24,cy-62);
+ c.fillStyle='#334155'; c.beginPath(); c.arc(cx,cy,5,0,6.284); c.fill();
+ c.textAlign='center'; c.font='12.5px Segoe UI'; c.fillStyle='#5b544a';
+ c.fillText('orientation 0° : les baies regardent le sud',cx,306);
+})();
+</script>
+</body>
+</html>

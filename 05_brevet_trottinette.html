@@ -1,0 +1,201 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sujet type DNB — La trottinette électrique · ESTIC</title><style>
+:root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(900px,100%);padding:14px 14px 50px}
+.entete{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:14px 18px;margin-bottom:14px}
+.entete h1{font-size:20px;color:var(--accf);margin-bottom:4px}
+.entete .info{font-size:13.5px;color:#64748b;line-height:1.7}
+.consignes{background:#eff6ff;border-left:5px solid var(--acc);border-radius:10px;padding:11px 15px;font-size:14px;line-height:1.75;margin-bottom:16px}
+.doc{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.doc h3{font-size:14px;color:var(--accf);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.doc canvas{width:100%;display:block;border-radius:8px;background:#fdfdfe;border:1px solid #e2e8f0}
+.doc table{width:100%;border-collapse:collapse;font-size:14px}
+.doc th,.doc td{border:1px solid #cbd5e1;padding:7px 9px;text-align:left}
+.doc th{background:#f1f5f9}
+.q{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q .num{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.q .num b{font-size:16px;color:var(--accf)}
+.q .num span{font-size:13px;font-weight:800;color:#64748b}
+.q p{font-size:15px;line-height:1.7}
+.q .aide{font-size:13px;color:#64748b;margin-top:5px;font-style:italic}
+.q input,.q textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px;font-size:15px;font-family:inherit;margin-top:9px}
+.q textarea{min-height:74px;resize:vertical}
+.q .court{width:150px;text-align:center;font-weight:700}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;padding:13px 28px;cursor:pointer;font-family:inherit}
+.btn.sec{background:#e2e8f0;color:var(--encre)}
+.centre{text-align:center;margin:18px 0}
+#resultat{display:none;background:#fff;border:2px solid var(--acc);border-radius:14px;padding:18px;margin-top:16px}
+#resultat h2{color:var(--accf);font-size:20px;text-align:center}
+.note{text-align:center;font-size:44px;font-weight:900;color:var(--acc);margin:6px 0}
+.corr{border-left:4px solid #16a34a;background:#f0fdf4;border-radius:8px;padding:10px 14px;margin:9px 0;font-size:14.5px;line-height:1.7}
+.corr b{color:#15803d}
+.pts{float:right;font-weight:900;color:#64748b;font-size:13px}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="logo_estic.png">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<div class="entete">
+  <h1>Sujet type DNB — Épreuve de sciences</h1>
+  <div class="info"><b>Partie technologie</b> · durée conseillée : 30 minutes · noté sur 25 points<br>
+  Support : une trottinette électrique en libre-service</div>
+</div>
+<div class="consignes">Tu disposes de trois documents. Réponds aux six questions : certaines demandent une
+<b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
+Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
+
+<div class="doc"><h2>Document 1 — Chaîne d’énergie de la trottinette</h2>
+<canvas id="d1" width="860" height="250"></canvas>
+<p class="leg">La batterie alimente le variateur, qui dose le courant envoyé au moteur.
+Le moteur entraîne directement la roue avant : il n’y a ni chaîne ni courroie.</p>
+
+<h2>Document 2 — Caractéristiques techniques</h2>
+<table>
+ <tr><th>Tension de la batterie</th><td>36 V</td></tr>
+ <tr><th>Capacité de la batterie</th><td>10 Ah</td></tr>
+ <tr><th>Puissance du moteur</th><td>350 W</td></tr>
+ <tr><th>Vitesse maximale bridée</th><td>25 km/h</td></tr>
+ <tr><th>Masse de la trottinette</th><td>14 kg</td></tr>
+ <tr><th>Durée de charge complète</th><td>4 h</td></tr>
+</table>
+
+<h2>Document 3 — Essais d’autonomie réalisés par le fabricant</h2>
+<table>
+ <tr><th>Conditions de l’essai</th><th>Autonomie mesurée</th></tr>
+ <tr><td>Terrain plat, 60 kg, 15 km/h</td><td>30 km</td></tr>
+ <tr><td>Terrain plat, 90 kg, 25 km/h</td><td>18 km</td></tr>
+ <tr><td>Parcours vallonné, 90 kg, 25 km/h</td><td>12 km</td></tr>
+</table>
+<p class="leg">L’autonomie annoncée sur l’emballage est de 30 km.</p>
+<div id="questions"></div>
+<div id="resultat" style="display:none"></div>
+<div class="centre"><button class="btn" id="rendre">Rendre ma copie</button></div>
+<div id="resultat"></div>
+</main>
+<script>
+'use strict';
+function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+function nb(v){return parseFloat(String(v||'').replace(',','.'));}
+const Q=[
+ {n:'1',pts:4,t:'À l’aide du document 1, indique la fonction assurée par le moteur et celle assurée par le variateur dans la chaîne d’énergie.',
+  champs:[{id:'a1',l:'Le moteur assure la fonction :',rep:['convertir','conversion']},
+          {id:'b1',l:'Le variateur assure la fonction :',rep:['distribuer','distribution']}],
+  corr:'Le <b>moteur CONVERTIT</b> l’énergie électrique en énergie mécanique de rotation. Le <b>variateur DISTRIBUE</b> : il dose le courant envoyé au moteur selon la position de la gâchette. La batterie, elle, ALIMENTE.'},
+ {n:'2',pts:5,t:'Calcule l’énergie stockée dans la batterie, puis la durée de fonctionnement du moteur à pleine puissance.',
+  aide:'énergie en wattheures = tension × capacité — puis durée = énergie ÷ puissance',
+  champs:[{id:'a2',l:'Énergie stockée, en wattheures :',rep:360,tol:2},
+          {id:'b2',l:'Durée à pleine puissance, en heures :',rep:1.03,tol:0.06}],
+  corr:'36 × 10 = <b>360 Wh</b>. À 350 W : 360 ÷ 350 ≈ <b>1,03 heure</b>, soit environ 1 h 02. En pratique le moteur ne tourne pas toujours à pleine puissance, l’autonomie réelle est donc plus longue.'},
+ {n:'3',pts:4,t:'Compare l’autonomie annoncée sur l’emballage aux essais du document 3. Calcule l’écart en pourcentage pour le parcours vallonné, puis explique cet écart.',
+  aide:'pourcentage d’écart = (valeur annoncée − valeur mesurée) ÷ valeur annoncée × 100',
+  champs:[{id:'a3',l:'Écart pour le parcours vallonné, en pourcentage :',rep:60,tol:1}],
+  redac:{id:'r3',cles:['montee','cote','pente','masse','poids','vitesse','lourd','plus','effort','condition']},
+  corr:'(30 − 12) ÷ 30 × 100 = <b>60 %</b> de moins qu’annoncé. L’écart s’explique par les <b>conditions d’essai</b> : les 30 km sont obtenus sur terrain plat, à 15 km/h et avec 60 kg. En montée, à 25 km/h et avec 90 kg, le moteur fournit bien plus d’effort et consomme davantage.'},
+ {n:'4',pts:4,t:'La vitesse est bridée à 25 km/h alors que le moteur pourrait aller plus vite. Donne une raison de ce bridage, puis calcule la durée d’un trajet de 5 km à cette vitesse.',
+  champs:[{id:'a4',l:'Durée du trajet, en minutes :',rep:12,tol:0.5}],
+  redac:{id:'r4',cles:['loi','reglement','securite','code','autorise','pieton','interdit','freinage','distance']},
+  corr:'Le bridage répond à une <b>obligation réglementaire</b> : les engins de déplacement personnel motorisés sont limités à 25 km/h sur la voie publique, pour des raisons de <b>sécurité</b> — distance de freinage et cohabitation avec les autres usagers. Durée : 5 ÷ 25 = 0,2 h, soit <b>12 minutes</b>.'},
+ {n:'5',pts:4,t:'Le moteur est placé directement dans la roue avant. Donne un avantage et un inconvénient de cette solution par rapport à une transmission par chaîne.',
+  redac:{id:'r5',cles:['entretien','usure','silencieux','compact','place','deraille','graisse','roue','lourde','reparer','demonter']},
+  corr:'<b>Avantages</b> : pas de chaîne à graisser ni à retendre, aucun risque de déraillement, fonctionnement silencieux et gain de place. <b>Inconvénients</b> : la roue devient lourde et fragile, et en cas de panne il faut démonter toute la roue — la réparation coûte plus cher.'},
+ {n:'6',pts:4,t:'Une trottinette en libre-service parcourt 8 km par jour et dure 18 mois. Calcule la distance totale parcourue, puis explique pourquoi cette durée de vie pose un problème environnemental.',
+  aide:'compte 30 jours par mois',
+  champs:[{id:'a6',l:'Distance totale parcourue, en kilomètres :',rep:4320,tol:60}],
+  redac:{id:'r6',cles:['fabrication','batterie','recycl','dechet','ressource','court','remplac','lithium','impact','amorti']},
+  corr:'8 × 30 × 18 = <b>4 320 km</b>. Le problème : l’<b>énergie de fabrication</b> — surtout celle de la batterie au lithium — est amortie sur une distance courte. Plus la durée de vie est brève, plus l’impact par kilomètre est élevé. Allonger la durée de vie et <b>recycler les batteries</b> pèse davantage que l’économie de carburant du trajet lui-même.'},
+];
+const z=document.getElementById('questions');
+Q.forEach(q=>{
+ const d=document.createElement('div'); d.className='q';
+ let html='<div class="num"><b>Question '+q.n+'</b><span>'+q.pts+' points</span></div><p>'+q.t+'</p>';
+ if(q.aide) html+='<div class="aide">'+q.aide+'</div>';
+ (q.champs||[]).forEach(c=>{ html+='<div style="margin-top:8px;font-size:14.5px">'+c.l+
+   ' <input class="court" id="'+c.id+'" autocomplete="off"></div>'; });
+ if(q.redac) html+='<textarea id="'+q.redac.id+'" placeholder="rédige ta réponse en une ou deux phrases"></textarea>';
+ d.innerHTML=html; z.appendChild(d);
+});
+document.getElementById('rendre').addEventListener('click',()=>{
+ let total=0, max=0, det='';
+ Q.forEach(q=>{
+  max+=q.pts;
+  let obtenu=0, parts=0, ok=0;
+  (q.champs||[]).forEach(c=>{
+   parts++;
+   const v=document.getElementById(c.id).value;
+   const bon = typeof c.rep==='number'
+     ? (isFinite(nb(v)) && Math.abs(nb(v)-c.rep)<=c.tol)
+     : c.rep.some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+   if(bon)ok++;
+  });
+  if(q.redac){ parts++;
+   const v=norm(document.getElementById(q.redac.id).value);
+   if(v.length>14 && q.redac.cles.some(k=>v.includes(k))) ok++;
+  }
+  obtenu = Math.round(q.pts*ok/parts*2)/2;
+  total+=obtenu;
+  det+='<div class="corr"><span class="pts">'+obtenu+' / '+q.pts+'</span><b>Question '+q.n+'</b><br>'+q.corr+'</div>';
+ });
+ const r=document.getElementById('resultat');
+ r.innerHTML='<h2>Copie rendue</h2><div class="note">'+total+' / '+max+'</div>'+
+  '<p style="text-align:center;font-size:14px;color:#64748b;margin-bottom:12px">Corrigé détaillé — compare avec ce que tu as écrit sur ton cahier</p>'+det;
+ r.style.display='block';
+ document.getElementById('rendre').disabled=true;
+ r.scrollIntoView({behavior:'smooth'});
+});
+/* ═══ Document 1 : chaîne d’énergie de la trottinette ═══ */
+(function(){
+ const c=document.getElementById('d1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,250);
+ function T(s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+  c.textAlign=al||'center';c.fillText(s,x,y);}
+ function FLECHE(x0,y0,x1,y1,ep,coul){
+  const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+  const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+  const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+  c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+  c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+  c.beginPath(); c.moveTo(x1,y1);
+  c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+  c.closePath(); c.fill();
+ }
+ /* quatre blocs, fonction VOLONTAIREMENT non nommée pour les blocs 2 et 3 :
+    c'est justement ce que la question 1 demande de retrouver. */
+ const B=[['BATTERIE','36 V · 10 Ah','#0e7490'],
+          ['VARIATEUR','gâchette','#7c3aed'],
+          ['MOTEUR','350 W','#ea580c'],
+          ['ROUE AVANT','la trottinette avance','#16a34a']];
+ const w=168, mg=28, esp=(860-2*mg-4*w)/3, y=74;
+ B.forEach(function(b,i){
+  const x=mg+i*(w+esp);
+  c.fillStyle='#fff'; c.strokeStyle=b[2]; c.lineWidth=2.6;
+  c.beginPath(); c.roundRect(x,y,w,76,12); c.fill(); c.stroke();
+  T(b[0],x+w/2,y+32,13.5,b[2]);
+  T(b[1],x+w/2,y+54,12,'#5b544a');
+  if(i<B.length-1) FLECHE(x+w+4,y+38,x+w+esp-4,y+38,3.2,'#94a3b8');
+ });
+ /* etiquettes des fonctions : deux sont laissees vides */
+ const lib=['ALIMENTER','?','?','AGIR'];
+ B.forEach(function(b,i){
+  const x=mg+i*(w+esp);
+  T(lib[i],x+w/2,y-14,12.5, lib[i]==='?'? '#dc2626':'#64748b');
+ });
+ T('à toi de retrouver les deux fonctions manquantes (question 1)',430,206,12.5,'#5b544a');
+ T('énergie électrique',mg+w+esp/2,y+96,11.5,'#94a3b8');
+ T('énergie mécanique',mg+3*(w+esp)-esp/2,y+96,11.5,'#94a3b8');
+})();
+</script>\n</body>\n</html>\n

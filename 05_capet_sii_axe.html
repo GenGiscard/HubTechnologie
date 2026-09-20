@@ -1,0 +1,389 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sujet type CAFEP-CAPET SII — Axe linéaire à vis à billes · ESTIC</title><style>
+:root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(900px,100%);padding:14px 14px 50px}
+.entete{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:14px 18px;margin-bottom:14px}
+.entete h1{font-size:20px;color:var(--accf);margin-bottom:4px}
+.entete .info{font-size:13.5px;color:#64748b;line-height:1.7}
+.consignes{background:#eff6ff;border-left:5px solid var(--acc);border-radius:10px;padding:11px 15px;font-size:14px;line-height:1.75;margin-bottom:16px}
+.doc{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.doc h3{font-size:14px;color:var(--accf);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.doc canvas{width:100%;display:block;border-radius:8px;background:#fdfdfe;border:1px solid #e2e8f0}
+.doc table{width:100%;border-collapse:collapse;font-size:14px}
+.doc th,.doc td{border:1px solid #cbd5e1;padding:7px 9px;text-align:left}
+.doc th{background:#f1f5f9}
+.q{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q .num{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.q .num b{font-size:16px;color:var(--accf)}
+.q .num span{font-size:13px;font-weight:800;color:#64748b}
+.q p{font-size:15px;line-height:1.7}
+.q .aide{font-size:13px;color:#64748b;margin-top:5px;font-style:italic}
+.q input,.q textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px;font-size:15px;font-family:inherit;margin-top:9px}
+.q textarea{min-height:74px;resize:vertical}
+.q .court{width:150px;text-align:center;font-weight:700}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;padding:13px 28px;cursor:pointer;font-family:inherit}
+.btn.sec{background:#e2e8f0;color:var(--encre)}
+.centre{text-align:center;margin:18px 0}
+#resultat{display:none;background:#fff;border:2px solid var(--acc);border-radius:14px;padding:18px;margin-top:16px}
+#resultat h2{color:var(--accf);font-size:20px;text-align:center}
+.note{text-align:center;font-size:44px;font-weight:900;color:var(--acc);margin:6px 0}
+.corr{border-left:4px solid #16a34a;background:#f0fdf4;border-radius:8px;padding:10px 14px;margin:9px 0;font-size:14.5px;line-height:1.7}
+.corr b{color:#15803d}
+.pts{float:right;font-weight:900;color:#64748b;font-size:13px}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="logo_estic.png">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<div class="entete">
+  <h1>Sujet type CAFEP-CAPET SII — Épreuve de sciences</h1>
+  <div class="info"><b>Épreuve d’analyse et d’exploitation · option ingénierie mécanique</b> · durée conseillée : 5 h · noté sur 100 points<br>
+  Support : l’axe X d’un centre d’usinage — chaîne motorisée à vis à billes</div>
+</div>
+<div class="consignes">Vous disposez de six documents. Le sujet comporte six documents, cinq parties et dix-sept questions : certaines demandent une
+<b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
+Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
+
+<div class="doc"><h2>Document 1 — Architecture de l’axe X</h2>
+<canvas id="d0" width="860" height="330"></canvas>
+<p class="leg">Le moteur brushless (1) est accouplé directement à la vis à billes (3)
+par un accouplement élastique (2). L’écrou (4) est solidaire du chariot (5), guidé par
+deux rails à billes parallèles. Un codeur incrémental est monté en bout d’arbre moteur.</p>
+
+<h2>Document 2 — Schéma cinématique</h2>
+<canvas id="d1" width="860" height="280"></canvas>
+<p class="leg">Modèle retenu pour l’étude. La liaison hélicoïdale traduit le couple
+vis-écrou de pas p. Le guidage du chariot est modélisé par une liaison glissière.</p>
+
+<h2>Document 3 — Caractéristiques du système</h2>
+<table>
+ <tr><th>Masse en mouvement (chariot, pièce, écrou)</th><td>M = 250 kg</td></tr>
+ <tr><th>Pas de la vis à billes</th><td>p = 10 mm/tour</td></tr>
+ <tr><th>Rendement du couple vis-écrou</th><td>η = 0,90</td></tr>
+ <tr><th>Course utile de l’axe</th><td>800 mm</td></tr>
+ <tr><th>Vitesse maximale d’avance</th><td>V = 0,5 m/s</td></tr>
+ <tr><th>Accélération maximale</th><td>a = 2 m/s²</td></tr>
+ <tr><th>Effort résistant de guidage</th><td>F<sub>f</sub> = 200 N</td></tr>
+ <tr><th>Inertie du rotor moteur</th><td>J<sub>m</sub> = 6,0 × 10⁻⁴ kg·m²</td></tr>
+ <tr><th>Inertie de la vis</th><td>J<sub>v</sub> = 8,0 × 10⁻⁴ kg·m²</td></tr>
+ <tr><th>Codeur incrémental</th><td>2500 points/tour, lecture en quadrature</td></tr>
+</table>
+
+<h2>Document 4 — Profil de vitesse imposé</h2>
+<canvas id="d2" width="860" height="290"></canvas>
+<p class="leg">Profil trapézoïdal : accélération constante, palier à vitesse maximale,
+puis décélération symétrique. Course totale 800 mm.</p>
+
+<h2>Document 5 — Extrait du catalogue moteur</h2>
+<table>
+ <tr><th>Référence</th><th>Couple nominal</th><th>Couple maxi</th><th>Vitesse maxi</th><th>Inertie rotor</th></tr>
+ <tr><td>BL-100</td><td>1,2 N·m</td><td>3,6 N·m</td><td>4000 tr/min</td><td>3,0 × 10⁻⁴ kg·m²</td></tr>
+ <tr><td>BL-200</td><td>2,0 N·m</td><td>6,0 N·m</td><td>3500 tr/min</td><td>6,0 × 10⁻⁴ kg·m²</td></tr>
+ <tr><td>BL-300</td><td>3,2 N·m</td><td>9,6 N·m</td><td>3000 tr/min</td><td>1,4 × 10⁻³ kg·m²</td></tr>
+</table>
+
+<h2>Document 6 — Extrait du programme de STI2D, enseignement spécifique ITEC</h2>
+<table>
+ <tr><th>Compétence</th><th>Connaissance associée</th></tr>
+ <tr><td>CO5.1 — Décoder le cahier des charges fonctionnel</td><td>Fonctions de service, critères et niveaux</td></tr>
+ <tr><td>CO5.2 — Identifier et caractériser une chaîne d’énergie</td><td>Transmission et transformation de mouvement</td></tr>
+ <tr><td>CO6.2 — Simuler le comportement d’un mécanisme</td><td>Loi entrée-sortie, inertie équivalente</td></tr>
+ <tr><td>CO7.3 — Valider un choix de composant</td><td>Critères de sélection, marge de dimensionnement</td></tr>
+</table>
+<div id="questions"></div>
+<div id="resultat" style="display:none"></div>
+<div class="centre"><button class="btn" id="rendre">Rendre ma copie</button></div>
+<div id="resultat"></div>
+</main>
+<script>
+'use strict';
+function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+function nb(v){return parseFloat(String(v||'').replace(',','.'));}
+const Q=[
+ {n:'A1',pts:5,t:'PARTIE A — MODÉLISATION CINÉMATIQUE. À l’aide du document 2, donnez le nom normalisé de la liaison entre la vis (3) et l’écrou (4), puis celui de la liaison entre le chariot (5) et le bâti.',
+  champs:[{id:'q1a',l:'Liaison vis (3) / écrou (4) :',rep:['helicoidale','liaison helicoidale','helicoidal']},
+          {id:'q1b',l:'Liaison chariot (5) / bâti :',rep:['glissiere','liaison glissiere']}],
+  corr:'Entre la vis et l’écrou : <b>liaison hélicoïdale</b> d’axe X et de pas p, à un seul degré de liberté, la rotation et la translation étant liées. Entre le chariot et le bâti : <b>liaison glissière</b> d’axe X, à un degré de liberté en translation.'},
+ {n:'A2',pts:5,t:'Établissez la loi entrée-sortie liant la vitesse d’avance V du chariot à la vitesse de rotation ω de la vis, puis calculez la constante k = V/ω.',
+  aide:'un tour de vis fait avancer l’écrou d’un pas',
+  champs:[{id:'a2',l:'Constante k, en m/rad (notation scientifique acceptée) :',rep:0.0015915,tol:0.00006}],
+  corr:'Un tour, soit 2π rad, fait avancer d’un pas p. Donc V = (p / 2π) × ω, d’où <b>k = p / 2π = 0,010 / 6,2832 ≈ 1,59 × 10⁻³ m/rad</b>.'},
+ {n:'A3',pts:5,t:'Calculez la vitesse de rotation de la vis correspondant à la vitesse d’avance maximale, en tr/min puis en rad/s.',
+  champs:[{id:'b1',l:'Vitesse de rotation, en tr/min :',rep:3000,tol:30},
+          {id:'b2',l:'Vitesse angulaire, en rad/s :',rep:314,tol:4}],
+  corr:'N = V / p = 0,5 / 0,010 = 50 tr/s = <b>3000 tr/min</b>. En rad/s : ω = 2π × 50 ≈ <b>314 rad/s</b>.'},
+ {n:'A4',pts:6,t:'Le chariot est guidé par DEUX rails à billes parallèles, chacun apportant en théorie une liaison glissière. Qualifiez le montage et justifiez le choix du constructeur.',
+  redac:{id:'r1',cles:['hyperstatique','hyperstatisme','surabondant','rigidit','precision','deformation','couple','renversement','parallelisme','usinage','cout','exigeant']},
+  corr:'Deux glissières en parallèle rendent le montage <b>hyperstatique</b> : les degrés de liaison sont surabondants. Ce choix est volontaire — il apporte une <b>rigidité</b> et une résistance au couple de renversement bien supérieures, indispensables en usinage. Le prix à payer est une exigence de <b>parallélisme</b> très sévère, donc un usinage coûteux du bâti.'},
+ {n:'B1',pts:7,t:'PARTIE B — ÉTUDE DYNAMIQUE. Calculez l’inertie équivalente de la masse en mouvement, ramenée à l’arbre de la vis.',
+  aide:'l’énergie cinétique se conserve : ½·J·ω² = ½·M·V², avec V = k·ω',
+  champs:[{id:'c1',l:'Inertie équivalente, en kg·m² :',rep:0.000633,tol:0.00003}],
+  corr:'L’égalité des énergies cinétiques donne J<sub>eq</sub> = M × k² = 250 × (1,5915 × 10⁻³)² ≈ <b>6,33 × 10⁻⁴ kg·m²</b>. C’est le carré de k qui intervient : une vis à petit pas réduit fortement l’inertie ramenée.'},
+ {n:'B2',pts:6,t:'Calculez l’inertie totale ramenée à l’arbre moteur, puis la part que représente la masse déplacée.',
+  champs:[{id:'d1q',l:'Inertie totale, en kg·m² :',rep:0.002033,tol:0.00008},
+          {id:'d2q',l:'Part de la masse déplacée, en pourcentage :',rep:31,tol:2}],
+  corr:'J<sub>tot</sub> = J<sub>m</sub> + J<sub>v</sub> + J<sub>eq</sub> = (6,0 + 8,0 + 6,33) × 10⁻⁴ ≈ <b>2,03 × 10⁻³ kg·m²</b>. La masse ne pèse que <b>31 %</b> du total : le moteur et la vis dominent, ce qui est caractéristique des axes à vis à billes rapides.'},
+ {n:'B3',pts:5,t:'Calculez l’accélération angulaire de la vis correspondant à l’accélération linéaire imposée.',
+  champs:[{id:'e1',l:'Accélération angulaire, en rad/s² :',rep:1257,tol:20}],
+  corr:'dω/dt = a / k = 2 / (1,5915 × 10⁻³) ≈ <b>1257 rad/s²</b>. En 0,25 s, la vis passe donc de 0 à 314 rad/s.'},
+ {n:'B4',pts:7,t:'Déterminez le couple moteur nécessaire en phase d’accélération : couple d’inertie, couple dû à l’effort résistant, puis couple total.',
+  aide:'l’effort résistant est ramené à l’arbre par C = F·k, à diviser par le rendement du couple vis-écrou',
+  champs:[{id:'f1',l:'Couple d’inertie, en N·m :',rep:2.555,tol:0.08},
+          {id:'f2',l:'Couple dû à l’effort résistant, en N·m :',rep:0.354,tol:0.02},
+          {id:'f3',l:'Couple total, en N·m :',rep:2.91,tol:0.1}],
+  corr:'C<sub>inertie</sub> = J<sub>tot</sub> × dω/dt = 2,033 × 10⁻³ × 1257 ≈ <b>2,56 N·m</b>. C<sub>résistant</sub> = F<sub>f</sub> × k / η = 200 × 1,5915 × 10⁻³ / 0,90 ≈ <b>0,354 N·m</b>. Total ≈ <b>2,91 N·m</b>. L’inertie représente 88 % du besoin : c’est l’accélération qui dimensionne, pas le frottement.'},
+ {n:'B5',pts:6,t:'Calculez la puissance mécanique maximale appelée sur l’arbre moteur.',
+  aide:'la puissance maximale est atteinte en fin d’accélération, quand le couple ET la vitesse sont maximaux',
+  champs:[{id:'g1',l:'Puissance maximale, en watts :',rep:914,tol:25}],
+  corr:'P = C × ω = 2,91 × 314 ≈ <b>914 W</b>. Elle survient à l’instant précis où l’axe atteint sa vitesse maximale sans avoir encore cessé d’accélérer.'},
+ {n:'C1',pts:6,t:'PARTIE C — CHOIX DU MOTEUR. À l’aide du document 5, choisissez le moteur convenant à cet axe. Justifiez en confrontant au moins deux critères.',
+  champs:[{id:'h1',l:'Référence retenue :',rep:['bl-200','bl200','bl 200']}],
+  redac:{id:'r2',cles:['couple','2,9','nominal','maxi','vitesse','3000','3500','inertie','adaptation','rapport','bl-100','insuffisant','bl-300','surdimension']},
+  corr:'Le <b>BL-200</b> convient. Son couple maxi de 6,0 N·m couvre les 2,91 N·m demandés, et sa vitesse maxi de 3500 tr/min dépasse les 3000 tr/min requis. Le BL-100 plafonne à 3,6 N·m : la marge serait trop faible. Le BL-300 conviendrait mais sa vitesse maxi de 3000 tr/min ne laisse <b>aucune marge</b>, et son inertie de rotor, plus du double, dégraderait l’adaptation d’inertie.'},
+ {n:'C2',pts:6,t:'L’hypothèse retenue au document 3 prend J\u2098 = 6,0 × 10⁻⁴ kg·m². Expliquez pourquoi le calcul du couple doit être REFAIT si l’on retient finalement le BL-300.',
+  redac:{id:'r3',cles:['inertie','rotor','augmente','change','jtot','recalcul','couple','boucle','iteratif','itera','superieur','1,4']},
+  corr:'L’inertie du rotor entre dans J<sub>tot</sub>. Passer de 6,0 × 10⁻⁴ à 1,4 × 10⁻³ kg·m² porterait J<sub>tot</sub> à 2,83 × 10⁻³ et le couple d’inertie à environ 3,56 N·m. Le dimensionnement est donc <b>itératif</b> : le choix du moteur modifie la donnée qui a servi à le choisir. C’est un point que les élèves saisissent rarement du premier coup.'},
+ {n:'C3',pts:6,t:'À l’aide du document 4, calculez la durée d’un déplacement sur toute la course.',
+  aide:'décomposez en trois phases : accélération, vitesse constante, décélération',
+  champs:[{id:'i1',l:'Durée de la phase d’accélération, en secondes :',rep:0.25,tol:0.02},
+          {id:'i2',l:'Distance parcourue pendant cette phase, en millimètres :',rep:62.5,tol:2},
+          {id:'i3',l:'Durée totale du déplacement, en secondes :',rep:1.85,tol:0.06}],
+  corr:'t₁ = V / a = 0,25 s ; d₁ = V² / (2a) = 62,5 mm. Les deux phases d’accélération consomment 125 mm, il reste 675 mm à vitesse constante, soit 1,35 s. Total : 0,25 + 1,35 + 0,25 = <b>1,85 s</b>.'},
+ {n:'D1',pts:5,t:'PARTIE D — PRÉCISION. Le codeur délivre 2500 points par tour, lus en quadrature. Calculez la résolution de mesure de position du chariot.',
+  aide:'la lecture en quadrature multiplie le nombre d’impulsions par 4',
+  champs:[{id:'j1',l:'Nombre d’impulsions par tour :',rep:10000,tol:100},
+          {id:'j2',l:'Résolution linéaire, en micromètres :',rep:1,tol:0.1}],
+  corr:'2500 × 4 = <b>10 000 impulsions par tour</b>. Chaque tour correspondant à 10 mm, la résolution vaut 10 / 10 000 = 0,001 mm, soit <b>1 µm</b>.'},
+ {n:'D2',pts:5,t:'La mesure est prise sur l’arbre MOTEUR et non sur le chariot. Analysez les conséquences sur la précision réelle de positionnement.',
+  redac:{id:'r4',cles:['jeu','deformation','torsion','elastique','dilatation','erreur','indirect','boucle','ouverte','regle','directe','usure','pas','vis']},
+  corr:'La mesure est <b>indirecte</b> : tout ce qui se trouve entre le codeur et le chariot échappe à l’asservissement — <b>jeu</b> résiduel du couple vis-écrou, <b>déformation élastique</b> de la vis en torsion et en traction, <b>dilatation thermique</b> de la vis en usinage continu, et erreur de pas cumulée. La résolution de 1 µm est donc une résolution de MESURE, pas une précision de positionnement. Une <b>règle optique</b> montée sur le chariot placerait ces défauts dans la boucle, au prix d’un coût supérieur et d’un risque d’instabilité.'},
+ {n:'D3',pts:5,t:'Proposez deux évolutions permettant d’augmenter la vitesse d’avance sans changer de moteur, et indiquez pour chacune une conséquence défavorable.',
+  redac:{id:'r5',cles:['pas','augmente','plus grand','inertie','vis','creuse','diametre','allege','resolution','degrade','precision','vitesse critique','flambage','couple']},
+  corr:'<b>Augmenter le pas</b> de la vis élève la vitesse à vitesse de rotation égale, mais accroît k donc l’inertie équivalente en k² ET dégrade la résolution du codeur. <b>Alléger les masses mobiles</b> ou adopter une vis creuse réduit J<sub>tot</sub>, mais diminue la rigidité et abaisse la vitesse critique de la vis. Toute évolution se paie ailleurs : c’est le cœur du compromis de conception.'},
+ {n:'E1',pts:8,t:'PARTIE E — EXPLOITATION PÉDAGOGIQUE. À l’aide du document 6, proposez une séance de 2 h en classe de terminale STI2D ITEC s’appuyant sur ce support. Précisez la compétence visée, l’activité des élèves et la production attendue.',
+  redac:{id:'r6',cles:['co6','co5','simuler','loi','entree','sortie','mesure','releve','activite','groupe','maquette','simulation','production','compte rendu','tableur','courbe','protocole']},
+  corr:'Réponse attendue articulant trois éléments. <b>Compétence</b> : CO6.2, simuler le comportement d’un mécanisme, via la loi entrée-sortie et l’inertie équivalente. <b>Activité</b> : en îlots, relever la vitesse d’avance pour plusieurs vitesses de rotation, tracer V = f(ω) sur tableur, identifier expérimentalement k, puis le confronter au calcul p/2π. <b>Production</b> : un compte rendu comportant le protocole, la courbe, l’écart relatif entre modèle et mesure et son interprétation. L’évaluation porte sur la démarche, pas sur le seul résultat numérique.'},
+ {n:'E2',pts:7,t:'Un élève affirme : « si on double le pas de la vis, le chariot ira deux fois plus vite, donc le moteur devra fournir deux fois plus de couple ». Analysez cette affirmation et proposez une remédiation.',
+  redac:{id:'r7',cles:['faux','partiel','carre','k2','inertie','quatre','augmente','plus que','confusion','vitesse','couple','experience','simulation','tableur','varier','montrer']},
+  corr:'L’affirmation est <b>partiellement juste</b> : la vitesse double bien, mais la conclusion sur le couple est fausse. L’inertie équivalente varie en <b>k²</b>, donc elle quadruple ; et l’accélération angulaire nécessaire est divisée par deux. L’élève confond une relation linéaire et une relation quadratique. <b>Remédiation</b> : faire varier le pas dans un tableur et tracer C = f(p), pour que la non-linéarité apparaisse d’elle-même — plutôt que d’énoncer la formule correcte, qui ne déloge pas la conception initiale.'},
+];
+const z=document.getElementById('questions');
+Q.forEach(q=>{
+ const d=document.createElement('div'); d.className='q';
+ let html='<div class="num"><b>Question '+q.n+'</b><span>'+q.pts+' points</span></div><p>'+q.t+'</p>';
+ if(q.aide) html+='<div class="aide">'+q.aide+'</div>';
+ (q.champs||[]).forEach(c=>{ html+='<div style="margin-top:8px;font-size:14.5px">'+c.l+
+   ' <input class="court" id="'+c.id+'" autocomplete="off"></div>'; });
+ if(q.redac) html+='<textarea id="'+q.redac.id+'" placeholder="rédige ta réponse en une ou deux phrases"></textarea>';
+ d.innerHTML=html; z.appendChild(d);
+});
+document.getElementById('rendre').addEventListener('click',()=>{
+ let total=0, max=0, det='';
+ Q.forEach(q=>{
+  max+=q.pts;
+  let obtenu=0, parts=0, ok=0;
+  (q.champs||[]).forEach(c=>{
+   parts++;
+   const v=document.getElementById(c.id).value;
+   const bon = typeof c.rep==='number'
+     ? (isFinite(nb(v)) && Math.abs(nb(v)-c.rep)<=c.tol)
+     : c.rep.some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+   if(bon)ok++;
+  });
+  if(q.redac){ parts++;
+   const v=norm(document.getElementById(q.redac.id).value);
+   if(v.length>14 && q.redac.cles.some(k=>v.includes(k))) ok++;
+  }
+  obtenu = Math.round(q.pts*ok/parts*2)/2;
+  total+=obtenu;
+  det+='<div class="corr"><span class="pts">'+obtenu+' / '+q.pts+'</span><b>Question '+q.n+'</b><br>'+q.corr+'</div>';
+ });
+ const r=document.getElementById('resultat');
+ r.innerHTML='<h2>Copie rendue</h2><div class="note">'+total+' / '+max+'</div>'+
+  '<p style="text-align:center;font-size:14px;color:#64748b;margin-bottom:12px">Corrigé détaillé — compare avec ce que tu as écrit sur ton cahier</p>'+det;
+ r.style.display='block';
+ document.getElementById('rendre').disabled=true;
+ r.scrollIntoView({behavior:'smooth'});
+});
+/* ═══ Documents 1 et 2 ═══ */
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FL2(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+/* Document 1 : architecture de l’axe */
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+/* Hachures bornées par calcul — ne jamais compter sur clip() */
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8;
+ c.strokeStyle=coul; c.lineWidth=1; c.lineCap='butt';
+ for(let k=-h;k<w;k+=p){
+  const t0=Math.max(0,-k), t1=Math.min(h,w-k);
+  if(t1<=t0) continue;
+  c.beginPath(); c.moveTo(x+k+t0,y+t0); c.lineTo(x+k+t1,y+t1); c.stroke();
+ }
+ c.strokeStyle=coul; c.lineWidth=2; c.strokeRect(x,y,w,h);
+}
+(function(){
+ const c=document.getElementById('d0').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,330);
+ const ay=176;
+ c.strokeStyle='#dc2626'; c.lineWidth=1.3; c.setLineDash([16,4,3,4]);
+ c.beginPath(); c.moveTo(70,ay); c.lineTo(800,ay); c.stroke(); c.setLineDash([]);
+ /* bati */
+ HACH(c,86,ay+66,690,26,'#475569');
+ HACH(c,96,ay-46,40,112,'#475569');
+ HACH(c,726,ay-46,40,112,'#475569');
+ /* moteur */
+ HACH(c,120,ay-40,110,80,'#ea580c');
+ T2(c,'M',175,ay+6,17,'#ea580c');
+ /* accouplement */
+ HACH(c,232,ay-20,40,40,'#7c3aed');
+ /* vis a billes : filet schematise */
+ c.strokeStyle='#0e7490'; c.lineWidth=2.4;
+ c.beginPath(); c.rect(274,ay-13,448,26); c.stroke();
+ for(let x=280;x<718;x+=17){
+  c.beginPath(); c.moveTo(x,ay+13); c.lineTo(x+11,ay-13); c.stroke();
+ }
+ /* ecrou + chariot */
+ HACH(c,420,ay-26,96,52,'#16a34a');
+ HACH(c,380,ay-82,176,56,'#b45309');
+ /* rails a billes */
+ c.fillStyle='#94a3b8';
+ c.fillRect(300,ay+40,470,12); c.fillRect(300,ay+56,470,8);
+ /* codeur */
+ HACH(c,86,ay-24,34,48,'#334155');
+ /* reperes */
+ const REP=[['1',175,ay-52,'#ea580c'],['2',252,ay-34,'#7c3aed'],['3',620,ay+2,'#0e7490'],
+            ['4',468,ay+2,'#16a34a'],['5',468,ay-56,'#b45309']];
+ REP.forEach(function(r){
+  c.fillStyle='#fff'; c.strokeStyle=r[3]; c.lineWidth=2;
+  c.beginPath(); c.arc(r[1],r[2],12,0,6.284); c.fill(); c.stroke();
+  T2(c,r[0],r[1],r[2]+5,13,r[3]);
+ });
+ /* étiquettes sorties des pièces : elles étaient masquées par le bâti */
+ T2(c,'codeur',103,ay+112,11.5,'#334155');
+ c.strokeStyle='#334155'; c.lineWidth=1.2;
+ c.beginPath(); c.moveTo(103,ay+24); c.lineTo(103,ay+100); c.stroke();
+ T2(c,'rails à billes',600,ay+112,11.5,'#94a3b8');
+ c.strokeStyle='#94a3b8'; c.lineWidth=1.2;
+ c.beginPath(); c.moveTo(600,ay+64); c.lineTo(600,ay+100); c.stroke();
+ c.strokeStyle='#b45309'; c.fillStyle='#b45309'; c.lineWidth=3;
+ c.beginPath(); c.moveTo(600,ay-100); c.lineTo(670,ay-100); c.stroke();
+ c.beginPath(); c.moveTo(682,ay-100); c.lineTo(668,ay-106); c.lineTo(668,ay-94); c.closePath(); c.fill();
+ T2(c,'avance X',636,ay-110,12,'#b45309');
+ T2(c,'course utile 800 mm',430,314,12.5,'#5b544a');
+})();
+/* Document 2 : schéma cinématique */
+(function(){
+ const c=document.getElementById('d1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,280);
+ T2(c,'SCHÉMA CINÉMATIQUE MINIMAL',430,28,14,'#155e75');
+ const y=150;
+ function bati(x){
+  c.strokeStyle='#475569'; c.lineWidth=2.4;
+  c.beginPath(); c.moveTo(x-26,y+58); c.lineTo(x+26,y+58); c.stroke();
+  for(let k=-24;k<26;k+=9){
+   c.beginPath(); c.moveTo(x+k,y+58); c.lineTo(x+k-8,y+68); c.stroke();
+  }
+ }
+ /* axe */
+ c.strokeStyle='#334155'; c.lineWidth=3;
+ c.beginPath(); c.moveTo(150,y); c.lineTo(720,y); c.stroke();
+ /* pivots aux extremites */
+ [190,660].forEach(function(x){
+  c.fillStyle='#fff'; c.strokeStyle='#0e7490'; c.lineWidth=2.6;
+  c.beginPath(); c.arc(x,y,15,0,6.284); c.fill(); c.stroke();
+  c.strokeStyle='#475569'; c.lineWidth=2.2;
+  c.beginPath(); c.moveTo(x,y+15); c.lineTo(x,y+58); c.stroke();
+  bati(x);
+ });
+ /* liaison helicoidale au centre */
+ c.fillStyle='#fff'; c.strokeStyle='#16a34a'; c.lineWidth=2.8;
+ c.beginPath(); c.rect(390,y-22,110,44); c.fill(); c.stroke();
+ c.strokeStyle='#16a34a'; c.lineWidth=2;
+ for(let x=398;x<496;x+=13){
+  c.beginPath(); c.moveTo(x,y+22); c.lineTo(x+9,y-22); c.stroke();
+ }
+ /* glissiere du chariot */
+ c.strokeStyle='#b45309'; c.lineWidth=2.8;
+ c.beginPath(); c.rect(360,y-92,170,40); c.stroke();
+ c.beginPath(); c.moveTo(300,y-52); c.lineTo(600,y-52); c.stroke();
+ c.beginPath(); c.moveTo(445,y-52); c.lineTo(445,y-22); c.stroke();
+ /* moteur */
+ c.strokeStyle='#ea580c'; c.lineWidth=2.8;
+ c.beginPath(); c.rect(120,y-26,70,52); c.stroke();
+ T2(c,'liaison pivot',190,y+92,12,'#0e7490');
+ T2(c,'liaison pivot',660,y+92,12,'#0e7490');
+ T2(c,'liaison hélicoïdale · pas p',445,y+44,12,'#16a34a');
+ T2(c,'liaison glissière',445,y-104,12,'#b45309');
+ T2(c,'moteur',155,y-38,12,'#ea580c');
+ T2(c,'x',760,y+5,13,'#334155');
+ c.strokeStyle='#334155'; c.fillStyle='#334155'; c.lineWidth=2.4;
+ c.beginPath(); c.moveTo(720,y); c.lineTo(742,y); c.stroke();
+ c.beginPath(); c.moveTo(752,y); c.lineTo(740,y-5); c.lineTo(740,y+5); c.closePath(); c.fill();
+})();
+/* Document 4 : profil de vitesse */
+(function(){
+ const c=document.getElementById('d2').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,290);
+ const x0=110, y0=236, L=650, H=170;
+ const TM=2.0, VM=0.6;
+ const X=t=>x0+t/TM*L, Y=v=>y0-v/VM*H;
+ c.strokeStyle='#e2e8f0'; c.lineWidth=1;
+ for(let v=0;v<=0.6;v+=0.1){ c.beginPath(); c.moveTo(x0,Y(v)); c.lineTo(x0+L,Y(v)); c.stroke(); }
+ for(let t=0;t<=TM;t+=0.25){ c.beginPath(); c.moveTo(X(t),y0); c.lineTo(X(t),y0-H); c.stroke(); }
+ c.strokeStyle='#475569'; c.lineWidth=2;
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(x0+L,y0); c.stroke();
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(x0,y0-H); c.stroke();
+ c.font='11.5px Segoe UI'; c.fillStyle='#64748b'; c.textAlign='center';
+ for(let t=0;t<=TM;t+=0.5) c.fillText(t.toFixed(1)+' s',X(t),y0+18);
+ c.textAlign='right';
+ for(let v=0;v<=0.6;v+=0.1) c.fillText(v.toFixed(1),x0-8,Y(v)+4);
+ /* trapeze : 0-0,25 / 0,25-1,60 / 1,60-1,85 */
+ c.strokeStyle='#0e7490'; c.lineWidth=3;
+ c.beginPath();
+ c.moveTo(X(0),Y(0)); c.lineTo(X(0.25),Y(0.5)); c.lineTo(X(1.60),Y(0.5));
+ c.lineTo(X(1.85),Y(0)); c.lineTo(X(TM),Y(0));
+ c.stroke();
+ c.strokeStyle='#94a3b8'; c.lineWidth=1.5; c.setLineDash([5,4]);
+ [0.25,1.60,1.85].forEach(function(t){
+  c.beginPath(); c.moveTo(X(t),y0); c.lineTo(X(t),Y(0.5)); c.stroke();
+ });
+ c.beginPath(); c.moveTo(x0,Y(0.5)); c.lineTo(X(1.85),Y(0.5)); c.stroke();
+ c.setLineDash([]);
+ c.font='bold 12px Segoe UI'; c.textAlign='center';
+ c.fillStyle='#0e7490'; c.fillText('V = 0,5 m/s',X(0.9),Y(0.5)-12);
+ c.fillStyle='#ea580c'; c.fillText('a = 2 m/s²',X(0.12),Y(0.30));
+ c.fillStyle='#7c3aed'; c.fillText('décélération',X(1.74),Y(0.26));
+ c.font='bold 13px Segoe UI'; c.fillStyle='#155e75';
+ c.fillText('PROFIL DE VITESSE TRAPÉZOÏDAL',430,28);
+ c.font='12px Segoe UI'; c.fillStyle='#5b544a';
+ c.fillText('vitesse d’avance (m/s) en fonction du temps (s)',430,272);
+})();
+</script>
+</body>
+</html>
