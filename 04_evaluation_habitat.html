@@ -799,57 +799,27 @@ const ACTIVITES=[
 },
 
 /* ---- 5. Animation comparative : quel mur isole le mieux ? ---- */
-{ titre:'Le duel des murs', icone:'', max:3,
- consigne:'Regarde l\u2019animation : la chaleur (points rouges) s\u2019échappe de deux maisons identiques, mais un seul mur est isolé. Clique sur la maison qui GARDE le mieux sa chaleur. (L\u2019animation tourne en boucle, prends ton temps.)',
- render(zone,done){
- const cv=el('canvas',{width:640,height:300},zone);
- const ctx=cv.getContext('2d');
- const parts=Array.from({length:16},()=>({x:Math.random(),y:40+Math.random()*200,v:0.4+Math.random()*0.5}));
- let t=0, fini=false, raf;
- function maison(x,isole,fuite){
- ctx.fillStyle='#fef3c7'; ctx.fillRect(x,90,180,170);
- ctx.strokeStyle='#78716c'; ctx.lineWidth=3; ctx.strokeRect(x,90,180,170);
- ctx.fillStyle='#b91c1c';
- ctx.beginPath(); ctx.moveTo(x-14,90); ctx.lineTo(x+90,36); ctx.lineTo(x+194,90); ctx.closePath(); ctx.fill();
- // mur droit (sortie de chaleur)
- ctx.fillStyle='#a8a29e'; ctx.fillRect(x+168,90,12,170);
- if(isole){ ctx.fillStyle='#fbbf24'; ctx.fillRect(x+156,90,12,170); }
- ctx.font='16px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e3a5f';
- ctx.fillText('20 °C', x+80, 180);
- // particules
- ctx.fillStyle='#ef4444';
- parts.forEach(p=>{
- let px=x+40+ p.x*200*fuite + ((t*p.v*40)%(200*fuite||1));
- let lim= isole? x+150 : x+300;
- px=Math.min(px,lim);
- ctx.beginPath(); ctx.arc(px, 100+ (p.y%150), 5,0,7); ctx.fill();
- });
- }
- function boucle(){
- if(fini) return;
- t+=0.016;
- ctx.clearRect(0,0,640,300);
- ctx.font='bold 15px Segoe UI'; ctx.textAlign='center'; ctx.fillStyle='#1e40af';
- ctx.fillText('MAISON A',110,26); ctx.fillText('MAISON B',430,26);
- maison(30,false,1); maison(350,true,0.15);
- ctx.fillStyle='#64748b'; ctx.font='13px Segoe UI';
- ctx.fillText('dehors : 5 °C',320,290);
- raf=requestAnimationFrame(boucle);
- }
- boucle();
- const rang=el('div',{class:'choix-cartes'},zone);
- [[' Maison A','A'],[' Maison B','B']].forEach(([lbl,id])=>{
- const c=el('div',{class:'cc'},rang,lbl);
- c.onclick=()=>{
- if(fini) return; fini=true; cancelAnimationFrame(raf);
- const ok=id==='B';
- c.classList.add(ok?'bon':'faux');
- feedback(ok?'ok':'ko',(ok?'✓ Bien vu !':'✗ Regarde à nouveau :')+' la maison B possède une couche d\u2019ISOLANT (en jaune) qui bloque les points rouges : la chaleur reste dedans. Sans isolant (maison A), elle s\u2019échappe en continu — et la facture grimpe.');
- done(ok?3:0);
- };
- });
- }
-},
+{ titre:'Charge des camions sur le tablier', icone:'', max:3,
+  consigne:'Quatre camions de 25 tonnes stationnent sur le tablier. La charge maximale admissible est de 150 tonnes. Quel POURCENTAGE de la charge maximale est utilise ? Arrondis au DIXIEME. La calculatrice est ouverte a droite !',
+  render(zone,done){
+   activiteCalcul(zone,done,{max:3,unite:'%',bonne:66.7,tol:0.2,
+    rappel:'pourcentage = valeur \u00f7 total \u00d7 100',
+    solution:'4 \u00d7 25 = 100 t. Puis 100 \u00f7 150 \u00d7 100 = 66,7 %. Le pont travaille en dessous de sa limite : il reste environ un tiers de marge de securite.',
+    schema(){
+     const s=svgEl('svg',{viewBox:'0 0 560 130',width:'560'});
+     svgEl('line',{x1:40,y1:86,x2:520,y2:86,stroke:'#475569','stroke-width':'10'},s);
+     [70,180,290,400].forEach(function(x){
+      svgEl('rect',{x:x,y:52,width:78,height:28,rx:4,fill:'#0e7490'},s);
+      svgEl('circle',{cx:x+16,cy:84,r:7,fill:'#334155'},s);
+      svgEl('circle',{cx:x+62,cy:84,r:7,fill:'#334155'},s);
+      const t=svgEl('text',{x:x+39,y:71,'font-size':'13',fill:'#fff','text-anchor':'middle','font-family':'Segoe UI'},s);
+      t.textContent='25 t';
+     });
+     const l=svgEl('text',{x:280,y:118,'font-size':'13',fill:'#475569','text-anchor':'middle','font-family':'Segoe UI'},s);
+     l.textContent='charge maximale admissible : 150 t';
+     return s;
+    }});
+  } },
 
 /* ---- 6. Choisir la poutre qui tient ---- */
 { titre:'Mission ingénieur : choisis ta poutre', icone:'', max:3,
@@ -987,38 +957,78 @@ const ACTIVITES=[
 },
 
 /* ---- 10. CALCUL : la flèche limite ---- */
-{ titre:'Calcule la flèche limite', icone:'', max:2,
- consigne:'Un pont poutre franchit une rivière de 48 mètres. La règle de l\u2019ingénieur (vue en TP) est rappelée ci-dessous. Calcule la flèche maximale autorisée et donne-la en CENTIMÈTRES. La calculatrice est ouverte à droite !',
- render(zone,done){
- activiteCalcul(zone,done,{max:2,unite:'cm',bonne:24,tol:0.01,
- rappel:'Flèche maximale = portée ÷ 200 · et 1 m = 100 cm',
- schema(){
- const s=svgEl('svg',{viewBox:'0 0 560 130',width:'560'});
- svgEl('line',{x1:60,y1:50,x2:500,y2:50,stroke:'#475569','stroke-width':'10'},s);
- [[60,58],[500,58]].forEach(([x,y])=>svgEl('polygon',{points:`${x},${y} ${x-16},${y+26} ${x+16},${y+26}`,fill:'#94a3b8'},s));
- svgEl('line',{x1:60,y1:108,x2:500,y2:108,stroke:'#94a3b8','stroke-width':'2'},s);
- svgEl('text',{x:280,y:100,'text-anchor':'middle','font-size':'16','font-weight':'bold',fill:'#1e40af','font-family':'Segoe UI'},s,'portée = 48 m');
- return s;
- },
- solution:'Le calcul : 48 ÷ 200 = 0,24 m. Puis on convertit : 0,24 m × 100 = 24 cm. La poutre ne doit jamais descendre de plus de 24 cm au centre.'});
- }
-},
+{ titre:'Traction ou compression ?', icone:'', max:2,
+  consigne:'Dans le treillis trace en TP, la barre du DESSUS est ecrasee par la charge et celle du DESSOUS est etiree. Clique sur l\u2019effort subi par la barre du DESSOUS.',
+  render(zone,done){
+   const s=svgEl('svg',{viewBox:'0 0 560 180',width:'560'});
+   svgEl('line',{x1:60,y1:52,x2:500,y2:52,stroke:'#dc2626','stroke-width':'8'},s);
+   svgEl('line',{x1:60,y1:140,x2:500,y2:140,stroke:'#0e7490','stroke-width':'8'},s);
+   [[60,52,170,140],[170,140,280,52],[280,52,390,140],[390,140,500,52]].forEach(function(q){
+    svgEl('line',{x1:q[0],y1:q[1],x2:q[2],y2:q[3],stroke:'#94a3b8','stroke-width':'5'},s);
+   });
+   const a=svgEl('text',{x:280,y:40,'font-size':'13',fill:'#dc2626','text-anchor':'middle','font-family':'Segoe UI'},s);
+   a.textContent='barre du dessus : ecrasee';
+   const b=svgEl('text',{x:280,y:166,'font-size':'13',fill:'#0e7490','text-anchor':'middle','font-family':'Segoe UI'},s);
+   b.textContent='barre du dessous : etiree';
+   zone.appendChild(s);
+   const rang=el('div',{class:'etiqs'},zone);
+   let repondu=false;
+   ['Compression','Traction','Flexion'].forEach(function(nom){
+    const bt=el('button',{},rang,nom);
+    bt.onclick=function(){
+     if(repondu) return; repondu=true;
+     rang.querySelectorAll('button').forEach(function(x){x.disabled=true;});
+     const ok = nom==='Traction';
+     bt.style.borderColor= ok?'#16a34a':'#dc2626';
+     feedback(ok?'ok':'ko',(ok?'\u2713 Exact. ':'\u2717 Non. ')+
+      'Une barre ETIREE travaille en TRACTION. Une barre ecrasee travaille en compression : c\u2019est la barre du dessus.');
+     done(ok?2:0);
+    };
+   });
+  } },
 
 /* ---- 11. CALCUL : les économies de l'isolation ---- */
-{ titre:'Les économies de l\u2019isolation', icone:'', max:2,
- consigne:'La famille Perrin dépense 1 200 € de chauffage par an. En isolant les combles de sa maison, elle réduit sa facture de 25 %. Combien d\u2019euros économise-t-elle CHAQUE ANNÉE ? Utilise la calculatrice.',
- render(zone,done){
- activiteCalcul(zone,done,{max:2,unite:'€ / an',bonne:300,tol:0.01,
- rappel:'Prendre 25 % d\u2019un nombre = nombre × 25 ÷ 100',
- solution:'Le calcul : 1 200 × 25 ÷ 100 = 300 €. Isoler = moins chauffer = 300 € économisés chaque année (et l\u2019isolation est vite remboursée !).'});
- }
-},
+{ titre:'Espacement des suspentes', icone:'', max:2,
+  consigne:'Un pont suspendu de 400 metres de portee compte 40 intervalles reguliers entre suspentes. Quel est l\u2019ESPACEMENT entre deux suspentes voisines, en metres ? La calculatrice est ouverte a droite !',
+  render(zone,done){
+   activiteCalcul(zone,done,{max:2,unite:'m',bonne:10,tol:0.05,
+    rappel:'espacement = portee \u00f7 nombre d\u2019intervalles',
+    solution:'400 \u00f7 40 = 10 metres. Plus les suspentes sont rapprochees, mieux la charge du tablier se repartit sur le cable porteur.',
+    schema(){
+     const s=svgEl('svg',{viewBox:'0 0 560 150',width:'560'});
+     svgEl('line',{x1:40,y1:112,x2:520,y2:112,stroke:'#475569','stroke-width':'9'},s);
+     svgEl('rect',{x:52,y:24,width:11,height:88,fill:'#64748b'},s);
+     svgEl('rect',{x:497,y:24,width:11,height:88,fill:'#64748b'},s);
+     svgEl('path',{d:'M58,28 Q280,132 502,28',fill:'none',stroke:'#0e7490','stroke-width':'5'},s);
+     for(let k=1;k<10;k++){
+      const x=58+k*44.4, t=k/10;
+      const y=28+2*t*(1-t)*104;
+      svgEl('line',{x1:x,y1:y,x2:x,y2:112,stroke:'#94a3b8','stroke-width':'2.5'},s);
+     }
+     const l=svgEl('text',{x:280,y:142,'font-size':'13',fill:'#475569','text-anchor':'middle','font-family':'Segoe UI'},s);
+     l.textContent='portee 400 m \u00b7 40 intervalles reguliers';
+     return s;
+    }});
+  } },
 
 ];
 /* ===FIN ACTIVITES=== */
 
 /* ============ Déroulement ============ */
 let eleve=null, idx=0, pts=[], t0=0;
+
+/* ===== ORDRE DE PRÉSENTATION ALÉATOIRE (voir _outils/melanger_questions.py) =====
+   ORDRE est une permutation des index de ACTIVITES. Elle ne sert QU'À L'AFFICHAGE :
+   les points restent écrits à l'index d'origine, pour que le tableau de bord
+   continue de comparer la même question entre deux élèves. */
+const ORDRE=(function(){
+ const t=ACTIVITES.map((_,i)=>i);
+ for(let i=t.length-1;i>0;i--){            /* Fisher-Yates : non biaisé */
+  const j=Math.floor(Math.random()*(i+1));
+  const x=t[i]; t[i]=t[j]; t[j]=x;
+ }
+ return t;
+})();
 const MAXTOT=ACTIVITES.reduce((s,a)=>s+a.max,0);
 const $=id=>document.getElementById(id);
 function montrer(id){ ['ecranLogin','ecranAct','ecranFin','ecranProf'].forEach(e=>$(e).classList.add('cache')); $(id).classList.remove('cache'); }
@@ -1030,7 +1040,7 @@ $('btnCommencer').onclick=()=>{
  montrer('ecranAct'); lancerActivite();
 };
 function lancerActivite(){
- const a=ACTIVITES[idx];
+ const a=ACTIVITES[ORDRE[idx]];
  $('barreP').style.width=(idx/ACTIVITES.length*100)+'%';
  $('numAct').textContent='Activité '+(idx+1)+' / '+ACTIVITES.length;
  $('ptsMaxAct').textContent=a.max+' pt'+(a.max>1?'s':'');
@@ -1041,7 +1051,7 @@ function lancerActivite(){
  $('btnSuivant').classList.add('cache');
  const zone=$('zoneAct'); zone.innerHTML='';
  a.render(zone, p=>{
- pts[idx]=p;
+    pts[ORDRE[idx]]=p;   /* index D'ORIGINE, pas le rang affiché */
  $('gainAct').textContent='➜ '+String(p).replace('.',',')+' / '+a.max+' pt'+(a.max>1?'s':'');
  $('gainAct').classList.remove('cache');
  $('btnSuivant').textContent = idx<ACTIVITES.length-1 ? 'Suivant ➜' : 'Voir mon résultat ';

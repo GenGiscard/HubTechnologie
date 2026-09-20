@@ -828,6 +828,19 @@ const ACTIVITES=[
 
 /* ============ Déroulement ============ */
 let eleve=null, idx=0, pts=[], t0=0;
+
+/* ===== ORDRE DE PRÉSENTATION ALÉATOIRE (voir _outils/melanger_questions.py) =====
+   ORDRE est une permutation des index de ACTIVITES. Elle ne sert QU'À L'AFFICHAGE :
+   les points restent écrits à l'index d'origine, pour que le tableau de bord
+   continue de comparer la même question entre deux élèves. */
+const ORDRE=(function(){
+ const t=ACTIVITES.map((_,i)=>i);
+ for(let i=t.length-1;i>0;i--){            /* Fisher-Yates : non biaisé */
+  const j=Math.floor(Math.random()*(i+1));
+  const x=t[i]; t[i]=t[j]; t[j]=x;
+ }
+ return t;
+})();
 const MAXTOT=ACTIVITES.reduce((s,a)=>s+a.max,0);
 const $=id=>document.getElementById(id);
 function montrer(id){ ['ecranLogin','ecranAct','ecranFin','ecranProf'].forEach(e=>$(e).classList.add('cache')); $(id).classList.remove('cache'); }
@@ -839,7 +852,7 @@ $('btnCommencer').onclick=()=>{
  montrer('ecranAct'); lancerActivite();
 };
 function lancerActivite(){
- const a=ACTIVITES[idx];
+ const a=ACTIVITES[ORDRE[idx]];
  $('barreP').style.width=(idx/ACTIVITES.length*100)+'%';
  $('numAct').textContent='Activité '+(idx+1)+' / '+ACTIVITES.length;
  $('ptsMaxAct').textContent=a.max+' pt'+(a.max>1?'s':'');
@@ -850,7 +863,7 @@ function lancerActivite(){
  $('btnSuivant').classList.add('cache');
  const zone=$('zoneAct'); zone.innerHTML='';
  a.render(zone, p=>{
- pts[idx]=p;
+    pts[ORDRE[idx]]=p;   /* index D'ORIGINE, pas le rang affiché */
  $('gainAct').textContent='➜ '+String(p).replace('.',',')+' / '+a.max+' pt'+(a.max>1?'s':'');
  $('gainAct').classList.remove('cache');
  $('btnSuivant').textContent = idx<ACTIVITES.length-1 ? 'Suivant ➜' : 'Voir mon résultat ';

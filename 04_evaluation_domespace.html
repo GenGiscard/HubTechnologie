@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Évaluation — La maison qui suit le soleil · ESTIC</title>
+<style>
+:root{--ink:#1e3a5f;--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.6}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.ev{max-width:880px;margin:0 auto;padding:26px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 8px}
+.sous{color:#5b544a;font-size:16px;max-width:700px;margin:0 auto}
+.video{max-width:880px;margin:18px auto;background:#fff;border:1px solid var(--bord);
+ border-left:6px solid var(--or);border-radius:16px;padding:16px 20px}
+.video .lab{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--or);font-weight:800}
+.video a{display:inline-block;margin-top:8px;background:var(--or);color:#fff;text-decoration:none;
+ font-weight:800;padding:11px 20px;border-radius:10px;font-size:16px}
+.video p{font-size:15px;color:#5b544a;margin-top:9px}
+main{max-width:880px;margin:0 auto;padding:0 20px 40px}
+.q{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:18px 22px;margin:14px 0}
+.q h2{font-size:17.5px;color:var(--accf);margin-bottom:11px}
+.q h2 .n{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 9px;font-size:15px;margin-right:8px}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.sel{border-color:var(--acc);background:#ecfeff;font-weight:700}
+.rep button:disabled{cursor:default;opacity:.85}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.ident{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:18px 22px;margin:14px 0}
+.ident label{display:block;font-size:13px;font-weight:800;color:var(--gris);margin:9px 0 3px}
+.ident input,.ident select{width:100%;padding:10px 12px;font-size:16px;font-family:inherit;
+ border:2px solid var(--bord);border-radius:10px}
+.gros{display:block;width:100%;background:var(--acc);color:#fff;border:none;border-radius:12px;
+ padding:15px;font-size:18px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:16px}
+.gros:disabled{background:#94a3b8;cursor:default}
+#bilan{display:none;background:#fff;border:2px solid var(--vert);border-radius:16px;padding:22px;margin-top:16px;text-align:center}
+#bilan .note{font-size:44px;font-weight:900;color:var(--vert)}
+.verr{color:var(--rouge);font-weight:700;font-size:14px;min-height:20px}
+footer{text-align:center;padding:20px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="ev">
+ <div class="eyebrow">Séquence 3ème · La maison qui suit le soleil</div>
+ <h1>Évaluation — La maison qui suit le soleil</h1>
+ <p class="sous">Douze questions sur l’épisode. Une seule réponse par question, et
+ <b>une seule tentative</b> : lis bien avant de cliquer.</p>
+</header>
+
+<div class="video">
+ <div class="lab">Avant de commencer</div>
+ <a href="01_cours_domespace.html">Revoir le cours — La maison qui suit le soleil</a>
+ <p>Douze questions sur le besoin, les deux chaînes et les calculs. Une seule tentative par question.</p>
+</div>
+
+<main>
+ <div class="ident">
+  <label for="inNom">Nom</label><input id="inNom" autocomplete="off">
+  <label for="inPrenom">Prénom</label><input id="inPrenom" autocomplete="off">
+  <label for="inClasse">Classe</label><select id="inClasse"><option value="">— Choisis ta classe —</option><option>5A</option><option>5B</option><option>5C</option><option>5D</option><option>5E</option><option>4A</option><option>4B</option><option>4C</option><option>4D</option><option>4E</option><option>3A</option><option>3B</option><option>3C</option><option>3D</option><option>3E</option><option>3PM</option></select>
+ </div>
+ <div id="questions"></div>
+ <button class="gros" id="envoyer">Terminer et envoyer</button>
+ <div id="bilan"></div>
+</main>
+
+<footer>Évaluation · Séquence La maison qui suit le soleil · Technologie 5ème · ESTIC Don Bosco</footer>
+
+<script>
+/* ===== VERROU — code redemandé à chaque ouverture, aucune persistance ===== */
+(function(){
+ const CODE='DOMES14';
+ const d=document.createElement('div');
+ d.id='verrouEval';
+ d.innerHTML='<div class="vbox"><img alt="Logo ESTIC" src="logo_estic.png">'+
+  '<h2>Évaluation verrouillée</h2><p>Entre le code donné par ton professeur.</p>'+
+  '<input id="vc" maxlength="10" autocomplete="off" placeholder="CODE">'+
+  '<div class="verr" id="ve"></div><button type="button" id="vb">Commencer</button></div>';
+ const s=document.createElement('style');
+ s.textContent='#verrouEval{position:fixed;inset:0;z-index:99999;background:#0f172a;display:flex;'+
+  'align-items:center;justify-content:center;padding:24px}'+
+  '#verrouEval .vbox{background:#fff;border-radius:18px;padding:30px;max-width:420px;width:100%;text-align:center}'+
+  '#verrouEval img{height:50px;margin-bottom:12px}'+
+  '#verrouEval h2{font-size:22px;color:#1e3a5f;margin-bottom:6px}'+
+  '#verrouEval p{font-size:15px;color:#5b6472;margin-bottom:16px}'+
+  '#verrouEval input{width:100%;padding:13px;font-size:22px;letter-spacing:4px;text-align:center;'+
+  'border:2px solid #cbd5e1;border-radius:12px;text-transform:uppercase;box-sizing:border-box}'+
+  '#verrouEval button{width:100%;padding:13px;margin-top:10px;font-size:17px;font-weight:800;'+
+  'border:none;border-radius:12px;background:#0e7490;color:#fff;cursor:pointer;font-family:inherit}';
+ document.head.appendChild(s); document.body.appendChild(d);
+ document.documentElement.style.overflow='hidden';
+ const ch=document.getElementById('vc');
+ try{ ch.focus(); }catch(e){}
+ function ouvrir(){
+  if(ch.value.trim().toUpperCase()===CODE){
+   document.documentElement.style.overflow='';
+   d.parentNode.removeChild(d);
+  } else { document.getElementById('ve').textContent='Code incorrect.'; ch.value=''; }
+ }
+ document.getElementById('vb').addEventListener('click',ouvrir);
+ ch.addEventListener('keydown',e=>{ if(e.key==='Enter') ouvrir(); });
+})();
+
+/* ===== QUESTIONS ===== */
+const Q=[
+ {q:"De combien de degrés le soleil se déplace-t-il en une heure ?",
+  r:["30°", "15°", "24°"],b:1,
+  ex:"Le soleil décrit 360° en 24 heures : 360 ÷ 24 = 15° par heure. C’est la vitesse que la maison doit suivre."},
+ {q:"La maison doit tourner de 180° entre 7 h et 19 h. Quelle est sa vitesse moyenne ?",
+  r:["15° par heure", "12° par heure", "30° par heure"],b:0,
+  ex:"180° en 12 heures : 180 ÷ 12 = 15° par heure. La maison suit exactement la course du soleil."},
+ {q:"Le moteur tourne à 1500 tr/min, le réducteur a un rapport de 1/30 000. Vitesse de sortie ?",
+  r:["50 tr/min", "0,5 tr/min", "0,05 tr/min"],b:2,
+  ex:"1500 ÷ 30 000 = 0,05 tr/min. Un tour complet demande 1 ÷ 0,05 = 20 minutes."},
+ {q:"À quoi sert le réducteur dans ce système ?",
+  r:["à produire du courant", "à échanger de la vitesse contre de la force", "à mesurer la position"],b:1,
+  ex:"Le moteur est rapide et peu puissant. Après réduction, le mouvement est très lent mais capable de déplacer plusieurs dizaines de tonnes."},
+ {q:"Dans la chaîne d’énergie, quel élément CONVERTIT ?",
+  r:["le contacteur", "le réducteur", "le moteur"],b:2,
+  ex:"Le moteur transforme l’électricité en mouvement : l’énergie change de forme. Le réducteur transmet sans changer cette forme."},
+ {q:"Pourquoi commander la rotation par une horloge plutôt que par un capteur de lumière ?",
+  r:["la position du soleil est prévisible, un nuage tromperait le capteur", "l’horloge est plus précise la nuit", "un capteur coûterait trop cher"],b:0,
+  ex:"La trajectoire du soleil se calcule à l’avance. Un capteur de luminosité ferait pivoter la maison au premier nuage : l’information serait moins fiable."},
+ {q:"Dans la chaîne d’information, l’automate assure quelle fonction ?",
+  r:["traiter", "acquérir", "agir"],b:0,
+  ex:"L’horloge acquiert l’heure, l’automate la traite et décide, puis il communique l’ordre au moteur qui agit."},
+ {q:"Pourquoi les baies vitrées sont-elles regroupées sur un seul secteur de la maison ?",
+  r:["pour économiser du verre", "parce que le bois ne supporte pas le verre", "pour pouvoir choisir ce qu’on expose au soleil"],b:2,
+  ex:"Le reste du mur est aveugle et isolé. En tournant, on choisit d’exposer les baies au soleil ou de leur tourner le dos : c’est tout l’intérêt de la rotation."},
+ {q:"En été, dans quel but fait-on tourner la maison ?",
+  r:["capter le maximum de soleil", "chercher l’ombre, pour éviter la surchauffe", "s’orienter face au vent"],b:1,
+  ex:"La rotation sert dans les deux sens : capter la chaleur en hiver, s’en protéger en été. Un seul mécanisme, deux usages opposés."},
+ {q:"Le moteur consomme 250 W pendant 20 minutes par jour. Quelle énergie par jour ?",
+  r:["83 Wh", "5000 Wh", "250 Wh"],b:0,
+  ex:"20 minutes = 1/3 d’heure. 250 × 1/3 ≈ 83 Wh, soit moins qu’une ampoule laissée allumée deux heures. La rotation coûte très peu."},
+ {q:"La maison est en bois. Quel avantage ce matériau présente-t-il ici ?",
+  r:["il conduit mieux la chaleur", "il isole bien et allège la structure à faire tourner", "il est plus lourd, donc plus stable"],b:1,
+  ex:"Le bois est un bon isolant et il est léger : deux atouts pour une maison qu’il faut à la fois chauffer peu et faire pivoter."},
+ {q:"Quelle est la principale contrainte de cette solution ?",
+  r:["elle consomme énormément d’électricité", "elle ne fonctionne pas en hiver", "elle ajoute un mécanisme à entretenir et coûte plus cher à construire"],b:2,
+  ex:"La consommation est faible. Ce qui pèse, c’est le mécanisme à entretenir et le surcoût de construction : un choix technique se juge sur plusieurs critères."}
+];
+
+const FIREBASE='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/evaluations/domespace';
+const rep=new Array(Q.length).fill(-1);
+const debut=Date.now();
+let envoye=false;
+
+(function(){
+ const z=document.getElementById('questions');
+ Q.forEach((o,i)=>{
+  const d=document.createElement('div'); d.className='q';
+  const h=document.createElement('h2');
+  h.innerHTML='<span class="n">'+(i+1)+'</span>'+o.q;
+  d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach((txt,j)=>{
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',()=>{
+    if(envoye) return;
+    rep[i]=j;
+    [...r.children].forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+})();
+
+document.getElementById('envoyer').addEventListener('click',async()=>{
+ if(envoye) return;
+ const nom=document.getElementById('inNom').value.trim();
+ const prenom=document.getElementById('inPrenom').value.trim();
+ const classe=document.getElementById('inClasse').value.trim();
+ if(!nom || !classe){ alert('Indique au moins ton nom et ta classe.'); return; }
+ const sansRep=rep.filter(v=>v<0).length;
+ if(sansRep>0 && !window.confirm) { }
+ envoye=true;
+ document.getElementById('envoyer').disabled=true;
+
+ let score=0;
+ document.querySelectorAll('.q').forEach((d,i)=>{
+  const bts=[...d.querySelectorAll('.rep button')];
+  bts.forEach((b,j)=>{
+   b.disabled=true;
+   if(j===Q[i].b) b.classList.add('bon');
+   else if(rep[i]===j) b.classList.add('faux');
+  });
+  if(rep[i]===Q[i].b) score++;
+  const e=document.createElement('div');
+  e.style.cssText='margin-top:10px;font-size:14.5px;color:#5b544a;border-left:4px solid #0e7490;padding-left:12px';
+  e.textContent=Q[i].ex;
+  d.appendChild(e);
+ });
+
+ const note=Math.round(score/Q.length*20*10)/10;
+ const duree=Math.round((Date.now()-debut)/1000);
+ const b=document.getElementById('bilan');
+ b.style.display='block';
+ b.innerHTML='<div class="note">'+String(note).replace('.',',')+' / 20</div>'+
+  '<div style="font-size:16px;color:#5b544a">'+score+' bonnes réponses sur '+Q.length+'</div>'+
+  '<div id="etatEnvoi" style="margin-top:10px;font-size:14px;color:#64748b">Envoi en cours…</div>';
+ b.scrollIntoView({behavior:'smooth'});
+
+ try{
+  await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({nom:nom,prenom:prenom,classe:classe,score:score,sur:Q.length,
+    note20:note,duree_s:duree,date:new Date().toISOString(),reponses:rep})});
+  document.getElementById('etatEnvoi').textContent='Résultat envoyé au professeur.';
+ }catch(e){
+  document.getElementById('etatEnvoi').textContent=
+   'Envoi impossible (réseau). Montre ton écran au professeur.';
+ }
+});
+</script>
+</body>
+</html>
