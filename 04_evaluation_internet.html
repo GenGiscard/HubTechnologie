@@ -904,39 +904,55 @@ const MAXTOT=ACTIVITES.reduce((s,a)=>s+a.max,0);
 const $=id=>document.getElementById(id);
 function montrer(id){ ['ecranLogin','ecranAct','ecranFin','ecranProf'].forEach(e=>$(e).classList.add('cache')); $(id).classList.remove('cache'); }
 
-/* ===== COPIE_ABANDON (voir _outils/copie_abandon.py) =====
-   La copie part même si l'élève quitte en cours de route, et une nouvelle
-   tentative est bloquée sans le mot de passe du professeur. */
+/* ===== COPIE_ABANDON v2 (voir _outils/copie_abandon.py) =====
+   La copie en cours est gardée DANS LE NAVIGATEUR et mise à jour régulièrement.
+   Elle est écrite dans la base sous un identifiant FIXE, choisi au démarrage :
+   on peut donc VÉRIFIER plus tard si elle est bien arrivée, et la renvoyer sinon.
+   Version 1 corrigée : elle se déclarait « transmise » sans jamais le vérifier. */
 const CLE_TENTATIVE='tentative_'+FIREBASE.split('/').pop();
 function lireTentative(){ try{ return JSON.parse(localStorage.getItem(CLE_TENTATIVE)); }catch(e){ return null; } }
 function ecrireTentative(o){ try{ localStorage.setItem(CLE_TENTATIVE,JSON.stringify(o)); }catch(e){} }
 function tentativeDebut(){
  ecrireTentative({nom:eleve.nom,prenom:eleve.prenom,classe:eleve.classe,
-  debut:new Date().toISOString(),fini:false,partiel:false});
+  debut:new Date().toISOString(),fini:false,confirme:false,
+  id:'ab'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),copie:null});
 }
-function tentativeFin(){
- const t=lireTentative()||{}; t.fini=true; ecrireTentative(t);
-}
-/* Envoi de sortie : pagehide couvre fermeture, rechargement et navigation.
-   PAS visibilitychange, qui verrouillerait l'élève dès qu'il change d'onglet. */
-window.addEventListener('pagehide',function(){
+function tentativeFin(){ const t=lireTentative()||{}; t.fini=true; ecrireTentative(t); }
+/* Copie partielle : points acquis, ZÉRO pour le reste, note sur le total. */
+function sauverPartiel(){
  const t=lireTentative();
- if(!t || t.fini || t.partiel || !eleve) return;
+ if(!t || t.fini || !eleve) return;
  const total=pts.reduce((s,p)=>s+(p||0),0);
- const donnees={ nom:eleve.nom, prenom:eleve.prenom, classe:eleve.classe,
+ t.copie={ nom:eleve.nom, prenom:eleve.prenom, classe:eleve.classe,
   score:Math.round(total*10)/10, sur:MAXTOT,
   note20:Math.round(total/MAXTOT*20*10)/10,
   duree_s:Math.round((Date.now()-t0)/1000),
-  date:new Date().toISOString(),
-  reponses:pts, statut:'abandon' };
- t.partiel=true; ecrireTentative(t);
+  date:new Date().toISOString(), reponses:pts, statut:'abandon' };
+ ecrireTentative(t);
+}
+setInterval(function(){ const t=lireTentative(); if(t && !t.fini) sauverPartiel(); },8000);
+/* Sortie : pagehide couvre fermeture, rechargement et navigation — PAS
+   visibilitychange, qui verrouillerait l'élève dès qu'il change d'onglet. */
+window.addEventListener('pagehide',function(){
+ const t=lireTentative();
+ if(!t || t.fini || t.confirme) return;
+ sauverPartiel();
+ const t2=lireTentative();
+ if(!t2 || !t2.copie) return;
  try{
-  /* sans en-tête Content-Type : requête CORS simple, qui part même pendant la
-     fermeture de la page grâce à keepalive */
-  fetch(FIREBASE+'.json',{method:'POST',keepalive:true,body:JSON.stringify(donnees)});
+  /* PUT sous l'identifiant fixe ; sans en-tête Content-Type pour rester une
+     requête CORS simple, keepalive pour partir pendant la fermeture. */
+  fetch(FIREBASE+'/'+t2.id+'.json',{method:'PUT',keepalive:true,body:JSON.stringify(t2.copie)});
  }catch(e){}
 });
-/* À l'ouverture : une tentative existe déjà → évaluation verrouillée. */
+/* Retour arrière : la page peut revenir du cache sans rechargement ; on force
+   le rechargement pour que le verrou s'affiche. */
+window.addEventListener('pageshow',function(e){
+ if(!e.persisted) return;
+ const t=lireTentative();
+ if(t && !t.fini) location.reload();
+});
+/* À l'ouverture : tentative existante → verrou, et VÉRIFICATION de la copie. */
 (function(){
  const t=lireTentative();
  if(!t) return;
@@ -947,9 +963,10 @@ window.addEventListener('pagehide',function(){
  bloc.style.cssText='background:#fef2f2;border:2px solid #fca5a5;border-radius:12px;'+
   'padding:14px 16px;margin:0 0 14px;color:#7f1d1d;font-size:15px;line-height:1.55';
  bloc.innerHTML='<b>Évaluation déjà commencée</b><br>'+
-  (t.prenom||'')+' '+(t.nom||'')+' ('+(t.classe||'')+') l’a commencée le '+quand+'. '+
-  (t.fini ? 'La copie a été rendue.' : 'La copie a été transmise au professeur avec les réponses données.')+
-  '<br>Pour la repasser, appelle ton professeur.'+
+  (t.prenom||'')+' '+(t.nom||'')+' ('+(t.classe||'')+') l’a commencée le '+quand+'.'+
+  '<div id="etatCopie" style="margin:8px 0;font-weight:700">'+
+  (t.fini ? 'La copie a été rendue.' : 'Vérification de la transmission de la copie…')+'</div>'+
+  'Pour la repasser, appelle ton professeur.'+
   '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">'+
   '<input id="mdpReprise" type="password" placeholder="mot de passe professeur" '+
   'style="padding:8px 10px;border:2px solid #fca5a5;border-radius:8px;font:inherit">'+
@@ -960,6 +977,30 @@ window.addEventListener('pagehide',function(){
   if($('mdpReprise').value!=='Agostini2025'){ $('mdpReprise').style.borderColor='#dc2626'; return; }
   try{ localStorage.removeItem(CLE_TENTATIVE); }catch(e){}
   bloc.remove(); if(go){ go.disabled=false; go.style.opacity=''; }
+ });
+ if(t.fini) return;
+ const etat=$('etatCopie');
+ function dire(ok,txt){ etat.style.color= ok?'#15803d':'#b91c1c'; etat.textContent=txt; }
+ if(t.confirme){ dire(true,'✓ La copie a bien été reçue par le professeur.'); return; }
+ if(!t.copie){ dire(false,'✗ Aucune réponse enregistrée : la copie n’a pas pu être constituée.'); return; }
+ /* 1) la copie est-elle déjà dans la base ? 2) sinon, on l'envoie maintenant. */
+ fetch(FIREBASE+'/'+t.id+'.json').then(function(r){ return r.json(); }).then(function(j){
+  if(j && typeof j==='object' && j.nom!==undefined){
+   t.confirme=true; ecrireTentative(t);
+   dire(true,'✓ La copie a bien été reçue par le professeur.');
+   return;
+  }
+  return fetch(FIREBASE+'/'+t.id+'.json',{method:'PUT',body:JSON.stringify(t.copie)})
+   .then(function(r){
+    if(r.ok){ t.confirme=true; ecrireTentative(t);
+     dire(true,'✓ La copie vient d’être transmise au professeur.'); return; }
+    return r.json().catch(function(){ return {}; }).then(function(e){
+     dire(false,'✗ Copie NON transmise : la base l’a refusée ('+(e.error||('HTTP '+r.status))+'). '+
+      'Préviens ton professeur : les règles Firebase sont à mettre à jour.');
+    });
+   });
+ }).catch(function(){
+  dire(false,'✗ Copie non transmise (pas de connexion). Elle sera renvoyée à la prochaine ouverture.');
  });
 })();
 $('btnCommencer').onclick=()=>{

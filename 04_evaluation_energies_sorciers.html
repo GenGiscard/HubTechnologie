@@ -202,33 +202,44 @@ let envoye=false;
  });
 })();
 
-/* ===== COPIE_ABANDON — gabarit QCM (voir _outils/copie_abandon.py) =====
-   Particularité : le nom se saisit EN BAS de page. Une copie abandonnée n'est donc
-   envoyée que si l'élève a déjà rempli nom et classe ; le VERROU, lui, s'applique
-   toujours, dès la première réponse cochée. */
+/* ===== COPIE_ABANDON v2 — gabarit QCM (voir _outils/copie_abandon.py) =====
+   Même principe que le gabarit ACTIVITES : copie gardée dans le navigateur,
+   écrite sous un identifiant fixe, VÉRIFIÉE et renvoyée si besoin à la
+   réouverture. Particularité : le nom se saisit en bas de page — sans nom ni
+   classe, aucune copie exploitable n'existe, mais le verrou s'applique. */
 const CLE_TENTATIVE='tentative_'+FIREBASE.split('/').pop();
 function lireTentative(){ try{ return JSON.parse(localStorage.getItem(CLE_TENTATIVE)); }catch(e){ return null; } }
 function ecrireTentative(o){ try{ localStorage.setItem(CLE_TENTATIVE,JSON.stringify(o)); }catch(e){} }
+function sauverPartiel(){
+ const t=lireTentative(); if(!t || t.fini) return;
+ const nom=((document.getElementById('inNom')||{}).value||'').trim();
+ const classe=((document.getElementById('inClasse')||{}).value||'').trim();
+ if(!nom || !classe){ t.copie=null; ecrireTentative(t); return; }
+ let score=0; Q.forEach(function(q,i){ if(rep[i]===q.b) score++; });
+ t.copie={ nom:nom, prenom:((document.getElementById('inPrenom')||{}).value||'').trim(),
+  classe:classe, score:score, sur:Q.length, note20:Math.round(score/Q.length*20*10)/10,
+  duree_s:Math.round((Date.now()-debut)/1000), date:new Date().toISOString(),
+  reponses:rep, statut:'abandon' };
+ ecrireTentative(t);
+}
 document.addEventListener('click',function(e){
  if(!e.target.closest || !e.target.closest('.rep button')) return;
- if(!lireTentative()) ecrireTentative({debut:new Date().toISOString(),fini:false,partiel:false});
+ if(!lireTentative()) ecrireTentative({debut:new Date().toISOString(),fini:false,confirme:false,
+  id:'ab'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),copie:null});
+ setTimeout(sauverPartiel,0);
+});
+document.addEventListener('input',function(e){
+ if(/^in(Nom|Prenom|Classe)$/.test(e.target.id||'')) sauverPartiel();
 });
 window.addEventListener('pagehide',function(){
- const t=lireTentative();
- if(!t || t.fini || t.partiel || envoye) return;
- const nom=(document.getElementById('inNom')||{}).value||'';
- const classe=(document.getElementById('inClasse')||{}).value||'';
- if(!nom.trim() || !classe.trim()) return;       /* sans nom, rien d'exploitable à envoyer */
- let score=0; Q.forEach(function(q,i){ if(rep[i]===q.b) score++; });
- t.partiel=true; ecrireTentative(t);
- try{
-  fetch(FIREBASE+'.json',{method:'POST',keepalive:true,body:JSON.stringify({
-   nom:nom.trim(), prenom:((document.getElementById('inPrenom')||{}).value||'').trim(),
-   classe:classe.trim(), score:score, sur:Q.length,
-   note20:Math.round(score/Q.length*20*10)/10,
-   duree_s:Math.round((Date.now()-debut)/1000),
-   date:new Date().toISOString(), reponses:rep, statut:'abandon'})});
- }catch(e){}
+ const t=lireTentative(); if(!t || t.fini || t.confirme || envoye) return;
+ sauverPartiel();
+ const t2=lireTentative(); if(!t2 || !t2.copie) return;
+ try{ fetch(FIREBASE+'/'+t2.id+'.json',{method:'PUT',keepalive:true,body:JSON.stringify(t2.copie)}); }catch(e){}
+});
+window.addEventListener('pageshow',function(e){
+ if(!e.persisted) return;
+ const t=lireTentative(); if(t && !t.fini) location.reload();
 });
 (function(){
  const t=lireTentative(); if(!t) return;
@@ -238,8 +249,10 @@ window.addEventListener('pagehide',function(){
  bloc.style.cssText='background:#fef2f2;border:2px solid #fca5a5;border-radius:12px;'+
   'padding:14px 16px;margin:0 0 16px;color:#7f1d1d;font-size:15px;line-height:1.55';
  bloc.innerHTML='<b>Évaluation déjà commencée</b> sur ce poste le '+
-  d.toLocaleDateString('fr-FR')+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+
-  '. Pour la repasser, appelle ton professeur.'+
+  d.toLocaleDateString('fr-FR')+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'.'+
+  '<div id="etatCopie" style="margin:8px 0;font-weight:700">'+
+  (t.fini?'La copie a été rendue.':'Vérification de la transmission de la copie…')+'</div>'+
+  'Pour la repasser, appelle ton professeur.'+
   '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">'+
   '<input id="mdpReprise" type="password" placeholder="mot de passe professeur" '+
   'style="padding:8px 10px;border:2px solid #fca5a5;border-radius:8px;font:inherit">'+
@@ -253,6 +266,22 @@ window.addEventListener('pagehide',function(){
   try{ localStorage.removeItem(CLE_TENTATIVE); }catch(e){}
   bloc.remove(); cible.style.display=''; if(env) env.style.display='';
  });
+ if(t.fini) return;
+ const etat=document.getElementById('etatCopie');
+ function dire(ok,txt){ etat.style.color= ok?'#15803d':'#b91c1c'; etat.textContent=txt; }
+ if(t.confirme){ dire(true,'✓ La copie a bien été reçue par le professeur.'); return; }
+ if(!t.copie){ dire(false,'✗ Aucune copie envoyée : le nom et la classe n’avaient pas été remplis.'); return; }
+ fetch(FIREBASE+'/'+t.id+'.json').then(function(r){ return r.json(); }).then(function(j){
+  if(j && typeof j==='object' && j.nom!==undefined){
+   t.confirme=true; ecrireTentative(t); dire(true,'✓ La copie a bien été reçue par le professeur.'); return; }
+  return fetch(FIREBASE+'/'+t.id+'.json',{method:'PUT',body:JSON.stringify(t.copie)}).then(function(r){
+   if(r.ok){ t.confirme=true; ecrireTentative(t); dire(true,'✓ La copie vient d’être transmise au professeur.'); return; }
+   return r.json().catch(function(){ return {}; }).then(function(e){
+    dire(false,'✗ Copie NON transmise : la base l’a refusée ('+(e.error||('HTTP '+r.status))+'). '+
+     'Préviens ton professeur : les règles Firebase sont à mettre à jour.');
+   });
+  });
+ }).catch(function(){ dire(false,'✗ Copie non transmise (pas de connexion). Elle sera renvoyée à la prochaine ouverture.'); });
 })();
 document.getElementById('envoyer').addEventListener('click',async()=>{
  if(envoye) return;
