@@ -1,0 +1,395 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sujet type Bac SI — Le portail coulissant automatisé · ESTIC</title><style>
+:root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(900px,100%);padding:14px 14px 50px}
+.entete{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:14px 18px;margin-bottom:14px}
+.entete h1{font-size:20px;color:var(--accf);margin-bottom:4px}
+.entete .info{font-size:13.5px;color:#64748b;line-height:1.7}
+.consignes{background:#eff6ff;border-left:5px solid var(--acc);border-radius:10px;padding:11px 15px;font-size:14px;line-height:1.75;margin-bottom:16px}
+.doc{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.doc h3{font-size:14px;color:var(--accf);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.doc canvas{width:100%;display:block;border-radius:8px;background:#fdfdfe;border:1px solid #e2e8f0}
+.doc table{width:100%;border-collapse:collapse;font-size:14px}
+.doc th,.doc td{border:1px solid #cbd5e1;padding:7px 9px;text-align:left}
+.doc th{background:#f1f5f9}
+.q{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q .num{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.q .num b{font-size:16px;color:var(--accf)}
+.q .num span{font-size:13px;font-weight:800;color:#64748b}
+.q p{font-size:15px;line-height:1.7}
+.q .aide{font-size:13px;color:#64748b;margin-top:5px;font-style:italic}
+.q input,.q textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px;font-size:15px;font-family:inherit;margin-top:9px}
+.q textarea{min-height:74px;resize:vertical}
+.q .court{width:150px;text-align:center;font-weight:700}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;padding:13px 28px;cursor:pointer;font-family:inherit}
+.btn.sec{background:#e2e8f0;color:var(--encre)}
+.centre{text-align:center;margin:18px 0}
+#resultat{display:none;background:#fff;border:2px solid var(--acc);border-radius:14px;padding:18px;margin-top:16px}
+#resultat h2{color:var(--accf);font-size:20px;text-align:center}
+.note{text-align:center;font-size:44px;font-weight:900;color:var(--acc);margin:6px 0}
+.corr{border-left:4px solid #16a34a;background:#f0fdf4;border-radius:8px;padding:10px 14px;margin:9px 0;font-size:14.5px;line-height:1.7}
+.corr b{color:#15803d}
+.pts{float:right;font-weight:900;color:#64748b;font-size:13px}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="logo_estic.png">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<div class="entete">
+  <h1>Sujet type Bac SI — Épreuve de sciences</h1>
+  <div class="info"><b>Épreuve de sciences de l’ingénieur</b> · durée conseillée : 2 h · noté sur 40 points<br>
+  Support : un portail coulissant motorisé de maison individuelle</div>
+</div>
+<div class="consignes">Tu disposes de six documents. Le sujet comporte six documents, trois parties et douze questions : certaines demandent une
+<b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
+Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
+
+<div class="doc"><h2>Document 1 — Présentation du système</h2>
+<canvas id="d0" width="860" height="330"></canvas>
+<p class="leg">Le vantail coulisse sur un rail au sol, guidé par deux galets. Un
+motoréducteur fixé au pilier entraîne un pignon qui engrène sur une crémaillère
+solidaire du vantail. Deux cellules photoélectriques et deux butées de fin de course
+complètent l’installation.</p>
+
+<h2>Document 2 — Diagramme des exigences (extrait)</h2>
+<canvas id="d1" width="860" height="300"></canvas>
+<p class="leg">Extrait simplifié du diagramme des exigences. Les exigences chiffrées
+sont celles que l’étude doit permettre de valider.</p>
+
+<h2>Document 3 — Chaîne de puissance</h2>
+<canvas id="d2" width="860" height="230"></canvas>
+<p class="leg">Le moteur à courant continu entraîne un réducteur, puis un ensemble
+pignon-crémaillère qui transforme la rotation en translation du vantail.</p>
+
+<h2>Document 4 — Caractéristiques techniques</h2>
+<table>
+ <tr><th>Masse du vantail</th><td>120 kg</td></tr>
+ <tr><th>Course d’ouverture</th><td>4,00 m</td></tr>
+ <tr><th>Effort résistant total ramené au vantail</th><td>150 N</td></tr>
+ <tr><th>Vitesse de déplacement imposée</th><td>0,15 m/s</td></tr>
+ <tr><th>Tension d’alimentation du moteur</th><td>24 V</td></tr>
+ <tr><th>Rendement global de la chaîne de puissance</th><td>0,60</td></tr>
+ <tr><th>Diamètre primitif du pignon</th><td>40 mm</td></tr>
+ <tr><th>Vitesse nominale du moteur</th><td>3000 tr/min</td></tr>
+ <tr><th>Batterie de secours</th><td>24 V · 1,2 Ah</td></tr>
+</table>
+
+<h2>Document 5 — Relevé du courant moteur sur un cycle</h2>
+<canvas id="d3" width="860" height="300"></canvas>
+<p class="leg">Relevé effectué lors d’une ouverture, avec un obstacle volontairement
+placé sur la trajectoire à t = 15 s. Le seuil de déclenchement est réglable par
+l’installateur.</p>
+
+<h2>Document 6 — Solutions de détection d’obstacle</h2>
+<table>
+ <tr><th>Solution</th><th>Détection</th><th>Coût</th><th>Contrainte</th></tr>
+ <tr><td>Surintensité moteur</td><td>après contact</td><td>nul, déjà intégré</td><td>seuil à régler finement</td></tr>
+ <tr><td>Cellules photoélectriques</td><td>avant contact</td><td>moyen</td><td>alignement, salissures</td></tr>
+ <tr><td>Barre palpeuse</td><td>au contact, effort faible</td><td>élevé</td><td>câblage mobile</td></tr>
+ <tr><td>Radar de proximité</td><td>avant contact</td><td>élevé</td><td>faux déclenchements</td></tr>
+</table>
+<div id="questions"></div>
+<div id="resultat" style="display:none"></div>
+<div class="centre"><button class="btn" id="rendre">Rendre ma copie</button></div>
+<div id="resultat"></div>
+</main>
+<script>
+'use strict';
+function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+function nb(v){return parseFloat(String(v||'').replace(',','.'));}
+const Q=[
+ {n:'A1',pts:3,t:'PARTIE A — ANALYSER LE BESOIN. À l’aide du document 1, nomme l’élément qui transforme la ROTATION du moteur en TRANSLATION du vantail, et celui qui garantit l’arrêt en position.',
+  champs:[{id:'q1a',l:'Transformation rotation → translation :',rep:['pignon cremaillere','pignon-cremaillere','cremaillere','pignon et cremaillere']},
+          {id:'q1b',l:'Arrêt en position :',rep:['butee','butees','fin de course','butee de fin de course','capteur fin de course']}],
+  corr:'L’ensemble <b>pignon-crémaillère</b> transforme la rotation en translation. Les <b>butées de fin de course</b> arrêtent le vantail en position ouverte et fermée : ce sont elles qui définissent la course de 4,00 m.'},
+ {n:'A2',pts:3,t:'D’après le document 2, cite l’exigence qui impose une contrainte de SÉCURITÉ, puis celle qui impose une contrainte de PERFORMANCE.',
+  redac:{id:'r1',cles:['obstacle','detect','securite','arret','inverse','30','ouvrir','temps','duree','performance','vitesse']},
+  corr:'Exigence de <b>sécurité</b> : la détection d’obstacle, qui impose l’arrêt puis l’inversion. Exigence de <b>performance</b> : l’ouverture complète en moins de 30 secondes. La première protège l’usager, la seconde caractérise le service rendu.'},
+ {n:'A3',pts:4,t:'Calcule la durée d’ouverture complète et conclus quant au respect de l’exigence du document 2.',
+  aide:'durée = course ÷ vitesse',
+  champs:[{id:'a2',l:'Durée d’ouverture, en secondes :',rep:26.7,tol:0.4}],
+  redac:{id:'r2',cles:['respect','valide','conforme','inferieur','moins','30','ok','satisfait']},
+  corr:'4,00 ÷ 0,15 ≈ <b>26,7 s</b>. L’exigence impose moins de 30 s : elle est <b>respectée</b>, avec environ 3 secondes de marge. La marge est faible, ce qui explique la sensibilité du système aux frottements.'},
+ {n:'B1',pts:3,t:'PARTIE B — MODÉLISER LA CHAÎNE DE PUISSANCE. Calcule la puissance mécanique utile nécessaire au déplacement du vantail.',
+  aide:'puissance = effort × vitesse',
+  champs:[{id:'b1',l:'Puissance utile, en watts :',rep:22.5,tol:0.3}],
+  corr:'P = F × v = 150 × 0,15 = <b>22,5 W</b>. C’est la puissance strictement nécessaire au vantail, sans tenir compte des pertes.'},
+ {n:'B2',pts:3,t:'En tenant compte du rendement, calcule la puissance absorbée par le moteur puis le courant qu’il appelle en régime établi.',
+  aide:'la puissance absorbée est SUPÉRIEURE à la puissance utile — puis P = U × I',
+  champs:[{id:'c1',l:'Puissance absorbée, en watts :',rep:37.5,tol:0.6},
+          {id:'c2',l:'Courant appelé, en ampères :',rep:1.56,tol:0.05}],
+  corr:'P = 22,5 ÷ 0,60 = <b>37,5 W</b>, puis I = 37,5 ÷ 24 ≈ <b>1,56 A</b>. Les 40 % perdus se dissipent en chaleur et en frottements dans le réducteur et le pignon-crémaillère.'},
+ {n:'B3',pts:3,t:'Calcule la vitesse de rotation du pignon, puis le rapport de réduction à installer entre le moteur et le pignon.',
+  aide:'v = ω × R — attention, le RAYON vaut la moitié du diamètre',
+  champs:[{id:'d1q',l:'Vitesse de rotation du pignon, en tr/min :',rep:71.6,tol:1.5},
+          {id:'d2q',l:'Rapport de réduction (moteur ÷ pignon) :',rep:42,tol:1.5}],
+  corr:'ω = 0,15 ÷ 0,020 = 7,5 rad/s, soit 7,5 × 60 ÷ 2π ≈ <b>71,6 tr/min</b>. Rapport : 3000 ÷ 71,6 ≈ <b>42</b>, soit une réduction de 1/42 environ.'},
+ {n:'B4',pts:4,t:'Calcule le couple exercé sur le pignon, puis le couple que doit fournir le moteur.',
+  aide:'couple sur le pignon = effort × rayon — puis remonter la chaîne en divisant par le rapport ET par le rendement',
+  champs:[{id:'f1',l:'Couple sur le pignon, en N·m :',rep:3,tol:0.1},
+          {id:'f2',l:'Couple moteur, en N·m :',rep:0.119,tol:0.012}],
+  corr:'C<sub>pignon</sub> = F × R = 150 × 0,020 = <b>3,00 N·m</b>. En remontant : C<sub>moteur</sub> = 3,00 ÷ (42 × 0,60) ≈ <b>0,119 N·m</b>. Vérification : 0,119 × 314 rad/s ≈ 37,4 W, cohérent avec la puissance absorbée trouvée en B2.'},
+ {n:'C1',pts:3,t:'PARTIE C — VALIDER LES PERFORMANCES. Relève sur le document 5 le courant au démarrage, puis en régime établi. Compare cette dernière valeur au résultat de la question B2.',
+  champs:[{id:'g1',l:'Courant de démarrage, en ampères :',rep:4.5,tol:0.3},
+          {id:'g2',l:'Courant en régime établi, en ampères :',rep:1.6,tol:0.2}],
+  redac:{id:'r9',cles:['coherent','accord','proche','confirme','valide','identique','conforme','1,5','1,6']},
+  corr:'Le relevé montre un pic de démarrage à environ <b>4,5 A</b> puis un régime établi vers <b>1,6 A</b>. Cette valeur est <b>cohérente</b> avec les 1,56 A calculés en B2 : le modèle est validé par l’expérience. Le pic de démarrage, lui, correspond à la mise en mouvement de la masse du vantail.'},
+ {n:'C2',pts:4,t:'À l’aide du document 5, propose une valeur de seuil de détection d’obstacle, et justifie ton choix.',
+  champs:[{id:'h1',l:'Seuil proposé, en ampères :',rep:2.5,tol:0.6}],
+  redac:{id:'r10',cles:['entre','superieur','dessus','regime','inferieur','dessous','obstacle','faux','declench','demarrage','marge']},
+  corr:'Un seuil vers <b>2,5 A</b> convient : au-dessus du régime établi (1,6 A) pour éviter les faux déclenchements, et en dessous de la surintensité mesurée sur obstacle (3,2 A). Attention au pic de démarrage à 4,5 A : il faut <b>inhiber la détection pendant les premières secondes</b>, sinon le portail se croirait bloqué à chaque départ.'},
+ {n:'C3',pts:3,t:'En cas de coupure secteur, la batterie doit permettre au moins 5 cycles complets (ouverture et fermeture). Calcule le nombre de cycles possibles et conclus.',
+  aide:'énergie de la batterie en Wh, puis énergie d’un cycle — un cycle, c’est deux fois la course',
+  champs:[{id:'e1',l:'Énergie de la batterie, en wattheures :',rep:28.8,tol:0.5},
+          {id:'e2',l:'Énergie consommée par cycle, en wattheures :',rep:0.556,tol:0.03},
+          {id:'e3',l:'Nombre de cycles possibles :',rep:51,tol:4}],
+  corr:'Batterie : 24 × 1,2 = <b>28,8 Wh</b>. Un cycle dure 2 × 26,7 = 53,4 s = 0,0148 h ; à 37,5 W cela fait ≈ <b>0,556 Wh</b>. Soit 28,8 ÷ 0,556 ≈ <b>51 cycles</b>. L’exigence de 5 cycles est <b>largement respectée</b>.'},
+ {n:'C4',pts:3,t:'À l’aide du document 6, choisis la solution de détection la plus sûre pour un portail donnant sur un trottoir fréquenté par des enfants. Justifie en citant deux critères.',
+  redac:{id:'r7',cles:['cellule','photo','avant','contact','sans','securite','enfant','surintensite','apres','touche','cout','align']},
+  corr:'Les <b>cellules photoélectriques</b> sont le meilleur compromis : elles détectent <b>avant tout contact</b>, pour un coût moyen. La surintensité ne réagit qu’<b>après</b> le contact, quand l’effort a déjà augmenté — inacceptable face à un enfant. Le radar détecte aussi avant contact mais son taux de faux déclenchements le rend peu adapté à un trottoir passant.'},
+ {n:'C5',pts:4,t:'Le client se plaint que le portail dépasse 30 secondes en hiver. Propose une explication technique appuyée sur tes résultats, puis une modification.',
+  redac:{id:'r8',cles:['froid','graisse','visqueu','frottement','effort','augment','marge','3','faible','galet','rail','givre','entretien','lubrif','puissance']},
+  corr:'La marge n’est que de <b>3 secondes</b> (question A3). Par temps froid, la graisse des galets devient plus <b>visqueuse</b> et du givre peut se former dans le rail : l’<b>effort résistant dépasse les 150 N</b>, le moteur ralentit et la durée franchit les 30 s. Modifications acceptées : graisse basse température, entretien du rail, ou moteur dimensionné avec une marge de puissance supérieure.'},
+];
+
+const z=document.getElementById('questions');
+Q.forEach(q=>{
+ const d=document.createElement('div'); d.className='q';
+ let html='<div class="num"><b>Question '+q.n+'</b><span>'+q.pts+' points</span></div><p>'+q.t+'</p>';
+ if(q.aide) html+='<div class="aide">'+q.aide+'</div>';
+ (q.champs||[]).forEach(c=>{ html+='<div style="margin-top:8px;font-size:14.5px">'+c.l+
+   ' <input class="court" id="'+c.id+'" autocomplete="off"></div>'; });
+ if(q.redac) html+='<textarea id="'+q.redac.id+'" placeholder="rédige ta réponse en une ou deux phrases"></textarea>';
+ d.innerHTML=html; z.appendChild(d);
+});
+document.getElementById('rendre').addEventListener('click',()=>{
+ let total=0, max=0, det='';
+ Q.forEach(q=>{
+  max+=q.pts;
+  let obtenu=0, parts=0, ok=0;
+  (q.champs||[]).forEach(c=>{
+   parts++;
+   const v=document.getElementById(c.id).value;
+   const bon = typeof c.rep==='number'
+     ? (isFinite(nb(v)) && Math.abs(nb(v)-c.rep)<=c.tol)
+     : c.rep.some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+   if(bon)ok++;
+  });
+  if(q.redac){ parts++;
+   const v=norm(document.getElementById(q.redac.id).value);
+   if(v.length>14 && q.redac.cles.some(k=>v.includes(k))) ok++;
+  }
+  obtenu = Math.round(q.pts*ok/parts*2)/2;
+  total+=obtenu;
+  det+='<div class="corr"><span class="pts">'+obtenu+' / '+q.pts+'</span><b>Question '+q.n+'</b><br>'+q.corr+'</div>';
+ });
+ const r=document.getElementById('resultat');
+ r.innerHTML='<h2>Copie rendue</h2><div class="note">'+total+' / '+max+'</div>'+
+  '<p style="text-align:center;font-size:14px;color:#64748b;margin-bottom:12px">Corrigé détaillé — compare avec ce que tu as écrit sur ton cahier</p>'+det;
+ r.style.display='block';
+ document.getElementById('rendre').disabled=true;
+ r.scrollIntoView({behavior:'smooth'});
+});
+/* ═══ Documents 1 et 2 ═══ */
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FL2(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+/* Document 1 : présentation du système, vue de dessus */
+(function(){
+ const c=document.getElementById('d0').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,330);
+ const yR=196;                       /* rail au sol */
+ /* rail */
+ c.strokeStyle='#94a3b8'; c.lineWidth=7; c.lineCap='butt';
+ c.beginPath(); c.moveTo(90,yR); c.lineTo(770,yR); c.stroke();
+ /* vantail, en position mi-ouverte */
+ c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=3;
+ c.beginPath(); c.rect(250,120,330,62); c.fill(); c.stroke();
+ for(let k=1;k<6;k++){
+  c.strokeStyle='#7dd3fc'; c.lineWidth=2;
+  c.beginPath(); c.moveTo(250+k*55,122); c.lineTo(250+k*55,180); c.stroke();
+ }
+ /* galets */
+ c.fillStyle='#475569';
+ [292,538].forEach(function(x){ c.beginPath(); c.arc(x,yR-10,11,0,6.284); c.fill(); });
+ /* cremaillere sous le vantail */
+ c.fillStyle='#b45309';
+ for(let x=254;x<576;x+=16){ c.fillRect(x,184,9,9); }
+ /* piliers */
+ c.fillStyle='#78716c';
+ c.fillRect(96,96,34,110); c.fillRect(730,96,34,110);
+ /* motoreducteur + pignon */
+ c.fillStyle='#fff'; c.strokeStyle='#ea580c'; c.lineWidth=2.8;
+ c.beginPath(); c.roundRect(140,138,74,58,8); c.fill(); c.stroke();
+ c.fillStyle='#ea580c'; c.font='bold 11px Segoe UI'; c.textAlign='center';
+ c.fillText('M',177,172);
+ c.strokeStyle='#16a34a'; c.lineWidth=2.6;
+ c.beginPath(); c.arc(232,188,17,0,6.284); c.stroke();
+ for(let k=0;k<10;k++){
+  const a=k*Math.PI/5;
+  c.beginPath();
+  c.moveTo(232+17*Math.cos(a),188+17*Math.sin(a));
+  c.lineTo(232+22*Math.cos(a),188+22*Math.sin(a)); c.stroke();
+ }
+ /* cellules photoelectriques */
+ c.fillStyle='#dc2626';
+ c.fillRect(620,150,14,26); c.fillRect(620,236,14,26);
+ c.strokeStyle='#dc2626'; c.lineWidth=1.6; c.setLineDash([5,4]);
+ c.beginPath(); c.moveTo(627,176); c.lineTo(627,236); c.stroke(); c.setLineDash([]);
+ /* butees */
+ c.fillStyle='#7c3aed';
+ c.fillRect(246,yR-4,8,18); c.fillRect(672,yR-4,8,18);
+ /* cotation de la course */
+ c.strokeStyle='#0e7490'; c.lineWidth=1.8;
+ c.beginPath(); c.moveTo(250,268); c.lineTo(676,268); c.stroke();
+ [250,676].forEach(function(x){ c.beginPath(); c.moveTo(x,262); c.lineTo(x,274); c.stroke(); });
+ c.font='bold 13px Segoe UI'; c.fillStyle='#0e7490'; c.textAlign='center';
+ c.fillText('course 4,00 m',463,288);
+ /* sens de deplacement */
+ c.strokeStyle='#0284c7'; c.fillStyle='#0284c7'; c.lineWidth=3;
+ c.beginPath(); c.moveTo(600,100); c.lineTo(660,100); c.stroke();
+ c.beginPath(); c.moveTo(672,100); c.lineTo(658,94); c.lineTo(658,106); c.closePath(); c.fill();
+ /* legendes */
+ c.font='bold 12px Segoe UI'; c.textAlign='left';
+ c.fillStyle='#ea580c'; c.fillText('motoréducteur',136,130);
+ c.fillStyle='#16a34a'; c.fillText('pignon',236,224);
+ c.fillStyle='#b45309'; c.fillText('crémaillère',330,212);
+ c.fillStyle='#475569'; c.fillText('galets de guidage',300,246);
+ c.fillStyle='#dc2626'; c.fillText('cellules',644,196);
+ c.fillStyle='#7c3aed'; c.fillText('butées de fin de course',464,318);
+ c.fillStyle='#78716c'; c.textAlign='center'; c.fillText('pilier',113,88); c.fillText('pilier',747,88);
+ c.fillStyle='#0284c7'; c.textAlign='left'; c.fillText('ouverture',600,92);
+ c.fillStyle='#94a3b8'; c.textAlign='right'; c.fillText('rail au sol',86,yR+4);
+})();
+
+/* Document 5 : relevé du courant moteur */
+(function(){
+ const c=document.getElementById('d3').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,300);
+ const x0=90, y0=248, L=690, H=190;
+ const TMAX=30, IMAX=5;
+ const X=t=>x0+t/TMAX*L, Y=i=>y0-i/IMAX*H;
+ /* grille */
+ c.strokeStyle='#e2e8f0'; c.lineWidth=1;
+ for(let i=0;i<=IMAX;i++){ c.beginPath(); c.moveTo(x0,Y(i)); c.lineTo(x0+L,Y(i)); c.stroke(); }
+ for(let t=0;t<=TMAX;t+=5){ c.beginPath(); c.moveTo(X(t),y0); c.lineTo(X(t),y0-H); c.stroke(); }
+ /* axes */
+ c.strokeStyle='#475569'; c.lineWidth=2;
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(x0+L,y0); c.stroke();
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(x0,y0-H); c.stroke();
+ c.font='11.5px Segoe UI'; c.fillStyle='#64748b'; c.textAlign='center';
+ for(let t=0;t<=TMAX;t+=5) c.fillText(t+' s',X(t),y0+18);
+ c.textAlign='right';
+ for(let i=0;i<=IMAX;i++) c.fillText(i+' A',x0-8,Y(i)+4);
+ /* courbe : pic de demarrage, regime, surintensite sur obstacle a 15 s */
+ function courant(t){
+  if(t<0.4) return 4.5*t/0.4;
+  if(t<2.2) return 4.5-(4.5-1.6)*(t-0.4)/1.8;      /* retombee */
+  if(t<15)  return 1.6;
+  if(t<16)  return 1.6+(3.2-1.6)*(t-15);           /* obstacle */
+  if(t<17)  return 3.2;
+  if(t<17.6) return 3.2*(17.6-t)/0.6;              /* arret */
+  return 0;
+ }
+ c.strokeStyle='#ea580c'; c.lineWidth=2.8; c.lineCap='butt';
+ c.beginPath();
+ for(let t=0;t<=TMAX;t+=0.05){
+  const px=X(t), py=Y(courant(t));
+  if(t===0) c.moveTo(px,py); else c.lineTo(px,py);
+ }
+ c.stroke();
+ /* reperes */
+ c.strokeStyle='#94a3b8'; c.lineWidth=1.6; c.setLineDash([5,4]);
+ c.beginPath(); c.moveTo(x0,Y(1.6)); c.lineTo(x0+L,Y(1.6)); c.stroke();
+ c.beginPath(); c.moveTo(X(15),y0); c.lineTo(X(15),y0-H); c.stroke();
+ c.setLineDash([]);
+ c.font='bold 12px Segoe UI'; c.textAlign='left';
+ c.fillStyle='#ea580c'; c.fillText('pic de démarrage',X(1.2),Y(4.5)-10);
+ c.fillStyle='#0e7490'; c.fillText('régime établi',X(6),Y(1.6)-10);
+ c.fillStyle='#dc2626'; c.fillText('obstacle rencontré',X(15.4),Y(3.2)-12);
+ c.fillStyle='#7c3aed'; c.fillText('arrêt puis inversion',X(18),Y(0.8));
+ c.textAlign='center'; c.font='bold 13px Segoe UI'; c.fillStyle='#155e75';
+ c.fillText('COURANT MOTEUR AU COURS D’UNE OUVERTURE',430,28);
+ c.font='12px Segoe UI'; c.fillStyle='#5b544a';
+ c.fillText('intensité (A) en fonction du temps (s)',430,284);
+})();
+
+/* Document 2 : diagramme des exigences, notation SysML simplifiée */
+(function(){
+ const c=document.getElementById('d1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,300);
+ function exig(x,y,w,h,id,titre,texte,coul){
+  c.fillStyle='#fff'; c.strokeStyle=coul; c.lineWidth=2.4;
+  c.beginPath(); c.rect(x,y,w,h); c.fill(); c.stroke();
+  c.fillStyle=coul; c.fillRect(x,y,w,20);
+  T2(c,'«requirement»',x+w/2,y+14,11,'#fff');
+  T2(c,titre,x+w/2,y+38,12.5,coul);
+  c.font='11.5px Segoe UI'; c.fillStyle='#5b544a'; c.textAlign='center';
+  texte.split('|').forEach(function(l,k){ c.fillText(l,x+w/2,y+58+k*15); });
+  c.font='bold 10.5px Segoe UI'; c.fillStyle='#94a3b8'; c.textAlign='left';
+  c.fillText('id = '+id,x+7,y+h-7);
+ }
+ exig(300,26,260,76,'1','Motoriser le portail','ouvrir et fermer sans effort|depuis une télécommande','#0e7490');
+ /* trois exigences derivees */
+ const Y=150;
+ exig(24,Y,250,92,'1.1','Assurer la sécurité','détecter un obstacle|arrêter puis inverser|le mouvement','#dc2626');
+ exig(302,Y,256,92,'1.2','Respecter la performance','ouverture complète|en moins de 30 s','#16a34a');
+ exig(586,Y,250,92,'1.3','Fonctionner sans secteur','au moins 5 cycles|sur batterie de secours','#7c3aed');
+ /* liens de derivation */
+ c.strokeStyle='#94a3b8'; c.lineWidth=1.8; c.setLineDash([5,4]);
+ [149,430,711].forEach(function(x){
+  c.beginPath(); c.moveTo(430,102); c.lineTo(430,126); c.lineTo(x,126); c.lineTo(x,Y); c.stroke();
+ });
+ c.setLineDash([]);
+ T2(c,'«deriveReqt»',430,120,10.5,'#94a3b8');
+})();
+/* Document 2 : chaîne de puissance */
+(function(){
+ const c=document.getElementById('d2').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,230);
+ const B=[['BATTERIE / SECTEUR','24 V','#0e7490'],
+          ['VARIATEUR','commande','#7c3aed'],
+          ['MOTEUR','3000 tr/min','#ea580c'],
+          ['RÉDUCTEUR','rapport à déterminer','#b45309'],
+          ['PIGNON-CRÉMAILLÈRE','\u00d8 40 mm','#16a34a']];
+ const w=150, mg=20, esp=(860-2*mg-5*w)/4, y=70;
+ B.forEach(function(b,i){
+  const x=mg+i*(w+esp);
+  c.fillStyle='#fff'; c.strokeStyle=b[2]; c.lineWidth=2.6;
+  c.beginPath(); c.roundRect(x,y,w,70,11); c.fill(); c.stroke();
+  T2(c,b[0],x+w/2,y+30,11.5,b[2]);
+  T2(c,b[1],x+w/2,y+50,11,'#5b544a');
+  if(i<B.length-1) FL2(c,x+w+3,y+35,x+w+esp-3,y+35,3,'#94a3b8');
+ });
+ T2(c,'énergie électrique',mg+w+esp/2,y+92,11.5,'#94a3b8');
+ T2(c,'rotation',mg+3*(w+esp)-esp/2,y+92,11.5,'#94a3b8');
+ T2(c,'translation du vantail  ·  0,15 m/s',mg+4*(w+esp)+w/2,y+92,11.5,'#16a34a');
+ T2(c,'rendement global de la chaîne : 0,60',430,206,12.5,'#5b544a');
+})();
+</script>
+</body>
+</html>
