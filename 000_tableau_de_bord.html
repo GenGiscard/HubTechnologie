@@ -311,7 +311,10 @@ async function charger(){
  note:parseFloat(v.note20!==undefined?v.note20:v.note)||0,
  score:v.score||0,
  duree:v.duree_s?Math.floor(v.duree_s/60)+' min '+String(v.duree_s%60).padStart(2,'0'):(v.duree||''),
- date:v.date?new Date(v.date).toLocaleDateString('fr-FR'):''
+ /* ts sert au TRI : trier le texte « jj/mm/aaaa » rangeait par jour du mois,
+    pas chronologiquement. date sert à l'AFFICHAGE, heure comprise. */
+ ts:v.date?(Date.parse(v.date)||0):0,
+ date:v.date?new Date(v.date).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):''
  }));
  }catch(e){ return []; }
  }));
@@ -351,7 +354,8 @@ function afficher(){
  '<div class="stat"><b>'+seqs+'</b><span>séquences évaluées</span></div>'+
  '<div class="stat"><b>'+new Set(L.map(d=>d.nom)).size+'</b><span>élèves</span></div>';
  L.sort((a,b)=>{
- const x=a[tri.col], y=b[tri.col];
+ const k= tri.col==='date' ? 'ts' : tri.col;   /* la colonne Date trie sur l'horodatage */
+ const x=a[k], y=b[k];
  if(typeof x==='number') return (x-y)*tri.sens;
  return String(x).localeCompare(String(y))*tri.sens;
  });
