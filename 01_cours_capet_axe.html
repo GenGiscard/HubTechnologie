@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Dimensionner une chaîne d'axe linéaire · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:34px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.85}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Dimensionner une chaîne d’axe linéaire</h1>
+ <p class="sous">Ramener une masse en translation à une inertie sur l’arbre moteur,
+ puis en déduire le couple. C’est le calcul qui revient dans presque tous les sujets
+ de mécanique — et celui où l’on perd le plus de points.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>La loi entrée-sortie</h2>
+ <div class="chapo">Tout part de là : une constante qui lie rotation et translation.</div>
+ <canvas id="cv1" width="880" height="230"></canvas>
+ <p>Un tour de vis, soit 2π radians, fait avancer l’écrou d’un pas p. La relation
+ entre la vitesse d’avance et la vitesse de rotation est donc linéaire.</p>
+ <div class="formule">V = k · ω &nbsp;&nbsp;avec&nbsp;&nbsp; k = p / 2π &nbsp;&nbsp;[m/rad]</div>
+ <div class="retenir">Cette constante <b>k</b> est le pivot de toute l’étude. On la
+ retrouvera pour l’inertie, pour le couple et pour la résolution de mesure.</div>
+ <div class="piege"><b>Piège classique.</b> Écrire k = p sans diviser par 2π. L’erreur
+ passe inaperçue sur la vitesse, mais elle fausse l’inertie d’un facteur 40.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>L’inertie équivalente</h2>
+ <div class="chapo">Comment une masse en kilogrammes devient une inertie en kg·m².</div>
+ <p>On ne peut pas additionner une masse et des inerties. Il faut d’abord
+ <b>ramener</b> la masse à l’arbre, en écrivant que l’énergie cinétique est la même
+ dans les deux représentations.</p>
+ <div class="formule">½ · J<sub>eq</sub> · ω² = ½ · M · V² &nbsp;&nbsp;⟹&nbsp;&nbsp;
+ J<sub>eq</sub> = M · k²</div>
+ <canvas id="cv2" width="880" height="250"></canvas>
+ <div class="retenir">Le <b>carré</b> de k est ce qui compte. Diviser le pas par deux
+ divise l’inertie ramenée par <b>quatre</b> — mais double la vitesse de rotation
+ nécessaire.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Fais varier le pas</h2>
+ <div class="chapo">Observe le compromis se déplacer.</div>
+ <canvas id="cv3" width="880" height="330"></canvas>
+ <div class="reglage">
+  <label for="sP">Pas de la vis</label>
+  <input type="range" id="sP" min="2" max="40" value="10" step="1">
+  <span id="vP" style="font-weight:800;color:var(--accf);min-width:84px">10 mm/tr</span>
+ </div>
+ <div class="retenir">Il existe un pas qui <b>minimise le couple</b> : celui pour
+ lequel l’inertie ramenée égale l’inertie propre du moteur et de la vis. C’est
+ l’<b>adaptation d’inertie</b>.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Le couple, en trois termes</h2>
+ <div class="chapo">Un seul oubli et le dimensionnement est faux.</div>
+ <table>
+  <tr><th>Terme</th><th>Expression</th><th>Quand il domine</th></tr>
+  <tr><td>Inertie</td><td>J<sub>tot</sub> · dω/dt</td><td>axes rapides, fortes accélérations</td></tr>
+  <tr><td>Effort résistant</td><td>F · k / η</td><td>usinage, charges importantes</td></tr>
+  <tr><td>Pesanteur (axe vertical)</td><td>M · g · k / η</td><td>axes Z, toujours présent</td></tr>
+ </table>
+ <div class="methode"><b>MÉTHODE — à dérouler dans cet ordre</b>
+  <ol>
+   <li>Calculer k = p / 2π.</li>
+   <li>Ramener la masse : J<sub>eq</sub> = M · k².</li>
+   <li>Sommer : J<sub>tot</sub> = J<sub>moteur</sub> + J<sub>vis</sub> + J<sub>eq</sub>.</li>
+   <li>Convertir l’accélération : dω/dt = a / k.</li>
+   <li>Additionner les trois termes de couple.</li>
+   <li>Vérifier la puissance : P = C · ω en fin d’accélération.</li>
+  </ol></div>
+ <div class="piege"><b>Piège du rendement.</b> Le rendement s’applique aux termes
+ d’<b>effort</b>, pas au terme d’inertie. On divise F·k par η, jamais J·dω/dt.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Le dimensionnement est itératif</h2>
+ <div class="chapo">Le point que les candidats traitent le plus mal.</div>
+ <canvas id="cv4" width="880" height="250"></canvas>
+ <p>L’inertie du rotor entre dans J<sub>tot</sub>. Or c’est J<sub>tot</sub> qui
+ détermine le couple, donc le moteur, donc l’inertie du rotor. La boucle doit être
+ rebouclée.</p>
+ <div class="retenir">En épreuve, écrire explicitement : « le moteur retenu ayant une
+ inertie de …, le calcul est repris et donne … ». Cette phrase vaut des points, même
+ si le moteur reste le même.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<footer>Préparation CAFEP-CAPET SII · Dimensionner une chaîne d’axe linéaire · ESTIC Don Bosco</footer>
+
+<script>
+'use strict';
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+function cadre(c,x,y,w,h,coul){
+ c.fillStyle='#fff'; c.strokeStyle=coul; c.lineWidth=2.4;
+ c.beginPath(); c.roundRect(x,y,w,h,10); c.fill(); c.stroke();
+}
+
+/* ═══ 1 · loi entrée-sortie ═══ */
+(function(){
+ const c=document.getElementById('cv1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,230);
+ T(c,'UN TOUR DE VIS = UN PAS D’AVANCE',440,28,14,'#155e75');
+ const y=130;
+ /* vis schematisee */
+ c.strokeStyle='#0e7490'; c.lineWidth=2.4;
+ c.beginPath(); c.rect(150,y-16,560,32); c.stroke();
+ for(let x=156;x<704;x+=22){
+  c.beginPath(); c.moveTo(x,y+16); c.lineTo(x+14,y-16); c.stroke();
+ }
+ /* ecrou */
+ c.fillStyle='#dcfce7'; c.strokeStyle='#16a34a'; c.lineWidth=2.6;
+ c.beginPath(); c.rect(320,y-30,70,60); c.fill(); c.stroke();
+ /* cotation d'un pas */
+ c.strokeStyle='#ea580c'; c.lineWidth=1.8;
+ c.beginPath(); c.moveTo(320,y+52); c.lineTo(342,y+52); c.stroke();
+ [320,342].forEach(function(x){ c.beginPath(); c.moveTo(x,y+46); c.lineTo(x,y+58); c.stroke(); });
+ T(c,'p',331,y+74,13,'#ea580c');
+ /* rotation */
+ c.strokeStyle='#7c3aed'; c.lineWidth=2.6;
+ c.beginPath(); c.arc(220,y,44,-2.4,0.9); c.stroke();
+ c.fillStyle='#7c3aed';
+ c.beginPath(); c.moveTo(220+44*Math.cos(0.9),y+44*Math.sin(0.9));
+ c.lineTo(220+34*Math.cos(0.72),y+34*Math.sin(0.72));
+ c.lineTo(220+52*Math.cos(0.72),y+52*Math.sin(0.72)); c.closePath(); c.fill();
+ T(c,'ω  (2π rad)',220,y-62,13,'#7c3aed');
+ FLECHE(c,420,y-46,520,y-46,3,'#16a34a');
+ T(c,'V',470,y-58,13,'#16a34a');
+ T(c,'k = p / 2π  —  la constante de toute l’étude',440,210,13,'#5b544a');
+})();
+
+/* ═══ 2 · inertie équivalente ═══ */
+(function(){
+ const c=document.getElementById('cv2').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,250);
+ T(c,'RAMENER UNE MASSE À UNE INERTIE',440,28,14,'#155e75');
+ /* modele reel */
+ cadre(c,60,66,340,130,'#0e7490');
+ T(c,'SYSTÈME RÉEL',230,92,12.5,'#0e7490');
+ c.fillStyle='#bae6fd'; c.strokeStyle='#0284c7'; c.lineWidth=2.4;
+ c.beginPath(); c.rect(180,120,140,44); c.fill(); c.stroke();
+ T(c,'M  ·  V',250,148,14,'#0369a1');
+ T(c,'masse en translation',230,182,11.5,'#5b544a');
+ /* modele equivalent */
+ cadre(c,480,66,340,130,'#7c3aed');
+ T(c,'MODÈLE ÉQUIVALENT',650,92,12.5,'#7c3aed');
+ c.fillStyle='#f3e8ff'; c.strokeStyle='#7c3aed'; c.lineWidth=2.4;
+ c.beginPath(); c.arc(650,142,34,0,6.284); c.fill(); c.stroke();
+ T(c,'Jeq',650,147,14,'#6b21a8');
+ T(c,'inertie sur l’arbre',650,182,11.5,'#5b544a');
+ FLECHE(c,410,132,470,132,3.4,'#ea580c');
+ T(c,'même énergie cinétique',440,120,12,'#ea580c');
+ T(c,'Jeq = M · k²   —   c’est le CARRÉ de k qui intervient',440,228,13.5,'#5b544a');
+})();
+
+/* ═══ 3 · simulateur du compromis ═══ */
+(function(){
+ const c=document.getElementById('cv3').getContext('2d');
+ const s=document.getElementById('sP'), aff=document.getElementById('vP');
+ const M=250, Jm=6e-4, Jv=8e-4, a=2, V=0.5, Ff=200, eta=0.90;
+ function calc(pmm){
+  const p=pmm/1000, k=p/(2*Math.PI);
+  const Jeq=M*k*k, Jt=Jm+Jv+Jeq;
+  const dw=a/k, C=Jt*dw+Ff*k/eta;
+  const N=V/p*60;
+  return {k:k,Jeq:Jeq,Jt:Jt,C:C,N:N};
+ }
+ function dessiner(){
+  const pmm=+s.value, r=calc(pmm);
+  aff.textContent=pmm+' mm/tr';
+  c.fillStyle='#fff'; c.fillRect(0,0,880,330);
+  T(c,'LE COUPLE PASSE PAR UN MINIMUM',440,26,14,'#155e75');
+  /* courbe C(p) */
+  const x0=90, y0=250, L=700, H=180;
+  let cmin=1e9, cmax=0;
+  for(let q=2;q<=40;q++){ const v=calc(q).C; if(v<cmin)cmin=v; if(v>cmax)cmax=v; }
+  const X=q=>x0+(q-2)/38*L, Y=v=>y0-(v-0)/cmax*H;
+  c.strokeStyle='#e2e8f0'; c.lineWidth=1;
+  for(let q=5;q<=40;q+=5){ c.beginPath(); c.moveTo(X(q),y0); c.lineTo(X(q),y0-H); c.stroke(); }
+  c.strokeStyle='#475569'; c.lineWidth=2;
+  c.beginPath(); c.moveTo(x0,y0); c.lineTo(x0+L,y0); c.stroke();
+  c.beginPath(); c.moveTo(x0,y0); c.lineTo(x0,y0-H); c.stroke();
+  c.font='11.5px Segoe UI'; c.fillStyle='#64748b'; c.textAlign='center';
+  for(let q=5;q<=40;q+=5) c.fillText(q,X(q),y0+18);
+  T(c,'pas de la vis (mm/tr)',440,y0+40,12,'#64748b');
+  /* libellé d'axe rentré : à x=26 il sortait du canvas une fois pivoté */
+  c.save(); c.translate(48,170); c.rotate(-Math.PI/2);
+  T(c,'couple (N·m)',0,0,12,'#64748b'); c.restore();
+  c.strokeStyle='#0e7490'; c.lineWidth=2.8;
+  c.beginPath();
+  for(let q=2;q<=40;q+=0.25){
+   const px=X(q), py=Y(calc(q).C);
+   if(q===2) c.moveTo(px,py); else c.lineTo(px,py);
+  }
+  c.stroke();
+  /* point courant */
+  c.fillStyle='#ea580c';
+  c.beginPath(); c.arc(X(pmm),Y(r.C),7,0,6.284); c.fill();
+  c.strokeStyle='#ea580c'; c.lineWidth=1.6; c.setLineDash([5,4]);
+  c.beginPath(); c.moveTo(X(pmm),y0); c.lineTo(X(pmm),Y(r.C)); c.stroke(); c.setLineDash([]);
+  /* lecture */
+  cadre(c,600,54,250,116,'#155e75');
+  T(c,'couple : '+r.C.toFixed(2)+' N·m',725,84,14,'#0e7490');
+  /* exprimé en g·m² : l'exposant ⁻⁴ ne s'affiche pas dans toutes les polices */
+  T(c,'Jeq : '+(r.Jeq*1000).toFixed(2)+' g·m²',725,108,12.5,'#7c3aed');
+  T(c,'vitesse : '+Math.round(r.N)+' tr/min',725,130,12.5,'#b45309');
+  T(c,'rapport Jeq/Jmot+vis : '+(r.Jeq/(Jm+Jv)).toFixed(2),725,152,12,'#5b544a');
+  T(c, r.N>4000 ? 'attention : vitesse de rotation hors catalogue courant'
+     : 'vitesse compatible avec un moteur brushless standard',
+    440, 312, 12.5, r.N>4000? '#dc2626':'#16a34a');
+ }
+ s.addEventListener('input',dessiner);
+ dessiner();
+})();
+
+/* ═══ 5 · la boucle itérative ═══ */
+(function(){
+ const c=document.getElementById('cv4').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,250);
+ T(c,'LE CHOIX DU MOTEUR MODIFIE LA DONNÉE QUI A SERVI À LE CHOISIR',440,28,14,'#155e75');
+ /* diagramme décalé vers la droite : le premier bloc touchait le bord */
+ const B=[['J totale','on la calcule',100],['COUPLE requis','on en déduit',320],
+          ['MOTEUR retenu','on le choisit',540],['J du rotor','elle change J totale',760]];
+ const w=170,h=64,y=94;
+ B.forEach(function(b,i){
+  const x=b[2]-(i===3?60:0);
+  cadre(c,b[2]-60,y,w,h, i===3? '#dc2626':'#0e7490');
+  T(c,b[0],b[2]+25,y+28,12.5, i===3? '#dc2626':'#155e75');
+  T(c,b[1],b[2]+25,y+47,11.5,'#5b544a');
+  if(i<3) FLECHE(c,b[2]+112,y+32,B[i+1][2]-64,y+32,3,'#94a3b8');
+ });
+ c.strokeStyle='#dc2626'; c.lineWidth=3; c.lineCap='butt';
+ c.beginPath(); c.moveTo(785,y+h); c.lineTo(785,196); c.lineTo(125,196); c.stroke();
+ FLECHE(c,125,196,125,y+h+3,3,'#dc2626');
+ T(c,'il faut REFAIRE le calcul avec l’inertie du moteur retenu',440,220,13,'#b91c1c');
+})();
+
+/* ═══ 6 · exercices ═══ */
+const Q=[
+ {q:"Une vis a un pas de 5 mm/tr. Que vaut k = V/ω ?",
+  r:["7,96 × 10⁻⁴ m/rad","5 × 10⁻³ m/rad","1,59 × 10⁻³ m/rad"],b:0,
+  ex:"k = p / 2π = 0,005 / 6,2832 ≈ 7,96 × 10⁻⁴ m/rad. Répondre 5 × 10⁻³ revient à oublier la division par 2π — l’erreur la plus fréquente."},
+ {q:"On divise le pas par deux. Que devient l’inertie équivalente de la masse ?",
+  r:["elle est divisée par deux","elle est divisée par quatre","elle ne change pas"],b:1,
+  ex:"Jeq = M·k² varie comme le CARRÉ de k. Diviser le pas par deux divise donc l’inertie ramenée par quatre — mais double la vitesse de rotation nécessaire."},
+ {q:"Où le rendement du couple vis-écrou doit-il intervenir ?",
+  r:["sur le terme d’inertie uniquement","sur les termes d’effort et de pesanteur","sur la somme de tous les termes"],b:1,
+  ex:"Le rendement traduit les pertes de la transmission d’EFFORT. On divise F·k et M·g·k par η. L’appliquer au terme d’inertie majorerait à tort le couple."},
+ {q:"Un axe vertical porte une masse de 80 kg, pas 10 mm, rendement 0,9. Quel couple la pesanteur impose-t-elle à l’arrêt ?",
+  r:["0 N·m, il n’y a pas de mouvement","environ 1,39 N·m","environ 0,80 N·m"],b:1,
+  ex:"C = M·g·k / η = 80 × 9,81 × 1,5915 × 10⁻³ / 0,9 ≈ 1,39 N·m. Ce couple existe même à l’arrêt : c’est lui qui impose un frein ou un moteur maintenu sous tension."},
+ {q:"Qu’appelle-t-on adaptation d’inertie ?",
+  r:["choisir le pas pour que Jeq égale l’inertie propre du moteur et de la vis","choisir un moteur dont l’inertie est nulle","adapter la masse au moteur disponible"],b:0,
+  ex:"Le couple passe par un minimum quand l’inertie ramenée équilibre l’inertie propre. C’est le critère qui guide le choix du pas, et le simulateur de la partie 3 le montre graphiquement."},
+ {q:"Pourquoi le dimensionnement d’un axe est-il itératif ?",
+  r:["parce que les catalogues changent souvent","parce que l’inertie du rotor choisi modifie le J total du calcul","parce qu’il faut vérifier plusieurs fournisseurs"],b:1,
+  ex:"Le J total contient l’inertie du rotor. Choisir un moteur plus gros augmente le J total, donc le couple requis. Il faut reboucler, et l’écrire explicitement en épreuve."}
+];
+(function(){
+ const z=document.getElementById('questions');
+ const choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',function(){
+    if(b.disabled) return;
+    choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';});
+    b.style.fontWeight='800';
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){
+    b.disabled=true;
+    if(j===Q[i].b) b.classList.add('bon');
+    else if(choix[i]===j) b.classList.add('faux');
+   });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div');
+   e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko');
+   e.textContent=Q[i].ex;
+   r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ');
+  b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+
+   (n===Q.length ? 'La méthode est acquise. Passe au TP pour l’appliquer sur des cas chiffrés.'
+                 : 'Reprends la méthode de la partie 4 : six étapes, dans cet ordre.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>
