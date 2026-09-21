@@ -489,7 +489,34 @@ requestAnimationFrame(dessinerTrain);
  {id:'courroie',x:420, y:150, w:180, h:50, lbl:'LA COURROIE', tx:510, ty:140},
  {id:'tambour', x:620, y:140, w:80, h:80, lbl:'LE TAMBOUR DU TREUIL', tx:660, ty:128},
  ];
- const poses={}; let sel=null, t=0;
+ const poses={}; let sel=null, t=0, survol=null;
+ /* ===== ZONES CLIQUABLES =====
+    La courroie n'est PAS un rectangle : ce sont deux brins inclinés, tangents aux
+    poulies. L'ancienne zone (rectangle y 150-200) se trouvait ENTRE les deux brins,
+    dans le vide — une régression introduite quand le tracé a été corrigé en
+    tangentes extérieures. On détecte désormais par DISTANCE aux brins. */
+ const BRINS=(function(){
+  const P1={x:330,y:180,r:58}, P2={x:660,y:180,r:32};
+  const d=Math.hypot(P2.x-P1.x,P2.y-P1.y), al=Math.asin((P1.r-P2.r)/d);
+  return [-1,1].map(function(s){
+   const nx=Math.sin(al), ny=s*Math.cos(al);
+   return {x1:P1.x+P1.r*nx, y1:P1.y+P1.r*ny, x2:P2.x+P2.r*nx, y2:P2.y+P2.r*ny};
+  });
+ })();
+ function distSeg(px,py,s){
+  const dx=s.x2-s.x1, dy=s.y2-s.y1;
+  const u=Math.max(0,Math.min(1,((px-s.x1)*dx+(py-s.y1)*dy)/(dx*dx+dy*dy)));
+  return Math.hypot(px-(s.x1+u*dx), py-(s.y1+u*dy));
+ }
+ function dansZone(z,x,y){
+  if(z.id==='courroie'){
+   /* partie centrale seulement : aux extrémités, la courroie touche les poulies */
+   if(x<395 || x>625) return false;
+   return BRINS.some(function(s){ return distSeg(x,y,s)<=18; });
+  }
+  return x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h;
+ }
+ function zoneSous(x,y){ return ZONES.find(function(z){ return dansZone(z,x,y); }) || null; }
  function dessiner(){
  t+=0.02;
  ctx.clearRect(0,0,860,320);
@@ -551,6 +578,24 @@ requestAnimationFrame(dessinerTrain);
  ctx.beginPath(); ctx.moveTo(40,290); ctx.lineTo(820,290); ctx.stroke();
  ctx.font='bold 12.5px Segoe UI'; ctx.textAlign='center';
  ZONES.forEach(z=>{ if(poses[z.id]){ ctx.fillStyle='#16a34a'; ctx.fillText('\u2713 '+z.lbl, z.tx, z.ty); } });
+ /* Retour visuel : quand une étiquette est choisie, l'organe survolé s'illumine.
+    L'élève VOIT ce qu'il s'apprête à désigner avant de cliquer. */
+ if(sel && survol && !poses[survol.id]){
+  ctx.save();
+  ctx.strokeStyle='rgba(234,88,12,0.9)'; ctx.fillStyle='rgba(234,88,12,0.10)';
+  ctx.lineWidth=3; ctx.setLineDash([7,5]);
+  if(survol.id==='courroie'){
+   ctx.lineWidth=14; ctx.setLineDash([]); ctx.strokeStyle='rgba(234,88,12,0.28)';
+   BRINS.forEach(function(s){ ctx.beginPath(); ctx.moveTo(s.x1,s.y1); ctx.lineTo(s.x2,s.y2); ctx.stroke(); });
+  } else {
+   ctx.beginPath(); ctx.roundRect(survol.x-4,survol.y-4,survol.w+8,survol.h+8,10);
+   ctx.fill(); ctx.stroke();
+  }
+  ctx.restore();
+  ctx.font='bold 12px Segoe UI'; ctx.fillStyle='#c2410c'; ctx.textAlign='center';
+  ctx.fillText('clique ici ?', survol.id==='courroie'? 510 : survol.x+survol.w/2,
+               survol.id==='courroie'? 104 : survol.y-10);
+ }
  requestAnimationFrame(dessiner);
  }
  dessiner();
@@ -561,11 +606,18 @@ requestAnimationFrame(dessinerTrain);
  bar.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel=z.id; });
  bar.appendChild(b);
  });
+ cv.addEventListener('mousemove',e=>{
+  const r=cv.getBoundingClientRect();
+  const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
+  survol=zoneSous(x,y);
+  cv.style.cursor = (sel && survol && !poses[survol.id]) ? 'pointer' : 'default';
+ });
+ cv.addEventListener('mouseleave',()=>{ survol=null; cv.style.cursor='default'; });
  cv.addEventListener('click',e=>{
  if(!sel) return;
  const r=cv.getBoundingClientRect();
  const x=(e.clientX-r.left)*cv.width/r.width, y=(e.clientY-r.top)*cv.height/r.height;
- const cible=ZONES.find(z=>x>=z.x && x<=z.x+z.w && y>=z.y && y<=z.y+z.h);
+ const cible=zoneSous(x,y);
  const verd=document.getElementById('verd5');
  if(cible && cible.id===sel){
  poses[sel]=true;
