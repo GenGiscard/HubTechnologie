@@ -788,12 +788,44 @@ Les copies terminées portent désormais `statut:'terminee'`.
 > envoyée que si nom et classe sont déjà remplis ; le verrou, lui, s'applique dès la
 > première réponse cochée.
 >
+> **Rechargement (F5)** : couvert — il déclenche `pagehide` comme une fermeture ;
+> la copie part, puis la page rouverte affiche l'écran verrouillé.
+>
+> **Retour arrière — ajouté le 06/09 après vérification.** Quand l'élève quitte par
+> un lien puis revient avec Retour, le navigateur peut restaurer la page depuis son
+> cache (bfcache) SANS la recharger : le verrou, posé au chargement, ne s'activait
+> pas et l'élève retrouvait l'évaluation en l'état. Correction : écoute de `pageshow`
+> avec `persisted`, qui force un `location.reload()` si une tentative inachevée
+> existe. Vérifié : déclenché seulement dans ce cas, ni au chargement normal ni après
+> une copie terminée.
+>
 > **Limite assumée** : le verrou vit dans le navigateur. Navigation privée ou autre
 > navigateur permettent de recommencer — mais la copie abandonnée est déjà partie.
 
 > **RÈGLE FIREBASE À RECOLLER** : le nœud `evaluations` refusait tout champ inconnu
 > (`$autre: false`). Le champ **`statut`** y a été ajouté (chaîne ≤ 20 caractères).
 > Sans cela, les copies abandonnées ET les copies terminées seraient rejetées.
+
+> **VERSION 2 (06/09) — la v1 mentait.** Test de Mat : l'écran verrouillé
+> affichait « la copie a été transmise », mais rien dans le tableau de bord.
+> Deux causes cumulées : (1) très probablement, règles Firebase pas encore
+> recollées → le champ `statut` rejeté ; (2) défaut de conception de la v1 : le
+> drapeau « envoyé » était posé AVANT de connaître le résultat, sans nouvel essai,
+> et le message l'affirmait sans vérification. Un envoi pendant la fermeture de
+> page (keepalive) ne permet PAS de lire la réponse de la base.
+> Refonte :
+> - la copie partielle est gardée DANS LE NAVIGATEUR, mise à jour toutes les 8 s ;
+> - elle est écrite sous un **identifiant FIXE** tiré au démarrage (`PUT`, et non
+>   `POST` qui crée une clé aléatoire) : on peut donc la RELIRE ;
+> - à la réouverture, `GET` vérifie si elle est arrivée ; sinon `PUT` la renvoie,
+>   cette fois en attendant la réponse ;
+> - le message dit la vérité : reçue, transmise à l'instant, refusée (avec la raison
+>   renvoyée par la base et l'indication « règles Firebase à mettre à jour »), ou pas
+>   de connexion. Une copie non confirmée est retentée à CHAQUE ouverture.
+> Conséquence utile : **une copie refusée avant la mise à jour des règles est
+> rattrapée** à la réouverture suivante. Testé sur les deux gabarits, avec une base
+> simulée qui refuse puis accepte le champ `statut` : les 3 cas donnent le bon
+> message, et aucun doublon (l'identifiant fixe l'interdit : la règle refuse d'écraser).
 
 Tableaux de bord : une pastille rouge **ABANDON** s'affiche à côté du nom, dans le
 tableau intégré à chaque évaluation et dans `000_tableau_de_bord.html`.
