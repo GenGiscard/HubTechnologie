@@ -100,6 +100,7 @@ svg .cliquable:hover{opacity:.75}
 .num-rep .unite{font-size:18px;font-weight:900;color:var(--niv-fonce)}
 .rappel-formule{text-align:center;font-weight:800;color:var(--niv-fonce);background:#f1f5f9;border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:15.5px}
 .cc.choisi{outline:3px solid #94a3b8;font-weight:800}
+svg .survol{filter:drop-shadow(0 0 4px #ea580c) drop-shadow(0 0 7px #ea580c)}/* SURBRILLANCE_ZONES */
 </style>
 </head>
 <body>
@@ -324,6 +325,30 @@ function widgetEtiquettes(zone, svg, zonesDef, etiquettesDef, bonnes, aideCorrec
  const textesPoses={};
  zonesDef.forEach(z=>{
  z.forme.classList.add('cliquable');
+ /* SURBRILLANCE_ZONES — halo élargi : un clone transparent au trait épaissi de
+    22 px, placé au-dessus, qui transmet le clic à la forme d'origine. Sans lui,
+    un câble de 8 px ou une suspente de 3 px sont presque impossibles à viser. */
+ if(z.forme.tagName.toLowerCase()==='g'){
+  /* Un GROUPE ne se clone pas utilement (le clone serait vide). Ses enfants
+     reçoivent déjà les événements : on branche la surbrillance sur le groupe. */
+  z.forme.style.cursor='pointer';
+  z.forme.addEventListener('mouseenter',()=>{ if(etiqChoisie) z.forme.classList.add('survol'); });
+  z.forme.addEventListener('mouseleave',()=>z.forme.classList.remove('survol'));
+ } else {
+ const halo=z.forme.cloneNode(false);
+ halo.removeAttribute('id'); halo.removeAttribute('class');
+ const epOr=parseFloat(z.forme.getAttribute('stroke-width')||'0')||0;
+ const creux=z.forme.getAttribute('fill')==='none';
+ halo.setAttribute('stroke','rgba(0,0,0,0)');
+ halo.setAttribute('stroke-width',String(epOr+22));
+ halo.setAttribute('fill', creux? 'none' : 'rgba(0,0,0,0)');
+ halo.setAttribute('pointer-events', creux? 'stroke' : 'all');
+ halo.style.cursor='pointer';
+ z.forme.parentNode.insertBefore(halo, z.forme.nextSibling);
+ halo.addEventListener('click',()=>z.forme.dispatchEvent(new MouseEvent('click')));
+ halo.addEventListener('mouseenter',()=>{ if(etiqChoisie) z.forme.classList.add('survol'); });
+ halo.addEventListener('mouseleave',()=>z.forme.classList.remove('survol'));
+ }
  z.forme.addEventListener('click',()=>{
  if(!etiqChoisie) return;
  // retirer l'étiquette de son ancienne zone éventuelle
@@ -623,10 +648,68 @@ const MAXTOT=ACTIVITES.reduce((s,a)=>s+a.max,0);
 const $=id=>document.getElementById(id);
 function montrer(id){ ['ecranLogin','ecranAct','ecranFin','ecranProf'].forEach(e=>$(e).classList.add('cache')); $(id).classList.remove('cache'); }
 
+/* ===== COPIE_ABANDON (voir _outils/copie_abandon.py) =====
+   La copie part même si l'élève quitte en cours de route, et une nouvelle
+   tentative est bloquée sans le mot de passe du professeur. */
+const CLE_TENTATIVE='tentative_'+FIREBASE.split('/').pop();
+function lireTentative(){ try{ return JSON.parse(localStorage.getItem(CLE_TENTATIVE)); }catch(e){ return null; } }
+function ecrireTentative(o){ try{ localStorage.setItem(CLE_TENTATIVE,JSON.stringify(o)); }catch(e){} }
+function tentativeDebut(){
+ ecrireTentative({nom:eleve.nom,prenom:eleve.prenom,classe:eleve.classe,
+  debut:new Date().toISOString(),fini:false,partiel:false});
+}
+function tentativeFin(){
+ const t=lireTentative()||{}; t.fini=true; ecrireTentative(t);
+}
+/* Envoi de sortie : pagehide couvre fermeture, rechargement et navigation.
+   PAS visibilitychange, qui verrouillerait l'élève dès qu'il change d'onglet. */
+window.addEventListener('pagehide',function(){
+ const t=lireTentative();
+ if(!t || t.fini || t.partiel || !eleve) return;
+ const total=pts.reduce((s,p)=>s+(p||0),0);
+ const donnees={ nom:eleve.nom, prenom:eleve.prenom, classe:eleve.classe,
+  score:Math.round(total*10)/10, sur:MAXTOT,
+  note20:Math.round(total/MAXTOT*20*10)/10,
+  duree_s:Math.round((Date.now()-t0)/1000),
+  date:new Date().toISOString(),
+  reponses:pts, statut:'abandon' };
+ t.partiel=true; ecrireTentative(t);
+ try{
+  /* sans en-tête Content-Type : requête CORS simple, qui part même pendant la
+     fermeture de la page grâce à keepalive */
+  fetch(FIREBASE+'.json',{method:'POST',keepalive:true,body:JSON.stringify(donnees)});
+ }catch(e){}
+});
+/* À l'ouverture : une tentative existe déjà → évaluation verrouillée. */
+(function(){
+ const t=lireTentative();
+ if(!t) return;
+ const zone=$('ecranLogin'); if(!zone) return;
+ const d=new Date(t.debut);
+ const quand=d.toLocaleDateString('fr-FR')+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+ const bloc=document.createElement('div');
+ bloc.style.cssText='background:#fef2f2;border:2px solid #fca5a5;border-radius:12px;'+
+  'padding:14px 16px;margin:0 0 14px;color:#7f1d1d;font-size:15px;line-height:1.55';
+ bloc.innerHTML='<b>Évaluation déjà commencée</b><br>'+
+  (t.prenom||'')+' '+(t.nom||'')+' ('+(t.classe||'')+') l’a commencée le '+quand+'. '+
+  (t.fini ? 'La copie a été rendue.' : 'La copie a été transmise au professeur avec les réponses données.')+
+  '<br>Pour la repasser, appelle ton professeur.'+
+  '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">'+
+  '<input id="mdpReprise" type="password" placeholder="mot de passe professeur" '+
+  'style="padding:8px 10px;border:2px solid #fca5a5;border-radius:8px;font:inherit">'+
+  '<button id="btnReprise" type="button" class="btn">Autoriser une nouvelle tentative</button></div>';
+ zone.insertBefore(bloc,zone.firstChild);
+ const go=$('btnCommencer'); if(go){ go.disabled=true; go.style.opacity='.45'; }
+ $('btnReprise').addEventListener('click',function(){
+  if($('mdpReprise').value!=='Agostini2025'){ $('mdpReprise').style.borderColor='#dc2626'; return; }
+  try{ localStorage.removeItem(CLE_TENTATIVE); }catch(e){}
+  bloc.remove(); if(go){ go.disabled=false; go.style.opacity=''; }
+ });
+})();
 $('btnCommencer').onclick=()=>{
  const nom=$('fNom').value.trim(), prenom=$('fPrenom').value.trim(), classe=$('fClasse').value;
  if(!nom||!prenom||!classe){ alert('Complète ton nom, ton prénom et ta classe !'); return; }
- eleve={nom,prenom,classe}; idx=0; pts=[]; t0=Date.now();
+ eleve={nom,prenom,classe}; idx=0; pts=[]; t0=Date.now(); tentativeDebut();
  montrer('ecranAct'); lancerActivite();
 };
 function lancerActivite(){
@@ -654,6 +737,7 @@ $('btnSuivant').onclick=()=>{
 };
 function terminer(){
  montrer('ecranFin');
+ tentativeFin();
  const total=pts.reduce((s,p)=>s+p,0);
  const note=Math.round(total/MAXTOT*20*10)/10;
  $('note20').textContent=String(note).replace('.',',');
@@ -677,7 +761,7 @@ async function envoyer(note,total){
  score:Math.round(total*10)/10, sur:MAXTOT, note20:note,
  duree_s:Math.round((Date.now()-t0)/1000),
  date:new Date().toISOString(),
- reponses:pts };
+ reponses:pts, statut:'terminee' };
  try{
  const rep=await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(donnees)});
  if(!rep.ok) throw new Error(rep.status);
@@ -746,7 +830,7 @@ function afficherRes(){
  '<div class="statq"><b>'+ACTIVITES[i].icone+' '+ACTIVITES[i].titre+'</b><div class="bq"><div style="width:'+s+'%;background:'+(s>=60?'#16a34a':(s>=40?'#f59e0b':'#dc2626'))+'"></div></div><span style="width:44px;text-align:right">'+s+' %</span></div>').join('');
  let html='<tr><th>Classe</th><th>Nom</th><th>Prénom</th><th>Score</th><th>Note /20</th><th>Durée</th><th>Date</th></tr>';
  lignes.forEach(r=>{
- html+='<tr><td>'+r.classe+'</td><td>'+r.nom+'</td><td>'+r.prenom+'</td><td>'+String(r.score).replace('.',',')+'/'+r.sur+
+ html+='<tr><td>'+r.classe+'</td><td>'+r.nom+(r.statut==='abandon'?'<span style="display:inline-block;margin-left:6px;padding:0 6px;border-radius:5px;background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5;font-size:11px;font-weight:800">ABANDON</span>':'')+'</td><td>'+r.prenom+'</td><td>'+String(r.score).replace('.',',')+'/'+r.sur+
  '</td><td style="font-weight:800;color:'+(r.note20>=10?'#16a34a':'#dc2626')+'">'+String(r.note20).replace('.',',')+
  '</td><td>'+(r.duree_s?Math.floor(r.duree_s/60)+'min'+String(r.duree_s%60).padStart(2,'0'):'—')+
  '</td><td>'+new Date(r.date).toLocaleDateString('fr-FR')+' '+new Date(r.date).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</td></tr>';

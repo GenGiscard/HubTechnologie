@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Isoler et résoudre en statique · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:34px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Isoler et résoudre en statique</h1>
+ <p class="sous">La moitié des points d’une partie mécanique se joue avant le moindre
+ calcul : sur le choix de l’isolement et le bilan des actions extérieures. Une erreur
+ là, et tout ce qui suit est perdu.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>Modéliser une action mécanique</h2>
+ <div class="chapo">Une force seule ne suffit pas : il faut son point d’application.</div>
+ <canvas id="cv1" width="880" height="240"></canvas>
+ <p>Le torseur des actions transmissibles rassemble la <b>résultante</b> et le
+ <b>moment</b> exprimé en un point. Changer de point d’expression change le moment,
+ jamais la résultante.</p>
+ <div class="formule">M<sub>B</sub> = M<sub>A</sub> + BA ∧ R</div>
+ <div class="piege"><b>Piège d’épreuve.</b> Additionner deux torseurs exprimés en des
+ points différents. Toujours les ramener au même point avant de sommer.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Les liaisons et leurs inconnues</h2>
+ <div class="chapo">Compter les inconnues avant de compter les équations.</div>
+ <table>
+  <tr><th>Liaison</th><th>Mobilités</th><th>Inconnues statiques</th><th>Dans le plan</th></tr>
+  <tr><td>Pivot</td><td>1 rotation</td><td>5</td><td>2</td></tr>
+  <tr><td>Glissière</td><td>1 translation</td><td>5</td><td>2</td></tr>
+  <tr><td>Rotule</td><td>3 rotations</td><td>3</td><td>2</td></tr>
+  <tr><td>Appui plan</td><td>2 transl. + 1 rot.</td><td>3</td><td>1</td></tr>
+  <tr><td>Linéaire annulaire</td><td>3 rot. + 1 transl.</td><td>2</td><td>1</td></tr>
+ </table>
+ <div class="retenir">Règle simple : <b>mobilités + inconnues statiques = 6</b> dans
+ l’espace, <b>= 3</b> dans le plan. C’est la vérification qui évite les oublis.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>La méthode d’isolement</h2>
+ <div class="chapo">Cinq étapes, toujours les mêmes, toujours dans cet ordre.</div>
+ <div class="methode"><b>MÉTHODE</b>
+  <ol>
+   <li><b>Choisir</b> l’isolement : le solide ou l’ensemble qui fait apparaître
+    l’inconnue cherchée, et le moins d’autres possible.</li>
+   <li><b>Tracer</b> la frontière et lister TOUT ce qui la traverse.</li>
+   <li><b>Bilan</b> des actions extérieures : liaisons, pesanteur, actions à distance.</li>
+   <li><b>Choisir le point</b> d’écriture des moments : celui qui annule le plus
+    d’inconnues.</li>
+   <li><b>Écrire</b> et résoudre : 3 équations dans le plan, 6 dans l’espace.</li>
+  </ol></div>
+ <canvas id="cv2" width="880" height="270"></canvas>
+ <div class="piege"><b>L’erreur la plus coûteuse.</b> Faire figurer une action
+ <b>intérieure</b> à l’isolement. Si les deux solides sont isolés ensemble, la liaison
+ entre eux disparaît du bilan.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Le cas plan, en trois équations</h2>
+ <div class="chapo">Deux projections et un moment. Rien de plus.</div>
+ <div class="formule">ΣF<sub>x</sub> = 0 &nbsp;&nbsp;·&nbsp;&nbsp; ΣF<sub>y</sub> = 0
+ &nbsp;&nbsp;·&nbsp;&nbsp; ΣM<sub>/A</sub> = 0</div>
+ <canvas id="cv3" width="880" height="340"></canvas>
+ <div class="reglage">
+  <label for="sA">Angle du tirant</label>
+  <input type="range" id="sA" min="15" max="70" value="30" step="1">
+  <span id="vA" style="font-weight:800;color:var(--accf);min-width:54px">30°</span>
+ </div>
+ <div class="retenir">Plus le tirant est <b>tendu vers l’horizontale</b>, plus sa
+ tension explose. L’angle est le paramètre de conception le plus sensible d’une
+ potence.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Le solide soumis à trois forces</h2>
+ <div class="chapo">Un cas particulier qui fait gagner un temps précieux.</div>
+ <canvas id="cv4" width="880" height="260"></canvas>
+ <p>Si un solide n’est soumis qu’à <b>trois forces</b> non parallèles, alors leurs
+ supports sont <b>concourants</b> et le dynamique est un triangle fermé.</p>
+ <div class="retenir">Reconnaître ce cas permet de déterminer une direction inconnue
+ <b>sans écrire la moindre équation</b> — et de vérifier un résultat algébrique.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<footer>Préparation CAFEP-CAPET SII · Isoler et résoudre en statique · ESTIC Don Bosco</footer>
+
+<script>
+'use strict';
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8;
+ c.strokeStyle=coul; c.lineWidth=1; c.lineCap='butt';
+ for(let k=-h;k<w;k+=p){
+  const t0=Math.max(0,-k), t1=Math.min(h,w-k);
+  if(t1<=t0) continue;
+  c.beginPath(); c.moveTo(x+k+t0,y+t0); c.lineTo(x+k+t1,y+t1); c.stroke();
+ }
+ c.strokeStyle=coul; c.lineWidth=2; c.strokeRect(x,y,w,h);
+}
+
+/* ═══ 1 · résultante et moment ═══ */
+(function(){
+ const c=document.getElementById('cv1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,240);
+ T(c,'LA MÊME RÉSULTANTE, DEUX MOMENTS DIFFÉRENTS',440,28,14,'#155e75');
+ const y=140;
+ c.strokeStyle='#334155'; c.lineWidth=5; c.lineCap='butt';
+ c.beginPath(); c.moveTo(180,y); c.lineTo(700,y); c.stroke();
+ [[220,'A','#0e7490'],[620,'B','#7c3aed']].forEach(function(q){
+  c.fillStyle='#fff'; c.strokeStyle=q[2]; c.lineWidth=2.6;
+  c.beginPath(); c.arc(q[0],y,9,0,6.284); c.fill(); c.stroke();
+  T(c,q[1],q[0],y+30,14,q[2]);
+ });
+ FLECHE(c,440,y-70,440,y-8,4,'#ea580c');
+ T(c,'R',456,y-42,15,'#ea580c','left');
+ c.strokeStyle='#94a3b8'; c.lineWidth=1.6; c.setLineDash([5,4]);
+ c.beginPath(); c.moveTo(220,y+58); c.lineTo(440,y+58); c.stroke();
+ c.beginPath(); c.moveTo(440,y+58); c.lineTo(620,y+58); c.stroke();
+ c.setLineDash([]);
+ T(c,'d(A)',330,y+76,12.5,'#0e7490');
+ T(c,'d(B)',530,y+76,12.5,'#7c3aed');
+ T(c,'le moment dépend du point choisi — la résultante, jamais',440,218,13,'#5b544a');
+})();
+
+/* ═══ 3 · isolement ═══ */
+(function(){
+ const c=document.getElementById('cv2').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,270);
+ T(c,'CE QUI TRAVERSE LA FRONTIÈRE ENTRE DANS LE BILAN',440,28,14,'#155e75');
+ /* deux solides */
+ c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=2.6;
+ c.beginPath(); c.roundRect(240,96,180,90,10); c.fill(); c.stroke();
+ T(c,'solide 1',330,146,14,'#0369a1');
+ c.fillStyle='#dcfce7'; c.strokeStyle='#16a34a'; c.lineWidth=2.6;
+ c.beginPath(); c.roundRect(470,96,180,90,10); c.fill(); c.stroke();
+ T(c,'solide 2',560,146,14,'#15803d');
+ /* liaison entre les deux */
+ c.strokeStyle='#7c3aed'; c.lineWidth=4;
+ c.beginPath(); c.moveTo(420,141); c.lineTo(470,141); c.stroke();
+ T(c,'liaison 1-2',445,176,11.5,'#7c3aed');
+ /* frontiere d'isolement englobant les deux */
+ c.strokeStyle='#dc2626'; c.lineWidth=2.6; c.setLineDash([9,6]);
+ c.beginPath(); c.roundRect(208,68,474,146,18); c.stroke(); c.setLineDash([]);
+ T(c,'frontière d’isolement {1 + 2}',445,54,12.5,'#dc2626');
+ /* actions exterieures */
+ FLECHE(c,150,141,204,141,3.2,'#ea580c');
+ T(c,'action extérieure',146,137,12,'#ea580c','right');
+ FLECHE(c,740,141,686,141,3.2,'#ea580c');
+ T(c,'action extérieure',744,137,12,'#ea580c','left');
+ T(c,'la liaison 1-2 est INTÉRIEURE : elle disparaît du bilan',440,244,13,'#b91c1c');
+})();
+
+/* ═══ 4 · simulateur de la potence ═══ */
+(function(){
+ const c=document.getElementById('cv3').getContext('2d');
+ const s=document.getElementById('sA'), aff=document.getElementById('vA');
+ const F=2000, L=1.2, dd=0.9;
+ function dessiner(){
+  const deg=+s.value, a=deg*Math.PI/180;
+  aff.textContent=deg+'°';
+  const Tn=F*L/(Math.sin(a)*dd);
+  const Ax=Tn*Math.cos(a), Ay=F-Tn*Math.sin(a);
+  const An=Math.hypot(Ax,Ay);
+  c.fillStyle='#fff'; c.fillRect(0,0,880,340);
+  T(c,'POTENCE MURALE — ÉQUILIBRE DU BRAS',440,26,14,'#155e75');
+  /* mur */
+  HACH(c,120,60,34,220,'#475569');
+  const xA=154, yA=214, ech=290;             /* A au bas du bras */
+  const xB=xA+L*ech, xD=xA+dd*ech;
+  /* bras */
+  c.strokeStyle='#334155'; c.lineWidth=8; c.lineCap='butt';
+  c.beginPath(); c.moveTo(xA,yA); c.lineTo(xB,yA); c.stroke();
+  /* tirant : de D vers le mur, en haut */
+  const yC=yA-dd*ech*Math.tan(a);
+  c.strokeStyle='#7c3aed'; c.lineWidth=5;
+  c.beginPath(); c.moveTo(xD,yA); c.lineTo(xA,Math.max(66,yC)); c.stroke();
+  /* points */
+  /* repères placés AU-DESSUS du bras : sous le bras, A tombait dans le mur et B
+     passait derrière la flèche de charge. */
+  [[xA,yA,'A','#0e7490',-14],[xD,yA,'D','#7c3aed',0],[xB,yA,'B','#ea580c',14]].forEach(function(q){
+   c.fillStyle='#fff'; c.strokeStyle=q[3]; c.lineWidth=2.4;
+   c.beginPath(); c.arc(q[0],q[1],8,0,6.284); c.fill(); c.stroke();
+   T(c,q[2],q[0]+q[4],q[1]-18,13,q[3]);
+  });
+  /* charge */
+  FLECHE(c,xB,yA+8,xB,yA+66,4,'#ea580c');
+  T(c,'F = 2000 N',xB+12,yA+50,12.5,'#ea580c','left');
+  /* angle */
+  c.strokeStyle='#7c3aed'; c.lineWidth=1.6;
+  c.beginPath(); c.arc(xD,yA,34,Math.PI-a,Math.PI); c.stroke();
+  T(c,deg+'°',xD-46,yA+26,12,'#7c3aed');
+  /* resultats */
+  const bx=600, by=66;
+  c.fillStyle='#fff'; c.strokeStyle='#155e75'; c.lineWidth=2.4;
+  c.beginPath(); c.roundRect(bx,by,250,124,12); c.fill(); c.stroke();
+  T(c,'tension du tirant',bx+125,by+24,12,'#64748b');
+  T(c,Math.round(Tn)+' N',bx+125,by+52,20,'#7c3aed');
+  T(c,'action en A : '+Math.round(An)+' N',bx+125,by+82,13,'#0e7490');
+  T(c,'Ax '+Math.round(Ax)+'  ·  Ay '+Math.round(Ay),bx+125,by+104,12,'#5b544a');
+  T(c, deg<22 ? 'tirant trop couché : la tension devient déraisonnable'
+     : 'moment en A : T·sin(α)·0,9 = F·1,2',
+    440, 322, 13, deg<22? '#dc2626':'#5b544a');
+ }
+ s.addEventListener('input',dessiner);
+ dessiner();
+})();
+
+/* ═══ 5 · trois forces concourantes ═══ */
+(function(){
+ const c=document.getElementById('cv4').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,260);
+ T(c,'TROIS FORCES : SUPPORTS CONCOURANTS, DYNAMIQUE FERMÉ',440,28,14,'#155e75');
+ /* solide et trois supports concourants */
+ const I=[330,132];
+ c.fillStyle='#f1f5f9'; c.strokeStyle='#475569'; c.lineWidth=2.4;
+ c.beginPath(); c.moveTo(220,190); c.lineTo(430,190); c.lineTo(370,92); c.closePath();
+ c.fill(); c.stroke();
+ const P=[[240,190,'#0e7490'],[420,186,'#16a34a'],[366,96,'#ea580c']];
+ P.forEach(function(q){
+  c.strokeStyle=q[2]; c.lineWidth=1.6; c.setLineDash([5,4]);
+  c.beginPath(); c.moveTo(q[0],q[1]); c.lineTo(I[0],I[1]); c.stroke(); c.setLineDash([]);
+  FLECHE(c,q[0],q[1],q[0]+(q[0]-I[0])*0.45,q[1]+(q[1]-I[1])*0.45,3.2,q[2]);
+ });
+ c.fillStyle='#dc2626'; c.beginPath(); c.arc(I[0],I[1],6,0,6.284); c.fill();
+ T(c,'I',I[0]+14,I[1]-8,13,'#dc2626','left');
+ T(c,'les trois supports se coupent en I',330,232,12.5,'#5b544a');
+ /* triangle des forces */
+ c.strokeStyle='#94a3b8'; c.lineWidth=1.6;
+ const O=[600,86];
+ const V=[[110,44],[-24,96],[-86,-140]];
+ let x=O[0], y=O[1];
+ V.forEach(function(v,i){
+  FLECHE(c,x,y,x+v[0],y+v[1],3.2,P[i][2]);
+  x+=v[0]; y+=v[1];
+ });
+ T(c,'dynamique fermé',660,236,12.5,'#5b544a');
+})();
+
+/* ═══ 6 · exercices ═══ */
+const Q=[
+ {q:"Vous isolez l’ensemble {1 + 2}. Que devient l’action de liaison entre 1 et 2 ?",
+  r:["elle doit figurer au bilan","elle est intérieure et disparaît du bilan","elle est doublée"],b:1,
+  ex:"Une action entre deux solides isolés ENSEMBLE est intérieure à la frontière : elle n’apparaît pas au bilan des actions extérieures. La faire figurer est l’erreur la plus coûteuse de l’épreuve."},
+ {q:"Dans le plan, combien d’inconnues statiques une liaison pivot introduit-elle ?",
+  r:["2","3","5"],b:0,
+  ex:"Dans le plan : mobilités + inconnues = 3. Le pivot laisse 1 rotation, il introduit donc 2 inconnues, les deux composantes de la résultante. Les 5 inconnues correspondent au cas spatial."},
+ {q:"En quel point vaut-il mieux écrire l’équation de moment ?",
+  r:["au centre de gravité, toujours","en un point où passent le plus d’inconnues","au point d’application de la charge"],b:1,
+  ex:"Écrire les moments en un point par lequel passent plusieurs inconnues les annule d’emblée. C’est le choix qui décide du temps de résolution — et souvent de la réussite de la question."},
+ {q:"Le moment d’une action change quand on change de point d’expression. Et la résultante ?",
+  r:["elle change aussi","elle est inchangée","elle change de signe"],b:1,
+  ex:"La résultante est un invariant du torseur. Seul le moment se transporte, selon la relation MB = MA + BA ∧ R."},
+ {q:"Sur la potence du cours, on couche le tirant de 30° à 15°. Que devient sa tension ?",
+  r:["elle est divisée par deux","elle double environ","elle ne change pas"],b:1,
+  ex:"T = F·L / (sin α · d). Passer de sin 30° = 0,50 à sin 15° = 0,26 multiplie la tension par près de 2. L’angle est le paramètre le plus sensible d’une potence."},
+ {q:"Un solide est soumis à trois forces non parallèles. Que peut-on affirmer ?",
+  r:["leurs supports sont concourants","elles sont d’égale intensité","le solide ne peut pas être en équilibre"],b:0,
+  ex:"C’est le théorème des trois forces : supports concourants et dynamique fermé. Il permet de trouver une direction inconnue sans aucune équation, et de vérifier un résultat algébrique."}
+];
+(function(){
+ const z=document.getElementById('questions');
+ const choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',function(){
+    if(b.disabled) return;
+    choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';});
+    b.style.fontWeight='800';
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){
+    b.disabled=true;
+    if(j===Q[i].b) b.classList.add('bon');
+    else if(choix[i]===j) b.classList.add('faux');
+   });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div');
+   e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko');
+   e.textContent=Q[i].ex;
+   r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ');
+  b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+
+   (n===Q.length ? 'La méthode est en place. Passe au TP pour l’appliquer sur des cas chiffrés.'
+                 : 'Reprends la méthode de la partie 3 : cinq étapes, dans cet ordre.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>

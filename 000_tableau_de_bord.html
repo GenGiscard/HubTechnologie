@@ -306,6 +306,7 @@ async function charger(){
  .map(([cle,v])=>({
  cle, seq:ev.titre, fb:ev.fb, niv:ev.niv, fichier:ev.f,
  nom:((v.nom||'')+' '+(v.prenom||'')).trim()||'(anonyme)',
+ abandon:v.statut==='abandon',
  classe:v.classe||'—',
  note:parseFloat(v.note20!==undefined?v.note20:v.note)||0,
  score:v.score||0,
@@ -356,7 +357,7 @@ function afficher(){
  });
  corps.innerHTML=L.map(d=>{
  const coul = d.note>=14?'var(--ok)':(d.note>=10?'var(--moy)':'var(--ko)');
- return '<tr><td>'+d.nom+'</td><td>'+d.classe+'</td>'+
+ return '<tr><td>'+d.nom+(d.abandon?'<span style="display:inline-block;margin-left:6px;padding:0 6px;border-radius:5px;background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5;font-size:11px;font-weight:800">ABANDON</span>':'')+'</td><td>'+d.classe+'</td>'+
  '<td><a class="lien" href="'+d.fichier+'">'+d.seq+'</a></td>'+
  '<td><span class="badge" style="background:'+(d.niv==='5e'?'#16a34a':(d.niv==='4e'?'#b45309':'#1d4ed8'))+'">'+d.niv+'</span></td>'+
  '<td class="note" style="color:'+coul+'">'+String(d.note).replace('.',',')+'</td>'+

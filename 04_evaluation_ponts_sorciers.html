@@ -163,16 +163,30 @@ const Q=[
 ];
 
 const FIREBASE='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/evaluations/ponts_sorciers';
+
+/* ===== ORDRE DE PRÉSENTATION ALÉATOIRE (voir _outils/melanger_qcm.py) =====
+   Permutation d'affichage seulement : rep[] reste indexé par numéro de question,
+   pour que le tableau de bord compare la même question entre deux élèves. */
+const ORDRE=(function(){
+ const t=Q.map((_,i)=>i);
+ for(let i=t.length-1;i>0;i--){            /* Fisher-Yates : non biaisé */
+  const j=Math.floor(Math.random()*(i+1));
+  const x=t[i]; t[i]=t[j]; t[j]=x;
+ }
+ return t;
+})();
 const rep=new Array(Q.length).fill(-1);
 const debut=Date.now();
 let envoye=false;
 
 (function(){
  const z=document.getElementById('questions');
- Q.forEach((o,i)=>{
+ ORDRE.forEach((i,rang)=>{
+  const o=Q[i];
   const d=document.createElement('div'); d.className='q';
+  d.dataset.qi=i;                /* index D'ORIGINE, pour la correction */
   const h=document.createElement('h2');
-  h.innerHTML='<span class="n">'+(i+1)+'</span>'+o.q;
+  h.innerHTML='<span class="n">'+(rang+1)+'</span>'+o.q;
   d.appendChild(h);
   const r=document.createElement('div'); r.className='rep';
   o.r.forEach((txt,j)=>{
@@ -189,6 +203,58 @@ let envoye=false;
  });
 })();
 
+/* ===== COPIE_ABANDON — gabarit QCM (voir _outils/copie_abandon.py) =====
+   Particularité : le nom se saisit EN BAS de page. Une copie abandonnée n'est donc
+   envoyée que si l'élève a déjà rempli nom et classe ; le VERROU, lui, s'applique
+   toujours, dès la première réponse cochée. */
+const CLE_TENTATIVE='tentative_'+FIREBASE.split('/').pop();
+function lireTentative(){ try{ return JSON.parse(localStorage.getItem(CLE_TENTATIVE)); }catch(e){ return null; } }
+function ecrireTentative(o){ try{ localStorage.setItem(CLE_TENTATIVE,JSON.stringify(o)); }catch(e){} }
+document.addEventListener('click',function(e){
+ if(!e.target.closest || !e.target.closest('.rep button')) return;
+ if(!lireTentative()) ecrireTentative({debut:new Date().toISOString(),fini:false,partiel:false});
+});
+window.addEventListener('pagehide',function(){
+ const t=lireTentative();
+ if(!t || t.fini || t.partiel || envoye) return;
+ const nom=(document.getElementById('inNom')||{}).value||'';
+ const classe=(document.getElementById('inClasse')||{}).value||'';
+ if(!nom.trim() || !classe.trim()) return;       /* sans nom, rien d'exploitable à envoyer */
+ let score=0; Q.forEach(function(q,i){ if(rep[i]===q.b) score++; });
+ t.partiel=true; ecrireTentative(t);
+ try{
+  fetch(FIREBASE+'.json',{method:'POST',keepalive:true,body:JSON.stringify({
+   nom:nom.trim(), prenom:((document.getElementById('inPrenom')||{}).value||'').trim(),
+   classe:classe.trim(), score:score, sur:Q.length,
+   note20:Math.round(score/Q.length*20*10)/10,
+   duree_s:Math.round((Date.now()-debut)/1000),
+   date:new Date().toISOString(), reponses:rep, statut:'abandon'})});
+ }catch(e){}
+});
+(function(){
+ const t=lireTentative(); if(!t) return;
+ const cible=document.getElementById('questions'); if(!cible) return;
+ const d=new Date(t.debut);
+ const bloc=document.createElement('div');
+ bloc.style.cssText='background:#fef2f2;border:2px solid #fca5a5;border-radius:12px;'+
+  'padding:14px 16px;margin:0 0 16px;color:#7f1d1d;font-size:15px;line-height:1.55';
+ bloc.innerHTML='<b>Évaluation déjà commencée</b> sur ce poste le '+
+  d.toLocaleDateString('fr-FR')+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+
+  '. Pour la repasser, appelle ton professeur.'+
+  '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">'+
+  '<input id="mdpReprise" type="password" placeholder="mot de passe professeur" '+
+  'style="padding:8px 10px;border:2px solid #fca5a5;border-radius:8px;font:inherit">'+
+  '<button id="btnReprise" type="button" class="gros">Autoriser une nouvelle tentative</button></div>';
+ cible.parentNode.insertBefore(bloc,cible);
+ cible.style.display='none';
+ const env=document.getElementById('envoyer'); if(env) env.style.display='none';
+ document.getElementById('btnReprise').addEventListener('click',function(){
+  if(document.getElementById('mdpReprise').value!=='Agostini2025'){
+   document.getElementById('mdpReprise').style.borderColor='#dc2626'; return; }
+  try{ localStorage.removeItem(CLE_TENTATIVE); }catch(e){}
+  bloc.remove(); cible.style.display=''; if(env) env.style.display='';
+ });
+})();
 document.getElementById('envoyer').addEventListener('click',async()=>{
  if(envoye) return;
  const nom=document.getElementById('inNom').value.trim();
@@ -199,9 +265,11 @@ document.getElementById('envoyer').addEventListener('click',async()=>{
  if(sansRep>0 && !window.confirm) { }
  envoye=true;
  document.getElementById('envoyer').disabled=true;
+ { const t=lireTentative()||{debut:new Date().toISOString()}; t.fini=true; ecrireTentative(t); }
 
  let score=0;
- document.querySelectorAll('.q').forEach((d,i)=>{
+ document.querySelectorAll('.q').forEach((d)=>{
+  const i=+d.dataset.qi;   /* pas la position affichée */
   const bts=[...d.querySelectorAll('.rep button')];
   bts.forEach((b,j)=>{
    b.disabled=true;
@@ -227,7 +295,7 @@ document.getElementById('envoyer').addEventListener('click',async()=>{
  try{
   await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},
    body:JSON.stringify({nom:nom,prenom:prenom,classe:classe,score:score,sur:Q.length,
-    note20:note,duree_s:duree,date:new Date().toISOString(),reponses:rep})});
+    note20:note,duree_s:duree,date:new Date().toISOString(),reponses:rep,statut:'terminee'})});
   document.getElementById('etatEnvoi').textContent='Résultat envoyé au professeur.';
  }catch(e){
   document.getElementById('etatEnvoi').textContent=
