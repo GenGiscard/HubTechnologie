@@ -695,25 +695,34 @@ window.addEventListener('pageshow',function(e){
  function dire(ok,txt){ etat.style.color= ok?'#15803d':'#b91c1c'; etat.textContent=txt; }
  if(t.confirme){ dire(true,'✓ La copie a bien été reçue par le professeur.'); return; }
  if(!t.copie){ dire(false,'✗ Aucune réponse enregistrée : la copie n’a pas pu être constituée.'); return; }
- /* 1) la copie est-elle déjà dans la base ? 2) sinon, on l'envoie maintenant. */
- fetch(FIREBASE+'/'+t.id+'.json').then(function(r){ return r.json(); }).then(function(j){
-  if(j && typeof j==='object' && j.nom!==undefined){
-   t.confirme=true; ecrireTentative(t);
-   dire(true,'✓ La copie a bien été reçue par le professeur.');
-   return;
-  }
-  return fetch(FIREBASE+'/'+t.id+'.json',{method:'PUT',body:JSON.stringify(t.copie)})
-   .then(function(r){
-    if(r.ok){ t.confirme=true; ecrireTentative(t);
-     dire(true,'✓ La copie vient d’être transmise au professeur.'); return; }
-    return r.json().catch(function(){ return {}; }).then(function(e){
-     dire(false,'✗ Copie NON transmise : la base l’a refusée ('+(e.error||('HTTP '+r.status))+'). '+
-      'Préviens ton professeur : les règles Firebase sont à mettre à jour.');
+ /* Vérification. Deux précautions, suite au test de Mat en RECHARGEMENT :
+    - on laisse d'abord 1,5 s à l'envoi de sortie de la page précédente, qui peut
+      être encore en vol quand cette page démarre ;
+    - un refus à l'écriture ne prouve PAS l'échec : la règle interdit d'écraser une
+      copie existante, donc un refus peut signifier « elle vient d'arriver ». On
+      RELIT avant de conclure. Sans cela, une copie bien reçue était annoncée refusée. */
+ function lire(){
+  return fetch(FIREBASE+'/'+t.id+'.json').then(function(r){ return r.json(); })
+   .then(function(j){ return !!(j && typeof j==='object' && j.nom!==undefined); });
+ }
+ function confirmer(txt){ t.confirme=true; ecrireTentative(t); dire(true,txt); }
+ setTimeout(function(){
+  lire().then(function(existe){
+   if(existe){ confirmer('✓ La copie a bien été reçue par le professeur.'); return; }
+   return fetch(FIREBASE+'/'+t.id+'.json',{method:'PUT',body:JSON.stringify(t.copie)}).then(function(r){
+    if(r.ok){ confirmer('✓ La copie vient d’être transmise au professeur.'); return; }
+    return lire().then(function(existe2){
+     if(existe2){ confirmer('✓ La copie a bien été reçue par le professeur.'); return; }
+     return r.json().catch(function(){ return {}; }).then(function(e){
+      dire(false,'✗ Copie NON transmise : la base l’a refusée ('+(e.error||('HTTP '+r.status))+'). '+
+       'Préviens ton professeur : les règles Firebase sont à mettre à jour.');
+     });
     });
    });
- }).catch(function(){
-  dire(false,'✗ Copie non transmise (pas de connexion). Elle sera renvoyée à la prochaine ouverture.');
- });
+  }).catch(function(){
+   dire(false,'✗ Copie non transmise (pas de connexion). Elle sera renvoyée à la prochaine ouverture.');
+  });
+ },1500);
 })();
 $('btnCommencer').onclick=()=>{
  const nom=$('fNom').value.trim(), prenom=$('fPrenom').value.trim(), classe=$('fClasse').value;
