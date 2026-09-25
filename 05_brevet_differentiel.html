@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sujet type DNB — Le différentiel · ESTIC</title><style>
+:root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(900px,100%);padding:14px 14px 50px}
+.entete{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:14px 18px;margin-bottom:14px}
+.entete h1{font-size:20px;color:var(--accf);margin-bottom:4px}
+.entete .info{font-size:13.5px;color:#64748b;line-height:1.7}
+.consignes{background:#eff6ff;border-left:5px solid var(--acc);border-radius:10px;padding:11px 15px;font-size:14px;line-height:1.75;margin-bottom:16px}
+.doc{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.doc h3{font-size:14px;color:var(--accf);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.doc canvas{width:100%;display:block;border-radius:8px;background:#fdfdfe;border:1px solid #e2e8f0}
+.doc table{width:100%;border-collapse:collapse;font-size:14px}
+.doc th,.doc td{border:1px solid #cbd5e1;padding:7px 9px;text-align:left}
+.doc th{background:#f1f5f9}
+.q{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q .num{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.q .num b{font-size:16px;color:var(--accf)}
+.q .num span{font-size:13px;font-weight:800;color:#64748b}
+.q p{font-size:15px;line-height:1.7}
+.q .aide{font-size:13px;color:#64748b;margin-top:5px;font-style:italic}
+.q input,.q textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px;font-size:15px;font-family:inherit;margin-top:9px}
+.q textarea{min-height:74px;resize:vertical}
+.q .court{width:150px;text-align:center;font-weight:700}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;padding:13px 28px;cursor:pointer;font-family:inherit}
+.btn.sec{background:#e2e8f0;color:var(--encre)}
+.centre{text-align:center;margin:18px 0}
+#resultat{display:none;background:#fff;border:2px solid var(--acc);border-radius:14px;padding:18px;margin-top:16px}
+#resultat h2{color:var(--accf);font-size:20px;text-align:center}
+.note{text-align:center;font-size:44px;font-weight:900;color:var(--acc);margin:6px 0}
+.corr{border-left:4px solid #16a34a;background:#f0fdf4;border-radius:8px;padding:10px 14px;margin:9px 0;font-size:14.5px;line-height:1.7}
+.corr b{color:#15803d}
+.pts{float:right;font-weight:900;color:#64748b;font-size:13px}
+.q .mc{background:#fff7ed;color:#c2410c;border:1.5px solid #fdba74;border-radius:8px;
+ padding:4px 11px;font:700 12px 'Segoe UI',sans-serif;cursor:pointer;margin-left:10px}
+.q .mc:hover{background:#ffedd5}
+@media print{.q .mc{display:none}}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="logo_estic.png">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<div class="entete">
+  <h1>Le différentiel</h1>
+  <div class="info"><b>Partie technologie</b> · durée conseillée : 30 minutes · noté sur 25 points<br>
+  Support : le différentiel d’une automobile</div>
+</div>
+<div class="consignes">Tu disposes de trois documents. Réponds aux six questions : certaines demandent une
+<b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
+Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
+
+<div class="doc"><h2>Document 1 — Le différentiel déplié</h2>
+<canvas id="d1" width="860" height="280"></canvas>
+<p class="leg">Le boîtier entraîne le satellite. Celui-ci engrène sur les deux
+planétaires, solidaires des roues. Modèle déplié : les deux planétaires deviennent
+deux crémaillères, le satellite une balance.</p>
+
+<h2>Document 2 — Relevé en virage</h2>
+<table>
+ <tr><th>Situation</th><th>Roue intérieure</th><th>Roue extérieure</th><th>Boîtier</th></tr>
+ <tr><td>Ligne droite</td><td>100 tr/min</td><td>100 tr/min</td><td>100 tr/min</td></tr>
+ <tr><td>Virage léger</td><td>90 tr/min</td><td>110 tr/min</td><td>100 tr/min</td></tr>
+ <tr><td>Virage serré</td><td>80 tr/min</td><td>?</td><td>100 tr/min</td></tr>
+</table>
+
+<h2>Document 3 — La règle du différentiel</h2>
+<table>
+ <tr><th>Relation vérifiée en permanence</th>
+     <td>vitesse roue gauche + vitesse roue droite = 2 × vitesse du boîtier</td></tr>
+</table>
+<p class="leg">Cette relation est imposée par la géométrie des engrenages, quelles que
+soient les conditions de roulage.</p>
+<div id="questions"></div>
+<div id="resultat" style="display:none"></div>
+<div class="centre"><button class="btn" id="rendre">Rendre ma copie</button></div>
+<div id="resultat"></div>
+</main>
+<script>
+'use strict';
+function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+function nb(v){return parseFloat(String(v||'').replace(',','.'));}
+const Q=[
+ {n:'1',pts:4,t:'Vérifie la règle du document 3 sur la ligne « virage léger » du document 2.',
+  champs:[{id:'a1',l:'Somme des deux roues, en tr/min :',rep:200,tol:3},
+          {id:'b1',l:'Double de la vitesse du boîtier, en tr/min :',rep:200,tol:3}],
+  corr:'90 + 110 = <b>200</b>, et 2 × 100 = <b>200</b>. La règle est vérifiée : ce que l’une des roues perd, l’autre le gagne exactement.'},
+ {n:'2',pts:5,t:'Complète le tableau : quelle est la vitesse de la roue extérieure en virage serré ?',
+  aide:'utilise la relation du document 3',
+  champs:[{id:'a2',l:'Vitesse de la roue extérieure, en tr/min :',rep:120,tol:3}],
+  corr:'La somme doit valoir 200, donc 200 − 80 = <b>120 tr/min</b>. Plus le virage est serré, plus l’écart entre les deux roues se creuse.'},
+ {n:'3',pts:4,t:'Explique pourquoi les deux roues d’un même essieu ne peuvent pas tourner à la même vitesse en virage.',
+  redac:{id:'r3',cles:['exterieure','parcourt','plus','chemin','distance','grand','rayon','virage','glisser','patine','use']},
+  corr:'La roue extérieure parcourt un <b>chemin plus long</b> que l’intérieure pendant le même temps : elle doit donc tourner plus vite. Sans différentiel, l’une des deux glisserait, usant les pneus et rendant la direction difficile.'},
+ {n:'4',pts:4,t:'Une roue se retrouve sur le verglas et patine. Calcule la vitesse de l’autre roue et explique ce qui se passe.',
+  champs:[{id:'a4',l:'Si la roue sur le verglas tourne à 200 tr/min, l’autre tourne à :',rep:0,tol:3}],
+  redac:{id:'r4',cles:['immobile','arret','bloque','zero','patine','tout','couple','avance','pas','coince']},
+  corr:'200 − 200 = <b>0 tr/min</b> : l’autre roue est <b>immobile</b>. Toute la rotation part dans la roue qui patine, et la voiture n’avance pas. C’est le défaut du différentiel simple.'},
+ {n:'5',pts:4,t:'À l’aide du document 1, explique le rôle du satellite dans ce mécanisme.',
+  redac:{id:'r5',cles:['balance','repartit','equilibre','tourne','sur lui','compense','ecart','relie','deux','planetaire','transmet']},
+  corr:'Le satellite se comporte comme une <b>balance</b> : entraîné par le boîtier, il relie les deux planétaires. En ligne droite il ne tourne pas sur lui-même. En virage, il pivote et <b>compense</b> exactement ce que l’une des roues perd par ce que l’autre gagne.'},
+ {n:'6',pts:4,t:'Propose une solution au problème du verglas, et indique son inconvénient.',
+  redac:{id:'r6',cles:['blocage','bloquer','differentiel','glissement','limite','antipatinage','frein','electronique','solidaire','virage','usure','cout','complexe']},
+  corr:'On peut <b>bloquer le différentiel</b>, ou utiliser un antipatinage qui freine la roue qui patine. Les deux roues tournent alors ensemble et la voiture repart. <b>Inconvénient</b> : différentiel bloqué, les roues ne peuvent plus tourner à des vitesses différentes — il faut le débloquer en virage, sous peine d’user les pneus et de durcir la direction.'},
+];
+const z=document.getElementById('questions');
+Q.forEach(q=>{
+ const d=document.createElement('div'); d.className='q';
+ let html='<div class="num"><b>Question '+q.n+'</b>'+
+  (q.cours? '<button type="button" class="mc" data-mc="'+q.cours+'">Mini-cours</button>':'')+
+  '<span>'+q.pts+' points</span></div><p>'+q.t+'</p>';
+ if(q.aide) html+='<div class="aide">'+q.aide+'</div>';
+ (q.champs||[]).forEach(c=>{ html+='<div style="margin-top:8px;font-size:14.5px">'+c.l+
+   ' <input class="court" id="'+c.id+'" autocomplete="off"></div>'; });
+ if(q.redac) html+='<textarea id="'+q.redac.id+'" placeholder="rédige ta réponse en une ou deux phrases"></textarea>';
+ d.innerHTML=html; z.appendChild(d);
+});
+document.getElementById('rendre').addEventListener('click',()=>{
+ let total=0, max=0, det='';
+ Q.forEach(q=>{
+  max+=q.pts;
+  let obtenu=0, parts=0, ok=0;
+  (q.champs||[]).forEach(c=>{
+   parts++;
+   const v=document.getElementById(c.id).value;
+   const bon = typeof c.rep==='number'
+     ? (isFinite(nb(v)) && Math.abs(nb(v)-c.rep)<=c.tol)
+     : c.rep.some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+   if(bon)ok++;
+  });
+  if(q.redac){ parts++;
+   const v=norm(document.getElementById(q.redac.id).value);
+   if(v.length>14 && q.redac.cles.some(k=>v.includes(k))) ok++;
+  }
+  obtenu = Math.round(q.pts*ok/parts*2)/2;
+  total+=obtenu;
+  det+='<div class="corr"><span class="pts">'+obtenu+' / '+q.pts+'</span><b>Question '+q.n+'</b><br>'+q.corr+'</div>';
+ });
+ const r=document.getElementById('resultat');
+ r.innerHTML='<h2>Copie rendue</h2><div class="note">'+total+' / '+max+'</div>'+
+  '<p style="text-align:center;font-size:14px;color:#64748b;margin-bottom:12px">Corrigé détaillé — compare avec ce que tu as écrit sur ton cahier</p>'+det;
+ r.style.display='block';
+ document.getElementById('rendre').disabled=true;
+ r.scrollIntoView({behavior:'smooth'});
+});
+
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FL2(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(10,ep*2.6), W=Math.max(8,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+(function(){
+ const c=document.getElementById('d1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,280);
+ const y=150;
+ /* deux cremailleres = les deux planetaires */
+ [[200,'roue gauche','#0e7490'],[660,'roue droite','#ea580c']].forEach(function(q){
+  c.fillStyle='#fff'; c.strokeStyle=q[2]; c.lineWidth=2.4;
+  c.beginPath(); c.rect(q[0]-34,y-90,68,180); c.fill(); c.stroke();
+  for(let k=-84;k<84;k+=14){
+   c.beginPath(); c.moveTo(q[0]+34,y+k); c.lineTo(q[0]+44,y+k+5); c.stroke();
+  }
+  T2(c,q[1],q[0],y+112,12.5,q[2]);
+ });
+ /* satellite : la balance */
+ c.strokeStyle='#16a34a'; c.lineWidth=9; c.lineCap='butt';
+ c.beginPath(); c.moveTo(244,y-30); c.lineTo(616,y+30); c.stroke();
+ c.fillStyle='#16a34a'; c.beginPath(); c.arc(430,y,11,0,6.284); c.fill();
+ T2(c,'satellite (la balance)',430,y-52,12.5,'#16a34a');
+ /* boitier */
+ c.strokeStyle='#7c3aed'; c.lineWidth=3; c.setLineDash([7,5]);
+ /* boîtier raccourci : il englobait les légendes du bas */
+ c.beginPath(); c.rect(150,y-112,560,184); c.stroke(); c.setLineDash([]);
+ T2(c,'le boîtier entraîne le satellite',430,y-124,12.5,'#7c3aed');
+ FL2(c,430,y+62,430,y+28,3.2,'#7c3aed');
+ T2(c,'somme des deux vitesses = 2 × vitesse du boîtier',430,258,13,'#5b544a');
+})();
+</script>
+</body>
+</html>

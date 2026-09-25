@@ -1,0 +1,211 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sujet type DNB — La fermeture éclair · ESTIC</title><style>
+:root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(900px,100%);padding:14px 14px 50px}
+.entete{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:14px 18px;margin-bottom:14px}
+.entete h1{font-size:20px;color:var(--accf);margin-bottom:4px}
+.entete .info{font-size:13.5px;color:#64748b;line-height:1.7}
+.consignes{background:#eff6ff;border-left:5px solid var(--acc);border-radius:10px;padding:11px 15px;font-size:14px;line-height:1.75;margin-bottom:16px}
+.doc{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.doc h3{font-size:14px;color:var(--accf);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.doc canvas{width:100%;display:block;border-radius:8px;background:#fdfdfe;border:1px solid #e2e8f0}
+.doc table{width:100%;border-collapse:collapse;font-size:14px}
+.doc th,.doc td{border:1px solid #cbd5e1;padding:7px 9px;text-align:left}
+.doc th{background:#f1f5f9}
+.q{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q .num{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.q .num b{font-size:16px;color:var(--accf)}
+.q .num span{font-size:13px;font-weight:800;color:#64748b}
+.q p{font-size:15px;line-height:1.7}
+.q .aide{font-size:13px;color:#64748b;margin-top:5px;font-style:italic}
+.q input,.q textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px;font-size:15px;font-family:inherit;margin-top:9px}
+.q textarea{min-height:74px;resize:vertical}
+.q .court{width:150px;text-align:center;font-weight:700}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;padding:13px 28px;cursor:pointer;font-family:inherit}
+.btn.sec{background:#e2e8f0;color:var(--encre)}
+.centre{text-align:center;margin:18px 0}
+#resultat{display:none;background:#fff;border:2px solid var(--acc);border-radius:14px;padding:18px;margin-top:16px}
+#resultat h2{color:var(--accf);font-size:20px;text-align:center}
+.note{text-align:center;font-size:44px;font-weight:900;color:var(--acc);margin:6px 0}
+.corr{border-left:4px solid #16a34a;background:#f0fdf4;border-radius:8px;padding:10px 14px;margin:9px 0;font-size:14.5px;line-height:1.7}
+.corr b{color:#15803d}
+.pts{float:right;font-weight:900;color:#64748b;font-size:13px}
+.q .mc{background:#fff7ed;color:#c2410c;border:1.5px solid #fdba74;border-radius:8px;
+ padding:4px 11px;font:700 12px 'Segoe UI',sans-serif;cursor:pointer;margin-left:10px}
+.q .mc:hover{background:#ffedd5}
+@media print{.q .mc{display:none}}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="logo_estic.png">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<div class="entete">
+  <h1>La fermeture éclair</h1>
+  <div class="info"><b>Partie technologie</b> · durée conseillée : 30 minutes · noté sur 25 points<br>
+  Support : une fermeture éclair de blouson</div>
+</div>
+<div class="consignes">Tu disposes de trois documents. Réponds aux six questions : certaines demandent une
+<b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
+Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
+
+<div class="doc"><h2>Document 1 — Le curseur et les dents</h2>
+<canvas id="d1" width="860" height="280"></canvas>
+<p class="leg">Le curseur ne contient aucune pièce mobile. Sa forme en Y et son coin
+central guident les dents : c’est une came.</p>
+
+<h2>Document 2 — Caractéristiques de la fermeture</h2>
+<table>
+ <tr><th>Longueur de la fermeture</th><td>60 cm</td></tr>
+ <tr><th>Nombre de dents par centimètre, sur chaque rangée</th><td>5</td></tr>
+ <tr><th>Effort de traction à supporter</th><td>120 N, réparti sur toute la longueur</td></tr>
+ <tr><th>Matière des dents</th><td>alliage de zinc moulé</td></tr>
+</table>
+
+<h2>Document 3 — Trois systèmes de fermeture</h2>
+<table>
+ <tr><th>Système</th><th>Ouverture</th><th>Étanchéité</th><th>Durée de vie</th></tr>
+ <tr><td>Fermeture éclair</td><td>d’un seul geste</td><td>bonne</td><td>longue si entretenue</td></tr>
+ <tr><td>Boutons</td><td>un par un</td><td>moyenne</td><td>très longue</td></tr>
+ <tr><td>Bande auto-agrippante</td><td>d’un seul geste</td><td>faible</td><td>courte, s’encrasse</td></tr>
+</table>
+<div id="questions"></div>
+<div id="resultat" style="display:none"></div>
+<div class="centre"><button class="btn" id="rendre">Rendre ma copie</button></div>
+<div id="resultat"></div>
+</main>
+<script>
+'use strict';
+function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+function nb(v){return parseFloat(String(v||'').replace(',','.'));}
+const Q=[
+ {n:'1',pts:4,t:'À l’aide du document 2, calcule le nombre total de dents sur une rangée, puis le nombre d’emboîtements quand la fermeture est fermée.',
+  champs:[{id:'a1',l:'Nombre de dents sur une rangée :',rep:300,tol:5},
+          {id:'b1',l:'Nombre d’emboîtements :',rep:300,tol:5}],
+  corr:'60 × 5 = <b>300 dents</b> par rangée. Chaque dent d’un côté s’emboîte avec sa voisine d’en face : il y a donc <b>300 emboîtements</b>.'},
+ {n:'2',pts:4,t:'À l’aide du document 1, explique comment le curseur peut fermer dans un sens et ouvrir dans l’autre, alors qu’il ne contient aucune pièce mobile.',
+  redac:{id:'r2',cles:['forme','coin','central','sens','couloir','rassemble','separe','came','guide','fixe','traverse']},
+  corr:'C’est sa <b>forme</b> qui travaille. Dans un sens, les deux couloirs du Y convergent et rassemblent les dents. Dans l’autre, le <b>coin central</b> s’insère entre elles et les sépare. La forme ne change jamais : on appelle cela une <b>came</b>.'},
+ {n:'3',pts:4,t:'Explique pourquoi une fermeture fermée résiste à la traction, alors qu’une dent seule ne tient rien.',
+  redac:{id:'r3',cles:['bosse','creux','emboit','voisine','prisonniere','nombre','300','ecarter','lateral','chacune','reparti']},
+  corr:'Chaque dent possède une <b>bosse</b> et un <b>creux</b>. La bosse de l’une est prisonnière du creux de sa voisine : elles ne peuvent plus s’écarter. La solidité vient du <b>nombre</b> d’emboîtements, pas de la résistance d’une dent isolée.'},
+ {n:'4',pts:5,t:'L’effort de 120 N se répartit sur les 300 emboîtements. Calcule l’effort supporté par un seul emboîtement.',
+  aide:'effort par emboîtement = effort total ÷ nombre d’emboîtements',
+  champs:[{id:'a4',l:'Effort par emboîtement, en newtons :',rep:0.4,tol:0.05}],
+  corr:'120 ÷ 300 = <b>0,4 N</b>, soit le poids d’une quarantaine de grammes. Chaque dent est très peu sollicitée : c’est tout l’intérêt de la répartition.'},
+ {n:'5',pts:4,t:'Une dent est tordue au milieu de la fermeture. Explique pourquoi la fermeture entière devient inutilisable.',
+  redac:{id:'r4',cles:['curseur','passe','bloque','coince','chaine','suite','toutes','arret','ouvre','derriere','defaut']},
+  corr:'Le curseur doit faire passer les dents <b>l’une après l’autre</b>. Une dent tordue bloque son passage : tout ce qui se trouve au-delà reste inaccessible. Un seul défaut sur 300 suffit à rendre l’ensemble inutilisable — c’est la faiblesse d’un système en série.'},
+ {n:'6',pts:4,t:'À l’aide du document 3, indique dans quel cas tu conseillerais une bande auto-agrippante plutôt qu’une fermeture éclair.',
+  redac:{id:'r6',cles:['enfant','rapide','simple','sans','apprentissage','motricite','chaussure','manipul','facile','peu','porte','usage']},
+  corr:'Pour un usage où la <b>simplicité de manipulation</b> prime sur la durée de vie et l’étanchéité : chaussures d’enfant, attelle médicale, vêtement à enfiler vite. La bande s’ouvre sans précision ni force, mais elle s’encrasse et se fatigue rapidement.'},
+];
+const z=document.getElementById('questions');
+Q.forEach(q=>{
+ const d=document.createElement('div'); d.className='q';
+ let html='<div class="num"><b>Question '+q.n+'</b>'+
+  (q.cours? '<button type="button" class="mc" data-mc="'+q.cours+'">Mini-cours</button>':'')+
+  '<span>'+q.pts+' points</span></div><p>'+q.t+'</p>';
+ if(q.aide) html+='<div class="aide">'+q.aide+'</div>';
+ (q.champs||[]).forEach(c=>{ html+='<div style="margin-top:8px;font-size:14.5px">'+c.l+
+   ' <input class="court" id="'+c.id+'" autocomplete="off"></div>'; });
+ if(q.redac) html+='<textarea id="'+q.redac.id+'" placeholder="rédige ta réponse en une ou deux phrases"></textarea>';
+ d.innerHTML=html; z.appendChild(d);
+});
+document.getElementById('rendre').addEventListener('click',()=>{
+ let total=0, max=0, det='';
+ Q.forEach(q=>{
+  max+=q.pts;
+  let obtenu=0, parts=0, ok=0;
+  (q.champs||[]).forEach(c=>{
+   parts++;
+   const v=document.getElementById(c.id).value;
+   const bon = typeof c.rep==='number'
+     ? (isFinite(nb(v)) && Math.abs(nb(v)-c.rep)<=c.tol)
+     : c.rep.some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+   if(bon)ok++;
+  });
+  if(q.redac){ parts++;
+   const v=norm(document.getElementById(q.redac.id).value);
+   if(v.length>14 && q.redac.cles.some(k=>v.includes(k))) ok++;
+  }
+  obtenu = Math.round(q.pts*ok/parts*2)/2;
+  total+=obtenu;
+  det+='<div class="corr"><span class="pts">'+obtenu+' / '+q.pts+'</span><b>Question '+q.n+'</b><br>'+q.corr+'</div>';
+ });
+ const r=document.getElementById('resultat');
+ r.innerHTML='<h2>Copie rendue</h2><div class="note">'+total+' / '+max+'</div>'+
+  '<p style="text-align:center;font-size:14px;color:#64748b;margin-bottom:12px">Corrigé détaillé — compare avec ce que tu as écrit sur ton cahier</p>'+det;
+ r.style.display='block';
+ document.getElementById('rendre').disabled=true;
+ r.scrollIntoView({behavior:'smooth'});
+});
+
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FL2(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(10,ep*2.6), W=Math.max(8,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+(function(){
+ const c=document.getElementById('d1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,280);
+ function dent(x,y,s,coul){
+  const L=18, e=10;
+  c.fillStyle=coul; c.strokeStyle='#334155'; c.lineWidth=1.4;
+  c.beginPath();
+  c.moveTo(x,y-L/2); c.lineTo(x+s*e,y-L/2); c.lineTo(x+s*e,y-4);
+  c.lineTo(x+s*(e+7),y); c.lineTo(x+s*e,y+4); c.lineTo(x+s*e,y+L/2);
+  c.lineTo(x,y+L/2); c.lineTo(x,y+3); c.lineTo(x-s*5,y); c.lineTo(x,y-3);
+  c.closePath(); c.fill(); c.stroke();
+ }
+ const cx=300;
+ for(let i=0;i<7;i++){
+  const y=40+i*20;
+  dent(cx-30,y,1,'#94a3b8'); dent(cx+30,y,-1,'#cbd5e1');
+ }
+ for(let i=0;i<7;i++){
+  const y=186+i*20, s=(i%2===0)?1:-1;
+  dent(cx-s*3,y,s,s>0?'#0e7490':'#ea580c');
+ }
+ /* curseur */
+ c.strokeStyle='#16a34a'; c.lineWidth=4;
+ c.beginPath(); c.moveTo(cx-36,cy0()+34); c.lineTo(cx-12,cy0()-4); c.lineTo(cx-12,cy0()-34); c.stroke();
+ c.beginPath(); c.moveTo(cx+36,cy0()+34); c.lineTo(cx+12,cy0()-4); c.lineTo(cx+12,cy0()-34); c.stroke();
+ c.fillStyle='#16a34a';
+ c.beginPath(); c.moveTo(cx,cy0()+30); c.lineTo(cx-11,cy0()); c.lineTo(cx+11,cy0()); c.closePath(); c.fill();
+ c.strokeStyle='#16a34a'; c.lineWidth=3;
+ c.beginPath(); c.moveTo(cx+30,cy0()+12); c.lineTo(cx+54,cy0()+12); c.stroke();
+ c.beginPath(); c.roundRect(cx+54,cy0()+2,22,20,5); c.stroke();
+ function cy0(){ return 168; }
+ FL2(c,cx+110,204,cx+110,110,3.4,'#16a34a');
+ T2(c,'on tire',cx+126,160,12.5,'#16a34a','left');
+ T2(c,'dents SÉPARÉES',cx,26,12.5,'#94a3b8');
+ T2(c,'dents EMBOÎTÉES',cx,338>280?264:264,12.5,'#0e7490');
+ T2(c,'le coin central du curseur rassemble les dents',620,60,12.5,'#5b544a');
+ T2(c,'chaque dent a une BOSSE et un CREUX',620,84,12.5,'#5b544a');
+ T2(c,'la bosse de l’une entre dans le creux de sa voisine',620,108,12.5,'#5b544a');
+})();
+</script>
+</body>
+</html>

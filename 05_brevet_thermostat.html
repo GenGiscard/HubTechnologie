@@ -1,0 +1,196 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sujet type DNB — Le thermostat de radiateur · ESTIC</title><style>
+:root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(900px,100%);padding:14px 14px 50px}
+.entete{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:14px 18px;margin-bottom:14px}
+.entete h1{font-size:20px;color:var(--accf);margin-bottom:4px}
+.entete .info{font-size:13.5px;color:#64748b;line-height:1.7}
+.consignes{background:#eff6ff;border-left:5px solid var(--acc);border-radius:10px;padding:11px 15px;font-size:14px;line-height:1.75;margin-bottom:16px}
+.doc{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.doc h3{font-size:14px;color:var(--accf);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.doc canvas{width:100%;display:block;border-radius:8px;background:#fdfdfe;border:1px solid #e2e8f0}
+.doc table{width:100%;border-collapse:collapse;font-size:14px}
+.doc th,.doc td{border:1px solid #cbd5e1;padding:7px 9px;text-align:left}
+.doc th{background:#f1f5f9}
+.q{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q .num{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.q .num b{font-size:16px;color:var(--accf)}
+.q .num span{font-size:13px;font-weight:800;color:#64748b}
+.q p{font-size:15px;line-height:1.7}
+.q .aide{font-size:13px;color:#64748b;margin-top:5px;font-style:italic}
+.q input,.q textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px;font-size:15px;font-family:inherit;margin-top:9px}
+.q textarea{min-height:74px;resize:vertical}
+.q .court{width:150px;text-align:center;font-weight:700}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;padding:13px 28px;cursor:pointer;font-family:inherit}
+.btn.sec{background:#e2e8f0;color:var(--encre)}
+.centre{text-align:center;margin:18px 0}
+#resultat{display:none;background:#fff;border:2px solid var(--acc);border-radius:14px;padding:18px;margin-top:16px}
+#resultat h2{color:var(--accf);font-size:20px;text-align:center}
+.note{text-align:center;font-size:44px;font-weight:900;color:var(--acc);margin:6px 0}
+.corr{border-left:4px solid #16a34a;background:#f0fdf4;border-radius:8px;padding:10px 14px;margin:9px 0;font-size:14.5px;line-height:1.7}
+.corr b{color:#15803d}
+.pts{float:right;font-weight:900;color:#64748b;font-size:13px}
+.q .mc{background:#fff7ed;color:#c2410c;border:1.5px solid #fdba74;border-radius:8px;
+ padding:4px 11px;font:700 12px 'Segoe UI',sans-serif;cursor:pointer;margin-left:10px}
+.q .mc:hover{background:#ffedd5}
+@media print{.q .mc{display:none}}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="logo_estic.png">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<div class="entete">
+  <h1>Le thermostat de radiateur</h1>
+  <div class="info"><b>Partie technologie</b> · durée conseillée : 30 minutes · noté sur 25 points<br>
+  Support : un thermostat de radiateur à cire</div>
+</div>
+<div class="consignes">Tu disposes de trois documents. Réponds aux six questions : certaines demandent une
+<b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
+Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
+
+<div class="doc"><h2>Document 1 — L’intérieur du thermostat</h2>
+<canvas id="d1" width="860" height="270"></canvas>
+<p class="leg">La cire se dilate en chauffant et pousse le pointeau, qui ferme le
+robinet. En refroidissant, le ressort le rouvre.</p>
+
+<h2>Document 2 — Ouverture du robinet selon la température</h2>
+<table>
+ <tr><th>Température de la pièce</th><td>17 °C</td><td>18 °C</td><td>19 °C</td><td>20 °C</td><td>21 °C</td></tr>
+ <tr><th>Ouverture du robinet</th><td>100 %</td><td>100 %</td><td>50 %</td><td>0 %</td><td>0 %</td></tr>
+</table>
+<p class="leg">Relevé effectué avec le thermostat réglé sur le repère 3, soit 20 °C.</p>
+
+<h2>Document 3 — Facture de chauffage du logement</h2>
+<table>
+ <tr><th>Dépense annuelle de chauffage</th><td>1 400 €</td></tr>
+ <tr><th>Économie obtenue en baissant la consigne de 1 °C</th><td>7 %</td></tr>
+ <tr><th>Température recommandée dans les pièces de vie</th><td>19 °C</td></tr>
+</table>
+<div id="questions"></div>
+<div id="resultat" style="display:none"></div>
+<div class="centre"><button class="btn" id="rendre">Rendre ma copie</button></div>
+<div id="resultat"></div>
+</main>
+<script>
+'use strict';
+function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+function nb(v){return parseFloat(String(v||'').replace(',','.'));}
+const Q=[
+ {n:'1',pts:4,t:'À l’aide du document 1, indique quelle pièce mesure la température et quelle pièce ferme le robinet.',
+  champs:[{id:'a1',l:'La pièce qui mesure est :',rep:['cire','la cire','capsule','capsule de cire','la capsule']},
+          {id:'b1',l:'La pièce qui ferme le robinet est :',rep:['pointeau','le pointeau','clapet','le clapet']}],
+  corr:'C’est la <b>capsule de cire</b> qui mesure : sa dilatation est la mesure. C’est le <b>pointeau</b> qu’elle pousse qui ferme le robinet. Capteur et actionneur sont ici purement mécaniques, sans aucune électronique.'},
+ {n:'2',pts:4,t:'À l’aide du document 2, décris ce qui arrive au robinet lorsque la pièce passe de 17 °C à 21 °C.',
+  redac:{id:'r2',cles:['ferme','progressif','peu a peu','50','diminue','ouvert','100','0','consigne','20']},
+  corr:'Le robinet reste <b>grand ouvert</b> jusqu’à 18 °C, se ferme <b>progressivement</b> ensuite — 50 % à 19 °C — et se ferme complètement à 20 °C, la consigne. La fermeture n’est pas brutale : c’est ce qui évite les à-coups de température.'},
+ {n:'3',pts:5,t:'Le logement est chauffé à 20 °C. En suivant la recommandation du document 3, calcule l’économie annuelle réalisée.',
+  aide:'commence par la baisse de température, puis applique le pourcentage',
+  champs:[{id:'a3',l:'Baisse de température, en degrés :',rep:1,tol:0.2},
+          {id:'b3',l:'Économie annuelle, en euros :',rep:98,tol:5}],
+  corr:'Passer de 20 à 19 °C représente <b>1 °C</b> de moins. 1 400 × 7 ÷ 100 = <b>98 €</b> par an, pour un degré qu’on ne sent presque pas.'},
+ {n:'4',pts:4,t:'Beaucoup de personnes mettent le thermostat sur 5 pour chauffer plus vite. Explique pourquoi cela ne fonctionne pas.',
+  redac:{id:'r4',cles:['deja','ouvert','maximum','grand','froid','vitesse','meme','tard','arrete','gaspill','depasse','consigne']},
+  corr:'Tant que la pièce est froide, le robinet est <b>déjà grand ouvert</b>, quelle que soit la consigne. Le chauffage arrive donc à la MÊME vitesse. Mettre 5 ne fait que <b>retarder l’arrêt</b> : la pièce dépasse la température voulue et on gaspille.'},
+ {n:'5',pts:4,t:'Un rideau recouvre le thermostat. Explique la conséquence sur la température de la pièce.',
+  redac:{id:'r5',cles:['air','chaud','piege','radiateur','lit','pas','piece','ferme','trop tot','froide','fausse']},
+  corr:'La cire ne lit plus la température de la pièce, mais celle de l’<b>air chaud piégé</b> derrière le rideau. Elle croit la consigne atteinte et ferme <b>trop tôt</b> : la pièce reste froide alors que le thermostat se juge satisfait.'},
+ {n:'6',pts:4,t:'Explique pourquoi ce système fonctionne en boucle fermée, sans aucune électronique.',
+  redac:{id:'r6',cles:['mesure','agit','boucle','retour','influence','chauffe','temperature','change','cire','seule','sans','courant','pile']},
+  corr:'La cire <b>mesure ET agit</b> : elle règle le débit d’eau chaude, qui modifie la température, qui modifie à son tour la dilatation de la cire. L’effet revient sur la cause : c’est une <b>boucle fermée</b>. La physique du matériau remplace le capteur, le calculateur et l’actionneur.'},
+];
+const z=document.getElementById('questions');
+Q.forEach(q=>{
+ const d=document.createElement('div'); d.className='q';
+ let html='<div class="num"><b>Question '+q.n+'</b>'+
+  (q.cours? '<button type="button" class="mc" data-mc="'+q.cours+'">Mini-cours</button>':'')+
+  '<span>'+q.pts+' points</span></div><p>'+q.t+'</p>';
+ if(q.aide) html+='<div class="aide">'+q.aide+'</div>';
+ (q.champs||[]).forEach(c=>{ html+='<div style="margin-top:8px;font-size:14.5px">'+c.l+
+   ' <input class="court" id="'+c.id+'" autocomplete="off"></div>'; });
+ if(q.redac) html+='<textarea id="'+q.redac.id+'" placeholder="rédige ta réponse en une ou deux phrases"></textarea>';
+ d.innerHTML=html; z.appendChild(d);
+});
+document.getElementById('rendre').addEventListener('click',()=>{
+ let total=0, max=0, det='';
+ Q.forEach(q=>{
+  max+=q.pts;
+  let obtenu=0, parts=0, ok=0;
+  (q.champs||[]).forEach(c=>{
+   parts++;
+   const v=document.getElementById(c.id).value;
+   const bon = typeof c.rep==='number'
+     ? (isFinite(nb(v)) && Math.abs(nb(v)-c.rep)<=c.tol)
+     : c.rep.some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+   if(bon)ok++;
+  });
+  if(q.redac){ parts++;
+   const v=norm(document.getElementById(q.redac.id).value);
+   if(v.length>14 && q.redac.cles.some(k=>v.includes(k))) ok++;
+  }
+  obtenu = Math.round(q.pts*ok/parts*2)/2;
+  total+=obtenu;
+  det+='<div class="corr"><span class="pts">'+obtenu+' / '+q.pts+'</span><b>Question '+q.n+'</b><br>'+q.corr+'</div>';
+ });
+ const r=document.getElementById('resultat');
+ r.innerHTML='<h2>Copie rendue</h2><div class="note">'+total+' / '+max+'</div>'+
+  '<p style="text-align:center;font-size:14px;color:#64748b;margin-bottom:12px">Corrigé détaillé — compare avec ce que tu as écrit sur ton cahier</p>'+det;
+ r.style.display='block';
+ document.getElementById('rendre').disabled=true;
+ r.scrollIntoView({behavior:'smooth'});
+});
+
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FL2(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(10,ep*2.6), W=Math.max(8,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+(function(){
+ const c=document.getElementById('d1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,270);
+ const x=360, y=150;
+ c.fillStyle='#f1f5f9'; c.strokeStyle='#475569'; c.lineWidth=2.6;
+ c.beginPath(); c.roundRect(x-56,y-104,112,124,12); c.fill(); c.stroke();
+ c.fillStyle='#fbbf24'; c.strokeStyle='#b45309'; c.lineWidth=2.2;
+ c.beginPath(); c.roundRect(x-38,y-96,76,34,7); c.fill(); c.stroke();
+ c.strokeStyle='#64748b'; c.lineWidth=2.2;
+ for(let k=0;k<4;k++){ c.beginPath(); c.moveTo(x-22,y-50+k*9); c.lineTo(x+22,y-45+k*9); c.stroke(); }
+ c.strokeStyle='#334155'; c.lineWidth=8;
+ c.beginPath(); c.moveTo(x,y-62); c.lineTo(x,y+4); c.stroke();
+ c.fillStyle='#334155';
+ c.beginPath(); c.moveTo(x-13,y+4); c.lineTo(x+13,y+4); c.lineTo(x,y+24); c.closePath(); c.fill();
+ c.strokeStyle='#475569'; c.lineWidth=10;
+ c.beginPath(); c.moveTo(x-110,y+44); c.lineTo(x-18,y+44); c.stroke();
+ c.beginPath(); c.moveTo(x+18,y+44); c.lineTo(x+110,y+44); c.stroke();
+ c.strokeStyle='#ef4444'; c.lineWidth=7; c.lineCap='round';
+ c.beginPath(); c.moveTo(x-104,y+44); c.lineTo(x+104,y+44); c.stroke(); c.lineCap='butt';
+ T2(c,'capsule de cire',x-72,y-80,12.5,'#b45309','right');
+ T2(c,'ressort de rappel',x-72,y-36,12.5,'#64748b','right');
+ T2(c,'pointeau',x+72,y-28,12.5,'#334155','left');
+ T2(c,'arrivée d’eau chaude',x-110,y+72,12.5,'#b91c1c','left');
+ T2(c,'la cire se dilate en chauffant et pousse le pointeau',430,238,12.5,'#5b544a');
+})();
+</script>
+</body>
+</html>

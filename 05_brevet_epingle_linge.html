@@ -1,0 +1,210 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sujet type DNB — L’épingle à linge · ESTIC</title><style>
+:root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
+
+.estic-bar{width:100%;display:flex;align-items:center;gap:14px;background:#1e293b;border-bottom:3px solid var(--neon);padding:8px 20px}
+
+.estic-bar img{height:36px}
+
+.estic-bar .id b{color:var(--neon);font-size:14px}
+
+.estic-bar .id span{display:block;font-size:11px;color:#94a3b8}
+
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#94a3b8}
+main{width:min(900px,100%);padding:14px 14px 50px}
+.entete{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:14px 18px;margin-bottom:14px}
+.entete h1{font-size:20px;color:var(--accf);margin-bottom:4px}
+.entete .info{font-size:13.5px;color:#64748b;line-height:1.7}
+.consignes{background:#eff6ff;border-left:5px solid var(--acc);border-radius:10px;padding:11px 15px;font-size:14px;line-height:1.75;margin-bottom:16px}
+.doc{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.doc h3{font-size:14px;color:var(--accf);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.doc canvas{width:100%;display:block;border-radius:8px;background:#fdfdfe;border:1px solid #e2e8f0}
+.doc table{width:100%;border-collapse:collapse;font-size:14px}
+.doc th,.doc td{border:1px solid #cbd5e1;padding:7px 9px;text-align:left}
+.doc th{background:#f1f5f9}
+.q{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q .num{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.q .num b{font-size:16px;color:var(--accf)}
+.q .num span{font-size:13px;font-weight:800;color:#64748b}
+.q p{font-size:15px;line-height:1.7}
+.q .aide{font-size:13px;color:#64748b;margin-top:5px;font-style:italic}
+.q input,.q textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px;font-size:15px;font-family:inherit;margin-top:9px}
+.q textarea{min-height:74px;resize:vertical}
+.q .court{width:150px;text-align:center;font-weight:700}
+.btn{border:none;border-radius:11px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;padding:13px 28px;cursor:pointer;font-family:inherit}
+.btn.sec{background:#e2e8f0;color:var(--encre)}
+.centre{text-align:center;margin:18px 0}
+#resultat{display:none;background:#fff;border:2px solid var(--acc);border-radius:14px;padding:18px;margin-top:16px}
+#resultat h2{color:var(--accf);font-size:20px;text-align:center}
+.note{text-align:center;font-size:44px;font-weight:900;color:var(--acc);margin:6px 0}
+.corr{border-left:4px solid #16a34a;background:#f0fdf4;border-radius:8px;padding:10px 14px;margin:9px 0;font-size:14.5px;line-height:1.7}
+.corr b{color:#15803d}
+.pts{float:right;font-weight:900;color:#64748b;font-size:13px}
+.q .mc{background:#fff7ed;color:#c2410c;border:1.5px solid #fdba74;border-radius:8px;
+ padding:4px 11px;font:700 12px 'Segoe UI',sans-serif;cursor:pointer;margin-left:10px}
+.q .mc:hover{background:#ffedd5}
+@media print{.q .mc{display:none}}
+</style></head><body>
+<div class="estic-bar">
+  <img alt="Logo ESTIC" src="logo_estic.png">
+  <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+  <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<main>
+<div class="entete">
+  <h1>L’épingle à linge</h1>
+  <div class="info"><b>Partie technologie</b> · durée conseillée : 30 minutes · noté sur 25 points<br>
+  Support : une épingle à linge en bois</div>
+</div>
+<div class="consignes">Tu disposes de trois documents. Réponds aux six questions : certaines demandent une
+<b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
+Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
+
+<div class="doc"><h2>Document 1 — L’épingle vue de côté</h2>
+<canvas id="d1" width="860" height="270"></canvas>
+<p class="leg">Le ressort maintient les deux branches serrées. L’axe du ressort sert
+de point d’appui. Les longueurs sont mesurées depuis cet axe.</p>
+
+<h2>Document 2 — Mesures relevées</h2>
+<table>
+ <tr><th>Distance axe → doigt</th><td>45 mm</td></tr>
+ <tr><th>Distance axe → mâchoire</th><td>12 mm</td></tr>
+ <tr><th>Effort du doigt en usage courant</th><td>8 N</td></tr>
+ <tr><th>Effort nécessaire pour tenir un drap mouillé</th><td>40 N à la mâchoire</td></tr>
+</table>
+
+<h2>Document 3 — Les trois familles de leviers</h2>
+<table>
+ <tr><th>Famille</th><th>Disposition</th><th>Exemple</th></tr>
+ <tr><td>Inter-appui</td><td>l’appui est ENTRE la force et la charge</td><td>tenaille, balançoire</td></tr>
+ <tr><td>Inter-résistant</td><td>la charge est au milieu</td><td>brouette, casse-noix</td></tr>
+ <tr><td>Inter-moteur</td><td>la force est au milieu</td><td>pince à épiler, canne à pêche</td></tr>
+</table>
+<div id="questions"></div>
+<div id="resultat" style="display:none"></div>
+<div class="centre"><button class="btn" id="rendre">Rendre ma copie</button></div>
+<div id="resultat"></div>
+</main>
+<script>
+'use strict';
+function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+function nb(v){return parseFloat(String(v||'').replace(',','.'));}
+const Q=[
+ {n:'1',pts:4,t:'À l’aide du document 1, nomme les trois éléments du levier : le point d’appui, l’endroit où s’applique la force du doigt et celui où agit la mâchoire.',
+  champs:[{id:'a1',l:'Le point d’appui se situe :',rep:['ressort','axe','axe du ressort','au ressort','pivot']}],
+  redac:{id:'r1',cles:['doigt','force','machoire','charge','linge','serre','appui','ressort','entre']},
+  corr:'Le point d’appui est l’<b>axe du ressort</b>. La force du doigt s’applique sur la branche longue, la mâchoire serre le linge de l’autre côté de l’axe. L’appui se trouve donc ENTRE la force et la charge.'},
+ {n:'2',pts:5,t:'Calcule le rapport des deux bras de levier, puis l’effort obtenu à la mâchoire quand le doigt appuie avec 8 N.',
+  aide:'rapport = bras du doigt ÷ bras de la mâchoire',
+  champs:[{id:'a2',l:'Rapport des bras (arrondis au centième) :',rep:3.75,tol:0.12},
+          {id:'b2',l:'Effort à la mâchoire, en newtons :',rep:30,tol:1.5}],
+  corr:'45 ÷ 12 = <b>3,75</b>. L’effort est multiplié d’autant : 8 × 3,75 = <b>30 N</b>. Le levier multiplie la force — mais la mâchoire se déplace 3,75 fois moins que le doigt.'},
+ {n:'3',pts:4,t:'Quel effort le doigt doit-il exercer pour obtenir les 40 N nécessaires au drap mouillé ?',
+  champs:[{id:'a3',l:'Effort du doigt, en newtons (arrondis au dixième) :',rep:10.7,tol:0.5}],
+  corr:'40 ÷ 3,75 ≈ <b>10,7 N</b>. C’est à peine plus qu’un usage courant : le levier fait tout le travail.'},
+ {n:'4',pts:4,t:'À l’aide du document 3, indique à quelle famille de leviers appartient l’épingle à linge, et justifie.',
+  champs:[{id:'a4',l:'Famille :',rep:['inter-appui','interappui','inter appui']}],
+  redac:{id:'r4',cles:['appui','entre','milieu','force','charge','ressort','doigt','machoire']},
+  corr:'C’est un levier <b>inter-appui</b> : le point d’appui, l’axe du ressort, se trouve entre la force du doigt et la charge tenue par la mâchoire. Même famille que la tenaille.'},
+ {n:'5',pts:4,t:'Explique le rôle du ressort. Que se passerait-il s’il était retiré ?',
+  redac:{id:'r5',cles:['serre','maintient','force','ferme','revient','rappel','sans','ouvre','tombe','tient plus','energie']},
+  corr:'Le ressort <b>maintient la fermeture</b> en permanence : c’est lui qui fournit l’effort de serrage quand le doigt a lâché. Sans lui, les deux branches ne seraient plus solidaires et l’épingle ne tiendrait rien.'},
+ {n:'6',pts:4,t:'Le fabricant hésite entre le bois et un plastique. Donne un avantage pour chacun.',
+  redac:{id:'r6',cles:['bois','naturel','recycl','biodegrad','chaud','casse','humidit','plastique','moul','serie','couleur','leger','resiste','eau','moins cher']},
+  corr:'Le <b>bois</b> est renouvelable, biodégradable et agréable en main, mais il se fend et vieillit mal à l’humidité. Le <b>plastique</b> s’injecte en grande série à faible coût, résiste à l’eau et accepte toutes les couleurs, mais il se recycle moins bien et se fragilise au soleil.'},
+];
+const z=document.getElementById('questions');
+Q.forEach(q=>{
+ const d=document.createElement('div'); d.className='q';
+ let html='<div class="num"><b>Question '+q.n+'</b>'+
+  (q.cours? '<button type="button" class="mc" data-mc="'+q.cours+'">Mini-cours</button>':'')+
+  '<span>'+q.pts+' points</span></div><p>'+q.t+'</p>';
+ if(q.aide) html+='<div class="aide">'+q.aide+'</div>';
+ (q.champs||[]).forEach(c=>{ html+='<div style="margin-top:8px;font-size:14.5px">'+c.l+
+   ' <input class="court" id="'+c.id+'" autocomplete="off"></div>'; });
+ if(q.redac) html+='<textarea id="'+q.redac.id+'" placeholder="rédige ta réponse en une ou deux phrases"></textarea>';
+ d.innerHTML=html; z.appendChild(d);
+});
+document.getElementById('rendre').addEventListener('click',()=>{
+ let total=0, max=0, det='';
+ Q.forEach(q=>{
+  max+=q.pts;
+  let obtenu=0, parts=0, ok=0;
+  (q.champs||[]).forEach(c=>{
+   parts++;
+   const v=document.getElementById(c.id).value;
+   const bon = typeof c.rep==='number'
+     ? (isFinite(nb(v)) && Math.abs(nb(v)-c.rep)<=c.tol)
+     : c.rep.some(r=>norm(v)===norm(r)||norm(v).includes(norm(r)));
+   if(bon)ok++;
+  });
+  if(q.redac){ parts++;
+   const v=norm(document.getElementById(q.redac.id).value);
+   if(v.length>14 && q.redac.cles.some(k=>v.includes(k))) ok++;
+  }
+  obtenu = Math.round(q.pts*ok/parts*2)/2;
+  total+=obtenu;
+  det+='<div class="corr"><span class="pts">'+obtenu+' / '+q.pts+'</span><b>Question '+q.n+'</b><br>'+q.corr+'</div>';
+ });
+ const r=document.getElementById('resultat');
+ r.innerHTML='<h2>Copie rendue</h2><div class="note">'+total+' / '+max+'</div>'+
+  '<p style="text-align:center;font-size:14px;color:#64748b;margin-bottom:12px">Corrigé détaillé — compare avec ce que tu as écrit sur ton cahier</p>'+det;
+ r.style.display='block';
+ document.getElementById('rendre').disabled=true;
+ r.scrollIntoView({behavior:'smooth'});
+});
+
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FL2(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(10,ep*2.6), W=Math.max(8,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+(function(){
+ const c=document.getElementById('d1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,270);
+ const ax=430, ay=140;
+ /* deux branches */
+ c.strokeStyle='#b45309'; c.lineWidth=16; c.lineCap='butt';
+ c.beginPath(); c.moveTo(ax-130,ay-26); c.lineTo(ax+190,ay-14); c.stroke();
+ c.beginPath(); c.moveTo(ax-130,ay+26); c.lineTo(ax+190,ay+14); c.stroke();
+ /* ressort */
+ c.strokeStyle='#475569'; c.lineWidth=3;
+ for(let k=0;k<4;k++){
+  c.beginPath(); c.arc(ax,ay,16+k*4,0.5,5.6); c.stroke();
+ }
+ c.fillStyle='#dc2626'; c.beginPath(); c.arc(ax,ay,6,0,6.284); c.fill();
+ /* légendes déportées à DROITE de l'axe : centrées dessous, elles tombaient
+    sur la cotation de 12 mm */
+ T2(c,'axe du ressort',ax+16,ay+52,12.5,'#dc2626','left');
+ T2(c,'point d’appui',ax+16,ay+70,12,'#dc2626','left');
+ /* doigt */
+ FL2(c,ax+160,ay-70,ax+160,ay-26,3.4,'#0e7490');
+ T2(c,'force du doigt',ax+160,ay-82,12.5,'#0e7490');
+ /* linge */
+ c.fillStyle='#bae6fd'; c.strokeStyle='#0284c7'; c.lineWidth=2;
+ c.beginPath(); c.rect(ax-160,ay-14,34,28); c.fill(); c.stroke();
+ T2(c,'le linge',ax-143,ay+52,12.5,'#0284c7');
+ /* cotations */
+ c.strokeStyle='#7c3aed'; c.lineWidth=1.4;
+ c.beginPath(); c.moveTo(ax,ay-96); c.lineTo(ax+160,ay-96); c.stroke();
+ [ax,ax+160].forEach(function(x){ c.beginPath(); c.moveTo(x,ay-102); c.lineTo(x,ay-90); c.stroke(); });
+ T2(c,'45 mm',ax+80,ay-104,12,'#7c3aed');
+ /* cotation remontée : son libellé tombait sur la légende du bas */
+ c.beginPath(); c.moveTo(ax-143,ay+78); c.lineTo(ax,ay+78); c.stroke();
+ [ax-143,ax].forEach(function(x){ c.beginPath(); c.moveTo(x,ay+72); c.lineTo(x,ay+84); c.stroke(); });
+ T2(c,'12 mm',ax-72,ay+98,12,'#7c3aed');
+ T2(c,'les distances sont mesurées depuis l’axe du ressort',430,256,12.5,'#5b544a');
+})();
+</script>
+</body>
+</html>
