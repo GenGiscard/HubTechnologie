@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sujet type DNB — La maison qui suit le soleil · ESTIC</title><style>
+<title>Sujet type CAFEP-CAPET SII — Grue d’atelier à vérin · ESTIC</title><style>
 :root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
@@ -55,37 +55,51 @@ main{width:min(900px,100%);padding:14px 14px 50px}
 </div>
 <main>
 <div class="entete">
-  <h1>Sujet type DNB — Épreuve de sciences</h1>
-  <div class="info"><b>Partie technologie</b> · durée conseillée : 30 minutes · noté sur 25 points<br>
-  Support : une maison à orientation pilotée</div>
+  <h1>Sujet type CAFEP-CAPET SII — Épreuve de sciences</h1>
+  <div class="info"><b>Épreuve d’analyse et d’exploitation · option ingénierie mécanique</b> · durée conseillée : 5 h · noté sur 100 points<br>
+  Support : une grue d’atelier hydraulique — flèche articulée et vérin de levage</div>
 </div>
-<div class="consignes">Tu disposes de trois documents. Réponds aux six questions : certaines demandent une
+<div class="consignes">Vous disposez de cinq documents. Le sujet comporte cinq documents, cinq parties et treize questions : certaines demandent une
 <b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
 Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
 
-<div class="doc"><h2>Document 1 — La maison vue de dessus</h2>
-<canvas id="d1" width="860" height="320"></canvas>
-<p class="leg">Les baies vitrées occupent un secteur de 120°. Le reste du mur est aveugle
-et isolé. La maison repose sur un rail circulaire et pivote autour de son centre.</p>
+<div class="doc"><h2>Document 1 — Architecture de la grue</h2>
+<canvas id="d0" width="860" height="360"></canvas>
+<p class="leg">La flèche AB est articulée en A sur le mât. Le vérin hydraulique CD la
+relève : il est monté sur rotule à ses deux extrémités et son poids est négligé. La
+charge est suspendue en B.</p>
 
-<h2>Document 2 — Course du soleil le 21 mars</h2>
+<h2>Document 2 — Géométrie, dans le plan (O, x, y)</h2>
 <table>
- <tr><th>Heure</th><th>7 h</th><th>10 h</th><th>13 h</th><th>16 h</th><th>19 h</th></tr>
- <tr><th>Position du soleil</th><td>−90°</td><td>−45°</td><td>0°</td><td>+45°</td><td>+90°</td></tr>
- <tr><th>Orientation à donner aux baies</th><td>−90°</td><td>−45°</td><td>0°</td><td>+45°</td><td>+90°</td></tr>
+ <tr><th>Point</th><th>Rôle</th><th>Coordonnées (m)</th></tr>
+ <tr><td>A</td><td>Articulation flèche / mât</td><td>(0 ; 1,20)</td></tr>
+ <tr><td>B</td><td>Point de suspension de la charge</td><td>(1,50 ; 1,20)</td></tr>
+ <tr><td>C</td><td>Pied du vérin, sur le mât</td><td>(0 ; 0,50)</td></tr>
+ <tr><td>D</td><td>Tête du vérin, sur la flèche</td><td>(0,60 ; 1,20)</td></tr>
 </table>
-<p class="leg">L’angle 0° correspond au sud. Les valeurs négatives sont vers l’est,
-les positives vers l’ouest.</p>
 
-<h2>Document 3 — Caractéristiques techniques</h2>
+<h2>Document 3 — Données de l’étude</h2>
 <table>
- <tr><th>Masse de la maison</th><td>30 tonnes</td></tr>
- <tr><th>Vitesse du moteur</th><td>1500 tr/min</td></tr>
- <tr><th>Rapport du réducteur</th><td>1 / 30 000</td></tr>
- <tr><th>Puissance du moteur</th><td>250 W</td></tr>
- <tr><th>Durée de rotation par jour</th><td>20 minutes</td></tr>
- <tr><th>Gain de chauffage annuel</th><td>1400 kWh</td></tr>
- <tr><th>Prix du kilowattheure</th><td>0,25 €</td></tr>
+ <tr><th>Charge nominale suspendue en B</th><td>P = 5 000 N</td></tr>
+ <tr><th>Poids propre de la flèche</th><td>négligé</td></tr>
+ <tr><th>Diamètre du piston du vérin</th><td>50 mm</td></tr>
+ <tr><th>Pression maximale de la pompe</th><td>150 bar</td></tr>
+ <tr><th>Diamètre de l’axe en A</th><td>16 mm, en cisaillement double</td></tr>
+ <tr><th>Matière de l’axe</th><td>C35 · R<sub>e</sub> = 335 MPa</td></tr>
+ <tr><th>Coefficient de sécurité</th><td>3, avec τ<sub>adm</sub> = 0,5 × R<sub>e</sub> / s</td></tr>
+</table>
+
+<h2>Document 4 — Résolution graphique amorcée</h2>
+<canvas id="d1" width="860" height="330"></canvas>
+<p class="leg">La direction du vérin et celle de la charge ont été tracées. Leur point
+de concours I est repéré. Le dynamique reste à fermer.</p>
+
+<h2>Document 5 — Extrait du programme de STI2D, enseignement spécifique ITEC</h2>
+<table>
+ <tr><th>Compétence</th><th>Connaissance associée</th></tr>
+ <tr><td>CO6.1 — Isoler un solide et faire le bilan des actions</td><td>Solide soumis à deux, puis à trois forces</td></tr>
+ <tr><td>CO6.2 — Simuler le comportement d’un mécanisme</td><td>Principe fondamental de la statique, cas plan</td></tr>
+ <tr><td>CO7.3 — Valider un choix de composant</td><td>Pression, contrainte, coefficient de sécurité</td></tr>
 </table>
 <div id="questions"></div>
 <div id="resultat" style="display:none"></div>
@@ -97,30 +111,64 @@ les positives vers l’ouest.</p>
 function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
 function nb(v){return parseFloat(String(v||'').replace(',','.'));}
 const Q=[
- {n:'1',cours:'vitesse',pts:4,t:'À l’aide du document 2, calcule de combien de degrés le soleil se déplace en une heure. Explique ensuite pourquoi cette valeur impose la vitesse de rotation de la maison.',
-  champs:[{id:'a1',l:'Déplacement du soleil, en degrés par heure :',rep:15,tol:0.2}],
-  redac:{id:'r1',cles:['meme','suivre','face','baies','rester','identique','vitesse','tourner']},
-  corr:'Entre 7 h et 19 h, soit 12 heures, le soleil passe de −90° à +90° : il parcourt 180°. Donc 180 ÷ 12 = <b>15° par heure</b>. Pour que les baies restent face au soleil, la maison doit tourner <b>à la même vitesse</b>, ni plus vite ni moins vite.'},
- {n:'2',cours:'trainordinaire',pts:4,t:'D’après le document 3, calcule la vitesse de rotation de la maison, puis la durée d’un tour complet.',
-  aide:'la vitesse de sortie vaut la vitesse du moteur multipliée par le rapport du réducteur',
-  champs:[{id:'a2',l:'Vitesse de la maison, en tours par minute :',rep:0.05,tol:0.005},
-          {id:'b2',l:'Durée d’un tour complet, en minutes :',rep:20,tol:0.5}],
-  corr:'1500 × 1/30 000 = <b>0,05 tr/min</b>. Un tour complet demande 1 ÷ 0,05 = <b>20 minutes</b>. C’est très lent : on ne voit pas la maison bouger.'},
- {n:'3',cours:'trainordinaire',pts:4,t:'Le document 3 indique une masse de 30 tonnes pour un moteur de 250 W seulement. Explique comment un moteur aussi peu puissant peut déplacer une telle masse.',
-  redac:{id:'r3',cles:['reducteur','reduit','vitesse','force','couple','lent','echange','multiplie','demultipli']},
-  corr:'Le <b>réducteur</b> divise la vitesse par 30 000 et multiplie d’autant la force disponible. Un moteur rapide et faible devient un mouvement très lent mais très puissant : c’est un <b>échange entre vitesse et force</b>. La maison tourne aussi sur un rail, ce qui limite les frottements.'},
- {n:'4',cours:'puissance',pts:5,t:'Calcule l’énergie consommée chaque jour par la rotation, puis sur une année de 365 jours.',
-  aide:'énergie = puissance × durée — attention aux unités : 20 minutes, ce n’est pas 20 heures',
-  champs:[{id:'a4',l:'Énergie par jour, en wattheures :',rep:83,tol:2},
-          {id:'b4',l:'Énergie par an, en kilowattheures :',rep:30.4,tol:1.5}],
-  redac:{id:'r4',cles:['faible','peu','negligeable','petit','moins','1400','gain','rentable']},
-  corr:'20 min = 1/3 h. 250 × 1/3 ≈ <b>83 Wh par jour</b>. Sur un an : 83 × 365 ≈ 30 300 Wh, soit <b>30,4 kWh</b>. À comparer aux 1400 kWh de chauffage économisés : la rotation consomme environ <b>46 fois moins</b> qu’elle ne fait gagner.'},
- {n:'5',pts:4,t:'À l’aide des documents 1 et 2, explique pourquoi les baies vitrées sont regroupées sur un seul secteur plutôt que réparties tout autour.',
-  redac:{id:'r5',cles:['choisir','orienter','isole','aveugle','ete','ombre','proteger','deperdition','perte','dos']},
-  corr:'Si les baies faisaient tout le tour, il n’y aurait plus rien à orienter : la rotation deviendrait inutile. En les regroupant, on peut <b>choisir</b> de les exposer au soleil en hiver ou de leur <b>tourner le dos</b> en été. Le reste du mur, aveugle et isolé, <b>limite les pertes de chaleur</b>.'},
- {n:'6',cours:'codeur',pts:4,t:'Un constructeur propose de remplacer l’horloge par un capteur de luminosité. En t’appuyant sur le document 2, donne un argument contre cette solution.',
-  redac:{id:'r6',cles:['nuage','previsible','calcul','trompe','ombre','fiable','meteo','pluie','hiver','couvert']},
-  corr:'Le document 2 montre que la position du soleil est <b>entièrement prévisible</b> : elle se calcule à l’avance. Un capteur de luminosité, lui, serait <b>trompé par un nuage</b> ou un ciel couvert et ferait tourner la maison à contretemps. L’horloge est plus fiable et moins chère.'},
+ {n:'A1',cours:'deuxforces',pts:6,t:'PARTIE A — MODÉLISATION. Le vérin CD est monté sur rotule à ses deux extrémités et son poids est négligé. Qu’en déduisez-vous sur la DIRECTION de l’action qu’il exerce en D ?',
+  redac:{id:'r1',cles:['deux forces','2 forces','droite','support','cd','axe','porte','direction','aligne','egales','opposees']},
+  corr:'Le vérin est un <b>solide soumis à DEUX forces</b> : en C et en D, et rien d’autre. Ces deux forces sont donc <b>égales, opposées et portées par la droite CD</b>. L’action du vérin sur la flèche est ainsi dirigée <b>selon CD</b> : sa direction est connue AVANT tout calcul, seule son intensité reste à trouver.'},
+ {n:'A2',cours:'troisforces',pts:6,t:'Isolez la flèche AB et faites le bilan des actions extérieures. Combien d’inconnues scalaires reste-t-il, et de combien d’équations disposez-vous dans le plan ?',
+  champs:[{id:'q2a',l:'Nombre d’inconnues scalaires :',rep:3,tol:0.1},
+          {id:'q2b',l:'Nombre d’équations disponibles :',rep:3,tol:0.1}],
+  corr:'Bilan : action du mât en A (2 inconnues, direction inconnue), action du vérin en D (1 inconnue d’intensité, direction connue par A1), et la charge en B (entièrement connue). Soit <b>3 inconnues</b> pour <b>3 équations</b> dans le plan : le problème est isostatique, il se résout.'},
+ {n:'A3',cours:'momentforce',pts:6,t:'À l’aide du document 2, calculez la longueur du vérin CD et l’angle qu’il forme avec l’horizontale.',
+  aide:'CD = D − C ; l’angle s’obtient par la tangente',
+  champs:[{id:'q3a',l:'Longueur CD (arrondir au millième), en m :',rep:0.922,tol:0.008},
+          {id:'q3b',l:'Angle avec l’horizontale (arrondir au dixième), en degrés :',rep:49.4,tol:0.6}],
+  corr:'CD = (0,60 ; 0,70), donc ‖CD‖ = √(0,60² + 0,70²) ≈ <b>0,922 m</b> et α = arctan(0,70 / 0,60) ≈ <b>49,4°</b>.'},
+ {n:'B1',cours:'momentforce',pts:8,t:'PARTIE B — RÉSOLUTION. Écrivez l’équation de moment en A et déterminez l’intensité de l’effort du vérin.',
+  aide:'écrire les moments en A annule les deux inconnues de l’articulation',
+  champs:[{id:'b1a',l:'Bras de levier du vérin par rapport à A (arrondir au millième), en m :',rep:0.456,tol:0.006},
+          {id:'b1b',l:'Effort du vérin (arrondir à la dizaine), en N :',rep:16463,tol:120}],
+  corr:'Le bras de levier vaut AD<sub>x</sub> × sin α = 0,60 × 0,70 / 0,922 ≈ <b>0,456 m</b>. L’équation de moment en A s’écrit F × 0,456 = 5 000 × 1,50, d’où F ≈ <b>16 460 N</b>. On remarque que le vérin doit exercer plus de TROIS FOIS la charge : son bras de levier est court.'},
+ {n:'B2',cours:'momentforce',pts:7,t:'Projetez l’effort du vérin sur les deux axes.',
+  champs:[{id:'b2a',l:'Composante horizontale (arrondir à la dizaine), en N :',rep:10714,tol:120},
+          {id:'b2b',l:'Composante verticale (arrondir à la dizaine), en N :',rep:12500,tol:120}],
+  corr:'F<sub>x</sub> = F × cos α ≈ <b>10 710 N</b> et F<sub>y</sub> = F × sin α ≈ <b>12 500 N</b>. La composante verticale dépasse à elle seule la charge de 5 000 N : la différence est reprise par l’articulation.'},
+ {n:'B3',cours:'poutre2appuis',pts:8,t:'Déterminez l’action du mât sur la flèche en A : ses deux composantes, puis sa norme.',
+  aide:'la somme des forces extérieures est nulle — attention aux signes',
+  champs:[{id:'b3a',l:'Composante horizontale en A (signe compris), en N :',rep:-10714,tol:130},
+          {id:'b3b',l:'Composante verticale en A (signe compris), en N :',rep:-7500,tol:130},
+          {id:'b3c',l:'Norme de l’action en A (arrondir à la dizaine), en N :',rep:13078,tol:150}],
+  corr:'A<sub>x</sub> = −F<sub>x</sub> ≈ <b>−10 710 N</b> et A<sub>y</sub> = P − F<sub>y</sub> = 5 000 − 12 500 = <b>−7 500 N</b>. Norme ≈ <b>13 080 N</b>. Les deux composantes sont NÉGATIVES : le mât tire la flèche vers le bas et vers la gauche, contrairement à l’intuition qui ferait pousser vers le haut.'},
+ {n:'B4',cours:'troisforces',pts:8,t:'À l’aide du document 4, vérifiez votre résultat par la propriété du solide soumis à trois forces. Donnez les coordonnées du point de concours I.',
+  champs:[{id:'b4a',l:'Abscisse de I, en m :',rep:1.5,tol:0.05},
+          {id:'b4b',l:'Ordonnée de I (arrondir au centième), en m :',rep:2.25,tol:0.05}],
+  redac:{id:'r4',cles:['concour','ai','meme','direction','passe','verifie','coherent','pente','0,7','aligne']},
+  corr:'La droite CD prolongée coupe la verticale de B en <b>I (1,50 ; 2,25)</b>. La flèche n’étant soumise qu’à trois forces, leurs supports sont concourants : l’action en A doit être portée par AI. Or AI a pour pente (2,25 − 1,20) / 1,50 = 0,70, exactement le rapport 7 500 / 10 710 trouvé en B3. <b>Le calcul est confirmé par la géométrie</b> — c’est cette vérification croisée que le jury attend.'},
+ {n:'C1',cours:'pression',pts:8,t:'PARTIE C — VALIDATION DU VÉRIN. Calculez la section du piston puis la pression nécessaire. Concluez vis-à-vis de la pompe.',
+  aide:'p = F / S — attention aux unités, 1 bar = 10⁵ Pa',
+  champs:[{id:'c1a',l:'Section du piston (arrondir au dixième), en cm² :',rep:19.6,tol:0.4},
+          {id:'c1b',l:'Pression nécessaire (arrondir à l’unité), en bar :',rep:83.8,tol:2.5}],
+  redac:{id:'r5',cles:['inferieur','moins','convient','valide','suffit','150','marge','ok','conforme']},
+  corr:'S = π × 25² = 1 963 mm², soit <b>19,6 cm²</b>. p = 16 460 / 1,963·10⁻³ ≈ 8,38 MPa, soit <b>83,8 bar</b>. La pompe délivre 150 bar : l’exigence est <b>largement satisfaite</b>, avec près de 44 % de marge.'},
+ {n:'C2',cours:'cisaillement',pts:8,t:'Vérifiez l’axe en A, sollicité en cisaillement double.',
+  aide:'en cisaillement DOUBLE, l’effort se répartit sur DEUX sections',
+  champs:[{id:'c2a',l:'Section d’une portée (arrondir au dixième), en mm² :',rep:201.1,tol:3},
+          {id:'c2b',l:'Contrainte de cisaillement (arrondir au dixième), en MPa :',rep:32.5,tol:1},
+          {id:'c2c',l:'Résistance pratique au cisaillement (arrondir au dixième), en MPa :',rep:55.8,tol:1}],
+  corr:'S = π × 8² ≈ <b>201,1 mm²</b>. En cisaillement double : τ = 13 080 / (2 × 201,1) ≈ <b>32,5 MPa</b>. τ<sub>adm</sub> = 0,5 × 335 / 3 ≈ <b>55,8 MPa</b>. L’axe <b>résiste</b>. Oublier le facteur 2 du cisaillement double conduirait à 65 MPa et à un refus injustifié.'},
+ {n:'D1',cours:'momentforce',pts:8,t:'PARTIE D — INFLUENCE DE LA GÉOMÉTRIE. On déplace l’attache D de 0,60 m à 0,90 m de A, sans rien changer d’autre. Calculez le nouvel effort du vérin et commentez.',
+  aide:'recalculez le bras de levier avec la nouvelle géométrie',
+  champs:[{id:'d1a',l:'Nouvel effort du vérin (arrondir à la dizaine), en N :',rep:13574,tol:150}],
+  redac:{id:'r6',cles:['bras','levier','augmente','plus grand','diminue','baisse','course','verin','encombr','allonge','plus long']},
+  corr:'CD devient (0,90 ; 0,70), de norme 1,140 m ; le bras de levier passe à 0,90 × 0,70 / 1,140 ≈ 0,553 m et F ≈ <b>13 570 N</b>, soit <b>18 % de moins</b>. Éloigner l’attache augmente le bras de levier, donc soulage le vérin. <b>Contrepartie</b> : la course nécessaire augmente et l’encombrement aussi — c’est le compromis de conception.'},
+ {n:'D2',cours:'momentforce',pts:6,t:'Le poids propre de la flèche a été négligé. Indiquez dans quel sens ce choix influence vos résultats.',
+  redac:{id:'r7',cles:['sous-estime','minor','augmente','plus','ajoute','moment','supplementaire','securite','centre','gravite','reel']},
+  corr:'Le poids de la flèche s’applique vers le bas, entre A et B : il ajoute un moment de même sens que la charge. Le calcul mené <b>SOUS-ESTIME</b> donc l’effort réel du vérin et l’action en A. L’hypothèse va dans le sens DÉFAVORABLE à la sécurité : elle n’est acceptable que si ce poids reste petit devant la charge, ce qu’il faut vérifier.'},
+ {n:'E1',pts:11,t:'PARTIE E — EXPLOITATION PÉDAGOGIQUE. À l’aide du document 5, proposez une séance de 2 h en terminale STI2D ITEC sur ce support. Précisez la compétence visée, l’activité des élèves et la production attendue.',
+  redac:{id:'r8',cles:['co6','isoler','bilan','trois forces','graphique','activite','ilot','maquette','mesure','dynamometre','production','compte rendu','comparer','calcul']},
+  corr:'Réponse articulant trois éléments. <b>Compétence</b> : CO6.1, isoler un solide et faire le bilan des actions, avec le cas du solide soumis à trois forces. <b>Activité</b> : en îlots, isoler la flèche, tracer la résolution graphique sur le document 4, puis comparer au calcul analytique — et si une maquette instrumentée est disponible, mesurer l’effort du vérin au dynamomètre. <b>Production</b> : un compte rendu comportant le schéma d’isolement, le tracé graphique, le calcul et l’écart entre les trois approches, avec son interprétation. L’évaluation porte sur la cohérence de la démarche, pas sur le seul résultat numérique.'},
+ {n:'E2',pts:10,t:'Un élève écrit : « la flèche pousse sur le mât vers le haut, puisque la charge tire vers le bas ». Analysez cette affirmation et proposez une remédiation.',
+  redac:{id:'r9',cles:['faux','negatif','vers le bas','verin','souleve','12500','depasse','5000','experience','concour','graphique','montrer','tracer','remedi']},
+  corr:'L’affirmation est <b>fausse</b>, et l’erreur est instructive : l’élève raisonne sur la seule charge en oubliant le vérin. Or le vérin pousse vers le haut avec 12 500 N, bien plus que les 5 000 N de la charge ; l’articulation doit donc RETENIR la flèche vers le bas, d’où A<sub>y</sub> = −7 500 N. <b>Remédiation</b> : faire tracer la résolution graphique du document 4 — la direction de l’action en A apparaît alors d’elle-même, dirigée vers le bas. Montrer le tracé est plus efficace que corriger le signe, qui ne déloge pas la représentation initiale.'},
 ];
 const z=document.getElementById('questions');
 Q.forEach(q=>{
@@ -162,50 +210,120 @@ document.getElementById('rendre').addEventListener('click',()=>{
  document.getElementById('rendre').disabled=true;
  r.scrollIntoView({behavior:'smooth'});
 });
-/* ═══ Document 1 : la maison vue de dessus ═══
-   NORD EN HAUT, convention du plan. Le secteur vitré regarde donc le SUD,
-   c'est-à-dire vers le BAS de la figure : la version précédente le dessinait
-   vers le haut, en contradiction avec sa propre légende. */
+/* ═══ Documents 1 et 2 ═══ */
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FL2(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+/* Document 1 : architecture de la grue */
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8;
+ c.strokeStyle=coul; c.lineWidth=1; c.lineCap='butt';
+ for(let k=-h;k<w;k+=p){
+  const t0=Math.max(0,-k), t1=Math.min(h,w-k);
+  if(t1<=t0) continue;
+  c.beginPath(); c.moveTo(x+k+t0,y+t0); c.lineTo(x+k+t1,y+t1); c.stroke();
+ }
+ c.strokeStyle=coul; c.lineWidth=2; c.strokeRect(x,y,w,h);
+}
+function FL2(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+/* Repère commun aux deux documents : 1 m = 200 px, origine en bas à gauche. */
+const EX=200, OX=170, OY=300;
+function PX(x,y){ return [OX+x*EX, OY-y*EX]; }
+
+(function(){
+ const c=document.getElementById('d0').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,360);
+ const A=PX(0,1.20), B=PX(1.50,1.20), D=PX(0.60,1.20), C=PX(0,0.50);
+ /* sol et mât */
+ HACH(c,OX-96,OY+4,300,16,'#475569');
+ c.strokeStyle='#334155'; c.lineWidth=9; c.lineCap='butt';
+ c.beginPath(); c.moveTo(OX,OY+4); c.lineTo(OX,A[1]-26); c.stroke();
+ /* flèche */
+ c.strokeStyle='#0e7490'; c.lineWidth=11;
+ c.beginPath(); c.moveTo(A[0],A[1]); c.lineTo(B[0],B[1]); c.stroke();
+ /* vérin */
+ c.strokeStyle='#7c3aed'; c.lineWidth=13;
+ c.beginPath(); c.moveTo(C[0],C[1]); c.lineTo((C[0]+D[0])/2,(C[1]+D[1])/2); c.stroke();
+ c.lineWidth=7;
+ c.beginPath(); c.moveTo((C[0]+D[0])/2,(C[1]+D[1])/2); c.lineTo(D[0],D[1]); c.stroke();
+ /* points */
+ [[A,'A','#dc2626'],[B,'B','#ea580c'],[C,'C','#7c3aed'],[D,'D','#7c3aed']].forEach(function(q){
+  c.fillStyle='#fff'; c.strokeStyle=q[2]; c.lineWidth=2.6;
+  c.beginPath(); c.arc(q[0][0],q[0][1],8,0,6.284); c.fill(); c.stroke();
+  T2(c,q[1],q[0][0]+(q[1]==='C'?-18:0),q[0][1]-16,13,q[2]);
+ });
+ /* charge */
+ FL2(c,B[0],B[1]+10,B[0],B[1]+86,4,'#ea580c');
+ c.setLineDash([4,3]); c.strokeStyle='#ea580c'; c.lineWidth=1.2;
+ c.beginPath(); c.moveTo(B[0]-22,B[1]+96); c.lineTo(B[0]+22,B[1]+96); c.stroke(); c.setDash&&c.setDash();
+ c.setLineDash([]);
+ T2(c,'P = 5 000 N',B[0]+14,B[1]+70,12.5,'#ea580c','left');
+ /* cotations */
+ c.strokeStyle='#64748b'; c.lineWidth=1.2;
+ c.beginPath(); c.moveTo(A[0],A[1]-44); c.lineTo(B[0],B[1]-44); c.stroke();
+ [A,B].forEach(function(p){ c.beginPath(); c.moveTo(p[0],p[1]-50); c.lineTo(p[0],p[1]-38); c.stroke(); });
+ T2(c,'1,50 m',(A[0]+B[0])/2,A[1]-52,11.5,'#64748b');
+ c.beginPath(); c.moveTo(A[0],A[1]-22); c.lineTo(D[0],D[1]-22); c.stroke();
+ T2(c,'0,60 m',(A[0]+D[0])/2,A[1]-28,11,'#7c3aed');
+ T2(c,'mât',OX-26,(A[1]+C[1])/2,11.5,'#334155','right');
+ /* étiquette à DROITE du vérin : à gauche elle passait sur le mât */
+ T2(c,'vérin hydraulique',D[0]+18,(C[1]+D[1])/2+30,11.5,'#7c3aed','left');
+ T2(c,'flèche',(A[0]+B[0])/2,A[1]+26,11.5,'#0e7490');
+ T2(c,'échelle : 1 m = 200 px  ·  repère (O, x, y), origine au pied du mât',430,344,11.5,'#5b544a');
+})();
+
+/* Document 4 : résolution graphique amorcée.
+   REPÈRE PROPRE À CE SCHÉMA : le point de concours I est à 2,25 m, soit hors cadre
+   à l'échelle du document 1. Échelle réduite et origine abaissée pour l'inclure. */
 (function(){
  const c=document.getElementById('d1').getContext('2d');
- c.fillStyle='#fff'; c.fillRect(0,0,860,320);
- const cx=430, cy=154, R=92;
- /* rail */
- c.strokeStyle='#94a3b8'; c.lineWidth=2.5; c.setLineDash([6,6]);
- c.beginPath(); c.arc(cx,cy,R+18,0,6.284); c.stroke(); c.setLineDash([]);
- /* axes cardinaux */
- c.strokeStyle='#e2e8f0'; c.lineWidth=1.6; c.setLineDash([4,4]);
- c.beginPath(); c.moveTo(cx-R-46,cy); c.lineTo(cx+R+46,cy); c.stroke();
- c.beginPath(); c.moveTo(cx,cy-R-40); c.lineTo(cx,cy+R+40); c.stroke(); c.setLineDash([]);
- /* mur aveugle */
- c.fillStyle='#f5f0e6'; c.strokeStyle='#8b6f47'; c.lineWidth=3.4;
- c.beginPath(); c.arc(cx,cy,R,0,6.284); c.fill(); c.stroke();
- /* secteur vitré de 120°, centré sur le SUD (vers le bas) */
- c.fillStyle='#bae6fd'; c.strokeStyle='#0284c7'; c.lineWidth=3.4;
- c.beginPath(); c.moveTo(cx,cy);
- c.arc(cx,cy,R, Math.PI/2-Math.PI/3, Math.PI/2+Math.PI/3);
- c.closePath(); c.fill(); c.stroke();
- /* cotation de l'ouverture */
- c.strokeStyle='#dc2626'; c.lineWidth=2;
- c.beginPath(); c.arc(cx,cy,46,Math.PI/2-Math.PI/3,Math.PI/2+Math.PI/3); c.stroke();
- c.font='bold 14px Segoe UI'; c.fillStyle='#dc2626'; c.textAlign='center';
- c.fillText('120°',cx,cy+38);
- /* etiquettes dans les zones, pour eviter tout chevauchement */
- c.font='bold 13px Segoe UI';
- c.fillStyle='#075985'; c.fillText('baies vitrées',cx,cy+78);
- c.fillStyle='#78350f'; c.fillText('mur aveugle isolé',cx,cy-52);
- /* points cardinaux */
- c.font='bold 13px Segoe UI'; c.fillStyle='#64748b';
- c.fillText('NORD',cx,cy-R-24);
- c.fillText('SUD',cx,cy+R+34);
- c.textAlign='right'; c.fillText('EST',cx-R-24,cy+5);
- c.textAlign='left';  c.fillText('OUEST',cx+R+24,cy+5);
- /* rail, en retrait pour ne croiser aucun texte */
- c.font='12.5px Segoe UI'; c.fillStyle='#94a3b8'; c.textAlign='left';
- c.fillText('rail circulaire',cx+R+24,cy-62);
- c.fillStyle='#334155'; c.beginPath(); c.arc(cx,cy,5,0,6.284); c.fill();
- c.textAlign='center'; c.font='12.5px Segoe UI'; c.fillStyle='#5b544a';
- c.fillText('orientation 0° : les baies regardent le sud',cx,306);
+ c.fillStyle='#fff'; c.fillRect(0,0,860,330);
+ const E2=140, X2=260, Y2=355;
+ const PX=function(x,y){ return [X2+x*E2, Y2-y*E2]; };
+ T2(c,'SUPPORTS DES ACTIONS — LE DYNAMIQUE RESTE À FERMER',430,26,14,'#155e75');
+ const A=PX(0,1.20), B=PX(1.50,1.20), D=PX(0.60,1.20), C=PX(0,0.50), I=PX(1.50,2.25);
+ /* flèche en trait fin */
+ c.strokeStyle='#cbd5e1'; c.lineWidth=7;
+ c.beginPath(); c.moveTo(A[0],A[1]); c.lineTo(B[0],B[1]); c.stroke();
+ /* support du vérin, prolongé jusqu'à I */
+ c.strokeStyle='#7c3aed'; c.lineWidth=2; c.setLineDash([7,5]);
+ c.beginPath(); c.moveTo(C[0],C[1]); c.lineTo(I[0],I[1]); c.stroke();
+ /* support de la charge : verticale de B */
+ c.strokeStyle='#ea580c';
+ c.beginPath(); c.moveTo(B[0],B[1]+60); c.lineTo(I[0],I[1]); c.stroke();
+ c.setLineDash([]);
+ /* point de concours */
+ c.fillStyle='#dc2626'; c.beginPath(); c.arc(I[0],I[1],7,0,6.284); c.fill();
+ T2(c,'I',I[0]+16,I[1]+4,14,'#dc2626','left');
+ [[A,'A','#dc2626'],[B,'B','#ea580c'],[D,'D','#7c3aed'],[C,'C','#7c3aed']].forEach(function(q){
+  c.fillStyle='#fff'; c.strokeStyle=q[2]; c.lineWidth=2.4;
+  c.beginPath(); c.arc(q[0][0],q[0][1],7,0,6.284); c.fill(); c.stroke();
+  T2(c,q[1],q[0][0]+(q[1]==='C'?-16:0),q[0][1]+(q[1]==='B'?26:-14),12.5,q[2]);
+ });
+ /* remontée : sous C, elle passait sur la légende du bas */
+ T2(c,'support du vérin (direction CD)',C[0]+16,C[1]-16,11.5,'#7c3aed','left');
+ T2(c,'support de la charge',B[0]+12,B[1]+56,11.5,'#ea580c','left');
+ T2(c,'à vous de tracer le support de l’action en A, puis de fermer le dynamique',430,314,12.5,'#5b544a');
 })();
 
 /* MINICOURS_INTEGRE — un bouton par question, une notion par mini-cours */

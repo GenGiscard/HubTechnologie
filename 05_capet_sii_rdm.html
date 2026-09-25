@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sujet type DNB — La maison qui suit le soleil · ESTIC</title><style>
+<title>Sujet type CAFEP-CAPET SII — Arbre de réducteur · ESTIC</title><style>
 :root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
@@ -55,37 +55,53 @@ main{width:min(900px,100%);padding:14px 14px 50px}
 </div>
 <main>
 <div class="entete">
-  <h1>Sujet type DNB — Épreuve de sciences</h1>
-  <div class="info"><b>Partie technologie</b> · durée conseillée : 30 minutes · noté sur 25 points<br>
-  Support : une maison à orientation pilotée</div>
+  <h1>Sujet type CAFEP-CAPET SII — Épreuve de sciences</h1>
+  <div class="info"><b>Épreuve d’analyse et d’exploitation · option ingénierie mécanique</b> · durée conseillée : 5 h · noté sur 100 points<br>
+  Support : l’arbre de sortie d’un réducteur — épaulement et rainure de clavette</div>
 </div>
-<div class="consignes">Tu disposes de trois documents. Réponds aux six questions : certaines demandent une
+<div class="consignes">Vous disposez de cinq documents. Le sujet comporte cinq documents, cinq parties et douze questions : certaines demandent une
 <b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
 Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
 
-<div class="doc"><h2>Document 1 — La maison vue de dessus</h2>
-<canvas id="d1" width="860" height="320"></canvas>
-<p class="leg">Les baies vitrées occupent un secteur de 120°. Le reste du mur est aveugle
-et isolé. La maison repose sur un rail circulaire et pivote autour de son centre.</p>
+<div class="doc"><h2>Document 1 — Architecture de l’arbre</h2>
+<canvas id="d0" width="860" height="300"></canvas>
+<p class="leg">L’arbre repose sur deux roulements en A et B. La roue dentée, calée sur
+une rainure de clavette, reçoit un effort tangentiel vertical. Un épaulement
+positionne le roulement de gauche.</p>
 
-<h2>Document 2 — Course du soleil le 21 mars</h2>
+<h2>Document 2 — Diagramme du moment fléchissant</h2>
+<canvas id="d1" width="860" height="280"></canvas>
+<p class="leg">Le moment fléchissant est nul aux appuis et maximal sous la roue. Les
+deux sections à vérifier y sont repérées.</p>
+
+<h2>Document 3 — Données de l’étude</h2>
 <table>
- <tr><th>Heure</th><th>7 h</th><th>10 h</th><th>13 h</th><th>16 h</th><th>19 h</th></tr>
- <tr><th>Position du soleil</th><td>−90°</td><td>−45°</td><td>0°</td><td>+45°</td><td>+90°</td></tr>
- <tr><th>Orientation à donner aux baies</th><td>−90°</td><td>−45°</td><td>0°</td><td>+45°</td><td>+90°</td></tr>
+ <tr><th>Distance entre appuis A et B</th><td>300 mm</td></tr>
+ <tr><th>Position de la roue depuis A</th><td>100 mm</td></tr>
+ <tr><th>Position de l’épaulement depuis A</th><td>60 mm</td></tr>
+ <tr><th>Effort tangentiel sur la roue</th><td>F<sub>t</sub> = 4 000 N, vertical</td></tr>
+ <tr><th>Diamètre primitif de la roue</th><td>150 mm</td></tr>
+ <tr><th>Diamètre de l’arbre à l’épaulement</th><td>40 mm</td></tr>
+ <tr><th>Diamètre de l’arbre sous la roue</th><td>45 mm</td></tr>
+ <tr><th>Matière</th><td>42CrMo4 · R<sub>e</sub> = 650 MPa</td></tr>
+ <tr><th>Coefficient de sécurité</th><td>4</td></tr>
 </table>
-<p class="leg">L’angle 0° correspond au sud. Les valeurs négatives sont vers l’est,
-les positives vers l’ouest.</p>
 
-<h2>Document 3 — Caractéristiques techniques</h2>
+<h2>Document 4 — Coefficients de concentration de contraintes</h2>
 <table>
- <tr><th>Masse de la maison</th><td>30 tonnes</td></tr>
- <tr><th>Vitesse du moteur</th><td>1500 tr/min</td></tr>
- <tr><th>Rapport du réducteur</th><td>1 / 30 000</td></tr>
- <tr><th>Puissance du moteur</th><td>250 W</td></tr>
- <tr><th>Durée de rotation par jour</th><td>20 minutes</td></tr>
- <tr><th>Gain de chauffage annuel</th><td>1400 kWh</td></tr>
- <tr><th>Prix du kilowattheure</th><td>0,25 €</td></tr>
+ <tr><th>Accident de forme</th><th>K<sub>t</sub> en flexion</th><th>K<sub>t</sub> en torsion</th></tr>
+ <tr><td>Épaulement, congé r/d = 0,05</td><td>1,8</td><td>1,5</td></tr>
+ <tr><td>Rainure de clavette, fond arrondi</td><td>2,1</td><td>1,7</td></tr>
+</table>
+<p class="leg">Le coefficient s’applique à la contrainte NOMINALE de la sollicitation
+concernée, séparément en flexion et en torsion.</p>
+
+<h2>Document 5 — Extrait du programme de STI2D, enseignement spécifique ITEC</h2>
+<table>
+ <tr><th>Compétence</th><th>Connaissance associée</th></tr>
+ <tr><td>CO6.2 — Simuler le comportement d’un mécanisme</td><td>Sollicitations simples et composées</td></tr>
+ <tr><td>CO7.3 — Valider un choix de composant</td><td>Contrainte admissible, coefficient de sécurité</td></tr>
+ <tr><td>CO7.4 — Proposer une modification argumentée</td><td>Concentration de contraintes, tracé des formes</td></tr>
 </table>
 <div id="questions"></div>
 <div id="resultat" style="display:none"></div>
@@ -97,30 +113,57 @@ les positives vers l’ouest.</p>
 function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
 function nb(v){return parseFloat(String(v||'').replace(',','.'));}
 const Q=[
- {n:'1',cours:'vitesse',pts:4,t:'À l’aide du document 2, calcule de combien de degrés le soleil se déplace en une heure. Explique ensuite pourquoi cette valeur impose la vitesse de rotation de la maison.',
-  champs:[{id:'a1',l:'Déplacement du soleil, en degrés par heure :',rep:15,tol:0.2}],
-  redac:{id:'r1',cles:['meme','suivre','face','baies','rester','identique','vitesse','tourner']},
-  corr:'Entre 7 h et 19 h, soit 12 heures, le soleil passe de −90° à +90° : il parcourt 180°. Donc 180 ÷ 12 = <b>15° par heure</b>. Pour que les baies restent face au soleil, la maison doit tourner <b>à la même vitesse</b>, ni plus vite ni moins vite.'},
- {n:'2',cours:'trainordinaire',pts:4,t:'D’après le document 3, calcule la vitesse de rotation de la maison, puis la durée d’un tour complet.',
-  aide:'la vitesse de sortie vaut la vitesse du moteur multipliée par le rapport du réducteur',
-  champs:[{id:'a2',l:'Vitesse de la maison, en tours par minute :',rep:0.05,tol:0.005},
-          {id:'b2',l:'Durée d’un tour complet, en minutes :',rep:20,tol:0.5}],
-  corr:'1500 × 1/30 000 = <b>0,05 tr/min</b>. Un tour complet demande 1 ÷ 0,05 = <b>20 minutes</b>. C’est très lent : on ne voit pas la maison bouger.'},
- {n:'3',cours:'trainordinaire',pts:4,t:'Le document 3 indique une masse de 30 tonnes pour un moteur de 250 W seulement. Explique comment un moteur aussi peu puissant peut déplacer une telle masse.',
-  redac:{id:'r3',cles:['reducteur','reduit','vitesse','force','couple','lent','echange','multiplie','demultipli']},
-  corr:'Le <b>réducteur</b> divise la vitesse par 30 000 et multiplie d’autant la force disponible. Un moteur rapide et faible devient un mouvement très lent mais très puissant : c’est un <b>échange entre vitesse et force</b>. La maison tourne aussi sur un rail, ce qui limite les frottements.'},
- {n:'4',cours:'puissance',pts:5,t:'Calcule l’énergie consommée chaque jour par la rotation, puis sur une année de 365 jours.',
-  aide:'énergie = puissance × durée — attention aux unités : 20 minutes, ce n’est pas 20 heures',
-  champs:[{id:'a4',l:'Énergie par jour, en wattheures :',rep:83,tol:2},
-          {id:'b4',l:'Énergie par an, en kilowattheures :',rep:30.4,tol:1.5}],
-  redac:{id:'r4',cles:['faible','peu','negligeable','petit','moins','1400','gain','rentable']},
-  corr:'20 min = 1/3 h. 250 × 1/3 ≈ <b>83 Wh par jour</b>. Sur un an : 83 × 365 ≈ 30 300 Wh, soit <b>30,4 kWh</b>. À comparer aux 1400 kWh de chauffage économisés : la rotation consomme environ <b>46 fois moins</b> qu’elle ne fait gagner.'},
- {n:'5',pts:4,t:'À l’aide des documents 1 et 2, explique pourquoi les baies vitrées sont regroupées sur un seul secteur plutôt que réparties tout autour.',
-  redac:{id:'r5',cles:['choisir','orienter','isole','aveugle','ete','ombre','proteger','deperdition','perte','dos']},
-  corr:'Si les baies faisaient tout le tour, il n’y aurait plus rien à orienter : la rotation deviendrait inutile. En les regroupant, on peut <b>choisir</b> de les exposer au soleil en hiver ou de leur <b>tourner le dos</b> en été. Le reste du mur, aveugle et isolé, <b>limite les pertes de chaleur</b>.'},
- {n:'6',cours:'codeur',pts:4,t:'Un constructeur propose de remplacer l’horloge par un capteur de luminosité. En t’appuyant sur le document 2, donne un argument contre cette solution.',
-  redac:{id:'r6',cles:['nuage','previsible','calcul','trompe','ombre','fiable','meteo','pluie','hiver','couvert']},
-  corr:'Le document 2 montre que la position du soleil est <b>entièrement prévisible</b> : elle se calcule à l’avance. Un capteur de luminosité, lui, serait <b>trompé par un nuage</b> ou un ciel couvert et ferait tourner la maison à contretemps. L’horloge est plus fiable et moins chère.'},
+ {n:'A1',cours:'poutre2appuis',pts:7,t:'PARTIE A — ACTIONS ET MOMENTS. Déterminez les réactions aux deux appuis.',
+  aide:'écrivez les moments en A pour obtenir RB, puis la somme verticale',
+  champs:[{id:'a1a',l:'Réaction en B (arrondir à l’unité), en N :',rep:1333,tol:20},
+          {id:'a1b',l:'Réaction en A (arrondir à l’unité), en N :',rep:2667,tol:20}],
+  corr:'Moments en A : R<sub>B</sub> × 300 = 4 000 × 100, d’où R<sub>B</sub> ≈ <b>1 333 N</b>. Somme verticale : R<sub>A</sub> = 4 000 − 1 333 ≈ <b>2 667 N</b>. L’appui le plus proche de la roue reprend deux fois plus d’effort.'},
+ {n:'A2',cours:'momentforce',pts:6,t:'Calculez le moment de torsion transmis par l’arbre.',
+  aide:'le couple s’obtient avec le RAYON primitif de la roue',
+  champs:[{id:'a2a',l:'Moment de torsion (arrondir à l’unité), en N·m :',rep:300,tol:6}],
+  corr:'M<sub>t</sub> = F<sub>t</sub> × R = 4 000 × 0,075 = <b>300 N·m</b>. Utiliser le diamètre au lieu du rayon doublerait le résultat, et toutes les contraintes de torsion avec lui.'},
+ {n:'A3',cours:'momentflechissant',pts:7,t:'À l’aide du document 2, donnez le moment fléchissant dans les deux sections à vérifier.',
+  champs:[{id:'a3a',l:'Moment fléchissant à l’épaulement (arrondir à l’unité), en N·m :',rep:160,tol:4},
+          {id:'a3b',l:'Moment fléchissant sous la roue (arrondir au dixième), en N·m :',rep:266.7,tol:4}],
+  corr:'À l’épaulement : M<sub>f</sub> = R<sub>A</sub> × 0,060 = <b>160 N·m</b>. Sous la roue : M<sub>f</sub> = R<sub>A</sub> × 0,100 ≈ <b>266,7 N·m</b>. Le moment est plus fort sous la roue, mais l’arbre y est aussi plus gros : rien ne permet encore de désigner la section critique.'},
+ {n:'B1',cours:'moduleflexion',pts:9,t:'PARTIE B — SECTION DE L’ÉPAULEMENT. Calculez les contraintes nominales de flexion et de torsion, pour un arbre de 40 mm.',
+  aide:'I/v = π d³ ÷ 32 et I₀/ρ = π d³ ÷ 16 — convertissez les moments en N·mm',
+  champs:[{id:'b1a',l:'Module de flexion I/v (arrondir à l’unité), en mm³ :',rep:6283,tol:80},
+          {id:'b1b',l:'Contrainte nominale de flexion (arrondir au dixième), en MPa :',rep:25.5,tol:0.8},
+          {id:'b1c',l:'Contrainte nominale de torsion (arrondir au dixième), en MPa :',rep:23.9,tol:0.8}],
+  corr:'I/v = π × 40³ ÷ 32 ≈ <b>6 283 mm³</b>, donc σ = 160 000 ÷ 6 283 ≈ <b>25,5 MPa</b>. Le module de torsion vaut le double, 12 566 mm³, d’où τ = 300 000 ÷ 12 566 ≈ <b>23,9 MPa</b>.'},
+ {n:'B2',cours:'concentration',pts:9,t:'Appliquez les coefficients du document 4, puis calculez la contrainte équivalente dans cette section.',
+  aide:'chaque Kt s’applique à SA sollicitation, avant la combinaison',
+  champs:[{id:'b2a',l:'Contrainte de flexion majorée (arrondir au dixième), en MPa :',rep:45.8,tol:1.2},
+          {id:'b2b',l:'Contrainte de torsion majorée (arrondir au dixième), en MPa :',rep:35.8,tol:1.2},
+          {id:'b2c',l:'Contrainte équivalente (arrondir au dixième), en MPa :',rep:85.0,tol:2}],
+  corr:'σ = 25,5 × 1,8 ≈ <b>45,8 MPa</b> et τ = 23,9 × 1,5 ≈ <b>35,8 MPa</b>. Puis σ<sub>éq</sub> = √(45,8² + 4 × 35,8²) ≈ <b>85,0 MPa</b>. Appliquer un coefficient unique à la contrainte équivalente serait une approximation : les deux accidents ne majorent pas de la même façon.'},
+ {n:'C1',cours:'moduleflexion',pts:9,t:'PARTIE C — SECTION DE LA CLAVETTE. Reprenez le calcul sous la roue, pour un arbre de 45 mm.',
+  champs:[{id:'c1a',l:'Contrainte nominale de flexion (arrondir au dixième), en MPa :',rep:29.8,tol:1},
+          {id:'c1b',l:'Contrainte nominale de torsion (arrondir au dixième), en MPa :',rep:16.8,tol:0.8}],
+  corr:'I/v = π × 45³ ÷ 32 ≈ 8 946 mm³, donc σ = 266 700 ÷ 8 946 ≈ <b>29,8 MPa</b>. I₀/ρ ≈ 17 892 mm³, donc τ = 300 000 ÷ 17 892 ≈ <b>16,8 MPa</b>. Le diamètre plus grand fait chuter la torsion, malgré un moment fléchissant plus fort.'},
+ {n:'C2',cours:'concentration',pts:9,t:'Appliquez les coefficients de la rainure de clavette et concluez pour cette section.',
+  champs:[{id:'c2a',l:'Contrainte de flexion majorée (arrondir au dixième), en MPa :',rep:62.6,tol:1.5},
+          {id:'c2b',l:'Contrainte de torsion majorée (arrondir au dixième), en MPa :',rep:28.5,tol:1.2},
+          {id:'c2c',l:'Contrainte équivalente (arrondir au dixième), en MPa :',rep:84.7,tol:2}],
+  corr:'σ = 29,8 × 2,1 ≈ <b>62,6 MPa</b>, τ = 16,8 × 1,7 ≈ <b>28,5 MPa</b>, d’où σ<sub>éq</sub> ≈ <b>84,7 MPa</b>.'},
+ {n:'C3',cours:'equivalente',pts:9,t:'Comparez les deux sections et concluez vis-à-vis de la résistance pratique.',
+  champs:[{id:'c3a',l:'Résistance pratique à l’extension (arrondir au dixième), en MPa :',rep:162.5,tol:2}],
+  redac:{id:'r7',cles:['egales','proche','identique','0,4','aucune','deux','verifier','conforme','marge','162','inferieur','tient']},
+  corr:'R<sub>pe</sub> = 650 ÷ 4 ≈ <b>162,5 MPa</b>. Les deux sections donnent 85,0 et 84,7 MPa : elles sont <b>pratiquement équivalentes</b>, à 0,4 % près. <b>Aucune ne domine</b> — il fallait donc les vérifier toutes les deux. Le diamètre plus grand sous la roue compense exactement le coefficient de concentration plus sévère de la clavette. L’arbre est conforme, avec plus de 90 % de marge.'},
+ {n:'D1',cours:'concentration',pts:9,t:'PARTIE D — PORTÉE DE L’HYPOTHÈSE. Calculez ce qu’aurait donné la section de la clavette SANS les coefficients de concentration, et commentez.',
+  champs:[{id:'d1a',l:'Contrainte équivalente sans les Kt (arrondir au dixième), en MPa :',rep:44.9,tol:1.5}],
+  redac:{id:'r8',cles:['moitie','deux fois','sous-estime','minor','presque','89','erreur','dangereux','faux','securite']},
+  corr:'Sans coefficients : σ<sub>éq</sub> = √(29,8² + 4 × 16,8²) ≈ <b>44,9 MPa</b>, contre 84,7 en réalité. Le calcul <b>sous-estime de 89 %</b> — presque un facteur deux. Sur une pièce plus sollicitée, cet écart transforme une conclusion de conformité en rupture au premier congé.'},
+ {n:'D2',cours:'concentration',pts:8,t:'Proposez une modification permettant de réduire la contrainte dans la section de la clavette, et indiquez son inconvénient.',
+  redac:{id:'r9',cles:['rayon','conge','augmente','fond','arrondi','kt','diminue','diametre','grossir','masse','encombr','usinage','cout','clavette','cannel']},
+  corr:'Plusieurs réponses recevables. <b>Augmenter le rayon en fond de rainure</b> abaisse directement K<sub>t</sub>, pour un coût d’usinage à peine supérieur — c’est la modification la plus rentable. <b>Augmenter le diamètre</b> agit en 1/d³ mais alourdit l’arbre et impose des roulements plus gros. <b>Remplacer la clavette par des cannelures</b> répartit la transmission et réduit fortement la concentration, au prix d’un usinage nettement plus cher.'},
+ {n:'E1',pts:10,t:'PARTIE E — EXPLOITATION PÉDAGOGIQUE. À l’aide du document 5, proposez une séance de 2 h en terminale STI2D ITEC sur ce support. Précisez la compétence visée, l’activité des élèves et la production attendue.',
+  redac:{id:'r10',cles:['co6','co7','simuler','activite','ilot','tableur','modeleur','simulation','comparer','calcul','conge','varier','production','compte rendu']},
+  corr:'Réponse articulant trois éléments. <b>Compétence</b> : CO6.2 puis CO7.4 — simuler, puis proposer une modification argumentée. <b>Activité</b> : en îlots, calculer la contrainte dans les deux sections sur tableur, puis faire varier le rayon de congé dans une simulation par éléments finis et relever la contrainte maximale ; comparer au calcul analytique majoré par K<sub>t</sub>. <b>Production</b> : un compte rendu comportant le tableau des contraintes, la courbe contrainte en fonction du rayon de congé, et une proposition de modification chiffrée. L’évaluation porte sur l’argumentation de la modification, pas sur le seul résultat numérique.'},
+ {n:'E2',pts:8,t:'Un élève affirme : « la section critique est forcément celle où le moment fléchissant est le plus grand ». Analysez et proposez une remédiation.',
+  redac:{id:'r11',cles:['faux','diametre','kt','section','compens','85','84','egal','torsion','combin','tableau','comparer','calculer','montrer']},
+  corr:'L’affirmation est <b>fausse</b>, et ce sujet en fournit le contre-exemple parfait : le moment est 67 % plus fort sous la roue, et pourtant les deux sections aboutissent à la même contrainte. Le diamètre, le coefficient de concentration et la torsion interviennent tous. <b>Remédiation</b> : faire compléter un tableau à quatre colonnes — moment, diamètre, K<sub>t</sub>, contrainte équivalente — pour les deux sections. L’élève constate lui-même que la dernière colonne ne suit pas la première, et construit le bon réflexe : vérifier TOUTES les sections singulières.'},
 ];
 const z=document.getElementById('questions');
 Q.forEach(q=>{
@@ -162,50 +205,104 @@ document.getElementById('rendre').addEventListener('click',()=>{
  document.getElementById('rendre').disabled=true;
  r.scrollIntoView({behavior:'smooth'});
 });
-/* ═══ Document 1 : la maison vue de dessus ═══
-   NORD EN HAUT, convention du plan. Le secteur vitré regarde donc le SUD,
-   c'est-à-dire vers le BAS de la figure : la version précédente le dessinait
-   vers le haut, en contradiction avec sa propre légende. */
+/* ═══ Documents 1 et 2 ═══ */
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FL2(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+/* Documents 1 et 2 */
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FL2(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+/* 1 mm = 1,9 px, origine de l'arbre à gauche */
+const EX=1.9, X0=140;
+function PX(mm){ return X0+mm*EX; }
+(function(){
+ const c=document.getElementById('d0').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,300);
+ T2(c,'ARBRE DE SORTIE DU RÉDUCTEUR',430,26,14,'#155e75');
+ const y=150, A=PX(0), B=PX(300), R=PX(100), E=PX(60);
+ /* arbre : deux diamètres */
+ c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=2.4;
+ c.beginPath(); c.rect(A-20,y-26,E-A+20,52); c.fill(); c.stroke();
+ c.beginPath(); c.rect(E,y-32,B-E+24,64); c.fill(); c.stroke();
+ /* épaulement repéré */
+ c.strokeStyle='#dc2626'; c.lineWidth=2.6;
+ c.beginPath(); c.moveTo(E,y-32); c.lineTo(E,y+32); c.stroke();
+ c.fillStyle='#dc2626'; c.beginPath(); c.arc(E,y-32,5,0,6.284); c.fill();
+ /* roue dentée */
+ c.fillStyle='#ede9fe'; c.strokeStyle='#7c3aed'; c.lineWidth=2.6;
+ c.beginPath(); c.rect(R-24,y-72,48,144); c.fill(); c.stroke();
+ /* rainure de clavette */
+ c.fillStyle='#fff'; c.strokeStyle='#ea580c'; c.lineWidth=2.4;
+ c.beginPath(); c.rect(R-16,y-38,32,10); c.fill(); c.stroke();
+ /* roulements */
+ [A,B].forEach(function(x){
+  c.fillStyle='#fff'; c.strokeStyle='#475569'; c.lineWidth=2.4;
+  c.beginPath(); c.rect(x-12,y-44,24,18); c.fill(); c.stroke();
+  c.beginPath(); c.rect(x-12,y+26,24,18); c.fill(); c.stroke();
+ });
+ T2(c,'A',A,y+72,13,'#475569'); T2(c,'B',B,y+72,13,'#475569');
+ /* effort */
+ FL2(c,R,y-124,R,y-78,3.6,'#16a34a');
+ T2(c,'Ft = 4 000 N',R+14,y-104,12.5,'#16a34a','left');
+ /* cotations */
+ c.strokeStyle='#64748b'; c.lineWidth=1.2;
+ c.beginPath(); c.moveTo(A,y+96); c.lineTo(B,y+96); c.stroke();
+ [A,B].forEach(function(x){ c.beginPath(); c.moveTo(x,y+90); c.lineTo(x,y+102); c.stroke(); });
+ T2(c,'300 mm',(A+B)/2,y+114,12,'#64748b');
+ c.beginPath(); c.moveTo(A,y+76); c.lineTo(R,y+76); c.stroke();
+ T2(c,'100 mm',(A+R)/2,y+70,11.5,'#7c3aed');
+ /* légendes */
+ T2(c,'épaulement',E-8,y-52,11.5,'#dc2626','right');
+ T2(c,'rainure de clavette',R+34,y-52,11.5,'#ea580c','left');
+ T2(c,'roue dentée',R,y+88,11.5,'#7c3aed');
+ T2(c,'\u00d8 40',(A+E)/2,y+6,12,'#0284c7');
+ T2(c,'\u00d8 45',(R+B)/2,y+6,12,'#0284c7');
+})();
 (function(){
  const c=document.getElementById('d1').getContext('2d');
- c.fillStyle='#fff'; c.fillRect(0,0,860,320);
- const cx=430, cy=154, R=92;
- /* rail */
- c.strokeStyle='#94a3b8'; c.lineWidth=2.5; c.setLineDash([6,6]);
- c.beginPath(); c.arc(cx,cy,R+18,0,6.284); c.stroke(); c.setLineDash([]);
- /* axes cardinaux */
- c.strokeStyle='#e2e8f0'; c.lineWidth=1.6; c.setLineDash([4,4]);
- c.beginPath(); c.moveTo(cx-R-46,cy); c.lineTo(cx+R+46,cy); c.stroke();
- c.beginPath(); c.moveTo(cx,cy-R-40); c.lineTo(cx,cy+R+40); c.stroke(); c.setLineDash([]);
- /* mur aveugle */
- c.fillStyle='#f5f0e6'; c.strokeStyle='#8b6f47'; c.lineWidth=3.4;
- c.beginPath(); c.arc(cx,cy,R,0,6.284); c.fill(); c.stroke();
- /* secteur vitré de 120°, centré sur le SUD (vers le bas) */
- c.fillStyle='#bae6fd'; c.strokeStyle='#0284c7'; c.lineWidth=3.4;
- c.beginPath(); c.moveTo(cx,cy);
- c.arc(cx,cy,R, Math.PI/2-Math.PI/3, Math.PI/2+Math.PI/3);
- c.closePath(); c.fill(); c.stroke();
- /* cotation de l'ouverture */
- c.strokeStyle='#dc2626'; c.lineWidth=2;
- c.beginPath(); c.arc(cx,cy,46,Math.PI/2-Math.PI/3,Math.PI/2+Math.PI/3); c.stroke();
- c.font='bold 14px Segoe UI'; c.fillStyle='#dc2626'; c.textAlign='center';
- c.fillText('120°',cx,cy+38);
- /* etiquettes dans les zones, pour eviter tout chevauchement */
- c.font='bold 13px Segoe UI';
- c.fillStyle='#075985'; c.fillText('baies vitrées',cx,cy+78);
- c.fillStyle='#78350f'; c.fillText('mur aveugle isolé',cx,cy-52);
- /* points cardinaux */
- c.font='bold 13px Segoe UI'; c.fillStyle='#64748b';
- c.fillText('NORD',cx,cy-R-24);
- c.fillText('SUD',cx,cy+R+34);
- c.textAlign='right'; c.fillText('EST',cx-R-24,cy+5);
- c.textAlign='left';  c.fillText('OUEST',cx+R+24,cy+5);
- /* rail, en retrait pour ne croiser aucun texte */
- c.font='12.5px Segoe UI'; c.fillStyle='#94a3b8'; c.textAlign='left';
- c.fillText('rail circulaire',cx+R+24,cy-62);
- c.fillStyle='#334155'; c.beginPath(); c.arc(cx,cy,5,0,6.284); c.fill();
- c.textAlign='center'; c.font='12.5px Segoe UI'; c.fillStyle='#5b544a';
- c.fillText('orientation 0° : les baies regardent le sud',cx,306);
+ c.fillStyle='#fff'; c.fillRect(0,0,860,280);
+ T2(c,'MOMENT FLÉCHISSANT LE LONG DE L’ARBRE',430,26,14,'#155e75');
+ const A=PX(0), B=PX(300), R=PX(100), E=PX(60), y0=210, H=130;
+ const Mmax=266.7;
+ const Y=function(M){ return y0-M/Mmax*H; };
+ /* axes */
+ c.strokeStyle='#475569'; c.lineWidth=2;
+ c.beginPath(); c.moveTo(A-30,y0); c.lineTo(B+40,y0); c.stroke();
+ c.beginPath(); c.moveTo(A,y0); c.lineTo(A,y0-H-18); c.stroke();
+ /* diagramme triangulaire */
+ c.fillStyle='rgba(14,116,144,0.14)'; c.strokeStyle='#0e7490'; c.lineWidth=2.8;
+ c.beginPath(); c.moveTo(A,y0); c.lineTo(R,Y(Mmax)); c.lineTo(B,y0); c.closePath();
+ c.fill(); c.stroke();
+ /* sections repérées */
+ [[E,160,'#dc2626','épaulement'],[R,266.7,'#ea580c','clavette']].forEach(function(q){
+  c.strokeStyle=q[2]; c.lineWidth=1.8; c.setLineDash([5,4]);
+  c.beginPath(); c.moveTo(q[0],y0); c.lineTo(q[0],Y(q[1])); c.stroke(); c.setLineDash([]);
+  c.fillStyle=q[2]; c.beginPath(); c.arc(q[0],Y(q[1]),6,0,6.284); c.fill();
+  T2(c,q[3],q[0],Y(q[1])-14,12,q[2]);
+  T2(c,q[1].toFixed(1).replace('.',',')+' N·m',q[0],Y(q[1])-30,12,q[2]);
+ });
+ T2(c,'A',A,y0+20,12.5,'#475569'); T2(c,'B',B,y0+20,12.5,'#475569');
+ T2(c,'Mf',A-24,y0-H-12,12.5,'#0e7490');
+ T2(c,'le moment est plus fort sous la roue — mais l’arbre y est aussi plus gros',430,262,12.5,'#5b544a');
 })();
 
 /* MINICOURS_INTEGRE — un bouton par question, une notion par mini-cours */

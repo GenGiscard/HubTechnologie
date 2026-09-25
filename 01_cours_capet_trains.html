@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Trains d'engrenages et épicycloïdaux · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:34px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Trains d’engrenages et épicycloïdaux</h1>
+ <p class="sous">Un train ordinaire se lit de proche en proche. Un train épicycloïdal
+ ne se lit pas du tout : il faut passer par Willis. Confondre les deux coûte la
+ question entière.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>Le train ordinaire</h2>
+ <div class="chapo">Le rapport est un produit, le sens une alternance.</div>
+ <canvas id="cv1" width="880" height="230"></canvas>
+ <div class="formule">r = (produit des Z menants) ÷ (produit des Z menés)</div>
+ <p>À chaque contact extérieur, le sens s’inverse. Avec <b>n</b> contacts extérieurs,
+ le signe du rapport vaut <b>(−1)ⁿ</b>. Un contact intérieur, lui, conserve le sens.</p>
+ <div class="piege"><b>Piège d’épreuve.</b> Compter les roues au lieu des contacts.
+ Une roue folle change le sens sans changer le rapport : elle compte pour le signe,
+ jamais pour le calcul.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Couple et rendement</h2>
+ <div class="chapo">Ce qu’on gagne en couple, on le perd en vitesse — et un peu plus.</div>
+ <div class="formule">C<sub>sortie</sub> = C<sub>entrée</sub> × (1 / r) × η</div>
+ <table>
+  <tr><th>Grandeur</th><th>Entrée</th><th>Sortie d’un réducteur 1/9</th></tr>
+  <tr><td>Vitesse</td><td>1500 tr/min</td><td>166,7 tr/min</td></tr>
+  <tr><td>Couple, sans pertes</td><td>3,0 N·m</td><td>27,0 N·m</td></tr>
+  <tr><td>Couple, η = 0,941</td><td>3,0 N·m</td><td>25,4 N·m</td></tr>
+ </table>
+ <div class="retenir">Le rendement d’un train à étages est le <b>produit</b> des
+ rendements : deux étages à 0,97 donnent 0,94, trois étages 0,91. Les pertes
+ s’accumulent vite.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Le train épicycloïdal</h2>
+ <div class="chapo">Trois arbres, un seul degré de liberté quand on en bloque un.</div>
+ <canvas id="cv2" width="880" height="300"></canvas>
+ <p>Le planétaire, la couronne et le porte-satellites tournent tous les trois. On ne
+ peut donc pas lire le rapport de proche en proche : les satellites tournent sur un
+ axe qui se déplace.</p>
+ <div class="formule">(ω<sub>planétaire</sub> − ω<sub>ps</sub>) ÷ (ω<sub>couronne</sub> − ω<sub>ps</sub>) = λ</div>
+ <div class="retenir"><b>Formule de Willis.</b> On se place dans le repère du
+ porte-satellites : le train redevient ordinaire, et λ est sa <b>raison basique</b>,
+ λ = − Z<sub>couronne</sub> ÷ Z<sub>planétaire</sub>.</div>
+ <div class="piege"><b>L’erreur la plus fréquente.</b> Appliquer le rapport d’un train
+ ordinaire à un épicycloïdal. Le résultat est faux et rien ne le signale.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Fais varier la denture</h2>
+ <div class="chapo">Observe le rapport, et la condition de montage.</div>
+ <canvas id="cv3" width="880" height="330"></canvas>
+ <div class="reglage">
+  <label for="sZ">Dents du planétaire</label>
+  <input type="range" id="sZ" min="16" max="40" value="24" step="2">
+  <span id="vZ" style="font-weight:800;color:var(--accf);min-width:60px">24 dents</span>
+ </div>
+ <div class="reglage">
+  <label for="sC">Dents de la couronne</label>
+  <input type="range" id="sC" min="48" max="120" value="72" step="2">
+  <span id="vC" style="font-weight:800;color:var(--or);min-width:60px">72 dents</span>
+ </div>
+ <div class="retenir">Couronne bloquée, le rapport vaut
+ <b>Z<sub>planétaire</sub> ÷ (Z<sub>planétaire</sub> + Z<sub>couronne</sub>)</b>.
+ Il ne descend jamais sous 1/11 environ sur un étage simple : c’est la limite de la
+ denture intérieure.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>La méthode, sans se tromper</h2>
+ <div class="chapo">Six étapes, dans cet ordre.</div>
+ <div class="methode"><b>MÉTHODE</b>
+  <ol>
+   <li><b>Repérer</b> les trois arbres : planétaire, couronne, porte-satellites.</li>
+   <li><b>Identifier</b> celui qui est bloqué — sa vitesse est nulle.</li>
+   <li><b>Calculer</b> la raison basique λ = − Z<sub>c</sub> ÷ Z<sub>p</sub>.</li>
+   <li><b>Écrire</b> Willis en entier, avant de remplacer quoi que ce soit.</li>
+   <li><b>Remplacer</b> la vitesse nulle, puis isoler le rapport cherché.</li>
+   <li><b>Vérifier</b> le signe : le sens obtenu est-il physiquement plausible ?</li>
+  </ol></div>
+ <canvas id="cv4" width="880" height="230"></canvas>
+ <div class="retenir">Les satellites n’apparaissent <b>jamais</b> dans la formule de
+ Willis. Leur denture ne sert qu’à la condition de montage
+ Z<sub>s</sub> = (Z<sub>c</sub> − Z<sub>p</sub>) ÷ 2.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<footer>Préparation CAFEP-CAPET SII · Trains d’engrenages et épicycloïdaux · ESTIC Don Bosco</footer>
+
+<script>
+'use strict';
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+function cadre(c,x,y,w,h,coul){
+ c.fillStyle='#fff'; c.strokeStyle=coul; c.lineWidth=2.4;
+ c.beginPath(); c.roundRect(x,y,w,h,10); c.fill(); c.stroke();
+}
+/* Roue dentée : n dents, tracée par son profil, sans rotation du repère. */
+function roue(c,x,y,r,n,coul,plein){
+ c.strokeStyle=coul; c.lineWidth=2; c.fillStyle= plein||'#fff';
+ c.beginPath();
+ for(let k=0;k<n;k++){
+  const a0=2*Math.PI*k/n, da=2*Math.PI/n;
+  const P=[[r*0.84,a0],[r,a0+da*0.18],[r,a0+da*0.42],[r*0.84,a0+da*0.6]];
+  P.forEach(function(q,i){
+   const px=x+q[0]*Math.cos(q[1]), py=y+q[0]*Math.sin(q[1]);
+   if(k===0&&i===0) c.moveTo(px,py); else c.lineTo(px,py);
+  });
+ }
+ c.closePath(); c.fill(); c.stroke();
+ c.fillStyle=coul; c.beginPath(); c.arc(x,y,3,0,6.284); c.fill();
+}
+/* Couronne à denture INTÉRIEURE : les dents pointent vers le centre. */
+function couronne(c,x,y,r,n,coul){
+ c.strokeStyle=coul; c.lineWidth=2.4;
+ c.beginPath(); c.arc(x,y,r+14,0,6.284); c.stroke();
+ c.beginPath();
+ for(let k=0;k<n;k++){
+  const a0=2*Math.PI*k/n, da=2*Math.PI/n;
+  const P=[[r,a0],[r*0.9,a0+da*0.2],[r*0.9,a0+da*0.4],[r,a0+da*0.6]];
+  P.forEach(function(q,i){
+   const px=x+q[0]*Math.cos(q[1]), py=y+q[0]*Math.sin(q[1]);
+   if(k===0&&i===0) c.moveTo(px,py); else c.lineTo(px,py);
+  });
+ }
+ c.closePath(); c.stroke();
+}
+
+/* ═══ 1 · train ordinaire ═══ */
+(function(){
+ const c=document.getElementById('cv1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,230);
+ T(c,'LE SENS S’INVERSE À CHAQUE CONTACT EXTÉRIEUR',440,28,14,'#155e75');
+ const y=126;
+ const R=[[170,38,16,'#0e7490','1'],[250,42,18,'#7c3aed','2'],[336,32,14,'#ea580c','3']];
+ R.forEach(function(q){ roue(c,q[0],y,q[1],q[2],q[3]); T(c,q[4],q[0],y+q[1]+20,12.5,q[3]); });
+ [['horaire',170,'#0e7490'],['anti',250,'#7c3aed'],['horaire',336,'#ea580c']].forEach(function(q){
+  T(c,q[0],q[1],y-58,11.5,q[2]);
+ });
+ cadre(c,430,78,410,96,'#64748b');
+ T(c,'la roue 2 est une roue FOLLE',635,104,13,'#7c3aed');
+ T(c,'elle inverse le sens…',635,126,12,'#5b544a');
+ T(c,'…mais disparaît du rapport : r = Z1 ÷ Z3',635,148,12.5,'#155e75');
+ T(c,'deux contacts extérieurs : (−1)² = +1, l’entrée et la sortie tournent dans le même sens',440,206,12.5,'#5b544a');
+})();
+
+/* ═══ 3 · train épicycloïdal ═══ */
+(function(){
+ const c=document.getElementById('cv2').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,300);
+ T(c,'TROIS ARBRES, UN SEUL MÉCANISME',440,28,14,'#155e75');
+ const cx=250, cy=156;
+ couronne(c,cx,cy,102,36,'#ea580c');
+ roue(c,cx,cy,40,12,'#0e7490');
+ /* trois satellites à 120° */
+ for(let k=0;k<3;k++){
+  const a=k*2*Math.PI/3-Math.PI/2;
+  const sx=cx+68*Math.cos(a), sy=cy+68*Math.sin(a);
+  roue(c,sx,sy,30,12,'#7c3aed');
+  c.strokeStyle='#16a34a'; c.lineWidth=5; c.lineCap='butt';
+  c.beginPath(); c.moveTo(cx,cy); c.lineTo(sx,sy); c.stroke();
+ }
+ c.fillStyle='#16a34a'; c.beginPath(); c.arc(cx,cy,7,0,6.284); c.fill();
+ /* légende en coordonnées ABSOLUES : la version précédente les calculait par un
+    décalage et la première entrée sortait du canvas par le haut. */
+ const L=[['planétaire','#0e7490',72],['satellites','#7c3aed',100],
+          ['couronne','#ea580c',128],['porte-satellites','#16a34a',156]];
+ L.forEach(function(q){
+  c.fillStyle=q[2]!==undefined?q[1]:q[1]; c.beginPath(); c.arc(462,q[2]-5,6,0,6.284); c.fill();
+  T(c,q[0],478,q[2],13,q[1],'left');
+ });
+ T(c,'Les satellites tournent sur un axe QUI SE DÉPLACE :',462,200,12.5,'#5b544a','left');
+ T(c,'impossible de lire le rapport de proche en proche.',462,220,12.5,'#5b544a','left');
+ T(c,'D’où le changement de repère de Willis.',462,240,12.5,'#b91c1c','left');
+ T(c,'condition de montage : Zs = (Zc − Zp) ÷ 2',250,292,12.5,'#5b544a');
+})();
+
+/* ═══ 4 · simulateur ═══ */
+(function(){
+ const c=document.getElementById('cv3').getContext('2d');
+ const sZ=document.getElementById('sZ'), sC=document.getElementById('sC');
+ const vZ=document.getElementById('vZ'), vC=document.getElementById('vC');
+ function dessiner(){
+  const Zp=+sZ.value, Zc=+sC.value;
+  vZ.textContent=Zp+' dents'; vC.textContent=Zc+' dents';
+  const Zs=(Zc-Zp)/2;
+  const lam=-Zc/Zp;
+  const rapport=Zp/(Zp+Zc);
+  const montable = Zs>0 && Number.isInteger(Zs) && (Zp+Zc)%3===0;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,330);
+  T(c,'COURONNE BLOQUÉE — LE PORTE-SATELLITES EST LA SORTIE',440,26,14,'#155e75');
+  /* schéma à l'échelle des dentures */
+  const cx=250, cy=176, k=1.35;
+  const rp=Zp*k/2, rc=Zc*k/2, rs=Zs*k/2;
+  couronne(c,cx,cy,rc,Math.min(Zc,48),'#ea580c');
+  roue(c,cx,cy,rp,Math.min(Zp,20),'#0e7490');
+  if(Zs>0){
+   for(let q=0;q<3;q++){
+    const a=q*2*Math.PI/3-Math.PI/2;
+    const sx=cx+(rp+rs)*Math.cos(a), sy=cy+(rp+rs)*Math.sin(a);
+    roue(c,sx,sy,rs,Math.min(Math.max(Zs,6),20),'#7c3aed');
+    c.strokeStyle='#16a34a'; c.lineWidth=4; c.lineCap='butt';
+    c.beginPath(); c.moveTo(cx,cy); c.lineTo(sx,sy); c.stroke();
+   }
+  }
+  c.fillStyle='#16a34a'; c.beginPath(); c.arc(cx,cy,6,0,6.284); c.fill();
+  /* lecture */
+  cadre(c,520,58,330,150,'#155e75');
+  T(c,'raison basique  λ = − Zc ÷ Zp',685,86,13,'#7c3aed');
+  T(c,'λ = '+lam.toFixed(2).replace('.',','),685,110,19,'#7c3aed');
+  T(c,'rapport de réduction  ω<sub>ps</sub> ÷ ω<sub>p</sub>'.replace(/<[^>]+>/g,''),685,140,12.5,'#64748b');
+  T(c,rapport.toFixed(4).replace('.',',')+'   soit  1 / '+(1/rapport).toFixed(2).replace('.',','),
+    685,166,17,'#0e7490');
+  T(c,'satellites : '+(Zs>0? Zs+' dents' : 'impossible'),685,192,12.5,'#5b544a');
+  T(c, montable ? 'montage à 3 satellites possible : (Zp + Zc) est divisible par 3'
+     : 'montage à 3 satellites IMPOSSIBLE avec cette denture',
+    440, 300, 13, montable? '#16a34a':'#dc2626');
+ }
+ sZ.addEventListener('input',dessiner);
+ sC.addEventListener('input',dessiner);
+ dessiner();
+})();
+
+/* ═══ 5 · la méthode ═══ */
+(function(){
+ const c=document.getElementById('cv4').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,230);
+ T(c,'LE CHANGEMENT DE REPÈRE DE WILLIS',440,28,14,'#155e75');
+ const B=[['REPÈRE FIXE','les 3 arbres tournent','#dc2626',60],
+          ['REPÈRE DU PORTE-SATELLITES','le train redevient ORDINAIRE','#16a34a',350],
+          ['RETOUR AU REPÈRE FIXE','on isole le rapport cherché','#0e7490',640]];
+ const w=200, y=88;
+ B.forEach(function(b,i){
+  cadre(c,b[3],y,w,68,b[2]);
+  T(c,b[0],b[3]+w/2,y+28,12,b[2]);
+  T(c,b[1],b[3]+w/2,y+48,11.5,'#5b544a');
+  if(i<2) FLECHE(c,b[3]+w+6,y+34,B[i+1][3]-6,y+34,3,'#94a3b8');
+ });
+ T(c,'on retranche ω du porte-satellites à TOUTES les vitesses',440,186,13,'#5b544a');
+ T(c,'c’est tout ce que dit la formule de Willis',440,208,12.5,'#b91c1c');
+})();
+
+/* ═══ 6 · exercices ═══ */
+const Q=[
+ {q:"Un train comporte trois roues en ligne, la roue centrale étant folle. Que change-t-elle ?",
+  r:["elle divise le rapport par deux","elle inverse le sens sans modifier le rapport","elle n’a aucun effet"],b:1,
+  ex:"Une roue folle ajoute un contact extérieur, donc une inversion de sens, mais elle apparaît une fois au numérateur et une fois au dénominateur : elle disparaît du rapport."},
+ {q:"Planétaire 24 dents, couronne 72 dents, couronne bloquée. Que vaut le rapport ωps/ωp ?",
+  r:["1/3","1/4","1/2"],b:1,
+  ex:"Willis donne ωps/ωp = Zp/(Zp+Zc) = 24/96 = 1/4. Répondre 1/3 revient à appliquer le rapport d’un train ordinaire, Zp/Zc : c’est l’erreur la plus fréquente."},
+ {q:"Dans la formule de Willis, où interviennent les satellites ?",
+  r:["au numérateur","nulle part","au dénominateur"],b:1,
+  ex:"Les satellites n’apparaissent jamais dans Willis. Leur denture ne sert qu’à la condition géométrique de montage, Zs = (Zc − Zp)/2."},
+ {q:"Un réducteur à deux étages a un rapport de 1/9 et un rendement de 0,94. Le couple d’entrée vaut 3 N·m. Quel couple en sortie ?",
+  r:["27,0 N·m","25,4 N·m","2,8 N·m"],b:1,
+  ex:"3 × 9 × 0,94 ≈ 25,4 N·m. Oublier le rendement donnerait 27,0 N·m, soit 6 % d’erreur — assez pour valider à tort un composant."},
+ {q:"Que vaut la raison basique λ d’un épicycloïdal à planétaire 24 et couronne 72 ?",
+  r:["+3","−3","−1/3"],b:1,
+  ex:"λ = −Zc/Zp = −72/24 = −3. Le signe négatif traduit l’inversion de sens dans le repère du porte-satellites : l’oublier fausse tout le reste."},
+ {q:"Pourquoi ne peut-on pas lire un épicycloïdal de proche en proche ?",
+  r:["parce que les satellites tournent sur un axe mobile","parce qu’il y a trop de roues","parce que la couronne a une denture intérieure"],b:0,
+  ex:"L’axe des satellites se déplace avec le porte-satellites. La lecture de proche en proche suppose des axes fixes : c’est exactement ce que le changement de repère de Willis rétablit."}
+];
+(function(){
+ const z=document.getElementById('questions');
+ const choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',function(){
+    if(b.disabled) return;
+    choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';});
+    b.style.fontWeight='800';
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){
+    b.disabled=true;
+    if(j===Q[i].b) b.classList.add('bon');
+    else if(choix[i]===j) b.classList.add('faux');
+   });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div');
+   e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko');
+   e.textContent=Q[i].ex;
+   r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ');
+  b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+
+   (n===Q.length ? 'La méthode est acquise. Passe au TP pour l’appliquer sur des cas chiffrés.'
+                 : 'Reprends la méthode de la partie 5 : six étapes, dans cet ordre.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>

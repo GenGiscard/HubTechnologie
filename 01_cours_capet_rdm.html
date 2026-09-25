@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Résistance des matériaux · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:34px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Résistance des matériaux</h1>
+ <p class="sous">Une pièce ne casse presque jamais là où la contrainte moyenne est la
+ plus forte. Elle casse au premier congé, au premier trou, à la première rainure.
+ Le calcul sans concentration de contraintes est un calcul faux.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>Les quatre sollicitations simples</h2>
+ <div class="chapo">Même logique à chaque fois : un effort, une caractéristique de section.</div>
+ <table>
+  <tr><th>Sollicitation</th><th>Contrainte</th><th>Section circulaire pleine</th></tr>
+  <tr><td>Traction</td><td>σ = N / S</td><td>S = π d² / 4</td></tr>
+  <tr><td>Cisaillement</td><td>τ = T / S</td><td>S = π d² / 4</td></tr>
+  <tr><td>Flexion</td><td>σ = M<sub>f</sub> / (I/v)</td><td>I/v = π d³ / 32</td></tr>
+  <tr><td>Torsion</td><td>τ = M<sub>t</sub> / (I₀/ρ)</td><td>I₀/ρ = π d³ / 16</td></tr>
+ </table>
+ <div class="retenir">Le module de torsion est exactement le <b>double</b> du module
+ de flexion. À diamètre égal, un arbre résiste deux fois mieux en torsion qu’en
+ flexion.</div>
+ <div class="piege"><b>Piège d’unités.</b> Un moment en N·m et un module en mm³ ne se
+ divisent pas. Convertir le moment en <b>N·mm</b> donne directement des MPa.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Le moment fléchissant selon le cas de charge</h2>
+ <div class="chapo">Trois cas à connaître par cœur.</div>
+ <canvas id="cv1" width="880" height="270"></canvas>
+ <div class="retenir">Une poutre <b>encastrée</b> subit quatre fois le moment d’une
+ poutre sur deux appuis, pour la même force et la même longueur. Le mode de liaison
+ pèse autant que la charge.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Fais varier le diamètre</h2>
+ <div class="chapo">La contrainte varie en 1/d³ : ce n’est pas une intuition, c’est une chute.</div>
+ <canvas id="cv2" width="880" height="330"></canvas>
+ <div class="reglage">
+  <label for="sD">Diamètre de l’arbre</label>
+  <input type="range" id="sD" min="12" max="44" value="25" step="1">
+  <span id="vD" style="font-weight:800;color:var(--accf);min-width:62px">25 mm</span>
+ </div>
+ <div class="reglage">
+  <label for="sM">Moment fléchissant</label>
+  <input type="range" id="sM" min="50" max="400" value="200" step="10">
+  <span id="vM" style="font-weight:800;color:var(--or);min-width:70px">200 N·m</span>
+ </div>
+ <div class="retenir">Augmenter le diamètre de <b>20 %</b> divise la contrainte par
+ <b>1,73</b>. C’est le levier le plus efficace — et le plus coûteux en masse.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>La concentration de contraintes</h2>
+ <div class="chapo">Là où la matière change de section, elle s’affole.</div>
+ <canvas id="cv3" width="880" height="290"></canvas>
+ <div class="formule">σ<sub>max</sub> = K<sub>t</sub> × σ<sub>nominale</sub></div>
+ <p>Le coefficient K<sub>t</sub> se lit dans un abaque, selon le rapport du rayon de
+ congé au diamètre. Il vaut couramment <b>1,5 à 2,5</b>, et grimpe au-delà de 3 pour
+ un congé vif.</p>
+ <div class="piege"><b>L’erreur qui casse les pièces.</b> Valider une contrainte
+ nominale de 130 MPa face à une limite pratique de 112 MPa en oubliant K<sub>t</sub> = 2,1.
+ La contrainte réelle atteint 274 MPa : la pièce rompt au congé, pas au milieu.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Flexion et torsion ensemble</h2>
+ <div class="chapo">Un arbre de transmission subit les deux.</div>
+ <div class="formule">σ<sub>équivalente</sub> = √(σ² + 4τ²)</div>
+ <div class="methode"><b>MÉTHODE — vérifier un arbre</b>
+  <ol>
+   <li><b>Isoler</b> et tracer les diagrammes : moment fléchissant, moment de torsion.</li>
+   <li><b>Repérer</b> la section la plus sollicitée — elle n’est pas toujours au milieu.</li>
+   <li><b>Calculer</b> σ de flexion et τ de torsion dans cette section.</li>
+   <li><b>Combiner</b> en contrainte équivalente.</li>
+   <li><b>Appliquer</b> K<sub>t</sub> s’il y a un changement de section à cet endroit.</li>
+   <li><b>Comparer</b> à R<sub>pe</sub> = R<sub>e</sub> / s, et conclure.</li>
+  </ol></div>
+ <div class="retenir">Oublier l’étape 5 est l’erreur la plus fréquente en épreuve.
+ Le jury attend qu’on cherche activement les <b>changements de section</b>.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<footer>Préparation CAFEP-CAPET SII · Résistance des matériaux · ESTIC Don Bosco</footer>
+
+<script>
+'use strict';
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+/* Hachures bornées par calcul — ne jamais compter sur clip(). */
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8;
+ c.strokeStyle=coul; c.lineWidth=1; c.lineCap='butt';
+ for(let k=-h;k<w;k+=p){
+  const t0=Math.max(0,-k), t1=Math.min(h,w-k);
+  if(t1<=t0) continue;
+  c.beginPath(); c.moveTo(x+k+t0,y+t0); c.lineTo(x+k+t1,y+t1); c.stroke();
+ }
+ c.strokeStyle=coul; c.lineWidth=2; c.strokeRect(x,y,w,h);
+}
+function appui(c,x,y,coul){
+ c.strokeStyle=coul; c.fillStyle='#fff'; c.lineWidth=2;
+ c.beginPath(); c.moveTo(x,y); c.lineTo(x-11,y+18); c.lineTo(x+11,y+18);
+ c.closePath(); c.fill(); c.stroke();
+ c.strokeStyle=coul; c.lineWidth=1.6;
+ for(let k=-12;k<14;k+=6){ c.beginPath(); c.moveTo(x+k,y+18); c.lineTo(x+k-6,y+26); c.stroke(); }
+}
+
+/* ═══ 2 · cas de charge ═══ */
+(function(){
+ const c=document.getElementById('cv1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,270);
+ T(c,'LE MOMENT MAXIMAL DÉPEND DU MODE DE LIAISON',440,28,14,'#155e75');
+ const y=126, Lp=180;
+ /* 1 — encastrée, charge au bout */
+ let x0=60;
+ HACH(c,x0-18,y-34,18,68,'#475569');
+ c.strokeStyle='#0e7490'; c.lineWidth=7; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y); c.lineTo(x0+Lp,y); c.stroke();
+ FLECHE(c,x0+Lp,y-52,x0+Lp,y-8,3.4,'#ea580c');
+ T(c,'F',x0+Lp+14,y-30,13,'#ea580c','left');
+ T(c,'encastrée',x0+Lp/2,y+34,12.5,'#0e7490');
+ T(c,'Mf = F × L',x0+Lp/2,y+56,14,'#dc2626');
+ /* 2 — deux appuis, charge centrale */
+ x0=360;
+ c.strokeStyle='#0e7490'; c.lineWidth=7;
+ c.beginPath(); c.moveTo(x0,y); c.lineTo(x0+Lp,y); c.stroke();
+ appui(c,x0,y+4,'#64748b'); appui(c,x0+Lp,y+4,'#64748b');
+ FLECHE(c,x0+Lp/2,y-52,x0+Lp/2,y-8,3.4,'#ea580c');
+ T(c,'F',x0+Lp/2+14,y-30,13,'#ea580c','left');
+ T(c,'deux appuis',x0+Lp/2,y+42,12.5,'#0e7490');
+ T(c,'Mf = F × L / 4',x0+Lp/2,y+64,14,'#16a34a');
+ /* 3 — deux appuis, charge répartie */
+ x0=660;
+ c.strokeStyle='#0e7490'; c.lineWidth=7;
+ c.beginPath(); c.moveTo(x0,y); c.lineTo(x0+Lp,y); c.stroke();
+ appui(c,x0,y+4,'#64748b'); appui(c,x0+Lp,y+4,'#64748b');
+ for(let k=0;k<=Lp;k+=22) FLECHE(c,x0+k,y-40,x0+k,y-8,2.2,'#ea580c');
+ T(c,'q',x0+Lp+14,y-30,13,'#ea580c','left');
+ T(c,'charge répartie',x0+Lp/2,y+42,12.5,'#0e7490');
+ T(c,'Mf = q × L² / 8',x0+Lp/2,y+64,14,'#7c3aed');
+ T(c,'à force et longueur égales, l’encastrement subit QUATRE FOIS le moment des deux appuis',440,224,13,'#5b544a');
+ T(c,'repérer le cas de charge AVANT tout calcul de section',440,248,12.5,'#b91c1c');
+})();
+
+/* ═══ 3 · simulateur ═══ */
+(function(){
+ const c=document.getElementById('cv2').getContext('2d');
+ const sD=document.getElementById('sD'), sM=document.getElementById('sM');
+ const vD=document.getElementById('vD'), vM=document.getElementById('vM');
+ function sigma(d,Mf){ return Mf*1000/(Math.PI*d*d*d/32); }
+ function dessiner(){
+  const d=+sD.value, Mf=+sM.value;
+  vD.textContent=d+' mm'; vM.textContent=Mf+' N·m';
+  const s=sigma(d,Mf), Rpe=335/3;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,330);
+  T(c,'LA CONTRAINTE VARIE EN 1 / d³',440,26,14,'#155e75');
+  /* courbe sigma(d) à moment fixé */
+  const x0=90, y0=250, L=470, H=180;
+  let smax=sigma(12,Mf);
+  const X=q=>x0+(q-12)/32*L, Y=v=>y0-Math.min(v,smax)/smax*H;
+  c.strokeStyle='#e2e8f0'; c.lineWidth=1;
+  for(let q=16;q<=44;q+=4){ c.beginPath(); c.moveTo(X(q),y0); c.lineTo(X(q),y0-H); c.stroke(); }
+  c.strokeStyle='#475569'; c.lineWidth=2;
+  c.beginPath(); c.moveTo(x0,y0); c.lineTo(x0+L,y0); c.stroke();
+  c.beginPath(); c.moveTo(x0,y0); c.lineTo(x0,y0-H); c.stroke();
+  c.font='11.5px Segoe UI'; c.fillStyle='#64748b'; c.textAlign='center';
+  for(let q=16;q<=44;q+=4) c.fillText(q,X(q),y0+18);
+  T(c,'diamètre (mm)',x0+L/2,y0+40,12,'#64748b');
+  /* rentré : à x=46 le libellé sortait du canvas une fois pivoté */
+  c.save(); c.translate(66,172); c.rotate(-Math.PI/2);
+  T(c,'contrainte (MPa)',0,0,12,'#64748b'); c.restore();
+  /* limite pratique */
+  if(Rpe<smax){
+   c.strokeStyle='#dc2626'; c.lineWidth=1.8; c.setLineDash([6,4]);
+   c.beginPath(); c.moveTo(x0,Y(Rpe)); c.lineTo(x0+L,Y(Rpe)); c.stroke(); c.setLineDash([]);
+   T(c,'Rpe = 112 MPa',x0+L-6,Y(Rpe)-8,11.5,'#dc2626','right');
+  }
+  c.strokeStyle='#0e7490'; c.lineWidth=2.8;
+  c.beginPath();
+  for(let q=12;q<=44;q+=0.25){
+   const px=X(q), py=Y(sigma(q,Mf));
+   if(q===12) c.moveTo(px,py); else c.lineTo(px,py);
+  }
+  c.stroke();
+  c.fillStyle='#ea580c'; c.beginPath(); c.arc(X(d),Y(s),7,0,6.284); c.fill();
+  /* lecture */
+  c.fillStyle='#fff'; c.strokeStyle='#155e75'; c.lineWidth=2.4;
+  c.beginPath(); c.roundRect(600,60,250,120,12); c.fill(); c.stroke();
+  T(c,'module de flexion I/v',725,84,12,'#64748b');
+  T(c,Math.round(Math.PI*d*d*d/32)+' mm³',725,108,17,'#7c3aed');
+  T(c,'contrainte maximale',725,134,12,'#64748b');
+  T(c,s.toFixed(1).replace('.',',')+' MPa',725,160,19, s<=Rpe? '#16a34a':'#dc2626');
+  T(c, s<=Rpe ? 'contrainte admissible : l’arbre tient'
+     : 'AU-DELÀ de la limite pratique : section insuffisante',
+    440, 306, 13, s<=Rpe? '#16a34a':'#dc2626');
+ }
+ sD.addEventListener('input',dessiner);
+ sM.addEventListener('input',dessiner);
+ dessiner();
+})();
+
+/* ═══ 4 · concentration de contraintes ═══
+   Mise en page reprise : la courbe de contrainte venait buter sur le titre, et
+   l'étiquette du congé tombait dans la zone de la courbe. */
+(function(){
+ const c=document.getElementById('cv3').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,290);
+ T(c,'LA PIÈCE CASSE AU CHANGEMENT DE SECTION',440,26,14,'#155e75');
+ const y=178;
+ /* arbre épaulé, vu de côté */
+ c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=2.4;
+ c.beginPath(); c.rect(120,y-40,230,80); c.fill(); c.stroke();
+ c.beginPath(); c.rect(350,y-24,300,48); c.fill(); c.stroke();
+ /* congé repéré */
+ c.strokeStyle='#dc2626'; c.lineWidth=3;
+ c.beginPath(); c.arc(362,y-36,12,Math.PI,Math.PI*1.5); c.stroke();
+ c.beginPath(); c.arc(362,y+36,12,Math.PI*0.5,Math.PI); c.stroke();
+ c.fillStyle='#dc2626'; c.beginPath(); c.arc(352,y-24,5,0,6.284); c.fill();
+ c.strokeStyle='#dc2626'; c.lineWidth=1.2;
+ c.beginPath(); c.moveTo(352,y+26); c.lineTo(352,y+52); c.stroke();
+ T(c,'congé de raccordement',352,y+68,12,'#dc2626');
+ /* courbe de contrainte, au-dessus de l'arbre */
+ c.strokeStyle='#7c3aed'; c.lineWidth=2.6;
+ c.beginPath();
+ for(let x=120;x<=650;x+=2){
+  const pic = 96*Math.exp(-Math.pow((x-352)/26,2));
+  const v = 104 - (x<350? 0 : 10) - pic*0.5;
+  if(x===120) c.moveTo(x,v); else c.lineTo(x,v);
+ }
+ c.stroke();
+ T(c,'contrainte réelle',180,122,12,'#7c3aed');
+ T(c,'σ nominale',600,84,12,'#64748b');
+ FLECHE(c,470,50,372,50,2.8,'#dc2626');
+ T(c,'pic de contrainte',480,54,12,'#dc2626','left');
+ T(c,'σmax = Kt × σnominale   —   Kt se lit dans un abaque, selon r / d',440,266,13,'#5b544a');
+ T(c,'un congé vif peut porter Kt au-delà de 3',440,285,12.5,'#b91c1c');
+})();
+
+/* ═══ 6 · exercices ═══ */
+const Q=[
+ {q:"Un arbre de 30 mm travaille en flexion. Que vaut son module I/v ?",
+  r:["2 651 mm³","5 301 mm³","10 603 mm³"],b:0,
+  ex:"I/v = π d³ / 32 = π × 27 000 / 32 ≈ 2 651 mm³. La valeur 5 301 mm³ est le module de TORSION, exactement le double : les confondre divise ou multiplie la contrainte par deux."},
+ {q:"Une poutre encastrée subit F à son extrémité. Où le moment est-il maximal ?",
+  r:["au milieu","à l’encastrement","à l’extrémité chargée"],b:1,
+  ex:"Mf = F × L à l’encastrement, et zéro à l’extrémité libre. C’est donc l’encastrement qu’il faut vérifier — et c’est là qu’on trouve souvent aussi un changement de section."},
+ {q:"On augmente le diamètre d’un arbre de 20 %. Que devient la contrainte de flexion ?",
+  r:["elle diminue de 20 %","elle est divisée par 1,73","elle est divisée par 2,4"],b:1,
+  ex:"La contrainte varie en 1/d³, donc elle est divisée par 1,2³ = 1,73, soit une baisse de 42 %. Raisonner en proportionnalité simple sous-estime largement l’effet."},
+ {q:"σ nominale = 130 MPa, Kt = 2,1, Rpe = 112 MPa. Que conclure ?",
+  r:["la pièce tient, 130 reste proche de 112","la pièce ne tient pas : 274 MPa au congé","il faut comparer 130 à 2,1 × 112"],b:1,
+  ex:"σmax = 2,1 × 130 = 273 MPa, soit plus du double de la limite pratique. La pièce rompra au congé. Le coefficient s’applique à la CONTRAINTE, jamais à la limite du matériau."},
+ {q:"Un arbre subit σ = 130 MPa en flexion et τ = 28 MPa en torsion. Contrainte équivalente ?",
+  r:["158 MPa","142 MPa","133 MPa"],b:1,
+  ex:"σéq = √(130² + 4 × 28²) = √(16 900 + 3 136) ≈ 142 MPa. Additionner simplement les deux contraintes donnerait 158 MPa : c’est faux, elles n’agissent pas sur les mêmes facettes."},
+ {q:"À diamètre égal, un arbre résiste mieux en torsion ou en flexion ?",
+  r:["en torsion, le module vaut le double","en flexion, le module vaut le double","identiquement"],b:0,
+  ex:"I₀/ρ = π d³ / 16 vaut exactement le double de I/v = π d³ / 32. Pour un même moment, la contrainte de torsion est donc deux fois plus faible."}
+];
+(function(){
+ const z=document.getElementById('questions');
+ const choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',function(){
+    if(b.disabled) return;
+    choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';});
+    b.style.fontWeight='800';
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){
+    b.disabled=true;
+    if(j===Q[i].b) b.classList.add('bon');
+    else if(choix[i]===j) b.classList.add('faux');
+   });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div');
+   e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko');
+   e.textContent=Q[i].ex;
+   r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ');
+  b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+
+   (n===Q.length ? 'La méthode est acquise. Passe au TP pour l’appliquer sur des cas chiffrés.'
+                 : 'Reprends la méthode de la partie 5 : six étapes, et surtout l’étape 5.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>
