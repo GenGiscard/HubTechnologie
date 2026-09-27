@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Cotation fonctionnelle · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:34px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Cotation fonctionnelle</h1>
+ <p class="sous">La cote la plus importante d’un mécanisme n’est jamais tracée sur un
+ dessin de définition. C’est un jeu, et il ne dépend d’aucune pièce prise isolément.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>La cote condition</h2>
+ <div class="chapo">Ce qu’on veut obtenir, et qu’on ne peut pas fabriquer directement.</div>
+ <canvas id="cv1" width="880" height="250"></canvas>
+ <p>Un jeu de montage, une garde de sécurité, un dépassement : ces grandeurs
+ conditionnent le fonctionnement, mais aucune machine ne les usine. Elles résultent
+ de l’<b>empilement</b> des cotes des pièces.</p>
+ <div class="retenir">Une cote condition se note par un <b>vecteur</b>, entre les deux
+ surfaces qui la délimitent. Elle ne figure sur AUCUN dessin de définition.</div>
+ <div class="piege"><b>Piège d’épreuve.</b> Coter le jeu sur le dessin de la pièce.
+ C’est un non-sens : le jeu appartient au mécanisme, pas à une pièce.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Tracer la chaîne</h2>
+ <div class="chapo">Une seule règle de sens, et tout en découle.</div>
+ <canvas id="cv2" width="880" height="260"></canvas>
+ <div class="formule">J = (somme des cotes de MÊME sens) − (somme des cotes de sens OPPOSÉ)</div>
+ <div class="methode"><b>MÉTHODE — tracer une chaîne</b>
+  <ol>
+   <li><b>Repérer</b> les deux surfaces qui délimitent le jeu.</li>
+   <li><b>Partir</b> de l’origine du vecteur condition et revenir à son extrémité,
+    en passant par les surfaces en contact.</li>
+   <li><b>Une cote par pièce</b> traversée : jamais deux, jamais zéro.</li>
+   <li><b>Orienter</b> chaque vecteur, puis appliquer la relation ci-dessus.</li>
+  </ol></div>
+ <div class="retenir">La chaîne se <b>ferme</b> : on revient toujours au point de
+ départ. Si elle ne se ferme pas, c’est qu’une surface de contact a été oubliée.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Les valeurs extrêmes</h2>
+ <div class="chapo">Le jeu est maximal quand ce qui contient est au maxi.</div>
+ <div class="formule">J<sub>max</sub> = A<sub>max</sub> − B<sub>min</sub> − C<sub>min</sub>
+ &nbsp;·&nbsp; J<sub>min</sub> = A<sub>min</sub> − B<sub>max</sub> − C<sub>max</sub></div>
+ <div class="retenir">L’intervalle de tolérance de la condition est la <b>SOMME</b> des
+ intervalles des cotes de la chaîne. C’est la propriété la plus utile : elle se
+ vérifie d’un coup d’œil et détecte la plupart des erreurs de calcul.</div>
+ <div class="piege"><b>Conséquence directe.</b> Plus la chaîne est longue, plus le jeu
+ est dispersé. Une chaîne à cinq cotes cumule cinq tolérances : on cherche toujours à
+ la raccourcir.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Fais varier les tolérances</h2>
+ <div class="chapo">La condition impose 0,80 à 1,20 mm. Tiens-la.</div>
+ <canvas id="cv3" width="880" height="330"></canvas>
+ <div class="reglage">
+  <label for="sA">Tolérance de A (60 mm)</label>
+  <input type="range" id="sA" min="2" max="20" value="15" step="1">
+  <span id="vA" style="font-weight:800;color:var(--accf);min-width:74px">± 0,15</span>
+ </div>
+ <div class="reglage">
+  <label for="sB">Tolérance de B et C</label>
+  <input type="range" id="sB" min="2" max="15" value="5" step="1">
+  <span id="vB" style="font-weight:800;color:var(--or);min-width:74px">± 0,05</span>
+ </div>
+ <div class="retenir">Resserrer une tolérance coûte cher : chaque dixième gagné
+ exige une machine plus précise ou un contrôle plus lourd. On resserre donc la cote
+ la <b>moins coûteuse</b> à tenir, pas la plus grande.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Répartir les tolérances</h2>
+ <div class="chapo">Le calcul inverse, celui qu’on demande en conception.</div>
+ <table>
+  <tr><th>Méthode</th><th>Principe</th><th>Quand l’employer</th></tr>
+  <tr><td>Répartition égale</td><td>IT total ÷ nombre de cotes</td><td>premier jet, pièces comparables</td></tr>
+  <tr><td>Répartition pondérée</td><td>plus de tolérance aux cotes longues ou difficiles</td><td>cas réel, procédés différents</td></tr>
+  <tr><td>Cote de réglage</td><td>une cote absorbe le reste, ajustée au montage</td><td>chaîne trop longue à tenir</td></tr>
+ </table>
+ <div class="retenir">En épreuve, annoncer la méthode AVANT de calculer. Le jury
+ évalue la démarche de conception, pas seulement le nombre.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<footer>Préparation CAFEP-CAPET SII · Cotation fonctionnelle · ESTIC Don Bosco</footer>
+
+<script>
+'use strict';
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(10,ep*2.6), W=Math.max(8,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+/* Hachures bornées par calcul — ne jamais compter sur clip(). */
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8;
+ c.strokeStyle=coul; c.lineWidth=1; c.lineCap='butt';
+ for(let k=-h;k<w;k+=p){
+  const t0=Math.max(0,-k), t1=Math.min(h,w-k);
+  if(t1<=t0) continue;
+  c.beginPath(); c.moveTo(x+k+t0,y+t0); c.lineTo(x+k+t1,y+t1); c.stroke();
+ }
+ c.strokeStyle=coul; c.lineWidth=2; c.strokeRect(x,y,w,h);
+}
+
+/* ═══ 1 · la cote condition ═══ */
+(function(){
+ const c=document.getElementById('cv1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,250);
+ T(c,'LE JEU N’APPARTIENT À AUCUNE PIÈCE',440,28,14,'#155e75');
+ const y=120, x0=140;
+ HACH(c,x0,y-44,190,88,'#0284c7');
+ HACH(c,x0+190,y-44,230,88,'#b45309');
+ HACH(c,x0+470,y-56,120,112,'#475569');
+ T(c,'pièce 1',x0+95,y+66,12.5,'#0284c7');
+ T(c,'pièce 2',x0+305,y+66,12.5,'#b45309');
+ T(c,'bâti',x0+530,y+78,12.5,'#475569');
+ /* le jeu */
+ c.fillStyle='rgba(220,38,38,0.16)'; c.strokeStyle='#dc2626'; c.lineWidth=2;
+ c.beginPath(); c.rect(x0+420,y-44,50,88); c.fill(); c.stroke();
+ FLECHE(c,x0+420,y-70,x0+470,y-70,3,'#dc2626');
+ T(c,'J',x0+445,y-80,15,'#dc2626');
+ T(c,'aucune machine ne fabrique ce jeu : il RÉSULTE des autres cotes',440,224,13,'#5b544a');
+})();
+
+/* ═══ 2 · tracer la chaîne ═══ */
+(function(){
+ const c=document.getElementById('cv2').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,260);
+ T(c,'LA CHAÎNE SE FERME : ON REVIENT AU POINT DE DÉPART',440,28,14,'#155e75');
+ const y=118, x0=130, A=600;
+ HACH(c,x0,y-40,250,80,'#0284c7');
+ HACH(c,x0+250,y-40,280,80,'#b45309');
+ c.fillStyle='rgba(220,38,38,0.14)'; c.strokeStyle='#dc2626'; c.lineWidth=2;
+ c.beginPath(); c.rect(x0+530,y-40,70,80); c.fill(); c.stroke();
+ HACH(c,x0+600,y-52,90,104,'#475569');
+ /* vecteurs */
+ /* libellé placé SOUS le vecteur : au-dessus, il touchait le titre */
+ FLECHE(c,x0,y-70,x0+A,y-70,2.6,'#0e7490');
+ T(c,'A',x0+A/2,y-54,13.5,'#0e7490');
+ FLECHE(c,x0,y+74,x0+250,y+74,2.6,'#0284c7');
+ T(c,'B',x0+125,y+94,13,'#0284c7');
+ FLECHE(c,x0+250,y+74,x0+530,y+74,2.6,'#b45309');
+ T(c,'C',x0+390,y+94,13,'#b45309');
+ FLECHE(c,x0+530,y+74,x0+600,y+74,2.6,'#dc2626');
+ T(c,'J',x0+565,y+94,13,'#dc2626');
+ T(c,'A est parcourue dans un sens, B, C et J dans l’autre  →  J = A − B − C',440,232,13.5,'#5b544a');
+})();
+
+/* ═══ 4 · simulateur ═══ */
+(function(){
+ const c=document.getElementById('cv3').getContext('2d');
+ const sA=document.getElementById('sA'), sB=document.getElementById('sB');
+ const vA=document.getElementById('vA'), vB=document.getElementById('vB');
+ const CMIN=0.80, CMAX=1.20;
+ function dessiner(){
+  const ita=+sA.value/100, itb=+sB.value/100;
+  vA.textContent='± '+ita.toFixed(2).replace('.',',');
+  vB.textContent='± '+itb.toFixed(2).replace('.',',');
+  const Jn=60-25-34;
+  const Jmax=(60+ita)-(25-itb)-(34-itb);
+  const Jmin=(60-ita)-(25+itb)-(34+itb);
+  const IT=Jmax-Jmin;
+  const ok = Jmin>=CMIN-1e-9 && Jmax<=CMAX+1e-9;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,330);
+  T(c,'L’INTERVALLE DE LA CONDITION EST LA SOMME DES INTERVALLES',440,26,13.5,'#155e75');
+  /* échelle en mm, de 0,4 à 1,6 */
+  const x0=90, L=700, y=130;
+  const X=v=>x0+(v-0.4)/1.2*L;
+  c.strokeStyle='#e2e8f0'; c.lineWidth=1;
+  for(let v=0.4;v<=1.61;v+=0.1){ c.beginPath(); c.moveTo(X(v),y-56); c.lineTo(X(v),y+76); c.stroke(); }
+  c.strokeStyle='#475569'; c.lineWidth=1.8;
+  c.beginPath(); c.moveTo(x0,y+76); c.lineTo(x0+L,y+76); c.stroke();
+  c.font='11.5px Segoe UI'; c.fillStyle='#64748b'; c.textAlign='center';
+  for(let v=0.4;v<=1.61;v+=0.2) c.fillText(v.toFixed(1).replace('.',','),X(v),y+94);
+  /* plage autorisée */
+  c.fillStyle='rgba(22,163,74,0.16)';
+  c.fillRect(X(CMIN),y-48,X(CMAX)-X(CMIN),58);
+  c.strokeStyle='#16a34a'; c.lineWidth=2; c.setLineDash([5,4]);
+  c.strokeRect(X(CMIN),y-48,X(CMAX)-X(CMIN),58); c.setLineDash([]);
+  T(c,'condition : 0,80 à 1,20',(X(CMIN)+X(CMAX))/2,y-58,12.5,'#16a34a');
+  /* plage obtenue */
+  c.fillStyle= ok? 'rgba(14,116,144,0.5)':'rgba(220,38,38,0.45)';
+  c.fillRect(X(Jmin),y-14,X(Jmax)-X(Jmin),36);
+  T(c,'jeu obtenu',(X(Jmin)+X(Jmax))/2,y+8,12.5,'#fff');
+  T(c,Jmin.toFixed(2).replace('.',','),X(Jmin),y+40,12, ok?'#0e7490':'#dc2626');
+  T(c,Jmax.toFixed(2).replace('.',','),X(Jmax),y+40,12, ok?'#0e7490':'#dc2626');
+  /* lecture */
+  T(c,'IT de la condition : '+IT.toFixed(2).replace('.',',')+' mm',440,254,15,'#7c3aed');
+  T(c,'somme des intervalles : '+(2*ita).toFixed(2).replace('.',',')+' + '+
+    (2*itb).toFixed(2).replace('.',',')+' + '+(2*itb).toFixed(2).replace('.',',')+
+    ' = '+(2*ita+4*itb).toFixed(2).replace('.',','),440,280,12.5,'#5b544a');
+  T(c, ok? 'condition RESPECTÉE' : 'condition NON respectée : resserre une tolérance',
+    440, 308, 13.5, ok? '#16a34a':'#dc2626');
+ }
+ sA.addEventListener('input',dessiner);
+ sB.addEventListener('input',dessiner);
+ dessiner();
+})();
+
+/* ═══ 6 · exercices ═══ */
+const Q=[
+ {q:"Sur quel dessin la cote condition doit-elle figurer ?",
+  r:["sur le dessin de définition de la pièce la plus grande","sur aucun dessin de définition","sur tous les dessins de définition"],b:1,
+  ex:"Le jeu appartient au mécanisme, pas à une pièce. Il n’est donc jamais coté sur un dessin de définition : il résulte de l’empilement des cotes fonctionnelles."},
+ {q:"A = 60 ± 0,15, B = 25 ± 0,05, C = 34 ± 0,05, avec J = A − B − C. Que vaut Jmax ?",
+  r:["1,25 mm","1,00 mm","0,75 mm"],b:0,
+  ex:"Jmax = 60,15 − 24,95 − 33,95 = 1,25 mm. Le jeu est maximal quand la cote qui CONTIENT est au maxi et les cotes opposées au mini."},
+ {q:"Quel est l’intervalle de tolérance de cette condition ?",
+  r:["0,15 mm","0,25 mm","0,50 mm"],b:2,
+  ex:"IT = 0,30 + 0,10 + 0,10 = 0,50 mm. L’intervalle de la condition est toujours la SOMME des intervalles des cotes de la chaîne : c’est la vérification la plus rapide."},
+ {q:"Combien de cotes une même pièce peut-elle apporter à une chaîne ?",
+  r:["une seule","autant que nécessaire","deux au maximum"],b:0,
+  ex:"Une cote par pièce traversée : jamais deux, jamais zéro. Si une pièce en apporte deux, c’est qu’une surface de contact a été mal repérée."},
+ {q:"On allonge la chaîne de trois à cinq cotes, tolérances identiques. Que devient le jeu ?",
+  r:["il est mieux maîtrisé","il est plus dispersé","il ne change pas"],b:1,
+  ex:"Cinq tolérances s’additionnent au lieu de trois : la dispersion augmente. C’est pourquoi on cherche toujours à raccourcir les chaînes, quitte à modifier l’architecture du mécanisme."},
+ {q:"Il faut réduire l’IT de la condition de 0,10 mm. Quelle cote resserrer ?",
+  r:["la plus grande, car elle disperse le plus","celle qui coûte le moins cher à tenir","toutes, à parts égales"],b:1,
+  ex:"Toutes les tolérances pèsent identiquement dans la somme, quelle que soit la longueur de la cote. Le critère est donc économique : on resserre là où le procédé le permet sans surcoût."}
+];
+(function(){
+ const z=document.getElementById('questions');
+ const choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',function(){
+    if(b.disabled) return;
+    choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';});
+    b.style.fontWeight='800';
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){
+    b.disabled=true;
+    if(j===Q[i].b) b.classList.add('bon');
+    else if(choix[i]===j) b.classList.add('faux');
+   });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div');
+   e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko');
+   e.textContent=Q[i].ex;
+   r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ');
+  b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+
+   (n===Q.length ? 'La méthode est acquise. Passe au TP pour l’appliquer sur des cas chiffrés.'
+                 : 'Reprends la partie 3 : l’IT de la condition est la SOMME des intervalles.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>

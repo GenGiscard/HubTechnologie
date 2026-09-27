@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Spécification géométrique et conception · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+.bascule{display:inline-flex;gap:8px;align-items:center;font-size:14px;font-weight:700;color:var(--accf)}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Spécification géométrique et conception</h1>
+ <p class="sous">Une pièce peut respecter toutes ses cotes et refuser de se monter.
+ Les dimensions ne disent rien de la forme, de l’orientation ni de la position :
+ c’est le rôle de la spécification géométrique.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>Pourquoi la cote ne suffit pas</h2>
+ <div class="chapo">Deux pièces conformes à leurs dimensions, et pourtant…</div>
+ <canvas id="cv1" width="880" height="260"></canvas>
+ <p>Une cote dimensionnelle contrôle une <b>taille</b> entre deux points. Elle ne dit
+ rien de l’inclinaison d’une face ni de l’emplacement d’un trou par rapport au reste
+ de la pièce.</p>
+ <div class="retenir">La spécification géométrique ne remplace pas la cote : elle
+ <b>complète</b> ce que la cote ne peut pas exprimer — forme, orientation, position.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Les familles de tolérances</h2>
+ <div class="chapo">Quatre familles, de la moins à la plus contraignante.</div>
+ <canvas id="cv2" width="880" height="200"></canvas>
+ <table>
+  <tr><th>Famille</th><th>Ce qu’elle limite</th><th>Référence ?</th><th>Exemples</th></tr>
+  <tr><td>Forme</td><td>la surface elle-même, isolée</td><td>jamais</td><td>planéité, rectitude, circularité, cylindricité</td></tr>
+  <tr><td>Orientation</td><td>l’angle par rapport à une référence</td><td>oui</td><td>perpendicularité, parallélisme, inclinaison</td></tr>
+  <tr><td>Position</td><td>l’emplacement par rapport à des références</td><td>oui</td><td>localisation, coaxialité, symétrie</td></tr>
+  <tr><td>Battement</td><td>le défaut en rotation autour d’un axe</td><td>oui</td><td>battement simple, battement total</td></tr>
+ </table>
+ <div class="retenir">Une tolérance de position <b>englobe</b> l’orientation, qui
+ englobe elle-même la forme. Spécifier la position suffit souvent : ajouter une
+ orientation plus serrée n’a de sens que si la fonction l’exige.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Le cadre et la zone de tolérance</h2>
+ <div class="chapo">Chaque case du cadre a un sens précis.</div>
+ <canvas id="cv3" width="880" height="270"></canvas>
+ <p>Le cadre se lit de gauche à droite : le <b>symbole</b> de la caractéristique, la
+ <b>valeur</b> de la zone — précédée de Ø si la zone est cylindrique —, puis les
+ <b>références</b> dans l’ordre de leur priorité.</p>
+ <div class="piege"><b>Piège d’épreuve.</b> Lire la valeur comme un écart de part et
+ d’autre. Une localisation Ø0,2 définit un cylindre de <b>diamètre</b> 0,2 : l’axe
+ réel peut s’écarter de 0,1 au plus du centre théorique, pas de 0,2.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Le système de références</h2>
+ <div class="chapo">Une mise en position isostatique, écrite sur le dessin.</div>
+ <canvas id="cv4" width="880" height="280"></canvas>
+ <table>
+  <tr><th>Référence</th><th>Contact</th><th>Degrés supprimés</th></tr>
+  <tr><td>Primaire, A</td><td>3 points — un plan</td><td>3</td></tr>
+  <tr><td>Secondaire, B</td><td>2 points — une droite</td><td>2</td></tr>
+  <tr><td>Tertiaire, C</td><td>1 point</td><td>1</td></tr>
+ </table>
+ <div class="retenir">3 + 2 + 1 = 6 : le système de références reproduit une
+ <b>mise en position isostatique</b>. C’est la même logique que celle d’un montage
+ d’usinage ou de contrôle.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Le choix de conception</h2>
+ <div class="chapo">Quelle surface prendre en référence ? Celle qui met la pièce en position.</div>
+ <div class="methode"><b>MÉTHODE — spécifier une pièce</b>
+  <ol>
+   <li><b>Identifier</b> les surfaces qui assurent la mise en position de la pièce dans
+    le mécanisme : ce sont les <b>références</b>.</li>
+   <li><b>Ordonner</b> ces références selon l’importance du contact : l’appui plan le
+    plus étendu en primaire.</li>
+   <li><b>Repérer</b> les surfaces qui réalisent la fonction : ce sont les
+    <b>éléments tolérancés</b>.</li>
+   <li><b>Choisir</b> la famille la moins contraignante qui garantit la fonction.</li>
+   <li><b>Chiffrer</b> la zone à partir de la condition fonctionnelle, pas de
+    l’habitude.</li>
+  </ol></div>
+ <div class="piege"><b>L’erreur de conception la plus coûteuse.</b> Prendre en
+ référence une surface commode à mesurer plutôt que la surface fonctionnelle. La
+ pièce est alors contrôlée conforme… par rapport à une face qui ne sert à rien dans
+ le montage.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Le maximum de matière</h2>
+ <div class="chapo">Un trou plus grand tolère une position moins précise.</div>
+ <canvas id="cv5" width="880" height="340"></canvas>
+ <div class="reglage">
+  <label for="sD">Diamètre réel du trou</label>
+  <input type="range" id="sD" min="0" max="10" value="0" step="1">
+  <span id="vD" style="font-weight:800;color:var(--accf);min-width:76px">10,00 mm</span>
+ </div>
+ <div class="reglage">
+  <label for="sE">Écart de position de l’axe</label>
+  <input type="range" id="sE" min="0" max="16" value="10" step="1">
+  <span id="vE" style="font-weight:800;color:var(--or);min-width:76px">0,10 mm</span>
+ </div>
+ <div class="reglage"><label class="bascule"><input type="checkbox" id="cM">
+  appliquer l’exigence du maximum de matière</label></div>
+ <div class="formule">zone autorisée = tolérance de position + (diamètre réel − diamètre au maximum de matière)</div>
+ <div class="retenir">Le maximum de matière garantit le <b>montage</b>, pas la
+ position absolue. Un trou plus grand laisse plus de place à la vis : on peut donc
+ accepter qu’il soit moins bien placé. Des pièces rejetées à tort deviennent
+ conformes, sans risque pour l’assemblage.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">7</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<footer>Préparation CAFEP-CAPET SII · Spécification géométrique et conception · ESTIC Don Bosco</footer>
+
+<script>
+'use strict';
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const L=Math.max(10,ep*2.6), W=Math.max(8,ep*2.2);
+ const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
+ const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
+ c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
+ c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
+ c.beginPath(); c.moveTo(x1,y1);
+ c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
+ c.closePath(); c.fill();
+}
+/* Symboles GPS dessinés : les caractères Unicode correspondants ne s'affichent
+   pas dans toutes les polices, d'où un tracé explicite. */
+function SYM(c,type,x,y,s,coul){
+ c.strokeStyle=coul; c.lineWidth=2; c.lineCap='butt';
+ const h=s/2;
+ if(type==='planeite'){
+  c.beginPath(); c.moveTo(x-h,y+h*0.5); c.lineTo(x-h*0.4,y-h*0.5);
+  c.lineTo(x+h,y-h*0.5); c.lineTo(x+h*0.4,y+h*0.5); c.closePath(); c.stroke();
+ } else if(type==='perpendicularite'){
+  c.beginPath(); c.moveTo(x-h,y+h*0.7); c.lineTo(x+h,y+h*0.7); c.stroke();
+  c.beginPath(); c.moveTo(x,y+h*0.7); c.lineTo(x,y-h*0.8); c.stroke();
+ } else if(type==='parallelisme'){
+  c.beginPath(); c.moveTo(x-h*0.6,y+h*0.7); c.lineTo(x-h*0.1,y-h*0.7); c.stroke();
+  c.beginPath(); c.moveTo(x+h*0.1,y+h*0.7); c.lineTo(x+h*0.6,y-h*0.7); c.stroke();
+ } else if(type==='localisation'){
+  c.beginPath(); c.arc(x,y,h*0.55,0,6.284); c.stroke();
+  c.beginPath(); c.moveTo(x-h,y); c.lineTo(x+h,y); c.stroke();
+  c.beginPath(); c.moveTo(x,y-h); c.lineTo(x,y+h); c.stroke();
+ } else if(type==='circularite'){
+  c.beginPath(); c.arc(x,y,h*0.7,0,6.284); c.stroke();
+ } else if(type==='coaxialite'){
+  c.beginPath(); c.arc(x,y,h*0.75,0,6.284); c.stroke();
+  c.beginPath(); c.arc(x,y,h*0.38,0,6.284); c.stroke();
+ }
+}
+function cadreGPS(c,x,y,cases,coul){
+ const hc=34; let cx=x;
+ cases.forEach(function(k){
+  const w=k.w||44;
+  c.fillStyle='#fff'; c.strokeStyle=coul; c.lineWidth=2;
+  c.beginPath(); c.rect(cx,y,w,hc); c.fill(); c.stroke();
+  if(k.sym) SYM(c,k.sym,cx+w/2,y+hc/2,22,coul);
+  else T(c,k.t,cx+w/2,y+hc/2+5,14,coul);
+  cx+=w;
+ });
+ return cx;
+}
+
+/* ═══ 1 · la cote ne suffit pas ═══ */
+(function(){
+ const c=document.getElementById('cv1').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,260);
+ T(c,'MÊMES COTES, DEUX PIÈCES DIFFÉRENTES',440,28,14,'#155e75');
+ /* pièce conforme */
+ c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=2.4;
+ c.beginPath(); c.rect(110,70,220,110); c.fill(); c.stroke();
+ T(c,'faces perpendiculaires',220,206,12.5,'#0284c7');
+ T(c,'le montage passe',220,226,12.5,'#16a34a');
+ /* pièce aux bonnes cotes, face inclinée */
+ c.fillStyle='#fef2f2'; c.strokeStyle='#dc2626';
+ c.beginPath(); c.moveTo(540,70); c.lineTo(760,70); c.lineTo(772,180); c.lineTo(552,180);
+ c.closePath(); c.fill(); c.stroke();
+ T(c,'face inclinée',660,206,12.5,'#dc2626');
+ T(c,'le montage bloque',660,226,12.5,'#dc2626');
+ /* la meme cote de 220 mesuree entre deux points */
+ [[110,330,'#0284c7'],[540,760,'#dc2626']].forEach(function(q){
+  c.strokeStyle='#64748b'; c.lineWidth=1.2;
+  c.beginPath(); c.moveTo(q[0],56); c.lineTo(q[1],56); c.stroke();
+  [q[0],q[1]].forEach(function(x){ c.beginPath(); c.moveTo(x,50); c.lineTo(x,62); c.stroke(); });
+  T(c,'220 ± 0,1  — conforme',(q[0]+q[1])/2,48,12,'#64748b');
+ });
+})();
+
+/* ═══ 2 · familles ═══ */
+(function(){
+ const c=document.getElementById('cv2').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,200);
+ T(c,'SIX SYMBOLES À RECONNAÎTRE',440,26,14,'#155e75');
+ const L=[['planeite','planéité','forme','#0e7490'],['circularite','circularité','forme','#0e7490'],
+          ['perpendicularite','perpendicularité','orientation','#7c3aed'],
+          ['parallelisme','parallélisme','orientation','#7c3aed'],
+          ['localisation','localisation','position','#ea580c'],['coaxialite','coaxialité','position','#ea580c']];
+ const w=128, m=(880-6*w)/2;
+ L.forEach(function(q,i){
+  const x=m+i*w+w/2;
+  c.fillStyle='#fff'; c.strokeStyle=q[3]; c.lineWidth=2;
+  c.beginPath(); c.roundRect(x-44,58,88,62,10); c.fill(); c.stroke();
+  SYM(c,q[0],x,89,30,q[3]);
+  T(c,q[1],x,142,12,q[3]);
+  T(c,q[2],x,162,11,'#94a3b8');
+ });
+})();
+
+/* ═══ 3 · cadre et zone ═══
+   Mise en page reprise : les trois légendes du cadre se chevauchaient, et le
+   libellé de la zone touchait le titre. */
+(function(){
+ const c=document.getElementById('cv3').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,270);
+ T(c,'LE CADRE SE LIT DE GAUCHE À DROITE',300,26,14,'#155e75');
+ cadreGPS(c,110,62,[{sym:'localisation'},{t:'Ø 0,2',w:84},{t:'A'},{t:'B'},{t:'C'}],'#155e75');
+ /* légendes sur deux hauteurs, reliées à leur case */
+ c.strokeStyle='#94a3b8'; c.lineWidth=1;
+ [[132,96,116],[196,96,150],[298,96,116]].forEach(function(q){
+  c.beginPath(); c.moveTo(q[0],q[1]); c.lineTo(q[0],q[2]-12); c.stroke();
+ });
+ T(c,'symbole',132,116,11.5,'#64748b');
+ T(c,'valeur de la zone',196,150,11.5,'#64748b');
+ T(c,'références par priorité',298,116,11.5,'#64748b');
+ T(c,'l’axe réel doit rester DANS le cylindre',250,204,13,'#5b544a');
+ T(c,'il peut donc s’écarter de 0,1 — pas de 0,2',250,228,13,'#b91c1c');
+ /* zone cylindrique vue de dessus */
+ const zx=610, zy=142;
+ c.fillStyle='rgba(22,163,74,0.12)'; c.beginPath(); c.arc(zx,zy,70,0,6.284); c.fill();
+ c.strokeStyle='#16a34a'; c.lineWidth=2; c.setLineDash([5,4]);
+ c.beginPath(); c.arc(zx,zy,70,0,6.284); c.stroke(); c.setLineDash([]);
+ c.strokeStyle='#94a3b8'; c.lineWidth=1.2;
+ c.beginPath(); c.moveTo(zx-94,zy); c.lineTo(zx+94,zy); c.stroke();
+ c.beginPath(); c.moveTo(zx,zy-94); c.lineTo(zx,zy+94); c.stroke();
+ FLECHE(c,zx,zy,zx+68,zy,1.8,'#16a34a');
+ T(c,'rayon 0,1',zx+36,zy-8,11.5,'#16a34a');
+ c.fillStyle='#dc2626'; c.beginPath(); c.arc(zx+26,zy+26,6,0,6.284); c.fill();
+ T(c,'axe réel',zx+38,zy+44,12,'#dc2626','left');
+ T(c,'zone : cylindre',zx+84,zy-62,12.5,'#16a34a','left');
+ T(c,'de DIAMÈTRE 0,2',zx+84,zy-44,12.5,'#16a34a','left');
+ T(c,'position théorique exacte',zx,zy+118,12,'#64748b');
+})();
+
+/* ═══ 4 · système de références ═══ */
+(function(){
+ const c=document.getElementById('cv4').getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,880,280);
+ T(c,'3 + 2 + 1 = 6 DEGRÉS DE LIBERTÉ SUPPRIMÉS',440,26,14,'#155e75');
+ /* pièce en perspective simplifiée */
+ const ox=300, oy=200;
+ c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=2.2;
+ c.beginPath(); c.moveTo(ox,oy); c.lineTo(ox+260,oy); c.lineTo(ox+330,oy-60);
+ c.lineTo(ox+70,oy-60); c.closePath(); c.fill(); c.stroke();
+ c.fillStyle='#bae6fd';
+ c.beginPath(); c.moveTo(ox,oy); c.lineTo(ox,oy-100); c.lineTo(ox+70,oy-160);
+ c.lineTo(ox+70,oy-60); c.closePath(); c.fill(); c.stroke();
+ c.fillStyle='#dbeafe';
+ c.beginPath(); c.moveTo(ox+70,oy-60); c.lineTo(ox+70,oy-160); c.lineTo(ox+330,oy-160);
+ c.lineTo(ox+330,oy-60); c.closePath(); c.fill(); c.stroke();
+ /* points de contact */
+ [[ox+60,oy-14],[ox+230,oy-14],[ox+160,oy-46]].forEach(function(p){
+  c.fillStyle='#0e7490'; c.beginPath(); c.arc(p[0],p[1],6,0,6.284); c.fill(); });
+ [[ox+120,oy-90],[ox+270,oy-90]].forEach(function(p){
+  c.fillStyle='#7c3aed'; c.beginPath(); c.arc(p[0],p[1],6,0,6.284); c.fill(); });
+ c.fillStyle='#ea580c'; c.beginPath(); c.arc(ox+34,oy-92,6,0,6.284); c.fill();
+ T(c,'A — primaire : 3 points',150,236,12.5,'#0e7490','left');
+ T(c,'B — secondaire : 2 points',150,256,12.5,'#7c3aed','left');
+ T(c,'C — tertiaire : 1 point',470,256,12.5,'#ea580c','left');
+ T(c,'appui plan',ox+130,oy+22,11.5,'#0e7490');
+})();
+
+/* ═══ 6 · simulateur maximum de matière ═══ */
+(function(){
+ const c=document.getElementById('cv5').getContext('2d');
+ const sD=document.getElementById('sD'), sE=document.getElementById('sE'), cM=document.getElementById('cM');
+ const vD=document.getElementById('vD'), vE=document.getElementById('vE');
+ const MMC=10.00, TPOS=0.20;
+ function dessiner(){
+  const d=MMC+ (+sD.value)/100, e=(+sE.value)/100;
+  vD.textContent=d.toFixed(2).replace('.',',')+' mm';
+  vE.textContent=e.toFixed(2).replace('.',',')+' mm';
+  const bonus = cM.checked ? d-MMC : 0;
+  const zone = TPOS + bonus;
+  const ok = 2*e <= zone+1e-9;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,340);
+  T(c, cM.checked? 'AVEC MAXIMUM DE MATIÈRE : LA ZONE GRANDIT AVEC LE TROU' : 'SANS MAXIMUM DE MATIÈRE : LA ZONE EST FIXE',
+    440,26,13.5,'#155e75');
+  /* vue agrandie : 1 mm = 500 px pour la zone */
+  const cx=260, cy=180, k=500;
+  c.strokeStyle='#94a3b8'; c.lineWidth=1.2;
+  c.beginPath(); c.moveTo(cx-150,cy); c.lineTo(cx+150,cy); c.stroke();
+  c.beginPath(); c.moveTo(cx,cy-150); c.lineTo(cx,cy+150); c.stroke();
+  c.fillStyle= ok? 'rgba(22,163,74,0.14)':'rgba(220,38,38,0.12)';
+  c.strokeStyle= ok? '#16a34a':'#dc2626'; c.lineWidth=2; c.setLineDash([6,4]);
+  c.beginPath(); c.arc(cx,cy,zone/2*k,0,6.284); c.fill(); c.stroke(); c.setLineDash([]);
+  if(cM.checked && bonus>0){
+   c.strokeStyle='#94a3b8'; c.lineWidth=1.4; c.setLineDash([3,3]);
+   c.beginPath(); c.arc(cx,cy,TPOS/2*k,0,6.284); c.stroke(); c.setLineDash([]);
+  }
+  const ax=cx+e*k*0.8, ay=cy-e*k*0.6;
+  c.fillStyle='#dc2626'; c.beginPath(); c.arc(ax,ay,6,0,6.284); c.fill();
+  T(c,'axe réel',ax+12,ay-8,12,'#dc2626','left');
+  /* lecture */
+  c.fillStyle='#fff'; c.strokeStyle='#155e75'; c.lineWidth=2.4;
+  c.beginPath(); c.roundRect(500,70,340,176,12); c.fill(); c.stroke();
+  T(c,'diamètre réel du trou : '+d.toFixed(2).replace('.',',')+' mm',670,98,12.5,'#0e7490');
+  T(c,'bonus de maximum de matière : '+bonus.toFixed(2).replace('.',',')+' mm',670,124,12.5,'#7c3aed');
+  T(c,'zone autorisée : Ø '+zone.toFixed(2).replace('.',','),670,156,16,'#155e75');
+  T(c,'écart de l’axe : '+e.toFixed(2).replace('.',',')+'  →  zone nécessaire Ø '+(2*e).toFixed(2).replace('.',','),670,188,12.5,'#ea580c');
+  T(c, ok? 'PIÈCE CONFORME' : 'PIÈCE REFUSÉE', 670, 226, 18, ok? '#16a34a':'#dc2626');
+  T(c,'diamètre virtuel = 10,00 − 0,20 = 9,80 mm : une vis de Ø 9 passe toujours',440,322,12.5,'#5b544a');
+ }
+ [sD,sE].forEach(function(s){ s.addEventListener('input',dessiner); });
+ cM.addEventListener('change',dessiner);
+ dessiner();
+})();
+
+/* ═══ 7 · exercices ═══ */
+const Q=[
+ {q:"Une pièce respecte toutes ses cotes dimensionnelles. Peut-elle refuser de se monter ?",
+  r:["non, les cotes suffisent","oui, par un défaut d’orientation ou de position","seulement si le matériau est inadapté"],b:1,
+  ex:"Une cote dimensionnelle contrôle une taille entre deux points. Elle ne dit rien de l’inclinaison d’une face ni de l’emplacement d’un trou : c’est le rôle de la spécification géométrique."},
+ {q:"Quelle famille de tolérance n’utilise JAMAIS de référence ?",
+  r:["la forme","l’orientation","la position"],b:0,
+  ex:"Une tolérance de forme porte sur la surface elle-même, isolée : planéité, rectitude, circularité. Orientation et position n’ont de sens que par rapport à une référence."},
+ {q:"Une localisation est spécifiée Ø 0,2. De combien l’axe réel peut-il s’écarter du centre théorique ?",
+  r:["de 0,2 mm","de 0,1 mm","de 0,4 mm"],b:1,
+  ex:"Ø 0,2 définit un cylindre de DIAMÈTRE 0,2. L’axe doit rester dedans : il peut s’en écarter du rayon, soit 0,1 mm. Lire 0,2 comme un écart est une erreur classique."},
+ {q:"Combien de points de contact définissent la référence PRIMAIRE ?",
+  r:["un seul","deux","trois"],b:2,
+  ex:"Trois points définissent un plan : la référence primaire supprime 3 degrés de liberté. Puis 2 pour la secondaire et 1 pour la tertiaire, soit 6 : une mise en position isostatique."},
+ {q:"Quelle surface prendre comme référence primaire ?",
+  r:["la plus facile à mesurer","celle qui met la pièce en position dans le mécanisme","la plus grande de la pièce"],b:1,
+  ex:"La référence doit être la surface FONCTIONNELLE de mise en position. Choisir une face commode à mesurer produit une pièce contrôlée conforme par rapport à une surface qui ne sert à rien au montage."},
+ {q:"Trou Ø 10,00 à 10,10, localisation Ø 0,2 au maximum de matière. Le trou réel mesure 10,06. Quelle zone est autorisée ?",
+  r:["Ø 0,20","Ø 0,26","Ø 0,14"],b:1,
+  ex:"Le bonus vaut 10,06 − 10,00 = 0,06, donc la zone passe à 0,20 + 0,06 = Ø 0,26. Un trou plus grand laisse plus de place à la vis : on peut tolérer une position moins précise."}
+];
+(function(){
+ const z=document.getElementById('questions');
+ const choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',function(){
+    if(b.disabled) return;
+    choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';});
+    b.style.fontWeight='800';
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){
+    b.disabled=true;
+    if(j===Q[i].b) b.classList.add('bon');
+    else if(choix[i]===j) b.classList.add('faux');
+   });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div');
+   e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko');
+   e.textContent=Q[i].ex;
+   r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ');
+  b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+
+   (n===Q.length ? 'La démarche est acquise. Passe au TP pour spécifier une vraie pièce.'
+                 : 'Reprends la méthode de la partie 5 : la référence est TOUJOURS la surface fonctionnelle.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>
