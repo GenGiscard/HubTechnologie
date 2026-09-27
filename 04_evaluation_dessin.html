@@ -1247,6 +1247,111 @@ combinaisons:{
   T(c,'une position de plus MULTIPLIE le total',350,258,12.5,'#5b544a');
  }},
 
+
+/* ---------- spécification géométrique et réglage ---------- */
+zonetolerance:{
+ titre:'Zone de tolérance de position',
+ formules:['zone Ø t  →  l’axe réel peut s’écarter de t / 2',
+           'écart radial = √(x² + y²)'],
+ texte:['La valeur Ø t désigne le DIAMÈTRE d’un cylindre, pas un écart admissible.',
+        'L’axe doit rester dans ce cylindre : c’est sa distance au centre qui décide.',
+        'Deux décalages chacun sous la limite peuvent, combinés, faire sortir l’axe de la zone.'],
+ dessin:function(c,t){
+  const cx=230, cy=150, R=90;
+  const a=t*0.9, r=R*(0.45+0.65*osc(t,6));
+  const ax=cx+r*Math.cos(a), ay=cy+r*Math.sin(a);
+  const ok=r<=R;
+  c.fillStyle= ok? 'rgba(22,163,74,0.14)':'rgba(220,38,38,0.12)';
+  c.beginPath(); c.arc(cx,cy,R,0,6.284); c.fill();
+  c.strokeStyle= ok? '#16a34a':'#dc2626'; c.lineWidth=2; c.setLineDash([5,4]);
+  c.beginPath(); c.arc(cx,cy,R,0,6.284); c.stroke(); c.setLineDash([]);
+  c.strokeStyle='#94a3b8'; c.lineWidth=1.2;
+  c.beginPath(); c.moveTo(cx-120,cy); c.lineTo(cx+120,cy); c.stroke();
+  c.beginPath(); c.moveTo(cx,cy-120); c.lineTo(cx,cy+120); c.stroke();
+  c.strokeStyle='#7c3aed'; c.lineWidth=1.4; c.setLineDash([3,3]);
+  c.beginPath(); c.moveTo(cx,cy); c.lineTo(ax,ay); c.stroke(); c.setLineDash([]);
+  c.fillStyle='#dc2626'; c.beginPath(); c.arc(ax,ay,6,0,6.284); c.fill();
+  T(c,'écart radial',500,110,12.5,'#64748b');
+  T(c,(r/R*0.10).toFixed(3).replace('.',',')+' mm',500,138,18,'#7c3aed');
+  T(c,'zone : Ø 0,20 → écart maxi 0,10',500,176,12.5,'#16a34a');
+  T(c, ok? 'axe DANS la zone : conforme':'axe HORS zone : refusé',500,210,14, ok? '#16a34a':'#dc2626');
+ }},
+
+maximummatiere:{
+ titre:'Exigence du maximum de matière',
+ formules:['zone accordée = tolérance + (diamètre réel − diamètre au maximum de matière)',
+           'diamètre virtuel = diamètre au maximum de matière − tolérance'],
+ texte:['Pour un trou, le maximum de matière est le PLUS PETIT diamètre autorisé.',
+        'Un trou plus grand laisse plus de place à la vis : on tolère une position moins précise.',
+        'À réserver aux fonctions de montage. Sur un centrage, un bonus dégraderait l’alignement.'],
+ dessin:function(c,t){
+  /* trou et zone dessinés SÉPARÉMENT : superposés, leurs deux cercles se
+     confondaient et l'animation devenait illisible */
+  const k=osc(t,7);
+  const d=9.00+0.20*k, bonus=d-9.00, zone=0.20+bonus;
+  c.fillStyle='#fff7ed'; c.strokeStyle='#ea580c'; c.lineWidth=2.4;
+  c.beginPath(); c.arc(140,150,46+110*bonus,0,6.284); c.fill(); c.stroke();
+  T(c,'le trou',140,262,12.5,'#ea580c');
+  c.fillStyle='rgba(22,163,74,0.18)';
+  c.beginPath(); c.arc(340,150,zone*220,0,6.284); c.fill();
+  c.strokeStyle='#16a34a'; c.lineWidth=1.8; c.setLineDash([4,3]);
+  c.beginPath(); c.arc(340,150,zone*220,0,6.284); c.stroke(); c.setLineDash([]);
+  c.fillStyle='#16a34a'; c.beginPath(); c.arc(340,150,3,0,6.284); c.fill();
+  T(c,'zone de l’axe (agrandie)',340,262,12.5,'#16a34a');
+  T(c,'diamètre du trou : '+d.toFixed(2).replace('.',',')+' mm',580,96,13,'#ea580c');
+  T(c,'bonus : '+bonus.toFixed(2).replace('.',',')+' mm',580,126,13,'#7c3aed');
+  T(c,'zone : Ø '+zone.toFixed(2).replace('.',','),580,162,17,'#16a34a');
+  T(c,'le trou grandit,',580,200,12.5,'#5b544a');
+  T(c,'la zone grandit avec lui',580,220,12.5,'#5b544a');
+ }},
+
+references:{
+ titre:'Le système de références',
+ formules:['primaire : 3 points  ·  secondaire : 2 points  ·  tertiaire : 1 point'],
+ texte:['3 + 2 + 1 = 6 : le système de références reproduit une mise en position isostatique.',
+        'La référence primaire est la surface d’appui FONCTIONNELLE, la plus étendue.',
+        'Prendre une surface commode à mesurer au lieu de la surface fonctionnelle fausse tout le contrôle.'],
+ dessin:function(c,t){
+  const n=Math.floor(t*0.9)%7;
+  const P=[[250,200,'#0e7490'],[430,200,'#0e7490'],[340,236,'#0e7490'],
+           [300,120,'#7c3aed'],[440,120,'#7c3aed'],[196,150,'#ea580c']];
+  c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=2;
+  c.beginPath(); c.moveTo(200,250); c.lineTo(470,250); c.lineTo(520,190); c.lineTo(250,190);
+  c.closePath(); c.fill(); c.stroke();
+  c.fillStyle='#dbeafe';
+  c.beginPath(); c.moveTo(250,190); c.lineTo(250,90); c.lineTo(520,90); c.lineTo(520,190);
+  c.closePath(); c.fill(); c.stroke();
+  for(let i=0;i<Math.min(n,6);i++){
+   c.fillStyle=P[i][2]; c.beginPath(); c.arc(P[i][0],P[i][1],7,0,6.284); c.fill();
+  }
+  const lib = n<=3? 'A — primaire : '+Math.min(n,3)+' / 3' : (n<=5? 'B — secondaire : '+(n-3)+' / 2' : 'C — tertiaire : 1 / 1');
+  T(c,lib,600,140,14, n<=3? '#0e7490' : (n<=5? '#7c3aed':'#ea580c'));
+  T(c,'degrés supprimés : '+Math.min(n,6)+' / 6',600,172,13,'#155e75');
+ }},
+
+cotereglage:{
+ titre:'La cote de réglage',
+ formules:['J = X − e     ·     e choisie après mesure de X'],
+ texte:['Quand la chaîne disperse trop, on ne resserre pas toutes les cotes : on en ajoute une réglable.',
+        'La cale, choisie au montage, absorbe à elle seule la dispersion de toutes les autres cotes.',
+        'Contrepartie : une mesure au montage, un stock d’épaisseurs, un risque d’erreur à maîtriser.'],
+ dessin:function(c,t){
+  const X=3.80+0.40*osc(t,7);
+  const e=Math.round((X-0.10)/0.05)*0.05;
+  const J=X-e;
+  const x0=110, w=480, y=140, k=w/4.4;
+  c.fillStyle='#fff'; c.strokeStyle='#475569'; c.lineWidth=2;
+  c.beginPath(); c.rect(x0,y-40,X*k,80); c.stroke();
+  c.fillStyle='#fecaca'; c.strokeStyle='#dc2626';
+  c.beginPath(); c.rect(x0,y-40,e*k,80); c.fill(); c.stroke();
+  c.fillStyle='rgba(22,163,74,0.3)';
+  c.fillRect(x0+e*k,y-40,J*k,80);
+  T(c,'cale e = '+e.toFixed(2).replace('.',','),x0+e*k/2,y+5,14,'#dc2626');
+  T(c,'espace mesuré X = '+X.toFixed(2).replace('.',','),x0+X*k/2,y-56,13,'#475569');
+  T(c,'jeu J = '+J.toFixed(2).replace('.',','),350,y+76,16,'#16a34a');
+  T(c,'X varie d’une pompe à l’autre, J reste dans la condition',350,y+108,12.5,'#5b544a');
+ }},
+
 /* ---------- statique ---------- */
 poutre2appuis:{
  titre:'Poutre sur deux appuis — trouver les réactions',

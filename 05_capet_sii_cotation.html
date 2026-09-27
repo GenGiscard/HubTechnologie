@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sujet type CAFEP-CAPET SII — Treuil à deux vitesses · ESTIC</title><style>
+<title>Sujet type CAFEP-CAPET SII — Réglage du jeu d’un arbre de pompe · ESTIC</title><style>
 :root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
@@ -57,51 +57,46 @@ main{width:min(900px,100%);padding:14px 14px 50px}
 <div class="entete">
   <h1>Sujet type CAFEP-CAPET SII — Épreuve de sciences</h1>
   <div class="info"><b>Épreuve d’analyse et d’exploitation · option ingénierie mécanique</b> · durée conseillée : 5 h · noté sur 100 points<br>
-  Support : un treuil de levage à deux vitesses — train épicycloïdal, frein et embrayage</div>
+  Support : l’arbre d’une pompe centrifuge — jeu axial des roulements et cale de réglage</div>
 </div>
 <div class="consignes">Vous disposez de cinq documents. Le sujet comporte cinq documents, cinq parties et douze questions : certaines demandent une
 <b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
 Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
 
-<div class="doc"><h2>Document 1 — Architecture du treuil</h2>
-<canvas id="d0" width="860" height="250"></canvas>
-<p class="leg">Le moteur entraîne le planétaire du train épicycloïdal. La sortie est
-prise sur le porte-satellites, puis démultipliée par un réducteur fixe avant
-d’atteindre le tambour d’enroulement.</p>
+<div class="doc"><h2>Document 1 — Montage de l’arbre (coupe simplifiée)</h2>
+<canvas id="d0" width="860" height="300"></canvas>
+<p class="leg">L’arbre est guidé par deux roulements séparés par une entretoise. Le
+couvercle ferme le carter ; une cale d’épaisseur e, placée sous le couvercle, règle
+le jeu axial J.</p>
 
-<h2>Document 2 — Le train épicycloïdal et ses commandes</h2>
-<canvas id="d1" width="860" height="320"></canvas>
-<p class="leg">Un frein peut immobiliser la couronne. Un embrayage peut au contraire
-la solidariser du planétaire. Les deux ne sont jamais actionnés ensemble.</p>
+<h2>Document 2 — Chaîne de cotes du jeu J</h2>
+<canvas id="d1" width="860" height="250"></canvas>
+<p class="leg">Sans la cale, l’espace disponible vaut X = A − B − C − D. Avec la
+cale, le jeu vaut J = X − e.</p>
 
-<h2>Document 3 — Caractéristiques</h2>
+<h2>Document 3 — Cotes de fabrication</h2>
 <table>
- <tr><th>Planétaire</th><td>Z<sub>p</sub> = 30 dents</td></tr>
- <tr><th>Couronne</th><td>Z<sub>c</sub> = 90 dents</td></tr>
- <tr><th>Réducteur fixe en aval</th><td>rapport 1/6</td></tr>
- <tr><th>Diamètre du tambour</th><td>160 mm</td></tr>
- <tr><th>Vitesse du moteur</th><td>1450 tr/min</td></tr>
- <tr><th>Couple maximal du moteur</th><td>18 N·m</td></tr>
- <tr><th>Charge à lever</th><td>400 kg · g = 9,81 N/kg</td></tr>
- <tr><th>Rendement du train épicycloïdal</th><td>0,96</td></tr>
- <tr><th>Rendement du réducteur fixe</th><td>0,97</td></tr>
+ <tr><th>Cote</th><th>Élément</th><th>Valeur</th></tr>
+ <tr><td>A</td><td>profondeur du logement dans le carter</td><td>100 ± 0,05</td></tr>
+ <tr><td>B</td><td>largeur du roulement 1</td><td>19 ± 0,05</td></tr>
+ <tr><td>C</td><td>largeur du roulement 2</td><td>19 ± 0,05</td></tr>
+ <tr><td>D</td><td>longueur de l’entretoise</td><td>58 ± 0,05</td></tr>
 </table>
 
-<h2>Document 4 — Les deux configurations</h2>
+<h2>Document 4 — Cahier des charges et moyens</h2>
 <table>
- <tr><th>Configuration</th><th>Frein sur la couronne</th><th>Embrayage planétaire-couronne</th></tr>
- <tr><td>Vitesse lente</td><td>serré</td><td>libre</td></tr>
- <tr><td>Prise directe</td><td>libre</td><td>serré</td></tr>
+ <tr><th>Jeu axial exigé</th><td>0,05 mm ≤ J ≤ 0,15 mm</td></tr>
+ <tr><th>Cales disponibles</th><td>épaisseurs par pas de 0,05 mm</td></tr>
+ <tr><th>Espace X mesuré sur la pompe n° 17</th><td>3,97 mm</td></tr>
+ <tr><th>Surcoût d’une cote tenue à ± 0,0125 mm</th><td>rectification systématique, environ × 4 par pièce</td></tr>
 </table>
-<p class="leg">Embrayage serré, planétaire et couronne tournent ensemble : l’ensemble
-du train est solidaire et tourne d’un bloc.</p>
 
 <h2>Document 5 — Extrait du programme de STI2D, enseignement spécifique ITEC</h2>
 <table>
  <tr><th>Compétence</th><th>Connaissance associée</th></tr>
- <tr><td>CO5.2 — Identifier et caractériser une chaîne d’énergie</td><td>Transmission de puissance, rendement</td></tr>
- <tr><td>CO6.2 — Simuler le comportement d’un mécanisme</td><td>Loi entrée-sortie, train épicycloïdal</td></tr>
- <tr><td>CO7.3 — Valider un choix de composant</td><td>Couple disponible, marge de dimensionnement</td></tr>
+ <tr><td>CO4.2 — Traduire un besoin en spécification</td><td>Cotation fonctionnelle, chaîne de cotes</td></tr>
+ <tr><td>CO7.3 — Valider un choix de conception</td><td>Condition fonctionnelle, coût</td></tr>
+ <tr><td>CO8.1 — Contrôler un produit</td><td>Mesure, réglage au montage</td></tr>
 </table>
 <div id="questions"></div>
 <div id="resultat" style="display:none"></div>
@@ -113,59 +108,53 @@ du train est solidaire et tourne d’un bloc.</p>
 function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
 function nb(v){return parseFloat(String(v||'').replace(',','.'));}
 const Q=[
- {n:'A1',cours:'willis',pts:7,t:'PARTIE A — ÉTUDE DU TRAIN. Déterminez la denture des satellites, puis vérifiez que trois satellites peuvent être montés à 120°.',
-  aide:'Zs = (Zc − Zp) ÷ 2 ; le montage à n satellites exige que (Zp + Zc) soit divisible par n',
-  champs:[{id:'a1a',l:'Nombre de dents des satellites :',rep:30,tol:0.5,u:'dents'},
-          {id:'a1b',l:'Valeur de (Zp + Zc) ÷ 3 :',rep:40,tol:0.5,u:''}],
-  corr:'Zs = (90 − 30) ÷ 2 = <b>30 dents</b>. (30 + 90) ÷ 3 = <b>40</b>, nombre entier : le montage à trois satellites régulièrement répartis est <b>possible</b>. Cette condition est purement géométrique et n’intervient jamais dans le calcul du rapport.'},
- {n:'A2',cours:'willis',pts:7,t:'Calculez la raison basique du train, puis écrivez la relation de Willis complète, avant toute substitution.',
-  champs:[{id:'a2a',l:'Raison basique λ :',rep:-3,tol:0.15,u:''}],
-  redac:{id:'r2',cles:['willis','planetaire','couronne','porte','satellites','omega','wps','repere','(','/','lambda','-3']},
-  corr:'λ = − Z<sub>c</sub> ÷ Z<sub>p</sub> = − 90 ÷ 30 = <b>−3</b>. Willis s’écrit (ω<sub>planétaire</sub> − ω<sub>ps</sub>) ÷ (ω<sub>couronne</sub> − ω<sub>ps</sub>) = λ. <b>Écrire la relation ENTIÈRE avant de substituer</b> est ce qui évite l’erreur la plus fréquente du chapitre.'},
- {n:'A3',cours:'willis',pts:8,t:'Frein serré sur la couronne. Déterminez le rapport entre le porte-satellites et le planétaire.',
-  aide:'la couronne est immobile : sa vitesse est nulle dans la relation de Willis',
-  champs:[{id:'a3a',l:'Rapport ωps ÷ ωplanétaire (arrondir au centième) :',rep:0.25,tol:0.015,u:''}],
-  corr:'Avec ω<sub>couronne</sub> = 0 : (ω<sub>p</sub> − ω<sub>ps</sub>) ÷ (0 − ω<sub>ps</sub>) = −3, d’où ω<sub>ps</sub> ÷ ω<sub>p</sub> = Z<sub>p</sub> ÷ (Z<sub>p</sub> + Z<sub>c</sub>) = 30 ÷ 120 = <b>0,25</b>, soit 1/4. Appliquer Z<sub>p</sub> ÷ Z<sub>c</sub> = 1/3 serait l’erreur classique : ce rapport n’a aucun sens ici.'},
- {n:'B1',cours:'trainordinaire',pts:8,t:'PARTIE B — VITESSES. En vitesse lente, calculez la fréquence de rotation du tambour puis la vitesse de montée du câble.',
-  aide:'n’oubliez pas le réducteur fixe 1/6 — puis v = π × D × N ÷ 60',
-  champs:[{id:'b1a',l:'Fréquence de rotation du tambour (arrondir au dixième) :',rep:60.4,tol:1.5,u:'tr/min'},
-          {id:'b1b',l:'Vitesse du câble (arrondir au millième) :',rep:0.506,tol:0.015,u:'m/s'}],
-  corr:'N = 1450 × 0,25 ÷ 6 ≈ <b>60,4 tr/min</b>. v = π × 0,160 × 60,4 ÷ 60 ≈ <b>0,506 m/s</b>, soit environ 30 m par minute.'},
- {n:'B2',cours:'trainordinaire',pts:8,t:'Embrayage serré. Justifiez la valeur du rapport du train, puis calculez la nouvelle vitesse du câble.',
-  aide:'si le planétaire et la couronne tournent ensemble, que fait le porte-satellites ?',
-  champs:[{id:'b2a',l:'Rapport du train épicycloïdal :',rep:1,tol:0.05,u:''},
-          {id:'b2b',l:'Vitesse du câble (arrondir au millième) :',rep:2.025,tol:0.06,u:'m/s'}],
-  corr:'Planétaire et couronne liés, le train n’a plus de mouvement relatif : il tourne <b>d’un bloc</b>, donc le rapport vaut <b>1</b>. La vitesse devient 1450 ÷ 6 ≈ 241,7 tr/min au tambour, soit <b>2,025 m/s</b> — quatre fois plus vite.'},
- {n:'C1',cours:'momentforce',pts:8,t:'PARTIE C — COUPLES. Calculez l’effort dans le câble, puis le couple nécessaire au tambour.',
-  aide:'le couple s’obtient avec le RAYON du tambour, pas son diamètre',
-  champs:[{id:'c1a',l:'Effort dans le câble (arrondir à l’unité) :',rep:3924,tol:30,u:'N'},
-          {id:'c1b',l:'Couple au tambour (arrondir au dixième) :',rep:313.9,tol:4,u:'N·m'}],
-  corr:'F = 400 × 9,81 = <b>3 924 N</b>. C = F × R = 3 924 × 0,080 ≈ <b>313,9 N·m</b>. Utiliser le diamètre au lieu du rayon doublerait le résultat : c’est une erreur qui passe souvent inaperçue.'},
- {n:'C2',cours:'rendement',pts:9,t:'En vitesse lente, déterminez le couple que le moteur doit fournir. Concluez vis-à-vis des 18 N·m disponibles.',
-  aide:'remontez la chaîne en divisant par les rapports ET par les rendements',
-  champs:[{id:'c2a',l:'Rendement global de la chaîne (arrondir au millième) :',rep:0.931,tol:0.006,u:''},
-          {id:'c2b',l:'Couple moteur nécessaire (arrondir au centième) :',rep:14.05,tol:0.3,u:'N·m'}],
-  redac:{id:'r7',cles:['inferieur','suffit','convient','possible','18','marge','ok','valide']},
-  corr:'Rendement global = 0,96 × 0,97 ≈ <b>0,931</b>. C<sub>moteur</sub> = 313,9 ÷ (6 × 4 × 0,931) ≈ <b>14,05 N·m</b>. Les 18 N·m disponibles <b>suffisent</b>, avec environ 22 % de marge : le levage est possible en vitesse lente.'},
- {n:'C3',cours:'rendement',pts:9,t:'Reprenez le calcul en prise directe. Que concluez-vous ?',
-  aide:'le train ne démultiplie plus : seul le réducteur fixe subsiste',
-  champs:[{id:'c3a',l:'Couple moteur nécessaire (arrondir au centième) :',rep:53.94,tol:1.2,u:'N·m'}],
-  redac:{id:'r8',cles:['impossible','insuffisant','trois fois','depasse','superieur','18','ne peut pas','lever','bloque','cale']},
-  corr:'C<sub>moteur</sub> = 313,9 ÷ (6 × 1 × 0,97) ≈ <b>53,94 N·m</b>, soit <b>trois fois</b> ce que le moteur peut fournir. En prise directe, le treuil est <b>incapable de lever la charge</b> : le moteur calerait.'},
- {n:'D1',cours:'rendement',pts:9,t:'PARTIE D — EXPLOITATION DU RÉSULTAT. À quoi sert alors la prise directe sur cet appareil ?',
-  redac:{id:'r9',cles:['vide','sans charge','approche','descente','positionner','crochet','rapide','remonter','gagner','temps','faible']},
-  corr:'Elle ne sert pas à lever la charge nominale, mais à <b>gagner du temps à vide</b> : descendre ou remonter rapidement le crochet pour l’approche, ou manœuvrer une charge faible. Le dimensionnement ne se juge donc pas rapport par rapport, mais <b>usage par usage</b> — un rapport peut être parfaitement légitime tout en étant incapable de la charge nominale.'},
- {n:'D2',cours:'rendement',pts:8,t:'Calculez la puissance de levage en vitesse lente, puis comparez-la à la puissance fournie par le moteur dans cette configuration.',
-  aide:'P = F × v pour le levage ; P = C × ω pour le moteur',
-  champs:[{id:'d2a',l:'Puissance de levage (arrondir à l’unité) :',rep:1986,tol:40,u:'W'},
-          {id:'d2b',l:'Puissance fournie par le moteur (arrondir à l’unité) :',rep:2133,tol:50,u:'W'}],
-  corr:'P<sub>levage</sub> = 3 924 × 0,506 ≈ <b>1 986 W</b>. Côté moteur : ω = 1450 × 2π ÷ 60 ≈ 151,8 rad/s, donc P = 14,05 × 151,8 ≈ <b>2 133 W</b>. L’écart de 147 W correspond exactement aux pertes : 1 986 ÷ 2 133 ≈ 0,931, le rendement trouvé en C2. <b>La cohérence énergétique valide toute la chaîne de calculs.</b>'},
- {n:'E1',pts:10,t:'PARTIE E — EXPLOITATION PÉDAGOGIQUE. À l’aide du document 5, proposez une séance de 2 h en terminale STI2D ITEC sur ce support. Précisez la compétence visée, l’activité des élèves et la production attendue.',
-  redac:{id:'r10',cles:['co6','co5','simuler','rendement','chaine','energie','activite','ilot','mesure','tableur','comparer','calcul','production','compte rendu','maquette']},
-  corr:'Réponse articulant trois éléments. <b>Compétence</b> : CO5.2 ou CO6.2 — caractériser la chaîne d’énergie et vérifier le rendement. <b>Activité</b> : en îlots, mesurer la vitesse de montée du câble dans les deux configurations, en déduire les rapports expérimentaux, puis les confronter aux valeurs calculées par Willis ; si un wattmètre est disponible, comparer puissance absorbée et puissance de levage pour estimer le rendement réel. <b>Production</b> : un compte rendu comportant le protocole, le tableau des mesures, les écarts modèle-mesure et leur interprétation. L’évaluation porte sur la démarche et l’exploitation des écarts, pas sur le seul résultat.'},
- {n:'E2',pts:9,t:'Un élève affirme : « la prise directe est forcément meilleure, puisque le rendement y est plus élevé ». Analysez et proposez une remédiation.',
-  redac:{id:'r11',cles:['confond','rendement','couple','multiplie','demultipli','54','18','ne peut pas','lever','critere','usage','calculer','montrer','comparer','tableau']},
-  corr:'L’élève <b>confond rendement et capacité</b>. Le rendement est effectivement meilleur en prise directe — 0,97 contre 0,931 — mais le train n’y multiplie plus le couple : il faudrait 54 N·m au lieu de 14. Un rendement élevé sur une transmission incapable de lever la charge ne sert à rien. <b>Remédiation</b> : faire compléter un tableau à deux colonnes, rendement et couple nécessaire, pour les deux configurations. La contradiction apparaît alors d’elle-même, et l’élève construit lui-même le bon critère : la capacité d’abord, le rendement ensuite.'},
+ {n:'A1',cours:'chainecotes',pts:7,t:'PARTIE A — CHAÎNE DE COTES. À l’aide des documents 1 et 2, indiquez combien de cotes de fabrication interviennent dans l’espace X, puis sa valeur nominale.',
+  champs:[{id:'a1a',l:'Nombre de cotes de fabrication :',rep:4,tol:0.1,u:''},
+          {id:'a1b',l:'Espace nominal X, en mm :',rep:4.00,tol:0.02,u:'mm'}],
+  corr:'Quatre cotes : A, B, C et D. X = 100 − 19 − 19 − 58 = <b>4,00 mm</b>. Chaque pièce traversée apporte une cote, et une seule.'},
+ {n:'A2',cours:'chainecotes',pts:7,t:'Calculez l’intervalle de tolérance de X obtenu avec les cotes de fabrication du document 3.',
+  aide:'l’IT de la condition est la SOMME des IT des cotes',
+  champs:[{id:'a2a',l:'IT de X, en mm :',rep:0.40,tol:0.02,u:'mm'},
+          {id:'a2b',l:'X minimal, en mm :',rep:3.80,tol:0.02,u:'mm'},
+          {id:'a2c',l:'X maximal, en mm :',rep:4.20,tol:0.02,u:'mm'}],
+  corr:'IT = 0,10 + 0,10 + 0,10 + 0,10 = <b>0,40 mm</b>. X varie donc de <b>3,80</b> à <b>4,20 mm</b>. Quatre cotes, quatre tolérances qui s’additionnent.'},
+ {n:'A3',cours:'chainecotes',pts:7,t:'Le cahier des charges exige 0,05 ≤ J ≤ 0,15. Comparez l’intervalle autorisé à celui de la question précédente, et concluez.',
+  champs:[{id:'a3a',l:'IT autorisé pour J, en mm :',rep:0.10,tol:0.01,u:'mm'}],
+  redac:{id:'r1',cles:['impossible','quatre','superieur','trop','depasse','0,40','0,10','ne peut','tolerancement','seul','reglage','cale']},
+  corr:'La condition n’autorise que <b>0,10 mm</b>, quatre fois moins que les 0,40 mm produits par la chaîne. Il est <b>impossible</b> de tenir le jeu par le seul tolérancement des pièces avec ces cotes : c’est tout l’intérêt de la cale de réglage.'},
+ {n:'B1',cours:'chainecotes',pts:8,t:'PARTIE B — SOLUTION PAR TOLÉRANCEMENT. On voudrait tenir la condition sans cale, en répartissant également l’IT autorisé sur les quatre cotes. Calculez la tolérance de chacune.',
+  champs:[{id:'b1a',l:'IT par cote, en mm :',rep:0.025,tol:0.003,u:'mm'},
+          {id:'b1b',l:'Tolérance symétrique de chaque cote (le ±), en mm :',rep:0.0125,tol:0.002,u:'mm'}],
+  corr:'0,10 ÷ 4 = <b>0,025 mm</b> d’IT par cote, soit <b>± 0,0125 mm</b>. Piège classique : confondre l’intervalle et le ± donne un résultat faux d’un facteur deux.'},
+ {n:'B2',pts:8,t:'À l’aide du document 4, commentez la faisabilité économique de cette solution.',
+  redac:{id:'r2',cles:['cout','cher','rectif','quatre','x 4','precis','roulement','norme','impose','catalogue','fournisseur','inacceptable','serie']},
+  corr:'Tenir ± 0,0125 mm impose une <b>rectification systématique</b>, soit un coût multiplié par quatre environ sur chaque pièce. Plus grave : les largeurs B et C sont celles de <b>roulements du commerce</b>, dont la tolérance est imposée par le fabricant — on ne peut tout simplement pas les resserrer. La solution par tolérancement est donc irréaliste.'},
+ {n:'C1',cours:'cotereglage',pts:8,t:'PARTIE C — SOLUTION PAR CALE DE RÉGLAGE. Sur la pompe n° 17, l’espace mesuré vaut X = 3,97 mm. Calculez l’épaisseur de cale idéale pour centrer le jeu à 0,10 mm.',
+  aide:'J = X − e',
+  champs:[{id:'c1a',l:'Épaisseur de cale idéale, en mm :',rep:3.87,tol:0.01,u:'mm'}],
+  corr:'e = X − J = 3,97 − 0,10 = <b>3,87 mm</b>. La cale est choisie <b>après mesure</b> de chaque pompe : elle absorbe à elle seule toute la dispersion des quatre cotes.'},
+ {n:'C2',cours:'cotereglage',pts:8,t:'Les cales existent par pas de 0,05 mm. Choisissez l’épaisseur retenue pour la pompe n° 17, puis calculez le jeu obtenu et concluez.',
+  champs:[{id:'c2a',l:'Épaisseur retenue, en mm :',rep:3.85,tol:0.01,u:'mm'},
+          {id:'c2b',l:'Jeu obtenu, en mm :',rep:0.12,tol:0.01,u:'mm'}],
+  corr:'L’épaisseur disponible la plus proche est <b>3,85 mm</b>. Le jeu vaut 3,97 − 3,85 = <b>0,12 mm</b>, compris entre 0,05 et 0,15 : la pompe est <b>conforme</b>.'},
+ {n:'C3',cours:'cotereglage',pts:9,t:'Déterminez la gamme de cales à stocker pour régler TOUTES les pompes produites, et le nombre d’épaisseurs différentes.',
+  aide:'X varie de 3,80 à 4,20 ; la cale vaut X − 0,10',
+  champs:[{id:'c3a',l:'Cale la plus fine, en mm :',rep:3.70,tol:0.01,u:'mm'},
+          {id:'c3b',l:'Cale la plus épaisse, en mm :',rep:4.10,tol:0.01,u:'mm'},
+          {id:'c3c',l:'Nombre d’épaisseurs à stocker :',rep:9,tol:0.1,u:''}],
+  corr:'X allant de 3,80 à 4,20, les cales vont de <b>3,70</b> à <b>4,10 mm</b>. Au pas de 0,05 : (4,10 − 3,70) ÷ 0,05 + 1 = <b>9 épaisseurs</b>. Dans le pire cas d’arrondi, le jeu reste entre 0,075 et 0,125 mm : toujours dans la condition.'},
+ {n:'D1',cours:'cotereglage',pts:8,t:'PARTIE D — CHOIX DE CONCEPTION. Donnez un avantage et un inconvénient de la cote de réglage.',
+  redac:{id:'r3',cles:['moins cher','tolerance','large','pieces','fabrication','mesure','montage','temps','stock','operateur','erreur','reglage','serie','cout']},
+  corr:'<b>Avantage</b> : les pièces gardent des tolérances larges et bon marché, les roulements du commerce conviennent, et la condition est tenue sur chaque pompe. <b>Inconvénients</b> : une opération de mesure et de choix au montage, donc du temps d’assemblage ; un stock de neuf cales à gérer ; et un risque d’erreur de l’opérateur, qui doit être maîtrisé par une procédure.'},
+ {n:'D2',cours:'chainecotes',pts:9,t:'Proposez une modification de conception qui RACCOURCIRAIT la chaîne de cotes, et indiquez son effet.',
+  redac:{id:'r4',cles:['supprim','entretoise','epaulement','arbre','moins','cotes','raccourc','it','dispersion','diminue','reduit','usiner','directement']},
+  corr:'Supprimer l’entretoise en usinant un <b>épaulement sur l’arbre</b> retire une cote de la chaîne : l’IT de X tombe de 0,40 à 0,30 mm, et la gamme de cales se réduit. Plus radicalement, un montage où les roulements s’appuient tous deux sur des surfaces d’une même pièce raccourcit encore la chaîne. <b>Raccourcir une chaîne est toujours plus efficace que resserrer ses tolérances</b> — au prix d’un usinage de l’arbre plus complexe.'},
+ {n:'E1',pts:8,t:'PARTIE E — EXPLOITATION PÉDAGOGIQUE. À l’aide du document 5, proposez une séance de 2 h en terminale STI2D ITEC sur ce support. Précisez la compétence visée, l’activité des élèves et la production attendue.',
+  redac:{id:'r5',cles:['co4','co8','co7','mesure','pied','coulisse','comparateur','montage','cale','ilot','activite','production','compte rendu','tableur','reglage']},
+  corr:'Réponse articulant trois éléments. <b>Compétence</b> : CO4.2 et CO8.1 — traduire une condition en chaîne de cotes, puis mesurer et régler. <b>Activité</b> : en îlots, tracer la chaîne, mesurer au comparateur l’espace X de plusieurs sous-ensembles réels, choisir la cale adaptée et contrôler le jeu obtenu. <b>Production</b> : une fiche de réglage par sous-ensemble et un tableur calculant automatiquement la cale à partir de la mesure. L’évaluation porte sur la cohérence entre calcul et mesure.'},
+ {n:'E2',pts:13,t:'Un élève propose : « il suffit de fabriquer toutes les pièces plus précisément, comme ça on n’a plus besoin de cale ». Analysez cette proposition et construisez une remédiation.',
+  redac:{id:'r6',cles:['cout','roulement','commerce','impose','fournisseur','quatre','x 4','impossible','economique','comparer','tableau','deux solutions','cale','reglage','choix']},
+  corr:'La proposition n’est pas absurde techniquement, mais elle ignore deux réalités : le <b>coût</b> — une précision de ± 0,0125 mm multiplie le prix de chaque pièce — et l’<b>impossibilité</b> de resserrer la largeur de roulements achetés dans le commerce. L’élève raisonne en géométrie pure, sans intégrer la fabrication. <b>Remédiation</b> : lui faire chiffrer les deux solutions dans un tableau — coût des pièces, coût du montage, faisabilité — pour qu’il découvre lui-même que la conception est un <b>arbitrage</b>, et non la recherche de la précision maximale.'},
 ];
 const z=document.getElementById('questions');
 Q.forEach(q=>{
@@ -221,10 +210,10 @@ function FL2(c,x0,y0,x1,y1,ep,coul){
  c.closePath(); c.fill();
 }
 /* Documents 1 et 2 */
-function T2(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
  c.textAlign=al||'center';c.fillText(s,x,y);}
 function FL2(c,x0,y0,x1,y1,ep,coul){
- const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
+ const L=Math.max(10,ep*2.6), W=Math.max(8,ep*2.2);
  const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
  const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
  c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
@@ -233,93 +222,73 @@ function FL2(c,x0,y0,x1,y1,ep,coul){
  c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
  c.closePath(); c.fill();
 }
-function BOITE(c,x,y,w,h,coul){
- c.fillStyle='#fff'; c.strokeStyle=coul; c.lineWidth=2.6;
- c.beginPath(); c.roundRect(x,y,w,h,11); c.fill(); c.stroke();
-}
-function roueD(c,x,y,r,n,coul){
- c.strokeStyle=coul; c.lineWidth=2; c.fillStyle='#fff';
- c.beginPath();
- for(let k=0;k<n;k++){
-  const a0=2*Math.PI*k/n, da=2*Math.PI/n;
-  [[r*0.84,a0],[r,a0+da*0.18],[r,a0+da*0.42],[r*0.84,a0+da*0.6]].forEach(function(q,i){
-   const px=x+q[0]*Math.cos(q[1]), py=y+q[0]*Math.sin(q[1]);
-   if(k===0&&i===0) c.moveTo(px,py); else c.lineTo(px,py);
-  });
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8;
+ c.strokeStyle=coul; c.lineWidth=1; c.lineCap='butt';
+ for(let k=-h;k<w;k+=p){
+  const t0=Math.max(0,-k), t1=Math.min(h,w-k);
+  if(t1<=t0) continue;
+  c.beginPath(); c.moveTo(x+k+t0,y+t0); c.lineTo(x+k+t1,y+t1); c.stroke();
  }
- c.closePath(); c.fill(); c.stroke();
- c.fillStyle=coul; c.beginPath(); c.arc(x,y,3,0,6.284); c.fill();
+ c.strokeStyle=coul; c.lineWidth=2; c.strokeRect(x,y,w,h);
 }
 (function(){
  const c=document.getElementById('d0').getContext('2d');
- c.fillStyle='#fff'; c.fillRect(0,0,860,250);
- T2(c,'CHAÎNE DE TRANSMISSION DU TREUIL',430,28,14,'#155e75');
- const B=[['MOTEUR','1450 tr/min · 18 N·m','#ea580c',36],
-          ['TRAIN ÉPICYCLOÏDAL','1/4  ou  1/1','#7c3aed',248],
-          ['RÉDUCTEUR FIXE','1/6','#0e7490',460],
-          ['TAMBOUR','\u00d8 160 mm','#16a34a',672]];
- const w=152, y=82;
- B.forEach(function(b,i){
-  BOITE(c,b[3],y,w,74,b[2]);
-  T2(c,b[0],b[3]+w/2,y+30,12,b[2]);
-  T2(c,b[1],b[3]+w/2,y+52,11.5,'#5b544a');
-  if(i<3) FL2(c,b[3]+w+5,y+37,B[i+1][3]-5,y+37,3,'#94a3b8');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,300);
+ T2(c,'ARBRE DE POMPE SUR DEUX ROULEMENTS',430,26,14,'#155e75');
+ const y=150;
+ /* carter en U */
+ HACH(c,120,y-100,40,200,'#475569');
+ HACH(c,160,y-100,480,26,'#475569');
+ HACH(c,160,y+74,480,26,'#475569');
+ /* arbre */
+ c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=2.2;
+ c.beginPath(); c.rect(100,y-16,640,32); c.fill(); c.stroke();
+ /* roulements */
+ [[160,'#7c3aed'],[520,'#7c3aed']].forEach(function(q){
+  c.fillStyle='#ede9fe'; c.strokeStyle=q[1]; c.lineWidth=2;
+  c.beginPath(); c.rect(q[0],y-74,60,58); c.fill(); c.stroke();
+  c.beginPath(); c.rect(q[0],y+16,60,58); c.fill(); c.stroke();
  });
- /* câble et charge */
- c.strokeStyle='#334155'; c.lineWidth=2.4; c.lineCap='butt';
- c.beginPath(); c.moveTo(748,y+74); c.lineTo(748,196); c.stroke();
- c.fillStyle='#475569'; c.beginPath(); c.roundRect(716,196,64,30,5); c.fill();
- T2(c,'400 kg',748,216,12,'#fff');
- T2(c,'le rapport du train DÉPEND de la configuration : frein ou embrayage',430,238,12.5,'#5b544a');
+ /* entretoise */
+ c.fillStyle='#fef3c7'; c.strokeStyle='#b45309'; c.lineWidth=2;
+ c.beginPath(); c.rect(220,y-40,300,24); c.fill(); c.stroke();
+ c.beginPath(); c.rect(220,y+16,300,24); c.fill(); c.stroke();
+ /* cale + jeu + couvercle */
+ c.fillStyle='#fecaca'; c.strokeStyle='#dc2626'; c.lineWidth=2;
+ c.beginPath(); c.rect(596,y-74,14,148); c.fill(); c.stroke();
+ HACH(c,622,y-100,34,200,'#0e7490');
+ /* legendes */
+ /* légendes regroupées SOUS le dessin : posées sur le carter, elles tombaient
+    dans les hachures */
+ T2(c,'roulement 1',190,y+122,12,'#7c3aed');
+ T2(c,'roulement 2',550,y+122,12,'#7c3aed');
+ T2(c,'entretoise',370,y+62,12,'#b45309');
+ T2(c,'cale e',634,y+122,12,'#dc2626');
+ T2(c,'couvercle',700,y-110,12,'#0e7490');
+ T2(c,'jeu J',613,y-118,12.5,'#dc2626');
+ FL2(c,613,y-110,613,y-80,2,'#dc2626');
+ T2(c,'carter',112,y-58,12,'#475569','right');   /* au-dessus de l'arbre */
 })();
 (function(){
  const c=document.getElementById('d1').getContext('2d');
- c.fillStyle='#fff'; c.fillRect(0,0,860,320);
- T2(c,'LE TRAIN ET SES DEUX COMMANDES',430,28,14,'#155e75');
- const cx=250, cy=168;
- /* couronne */
- c.strokeStyle='#ea580c'; c.lineWidth=2.6;
- c.beginPath(); c.arc(cx,cy,118,0,6.284); c.stroke();
- c.beginPath();
- for(let k=0;k<36;k++){
-  const a0=2*Math.PI*k/36, da=2*Math.PI/36;
-  [[104,a0],[94,a0+da*0.2],[94,a0+da*0.4],[104,a0+da*0.6]].forEach(function(q,i){
-   const px=cx+q[0]*Math.cos(q[1]), py=cy+q[0]*Math.sin(q[1]);
-   if(k===0&&i===0) c.moveTo(px,py); else c.lineTo(px,py);
-  });
- }
- c.closePath(); c.stroke();
- roueD(c,cx,cy,36,12,'#0e7490');
- for(let k=0;k<3;k++){
-  const a=k*2*Math.PI/3-Math.PI/2;
-  const sx=cx+70*Math.cos(a), sy=cy+70*Math.sin(a);
-  roueD(c,sx,sy,32,12,'#7c3aed');
-  c.strokeStyle='#16a34a'; c.lineWidth=5; c.lineCap='butt';
-  c.beginPath(); c.moveTo(cx,cy); c.lineTo(sx,sy); c.stroke();
- }
- c.fillStyle='#16a34a'; c.beginPath(); c.arc(cx,cy,7,0,6.284); c.fill();
- /* frein sur la couronne */
- c.strokeStyle='#dc2626'; c.lineWidth=7; c.lineCap='butt';
- c.beginPath(); c.moveTo(cx-140,cy-58); c.lineTo(cx-118,cy-58); c.stroke();
- for(let k=0;k<4;k++){ c.beginPath(); c.moveTo(cx-140,cy-58+k*6); c.lineTo(cx-150,cy-50+k*6); c.stroke(); }
- /* aligné à GAUCHE : cadré à droite, le libellé sortait du canvas */
- T2(c,'FREIN',16,cy-70,12,'#dc2626','left');
- T2(c,'immobilise',16,cy-52,11,'#dc2626','left');
- T2(c,'la couronne',16,cy-36,11,'#dc2626','left');
- /* embrayage entre planétaire et couronne */
- c.strokeStyle='#0284c7'; c.lineWidth=4; c.setLineDash([6,4]);
- c.beginPath(); c.moveTo(cx+36,cy+74); c.lineTo(cx+104,cy+74); c.stroke(); c.setLineDash([]);
- T2(c,'EMBRAYAGE',cx+150,cy+70,12,'#0284c7','left');
- T2(c,'solidarise planétaire et couronne',cx+150,cy+88,11,'#0284c7','left');
- /* légende */
- const L=[['planétaire (entrée)','#0e7490',66],['satellites','#7c3aed',94],
-          ['couronne','#ea580c',122],['porte-satellites (sortie)','#16a34a',150]];
+ c.fillStyle='#fff'; c.fillRect(0,0,860,250);
+ T2(c,'SANS CALE : X = A − B − C − D   ·   AVEC CALE : J = X − e',430,26,13.5,'#155e75');
+ const y=130, x0=90;
+ const L=[['B',96,'#7c3aed'],['D',300,'#b45309'],['C',96,'#7c3aed'],['e',60,'#dc2626'],['J',24,'#dc2626']];
+ let x=x0;
+ FL2(c,x0,y-64,x0+96+300+96+60+24,y-64,2.4,'#475569');
+ T2(c,'A',x0+288,y-74,13.5,'#475569');
  L.forEach(function(q){
-  c.fillStyle=q[1]; c.beginPath(); c.arc(462,q[2]-5,6,0,6.284); c.fill();
-  T2(c,q[0],478,q[2],12.5,q[1],'left');
+  c.fillStyle= q[0]==='J'? 'rgba(220,38,38,0.18)' : '#fff';
+  c.strokeStyle=q[2]; c.lineWidth=2;
+  c.beginPath(); c.rect(x,y-30,q[1],60); c.fill(); c.stroke();
+  T2(c,q[0],x+q[1]/2,y+5,14,q[2]);
+  x+=q[1];
  });
- T2(c,'Les deux commandes ne sont JAMAIS actionnées ensemble.',462,206,12.5,'#b91c1c','left');
- T2(c,'condition de montage : Zs = (Zc − Zp) ÷ 2',250,306,12.5,'#5b544a');
+ FL2(c,x0+492,y+56,x0+576,y+56,2.2,'#0e7490');
+ T2(c,'X',x0+534,y+76,13.5,'#0e7490');
+ T2(c,'la cale absorbe à elle seule la dispersion de A, B, C et D',430,226,12.5,'#5b544a');
 })();
 
 /* MINICOURS_INTEGRE — un bouton par question, une notion par mini-cours */

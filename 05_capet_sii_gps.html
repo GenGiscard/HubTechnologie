@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sujet type CAFEP-CAPET SII — Treuil à deux vitesses · ESTIC</title><style>
+<title>Sujet type CAFEP-CAPET SII — Flasque de moteur · ESTIC</title><style>
 :root{--acc:#1d4ed8;--accf:#1e3a8a;--fond:#f8fafc;--encre:#1e293b}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--encre);display:flex;flex-direction:column;align-items:center}
@@ -57,51 +57,47 @@ main{width:min(900px,100%);padding:14px 14px 50px}
 <div class="entete">
   <h1>Sujet type CAFEP-CAPET SII — Épreuve de sciences</h1>
   <div class="info"><b>Épreuve d’analyse et d’exploitation · option ingénierie mécanique</b> · durée conseillée : 5 h · noté sur 100 points<br>
-  Support : un treuil de levage à deux vitesses — train épicycloïdal, frein et embrayage</div>
+  Support : la flasque de fixation d’un moteur — spécification géométrique et choix de conception</div>
 </div>
 <div class="consignes">Vous disposez de cinq documents. Le sujet comporte cinq documents, cinq parties et douze questions : certaines demandent une
 <b>phrase rédigée</b>, d’autres un <b>calcul</b> dont tu poses les étapes <b>sur ton cahier</b> avant d’écrire le résultat ici.
 Aucune correction ne s’affiche avant la fin. La calculatrice est autorisée.</div>
 
-<div class="doc"><h2>Document 1 — Architecture du treuil</h2>
-<canvas id="d0" width="860" height="250"></canvas>
-<p class="leg">Le moteur entraîne le planétaire du train épicycloïdal. La sortie est
-prise sur le porte-satellites, puis démultipliée par un réducteur fixe avant
-d’atteindre le tambour d’enroulement.</p>
+<div class="doc"><h2>Document 1 — Mise en position de la flasque</h2>
+<canvas id="d0" width="860" height="290"></canvas>
+<p class="leg">La flasque s’appuie sur le carter par sa grande face plane, se centre
+dans un alésage du carter et reçoit quatre vis de fixation. Un pion interdit la
+rotation autour de l’axe.</p>
 
-<h2>Document 2 — Le train épicycloïdal et ses commandes</h2>
-<canvas id="d1" width="860" height="320"></canvas>
-<p class="leg">Un frein peut immobiliser la couronne. Un embrayage peut au contraire
-la solidariser du planétaire. Les deux ne sont jamais actionnés ensemble.</p>
+<h2>Document 2 — Spécifications du dessin de définition (extrait)</h2>
+<canvas id="d1" width="860" height="300"></canvas>
+<p class="leg">A : face d’appui. B : diamètre de centrage. C : trou du pion. Les quatre
+trous de fixation sont localisés par rapport à A, B et C.</p>
 
-<h2>Document 3 — Caractéristiques</h2>
+<h2>Document 3 — Données dimensionnelles</h2>
 <table>
- <tr><th>Planétaire</th><td>Z<sub>p</sub> = 30 dents</td></tr>
- <tr><th>Couronne</th><td>Z<sub>c</sub> = 90 dents</td></tr>
- <tr><th>Réducteur fixe en aval</th><td>rapport 1/6</td></tr>
- <tr><th>Diamètre du tambour</th><td>160 mm</td></tr>
- <tr><th>Vitesse du moteur</th><td>1450 tr/min</td></tr>
- <tr><th>Couple maximal du moteur</th><td>18 N·m</td></tr>
- <tr><th>Charge à lever</th><td>400 kg · g = 9,81 N/kg</td></tr>
- <tr><th>Rendement du train épicycloïdal</th><td>0,96</td></tr>
- <tr><th>Rendement du réducteur fixe</th><td>0,97</td></tr>
+ <tr><th>Trous de fixation (×4)</th><td>Ø 9,00 à 9,20 mm</td></tr>
+ <tr><th>Localisation des trous</th><td>Ø 0,2 au maximum de matière, par rapport à A, B, C</td></tr>
+ <tr><th>Planéité de la face A</th><td>0,05 mm</td></tr>
+ <tr><th>Perpendicularité du centrage B par rapport à A</th><td>Ø 0,03 mm</td></tr>
+ <tr><th>Vis de fixation</th><td>M8, diamètre 8 mm</td></tr>
 </table>
 
-<h2>Document 4 — Les deux configurations</h2>
+<h2>Document 4 — Relevé de contrôle d’une flasque</h2>
 <table>
- <tr><th>Configuration</th><th>Frein sur la couronne</th><th>Embrayage planétaire-couronne</th></tr>
- <tr><td>Vitesse lente</td><td>serré</td><td>libre</td></tr>
- <tr><td>Prise directe</td><td>libre</td><td>serré</td></tr>
+ <tr><th>Diamètre mesuré du trou n° 1</th><td>9,14 mm</td></tr>
+ <tr><th>Décalage de l’axe du trou n° 1, en x</th><td>0,09 mm</td></tr>
+ <tr><th>Décalage de l’axe du trou n° 1, en y</th><td>0,12 mm</td></tr>
 </table>
-<p class="leg">Embrayage serré, planétaire et couronne tournent ensemble : l’ensemble
-du train est solidaire et tourne d’un bloc.</p>
+<p class="leg">Décalages mesurés par rapport à la position théorique exacte, dans le
+système de références A, B, C.</p>
 
 <h2>Document 5 — Extrait du programme de STI2D, enseignement spécifique ITEC</h2>
 <table>
  <tr><th>Compétence</th><th>Connaissance associée</th></tr>
- <tr><td>CO5.2 — Identifier et caractériser une chaîne d’énergie</td><td>Transmission de puissance, rendement</td></tr>
- <tr><td>CO6.2 — Simuler le comportement d’un mécanisme</td><td>Loi entrée-sortie, train épicycloïdal</td></tr>
- <tr><td>CO7.3 — Valider un choix de composant</td><td>Couple disponible, marge de dimensionnement</td></tr>
+ <tr><td>CO4.2 — Traduire un besoin en spécification</td><td>Spécification géométrique des produits</td></tr>
+ <tr><td>CO7.3 — Valider un choix de conception</td><td>Condition fonctionnelle, montage</td></tr>
+ <tr><td>CO8.1 — Contrôler un produit</td><td>Mesure, conformité à une spécification</td></tr>
 </table>
 <div id="questions"></div>
 <div id="resultat" style="display:none"></div>
@@ -113,59 +109,55 @@ du train est solidaire et tourne d’un bloc.</p>
 function norm(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
 function nb(v){return parseFloat(String(v||'').replace(',','.'));}
 const Q=[
- {n:'A1',cours:'willis',pts:7,t:'PARTIE A — ÉTUDE DU TRAIN. Déterminez la denture des satellites, puis vérifiez que trois satellites peuvent être montés à 120°.',
-  aide:'Zs = (Zc − Zp) ÷ 2 ; le montage à n satellites exige que (Zp + Zc) soit divisible par n',
-  champs:[{id:'a1a',l:'Nombre de dents des satellites :',rep:30,tol:0.5,u:'dents'},
-          {id:'a1b',l:'Valeur de (Zp + Zc) ÷ 3 :',rep:40,tol:0.5,u:''}],
-  corr:'Zs = (90 − 30) ÷ 2 = <b>30 dents</b>. (30 + 90) ÷ 3 = <b>40</b>, nombre entier : le montage à trois satellites régulièrement répartis est <b>possible</b>. Cette condition est purement géométrique et n’intervient jamais dans le calcul du rapport.'},
- {n:'A2',cours:'willis',pts:7,t:'Calculez la raison basique du train, puis écrivez la relation de Willis complète, avant toute substitution.',
-  champs:[{id:'a2a',l:'Raison basique λ :',rep:-3,tol:0.15,u:''}],
-  redac:{id:'r2',cles:['willis','planetaire','couronne','porte','satellites','omega','wps','repere','(','/','lambda','-3']},
-  corr:'λ = − Z<sub>c</sub> ÷ Z<sub>p</sub> = − 90 ÷ 30 = <b>−3</b>. Willis s’écrit (ω<sub>planétaire</sub> − ω<sub>ps</sub>) ÷ (ω<sub>couronne</sub> − ω<sub>ps</sub>) = λ. <b>Écrire la relation ENTIÈRE avant de substituer</b> est ce qui évite l’erreur la plus fréquente du chapitre.'},
- {n:'A3',cours:'willis',pts:8,t:'Frein serré sur la couronne. Déterminez le rapport entre le porte-satellites et le planétaire.',
-  aide:'la couronne est immobile : sa vitesse est nulle dans la relation de Willis',
-  champs:[{id:'a3a',l:'Rapport ωps ÷ ωplanétaire (arrondir au centième) :',rep:0.25,tol:0.015,u:''}],
-  corr:'Avec ω<sub>couronne</sub> = 0 : (ω<sub>p</sub> − ω<sub>ps</sub>) ÷ (0 − ω<sub>ps</sub>) = −3, d’où ω<sub>ps</sub> ÷ ω<sub>p</sub> = Z<sub>p</sub> ÷ (Z<sub>p</sub> + Z<sub>c</sub>) = 30 ÷ 120 = <b>0,25</b>, soit 1/4. Appliquer Z<sub>p</sub> ÷ Z<sub>c</sub> = 1/3 serait l’erreur classique : ce rapport n’a aucun sens ici.'},
- {n:'B1',cours:'trainordinaire',pts:8,t:'PARTIE B — VITESSES. En vitesse lente, calculez la fréquence de rotation du tambour puis la vitesse de montée du câble.',
-  aide:'n’oubliez pas le réducteur fixe 1/6 — puis v = π × D × N ÷ 60',
-  champs:[{id:'b1a',l:'Fréquence de rotation du tambour (arrondir au dixième) :',rep:60.4,tol:1.5,u:'tr/min'},
-          {id:'b1b',l:'Vitesse du câble (arrondir au millième) :',rep:0.506,tol:0.015,u:'m/s'}],
-  corr:'N = 1450 × 0,25 ÷ 6 ≈ <b>60,4 tr/min</b>. v = π × 0,160 × 60,4 ÷ 60 ≈ <b>0,506 m/s</b>, soit environ 30 m par minute.'},
- {n:'B2',cours:'trainordinaire',pts:8,t:'Embrayage serré. Justifiez la valeur du rapport du train, puis calculez la nouvelle vitesse du câble.',
-  aide:'si le planétaire et la couronne tournent ensemble, que fait le porte-satellites ?',
-  champs:[{id:'b2a',l:'Rapport du train épicycloïdal :',rep:1,tol:0.05,u:''},
-          {id:'b2b',l:'Vitesse du câble (arrondir au millième) :',rep:2.025,tol:0.06,u:'m/s'}],
-  corr:'Planétaire et couronne liés, le train n’a plus de mouvement relatif : il tourne <b>d’un bloc</b>, donc le rapport vaut <b>1</b>. La vitesse devient 1450 ÷ 6 ≈ 241,7 tr/min au tambour, soit <b>2,025 m/s</b> — quatre fois plus vite.'},
- {n:'C1',cours:'momentforce',pts:8,t:'PARTIE C — COUPLES. Calculez l’effort dans le câble, puis le couple nécessaire au tambour.',
-  aide:'le couple s’obtient avec le RAYON du tambour, pas son diamètre',
-  champs:[{id:'c1a',l:'Effort dans le câble (arrondir à l’unité) :',rep:3924,tol:30,u:'N'},
-          {id:'c1b',l:'Couple au tambour (arrondir au dixième) :',rep:313.9,tol:4,u:'N·m'}],
-  corr:'F = 400 × 9,81 = <b>3 924 N</b>. C = F × R = 3 924 × 0,080 ≈ <b>313,9 N·m</b>. Utiliser le diamètre au lieu du rayon doublerait le résultat : c’est une erreur qui passe souvent inaperçue.'},
- {n:'C2',cours:'rendement',pts:9,t:'En vitesse lente, déterminez le couple que le moteur doit fournir. Concluez vis-à-vis des 18 N·m disponibles.',
-  aide:'remontez la chaîne en divisant par les rapports ET par les rendements',
-  champs:[{id:'c2a',l:'Rendement global de la chaîne (arrondir au millième) :',rep:0.931,tol:0.006,u:''},
-          {id:'c2b',l:'Couple moteur nécessaire (arrondir au centième) :',rep:14.05,tol:0.3,u:'N·m'}],
-  redac:{id:'r7',cles:['inferieur','suffit','convient','possible','18','marge','ok','valide']},
-  corr:'Rendement global = 0,96 × 0,97 ≈ <b>0,931</b>. C<sub>moteur</sub> = 313,9 ÷ (6 × 4 × 0,931) ≈ <b>14,05 N·m</b>. Les 18 N·m disponibles <b>suffisent</b>, avec environ 22 % de marge : le levage est possible en vitesse lente.'},
- {n:'C3',cours:'rendement',pts:9,t:'Reprenez le calcul en prise directe. Que concluez-vous ?',
-  aide:'le train ne démultiplie plus : seul le réducteur fixe subsiste',
-  champs:[{id:'c3a',l:'Couple moteur nécessaire (arrondir au centième) :',rep:53.94,tol:1.2,u:'N·m'}],
-  redac:{id:'r8',cles:['impossible','insuffisant','trois fois','depasse','superieur','18','ne peut pas','lever','bloque','cale']},
-  corr:'C<sub>moteur</sub> = 313,9 ÷ (6 × 1 × 0,97) ≈ <b>53,94 N·m</b>, soit <b>trois fois</b> ce que le moteur peut fournir. En prise directe, le treuil est <b>incapable de lever la charge</b> : le moteur calerait.'},
- {n:'D1',cours:'rendement',pts:9,t:'PARTIE D — EXPLOITATION DU RÉSULTAT. À quoi sert alors la prise directe sur cet appareil ?',
-  redac:{id:'r9',cles:['vide','sans charge','approche','descente','positionner','crochet','rapide','remonter','gagner','temps','faible']},
-  corr:'Elle ne sert pas à lever la charge nominale, mais à <b>gagner du temps à vide</b> : descendre ou remonter rapidement le crochet pour l’approche, ou manœuvrer une charge faible. Le dimensionnement ne se juge donc pas rapport par rapport, mais <b>usage par usage</b> — un rapport peut être parfaitement légitime tout en étant incapable de la charge nominale.'},
- {n:'D2',cours:'rendement',pts:8,t:'Calculez la puissance de levage en vitesse lente, puis comparez-la à la puissance fournie par le moteur dans cette configuration.',
-  aide:'P = F × v pour le levage ; P = C × ω pour le moteur',
-  champs:[{id:'d2a',l:'Puissance de levage (arrondir à l’unité) :',rep:1986,tol:40,u:'W'},
-          {id:'d2b',l:'Puissance fournie par le moteur (arrondir à l’unité) :',rep:2133,tol:50,u:'W'}],
-  corr:'P<sub>levage</sub> = 3 924 × 0,506 ≈ <b>1 986 W</b>. Côté moteur : ω = 1450 × 2π ÷ 60 ≈ 151,8 rad/s, donc P = 14,05 × 151,8 ≈ <b>2 133 W</b>. L’écart de 147 W correspond exactement aux pertes : 1 986 ÷ 2 133 ≈ 0,931, le rendement trouvé en C2. <b>La cohérence énergétique valide toute la chaîne de calculs.</b>'},
- {n:'E1',pts:10,t:'PARTIE E — EXPLOITATION PÉDAGOGIQUE. À l’aide du document 5, proposez une séance de 2 h en terminale STI2D ITEC sur ce support. Précisez la compétence visée, l’activité des élèves et la production attendue.',
-  redac:{id:'r10',cles:['co6','co5','simuler','rendement','chaine','energie','activite','ilot','mesure','tableur','comparer','calcul','production','compte rendu','maquette']},
-  corr:'Réponse articulant trois éléments. <b>Compétence</b> : CO5.2 ou CO6.2 — caractériser la chaîne d’énergie et vérifier le rendement. <b>Activité</b> : en îlots, mesurer la vitesse de montée du câble dans les deux configurations, en déduire les rapports expérimentaux, puis les confronter aux valeurs calculées par Willis ; si un wattmètre est disponible, comparer puissance absorbée et puissance de levage pour estimer le rendement réel. <b>Production</b> : un compte rendu comportant le protocole, le tableau des mesures, les écarts modèle-mesure et leur interprétation. L’évaluation porte sur la démarche et l’exploitation des écarts, pas sur le seul résultat.'},
- {n:'E2',pts:9,t:'Un élève affirme : « la prise directe est forcément meilleure, puisque le rendement y est plus élevé ». Analysez et proposez une remédiation.',
-  redac:{id:'r11',cles:['confond','rendement','couple','multiplie','demultipli','54','18','ne peut pas','lever','critere','usage','calculer','montrer','comparer','tableau']},
-  corr:'L’élève <b>confond rendement et capacité</b>. Le rendement est effectivement meilleur en prise directe — 0,97 contre 0,931 — mais le train n’y multiplie plus le couple : il faudrait 54 N·m au lieu de 14. Un rendement élevé sur une transmission incapable de lever la charge ne sert à rien. <b>Remédiation</b> : faire compléter un tableau à deux colonnes, rendement et couple nécessaire, pour les deux configurations. La contradiction apparaît alors d’elle-même, et l’élève construit lui-même le bon critère : la capacité d’abord, le rendement ensuite.'},
+ {n:'A1',cours:'references',pts:7,t:'PARTIE A — CHOIX DES RÉFÉRENCES. À l’aide du document 1, justifiez le choix de la grande face plane comme référence PRIMAIRE A.',
+  redac:{id:'r1',cles:['appui','plan','etendu','grande','position','mise','stable','fonction','carter','contact','trois','3']},
+  corr:'La grande face plane est la surface qui assure la <b>mise en position principale</b> de la flasque sur le carter : c’est l’appui le plus étendu. Elle supprime 3 degrés de liberté. La référence primaire est TOUJOURS la surface fonctionnelle d’appui, jamais une face choisie pour sa commodité de mesure.'},
+ {n:'A2',cours:'references',pts:7,t:'Justifiez le choix du diamètre de centrage comme référence SECONDAIRE B, plutôt que le contour extérieur de la flasque.',
+  redac:{id:'r2',cles:['centrage','centre','carter','fonction','position','axe','contour','sert','rien','montage','aligne']},
+  corr:'Le centrage <b>positionne réellement</b> la flasque dans le carter : c’est lui qui aligne l’axe du moteur. Le contour extérieur ne participe à aucune fonction de montage. Le prendre en référence produirait des pièces contrôlées conformes par rapport à une surface qui ne sert à rien.'},
+ {n:'A3',cours:'references',pts:8,t:'Indiquez le nombre de degrés de liberté supprimés par chacune des trois références.',
+  champs:[{id:'a3a',l:'Référence A, appui plan :',rep:3,tol:0.1,u:''},
+          {id:'a3b',l:'Référence B, centrage court :',rep:2,tol:0.1,u:''},
+          {id:'a3c',l:'Référence C, pion anti-rotation :',rep:1,tol:0.1,u:''}],
+  corr:'<b>3 + 2 + 1 = 6</b> : l’appui plan supprime 3 degrés, le centrage court 2, le pion le dernier, la rotation autour de l’axe. Le système de références reproduit exactement la mise en position isostatique du montage réel.'},
+ {n:'B1',cours:'zonetolerance',pts:6,t:'PARTIE B — LECTURE DES SPÉCIFICATIONS. Décrivez la zone de tolérance de planéité de la face A.',
+  redac:{id:'r3',cles:['deux','plans','paralleles','distants','0,05','entre','surface','reference','sans']},
+  corr:'La surface réelle doit être comprise entre <b>deux plans parallèles distants de 0,05 mm</b>. Il s’agit d’une tolérance de forme : elle ne porte AUCUNE référence, puisqu’elle ne concerne que la surface elle-même.'},
+ {n:'B2',cours:'zonetolerance',pts:7,t:'La perpendicularité du centrage est spécifiée Ø 0,03 par rapport à A. De combien l’axe du centrage peut-il s’écarter de la perpendiculaire idéale ?',
+  champs:[{id:'b2a',l:'Écart maximal de l’axe (arrondir au millième), en mm :',rep:0.015,tol:0.002,u:'mm'}],
+  corr:'Ø 0,03 définit un cylindre de <b>diamètre</b> 0,03 perpendiculaire à A. L’axe doit y rester : il peut s’écarter du rayon, soit <b>0,015 mm</b>. Lire 0,03 comme un écart admissible est l’erreur la plus fréquente.'},
+ {n:'B3',cours:'zonetolerance',pts:7,t:'Pour la localisation des trous de fixation, donnez le diamètre de la zone au maximum de matière et l’écart maximal correspondant de l’axe.',
+  champs:[{id:'b3a',l:'Diamètre de la zone, en mm :',rep:0.2,tol:0.01,u:'mm'},
+          {id:'b3b',l:'Écart maximal de l’axe, en mm :',rep:0.1,tol:0.01,u:'mm'}],
+  corr:'Au maximum de matière, c’est-à-dire pour un trou de 9,00 mm, la zone vaut <b>Ø 0,2</b> et l’axe peut s’écarter de <b>0,1 mm</b>. Cette zone grandit quand le trou s’éloigne du maximum de matière.'},
+ {n:'C1',cours:'maximummatiere',pts:8,t:'PARTIE C — CONTRÔLE. À l’aide du document 4, calculez le bonus de maximum de matière pour le trou n° 1, puis la zone de localisation qui lui est accordée.',
+  aide:'le trou au maximum de matière est le PLUS PETIT autorisé, 9,00 mm',
+  champs:[{id:'c1a',l:'Bonus de maximum de matière, en mm :',rep:0.14,tol:0.01,u:'mm'},
+          {id:'c1b',l:'Zone de localisation accordée, en mm :',rep:0.34,tol:0.01,u:'mm'}],
+  corr:'Bonus = 9,14 − 9,00 = <b>0,14 mm</b>. Zone accordée : 0,20 + 0,14 = <b>Ø 0,34</b>. Le trou étant plus grand que le minimum, la vis y dispose de plus de place : on peut tolérer une position moins précise.'},
+ {n:'C2',cours:'zonetolerance',pts:9,t:'Calculez l’écart radial de l’axe du trou n° 1, puis concluez sur sa conformité, avec puis sans l’exigence du maximum de matière.',
+  aide:'écart radial = √(x² + y²) ; zone nécessaire = 2 × écart radial',
+  champs:[{id:'c2a',l:'Écart radial (arrondir au centième), en mm :',rep:0.15,tol:0.01,u:'mm'},
+          {id:'c2b',l:'Diamètre de zone nécessaire, en mm :',rep:0.30,tol:0.01,u:'mm'}],
+  redac:{id:'r4',cles:['conforme','accepte','0,34','bonus','sans','refuse','0,2','grace','maximum','matiere']},
+  corr:'Écart radial = √(0,09² + 0,12²) = <b>0,15 mm</b>, soit une zone nécessaire de <b>Ø 0,30</b>. Avec le maximum de matière, la zone accordée est Ø 0,34 : la pièce est <b>CONFORME</b>. Sans lui, la zone ne serait que Ø 0,20 : la pièce serait <b>REFUSÉE</b>. Le maximum de matière sauve une pièce parfaitement montable, qu’un contrôle rigide aurait mise au rebut.'},
+ {n:'C3',cours:'maximummatiere',pts:8,t:'Calculez le diamètre virtuel des trous et vérifiez que les vis M8 passent dans tous les cas.',
+  aide:'diamètre virtuel = diamètre au maximum de matière − tolérance de position',
+  champs:[{id:'c3a',l:'Diamètre virtuel, en mm :',rep:8.8,tol:0.02,u:'mm'},
+          {id:'c3b',l:'Jeu minimal garanti avec une vis de 8 mm, en mm :',rep:0.8,tol:0.02,u:'mm'}],
+  corr:'Diamètre virtuel = 9,00 − 0,20 = <b>8,80 mm</b>. C’est la plus petite ouverture efficace, dans le pire cas combiné de taille et de position. Une vis de 8 mm passe toujours, avec <b>0,8 mm</b> de jeu garanti : le montage est assuré pour TOUTE pièce conforme.'},
+ {n:'D1',cours:'maximummatiere',pts:9,t:'PARTIE D — CHOIX DE CONCEPTION. Expliquez pourquoi le maximum de matière est pertinent pour les trous de fixation, mais serait à proscrire pour le centrage B.',
+  redac:{id:'r5',cles:['montage','jeu','vis','passer','fixation','centrage','precision','alignement','axe','bonus','fonction','deplace','decentr']},
+  corr:'Pour les trous de fixation, la fonction est de <b>laisser passer la vis</b> : un trou plus grand compense un défaut de position, le bonus est donc légitime. Pour le centrage, la fonction est l’<b>alignement précis</b> de l’axe du moteur : un diamètre plus grand ne compense rien, il augmente au contraire le jeu et le défaut d’alignement. Le maximum de matière se justifie par la fonction de montage, jamais par principe.'},
+ {n:'D2',cours:'references',pts:8,t:'Un dessinateur propose de prendre la face ARRIÈRE de la flasque comme référence A, parce qu’elle est plus facile à palper. Analysez les conséquences.',
+  redac:{id:'r6',cles:['fonction','appui','carter','conforme','monte','rejet','faux','parallelisme','epaisseur','defaut','cumul','inutile','accept']},
+  corr:'La face arrière ne touche pas le carter : elle ne participe pas à la mise en position. Une flasque pourrait alors être déclarée conforme par rapport à cette face tout en présentant, sur la face d’appui réelle, un défaut de parallélisme ou d’épaisseur qui décale les trous. On accepterait des pièces qui ne se montent pas, et on pourrait en rejeter qui se montent parfaitement. <b>La référence doit être la surface fonctionnelle</b>, même si elle est moins commode à mesurer.'},
+ {n:'E1',pts:8,t:'PARTIE E — EXPLOITATION PÉDAGOGIQUE. À l’aide du document 5, proposez une séance de 2 h en terminale STI2D ITEC sur ce support. Précisez la compétence visée, l’activité des élèves et la production attendue.',
+  redac:{id:'r7',cles:['co4','co8','co7','controle','mesure','pied','colonne','machine','tridimensionnelle','ilot','activite','piece','production','compte rendu','conforme']},
+  corr:'Réponse articulant trois éléments. <b>Compétence</b> : CO8.1, contrôler un produit, adossée à CO4.2. <b>Activité</b> : en îlots, mesurer plusieurs flasques réelles ou simulées — diamètre et position des trous —, calculer le bonus et la zone accordée, puis statuer sur la conformité avec et sans maximum de matière. <b>Production</b> : un rapport de contrôle par pièce, et une synthèse sur le nombre de pièces que le maximum de matière permet de sauver. L’évaluation porte sur la justification de chaque décision de conformité.'},
+ {n:'E2',pts:8,t:'Un élève affirme : « l’axe est décalé de 0,09 en x et de 0,12 en y, les deux restent sous 0,1… non, 0,12 dépasse, donc la pièce est refusée ». Analysez son raisonnement et proposez une remédiation.',
+  redac:{id:'r8',cles:['radial','combin','hypot','pythagore','cylindre','zone','separe','composantes','diametre','bonus','dessin','tracer','cercle','remedi']},
+  corr:'Son raisonnement est <b>doublement faux</b>. Il traite les deux décalages séparément, comme deux tolérances dimensionnelles, alors que la zone est un <b>cylindre</b> : c’est l’écart RADIAL, 0,15, qui compte. Et il oublie le <b>bonus</b> de maximum de matière, qui porte la zone à Ø 0,34. <b>Remédiation</b> : faire placer le point sur un dessin à l’échelle, dans le cercle de la zone. L’élève voit que ce n’est ni x ni y qui décide, mais la distance au centre — et que le cercle grandit avec le trou.'},
 ];
 const z=document.getElementById('questions');
 Q.forEach(q=>{
@@ -221,105 +213,107 @@ function FL2(c,x0,y0,x1,y1,ep,coul){
  c.closePath(); c.fill();
 }
 /* Documents 1 et 2 */
-function T2(c,s,x,y,t,co,al){c.font='bold '+(t||14)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+function T2(c,s,x,y,t,co,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
  c.textAlign=al||'center';c.fillText(s,x,y);}
-function FL2(c,x0,y0,x1,y1,ep,coul){
- const L=Math.max(12,ep*2.6), W=Math.max(10,ep*2.2);
- const dx=x1-x0, dy=y1-y0, d=Math.hypot(dx,dy)||1, tx=dx/d, ty=dy/d;
- const nx=-ty, ny=tx, bx=x1-tx*L, by=y1-ty*L;
- c.strokeStyle=coul; c.fillStyle=coul; c.lineWidth=ep; c.lineCap='butt';
- c.beginPath(); c.moveTo(x0,y0); c.lineTo(bx,by); c.stroke();
- c.beginPath(); c.moveTo(x1,y1);
- c.lineTo(bx+nx*W/2,by+ny*W/2); c.lineTo(bx-nx*W/2,by-ny*W/2);
- c.closePath(); c.fill();
-}
-function BOITE(c,x,y,w,h,coul){
- c.fillStyle='#fff'; c.strokeStyle=coul; c.lineWidth=2.6;
- c.beginPath(); c.roundRect(x,y,w,h,11); c.fill(); c.stroke();
-}
-function roueD(c,x,y,r,n,coul){
- c.strokeStyle=coul; c.lineWidth=2; c.fillStyle='#fff';
- c.beginPath();
- for(let k=0;k<n;k++){
-  const a0=2*Math.PI*k/n, da=2*Math.PI/n;
-  [[r*0.84,a0],[r,a0+da*0.18],[r,a0+da*0.42],[r*0.84,a0+da*0.6]].forEach(function(q,i){
-   const px=x+q[0]*Math.cos(q[1]), py=y+q[0]*Math.sin(q[1]);
-   if(k===0&&i===0) c.moveTo(px,py); else c.lineTo(px,py);
-  });
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8;
+ c.strokeStyle=coul; c.lineWidth=1; c.lineCap='butt';
+ for(let k=-h;k<w;k+=p){
+  const t0=Math.max(0,-k), t1=Math.min(h,w-k);
+  if(t1<=t0) continue;
+  c.beginPath(); c.moveTo(x+k+t0,y+t0); c.lineTo(x+k+t1,y+t1); c.stroke();
  }
- c.closePath(); c.fill(); c.stroke();
- c.fillStyle=coul; c.beginPath(); c.arc(x,y,3,0,6.284); c.fill();
+ c.strokeStyle=coul; c.lineWidth=2; c.strokeRect(x,y,w,h);
+}
+function SYM(c,type,x,y,s,coul){
+ c.strokeStyle=coul; c.lineWidth=2; const h=s/2;
+ if(type==='planeite'){
+  c.beginPath(); c.moveTo(x-h,y+h*0.5); c.lineTo(x-h*0.4,y-h*0.5);
+  c.lineTo(x+h,y-h*0.5); c.lineTo(x+h*0.4,y+h*0.5); c.closePath(); c.stroke();
+ } else if(type==='perpendicularite'){
+  c.beginPath(); c.moveTo(x-h,y+h*0.7); c.lineTo(x+h,y+h*0.7); c.stroke();
+  c.beginPath(); c.moveTo(x,y+h*0.7); c.lineTo(x,y-h*0.8); c.stroke();
+ } else if(type==='localisation'){
+  c.beginPath(); c.arc(x,y,h*0.55,0,6.284); c.stroke();
+  c.beginPath(); c.moveTo(x-h,y); c.lineTo(x+h,y); c.stroke();
+  c.beginPath(); c.moveTo(x,y-h); c.lineTo(x,y+h); c.stroke();
+ }
+}
+function cadreGPS(c,x,y,cases,coul){
+ let cx=x;
+ cases.forEach(function(k){
+  const w=k.w||38;
+  c.fillStyle='#fff'; c.strokeStyle=coul; c.lineWidth=1.8;
+  c.beginPath(); c.rect(cx,y,w,28); c.fill(); c.stroke();
+  if(k.sym) SYM(c,k.sym,cx+w/2,y+14,18,coul); else T2(c,k.t,cx+w/2,y+19,12.5,coul);
+  cx+=w;
+ });
 }
 (function(){
  const c=document.getElementById('d0').getContext('2d');
- c.fillStyle='#fff'; c.fillRect(0,0,860,250);
- T2(c,'CHAÎNE DE TRANSMISSION DU TREUIL',430,28,14,'#155e75');
- const B=[['MOTEUR','1450 tr/min · 18 N·m','#ea580c',36],
-          ['TRAIN ÉPICYCLOÏDAL','1/4  ou  1/1','#7c3aed',248],
-          ['RÉDUCTEUR FIXE','1/6','#0e7490',460],
-          ['TAMBOUR','\u00d8 160 mm','#16a34a',672]];
- const w=152, y=82;
- B.forEach(function(b,i){
-  BOITE(c,b[3],y,w,74,b[2]);
-  T2(c,b[0],b[3]+w/2,y+30,12,b[2]);
-  T2(c,b[1],b[3]+w/2,y+52,11.5,'#5b544a');
-  if(i<3) FL2(c,b[3]+w+5,y+37,B[i+1][3]-5,y+37,3,'#94a3b8');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,290);
+ T2(c,'LA FLASQUE ENTRE LE MOTEUR ET LE CARTER',430,26,14,'#155e75');
+ const y=150;
+ /* carter */
+ HACH(c,470,y-110,160,220,'#475569');
+ /* alesage du carter */
+ c.fillStyle='#fff'; c.fillRect(470,y-34,40,68);
+ c.strokeStyle='#475569'; c.lineWidth=2; c.strokeRect(470,y-34,40,68);
+ /* flasque */
+ c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=2.4;
+ c.beginPath(); c.rect(420,y-100,50,200); c.fill(); c.stroke();
+ c.beginPath(); c.rect(470,y-32,36,64); c.fill(); c.stroke();
+ /* moteur */
+ c.fillStyle='#fff7ed'; c.strokeStyle='#ea580c'; c.lineWidth=2.4;
+ c.beginPath(); c.roundRect(230,y-70,190,140,10); c.fill(); c.stroke();
+ T2(c,'MOTEUR',325,y+5,14,'#ea580c');
+ /* vis */
+ [y-78,y+78].forEach(function(yy){
+  c.fillStyle='#334155'; c.fillRect(410,yy-5,90,10);
+  c.fillRect(398,yy-11,14,22);
  });
- /* câble et charge */
- c.strokeStyle='#334155'; c.lineWidth=2.4; c.lineCap='butt';
- c.beginPath(); c.moveTo(748,y+74); c.lineTo(748,196); c.stroke();
- c.fillStyle='#475569'; c.beginPath(); c.roundRect(716,196,64,30,5); c.fill();
- T2(c,'400 kg',748,216,12,'#fff');
- T2(c,'le rapport du train DÉPEND de la configuration : frein ou embrayage',430,238,12.5,'#5b544a');
+ /* pion */
+ c.fillStyle='#16a34a'; c.fillRect(454,y+40,40,9);
+ /* legendes */
+ T2(c,'A — face d’appui',470,y+128,12.5,'#0284c7');
+ /* libellés sortis du carter : posés sur les hachures, ils se lisaient mal */
+ c.strokeStyle='#0284c7'; c.lineWidth=1.2;
+ c.beginPath(); c.moveTo(506,y-6); c.lineTo(636,y-6); c.stroke();
+ T2(c,'B — centrage',642,y-2,12.5,'#0284c7','left');
+ T2(c,'vis de fixation',640,y-78,12,'#334155','left');
+ T2(c,'C — pion',640,y+48,12,'#16a34a','left');
+ T2(c,'carter',642,y+96,12.5,'#475569','left');
+ c.strokeStyle='#0284c7'; c.lineWidth=3;
+ c.beginPath(); c.moveTo(470,y-100); c.lineTo(470,y+100); c.stroke();
 })();
 (function(){
  const c=document.getElementById('d1').getContext('2d');
- c.fillStyle='#fff'; c.fillRect(0,0,860,320);
- T2(c,'LE TRAIN ET SES DEUX COMMANDES',430,28,14,'#155e75');
- const cx=250, cy=168;
- /* couronne */
- c.strokeStyle='#ea580c'; c.lineWidth=2.6;
- c.beginPath(); c.arc(cx,cy,118,0,6.284); c.stroke();
- c.beginPath();
- for(let k=0;k<36;k++){
-  const a0=2*Math.PI*k/36, da=2*Math.PI/36;
-  [[104,a0],[94,a0+da*0.2],[94,a0+da*0.4],[104,a0+da*0.6]].forEach(function(q,i){
-   const px=cx+q[0]*Math.cos(q[1]), py=cy+q[0]*Math.sin(q[1]);
-   if(k===0&&i===0) c.moveTo(px,py); else c.lineTo(px,py);
-  });
- }
- c.closePath(); c.stroke();
- roueD(c,cx,cy,36,12,'#0e7490');
- for(let k=0;k<3;k++){
-  const a=k*2*Math.PI/3-Math.PI/2;
-  const sx=cx+70*Math.cos(a), sy=cy+70*Math.sin(a);
-  roueD(c,sx,sy,32,12,'#7c3aed');
-  c.strokeStyle='#16a34a'; c.lineWidth=5; c.lineCap='butt';
-  c.beginPath(); c.moveTo(cx,cy); c.lineTo(sx,sy); c.stroke();
- }
- c.fillStyle='#16a34a'; c.beginPath(); c.arc(cx,cy,7,0,6.284); c.fill();
- /* frein sur la couronne */
- c.strokeStyle='#dc2626'; c.lineWidth=7; c.lineCap='butt';
- c.beginPath(); c.moveTo(cx-140,cy-58); c.lineTo(cx-118,cy-58); c.stroke();
- for(let k=0;k<4;k++){ c.beginPath(); c.moveTo(cx-140,cy-58+k*6); c.lineTo(cx-150,cy-50+k*6); c.stroke(); }
- /* aligné à GAUCHE : cadré à droite, le libellé sortait du canvas */
- T2(c,'FREIN',16,cy-70,12,'#dc2626','left');
- T2(c,'immobilise',16,cy-52,11,'#dc2626','left');
- T2(c,'la couronne',16,cy-36,11,'#dc2626','left');
- /* embrayage entre planétaire et couronne */
- c.strokeStyle='#0284c7'; c.lineWidth=4; c.setLineDash([6,4]);
- c.beginPath(); c.moveTo(cx+36,cy+74); c.lineTo(cx+104,cy+74); c.stroke(); c.setLineDash([]);
- T2(c,'EMBRAYAGE',cx+150,cy+70,12,'#0284c7','left');
- T2(c,'solidarise planétaire et couronne',cx+150,cy+88,11,'#0284c7','left');
- /* légende */
- const L=[['planétaire (entrée)','#0e7490',66],['satellites','#7c3aed',94],
-          ['couronne','#ea580c',122],['porte-satellites (sortie)','#16a34a',150]];
- L.forEach(function(q){
-  c.fillStyle=q[1]; c.beginPath(); c.arc(462,q[2]-5,6,0,6.284); c.fill();
-  T2(c,q[0],478,q[2],12.5,q[1],'left');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,300);
+ T2(c,'LA FLASQUE VUE DE FACE, AVEC SES SPÉCIFICATIONS',430,26,14,'#155e75');
+ const cx=240, cy=160, R=110;
+ c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=2.4;
+ c.beginPath(); c.arc(cx,cy,R,0,6.284); c.fill(); c.stroke();
+ c.fillStyle='#fff'; c.beginPath(); c.arc(cx,cy,36,0,6.284); c.fill(); c.stroke();
+ T2(c,'B',cx,cy+5,14,'#0284c7');
+ [[1,1],[1,-1],[-1,1],[-1,-1]].forEach(function(s){
+  const x=cx+s[0]*72, y=cy+s[1]*72;
+  c.fillStyle='#fff'; c.strokeStyle='#ea580c'; c.lineWidth=2;
+  c.beginPath(); c.arc(x,y,11,0,6.284); c.fill(); c.stroke();
+  c.strokeStyle='#94a3b8'; c.lineWidth=1;
+  c.beginPath(); c.moveTo(x-16,y); c.lineTo(x+16,y); c.stroke();
+  c.beginPath(); c.moveTo(x,y-16); c.lineTo(x,y+16); c.stroke();
  });
- T2(c,'Les deux commandes ne sont JAMAIS actionnées ensemble.',462,206,12.5,'#b91c1c','left');
- T2(c,'condition de montage : Zs = (Zc − Zp) ÷ 2',250,306,12.5,'#5b544a');
+ c.fillStyle='#16a34a'; c.beginPath(); c.arc(cx+100,cy+28,6,0,6.284); c.fill();
+ T2(c,'C',cx+116,cy+34,12.5,'#16a34a','left');
+ /* cadres de tolerance */
+ const X=440;
+ T2(c,'4 trous Ø 9,00 à 9,20',X,76,12.5,'#ea580c','left');
+ cadreGPS(c,X,84,[{sym:'localisation'},{t:'Ø 0,2 M',w:88},{t:'A'},{t:'B'},{t:'C'}],'#ea580c');
+ T2(c,'face A',X,146,12.5,'#0284c7','left');
+ cadreGPS(c,X,154,[{sym:'planeite'},{t:'0,05',w:62}],'#0284c7');
+ T2(c,'centrage B',X,214,12.5,'#0284c7','left');
+ cadreGPS(c,X,222,[{sym:'perpendicularite'},{t:'Ø 0,03',w:72},{t:'A'}],'#0284c7');
+ T2(c,'M : exigence du maximum de matière',X,280,11.5,'#64748b','left');
 })();
 
 /* MINICOURS_INTEGRE — un bouton par question, une notion par mini-cours */
