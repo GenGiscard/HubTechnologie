@@ -310,6 +310,7 @@ async function charger(){
  classe:v.classe||'—',
   note:parseFloat(v.note20!==undefined?v.note20:v.note)||0,
   bonus:parseFloat(v.bonus)||0,
+ kahoot:String(v.bonus_eleves||''),
  score:v.score||0,
  duree:v.duree_s?Math.floor(v.duree_s/60)+' min '+String(v.duree_s%60).padStart(2,'0'):(v.duree||''),
  /* ts sert au TRI : trier le texte « jj/mm/aaaa » rangeait par jour du mois,
@@ -365,7 +366,7 @@ function afficher(){
  return '<tr><td>'+d.nom+(d.abandon?'<span style="display:inline-block;margin-left:6px;padding:0 6px;border-radius:5px;background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5;font-size:11px;font-weight:800">ABANDON</span>':'')+'</td><td>'+d.classe+'</td>'+
  '<td><a class="lien" href="'+d.fichier+'">'+d.seq+'</a></td>'+
  '<td><span class="badge" style="background:'+(d.niv==='5e'?'#16a34a':(d.niv==='4e'?'#b45309':'#1d4ed8'))+'">'+d.niv+'</span></td>'+
- '<td class="note" style="color:'+coul+'">'+String(d.note).replace('.',',')+(d.bonus>0? ' <span title="dont points Kahoot" style="font-size:11px;color:#6d28d9;font-weight:800">+'+String(d.bonus).replace('.',',')+'</span>':'')+'</td>'+
+ '<td class="note" style="color:'+coul+'">'+String(d.note).replace('.',',')+(d.bonus>0? ' <span title="dont points Kahoot" style="font-size:11px;color:#6d28d9;font-weight:800">+'+String(d.bonus).replace('.',',')+'</span>':'')+(d.kahoot? '<div style="font-size:11px;color:#6d28d9;font-weight:700;margin-top:2px">Kahoot : '+d.kahoot.replace(/[<>&]/g,'')+'</div>':'')+'</td>'+
  '<td><div class="jauge"><div style="width:'+Math.min(100,d.note/20*100)+'%;background:'+coul+'"></div></div></td>'+
  '<td>'+(d.duree||'—')+'</td><td>'+(d.date||'—')+'</td></tr>';
  }).join('');
@@ -380,8 +381,8 @@ document.getElementById('fNom').addEventListener('input',afficher);
 document.getElementById('rafraichir').addEventListener('click',charger);
 document.getElementById('csv').addEventListener('click',()=>{
  const L=filtres();
- const lignes=[['Nom','Classe','Sequence','Niveau','Note/20','Duree','Date']]
- .concat(L.map(d=>[d.nom,d.classe,d.seq,d.niv,String(d.note).replace('.',','),d.duree,d.date]));
+ const lignes=[['Nom','Classe','Sequence','Niveau','Note/20','Duree','Date','Kahoot']]
+ .concat(L.map(d=>[d.nom,d.classe,d.seq,d.niv,String(d.note).replace('.',','),d.duree,d.date,d.kahoot || (d.bonus>0? '+'+String(d.bonus).replace('.',','):'')]));
  const csv=lignes.map(l=>l.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');
  const a=document.createElement('a');
  a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
