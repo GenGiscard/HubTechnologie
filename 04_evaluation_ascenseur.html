@@ -1056,11 +1056,16 @@ const URL_BONUS=FIREBASE.split('/evaluations/')[0]+'/bonus';
 async function lireBonus(classe,nom,prenom){
  const vide={total:0,groupe:false,eleves:[],entrees:[],detail:''};
  try{
-  const r=await fetch(URL_BONUS+'.json'); const j=await r.json();
+  const r=await fetch(URL_BONUS+'.json');
+  if(!r.ok){ vide.erreur='refus HTTP '+r.status; return vide; }
+  const j=await r.json();
+  if(j && j.error){ vide.erreur=String(j.error).slice(0,60); return vide; }
   if(!j || typeof j!=='object') return vide;
   const cl=normB(classe), eN=normB(nom), eP=normB(prenom);
   const mN=motsB(nom), mP=motsB(prenom);
   const paires = (mN.length>1 && mN.length===mP.length) ? new Set(mN.map(function(x,i){ return x+'_'+mP[i]; })) : null;
+  /* champs INVERSÉS : prénoms écrits dans « Nom », noms dans « Prénom » — fréquent */
+  const pairesInv = paires ? new Set(mP.map(function(x,i){ return x+'_'+mN[i]; })) : null;
   const EN=ensembleB(mN), EP=ensembleB(mP);
   const parEleve={}, entrees=[];
   Object.keys(j).forEach(function(k){
@@ -1070,8 +1075,11 @@ async function lireBonus(classe,nom,prenom){
     if(!b || b.consomme || typeof b.points!=='number' || b.points<=0) return;
     if(normB(b.classe)!==cl) return;
     const bn=normB(b.nom), bp=normB(b.prenom);
-    const exact = bn===eN && bp===eP;
-    const ok = exact || (paires ? paires.has(bn+'_'+bp) : (EN.has(bn) && (!bp || EP.has(bp))));
+    const exact = (bn===eN && bp===eP) || (bn===eP && bp===eN);
+    /* PRÉSENCE du nom parmi les noms ET du prénom parmi les prénoms, dans les deux sens.
+       L'appariement par position (v2) ratait « Person Phillipe FOFO / Michel Hugo
+       François » : Hugo n'était pas en face de Person. Retiré sur retour de Mat. */
+    const ok = exact || (EN.has(bn) && (!bp || EP.has(bp))) || (EP.has(bn) && (!bp || EN.has(bp)));
     if(!ok) return;
     entrees.push({cle:k,id:id});
     const ke=bn+'_'+bp;
@@ -1084,7 +1092,7 @@ async function lireBonus(classe,nom,prenom){
      un nom composé (« Le Gall » / « Anne Marie ») qui ressemble à deux élèves */
   const groupe = eleves.length>1 || (eleves.length===1 && !eleves[0].exact);
   return {total: groupe? 0 : (eleves[0]? eleves[0].points : 0), groupe:groupe, eleves:eleves, entrees:entrees, detail:''};
- }catch(e){ return vide; }
+ }catch(e){ vide.erreur='connexion impossible'; return vide; }
 }
 function detailGroupeB(bn,noteBrute){
  const f=function(x){ return String(x).replace('.',','); };
@@ -1124,11 +1132,25 @@ async function envoyer(note,total){
   lg.textContent='Points Kahoot, pour chacun : '+bn.detail;
   $('scoreBrut').parentNode.insertBefore(lg,$('scoreBrut').nextSibling);
  }
+ /* repère de diagnostic : sa PRÉSENCE prouve que la version à jour est chargée */
+ if(bn.erreur){
+  bn.detail='lecture des points impossible ('+bn.erreur+')';
+  const le=document.createElement('div');
+  le.style.cssText='margin-top:6px;font-weight:700;color:#c2410c';
+  le.textContent='Points Kahoot : '+bn.detail+'. Préviens ton professeur.';
+  $('scoreBrut').parentNode.insertBefore(le,$('scoreBrut').nextSibling);
+ }
+ else if(!bn.eleves.length){
+  const l0=document.createElement('div');
+  l0.style.cssText='margin-top:6px;font-size:13px;color:#94a3b8';
+  l0.textContent='Points Kahoot : aucun point en attente pour ce nom.';
+  $('scoreBrut').parentNode.insertBefore(l0,$('scoreBrut').nextSibling);
+ }
  const donnees={ nom:eleve.nom, prenom:eleve.prenom, classe:eleve.classe,
  score:Math.round(total*10)/10, sur:MAXTOT, note20:note,
  duree_s:Math.round((Date.now()-t0)/1000),
  date:new Date().toISOString(),
- reponses:pts, statut:'terminee', note20_brute:noteBrute, bonus:bn.total, bonus_eleves:bn.detail };
+ reponses:pts, statut:'terminee', note20_brute:noteBrute, bonus:bn.total, bonus_eleves:(bn.detail||'aucun') };
  try{
  const rep=await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(donnees)});
  if(!rep.ok) throw new Error(rep.status);

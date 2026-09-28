@@ -310,7 +310,10 @@ async function charger(){
  classe:v.classe||'—',
   note:parseFloat(v.note20!==undefined?v.note20:v.note)||0,
   bonus:parseFloat(v.bonus)||0,
- kahoot:String(v.bonus_eleves||''),
+ kahoot:(v.bonus_eleves && v.bonus_eleves!=='aucun')? String(v.bonus_eleves) : '',
+ /* copie d'aujourd'hui ou plus récente SANS trace Kahoot : produite par une
+    ancienne version de l'évaluation (fichier non redéposé, ou cache) */
+ sansKahoot: v.bonus_eleves===undefined && String(v.date||'')>='2026-09-28',
  score:v.score||0,
  duree:v.duree_s?Math.floor(v.duree_s/60)+' min '+String(v.duree_s%60).padStart(2,'0'):(v.duree||''),
  /* ts sert au TRI : trier le texte « jj/mm/aaaa » rangeait par jour du mois,
@@ -366,7 +369,7 @@ function afficher(){
  return '<tr><td>'+d.nom+(d.abandon?'<span style="display:inline-block;margin-left:6px;padding:0 6px;border-radius:5px;background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5;font-size:11px;font-weight:800">ABANDON</span>':'')+'</td><td>'+d.classe+'</td>'+
  '<td><a class="lien" href="'+d.fichier+'">'+d.seq+'</a></td>'+
  '<td><span class="badge" style="background:'+(d.niv==='5e'?'#16a34a':(d.niv==='4e'?'#b45309':'#1d4ed8'))+'">'+d.niv+'</span></td>'+
- '<td class="note" style="color:'+coul+'">'+String(d.note).replace('.',',')+(d.bonus>0? ' <span title="dont points Kahoot" style="font-size:11px;color:#6d28d9;font-weight:800">+'+String(d.bonus).replace('.',',')+'</span>':'')+(d.kahoot? '<div style="font-size:11px;color:#6d28d9;font-weight:700;margin-top:2px">Kahoot : '+d.kahoot.replace(/[<>&]/g,'')+'</div>':'')+'</td>'+
+ '<td class="note" style="color:'+coul+'">'+String(d.note).replace('.',',')+(d.bonus>0? ' <span title="dont points Kahoot" style="font-size:11px;color:#6d28d9;font-weight:800">+'+String(d.bonus).replace('.',',')+'</span>':'')+(d.kahoot? '<div style="font-size:11px;color:#6d28d9;font-weight:700;margin-top:2px">Kahoot : '+d.kahoot.replace(/[<>&]/g,'')+'</div>':'')+(d.sansKahoot? '<div style="font-size:10.5px;color:#94a3b8;margin-top:2px" title="Cette copie a été faite avec une version de l’évaluation qui ne gère pas les points Kahoot">version sans Kahoot</div>':'')+'</td>'+
  '<td><div class="jauge"><div style="width:'+Math.min(100,d.note/20*100)+'%;background:'+coul+'"></div></div></td>'+
  '<td>'+(d.duree||'—')+'</td><td>'+(d.date||'—')+'</td></tr>';
  }).join('');
@@ -424,6 +427,15 @@ document.getElementById('csv').addEventListener('click',()=>{
    '<button type="button" id="bkAjouter" style="background:#7c3aed;color:#fff;border:none;border-radius:9px;padding:9px 16px;font-weight:700;cursor:pointer">Ajouter</button>'+
   '</div>'+
   '<div id="bkMsg" style="font-size:13px;margin-top:8px;min-height:18px"></div>'+
+  '<div style="margin-top:10px;padding:10px 12px;background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px">'+
+   '<b style="font-size:13px;color:#6d28d9">Tester une copie</b> <span style="font-size:12.5px;color:#64748b">'+
+   'recopie le nom et le prénom EXACTEMENT comme le groupe les a écrits</span><br>'+
+   '<select id="ktClasse" style="padding:6px;border-radius:8px;border:1px solid #cbd5e1;margin-top:6px">'+
+    CLASSES.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select> '+
+   '<input id="ktNom" placeholder="nom(s) saisi(s)" style="padding:6px;border-radius:8px;border:1px solid #cbd5e1;width:230px"> '+
+   '<input id="ktPrenom" placeholder="prénom(s) saisi(s)" style="padding:6px;border-radius:8px;border:1px solid #cbd5e1;width:230px"> '+
+   '<button type="button" id="ktGo" style="background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:7px 13px;font-weight:700;cursor:pointer">Tester</button>'+
+   '<div id="ktRes" style="font-size:13px;margin-top:8px"></div></div>'+
   '<div style="margin-top:10px;padding:10px 12px;background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px">'+
    '<button type="button" id="bkVerif" style="background:#fff;color:#6d28d9;border:1.5px solid #c4b5fd;border-radius:9px;padding:7px 13px;font-weight:700;cursor:pointer">Vérifier les évaluations en ligne</button>'+
    '<span style="font-size:12.5px;color:#64748b;margin-left:10px">contrôle que les fichiers du site gèrent bien les points Kahoot</span>'+
@@ -525,10 +537,109 @@ document.getElementById('csv').addEventListener('click',()=>{
     (absents.length? 'Introuvables : '+absents.map(esc).join(', ')+'.':'');
   }
  });
+ document.getElementById('ktGo').addEventListener('click',async function(){
+  const z=document.getElementById('ktRes'); z.style.color='#475569'; z.textContent='Test en cours…';
+  const classe=document.getElementById('ktClasse').value;
+  const nom=document.getElementById('ktNom').value, prenom=document.getElementById('ktPrenom').value;
+  if(!window.KahootTest){ z.textContent='Testeur indisponible.'; return; }
+  const bn=await window.KahootTest.lireBonus(classe,nom,prenom);
+  const dispo=LISTE.filter(function(b){ return !b.consomme && b.classe===classe; });
+  const f=function(x){ return String(x).replace('.',','); };
+  if(bn.eleves.length){
+   z.style.color='#15803d';
+   z.innerHTML='<b>Correspondance trouvée</b> — copie '+(bn.groupe?'de GROUPE':'individuelle')+' : '+
+    bn.eleves.map(function(e){ return esc((e.prenom+' '+e.nom).trim())+' +'+f(e.points); }).join(', ')+
+    '. Ces points seraient appliqués puis consommés.';
+  } else {
+   z.style.color='#b91c1c';
+   z.innerHTML='<b>Aucune correspondance.</b> '+(dispo.length
+    ? 'Points disponibles en '+esc(classe)+' : '+dispo.map(function(b){ return esc(b.nom+' '+b.prenom)+' (+'+f(b.points)+')'; }).join(', ')+
+      '. Compare l’orthographe avec ce que le groupe a écrit.'
+    : 'Il n’y a aucun point disponible en '+esc(classe)+'.');
+  }
+ });
  /* chargement avec le reste du tableau de bord, et à chaque « Rafraîchir » */
  const c0=charger;
  charger=async function(){ const x=await c0.apply(this,arguments); chargerBonus(); return x; };
  window.chargerBonus=chargerBonus;
+})();
+</script>
+
+<script>
+/* KAHOOT_TESTEUR — la MÊME règle de correspondance que les évaluations, copiée
+   depuis _outils/bonus_kahoot_groupes.py, pour diagnostiquer sans faire repasser
+   une évaluation. Encapsulée : aucune variable globale n'est créée. */
+(function(){
+ const FIREBASE=BASE.replace(/\/?$/,'/')+'test';
+
+/* ===== BONUS_KAHOOT_V2 — copies individuelles ET de groupe (voir _outils/bonus_kahoot_groupes.py) ===== */
+function normB(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+ .toLowerCase().replace(/[^a-z0-9]/g,''); }
+function motsB(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
+ .split(/[\s,;\/+&]+/).map(function(x){ return x.replace(/[^a-z0-9]/g,''); })
+ .filter(function(x){ return x && x!=='et'; }); }
+function ensembleB(m){ const s=new Set(m);
+ for(let i=0;i<m.length;i++){ if(i+1<m.length) s.add(m[i]+m[i+1]); if(i+2<m.length) s.add(m[i]+m[i+1]+m[i+2]); }
+ return s; }
+const URL_BONUS=FIREBASE.split('/evaluations/')[0]+'/bonus';
+async function lireBonus(classe,nom,prenom){
+ const vide={total:0,groupe:false,eleves:[],entrees:[],detail:''};
+ try{
+  const r=await fetch(URL_BONUS+'.json');
+  if(!r.ok){ vide.erreur='refus HTTP '+r.status; return vide; }
+  const j=await r.json();
+  if(j && j.error){ vide.erreur=String(j.error).slice(0,60); return vide; }
+  if(!j || typeof j!=='object') return vide;
+  const cl=normB(classe), eN=normB(nom), eP=normB(prenom);
+  const mN=motsB(nom), mP=motsB(prenom);
+  const paires = (mN.length>1 && mN.length===mP.length) ? new Set(mN.map(function(x,i){ return x+'_'+mP[i]; })) : null;
+  /* champs INVERSÉS : prénoms écrits dans « Nom », noms dans « Prénom » — fréquent */
+  const pairesInv = paires ? new Set(mP.map(function(x,i){ return x+'_'+mN[i]; })) : null;
+  const EN=ensembleB(mN), EP=ensembleB(mP);
+  const parEleve={}, entrees=[];
+  Object.keys(j).forEach(function(k){
+   const e=j[k]; if(!e || typeof e!=='object') return;
+   Object.keys(e).forEach(function(id){
+    const b=e[id];
+    if(!b || b.consomme || typeof b.points!=='number' || b.points<=0) return;
+    if(normB(b.classe)!==cl) return;
+    const bn=normB(b.nom), bp=normB(b.prenom);
+    const exact = (bn===eN && bp===eP) || (bn===eP && bp===eN);
+    /* PRÉSENCE du nom parmi les noms ET du prénom parmi les prénoms, dans les deux sens.
+       L'appariement par position (v2) ratait « Person Phillipe FOFO / Michel Hugo
+       François » : Hugo n'était pas en face de Person. Retiré sur retour de Mat. */
+    const ok = exact || (EN.has(bn) && (!bp || EP.has(bp))) || (EP.has(bn) && (!bp || EN.has(bp)));
+    if(!ok) return;
+    entrees.push({cle:k,id:id});
+    const ke=bn+'_'+bp;
+    if(!parEleve[ke]) parEleve[ke]={nom:b.nom,prenom:b.prenom||'',points:0,exact:exact};
+    parEleve[ke].points+=b.points;
+   });
+  });
+  const eleves=Object.keys(parEleve).map(function(k){ const x=parEleve[k]; x.points=Math.round(x.points*10)/10; return x; });
+  /* une correspondance EXACTE désigne forcément une copie individuelle, même avec
+     un nom composé (« Le Gall » / « Anne Marie ») qui ressemble à deux élèves */
+  const groupe = eleves.length>1 || (eleves.length===1 && !eleves[0].exact);
+  return {total: groupe? 0 : (eleves[0]? eleves[0].points : 0), groupe:groupe, eleves:eleves, entrees:entrees, detail:''};
+ }catch(e){ vide.erreur='connexion impossible'; return vide; }
+}
+function detailGroupeB(bn,noteBrute){
+ const f=function(x){ return String(x).replace('.',','); };
+ return bn.eleves.map(function(e){
+  return (e.prenom+' '+e.nom).trim()+' +'+f(e.points)+' = '+f(Math.min(20,Math.round((noteBrute+e.points)*10)/10));
+ }).join(' ; ').slice(0,300);
+}
+async function consommerBonus(entrees,evaluation){
+ for(const x of entrees){
+  try{
+   await fetch(URL_BONUS+'/'+x.cle+'/'+x.id+'.json',{method:'PATCH',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({consomme:true,evaluation:evaluation,date_conso:new Date().toISOString()})});
+  }catch(e){}
+ }
+}
+
+ window.KahootTest={lireBonus:lireBonus};
 })();
 </script>
 </body></html>
