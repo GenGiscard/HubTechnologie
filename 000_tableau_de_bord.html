@@ -424,6 +424,10 @@ document.getElementById('csv').addEventListener('click',()=>{
    '<button type="button" id="bkAjouter" style="background:#7c3aed;color:#fff;border:none;border-radius:9px;padding:9px 16px;font-weight:700;cursor:pointer">Ajouter</button>'+
   '</div>'+
   '<div id="bkMsg" style="font-size:13px;margin-top:8px;min-height:18px"></div>'+
+  '<div style="margin-top:10px;padding:10px 12px;background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px">'+
+   '<button type="button" id="bkVerif" style="background:#fff;color:#6d28d9;border:1.5px solid #c4b5fd;border-radius:9px;padding:7px 13px;font-weight:700;cursor:pointer">Vérifier les évaluations en ligne</button>'+
+   '<span style="font-size:12.5px;color:#64748b;margin-left:10px">contrôle que les fichiers du site gèrent bien les points Kahoot</span>'+
+   '<div id="bkVerifRes" style="font-size:13px;margin-top:8px"></div></div>'+
   '<div style="display:flex;gap:10px;align-items:center;margin-top:10px">'+
    '<label style="font-size:12px;font-weight:700;color:#475569">Afficher : <select id="bkFiltre" style="padding:5px;border-radius:8px;border:1px solid #cbd5e1">'+
     '<option value="">toutes les classes</option>'+CLASSES.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></label>'+
@@ -495,6 +499,31 @@ document.getElementById('csv').addEventListener('click',()=>{
   if(!confirm('Supprimer ces points ?')) return;
   try{ await fetch(URL_BONUS+'/'+b.dataset.suppr+'.json',{method:'DELETE'}); chargerBonus(); }
   catch(err){ msg('Suppression impossible.',false); }
+ });
+ /* Vérification du DÉPLOIEMENT : on relit chaque fichier d'évaluation tel que le site
+    le sert réellement, et on y cherche le code Kahoot v2. Né d'un test de Mat où
+    l'évaluation en ligne était restée l'ancienne version. */
+ document.getElementById('bkVerif').addEventListener('click',async function(){
+  const z=document.getElementById('bkVerifRes'), liste=(typeof EVALS!=='undefined'?EVALS:[]);
+  z.style.color='#475569'; z.textContent='Vérification en cours…';
+  const vieux=[], absents=[]; let bons=0;
+  for(const e of liste){
+   try{
+    const r=await fetch(e.f+'?v='+Date.now(),{cache:'no-store'});
+    if(!r.ok){ absents.push(e.titre); continue; }
+    const t=await r.text();
+    if(t.indexOf('BONUS_KAHOOT_V2')>=0) bons++; else vieux.push(e.titre+' ('+e.f+')');
+   }catch(err){ absents.push(e.titre); }
+  }
+  if(!vieux.length && !absents.length){
+   z.style.color='#15803d';
+   z.textContent=bons+' / '+liste.length+' évaluations à jour : les points Kahoot seront appliqués.';
+  } else {
+   z.style.color='#b91c1c';
+   z.innerHTML='<b>'+bons+' / '+liste.length+' à jour.</b> '+
+    (vieux.length? 'Ancienne version en ligne — à redéposer : '+vieux.map(esc).join(', ')+'. ':'')+
+    (absents.length? 'Introuvables : '+absents.map(esc).join(', ')+'.':'');
+  }
  });
  /* chargement avec le reste du tableau de bord, et à chaque « Rafraîchir » */
  const c0=charger;

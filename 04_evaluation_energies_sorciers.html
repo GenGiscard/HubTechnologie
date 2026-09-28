@@ -300,6 +300,65 @@ window.addEventListener('pageshow',function(e){
   });
  },1500);
 })();
+
+/* ===== BONUS_KAHOOT_V2 — copies individuelles ET de groupe (voir _outils/bonus_kahoot_groupes.py) ===== */
+function normB(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+ .toLowerCase().replace(/[^a-z0-9]/g,''); }
+function motsB(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
+ .split(/[\s,;\/+&]+/).map(function(x){ return x.replace(/[^a-z0-9]/g,''); })
+ .filter(function(x){ return x && x!=='et'; }); }
+function ensembleB(m){ const s=new Set(m);
+ for(let i=0;i<m.length;i++){ if(i+1<m.length) s.add(m[i]+m[i+1]); if(i+2<m.length) s.add(m[i]+m[i+1]+m[i+2]); }
+ return s; }
+const URL_BONUS=FIREBASE.split('/evaluations/')[0]+'/bonus';
+async function lireBonus(classe,nom,prenom){
+ const vide={total:0,groupe:false,eleves:[],entrees:[],detail:''};
+ try{
+  const r=await fetch(URL_BONUS+'.json'); const j=await r.json();
+  if(!j || typeof j!=='object') return vide;
+  const cl=normB(classe), eN=normB(nom), eP=normB(prenom);
+  const mN=motsB(nom), mP=motsB(prenom);
+  const paires = (mN.length>1 && mN.length===mP.length) ? new Set(mN.map(function(x,i){ return x+'_'+mP[i]; })) : null;
+  const EN=ensembleB(mN), EP=ensembleB(mP);
+  const parEleve={}, entrees=[];
+  Object.keys(j).forEach(function(k){
+   const e=j[k]; if(!e || typeof e!=='object') return;
+   Object.keys(e).forEach(function(id){
+    const b=e[id];
+    if(!b || b.consomme || typeof b.points!=='number' || b.points<=0) return;
+    if(normB(b.classe)!==cl) return;
+    const bn=normB(b.nom), bp=normB(b.prenom);
+    const exact = bn===eN && bp===eP;
+    const ok = exact || (paires ? paires.has(bn+'_'+bp) : (EN.has(bn) && (!bp || EP.has(bp))));
+    if(!ok) return;
+    entrees.push({cle:k,id:id});
+    const ke=bn+'_'+bp;
+    if(!parEleve[ke]) parEleve[ke]={nom:b.nom,prenom:b.prenom||'',points:0,exact:exact};
+    parEleve[ke].points+=b.points;
+   });
+  });
+  const eleves=Object.keys(parEleve).map(function(k){ const x=parEleve[k]; x.points=Math.round(x.points*10)/10; return x; });
+  /* une correspondance EXACTE désigne forcément une copie individuelle, même avec
+     un nom composé (« Le Gall » / « Anne Marie ») qui ressemble à deux élèves */
+  const groupe = eleves.length>1 || (eleves.length===1 && !eleves[0].exact);
+  return {total: groupe? 0 : (eleves[0]? eleves[0].points : 0), groupe:groupe, eleves:eleves, entrees:entrees, detail:''};
+ }catch(e){ return vide; }
+}
+function detailGroupeB(bn,noteBrute){
+ const f=function(x){ return String(x).replace('.',','); };
+ return bn.eleves.map(function(e){
+  return (e.prenom+' '+e.nom).trim()+' +'+f(e.points)+' = '+f(Math.min(20,Math.round((noteBrute+e.points)*10)/10));
+ }).join(' ; ').slice(0,300);
+}
+async function consommerBonus(entrees,evaluation){
+ for(const x of entrees){
+  try{
+   await fetch(URL_BONUS+'/'+x.cle+'/'+x.id+'.json',{method:'PATCH',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({consomme:true,evaluation:evaluation,date_conso:new Date().toISOString()})});
+  }catch(e){}
+ }
+}
 document.getElementById('envoyer').addEventListener('click',async()=>{
  if(envoye) return;
  const nom=document.getElementById('inNom').value.trim();
@@ -330,9 +389,15 @@ document.getElementById('envoyer').addEventListener('click',async()=>{
 
  const note=Math.round(score/Q.length*20*10)/10;
  const duree=Math.round((Date.now()-debut)/1000);
+ /* BONUS_KAHOOT — points non consommés ajoutés, plafonnés à 20 */
+ const bn=await lireBonus(classe,nom,prenom);
+ const noteFinale=Math.min(20,Math.round((note+bn.total)*10)/10);
+ if(bn.groupe) bn.detail=detailGroupeB(bn,note);
  const b=document.getElementById('bilan');
  b.style.display='block';
- b.innerHTML='<div class="note">'+String(note).replace('.',',')+' / 20</div>'+
+ b.innerHTML='<div class="note">'+String(noteFinale).replace('.',',')+' / 20</div>'+
+  (bn.total>0? '<div style="font-weight:700;color:#7c3aed">dont '+String(bn.total).replace('.',',')+' point(s) Kahoot ajouté(s) à ta note de '+String(note).replace('.',',')+'</div>':'')+
+  (bn.groupe? '<div style="font-weight:700;color:#7c3aed">Points Kahoot, pour chacun : '+bn.detail+'</div>':'')+
   '<div style="font-size:16px;color:#5b544a">'+score+' bonnes réponses sur '+Q.length+'</div>'+
   '<div id="etatEnvoi" style="margin-top:10px;font-size:14px;color:#64748b">Envoi en cours…</div>';
  b.scrollIntoView({behavior:'smooth'});
@@ -340,8 +405,9 @@ document.getElementById('envoyer').addEventListener('click',async()=>{
  try{
   await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},
    body:JSON.stringify({nom:nom,prenom:prenom,classe:classe,score:score,sur:Q.length,
-    note20:note,duree_s:duree,date:new Date().toISOString(),reponses:rep,statut:'terminee'})});
+    note20:noteFinale,note20_brute:note,bonus:bn.total,bonus_eleves:bn.detail,duree_s:duree,date:new Date().toISOString(),reponses:rep,statut:'terminee'})});
   document.getElementById('etatEnvoi').textContent='Résultat envoyé au professeur.';
+  if(bn.entrees.length) await consommerBonus(bn.entrees,FIREBASE.split('/').pop());
  }catch(e){
   document.getElementById('etatEnvoi').textContent=
    'Envoi impossible (réseau). Montre ton écran au professeur.';
