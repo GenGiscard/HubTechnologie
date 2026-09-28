@@ -308,7 +308,8 @@ async function charger(){
  nom:((v.nom||'')+' '+(v.prenom||'')).trim()||'(anonyme)',
  abandon:v.statut==='abandon',
  classe:v.classe||'—',
- note:parseFloat(v.note20!==undefined?v.note20:v.note)||0,
+  note:parseFloat(v.note20!==undefined?v.note20:v.note)||0,
+  bonus:parseFloat(v.bonus)||0,
  score:v.score||0,
  duree:v.duree_s?Math.floor(v.duree_s/60)+' min '+String(v.duree_s%60).padStart(2,'0'):(v.duree||''),
  /* ts sert au TRI : trier le texte « jj/mm/aaaa » rangeait par jour du mois,
@@ -364,7 +365,7 @@ function afficher(){
  return '<tr><td>'+d.nom+(d.abandon?'<span style="display:inline-block;margin-left:6px;padding:0 6px;border-radius:5px;background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5;font-size:11px;font-weight:800">ABANDON</span>':'')+'</td><td>'+d.classe+'</td>'+
  '<td><a class="lien" href="'+d.fichier+'">'+d.seq+'</a></td>'+
  '<td><span class="badge" style="background:'+(d.niv==='5e'?'#16a34a':(d.niv==='4e'?'#b45309':'#1d4ed8'))+'">'+d.niv+'</span></td>'+
- '<td class="note" style="color:'+coul+'">'+String(d.note).replace('.',',')+'</td>'+
+ '<td class="note" style="color:'+coul+'">'+String(d.note).replace('.',',')+(d.bonus>0? ' <span title="dont points Kahoot" style="font-size:11px;color:#6d28d9;font-weight:800">+'+String(d.bonus).replace('.',',')+'</span>':'')+'</td>'+
  '<td><div class="jauge"><div style="width:'+Math.min(100,d.note/20*100)+'%;background:'+coul+'"></div></div></td>'+
  '<td>'+(d.duree||'—')+'</td><td>'+(d.date||'—')+'</td></tr>';
  }).join('');
@@ -386,4 +387,118 @@ document.getElementById('csv').addEventListener('click',()=>{
  a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
  a.download='resultats_toutes_sequences.csv'; a.click();
 });
-</script></body></html>
+</script>
+<script>
+/* ===== BONUS_KAHOOT — espace de saisie des points Kahoot =====
+   Les points saisis ici sont appliqués AUTOMATIQUEMENT à la prochaine évaluation
+   remise par l'élève, puis marqués « consommés » avec le nom de l'évaluation.
+   Identification : classe + nom + prénom, sans accents ni majuscules ni espaces —
+   la même règle que dans les évaluations. */
+(function(){
+ const URL_BONUS=BASE.replace(/evaluations\/?$/,'bonus');
+ const CLASSES=['5A','5B','5C','5D','5E','4A','4B','4C','4D','4E','3A','3B','3C','3D','3E','3PM'];
+ function cle(classe,nom,prenom){
+  const n=function(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+   .toLowerCase().replace(/[^a-z0-9]/g,''); };
+  return n(classe)+'_'+n(nom)+'_'+n(prenom);
+ }
+ function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+ const app=document.getElementById('appli'); if(!app) return;
+ const sec=document.createElement('section');
+ sec.style.cssText='margin-top:26px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px';
+ sec.innerHTML=
+  '<h2 style="font-size:19px;color:#6d28d9;margin:0 0 4px">Points Kahoot</h2>'+
+  '<div style="font-size:13px;color:#64748b;margin-bottom:12px">Ajoutés automatiquement à la prochaine '+
+  'évaluation remise par l’élève, sur sa note sur 20, plafonnée à 20. Ils sont ensuite marqués consommés.</div>'+
+  '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">'+
+   '<label style="font-size:12px;font-weight:700;color:#475569">Classe<br><select id="bkClasse" style="padding:7px;border-radius:8px;border:1px solid #cbd5e1">'+
+    CLASSES.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></label>'+
+   '<label style="font-size:12px;font-weight:700;color:#475569">Nom<br><input id="bkNom" style="padding:7px;border-radius:8px;border:1px solid #cbd5e1;width:130px"></label>'+
+   '<label style="font-size:12px;font-weight:700;color:#475569">Prénom<br><input id="bkPrenom" style="padding:7px;border-radius:8px;border:1px solid #cbd5e1;width:120px"></label>'+
+   '<label style="font-size:12px;font-weight:700;color:#475569">Points<br><select id="bkPoints" style="padding:7px;border-radius:8px;border:1px solid #cbd5e1">'+
+    '<option value="0.5">0,5</option><option value="1" selected>1</option><option value="1.5">1,5</option>'+
+    '<option value="2">2</option><option value="3">3</option></select></label>'+
+   '<label style="font-size:12px;font-weight:700;color:#475569">Motif<br><input id="bkMotif" value="Kahoot" style="padding:7px;border-radius:8px;border:1px solid #cbd5e1;width:150px"></label>'+
+   '<button type="button" id="bkAjouter" style="background:#7c3aed;color:#fff;border:none;border-radius:9px;padding:9px 16px;font-weight:700;cursor:pointer">Ajouter</button>'+
+  '</div>'+
+  '<div id="bkMsg" style="font-size:13px;margin-top:8px;min-height:18px"></div>'+
+  '<div style="display:flex;gap:10px;align-items:center;margin-top:10px">'+
+   '<label style="font-size:12px;font-weight:700;color:#475569">Afficher : <select id="bkFiltre" style="padding:5px;border-radius:8px;border:1px solid #cbd5e1">'+
+    '<option value="">toutes les classes</option>'+CLASSES.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></label>'+
+   '<span id="bkResume" style="font-size:13px;color:#475569"></span></div>'+
+  '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:13.5px">'+
+   '<thead><tr style="background:#f8fafc;color:#155e75;text-align:left">'+
+   '<th style="padding:7px">Classe</th><th style="padding:7px">Élève</th><th style="padding:7px">Points</th>'+
+   '<th style="padding:7px">Motif</th><th style="padding:7px">Ajouté le</th><th style="padding:7px">État</th><th></th></tr></thead>'+
+   '<tbody id="bkCorps"></tbody></table></div>';
+ app.appendChild(sec);
+
+ let LISTE=[];
+ function msg(t,ok){ const m=document.getElementById('bkMsg'); m.textContent=t; m.style.color= ok? '#15803d':'#b91c1c'; }
+ function afficher(){
+  const f=document.getElementById('bkFiltre').value;
+  const L=LISTE.filter(function(b){ return !f || b.classe===f; });
+  const dispo=L.filter(function(b){return !b.consomme;}).reduce(function(s,b){return s+b.points;},0);
+  const conso=L.filter(function(b){return b.consomme;}).reduce(function(s,b){return s+b.points;},0);
+  document.getElementById('bkResume').textContent=
+   String(dispo).replace('.',',')+' point(s) disponible(s) · '+String(conso).replace('.',',')+' consommé(s)';
+  document.getElementById('bkCorps').innerHTML = L.length ? L.map(function(b){
+   const d=new Date(b.date), dc=b.date_conso? new Date(b.date_conso):null;
+   const etat = b.consomme
+    ? '<span style="color:#64748b">consommé · '+esc((function(){ const e=(typeof EVALS!=='undefined'?EVALS:[]).find(function(x){return x.fb===b.evaluation;}); return e? e.titre : (b.evaluation||'?'); })())+(dc? ' · '+dc.toLocaleDateString('fr-FR'):'')+'</span>'
+    : '<span style="color:#15803d;font-weight:700">disponible</span>';
+   const suppr = b.consomme ? '' :
+    '<button type="button" data-suppr="'+esc(b.cle+'/'+b.id)+'" style="background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5;border-radius:7px;padding:3px 9px;cursor:pointer">Supprimer</button>';
+   return '<tr style="border-top:1px solid #f1f5f9"><td style="padding:7px">'+esc(b.classe)+'</td>'+
+    '<td style="padding:7px">'+esc(b.nom)+' '+esc(b.prenom)+'</td>'+
+    '<td style="padding:7px;font-weight:800;color:#6d28d9">+'+String(b.points).replace('.',',')+'</td>'+
+    '<td style="padding:7px">'+esc(b.motif||'')+'</td>'+
+    '<td style="padding:7px">'+(isNaN(d)?'':d.toLocaleDateString('fr-FR'))+'</td>'+
+    '<td style="padding:7px">'+etat+'</td><td style="padding:7px">'+suppr+'</td></tr>';
+  }).join('') : '<tr><td colspan="7" style="padding:10px;color:#64748b">Aucun point saisi.</td></tr>';
+ }
+ async function chargerBonus(){
+  try{
+   const r=await fetch(URL_BONUS+'.json'); const j=await r.json(); LISTE=[];
+   if(j && typeof j==='object') Object.keys(j).forEach(function(k){
+    const e=j[k]; if(e && typeof e==='object') Object.keys(e).forEach(function(id){
+     const b=e[id]; if(b && typeof b.points==='number') LISTE.push(Object.assign({cle:k,id:id},b));
+    });
+   });
+   LISTE.sort(function(a,b){ return String(b.date).localeCompare(String(a.date)); });
+   afficher();
+  }catch(e){ msg('Lecture des points impossible : vérifier la connexion et les règles Firebase.',false); }
+ }
+ document.getElementById('bkFiltre').addEventListener('change',afficher);
+ document.getElementById('bkAjouter').addEventListener('click',async function(){
+  const classe=document.getElementById('bkClasse').value;
+  const nom=document.getElementById('bkNom').value.trim();
+  const prenom=document.getElementById('bkPrenom').value.trim();
+  const points=parseFloat(document.getElementById('bkPoints').value);
+  const motif=document.getElementById('bkMotif').value.trim().slice(0,80);
+  if(!nom){ msg('Indique au moins le nom de l’élève.',false); return; }
+  try{
+   const r=await fetch(URL_BONUS+'/'+cle(classe,nom,prenom)+'.json',{method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({classe:classe,nom:nom,prenom:prenom,points:points,motif:motif,
+     date:new Date().toISOString(),consomme:false})});
+   if(!r.ok) throw new Error(r.status);
+   msg('+'+String(points).replace('.',',')+' ajouté(s) à '+prenom+' '+nom+' ('+classe+').',true);
+   document.getElementById('bkNom').value=''; document.getElementById('bkPrenom').value='';
+   chargerBonus();
+  }catch(e){ msg('Ajout refusé : les règles Firebase doivent contenir le nœud « bonus ».',false); }
+ });
+ document.getElementById('bkCorps').addEventListener('click',async function(e){
+  const b=e.target.closest && e.target.closest('[data-suppr]'); if(!b) return;
+  if(!confirm('Supprimer ces points ?')) return;
+  try{ await fetch(URL_BONUS+'/'+b.dataset.suppr+'.json',{method:'DELETE'}); chargerBonus(); }
+  catch(err){ msg('Suppression impossible.',false); }
+ });
+ /* chargement avec le reste du tableau de bord, et à chaque « Rafraîchir » */
+ const c0=charger;
+ charger=async function(){ const x=await c0.apply(this,arguments); chargerBonus(); return x; };
+ window.chargerBonus=chargerBonus;
+})();
+</script>
+</body></html>
