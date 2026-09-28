@@ -160,6 +160,7 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 <div class="acti" id="a1"><div class="boite">
  <h2><span class="badge">1</span>Lire un cadre de tolérance</h2>
  <div class="consigne">Un trou porte le cadre : <b>localisation · Ø 0,3 · A · B</b>.</div>
+ <canvas id="figM1" width="760" height="250" style="display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff"></canvas>
  <div class="cahiernote"><b>SUR TA COPIE</b> — Ø 0,3 désigne un DIAMÈTRE de zone, pas un écart.</div>
  <div id="champs1"></div>
  <div class="btnrow"><button class="btn" id="verif1">Valider</button></div><div id="verd1"></div>
@@ -179,6 +180,7 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 <div class="acti" id="a4"><div class="boite">
  <h2><span class="badge">4</span>Le maximum de matière</h2>
  <div class="consigne">Un trou est coté <b>Ø 12,00 à 12,20</b>, avec une localisation <b>Ø 0,25 au maximum de matière</b>. Le trou mesuré fait <b>12,12 mm</b>.</div>
+ <canvas id="figM4" width="760" height="230" style="display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff"></canvas>
  <div class="cahiernote"><b>SUR TA COPIE</b> — le trou au maximum de matière est le PLUS PETIT, 12,00.</div>
  <div id="champs4"></div>
  <div class="btnrow"><button class="btn" id="verif4">Valider</button></div><div id="verd4"></div>
@@ -660,6 +662,97 @@ function poserCorrige(n,raison){
 })();
 
 
+</script>
+
+<script>
+/* FIGURES_GPS — cadres de tolérance DESSINÉS et vue de la pièce.
+   Retour de Mat : écrit comme une ligne de texte (« localisation · Ø 0,3 · A · B »),
+   le cadre ne ressemblait pas à un cadre, et sans figure de la pièce la question
+   semblait incomplète. Symboles tracés, pas en Unicode (polices incomplètes). */
+(function(){
+function T(c,s,x,y,t,co,al){c.font='bold '+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';
+ c.textAlign=al||'center';c.fillText(s,x,y);}
+function symLoc(c,x,y,coul){
+ c.strokeStyle=coul; c.lineWidth=2;
+ c.beginPath(); c.arc(x,y,6,0,6.284); c.stroke();
+ c.beginPath(); c.moveTo(x-11,y); c.lineTo(x+11,y); c.stroke();
+ c.beginPath(); c.moveTo(x,y-11); c.lineTo(x,y+11); c.stroke();
+}
+function cadre(c,x,y,cases,coul){
+ let cx=x;
+ cases.forEach(function(k){
+  const w=k.w||40;
+  c.fillStyle='#fff'; c.strokeStyle=coul; c.lineWidth=2;
+  c.beginPath(); c.rect(cx,y,w,32); c.fill(); c.stroke();
+  if(k.loc) symLoc(c,cx+w/2,y+16,coul); else T(c,k.t,cx+w/2,y+21,14,coul);
+  cx+=w;
+ });
+ return cx;
+}
+function reference(c,x,y,lettre,coul){
+ c.fillStyle='#fff'; c.strokeStyle=coul; c.lineWidth=2;
+ c.beginPath(); c.rect(x-13,y,26,24); c.fill(); c.stroke();
+ T(c,lettre,x,y+17,14,coul);
+}
+function piece(c,ox,oy,coul){
+ /* plaque vue de face : A = face du dessous, B = face de gauche */
+ c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=2.4;
+ c.beginPath(); c.rect(ox,oy,230,140); c.fill(); c.stroke();
+ const tx=ox+150, ty=oy+60;
+ c.fillStyle='#fff'; c.strokeStyle=coul; c.lineWidth=2.2;
+ c.beginPath(); c.arc(tx,ty,16,0,6.284); c.fill(); c.stroke();
+ c.strokeStyle='#94a3b8'; c.lineWidth=1;
+ c.beginPath(); c.moveTo(tx-26,ty); c.lineTo(tx+26,ty); c.stroke();
+ c.beginPath(); c.moveTo(tx,ty-26); c.lineTo(tx,ty+26); c.stroke();
+ /* références */
+ c.strokeStyle='#155e75'; c.lineWidth=1.4;
+ c.beginPath(); c.moveTo(ox+60,oy+140); c.lineTo(ox+60,oy+162); c.stroke();
+ reference(c,ox+60,oy+162,'A','#155e75');
+ c.beginPath(); c.moveTo(ox,oy+100); c.lineTo(ox-24,oy+100); c.stroke();
+ reference(c,ox-37,oy+88,'B','#155e75');
+ /* cotes théoriques exactes, encadrées */
+ c.strokeStyle='#64748b'; c.lineWidth=1.1;
+ c.beginPath(); c.moveTo(ox,oy-14); c.lineTo(tx,oy-14); c.stroke();
+ T(c,'60',ox+75,oy-20,12,'#64748b');
+ c.strokeRect(ox+62,oy-34,26,18);
+ c.beginPath(); c.moveTo(ox+244,oy+140); c.lineTo(ox+244,ty); c.stroke();
+ T(c,'80',ox+262,oy+106,12,'#64748b','left');
+ c.strokeRect(ox+256,oy+92,26,18);
+ return [tx,ty];
+}
+(function(){
+ const cv=document.getElementById('figM1'); if(!cv) return;
+ const c=cv.getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,760,250);
+ const t=piece(c,90,46,'#ea580c');
+ const fin=cadre(c,430,70,[{loc:1},{t:'Ø 0,3',w:80},{t:'A'},{t:'B'}],'#ea580c');
+ c.strokeStyle='#ea580c'; c.lineWidth=1.4;
+ c.beginPath(); c.moveTo(430,86); c.lineTo(t[0]+16,t[1]-8); c.stroke();
+ T(c,'symbole',450,124,11,'#64748b');
+ T(c,'zone',510,124,11,'#64748b');
+ T(c,'références',590,124,11,'#64748b');
+ T(c,'cotes encadrées : position THÉORIQUE EXACTE du trou',560,176,11.5,'#5b544a');
+ T(c,'par rapport aux références A et B',560,194,11.5,'#5b544a');
+})();
+(function(){
+ const cv=document.getElementById('figM4'); if(!cv) return;
+ const c=cv.getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,760,230);
+ T(c,'Ø 12,00 à 12,20',210,40,15,'#ea580c');
+ c.fillStyle='#fff'; c.strokeStyle='#ea580c'; c.lineWidth=2.4;
+ c.beginPath(); c.arc(210,130,52,0,6.284); c.stroke();
+ c.strokeStyle='#94a3b8'; c.lineWidth=1;
+ c.beginPath(); c.moveTo(140,130); c.lineTo(280,130); c.stroke();
+ c.beginPath(); c.moveTo(210,60); c.lineTo(210,200); c.stroke();
+ /* le M entouré a sa propre case : dessiné à part, il tombait sur la case A */
+ cadre(c,370,74,[{loc:1},{t:'Ø 0,25',w:84},{t:'',w:36},{t:'A'},{t:'B'}],'#ea580c');
+ c.strokeStyle='#ea580c'; c.lineWidth=1.8;
+ c.beginPath(); c.arc(512,90,11,0,6.284); c.stroke();
+ T(c,'M',512,95,13,'#ea580c');
+ T(c,'M entouré : exigence du maximum de matière',515,146,12,'#7c3aed');
+ T(c,'trou au maximum de matière = le PLUS PETIT, 12,00',515,170,11.5,'#5b544a');
+})();
+})();
 </script>
 </body>
 </html>
