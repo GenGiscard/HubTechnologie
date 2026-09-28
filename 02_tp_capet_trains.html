@@ -113,6 +113,23 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 .chp input.large{width:100%;text-align:left;font-weight:400}
 .chp .u{font-size:14px;color:#8a8378;min-width:40px}
 .cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
+.corrige-btn{margin-top:10px;background:#f0f9ff;color:#0369a1;border:1.5px solid #7dd3fc;
+ border-radius:9px;padding:7px 13px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer}
+.corrige-btn:hover{background:#e0f2fe}
+.corrige-bloc{display:none;margin-top:10px;border:1px solid #bae6fd;border-radius:12px;
+ background:#f8fcff;padding:12px 14px}
+.corrige-bloc.ouvert{display:block}
+.corrige-bloc .etape{display:flex;gap:10px;margin:6px 0;font-size:14.5px;line-height:1.5}
+.corrige-bloc .etape > span{flex:0 0 112px;font-weight:800;color:#0369a1;font-size:12px;
+ text-transform:uppercase;letter-spacing:.5px;padding-top:2px}
+.corrige-bloc .retenu{margin-top:8px;background:#ecfeff;border-left:4px solid #0e7490;
+ border-radius:8px;padding:8px 11px;font-size:14px}
+.copie-zone{margin-top:18px;border-top:2px dashed #cbd5e1;padding-top:14px}
+.copie-zone h3{color:#155e75;font-size:18px;margin-bottom:4px}
+.copie-zone .chapo-c{color:#64748b;font-size:13.5px;margin-bottom:10px}
+.copie-ex{border:1px solid #e9e2d4;border-radius:12px;padding:11px 14px;margin:10px 0;background:#fff}
+.copie-ex b.t{color:#7c2d12}
+@media print{.corrige-btn{display:none}.corrige-bloc{display:block}}
 </style>
 </head>
 <body>
@@ -623,6 +640,60 @@ brancher('verif6',T6,'verd6',6,'Entraxe = m × (Z1 + Z2) ÷ 2 = 2,5 × 80 ÷ 2 =
 
 /* ===== INITIALISATION — À GARDER EN DERNIER ===== */
 charger(); majProgression();
+
+/* ===== CORRIGES_CAPET (voir _outils/ajouter_corriges_tp_capet.py) ===== */
+const CORRIGES={"1": "<div class=\"etape\"><span>Formule</span><div>Z<sub>s</sub> = (Z<sub>c</sub> − Z<sub>p</sub>) / 2 ; λ = − Z<sub>c</sub> / Z<sub>p</sub></div></div><div class=\"etape\"><span>Application</span><div>Z<sub>s</sub> = (80 − 20) / 2 ; λ = − 80 / 20.</div></div><div class=\"etape\"><span>Résultat</span><div><b>Z<sub>s</sub> = 30 dents</b> et <b>λ = −4</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — la denture des satellites ne sert qu’à la condition de montage. Elle n’apparaît jamais dans la formule de Willis.</div>", "2": "<div class=\"etape\"><span>Formule</span><div>Willis : (ω<sub>p</sub> − ω<sub>ps</sub>) / (ω<sub>c</sub> − ω<sub>ps</sub>) = λ, avec ω<sub>c</sub> = 0</div></div><div class=\"etape\"><span>Application</span><div>(ω<sub>p</sub> − ω<sub>ps</sub>) / (−ω<sub>ps</sub>) = −4 → ω<sub>ps</sub> / ω<sub>p</sub> = 20 / (20 + 80) = 0,20. Puis 1 450 × 0,20.</div></div><div class=\"etape\"><span>Résultat</span><div><b>rapport 0,20</b> et <b>290 tr/min</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — écrire la relation ENTIÈRE avant de remplacer la vitesse nulle. Répondre Z<sub>p</sub> / Z<sub>c</sub> = 1/4 revient à traiter un épicycloïdal comme un train ordinaire.</div>", "3": "<div class=\"etape\"><span>Règle de tri</span><div>Un train est <b>ordinaire</b> si tous ses axes sont fixes : on le lit de proche en proche. Il est <b>épicycloïdal</b> si un axe se déplace — celui des satellites : il faut changer de repère.</div></div><div class=\"retenu\"><b>À retenir</b> — devant un train, chercher d’abord si un axe bouge. C’est ce seul critère qui décide de la méthode.</div>", "4": "<div class=\"etape\"><span>Formule</span><div>r<sub>global</sub> = r<sub>1</sub> × r<sub>2</sub>, puis N<sub>s</sub> = N<sub>e</sub> × r<sub>global</sub></div></div><div class=\"etape\"><span>Application</span><div>r<sub>1</sub> = 16 / 64 = 0,25 ; r<sub>2</sub> = 18 / 54 = 0,333 ; r = 0,0833. N<sub>s</sub> = 1 450 × 0,0833.</div></div><div class=\"etape\"><span>Résultat</span><div><b>r = 1/12</b> et <b>N<sub>s</sub> = 120,83 tr/min</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — les rapports d’étages se MULTIPLIENT. Les additionner est une erreur qui ne se remarque pas toujours à la relecture.</div>", "5": "<div class=\"etape\"><span>Formule</span><div>η<sub>global</sub> = η<sub>1</sub> × η<sub>2</sub> ; C<sub>s</sub> = C<sub>e</sub> × (1/r) × η</div></div><div class=\"etape\"><span>Application</span><div>η = 0,97 × 0,97 = 0,941. Sans pertes : 2,4 × 12 = 28,8 N·m. Réel : 28,8 × 0,941.</div></div><div class=\"etape\"><span>Résultat</span><div><b>η = 0,941</b> et <b>C<sub>s</sub> = 27,1 N·m</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — oublier le rendement surestime le couple de 6 % : assez pour valider à tort un composant.</div>", "6": "<div class=\"etape\"><span>Formule</span><div>a = m (Z<sub>1</sub> + Z<sub>2</sub>) / 2 ; d = m Z ; porte-satellites bloqué → ω<sub>c</sub> / ω<sub>p</sub> = λ</div></div><div class=\"etape\"><span>Application</span><div>a = 2,5 × 80 / 2 = 100 mm ; d = 2,5 × 16 = 40 mm ; λ = −4.</div></div><div class=\"etape\"><span>Résultat</span><div><b>a = 100 mm</b>, <b>d = 40 mm</b>, rapport <b>−4</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — bloquer un autre arbre change complètement la fonction du train : ici la sortie tourne quatre fois PLUS VITE et en sens inverse.</div>"};
+const COPIE=[{"titre": "Un autre épicycloïdal", "enonce": "Planétaire 18 dents, couronne 72 dents, couronne bloquée, entrée par le planétaire. Calculer la denture des satellites et le rapport ω<sub>ps</sub> / ω<sub>p</sub>.", "corrige": "<div class=\"etape\"><span>Formule</span><div>Z<sub>s</sub> = (Z<sub>c</sub> − Z<sub>p</sub>) / 2 ; ω<sub>ps</sub> / ω<sub>p</sub> = Z<sub>p</sub> / (Z<sub>p</sub> + Z<sub>c</sub>)</div></div><div class=\"etape\"><span>Application</span><div>Z<sub>s</sub> = 54 / 2 ; rapport = 18 / 90.</div></div><div class=\"etape\"><span>Résultat</span><div><b>Z<sub>s</sub> = 27 dents</b> et <b>rapport 0,20</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — vérifier la condition de montage : (18 + 72) / 3 = 30, entier — trois satellites se montent.</div>"}, {"titre": "Trois étages", "enonce": "Un réducteur enchaîne trois étages de rapport 1/3, chacun de rendement 0,97. Calculer le rapport et le rendement globaux.", "corrige": "<div class=\"etape\"><span>Formule</span><div>r = r<sub>1</sub> × r<sub>2</sub> × r<sub>3</sub> ; η = η<sub>1</sub> × η<sub>2</sub> × η<sub>3</sub></div></div><div class=\"etape\"><span>Application</span><div>r = (1/3)³ ; η = 0,97³.</div></div><div class=\"etape\"><span>Résultat</span><div><b>r = 1/27</b> et <b>η = 0,913</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — près de 9 % de pertes pour trois étages : un épicycloïdal compact atteint souvent le même rapport en un seul étage.</div>"}, {"titre": "Changer d’arbre bloqué", "enonce": "Même train qu’à l’exercice 1, mais le PLANÉTAIRE est bloqué. Entrée par la couronne, sortie par le porte-satellites. Calculer ω<sub>ps</sub> / ω<sub>c</sub>.", "corrige": "<div class=\"etape\"><span>Formule</span><div>Willis avec ω<sub>p</sub> = 0 → ω<sub>ps</sub> / ω<sub>c</sub> = Z<sub>c</sub> / (Z<sub>p</sub> + Z<sub>c</sub>)</div></div><div class=\"etape\"><span>Application</span><div>rapport = 72 / 90.</div></div><div class=\"etape\"><span>Résultat</span><div><b>rapport 0,80</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — le même train donne 0,20 ou 0,80 selon l’arbre bloqué. C’est le principe des boîtes de vitesses automatiques.</div>"}];
+function poserCorrige(n,raison){
+ const a=document.getElementById('a'+n); if(!a || !CORRIGES[n]) return;
+ const bo=a.querySelector('.boite'); if(!bo || bo.querySelector('.corrige-btn')) return;
+ const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+ btn.textContent='Voir le corrigé détaillé'+(raison? ' ('+raison+')':'');
+ const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=CORRIGES[n];
+ btn.addEventListener('click',function(){
+  bl.classList.toggle('ouvert');
+  btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Voir')+' le corrigé détaillé';
+ });
+ bo.appendChild(btn); bo.appendChild(bl);
+}
+/* TOUT VISIBLE DÈS LE DÉPART — choix de Mat, pour les TP CAPET uniquement.
+   Les corrigés sont posés sur toutes les missions à l'ouverture, et le verrouillage
+   progressif est levé : sans cela, le corrigé d'une mission verrouillée resterait
+   sous son cadenas. Le score reste juste — `reussir` ajoute les points à chaque
+   réussite, et un bouton validé est désactivé. Seule la barre de progression
+   continue d'avancer dans l'ordre. */
+(function(){
+ Object.keys(CORRIGES).forEach(function(n){ poserCorrige(+n); });
+ const m0=majProgression;
+ majProgression=function(){
+  const x=m0.apply(this,arguments);
+  document.querySelectorAll('.acti .verrou').forEach(function(v){ v.remove(); });
+  return x;
+ };
+ majProgression();
+})();
+/* exercices sur copie, dans la mission bilan, accessibles sans terminer le TP */
+(function(){
+ const actis=document.querySelectorAll('.acti'); if(!actis.length) return;
+ const bo=actis[actis.length-1].querySelector('.boite'); if(!bo) return;
+ const z=document.createElement('div'); z.className='copie-zone';
+ z.innerHTML='<h3>Exercices sur copie</h3><div class="chapo-c">Rédige sur ta copie : '+
+  'formule, application numérique, résultat avec son unité. Compare ensuite au corrigé.</div>';
+ COPIE.forEach(function(ex,i){
+  const d=document.createElement('div'); d.className='copie-ex';
+  d.innerHTML='<b class="t">Exercice '+(i+1)+' — '+ex.titre+'</b><p style="margin:6px 0">'+ex.enonce+'</p>';
+  const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+  btn.textContent='Afficher le corrigé';
+  const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=ex.corrige;
+  btn.addEventListener('click',function(){
+   bl.classList.toggle('ouvert');
+   btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Afficher')+' le corrigé';
+  });
+  d.appendChild(btn); d.appendChild(bl); z.appendChild(d);
+ });
+ bo.appendChild(z);
+})();
+
 
 </script>
 </body>

@@ -113,6 +113,23 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 .chp input.large{width:100%;text-align:left;font-weight:400}
 .chp .u{font-size:14px;color:#8a8378;min-width:40px}
 .cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
+.corrige-btn{margin-top:10px;background:#f0f9ff;color:#0369a1;border:1.5px solid #7dd3fc;
+ border-radius:9px;padding:7px 13px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer}
+.corrige-btn:hover{background:#e0f2fe}
+.corrige-bloc{display:none;margin-top:10px;border:1px solid #bae6fd;border-radius:12px;
+ background:#f8fcff;padding:12px 14px}
+.corrige-bloc.ouvert{display:block}
+.corrige-bloc .etape{display:flex;gap:10px;margin:6px 0;font-size:14.5px;line-height:1.5}
+.corrige-bloc .etape > span{flex:0 0 112px;font-weight:800;color:#0369a1;font-size:12px;
+ text-transform:uppercase;letter-spacing:.5px;padding-top:2px}
+.corrige-bloc .retenu{margin-top:8px;background:#ecfeff;border-left:4px solid #0e7490;
+ border-radius:8px;padding:8px 11px;font-size:14px}
+.copie-zone{margin-top:18px;border-top:2px dashed #cbd5e1;padding-top:14px}
+.copie-zone h3{color:#155e75;font-size:18px;margin-bottom:4px}
+.copie-zone .chapo-c{color:#64748b;font-size:13.5px;margin-bottom:10px}
+.copie-ex{border:1px solid #e9e2d4;border-radius:12px;padding:11px 14px;margin:10px 0;background:#fff}
+.copie-ex b.t{color:#7c2d12}
+@media print{.corrige-btn{display:none}.corrige-bloc{display:block}}
 </style>
 </head>
 <body>
@@ -588,6 +605,60 @@ brancher('verif6',G6,'verd6',6,'Appui plan : 3 degrés. Appui linéaire : 2. But
 
 /* ===== INITIALISATION — À GARDER EN DERNIER ===== */
 charger(); majProgression();
+
+/* ===== CORRIGES_CAPET (voir _outils/ajouter_corriges_tp_capet.py) ===== */
+const CORRIGES={"1": "<div class=\"etape\"><span>Formule</span><div>zone Ø t → écart maxi = t / 2</div></div><div class=\"etape\"><span>Application</span><div>Ø 0,3 → écart 0,3 / 2. Deux références : A et B.</div></div><div class=\"etape\"><span>Résultat</span><div><b>zone Ø 0,30</b>, <b>écart maxi 0,15 mm</b>, <b>2 références</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — la valeur après Ø est un DIAMÈTRE de zone, pas un écart admissible.</div>", "2": "<div class=\"etape\"><span>Formule</span><div>écart radial = √(x² + y²) ; zone nécessaire = 2 × écart radial</div></div><div class=\"etape\"><span>Application</span><div>écart = √(0,12² + 0,16²) = 0,20. Zone nécessaire : 2 × 0,20.</div></div><div class=\"etape\"><span>Résultat</span><div><b>écart 0,20</b>, <b>zone nécessaire Ø 0,40</b> pour Ø 0,30 autorisé : <b>refusée</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — chaque décalage pris isolément reste sous 0,15 — c’est leur COMBINAISON qui fait sortir l’axe de la zone.</div>", "3": "<div class=\"etape\"><span>Règle de tri</span><div><b>Forme</b> : la surface seule, sans référence — planéité, circularité. <b>Orientation</b> : un angle par rapport à une référence — perpendicularité, parallélisme. <b>Position</b> : un emplacement par rapport à des références — localisation, coaxialité.</div></div><div class=\"retenu\"><b>À retenir</b> — la position englobe l’orientation, qui englobe la forme. Spécifier la position suffit souvent.</div>", "4": "<div class=\"etape\"><span>Formule</span><div>bonus = diamètre réel − diamètre au maximum de matière ; zone = tolérance + bonus</div></div><div class=\"etape\"><span>Application</span><div>bonus = 12,12 − 12,00 ; zone = 0,25 + 0,12.</div></div><div class=\"etape\"><span>Résultat</span><div><b>bonus 0,12</b> et <b>zone Ø 0,37</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — pour un trou, le maximum de matière est le PLUS PETIT diamètre autorisé.</div>", "5": "<div class=\"etape\"><span>Formule</span><div>diamètre virtuel = diamètre au maximum de matière − tolérance</div></div><div class=\"etape\"><span>Application</span><div>D<sub>v</sub> = 12,00 − 0,25 ; jeu = 11,75 − 11.</div></div><div class=\"etape\"><span>Résultat</span><div><b>D<sub>v</sub> = 11,75 mm</b> et <b>jeu garanti 0,75 mm</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — le diamètre virtuel est la plus petite ouverture efficace, dans le pire cas combiné de taille et de position : il garantit le montage.</div>", "6": "<div class=\"etape\"><span>Formule</span><div>primaire 3, secondaire 2, tertiaire 1</div></div><div class=\"etape\"><span>Application</span><div>appui plan : 3 ; appui linéaire : 2 ; butée : 1.</div></div><div class=\"etape\"><span>Résultat</span><div><b>3 + 2 + 1 = 6</b> degrés supprimés.</div></div><div class=\"retenu\"><b>À retenir</b> — le système de références reproduit une mise en position isostatique, dans l’ordre A, B, C du cadre.</div>"};
+const COPIE=[{"titre": "Contrôle d’une position", "enonce": "Un trou est localisé Ø 0,4. Son axe est décalé de 0,15 mm en x et 0,20 mm en y. La pièce est-elle conforme ?", "corrige": "<div class=\"etape\"><span>Formule</span><div>écart radial = √(x² + y²)</div></div><div class=\"etape\"><span>Application</span><div>écart = √(0,15² + 0,20²) = 0,25 ; zone nécessaire Ø 0,50.</div></div><div class=\"etape\"><span>Résultat</span><div><b>Refusée</b> : Ø 0,50 nécessaire pour Ø 0,40 autorisé.</div></div><div class=\"retenu\"><b>À retenir</b> — même piège qu’en mission 2 : chaque décalage isolé paraît acceptable.</div>"}, {"titre": "Le maximum de matière sauve-t-il la pièce ?", "enonce": "Même trou, coté Ø 8,00 à 8,30, localisation Ø 0,4 au maximum de matière. Le trou mesure 8,12 mm. Conclure.", "corrige": "<div class=\"etape\"><span>Formule</span><div>zone = 0,40 + (8,12 − 8,00)</div></div><div class=\"etape\"><span>Application</span><div>bonus 0,12 ; zone Ø 0,52 ; nécessaire Ø 0,50.</div></div><div class=\"etape\"><span>Résultat</span><div><b>Acceptée</b> grâce au bonus.</div></div><div class=\"retenu\"><b>À retenir</b> — la même pièce, refusée à l’exercice 1, devient conforme : elle se monte parfaitement.</div>"}, {"titre": "Garantir le montage", "enonce": "Calculer le diamètre virtuel de ce trou et vérifier qu’une vis de Ø 6 mm passe toujours.", "corrige": "<div class=\"etape\"><span>Formule</span><div>D<sub>v</sub> = 8,00 − 0,40</div></div><div class=\"etape\"><span>Application</span><div>D<sub>v</sub> = 7,60 ; jeu = 7,60 − 6.</div></div><div class=\"etape\"><span>Résultat</span><div><b>D<sub>v</sub> = 7,60 mm</b>, <b>jeu garanti 1,6 mm</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — une marge aussi large suggère qu’on pourrait élargir la tolérance de position, et réduire le coût de fabrication.</div>"}];
+function poserCorrige(n,raison){
+ const a=document.getElementById('a'+n); if(!a || !CORRIGES[n]) return;
+ const bo=a.querySelector('.boite'); if(!bo || bo.querySelector('.corrige-btn')) return;
+ const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+ btn.textContent='Voir le corrigé détaillé'+(raison? ' ('+raison+')':'');
+ const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=CORRIGES[n];
+ btn.addEventListener('click',function(){
+  bl.classList.toggle('ouvert');
+  btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Voir')+' le corrigé détaillé';
+ });
+ bo.appendChild(btn); bo.appendChild(bl);
+}
+/* TOUT VISIBLE DÈS LE DÉPART — choix de Mat, pour les TP CAPET uniquement.
+   Les corrigés sont posés sur toutes les missions à l'ouverture, et le verrouillage
+   progressif est levé : sans cela, le corrigé d'une mission verrouillée resterait
+   sous son cadenas. Le score reste juste — `reussir` ajoute les points à chaque
+   réussite, et un bouton validé est désactivé. Seule la barre de progression
+   continue d'avancer dans l'ordre. */
+(function(){
+ Object.keys(CORRIGES).forEach(function(n){ poserCorrige(+n); });
+ const m0=majProgression;
+ majProgression=function(){
+  const x=m0.apply(this,arguments);
+  document.querySelectorAll('.acti .verrou').forEach(function(v){ v.remove(); });
+  return x;
+ };
+ majProgression();
+})();
+/* exercices sur copie, dans la mission bilan, accessibles sans terminer le TP */
+(function(){
+ const actis=document.querySelectorAll('.acti'); if(!actis.length) return;
+ const bo=actis[actis.length-1].querySelector('.boite'); if(!bo) return;
+ const z=document.createElement('div'); z.className='copie-zone';
+ z.innerHTML='<h3>Exercices sur copie</h3><div class="chapo-c">Rédige sur ta copie : '+
+  'formule, application numérique, résultat avec son unité. Compare ensuite au corrigé.</div>';
+ COPIE.forEach(function(ex,i){
+  const d=document.createElement('div'); d.className='copie-ex';
+  d.innerHTML='<b class="t">Exercice '+(i+1)+' — '+ex.titre+'</b><p style="margin:6px 0">'+ex.enonce+'</p>';
+  const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+  btn.textContent='Afficher le corrigé';
+  const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=ex.corrige;
+  btn.addEventListener('click',function(){
+   bl.classList.toggle('ouvert');
+   btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Afficher')+' le corrigé';
+  });
+  d.appendChild(btn); d.appendChild(bl); z.appendChild(d);
+ });
+ bo.appendChild(z);
+})();
+
 
 </script>
 </body>

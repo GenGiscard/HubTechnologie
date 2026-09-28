@@ -113,6 +113,23 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
 .chp input.large{width:100%;text-align:left;font-weight:400}
 .chp .u{font-size:14px;color:#8a8378;min-width:40px}
 .cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
+.corrige-btn{margin-top:10px;background:#f0f9ff;color:#0369a1;border:1.5px solid #7dd3fc;
+ border-radius:9px;padding:7px 13px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer}
+.corrige-btn:hover{background:#e0f2fe}
+.corrige-bloc{display:none;margin-top:10px;border:1px solid #bae6fd;border-radius:12px;
+ background:#f8fcff;padding:12px 14px}
+.corrige-bloc.ouvert{display:block}
+.corrige-bloc .etape{display:flex;gap:10px;margin:6px 0;font-size:14.5px;line-height:1.5}
+.corrige-bloc .etape > span{flex:0 0 112px;font-weight:800;color:#0369a1;font-size:12px;
+ text-transform:uppercase;letter-spacing:.5px;padding-top:2px}
+.corrige-bloc .retenu{margin-top:8px;background:#ecfeff;border-left:4px solid #0e7490;
+ border-radius:8px;padding:8px 11px;font-size:14px}
+.copie-zone{margin-top:18px;border-top:2px dashed #cbd5e1;padding-top:14px}
+.copie-zone h3{color:#155e75;font-size:18px;margin-bottom:4px}
+.copie-zone .chapo-c{color:#64748b;font-size:13.5px;margin-bottom:10px}
+.copie-ex{border:1px solid #e9e2d4;border-radius:12px;padding:11px 14px;margin:10px 0;background:#fff}
+.copie-ex b.t{color:#7c2d12}
+@media print{.corrige-btn{display:none}.corrige-bloc{display:block}}
 </style>
 </head>
 <body>
@@ -629,6 +646,60 @@ brancher('verif6',C6,'verd6',6,'Jeu mini = alésage mini − arbre maxi = 0 − 
 
 /* ===== INITIALISATION — À GARDER EN DERNIER ===== */
 charger(); majProgression();
+
+/* ===== CORRIGES_CAPET (voir _outils/ajouter_corriges_tp_capet.py) ===== */
+const CORRIGES={"1": "<div class=\"etape\"><span>Formule</span><div>J = A − B − C ; J<sub>max</sub> = A<sub>max</sub> − B<sub>min</sub> − C<sub>min</sub> ; J<sub>min</sub> = A<sub>min</sub> − B<sub>max</sub> − C<sub>max</sub></div></div><div class=\"etape\"><span>Application</span><div>J<sub>n</sub> = 80 − 32 − 46. J<sub>max</sub> = 80,10 − 31,95 − 45,95. J<sub>min</sub> = 79,90 − 32,05 − 46,05.</div></div><div class=\"etape\"><span>Résultat</span><div><b>J<sub>n</sub> = 2,00</b>, <b>J<sub>max</sub> = 2,20</b>, <b>J<sub>min</sub> = 1,80</b>, <b>IT = 0,40 mm</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — vérifier que l’IT vaut la SOMME des IT des cotes : 0,20 + 0,10 + 0,10 = 0,40.</div>", "2": "<div class=\"etape\"><span>Formule</span><div>IT autorisé = J<sub>max exigé</sub> − J<sub>min exigé</sub></div></div><div class=\"etape\"><span>Application</span><div>IT = 2,15 − 1,85 = 0,30. Écart : 0,40 − 0,30.</div></div><div class=\"etape\"><span>Résultat</span><div><b>0,30 mm</b> autorisés, il faut en retirer <b>0,10 mm</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — le jeu nominal est bien centré : seule la DISPERSION pose problème.</div>", "3": "<div class=\"etape\"><span>Règle de tri</span><div>La cote <b>condition</b> appartient au mécanisme : elle se représente par un vecteur et ne se fabrique pas. Les cotes <b>fonctionnelles</b> appartiennent aux pièces : elles figurent sur les dessins de définition et se contrôlent une par une.</div></div><div class=\"retenu\"><b>À retenir</b> — un jeu ne se cote jamais sur le dessin d’une pièce : c’est un non-sens.</div>", "4": "<div class=\"etape\"><span>Formule</span><div>IT par cote = IT autorisé / nombre de cotes ; tolérance ± = IT / 2</div></div><div class=\"etape\"><span>Application</span><div>IT = 0,30 / 3 = 0,10 ; ± 0,10 / 2.</div></div><div class=\"etape\"><span>Résultat</span><div><b>IT 0,10 mm</b> par cote, soit <b>± 0,05 mm</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — ne pas confondre l’intervalle et le ± : c’est l’erreur la plus fréquente de l’exercice.</div>", "5": "<div class=\"etape\"><span>Formule</span><div>J = A − B − C − D</div></div><div class=\"etape\"><span>Application</span><div>J<sub>n</sub> = 120 − 38 − 44 − 36. IT = 0,20 + 0,10 + 0,10 + 0,08.</div></div><div class=\"etape\"><span>Résultat</span><div><b>J<sub>n</sub> = 2,00</b>, <b>J<sub>max</sub> = 2,24</b>, <b>J<sub>min</sub> = 1,76</b>, <b>IT = 0,48 mm</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — même jeu nominal qu’à la mission 1, mais une dispersion plus grande : allonger une chaîne la dégrade toujours.</div>", "6": "<div class=\"etape\"><span>Formule</span><div>jeu mini = alésage mini − arbre maxi ; jeu maxi = alésage maxi − arbre mini</div></div><div class=\"etape\"><span>Application</span><div>jeu mini = 0 − (−0,020) ; jeu maxi = 0,033 − (−0,041).</div></div><div class=\"etape\"><span>Résultat</span><div><b>jeu mini 0,020</b>, <b>jeu maxi 0,074</b>, <b>IT 0,054 mm</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — H8/f7 garantit un jeu dans TOUS les cas : c’est un ajustement glissant, adapté aux paliers lisses.</div>"};
+const COPIE=[{"titre": "Une chaîne à trois cotes", "enonce": "J = A − B − C avec A = 50 ± 0,10, B = 20 ± 0,05, C = 28 ± 0,05. Calculer J<sub>n</sub>, J<sub>max</sub>, J<sub>min</sub> et l’IT.", "corrige": "<div class=\"etape\"><span>Formule</span><div>J<sub>max</sub> = A<sub>max</sub> − B<sub>min</sub> − C<sub>min</sub></div></div><div class=\"etape\"><span>Application</span><div>J<sub>max</sub> = 50,10 − 19,95 − 27,95 ; J<sub>min</sub> = 49,90 − 20,05 − 28,05.</div></div><div class=\"etape\"><span>Résultat</span><div><b>J<sub>n</sub> = 2,00</b>, <b>J<sub>max</sub> = 2,20</b>, <b>J<sub>min</sub> = 1,80</b>, <b>IT = 0,40</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — contrôle express : 0,20 + 0,10 + 0,10 = 0,40.</div>"}, {"titre": "Répartir", "enonce": "Même chaîne. La condition impose 1,90 ≤ J ≤ 2,10. Répartir également l’IT autorisé sur les trois cotes.", "corrige": "<div class=\"etape\"><span>Formule</span><div>IT par cote = IT autorisé / 3</div></div><div class=\"etape\"><span>Application</span><div>IT autorisé = 0,20 ; 0,20 / 3.</div></div><div class=\"etape\"><span>Résultat</span><div><b>IT ≈ 0,067 mm</b> par cote, soit <b>± 0,033 mm</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — une répartition égale est un premier jet : en réalité, on donne plus de tolérance aux cotes difficiles à tenir.</div>"}, {"titre": "Un ajustement serré", "enonce": "Ajustement Ø 20 H7/g6 : alésage +0,021 / 0, arbre −0,007 / −0,020. Calculer le jeu minimal et le jeu maximal.", "corrige": "<div class=\"etape\"><span>Formule</span><div>jeu mini = alésage mini − arbre maxi</div></div><div class=\"etape\"><span>Application</span><div>jeu mini = 0 − (−0,007) ; jeu maxi = 0,021 − (−0,020).</div></div><div class=\"etape\"><span>Résultat</span><div><b>jeu mini 0,007</b> et <b>jeu maxi 0,041 mm</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — H7/g6 est plus serré que H8/f7 : ajustement de précision, pour guidages exigeants.</div>"}];
+function poserCorrige(n,raison){
+ const a=document.getElementById('a'+n); if(!a || !CORRIGES[n]) return;
+ const bo=a.querySelector('.boite'); if(!bo || bo.querySelector('.corrige-btn')) return;
+ const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+ btn.textContent='Voir le corrigé détaillé'+(raison? ' ('+raison+')':'');
+ const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=CORRIGES[n];
+ btn.addEventListener('click',function(){
+  bl.classList.toggle('ouvert');
+  btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Voir')+' le corrigé détaillé';
+ });
+ bo.appendChild(btn); bo.appendChild(bl);
+}
+/* TOUT VISIBLE DÈS LE DÉPART — choix de Mat, pour les TP CAPET uniquement.
+   Les corrigés sont posés sur toutes les missions à l'ouverture, et le verrouillage
+   progressif est levé : sans cela, le corrigé d'une mission verrouillée resterait
+   sous son cadenas. Le score reste juste — `reussir` ajoute les points à chaque
+   réussite, et un bouton validé est désactivé. Seule la barre de progression
+   continue d'avancer dans l'ordre. */
+(function(){
+ Object.keys(CORRIGES).forEach(function(n){ poserCorrige(+n); });
+ const m0=majProgression;
+ majProgression=function(){
+  const x=m0.apply(this,arguments);
+  document.querySelectorAll('.acti .verrou').forEach(function(v){ v.remove(); });
+  return x;
+ };
+ majProgression();
+})();
+/* exercices sur copie, dans la mission bilan, accessibles sans terminer le TP */
+(function(){
+ const actis=document.querySelectorAll('.acti'); if(!actis.length) return;
+ const bo=actis[actis.length-1].querySelector('.boite'); if(!bo) return;
+ const z=document.createElement('div'); z.className='copie-zone';
+ z.innerHTML='<h3>Exercices sur copie</h3><div class="chapo-c">Rédige sur ta copie : '+
+  'formule, application numérique, résultat avec son unité. Compare ensuite au corrigé.</div>';
+ COPIE.forEach(function(ex,i){
+  const d=document.createElement('div'); d.className='copie-ex';
+  d.innerHTML='<b class="t">Exercice '+(i+1)+' — '+ex.titre+'</b><p style="margin:6px 0">'+ex.enonce+'</p>';
+  const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+  btn.textContent='Afficher le corrigé';
+  const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=ex.corrige;
+  btn.addEventListener('click',function(){
+   bl.classList.toggle('ouvert');
+   btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Afficher')+' le corrigé';
+  });
+  d.appendChild(btn); d.appendChild(bl); z.appendChild(d);
+ });
+ bo.appendChild(z);
+})();
+
 
 </script>
 </body>

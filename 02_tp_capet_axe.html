@@ -118,6 +118,23 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
  vertical-align:middle}
 .boite .mc:hover{background:#ffedd5}
 @media print{.boite .mc{display:none}}
+.corrige-btn{margin-top:10px;background:#f0f9ff;color:#0369a1;border:1.5px solid #7dd3fc;
+ border-radius:9px;padding:7px 13px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer}
+.corrige-btn:hover{background:#e0f2fe}
+.corrige-bloc{display:none;margin-top:10px;border:1px solid #bae6fd;border-radius:12px;
+ background:#f8fcff;padding:12px 14px}
+.corrige-bloc.ouvert{display:block}
+.corrige-bloc .etape{display:flex;gap:10px;margin:6px 0;font-size:14.5px;line-height:1.5}
+.corrige-bloc .etape > span{flex:0 0 112px;font-weight:800;color:#0369a1;font-size:12px;
+ text-transform:uppercase;letter-spacing:.5px;padding-top:2px}
+.corrige-bloc .retenu{margin-top:8px;background:#ecfeff;border-left:4px solid #0e7490;
+ border-radius:8px;padding:8px 11px;font-size:14px}
+.copie-zone{margin-top:18px;border-top:2px dashed #cbd5e1;padding-top:14px}
+.copie-zone h3{color:#155e75;font-size:18px;margin-bottom:4px}
+.copie-zone .chapo-c{color:#64748b;font-size:13.5px;margin-bottom:10px}
+.copie-ex{border:1px solid #e9e2d4;border-radius:12px;padding:11px 14px;margin:10px 0;background:#fff}
+.copie-ex b.t{color:#7c2d12}
+@media print{.corrige-btn{display:none}.corrige-bloc{display:block}}
 </style>
 </head>
 <body>
@@ -709,6 +726,60 @@ champsSup('champsSup8',SUP8);
 })();
 
 charger(); majProgression();
+
+/* ===== CORRIGES_CAPET (voir _outils/ajouter_corriges_tp_capet.py) ===== */
+const CORRIGES={"1": "<div class=\"etape\"><span>Formule</span><div>k = p / 2π, puis ω = V / k, puis N = ω × 60 / 2π</div></div><div class=\"etape\"><span>Application</span><div>k = 0,008 / 6,2832 = 1,273·10⁻³ m/rad. ω = 0,4 / 1,273·10⁻³ = 314,2 rad/s.</div></div><div class=\"etape\"><span>Résultat</span><div><b>k = 1,273·10⁻³ m/rad</b> et <b>N = 3 000 tr/min</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — k s’exprime en mètres PAR RADIAN. Oublier le 2π donne k = p et fausse toute la suite d’un facteur 6,28 — puis d’un facteur 40 sur l’inertie, qui dépend de k².</div>", "2": "<div class=\"etape\"><span>Formule</span><div>J<sub>eq</sub> = M × k² ; J<sub>tot</sub> = J<sub>moteur</sub> + J<sub>vis</sub> + J<sub>eq</sub></div></div><div class=\"etape\"><span>Application</span><div>J<sub>eq</sub> = 180 × (1,273·10⁻³)² = 2,917·10⁻⁴. J<sub>tot</sub> = 4,0·10⁻⁴ + 5,0·10⁻⁴ + 2,917·10⁻⁴.</div></div><div class=\"etape\"><span>Résultat</span><div><b>J<sub>eq</sub> = 2,92·10⁻⁴ kg·m²</b> et <b>J<sub>tot</sub> = 1,19·10⁻³ kg·m²</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — on égale les énergies cinétiques : ½ J<sub>eq</sub> ω² = ½ M V². C’est ce qui permet d’additionner une masse à des inerties — jamais directement.</div>", "3": "<div class=\"etape\"><span>Règle de tri</span><div>Le terme d’<b>inertie</b> contient une accélération (dω/dt). Le terme d’<b>effort</b> contient F × k et se divise par le rendement. Le terme de <b>pesanteur</b> n’existe que sur un axe non horizontal.</div></div><div class=\"retenu\"><b>À retenir</b> — le rendement ne s’applique qu’au terme d’effort. L’appliquer aussi au terme d’inertie est l’erreur la plus fréquente en épreuve.</div>", "4": "<div class=\"etape\"><span>Formule</span><div>dω/dt = a / k ; C<sub>i</sub> = J<sub>tot</sub> × dω/dt ; C<sub>F</sub> = F × k / η</div></div><div class=\"etape\"><span>Application</span><div>dω/dt = 2,5 / 1,273·10⁻³ = 1 963 rad/s². C<sub>i</sub> = 1,19·10⁻³ × 1 963 = 2,34 N·m. C<sub>F</sub> = 150 × 1,273·10⁻³ / 0,90 = 0,212 N·m.</div></div><div class=\"etape\"><span>Résultat</span><div><b>C = 2,34 + 0,21 = 2,55 N·m</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — sur un axe rapide, le terme d’inertie écrase le terme d’effort : ici plus de 90 % du couple sert à accélérer.</div>", "5": "<div class=\"etape\"><span>Formule</span><div>C<sub>g</sub> = M × g × k / η, puis C = C<sub>i</sub> + C<sub>F</sub> + C<sub>g</sub></div></div><div class=\"etape\"><span>Application</span><div>C<sub>g</sub> = 180 × 9,81 × 1,273·10⁻³ / 0,90 = 2,497 N·m. C = 2,34 + 0,21 + 2,50.</div></div><div class=\"etape\"><span>Résultat</span><div><b>C<sub>g</sub> = 2,50 N·m</b> et <b>C = 5,05 N·m</b> en montée.</div></div><div class=\"retenu\"><b>À retenir</b> — passer à la verticale double presque le couple. Un axe vertical se dimensionne en montée accélérée, cas le plus défavorable.</div>", "6": "<div class=\"etape\"><span>Formule</span><div>J<sub>tot</sub> recalculé avec le vrai rotor, puis même calcul qu’en mission 4</div></div><div class=\"etape\"><span>Application</span><div>J<sub>tot</sub> = 1,1·10⁻³ + 5,0·10⁻⁴ + 2,917·10⁻⁴ = 1,89·10⁻³. C<sub>i</sub> = 1,89·10⁻³ × 1 963 = 3,71 N·m.</div></div><div class=\"etape\"><span>Résultat</span><div><b>C = 3,71 + 0,21 = 3,93 N·m</b>, soit <b>+54 %</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — le dimensionnement est ITÉRATIF : l’inertie du moteur choisi entre dans le calcul qui a servi à le choisir. Écrire cette phrase de rebouclage vaut des points au CAPET.</div>", "7": "<div class=\"etape\"><span>Corrigé</span><div>k = 0,005 / 6,2832 ≈ 7,96·10⁻⁴ m/rad. Jeq = 300 × k² ≈ 1,90·10⁻⁴ kg·m². Jtot ≈ 8,90·10⁻⁴ kg·m². Avec un pas deux fois plus petit qu’à la mission 2, l’inertie ramenée est divisée par quatre : la masse ne pèse presque plus rien.</div></div>", "8": "<div class=\"etape\"><span>Corrigé</span><div>dω/dt = 3 / 7,96·10⁻⁴ ≈ 3 770 rad/s². Cinertie ≈ 3,36 N·m. Ceffort = 120 × 7,96·10⁻⁴ / 0,90 ≈ 0,11 N·m. Total ≈ 3,47 N·m. Le pas plus fin réduit l’inertie mais impose une vitesse de rotation doublée : le compromis s’est déplacé, il n’a pas disparu.</div></div>"};
+const COPIE=[{"titre": "Une nouvelle vis", "enonce": "Une vis à billes de pas 10 mm doit assurer une avance de 0,5 m/s. Calculer k, la vitesse angulaire puis la fréquence de rotation.", "corrige": "<div class=\"etape\"><span>Formule</span><div>k = p / 2π ; ω = V / k</div></div><div class=\"etape\"><span>Application</span><div>k = 0,010 / 6,2832 = 1,592·10⁻³ m/rad ; ω = 0,5 / 1,592·10⁻³ = 314,2 rad/s.</div></div><div class=\"etape\"><span>Résultat</span><div><b>N = 3 000 tr/min</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — un pas plus grand réduit la vitesse de rotation nécessaire, mais augmente l’inertie ramenée.</div>"}, {"titre": "L’inertie ramenée", "enonce": "Même vis. La masse mobile vaut 250 kg. Calculer son inertie équivalente ramenée sur l’arbre.", "corrige": "<div class=\"etape\"><span>Formule</span><div>J<sub>eq</sub> = M × k²</div></div><div class=\"etape\"><span>Application</span><div>J<sub>eq</sub> = 250 × (1,592·10⁻³)².</div></div><div class=\"etape\"><span>Résultat</span><div><b>J<sub>eq</sub> = 6,33·10⁻⁴ kg·m²</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — comparer avec la mission 2 : pas plus grand et masse plus lourde, l’inertie ramenée double.</div>"}, {"titre": "Le couple de pesanteur", "enonce": "Cet axe est vertical, rendement 0,90. Calculer le couple nécessaire pour maintenir la charge, g = 9,81 N/kg.", "corrige": "<div class=\"etape\"><span>Formule</span><div>C<sub>g</sub> = M × g × k / η</div></div><div class=\"etape\"><span>Application</span><div>C<sub>g</sub> = 250 × 9,81 × 1,592·10⁻³ / 0,90.</div></div><div class=\"etape\"><span>Résultat</span><div><b>C<sub>g</sub> = 4,34 N·m</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — ce couple est permanent : il faut un frein à manque de courant pour qu’un axe vertical ne chute pas à l’arrêt.</div>"}];
+function poserCorrige(n,raison){
+ const a=document.getElementById('a'+n); if(!a || !CORRIGES[n]) return;
+ const bo=a.querySelector('.boite'); if(!bo || bo.querySelector('.corrige-btn')) return;
+ const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+ btn.textContent='Voir le corrigé détaillé'+(raison? ' ('+raison+')':'');
+ const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=CORRIGES[n];
+ btn.addEventListener('click',function(){
+  bl.classList.toggle('ouvert');
+  btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Voir')+' le corrigé détaillé';
+ });
+ bo.appendChild(btn); bo.appendChild(bl);
+}
+/* TOUT VISIBLE DÈS LE DÉPART — choix de Mat, pour les TP CAPET uniquement.
+   Les corrigés sont posés sur toutes les missions à l'ouverture, et le verrouillage
+   progressif est levé : sans cela, le corrigé d'une mission verrouillée resterait
+   sous son cadenas. Le score reste juste — `reussir` ajoute les points à chaque
+   réussite, et un bouton validé est désactivé. Seule la barre de progression
+   continue d'avancer dans l'ordre. */
+(function(){
+ Object.keys(CORRIGES).forEach(function(n){ poserCorrige(+n); });
+ const m0=majProgression;
+ majProgression=function(){
+  const x=m0.apply(this,arguments);
+  document.querySelectorAll('.acti .verrou').forEach(function(v){ v.remove(); });
+  return x;
+ };
+ majProgression();
+})();
+/* exercices sur copie, dans la mission bilan, accessibles sans terminer le TP */
+(function(){
+ const actis=document.querySelectorAll('.acti'); if(!actis.length) return;
+ const bo=actis[actis.length-1].querySelector('.boite'); if(!bo) return;
+ const z=document.createElement('div'); z.className='copie-zone';
+ z.innerHTML='<h3>Exercices sur copie</h3><div class="chapo-c">Rédige sur ta copie : '+
+  'formule, application numérique, résultat avec son unité. Compare ensuite au corrigé.</div>';
+ COPIE.forEach(function(ex,i){
+  const d=document.createElement('div'); d.className='copie-ex';
+  d.innerHTML='<b class="t">Exercice '+(i+1)+' — '+ex.titre+'</b><p style="margin:6px 0">'+ex.enonce+'</p>';
+  const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+  btn.textContent='Afficher le corrigé';
+  const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=ex.corrige;
+  btn.addEventListener('click',function(){
+   bl.classList.toggle('ouvert');
+   btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Afficher')+' le corrigé';
+  });
+  d.appendChild(btn); d.appendChild(bl); z.appendChild(d);
+ });
+ bo.appendChild(z);
+})();
+
 
 </script>
 <script>

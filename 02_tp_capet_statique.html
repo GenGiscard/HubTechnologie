@@ -118,6 +118,23 @@ canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;
  vertical-align:middle}
 .boite .mc:hover{background:#ffedd5}
 @media print{.boite .mc{display:none}}
+.corrige-btn{margin-top:10px;background:#f0f9ff;color:#0369a1;border:1.5px solid #7dd3fc;
+ border-radius:9px;padding:7px 13px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer}
+.corrige-btn:hover{background:#e0f2fe}
+.corrige-bloc{display:none;margin-top:10px;border:1px solid #bae6fd;border-radius:12px;
+ background:#f8fcff;padding:12px 14px}
+.corrige-bloc.ouvert{display:block}
+.corrige-bloc .etape{display:flex;gap:10px;margin:6px 0;font-size:14.5px;line-height:1.5}
+.corrige-bloc .etape > span{flex:0 0 112px;font-weight:800;color:#0369a1;font-size:12px;
+ text-transform:uppercase;letter-spacing:.5px;padding-top:2px}
+.corrige-bloc .retenu{margin-top:8px;background:#ecfeff;border-left:4px solid #0e7490;
+ border-radius:8px;padding:8px 11px;font-size:14px}
+.copie-zone{margin-top:18px;border-top:2px dashed #cbd5e1;padding-top:14px}
+.copie-zone h3{color:#155e75;font-size:18px;margin-bottom:4px}
+.copie-zone .chapo-c{color:#64748b;font-size:13.5px;margin-bottom:10px}
+.copie-ex{border:1px solid #e9e2d4;border-radius:12px;padding:11px 14px;margin:10px 0;background:#fff}
+.copie-ex b.t{color:#7c2d12}
+@media print{.corrige-btn{display:none}.corrige-bloc{display:block}}
 </style>
 </head>
 <body>
@@ -706,6 +723,60 @@ champsSup('champsSup8',SUP8);
 })();
 
 charger(); majProgression();
+
+/* ===== CORRIGES_CAPET (voir _outils/ajouter_corriges_tp_capet.py) ===== */
+const CORRIGES={"1": "<div class=\"etape\"><span>Formule</span><div>ΣM<sub>/A</sub> = 0 → T × sin 40° × 0,75 = F × 1,00 ; puis ΣF = 0</div></div><div class=\"etape\"><span>Application</span><div>T = 2 500 / (0,643 × 0,75) = 5 186 N. A<sub>x</sub> = T cos 40° = 3 973 N. A<sub>y</sub> = 2 500 − T sin 40° = 2 500 − 3 333.</div></div><div class=\"etape\"><span>Résultat</span><div><b>T = 5 186 N</b>, <b>A<sub>x</sub> = 3 973 N</b>, <b>A<sub>y</sub> = −833 N</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — le tirant porte plus du double de la charge : son bras de levier est court et son angle faible. Et A<sub>y</sub> est NÉGATIF — le mur retient le bras vers le bas.</div>", "2": "<div class=\"etape\"><span>Règle de tri</span><div>Dans le plan, une liaison supprime autant de mobilités qu’elle introduit d’inconnues, pour un total de 3. Pivot : 1 mobilité, <b>2 inconnues</b>. Appui plan : 2 mobilités, <b>1 inconnue</b>. Encastrement : 0 mobilité, <b>3 inconnues</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — compter les inconnues AVANT de calculer. Plus de 3 inconnues sur un solide dans le plan : le problème est hyperstatique et la statique seule ne suffit pas.</div>", "3": "<div class=\"etape\"><span>Règle de tri</span><div>Une action est <b>intérieure</b> si ses deux acteurs appartiennent au système isolé : ici, l’action du tirant sur le bras. Elle est <b>extérieure</b> dès qu’un acteur est hors du système : le mur, la charge, la pesanteur.</div></div><div class=\"retenu\"><b>À retenir</b> — les actions intérieures n’apparaissent JAMAIS dans le bilan : elles s’annulent deux à deux. Changer d’isolement change ce qui est intérieur.</div>", "4": "<div class=\"etape\"><span>Formule</span><div>rapport = bras de l’effort / bras de la charge ; charge = effort × rapport</div></div><div class=\"etape\"><span>Application</span><div>rapport = 0,35 / 0,07 = 5. Charge = 120 × 5.</div></div><div class=\"etape\"><span>Résultat</span><div><b>rapport 5</b> et <b>charge 600 N</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — on gagne en effort ce qu’on perd en déplacement : la charge monte cinq fois moins que la main ne descend.</div>", "5": "<div class=\"etape\"><span>Formule</span><div>ΣM<sub>/A</sub> = 0 → R<sub>B</sub> × 3,00 = P × 1,00 ; puis ΣF<sub>y</sub> = 0</div></div><div class=\"etape\"><span>Application</span><div>R<sub>B</sub> = 4 000 × 1,00 / 3,00 = 1 333 N. R<sub>A</sub> = 4 000 − 1 333.</div></div><div class=\"etape\"><span>Résultat</span><div><b>R<sub>A</sub> = 2 667 N</b> et <b>R<sub>B</sub> = 1 333 N</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — écrire les moments en A élimine R<sub>A</sub> d’un coup. L’appui le plus proche de la charge reprend le plus d’effort.</div>", "6": "<div class=\"etape\"><span>Formule</span><div>R = 2 T cos(θ / 2), θ étant l’angle entre les deux brins</div></div><div class=\"etape\"><span>Application</span><div>Renvoi à 90° : les brins sont perpendiculaires. R = 2 × 1 800 × cos 45° = 3 600 × 0,707.</div></div><div class=\"etape\"><span>Résultat</span><div><b>R = 2 546 N</b>, à <b>45°</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — l’axe d’une poulie ne supporte PAS la tension du câble, mais la somme vectorielle des deux brins. Répondre 1 800 N est l’erreur classique.</div>", "7": "<div class=\"etape\"><span>Corrigé</span><div>Moments en A : RB × 2,40 = 6 000 × 0,80 + 2 000 × 1,80 = 8 400, d’où RB = 3 500 N. Somme verticale : RA = 8 000 − 3 500 = 4 500 N. Vérification : l’appui le plus proche de la charge dominante reprend le plus d’effort.</div></div>", "8": "<div class=\"etape\"><span>Corrigé</span><div>4 000 × 2,50 = 10 000 N·m. Le contrepoids doit fournir le même moment : 10 000 ÷ 0,80 = 12 500 N, soit 1 274 kg. Rapprocher le contrepoids de l’axe le rend énorme : c’est pourquoi les grues l’éloignent le plus possible.</div></div>"};
+const COPIE=[{"titre": "Poutre sur deux appuis", "enonce": "Une poutre de 4,00 m repose sur deux appuis A et B. Une charge de 3 000 N est placée à 1,00 m de A. Déterminer les deux réactions.", "corrige": "<div class=\"etape\"><span>Formule</span><div>ΣM<sub>/A</sub> = 0 puis ΣF<sub>y</sub> = 0</div></div><div class=\"etape\"><span>Application</span><div>R<sub>B</sub> = 3 000 × 1,00 / 4,00 = 750 N ; R<sub>A</sub> = 3 000 − 750.</div></div><div class=\"etape\"><span>Résultat</span><div><b>R<sub>A</sub> = 2 250 N</b> et <b>R<sub>B</sub> = 750 N</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — vérifier toujours que la somme des réactions vaut la charge.</div>"}, {"titre": "Potence à tirant", "enonce": "Un bras de 2,00 m porte 1 500 N à son extrémité. Le tirant est attaché à 1,50 m du mur et incliné à 30°. Calculer la tension du tirant.", "corrige": "<div class=\"etape\"><span>Formule</span><div>ΣM<sub>/A</sub> = 0 → T × sin 30° × 1,50 = 1 500 × 2,00</div></div><div class=\"etape\"><span>Application</span><div>T = 3 000 / (0,5 × 1,50).</div></div><div class=\"etape\"><span>Résultat</span><div><b>T = 4 000 N</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — à 30°, le tirant porte plus de deux fois et demie la charge. Plus l’angle est faible, plus la tension explose.</div>"}, {"titre": "Poulie à 180°", "enonce": "Un câble tendu à 1 000 N fait demi-tour sur une poulie : les deux brins sont parallèles. Quelle action supporte l’axe ?", "corrige": "<div class=\"etape\"><span>Formule</span><div>R = 2 T cos(θ / 2), avec θ = 0°</div></div><div class=\"etape\"><span>Application</span><div>R = 2 × 1 000 × cos 0°.</div></div><div class=\"etape\"><span>Résultat</span><div><b>R = 2 000 N</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — c’est le cas le plus défavorable : l’axe supporte le DOUBLE de la tension. À 90° il n’en supporte que 1,41 fois.</div>"}];
+function poserCorrige(n,raison){
+ const a=document.getElementById('a'+n); if(!a || !CORRIGES[n]) return;
+ const bo=a.querySelector('.boite'); if(!bo || bo.querySelector('.corrige-btn')) return;
+ const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+ btn.textContent='Voir le corrigé détaillé'+(raison? ' ('+raison+')':'');
+ const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=CORRIGES[n];
+ btn.addEventListener('click',function(){
+  bl.classList.toggle('ouvert');
+  btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Voir')+' le corrigé détaillé';
+ });
+ bo.appendChild(btn); bo.appendChild(bl);
+}
+/* TOUT VISIBLE DÈS LE DÉPART — choix de Mat, pour les TP CAPET uniquement.
+   Les corrigés sont posés sur toutes les missions à l'ouverture, et le verrouillage
+   progressif est levé : sans cela, le corrigé d'une mission verrouillée resterait
+   sous son cadenas. Le score reste juste — `reussir` ajoute les points à chaque
+   réussite, et un bouton validé est désactivé. Seule la barre de progression
+   continue d'avancer dans l'ordre. */
+(function(){
+ Object.keys(CORRIGES).forEach(function(n){ poserCorrige(+n); });
+ const m0=majProgression;
+ majProgression=function(){
+  const x=m0.apply(this,arguments);
+  document.querySelectorAll('.acti .verrou').forEach(function(v){ v.remove(); });
+  return x;
+ };
+ majProgression();
+})();
+/* exercices sur copie, dans la mission bilan, accessibles sans terminer le TP */
+(function(){
+ const actis=document.querySelectorAll('.acti'); if(!actis.length) return;
+ const bo=actis[actis.length-1].querySelector('.boite'); if(!bo) return;
+ const z=document.createElement('div'); z.className='copie-zone';
+ z.innerHTML='<h3>Exercices sur copie</h3><div class="chapo-c">Rédige sur ta copie : '+
+  'formule, application numérique, résultat avec son unité. Compare ensuite au corrigé.</div>';
+ COPIE.forEach(function(ex,i){
+  const d=document.createElement('div'); d.className='copie-ex';
+  d.innerHTML='<b class="t">Exercice '+(i+1)+' — '+ex.titre+'</b><p style="margin:6px 0">'+ex.enonce+'</p>';
+  const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+  btn.textContent='Afficher le corrigé';
+  const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=ex.corrige;
+  btn.addEventListener('click',function(){
+   bl.classList.toggle('ouvert');
+   btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Afficher')+' le corrigé';
+  });
+  d.appendChild(btn); d.appendChild(bl); z.appendChild(d);
+ });
+ bo.appendChild(z);
+})();
+
 
 </script>
 <script>
