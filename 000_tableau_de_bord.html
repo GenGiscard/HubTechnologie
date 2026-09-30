@@ -72,7 +72,7 @@ tr:hover td{background:#fbf8f1}
  <thead><tr>
  <th data-tri="nom">Élève</th><th data-tri="classe">Classe</th><th data-tri="seq">Séquence</th>
  <th data-tri="niv">Niveau</th><th data-tri="note">Note /20</th><th>Réussite</th>
- <th data-tri="duree">Durée</th><th data-tri="date">Date</th>
+ <th data-tri="duree">Durée</th><th data-tri="date">Date</th><th id="thSuppr" style="display:none"></th>
  </tr></thead><tbody id="corps"></tbody>
  </table>
 </div>
@@ -371,7 +371,8 @@ function afficher(){
  '<td><span class="badge" style="background:'+(d.niv==='5e'?'#16a34a':(d.niv==='4e'?'#b45309':'#1d4ed8'))+'">'+d.niv+'</span></td>'+
  '<td class="note" style="color:'+coul+'">'+String(d.note).replace('.',',')+(d.bonus>0? ' <span title="dont points Kahoot" style="font-size:11px;color:#6d28d9;font-weight:800">+'+String(d.bonus).replace('.',',')+'</span>':'')+(d.kahoot? '<div style="font-size:11px;color:#6d28d9;font-weight:700;margin-top:2px">Kahoot : '+d.kahoot.replace(/[<>&]/g,'')+'</div>':'')+(d.sansKahoot? '<div style="font-size:10.5px;color:#94a3b8;margin-top:2px" title="Cette copie a été faite avec une version de l’évaluation qui ne gère pas les points Kahoot">version sans Kahoot</div>':'')+'</td>'+
  '<td><div class="jauge"><div style="width:'+Math.min(100,d.note/20*100)+'%;background:'+coul+'"></div></div></td>'+
- '<td>'+(d.duree||'—')+'</td><td>'+(d.date||'—')+'</td></tr>';
+ '<td>'+(d.duree||'—')+'</td><td>'+(d.date||'—')+'</td>'+
+ (window.MODE_NETTOYAGE? '<td><button type="button" class="suppr-copie" data-fb="'+d.fb+'" data-cle="'+d.cle+'" data-nom="'+String(d.nom).replace(/"/g,'')+'" style="background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5;border-radius:7px;padding:3px 9px;cursor:pointer;font-size:12px">Supprimer</button></td>':'')+'</tr>';
  }).join('');
 }
 document.querySelectorAll('th[data-tri]').forEach(th=>th.addEventListener('click',()=>{
@@ -640,6 +641,96 @@ async function consommerBonus(entrees,evaluation){
 }
 
  window.KahootTest={lireBonus:lireBonus};
+})();
+</script>
+
+<script>
+/* ===== NETTOYAGE_EVALUATIONS — effacer des copies quand il y en a trop =====
+   Ne touche QUE le nœud `evaluations`. Les points Kahoot (nœud `bonus`) ne sont
+   jamais effacés. Une sauvegarde CSV de ce qui va disparaître est téléchargée AVANT
+   tout effacement. Les règles Firebase autorisent la suppression d'une copie mais
+   jamais sa modification : une note ne peut pas être falsifiée. */
+(function(){
+ const app=document.getElementById('appli'); if(!app) return;
+ const sec=document.createElement('section');
+ sec.style.cssText='margin-top:26px;background:#fff;border:1px solid #fecaca;border-radius:14px;padding:18px 20px';
+ const opts=EVALS.map(function(e){ return '<option value="'+e.fb+'">'+e.titre+' ('+e.niv+')</option>'; }).join('');
+ sec.innerHTML=
+  '<h2 style="font-size:19px;color:#b91c1c;margin:0 0 4px">Effacer des copies</h2>'+
+  '<div style="font-size:13px;color:#64748b;margin-bottom:12px">Les points Kahoot ne sont jamais effacés. '+
+  'Une sauvegarde CSV des copies concernées est téléchargée avant tout effacement.</div>'+
+  '<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">'+
+   '<label style="font-size:12px;font-weight:700;color:#475569">Évaluation<br><select id="nzEval" style="padding:7px;border-radius:8px;border:1px solid #cbd5e1;max-width:320px">'+
+    '<option value="*">toutes les évaluations</option>'+opts+'</select></label>'+
+   '<label style="font-size:12px;font-weight:700;color:#475569"><input type="checkbox" id="nzAvantOn"> seulement les copies antérieures au<br>'+
+    '<input type="date" id="nzAvant" style="padding:6px;border-radius:8px;border:1px solid #cbd5e1"></label>'+
+   '<button type="button" id="nzGo" style="background:#dc2626;color:#fff;border:none;border-radius:9px;padding:9px 16px;font-weight:700;cursor:pointer">Effacer</button>'+
+  '</div>'+
+  '<label style="display:block;margin-top:12px;font-size:13px;color:#475569"><input type="checkbox" id="nzMode"> '+
+  'afficher un bouton « Supprimer » sur chaque copie, pour retirer une copie de test</label>'+
+  '<div id="nzMsg" style="font-size:13px;margin-top:10px;min-height:18px"></div>';
+ app.appendChild(sec);
+ const msg=function(t,ok){ const m=document.getElementById('nzMsg'); m.textContent=t; m.style.color= ok? '#15803d':'#b91c1c'; };
+
+ function cibles(){
+  const ev=document.getElementById('nzEval').value;
+  const avantOn=document.getElementById('nzAvantOn').checked;
+  const lim=Date.parse(document.getElementById('nzAvant').value||'');
+  return DONNEES.filter(function(d){
+   if(ev!=='*' && d.fb!==ev) return false;
+   if(avantOn){ if(isNaN(lim)) return false; return d.ts>0 && d.ts<lim; }
+   return true;
+  });
+ }
+ function sauvegarde(L){
+  const esc=function(v){ v=String(v==null?'':v); return /[";\n]/.test(v)? '"'+v.replace(/"/g,'""')+'"' : v; };
+  const lignes=[['Nom','Classe','Sequence','Niveau','Note/20','Duree','Date','Kahoot']]
+   .concat(L.map(function(d){ return [d.nom,d.classe,d.seq,d.niv,String(d.note).replace('.',','),d.duree,d.date,d.kahoot||'']; }));
+  const csv='\ufeff'+lignes.map(function(l){ return l.map(esc).join(';'); }).join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download='sauvegarde_evaluations_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+ }
+ document.getElementById('nzGo').addEventListener('click',async function(){
+  const L=cibles();
+  if(document.getElementById('nzAvantOn').checked && !document.getElementById('nzAvant').value){ msg('Choisis une date.',false); return; }
+  if(!L.length){ msg('Aucune copie ne correspond à ce choix.',false); return; }
+  const rep=prompt(L.length+' copie(s) vont être effacées définitivement.\nUne sauvegarde CSV va être téléchargée.\n\nPour confirmer, tape EFFACER');
+  if(rep===null) return;
+  if(rep.trim().toUpperCase()!=='EFFACER'){ msg('Effacement annulé : confirmation incorrecte.',false); return; }
+  sauvegarde(L);
+  msg('Effacement en cours…',true);
+  let echecs=0;
+  const parDate=document.getElementById('nzAvantOn').checked;
+  if(parDate){
+   for(const d of L){
+    try{ const r=await fetch(BASE+d.fb+'/'+d.cle+'.json',{method:'DELETE'}); if(!r.ok) echecs++; }catch(e){ echecs++; }
+   }
+  } else {
+   const fbs=[...new Set(L.map(function(d){ return d.fb; }))];
+   for(const fb of fbs){
+    try{ const r=await fetch(BASE+fb+'.json',{method:'DELETE'}); if(!r.ok) echecs++; }catch(e){ echecs++; }
+   }
+  }
+  if(echecs) msg(echecs+' effacement(s) refusé(s) : les règles Firebase doivent être mises à jour.',false);
+  else msg(L.length+' copie(s) effacée(s). Sauvegarde téléchargée. Points Kahoot conservés.',true);
+  charger();
+ });
+ document.getElementById('nzMode').addEventListener('change',function(){
+  window.MODE_NETTOYAGE=this.checked;
+  document.getElementById('thSuppr').style.display=this.checked? '':'none';
+  afficher();
+ });
+ document.addEventListener('click',async function(e){
+  const b=e.target.closest && e.target.closest('.suppr-copie'); if(!b) return;
+  if(!confirm('Supprimer définitivement la copie de '+b.dataset.nom+' ?')) return;
+  try{
+   const r=await fetch(BASE+b.dataset.fb+'/'+b.dataset.cle+'.json',{method:'DELETE'});
+   if(!r.ok) throw new Error(r.status);
+   msg('Copie de '+b.dataset.nom+' supprimée.',true); charger();
+  }catch(err){ msg('Suppression refusée : les règles Firebase doivent être mises à jour.',false); }
+ });
 })();
 </script>
 </body></html>

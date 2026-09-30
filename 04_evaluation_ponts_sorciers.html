@@ -400,6 +400,9 @@ document.getElementById('envoyer').addEventListener('click',async()=>{
  const duree=Math.round((Date.now()-debut)/1000);
  /* BONUS_KAHOOT — points non consommés ajoutés, plafonnés à 20 */
  const bn=await lireBonus(classe,nom,prenom);
+ /* 20/20 AVANT bonus : les points ne rapporteraient rien — ils sont CONSERVÉS pour une
+    prochaine évaluation, ni ajoutés ni consommés (demande de Mat : sinon c'est injuste) */
+ if(note>=20 && bn.eleves.length){ bn.total=0; bn.groupe=false; bn.eleves=[]; bn.entrees=[]; bn.conserve=true; bn.detail='points conservés, note déjà à 20/20'; }
  const noteFinale=Math.min(20,Math.round((note+bn.total)*10)/10);
  if(bn.groupe) bn.detail=detailGroupeB(bn,note);
  if(bn.erreur) bn.detail='lecture des points impossible ('+bn.erreur+')';
@@ -408,7 +411,8 @@ document.getElementById('envoyer').addEventListener('click',async()=>{
  b.innerHTML='<div class="note">'+String(noteFinale).replace('.',',')+' / 20</div>'+
   (bn.total>0? '<div style="font-weight:700;color:#7c3aed">dont '+String(bn.total).replace('.',',')+' point(s) Kahoot ajouté(s) à ta note de '+String(note).replace('.',',')+'</div>':'')+
   (bn.groupe? '<div style="font-weight:700;color:#7c3aed">Points Kahoot, pour chacun : '+bn.detail+'</div>':'')+
-  (bn.erreur? '<div style="font-weight:700;color:#c2410c">Points Kahoot : lecture des points impossible ('+bn.erreur+'). Préviens ton professeur.</div>'
+  (bn.conserve? '<div style="font-weight:700;color:#7c3aed">Points Kahoot conservés pour une prochaine évaluation : tu as déjà 20/20.</div>'
+   : bn.erreur? '<div style="font-weight:700;color:#c2410c">Points Kahoot : lecture des points impossible ('+bn.erreur+'). Préviens ton professeur.</div>'
    : (!bn.eleves.length? '<div style="font-size:13px;color:#94a3b8">Points Kahoot : aucun point en attente pour ce nom.</div>':''))+
   '<div style="font-size:16px;color:#5b544a">'+score+' bonnes réponses sur '+Q.length+'</div>'+
   '<div id="etatEnvoi" style="margin-top:10px;font-size:14px;color:#64748b">Envoi en cours…</div>';

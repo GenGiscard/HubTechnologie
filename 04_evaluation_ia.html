@@ -591,13 +591,14 @@ function activiteCalcul(zone,done,cfg){
 }
 /* Widget « étiquettes à poser » : clique une étiquette, puis sa zone sur le schéma */
 function widgetEtiquettes(zone, svg, zonesDef, etiquettesDef, bonnes, aideCorrection, done, maxPts){
- let etiqChoisie=null; const poses={};
+ let etiqChoisie=null; const poses={}; let fini=false;
  const rangEtiq=el('div',{class:'etiqs'},zone);
  const btns={};
  etiquettesDef.forEach(nom=>{
  const b=el('button',{},rangEtiq,nom);
  btns[nom]=b;
- b.onclick=()=>{ if(b.classList.contains('pose'))return;
+ /* ETIQUETTES_REPRISE — une étiquette posée peut être reprise et déplacée */
+ b.onclick=()=>{ if(fini)return;
  Object.values(btns).forEach(x=>x.classList.remove('choisi'));
  etiqChoisie=nom; b.classList.add('choisi'); };
  });
@@ -630,7 +631,12 @@ function widgetEtiquettes(zone, svg, zonesDef, etiquettesDef, bonnes, aideCorrec
  halo.addEventListener('mouseleave',()=>z.forme.classList.remove('survol'));
  }
  z.forme.addEventListener('click',()=>{
- if(!etiqChoisie) return;
+ if(fini || !etiqChoisie) return;
+ /* l'étiquette qui occupait déjà cette zone redevient DISPONIBLE. Sans cela elle
+    restait marquée posée, impossible à reprendre : la zone qu'elle devait
+    occuper restait vide, Valider ne s'activait jamais, l'élève était bloqué. */
+ const ancienne=poses[z.id];
+ if(ancienne && ancienne!==etiqChoisie) btns[ancienne].classList.remove('pose');
  // retirer l'étiquette de son ancienne zone éventuelle
  Object.keys(poses).forEach(k=>{ if(poses[k]===etiqChoisie){ delete poses[k]; textesPoses[k].textContent='?'; } });
  poses[z.id]=etiqChoisie;
@@ -644,7 +650,8 @@ function widgetEtiquettes(zone, svg, zonesDef, etiquettesDef, bonnes, aideCorrec
  textesPoses[z.id]=t;
  });
  const valider=boutonValider(zone,()=>{
- valider.disabled=true;
+ valider.disabled=true; fini=true;
+ Object.values(btns).forEach(x=>{ x.disabled=true; });
  let pts=0;
  zonesDef.forEach(z=>{
  const ok=poses[z.id]===bonnes[z.id];
@@ -1139,6 +1146,9 @@ async function envoyer(note,total){
  /* BONUS_KAHOOT — points non consommés ajoutés à la note, plafonnée à 20 */
  const bn=await lireBonus(eleve.classe,eleve.nom,eleve.prenom);
  const noteBrute=note;
+ /* 20/20 AVANT bonus : les points ne rapporteraient rien — ils sont CONSERVÉS pour une
+    prochaine évaluation, ni ajoutés ni consommés (demande de Mat : sinon c'est injuste) */
+ if(noteBrute>=20 && bn.eleves.length){ bn.total=0; bn.groupe=false; bn.eleves=[]; bn.entrees=[]; bn.conserve=true; }
  if(bn.total>0){
   note=Math.min(20,Math.round((note+bn.total)*10)/10);
   $('note20').textContent=String(note).replace('.',',');
@@ -1163,6 +1173,13 @@ async function envoyer(note,total){
   le.style.cssText='margin-top:6px;font-weight:700;color:#c2410c';
   le.textContent='Points Kahoot : '+bn.detail+'. Préviens ton professeur.';
   $('scoreBrut').parentNode.insertBefore(le,$('scoreBrut').nextSibling);
+ }
+ else if(bn.conserve){
+  bn.detail='points conservés, note déjà à 20/20';
+  const lc=document.createElement('div');
+  lc.style.cssText='margin-top:6px;font-weight:700;color:#7c3aed';
+  lc.textContent='Points Kahoot conservés pour une prochaine évaluation : tu as déjà 20/20.';
+  $('scoreBrut').parentNode.insertBefore(lc,$('scoreBrut').nextSibling);
  }
  else if(!bn.eleves.length){
   const l0=document.createElement('div');
