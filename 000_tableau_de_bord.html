@@ -428,23 +428,11 @@ document.getElementById('csv').addEventListener('click',()=>{
    '<button type="button" id="bkAjouter" style="background:#7c3aed;color:#fff;border:none;border-radius:9px;padding:9px 16px;font-weight:700;cursor:pointer">Ajouter</button>'+
   '</div>'+
   '<div id="bkMsg" style="font-size:13px;margin-top:8px;min-height:18px"></div>'+
-  '<div style="margin-top:10px;padding:10px 12px;background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px">'+
-   '<b style="font-size:13px;color:#6d28d9">Tester une copie</b> <span style="font-size:12.5px;color:#64748b">'+
-   'recopie le nom et le prénom EXACTEMENT comme le groupe les a écrits</span><br>'+
-   '<select id="ktClasse" style="padding:6px;border-radius:8px;border:1px solid #cbd5e1;margin-top:6px">'+
-    CLASSES.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select> '+
-   '<input id="ktNom" placeholder="nom(s) saisi(s)" style="padding:6px;border-radius:8px;border:1px solid #cbd5e1;width:230px"> '+
-   '<input id="ktPrenom" placeholder="prénom(s) saisi(s)" style="padding:6px;border-radius:8px;border:1px solid #cbd5e1;width:230px"> '+
-   '<button type="button" id="ktGo" style="background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:7px 13px;font-weight:700;cursor:pointer">Tester</button>'+
-   '<div id="ktRes" style="font-size:13px;margin-top:8px"></div></div>'+
-  '<div style="margin-top:10px;padding:10px 12px;background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px">'+
-   '<button type="button" id="bkVerif" style="background:#fff;color:#6d28d9;border:1.5px solid #c4b5fd;border-radius:9px;padding:7px 13px;font-weight:700;cursor:pointer">Vérifier les évaluations en ligne</button>'+
-   '<span style="font-size:12.5px;color:#64748b;margin-left:10px">contrôle que les fichiers du site gèrent bien les points Kahoot</span>'+
-   '<div id="bkVerifRes" style="font-size:13px;margin-top:8px"></div></div>'+
   '<div style="display:flex;gap:10px;align-items:center;margin-top:10px">'+
    '<label style="font-size:12px;font-weight:700;color:#475569">Afficher : <select id="bkFiltre" style="padding:5px;border-radius:8px;border:1px solid #cbd5e1">'+
     '<option value="">toutes les classes</option>'+CLASSES.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></label>'+
-   '<span id="bkResume" style="font-size:13px;color:#475569"></span></div>'+
+   '<span id="bkResume" style="font-size:13px;color:#475569"></span>'+
+   '<button type="button" id="bkPurge" style="margin-left:auto;background:#fff;color:#b91c1c;border:1.5px solid #fca5a5;border-radius:9px;padding:6px 12px;font-weight:700;cursor:pointer">Effacer les points consommés</button></div>'+
   '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:13.5px">'+
    '<thead><tr style="background:#f8fafc;color:#155e75;text-align:left">'+
    '<th style="padding:7px">Classe</th><th style="padding:7px">Élève</th><th style="padding:7px">Points</th>'+
@@ -489,6 +477,22 @@ document.getElementById('csv').addEventListener('click',()=>{
   }catch(e){ msg('Lecture des points impossible : vérifier la connexion et les règles Firebase.',false); }
  }
  document.getElementById('bkFiltre').addEventListener('change',afficher);
+ /* Effacer les points DÉJÀ CONSOMMÉS — suit le filtre « Afficher ». Les points
+    disponibles ne sont jamais touchés. */
+ document.getElementById('bkPurge').addEventListener('click',async function(){
+  const f=document.getElementById('bkFiltre').value;
+  const L=LISTE.filter(function(b){ return b.consomme && (!f || b.classe===f); });
+  if(!L.length){ msg('Aucun point consommé à effacer'+(f? ' en '+f:'')+'.',false); return; }
+  if(!confirm('Effacer définitivement '+L.length+' point(s) consommé(s)'+(f? ' de la classe '+f:' de toutes les classes')+
+   ' ?\n\nLes points encore disponibles sont conservés.')) return;
+  let echecs=0;
+  for(const b of L){
+   try{ const r=await fetch(URL_BONUS+'/'+b.cle+'/'+b.id+'.json',{method:'DELETE'}); if(!r.ok) echecs++; }
+   catch(e){ echecs++; }
+  }
+  msg(echecs? echecs+' effacement(s) refusé(s).' : L.length+' point(s) consommé(s) effacé(s). Points disponibles conservés.', !echecs);
+  chargerBonus();
+ });
  document.getElementById('bkAjouter').addEventListener('click',async function(){
   const classe=document.getElementById('bkClasse').value;
   const nom=document.getElementById('bkNom').value.trim();
@@ -513,52 +517,6 @@ document.getElementById('csv').addEventListener('click',()=>{
   try{ await fetch(URL_BONUS+'/'+b.dataset.suppr+'.json',{method:'DELETE'}); chargerBonus(); }
   catch(err){ msg('Suppression impossible.',false); }
  });
- /* Vérification du DÉPLOIEMENT : on relit chaque fichier d'évaluation tel que le site
-    le sert réellement, et on y cherche le code Kahoot v2. Né d'un test de Mat où
-    l'évaluation en ligne était restée l'ancienne version. */
- document.getElementById('bkVerif').addEventListener('click',async function(){
-  const z=document.getElementById('bkVerifRes'), liste=(typeof EVALS!=='undefined'?EVALS:[]);
-  z.style.color='#475569'; z.textContent='Vérification en cours…';
-  const vieux=[], absents=[]; let bons=0;
-  for(const e of liste){
-   try{
-    const r=await fetch(e.f+'?v='+Date.now(),{cache:'no-store'});
-    if(!r.ok){ absents.push(e.titre); continue; }
-    const t=await r.text();
-    if(t.indexOf('BONUS_KAHOOT_V2')>=0) bons++; else vieux.push(e.titre+' ('+e.f+')');
-   }catch(err){ absents.push(e.titre); }
-  }
-  if(!vieux.length && !absents.length){
-   z.style.color='#15803d';
-   z.textContent=bons+' / '+liste.length+' évaluations à jour : les points Kahoot seront appliqués.';
-  } else {
-   z.style.color='#b91c1c';
-   z.innerHTML='<b>'+bons+' / '+liste.length+' à jour.</b> '+
-    (vieux.length? 'Ancienne version en ligne — à redéposer : '+vieux.map(esc).join(', ')+'. ':'')+
-    (absents.length? 'Introuvables : '+absents.map(esc).join(', ')+'.':'');
-  }
- });
- document.getElementById('ktGo').addEventListener('click',async function(){
-  const z=document.getElementById('ktRes'); z.style.color='#475569'; z.textContent='Test en cours…';
-  const classe=document.getElementById('ktClasse').value;
-  const nom=document.getElementById('ktNom').value, prenom=document.getElementById('ktPrenom').value;
-  if(!window.KahootTest){ z.textContent='Testeur indisponible.'; return; }
-  const bn=await window.KahootTest.lireBonus(classe,nom,prenom);
-  const dispo=LISTE.filter(function(b){ return !b.consomme && b.classe===classe; });
-  const f=function(x){ return String(x).replace('.',','); };
-  if(bn.eleves.length){
-   z.style.color='#15803d';
-   z.innerHTML='<b>Correspondance trouvée</b> — copie '+(bn.groupe?'de GROUPE':'individuelle')+' : '+
-    bn.eleves.map(function(e){ return esc((e.prenom+' '+e.nom).trim())+' +'+f(e.points); }).join(', ')+
-    '. Ces points seraient appliqués puis consommés.';
-  } else {
-   z.style.color='#b91c1c';
-   z.innerHTML='<b>Aucune correspondance.</b> '+(dispo.length
-    ? 'Points disponibles en '+esc(classe)+' : '+dispo.map(function(b){ return esc(b.nom+' '+b.prenom)+' (+'+f(b.points)+')'; }).join(', ')+
-      '. Compare l’orthographe avec ce que le groupe a écrit.'
-    : 'Il n’y a aucun point disponible en '+esc(classe)+'.');
-  }
- });
  /* chargement avec le reste du tableau de bord, et à chaque « Rafraîchir » */
  const c0=charger;
  charger=async function(){ const x=await c0.apply(this,arguments); chargerBonus(); return x; };
@@ -566,83 +524,6 @@ document.getElementById('csv').addEventListener('click',()=>{
 })();
 </script>
 
-<script>
-/* KAHOOT_TESTEUR — la MÊME règle de correspondance que les évaluations, copiée
-   depuis _outils/bonus_kahoot_groupes.py, pour diagnostiquer sans faire repasser
-   une évaluation. Encapsulée : aucune variable globale n'est créée. */
-(function(){
- const FIREBASE=BASE.replace(/\/?$/,'/')+'test';
-
-/* ===== BONUS_KAHOOT_V2 — copies individuelles ET de groupe (voir _outils/bonus_kahoot_groupes.py) ===== */
-function normB(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
- .toLowerCase().replace(/[^a-z0-9]/g,''); }
-function motsB(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
- .split(/[\s,;\/+&]+/).map(function(x){ return x.replace(/[^a-z0-9]/g,''); })
- .filter(function(x){ return x && x!=='et'; }); }
-function ensembleB(m){ const s=new Set(m);
- for(let i=0;i<m.length;i++){ if(i+1<m.length) s.add(m[i]+m[i+1]); if(i+2<m.length) s.add(m[i]+m[i+1]+m[i+2]); }
- return s; }
-const URL_BONUS=FIREBASE.split('/evaluations/')[0]+'/bonus';
-async function lireBonus(classe,nom,prenom){
- const vide={total:0,groupe:false,eleves:[],entrees:[],detail:''};
- try{
-  const r=await fetch(URL_BONUS+'.json');
-  if(!r.ok){ vide.erreur='refus HTTP '+r.status; return vide; }
-  const j=await r.json();
-  if(j && j.error){ vide.erreur=String(j.error).slice(0,60); return vide; }
-  if(!j || typeof j!=='object') return vide;
-  const cl=normB(classe), eN=normB(nom), eP=normB(prenom);
-  const mN=motsB(nom), mP=motsB(prenom);
-  const paires = (mN.length>1 && mN.length===mP.length) ? new Set(mN.map(function(x,i){ return x+'_'+mP[i]; })) : null;
-  /* champs INVERSÉS : prénoms écrits dans « Nom », noms dans « Prénom » — fréquent */
-  const pairesInv = paires ? new Set(mP.map(function(x,i){ return x+'_'+mN[i]; })) : null;
-  const EN=ensembleB(mN), EP=ensembleB(mP);
-  const parEleve={}, entrees=[];
-  Object.keys(j).forEach(function(k){
-   const e=j[k]; if(!e || typeof e!=='object') return;
-   Object.keys(e).forEach(function(id){
-    const b=e[id];
-    if(!b || b.consomme || typeof b.points!=='number' || b.points<=0) return;
-    if(normB(b.classe)!==cl) return;
-    const bn=normB(b.nom), bp=normB(b.prenom);
-    const exact = (bn===eN && bp===eP) || (bn===eP && bp===eN);
-    /* PRÉSENCE du nom parmi les noms ET du prénom parmi les prénoms, dans les deux sens.
-       L'appariement par position (v2) ratait « Person Phillipe FOFO / Michel Hugo
-       François » : Hugo n'était pas en face de Person. Retiré sur retour de Mat. */
-    const ok = exact || (EN.has(bn) && (!bp || EP.has(bp))) || (EP.has(bn) && (!bp || EN.has(bp)));
-    if(!ok) return;
-    entrees.push({cle:k,id:id});
-    const ke=bn+'_'+bp;
-    if(!parEleve[ke]) parEleve[ke]={nom:b.nom,prenom:b.prenom||'',points:0,exact:exact};
-    parEleve[ke].points+=b.points;
-   });
-  });
-  const eleves=Object.keys(parEleve).map(function(k){ const x=parEleve[k]; x.points=Math.round(x.points*10)/10; return x; });
-  /* une correspondance EXACTE désigne forcément une copie individuelle, même avec
-     un nom composé (« Le Gall » / « Anne Marie ») qui ressemble à deux élèves */
-  const groupe = eleves.length>1 || (eleves.length===1 && !eleves[0].exact);
-  return {total: groupe? 0 : (eleves[0]? eleves[0].points : 0), groupe:groupe, eleves:eleves, entrees:entrees, detail:''};
- }catch(e){ vide.erreur='connexion impossible'; return vide; }
-}
-function detailGroupeB(bn,noteBrute){
- const f=function(x){ return String(x).replace('.',','); };
- return bn.eleves.map(function(e){
-  return (e.prenom+' '+e.nom).trim()+' +'+f(e.points)+' = '+f(Math.min(20,Math.round((noteBrute+e.points)*10)/10));
- }).join(' ; ').slice(0,300);
-}
-async function consommerBonus(entrees,evaluation){
- for(const x of entrees){
-  try{
-   await fetch(URL_BONUS+'/'+x.cle+'/'+x.id+'.json',{method:'PATCH',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({consomme:true,evaluation:evaluation,date_conso:new Date().toISOString()})});
-  }catch(e){}
- }
-}
-
- window.KahootTest={lireBonus:lireBonus};
-})();
-</script>
 
 <script>
 /* ===== NETTOYAGE_EVALUATIONS — effacer des copies quand il y en a trop =====
