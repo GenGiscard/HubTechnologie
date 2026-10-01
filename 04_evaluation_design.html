@@ -1134,7 +1134,7 @@ async function lireBonus(classe,nom,prenom){
     parEleve[ke].points+=b.points;
    });
   });
-  const eleves=Object.keys(parEleve).map(function(k){ const x=parEleve[k]; x.points=Math.round(x.points*10)/10; return x; });
+  const eleves=Object.keys(parEleve).map(function(k){ const x=parEleve[k]; x.points=Math.round(x.points*100)/100; return x; });
   /* une correspondance EXACTE désigne forcément une copie individuelle, même avec
      un nom composé (« Le Gall » / « Anne Marie ») qui ressemble à deux élèves */
   const groupe = eleves.length>1 || (eleves.length===1 && !eleves[0].exact);
@@ -1144,7 +1144,7 @@ async function lireBonus(classe,nom,prenom){
 function detailGroupeB(bn,noteBrute){
  const f=function(x){ return String(x).replace('.',','); };
  return bn.eleves.map(function(e){
-  return (e.prenom+' '+e.nom).trim()+' +'+f(e.points)+' = '+f(Math.min(20,Math.round((noteBrute+e.points)*10)/10));
+  return (e.prenom+' '+e.nom).trim()+' +'+f(e.points)+' = '+f(Math.min(20,Math.round((noteBrute+e.points)*100)/100));
  }).join(' ; ').slice(0,300);
 }
 async function consommerBonus(entrees,evaluation){
@@ -1166,7 +1166,7 @@ async function envoyer(note,total){
     prochaine évaluation, ni ajoutés ni consommés (demande de Mat : sinon c'est injuste) */
  if(noteBrute>=20 && bn.eleves.length){ bn.total=0; bn.groupe=false; bn.eleves=[]; bn.entrees=[]; bn.conserve=true; }
  if(bn.total>0){
-  note=Math.min(20,Math.round((note+bn.total)*10)/10);
+  note=Math.min(20,Math.round((note+bn.total)*100)/100);
   $('note20').textContent=String(note).replace('.',',');
   $('note20').style.color= note>=10?'var(--vert)':'var(--rouge)';
   const lb=document.createElement('div');
