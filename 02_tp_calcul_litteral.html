@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP — Calcul littéral : développer, réduire, factoriser · ESTIC</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid #0e7490;padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:#155e75;font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:#64748b}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:#64748b}
+.btn{background:#0e7490;color:#fff;border:none;border-radius:10px;padding:9px 16px;font:700 15px 'Segoe UI',system-ui,sans-serif;cursor:pointer}
+.btn:hover{background:#155e75}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.sec{background:#fff;color:#0e7490;border:2px solid #0e7490}
+.btn-mc{background:#faf5ff;color:#6d28d9;border:2px solid #c4b5fd;border-radius:10px;padding:8px 14px;font:700 14px 'Segoe UI',system-ui,sans-serif;cursor:pointer}
+.btn-mc:hover{background:#f3e8ff}
+canvas.anim{display:block;width:100%;max-width:880px;height:auto;aspect-ratio:880/360;margin:12px auto;background:#fff;border:1px solid #e9e2d4;border-radius:12px}
+.mc-fond{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.mc-fond.ouvert{display:flex}
+.mc-boite{background:#fff;border-radius:18px;max-width:920px;width:100%;max-height:96vh;overflow:auto;padding:18px 22px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.mc-tete{display:flex;align-items:center;gap:12px}
+.mc-etiq{background:#7c3aed;color:#fff;font:800 12px 'Segoe UI',sans-serif;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px}
+.mc-tete h3{color:#155e75;font-size:21px}
+.mc-canvas{display:block;width:100%;height:auto;aspect-ratio:880/360;margin:12px 0;border:1px solid #e9e2d4;border-radius:12px;background:#fff}
+.mc-formule{background:#f8fafc;border-left:5px solid #7c3aed;border-radius:8px;padding:10px 14px;font:700 17px 'Cambria Math','Times New Roman',serif;color:#1f2937;text-align:center}
+.mc-pts{margin:10px 0 0 20px;font-size:15px;line-height:1.75;color:#334155}
+.mc-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+
+:root{--acc:#0e7490;--accf:#155e75;--vert:#16a34a;--rouge:#dc2626;--gris:#64748b;--bord:#e9e2d4}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#fdf9f0;color:#1f2937;line-height:1.55;padding-bottom:90px}
+header.tp{max-width:940px;margin:0 auto;padding:24px 20px 6px;text-align:center}
+header.tp h1{font-size:30px;color:var(--accf)}
+header.tp p{color:#475569;font-size:16px}
+header.tp a{color:var(--acc);font-weight:700}
+.barre{position:sticky;top:0;z-index:10;background:#fdf9f0;padding:10px 20px;border-bottom:1px solid var(--bord)}
+.barre .in{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.progression{display:flex;gap:5px;flex:1}
+.seg{flex:1;height:26px;border-radius:7px;background:#e7e5e4;color:#78716c;font:800 12px 'Segoe UI',sans-serif;display:flex;align-items:center;justify-content:center}
+.seg.ok{background:var(--vert);color:#fff}
+.seg.encours{background:#fde68a;color:#92400e}
+.score{font-weight:800;color:var(--accf);white-space:nowrap}
+.score b{color:#ca8a04}
+.acti{max-width:940px;margin:22px auto;padding:0 16px}
+.boite{position:relative;background:#fff;border:1px solid var(--bord);border-radius:18px;padding:20px 24px;overflow:hidden}
+.boite h2{font-size:22px;color:var(--accf);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{background:var(--acc);color:#fff;border-radius:8px;padding:1px 10px;font-size:17px}
+.diff{background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:20px;padding:1px 10px;font-size:12px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+.consigne{font-size:17px;margin:8px 0}
+.consigne b{font-family:'Cambria Math','Times New Roman',serif;font-size:19px}
+.cahiernote{background:#f8fafc;border-left:4px solid var(--gris);border-radius:8px;padding:7px 12px;margin:8px 0;font-size:14.5px;color:#334155}
+.chp{display:grid;grid-template-columns:minmax(150px,280px) 1fr;gap:10px;align-items:center;margin:8px 0}
+.chp label{font-weight:700;color:#334155;font-size:16px}
+.chp label .e{font-size:17px}
+input.math{width:100%;max-width:340px;padding:9px 12px;border:2px solid #cbd5e1;border-radius:10px;font:600 18px 'Segoe UI',sans-serif}
+input.math:focus{outline:none;border-color:var(--acc)}
+input.math.bon{border-color:var(--vert);background:#f0fdf4}
+input.math.faux{border-color:var(--rouge);background:#fef2f2}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.verdict{margin-top:12px;font-size:15.5px;padding:10px 14px;border-radius:10px}
+.verdict:empty{display:none}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.verdict ul{margin:4px 0 0 18px}
+.verrou{position:absolute;inset:0;background:rgba(253,249,240,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-weight:800;color:#78716c;font-size:16px;z-index:2}
+.cadenas{width:30px;height:24px;background:#a8a29e;border-radius:5px;position:relative;margin-top:14px}
+.cadenas::before{content:'';position:absolute;left:6px;top:-14px;width:18px;height:18px;border:4px solid #a8a29e;border-bottom:none;border-radius:10px 10px 0 0;box-sizing:border-box}
+.fait{display:none;background:#f0fdf4;color:#166534;border-radius:9px;padding:6px 12px;font-weight:800;font-size:14px;margin-top:8px}
+.fait.vu{display:inline-block}
+canvas.fig{display:block;width:100%;max-width:880px;height:auto;aspect-ratio:880/360;margin:10px auto;border:1px solid var(--bord);border-radius:12px;background:#fff}
+.jetons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:12px 0;min-height:52px}
+.jet{border:2.5px solid #94a3b8;background:#fff;border-radius:10px;padding:7px 16px;font:800 20px 'Segoe UI',sans-serif;cursor:pointer}
+.jet.sel{border-color:var(--acc);background:#ecfeff;transform:translateY(-3px)}
+.bacs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.bac{border:2.5px dashed;border-radius:14px;padding:8px;min-height:110px;cursor:pointer;text-align:center}
+.bac .t{font-weight:800;font-size:15px}
+.bac .zone{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+.bac .zone span{border:2px solid;border-radius:8px;padding:3px 10px;font:800 17px 'Segoe UI',sans-serif;background:#fff}
+.bac.secoue{animation:secoue .4s}
+@keyframes secoue{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.partie2{display:none}
+.partie2.vu{display:block}
+.cas{border:1px solid var(--bord);border-radius:12px;padding:12px 14px;margin:12px 0}
+.cas .titre{font-weight:800;color:var(--accf);margin-bottom:6px}
+.cas button.ligne{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);border-radius:10px;padding:8px 14px;margin:5px 0;font:700 18px 'Cambria Math','Times New Roman',serif;cursor:pointer;color:#1f2937}
+.cas button.ligne.aucune{font:700 15px 'Segoe UI',sans-serif;color:var(--gris)}
+.cas button.bon{border-color:var(--vert);background:#f0fdf4}
+.cas button.faux{border-color:var(--rouge);background:#fef2f2}
+.cas .expl{font-size:15px;color:#166534;margin-top:6px}
+.tab-bilan{width:100%;border-collapse:collapse;margin:10px 0;font-size:15.5px}
+.tab-bilan td,.tab-bilan th{border:1px solid var(--bord);padding:6px 10px;text-align:left}
+.tab-bilan th{background:#f8fafc;color:var(--accf)}
+.etoiles{color:#ca8a04;font-weight:800;letter-spacing:2px}
+.clavier{position:fixed;right:14px;bottom:14px;z-index:20;background:#fff;border:1px solid var(--bord);border-radius:14px;padding:8px 10px;box-shadow:0 6px 20px rgba(0,0,0,.12);display:flex;align-items:center;gap:6px}
+.clavier span{font-size:12px;font-weight:800;color:var(--gris);margin-right:4px}
+.clavier button{min-width:40px;height:38px;border:2px solid #cbd5e1;background:#f8fafc;border-radius:9px;font:800 18px 'Segoe UI',sans-serif;cursor:pointer}
+.clavier button:hover{border-color:var(--acc)}
+@media (max-width:700px){.chp{grid-template-columns:1fr}.bacs{grid-template-columns:1fr}.barre .in{flex-wrap:wrap}.clavier{left:8px;right:8px;justify-content:center}.clavier span{display:none}}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Mathématiques · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="tp">
+ <h1>TP — Calcul littéral</h1>
+ <p>Neuf missions, du calcul simple à la factorisation. Un mini-cours animé t’aide sur les exercices difficiles.
+ <a href="01_cours_calcul_litteral.html">Revoir le cours</a></p>
+</header>
+
+<div class="barre"><div class="in">
+ <div class="progression" id="progression"></div>
+ <div class="score">Étoiles : <b id="scoreTot">0</b> / 27</div>
+</div></div>
+
+<!-- ===================== MISSION 1 ===================== -->
+<div class="acti" id="a1"><div class="boite">
+ <h2><span class="badge">1</span>Calculer une expression</h2>
+ <p class="consigne">On donne <b>A = 2x² − 3x + 1</b>. Calcule A pour chaque valeur de x.</p>
+ <canvas class="fig" id="fig1"></canvas>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — remplace x par le nombre, entre parenthèses s’il est négatif.</div>
+ <div id="champs1"></div>
+ <div class="btnrow"><button type="button" class="btn" data-valider="1">Valider</button></div>
+ <div class="verdict" id="verd1"></div><div class="fait" id="fait1"></div>
+</div></div>
+
+<!-- ===================== MISSION 2 ===================== -->
+<div class="acti" id="a2"><div class="boite">
+ <h2><span class="badge">2</span>Réduire : ranger par familles</h2>
+ <p class="consigne">Range chaque terme de <b>5x + 3 − 2x² + x − 7 + 4x²</b> : clique un terme, puis sa famille.</p>
+ <div class="jetons" id="jet2"></div>
+ <div class="bacs">
+  <div class="bac" data-f="0" style="border-color:#7c3aed;color:#7c3aed"><div class="t">les x²</div><div class="zone"></div></div>
+  <div class="bac" data-f="1" style="border-color:#2563eb;color:#2563eb"><div class="t">les x</div><div class="zone"></div></div>
+  <div class="bac" data-f="2" style="border-color:#ea580c;color:#ea580c"><div class="t">les nombres</div><div class="zone"></div></div>
+ </div>
+ <div class="partie2" id="partie2">
+  <p class="consigne">Bien rangé. Écris maintenant l’expression réduite.</p>
+  <div id="champs2"></div>
+  <div class="btnrow"><button type="button" class="btn" data-valider="2">Valider</button></div>
+ </div>
+ <div class="verdict" id="verd2"></div><div class="fait" id="fait2"></div>
+</div></div>
+
+<!-- ===================== MISSION 3 ===================== -->
+<div class="acti" id="a3"><div class="boite">
+ <h2><span class="badge">3</span>Développer avec un rectangle</h2>
+ <p class="consigne">Le rectangle mesure <b>5</b> sur <b>2x + 3</b>. Son aire vaut <b>5(2x + 3)</b>.</p>
+ <canvas class="fig" id="fig3"></canvas>
+ <div id="champs3"></div>
+ <div class="btnrow"><button type="button" class="btn" data-valider="3">Valider</button></div>
+ <div class="verdict" id="verd3"></div><div class="fait" id="fait3"></div>
+</div></div>
+
+<!-- ===================== MISSION 4 ===================== -->
+<div class="acti" id="a4"><div class="boite">
+ <h2><span class="badge">4</span>Le piège du signe moins <span class="diff">difficile</span></h2>
+ <p class="consigne">Développe et réduis. Attention aux signes devant les parenthèses.</p>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — entoure le signe devant chaque parenthèse avant de développer.</div>
+ <div id="champs4"></div>
+ <div class="btnrow"><button type="button" class="btn" data-valider="4">Valider</button>
+  <button type="button" class="btn-mc" data-mini="signe">Mini-cours : le signe moins</button></div>
+ <div class="verdict" id="verd4"></div><div class="fait" id="fait4"></div>
+</div></div>
+
+<!-- ===================== MISSION 5 ===================== -->
+<div class="acti" id="a5"><div class="boite">
+ <h2><span class="badge">5</span>La double distributivité <span class="diff">difficile</span></h2>
+ <p class="consigne">Le rectangle mesure <b>x + 4</b> sur <b>x + 2</b>. Trouve l’aire de chaque case.</p>
+ <canvas class="fig" id="fig5"></canvas>
+ <div id="champs5"></div>
+ <div class="btnrow"><button type="button" class="btn" data-valider="5">Valider</button>
+  <button type="button" class="btn-mc" data-mini="double">Mini-cours : la double distributivité</button></div>
+ <div class="verdict" id="verd5"></div><div class="fait" id="fait5"></div>
+</div></div>
+
+<!-- ===================== MISSION 6 ===================== -->
+<div class="acti" id="a6"><div class="boite">
+ <h2><span class="badge">6</span>Signes et carrés <span class="diff">difficile</span></h2>
+ <p class="consigne">Développe et réduis. Chaque produit garde son signe.</p>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — trace les 4 flèches, écris les 4 produits, puis réduis.</div>
+ <div id="champs6"></div>
+ <div class="btnrow"><button type="button" class="btn" data-valider="6">Valider</button>
+  <button type="button" class="btn-mc" data-mini="double">Mini-cours : double distributivité</button>
+  <button type="button" class="btn-mc" data-mini="carre">Mini-cours : le carré d’une somme</button></div>
+ <div class="verdict" id="verd6"></div><div class="fait" id="fait6"></div>
+</div></div>
+
+<!-- ===================== MISSION 7 ===================== -->
+<div class="acti" id="a7"><div class="boite">
+ <h2><span class="badge">7</span>Factoriser <span class="diff">difficile</span></h2>
+ <p class="consigne">Factorise au maximum : sors le plus grand facteur commun.</p>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — souligne le facteur commun dans chaque terme.</div>
+ <div id="champs7"></div>
+ <div class="btnrow"><button type="button" class="btn" data-valider="7">Valider</button>
+  <button type="button" class="btn-mc" data-mini="factoriser">Mini-cours : factoriser</button></div>
+ <div class="verdict" id="verd7"></div><div class="fait" id="fait7"></div>
+</div></div>
+
+<!-- ===================== MISSION 8 ===================== -->
+<div class="acti" id="a8"><div class="boite">
+ <h2><span class="badge">8</span>Factoriser, niveau expert <span class="diff">difficile</span></h2>
+ <p class="consigne">Le facteur commun peut être une parenthèse. Ou cherche deux carrés.</p>
+ <div id="champs8"></div>
+ <div class="btnrow"><button type="button" class="btn" data-valider="8">Valider</button>
+  <button type="button" class="btn-mc" data-mini="factoriser">Mini-cours : factoriser</button>
+  <button type="button" class="btn-mc" data-mini="identite">Mini-cours : a² − b²</button></div>
+ <div class="verdict" id="verd8"></div><div class="fait" id="fait8"></div>
+</div></div>
+
+<!-- ===================== MISSION 9 ===================== -->
+<div class="acti" id="a9"><div class="boite">
+ <h2><span class="badge">9</span>Trouve l’erreur <span class="diff">difficile</span></h2>
+ <p class="consigne">Clique la première ligne fausse, ou « Aucune erreur ». Teste avec x = 2.</p>
+ <div id="cas9"></div>
+ <div class="btnrow"><button type="button" class="btn-mc" data-mini="verifier">Mini-cours : vérifier avec un nombre</button></div>
+ <div class="verdict" id="verd9"></div><div class="fait" id="fait9"></div>
+</div></div>
+
+<!-- ===================== BILAN ===================== -->
+<div class="acti" id="a10"><div class="boite">
+ <h2><span class="badge">10</span>Bilan</h2>
+ <div id="bilan"></div>
+ <div class="btnrow"><button type="button" class="btn sec" id="recommencer">Recommencer le TP</button></div>
+</div></div>
+
+<div class="clavier" id="clavier" aria-label="Clavier mathématique">
+ <span>Clavier</span>
+ <button type="button" data-car="x">x</button><button type="button" data-car="²" title="au carré">²</button>
+ <button type="button" data-car="(">(</button><button type="button" data-car=")">)</button>
+ <button type="button" data-car="−">−</button>
+</div>
+
+<script>
+/* =====================================================================
+   BIBLIOTHÈQUE COMMUNE — calcul littéral (cours + TP)
+   Animations canvas, analyseur d'expressions, fenêtre de mini-cours.
+   Code couleur constant : x² violet, x bleu, nombres orange,
+   facteur commun turquoise, signe moins rouge, résultat vert.
+   ===================================================================== */
+'use strict';
+const C_ = { x2:'#7c3aed', x:'#2563eb', n:'#ea580c', neg:'#dc2626', ok:'#16a34a', fac:'#0d9488',
+             txt:'#1f2937', gris:'#64748b', trait:'#cbd5e1' };
+const AW = 880, AH = 360;
+
+function cl(v){ return Math.max(0, Math.min(1, v)); }
+function ph(t, a, b){ return cl((t - a) / (b - a)); }
+function ez(p){ p = cl(p); return p < .5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2) / 2; }
+function lp(a, b, p){ return a + (b - a) * p; }
+function police(t, b){ return (b === false ? '' : 'bold ') + t + 'px "Segoe UI",system-ui,sans-serif'; }
+
+function txt(c, s, x, y, o){
+  o = o || {};
+  const a = o.a == null ? 1 : o.a; if (a <= 0) return;
+  c.save(); c.globalAlpha = a; c.font = police(o.t || 20, o.b);
+  c.fillStyle = o.c || C_.txt; c.textAlign = o.al || 'center'; c.textBaseline = 'middle';
+  c.fillText(s, x, y); c.restore();
+}
+function fond(c){ c.fillStyle = '#ffffff'; c.fillRect(0, 0, AW, AH); }
+function rr(c, x, y, w, h, r){
+  c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+}
+/* Suite de morceaux de texte colorés, posés côte à côte. Renvoie la position de chacun. */
+function jetons(c, toks, x, y, o){
+  o = o || {}; const t = o.t || 26; let tot = 0; const pos = [];
+  toks.forEach(function(k){ c.font = police(t, k.b); k._w = c.measureText(k.s).width; tot += k._w; });
+  let cx = o.al === 'left' ? x : (o.al === 'right' ? x - tot : x - tot / 2);
+  toks.forEach(function(k){
+    const a = (o.a == null ? 1 : o.a) * (k.a == null ? 1 : k.a);
+    txt(c, k.s, cx + k._w / 2, y, { t: t, c: k.c || o.c || C_.txt, a: a, b: k.b });
+    pos.push({ x0: cx, x1: cx + k._w, cx: cx + k._w / 2 }); cx += k._w;
+  });
+  return pos;
+}
+/* Flèche courbe de x0 à x1, sommet à h px au-dessus (h < 0 : en dessous), tracée jusqu'à p. */
+function arc(c, x0, x1, y, h, col, p, ep){
+  p = cl(p); if (p <= 0) return; ep = ep || 2.6;
+  const mx = (x0 + x1) / 2, my = y - 2 * h;
+  const B = function(u){ return { x: (1-u)*(1-u)*x0 + 2*(1-u)*u*mx + u*u*x1, y: (1-u)*(1-u)*y + 2*(1-u)*u*my + u*u*y }; };
+  c.save(); c.strokeStyle = col; c.fillStyle = col; c.lineWidth = ep; c.lineCap = 'round';
+  c.beginPath();
+  for (let i = 0; i <= 30; i++){ const q = B(p * i / 30); if (i) c.lineTo(q.x, q.y); else c.moveTo(q.x, q.y); }
+  c.stroke();
+  const u = p, q = B(u);
+  const dx = 2*(1-u)*(mx - x0) + 2*u*(x1 - mx), dy = 2*(1-u)*(my - y) + 2*u*(y - my);
+  const L = Math.hypot(dx, dy) || 1, tx = dx / L, ty = dy / L, nx = -ty, ny = tx, s = ep * 3.6;
+  c.beginPath(); c.moveTo(q.x, q.y);
+  c.lineTo(q.x - tx*s + nx*s*.5, q.y - ty*s + ny*s*.5); c.lineTo(q.x - tx*s - nx*s*.5, q.y - ty*s - ny*s*.5);
+  c.closePath(); c.fill(); c.restore();
+}
+function fleche(c, x0, y0, x1, y1, col, ep){
+  ep = ep || 3; const d = Math.hypot(x1 - x0, y1 - y0) || 1, tx = (x1 - x0) / d, ty = (y1 - y0) / d, nx = -ty, ny = tx, s = ep * 3.4;
+  c.save(); c.strokeStyle = col; c.fillStyle = col; c.lineWidth = ep; c.lineCap = 'butt';
+  c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1 - tx*s, y1 - ty*s); c.stroke();
+  c.beginPath(); c.moveTo(x1, y1); c.lineTo(x1 - tx*s + nx*s*.55, y1 - ty*s + ny*s*.55);
+  c.lineTo(x1 - tx*s - nx*s*.55, y1 - ty*s - ny*s*.55); c.closePath(); c.fill(); c.restore();
+}
+/* Carte d'un terme ; sy < 1 l'aplatit (retournement). */
+function carte(c, cx, cy, w, h, s, col, o){
+  o = o || {}; const a = o.a == null ? 1 : o.a; if (a <= 0) return;
+  c.save(); c.globalAlpha = a; c.translate(cx, cy); c.scale(o.sc || 1, Math.max(.02, (o.sy == null ? 1 : o.sy)) * (o.sc || 1));
+  rr(c, -w/2, -h/2, w, h, 9); c.fillStyle = o.fill || '#ffffff'; c.fill();
+  c.lineWidth = 2.4; c.strokeStyle = col; c.stroke();
+  c.font = police(o.t || 22); c.fillStyle = col; c.textAlign = 'center'; c.textBaseline = 'middle';
+  c.fillText(s, 0, 1); c.restore();
+}
+/* Case d'aire, remplie selon p. */
+function cellule(c, x, y, w, h, col, lab, p, o){
+  o = o || {};
+  c.save(); c.strokeStyle = C_.trait; c.lineWidth = 1.6; c.strokeRect(x, y, w, h);
+  if (p > 0){
+    c.globalAlpha = .2 * p; c.fillStyle = col; c.fillRect(x, y, w, h);
+    c.globalAlpha = p; c.strokeStyle = col; c.lineWidth = 2.4; c.strokeRect(x + 1, y + 1, w - 2, h - 2);
+  }
+  c.restore();
+  if (lab && p > 0) txt(c, lab, x + w/2, y + h/2, { t: o.t || 24, c: col, a: p });
+}
+function bulle(c, x, y, l1, l2, col, a){
+  if (a <= 0) return; const w = 290, h = l2 ? 54 : 38;
+  c.save(); c.globalAlpha = a; rr(c, x - w/2, y - h/2, w, h, 10); c.fillStyle = '#fff7ed'; c.fill();
+  c.strokeStyle = col; c.lineWidth = 2; c.stroke();
+  c.beginPath(); c.moveTo(x - w/2, y - 8); c.lineTo(x - w/2 - 14, y); c.lineTo(x - w/2, y + 8); c.closePath();
+  c.fillStyle = col; c.fill(); c.restore();
+  txt(c, l1, x, l2 ? y - 11 : y, { t: 16, c: col, a: a });
+  if (l2) txt(c, l2, x, y + 13, { t: 15, c: C_.txt, a: a, b: false });
+}
+function coche(c, x, y, r, a){
+  if (a <= 0) return; c.save(); c.globalAlpha = a; c.fillStyle = C_.ok;
+  c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fill();
+  c.strokeStyle = '#fff'; c.lineWidth = r * .24; c.lineCap = 'round'; c.lineJoin = 'round';
+  c.beginPath(); c.moveTo(x - r*.45, y + r*.02); c.lineTo(x - r*.1, y + r*.36); c.lineTo(x + r*.48, y - r*.34); c.stroke(); c.restore();
+}
+function croix(c, x, y, r, a){
+  if (a <= 0) return; c.save(); c.globalAlpha = a; c.fillStyle = C_.neg;
+  c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fill();
+  const k = r * .38; c.strokeStyle = '#fff'; c.lineWidth = r * .24; c.lineCap = 'round';
+  c.beginPath(); c.moveTo(x - k, y - k); c.lineTo(x + k, y + k); c.moveTo(x + k, y - k); c.lineTo(x - k, y + k); c.stroke(); c.restore();
+}
+/* Encadré arrondi autour d'une zone (surlignage). */
+function cadre(c, x0, x1, y, h, col, a){
+  if (a <= 0) return; c.save(); c.globalAlpha = a; rr(c, x0 - 6, y - h/2, x1 - x0 + 12, h, 8);
+  c.fillStyle = col; c.globalAlpha = a * .12; c.fill(); c.globalAlpha = a; c.strokeStyle = col; c.lineWidth = 2; c.stroke(); c.restore();
+}
+
+/* =====================================================================
+   ANIMATIONS — chacune : titre, durée (s), draw(ctx, t)
+   ===================================================================== */
+const ANIMS = {
+
+valeur: { titre: 'Calculer la valeur d’une expression', dur: 8.4, draw: function(c, t){
+  fond(c);
+  txt(c, 'On remplace x par −2', 330, 32, { t: 18, c: C_.gris });
+  const L = [
+    [{ s: 'E = 3x² − 2x + 5' }],
+    [{ s: 'E = 3 × ' }, { s: '(−2)', c: C_.n }, { s: '² − 2 × ' }, { s: '(−2)', c: C_.n }, { s: ' + 5' }],
+    [{ s: 'E = 3 × ' }, { s: '4', c: C_.n }, { s: ' + ' }, { s: '4', c: C_.n }, { s: ' + 5' }],
+    [{ s: 'E = 12 + 4 + 5' }],
+    [{ s: 'E = 21', c: C_.ok }]];
+  L.forEach(function(k, i){
+    const p = ez(ph(t, .3 + i * 1.3, 1 + i * 1.3)); if (p <= 0) return;
+    jetons(c, k, 330 - (1 - p) * 24, 82 + i * 58, { t: 26, a: p });
+  });
+  bulle(c, 715, 136, 'Parenthèses obligatoires', 'autour d’un nombre négatif', C_.n, ez(ph(t, 2, 2.6)));
+  bulle(c, 715, 208, '(−2)² = 4', 'et  −2 × (−2) = +4', C_.n, ez(ph(t, 3.3, 3.9)));
+}},
+
+reduire: { titre: 'Réduire : ranger les termes par famille', dur: 8.2, draw: function(c, t){
+  fond(c);
+  txt(c, '3x + 5 + 2x² + x − 2 + 4x²', 440, 30, { t: 20, c: C_.gris });
+  const fam = [{ col: C_.x2, lab: 'les x²', x: 170, res: '6x²' }, { col: C_.x, lab: 'les x', x: 440, res: '4x' },
+               { col: C_.n, lab: 'les nombres', x: 710, res: '3' }];
+  fam.forEach(function(f){
+    c.save(); rr(c, f.x - 120, 130, 240, 112, 14); c.fillStyle = '#f8fafc'; c.fill();
+    c.setLineDash([7, 6]); c.strokeStyle = f.col; c.lineWidth = 2; c.stroke(); c.restore();
+    txt(c, f.lab, f.x, 228, { t: 16, c: f.col });
+  });
+  const cartes = [{ s: '3x', f: 1, k: 0 }, { s: '5', f: 2, k: 0 }, { s: '2x²', f: 0, k: 0 },
+                  { s: 'x', f: 1, k: 1 }, { s: '−2', f: 2, k: 1 }, { s: '4x²', f: 0, k: 1 }];
+  const fusion = ez(ph(t, 4.6, 5.5));
+  cartes.forEach(function(k, i){
+    const p = ez(ph(t, 1 + i * .45, 1.6 + i * .45));
+    const x0 = 145 + i * 118, y0 = 82, xb = fam[k.f].x + (k.k ? 50 : -50), yb = 182;
+    const x = lp(lp(x0, xb, p), fam[k.f].x, fusion), y = lp(y0, yb, p);
+    carte(c, x, y, 76, 44, k.s, fam[k.f].col, { a: (ph(t, 0, .6)) * (1 - fusion) });
+  });
+  fam.forEach(function(f){ carte(c, f.x, 182, 86, 48, f.res, f.col, { a: fusion, t: 24, sc: lp(.6, 1, fusion) }); });
+  const r = ez(ph(t, 6.1, 6.9));
+  jetons(c, [{ s: '= ' }, { s: '6x²', c: C_.x2 }, { s: ' + ' }, { s: '4x', c: C_.x }, { s: ' + ' }, { s: '3', c: C_.n }],
+         440, 300, { t: 32, a: r });
+}},
+
+simple: { titre: 'La simple distributivité', dur: 7.4, draw: function(c, t){
+  fond(c);
+  const P = jetons(c, [{ s: '3', c: C_.fac }, { s: '(' }, { s: 'x', c: C_.x }, { s: ' + ' }, { s: '4', c: C_.n }, { s: ')' }], 440, 82, { t: 32 });
+  arc(c, P[0].cx, P[2].cx, 60, 30, C_.x, ph(t, 1.2, 2.2), 3);
+  arc(c, P[0].cx, P[4].cx, 60, 44, C_.n, ph(t, 2.4, 3.4), 3);
+  const x0 = 245, y0 = 130, H = 120, wX = 230, w4 = 160;
+  const a1 = ez(ph(t, 1.2, 2.2)), a2 = ez(ph(t, 2.4, 3.4));
+  c.save(); c.globalAlpha = .1 * (1 - a2); c.fillStyle = C_.gris; c.fillRect(x0, y0, wX + w4, H); c.restore();
+  cellule(c, x0, y0, wX, H, C_.x, '3x', a1, { t: 30 });
+  cellule(c, x0 + wX, y0, w4, H, C_.n, '12', a2, { t: 30 });
+  txt(c, '3(x + 4)', x0 + (wX + w4) / 2, y0 + H / 2, { t: 26, c: C_.gris, a: 1 - Math.max(a1, a2) });
+  txt(c, '3', x0 - 18, y0 + H / 2, { t: 24, c: C_.fac });
+  txt(c, 'x', x0 + wX / 2, y0 - 14, { t: 20, c: C_.x });
+  txt(c, '4', x0 + wX + w4 / 2, y0 - 14, { t: 20, c: C_.n });
+  jetons(c, [{ s: '3(x + 4) = ' }, { s: '3 × x', c: C_.x }, { s: ' + ' }, { s: '3 × 4', c: C_.n }], 440, 290, { t: 24, a: ez(ph(t, 4, 4.8)) });
+  jetons(c, [{ s: '= ' }, { s: '3x', c: C_.x }, { s: ' + ' }, { s: '12', c: C_.n }], 440, 332, { t: 28, a: ez(ph(t, 5.2, 6)) });
+}},
+
+signe: { titre: 'Le signe moins devant une parenthèse', dur: 8, draw: function(c, t){
+  fond(c);
+  txt(c, 'Un − devant la parenthèse change TOUS les signes', 440, 30, { t: 19, c: C_.neg });
+  function flip(x, y, w, av, ap, a0, a1){
+    const p = ph(t, a0, a1), sy = Math.abs(Math.cos(Math.PI * p));
+    carte(c, x, y, w, 50, p < .5 ? av : ap, p < .5 ? C_.txt : C_.neg, { sy: sy, a: ez(ph(t, a0 - 1, a0 - .5)) });
+  }
+  jetons(c, [{ s: '−', c: C_.neg }, { s: '(x − 5)' }], 200, 110, { t: 30 });
+  txt(c, '=', 330, 110, { t: 30, a: ez(ph(t, .4, .9)) });
+  flip(410, 110, 76, 'x', '−x', 1.5, 2.1);
+  flip(505, 110, 86, '− 5', '+ 5', 2.1, 2.7);
+  jetons(c, [{ s: '3 ' }, { s: '−', c: C_.neg }, { s: ' (2x + 1)' }], 200, 225, { t: 30, a: ez(ph(t, 3.1, 3.6)) });
+  txt(c, '=', 345, 225, { t: 30, a: ez(ph(t, 3.4, 3.9)) });
+  carte(c, 410, 225, 60, 50, '3', C_.txt, { a: ez(ph(t, 3.6, 4.1)) });
+  flip(500, 225, 92, '+ 2x', '− 2x', 4.6, 5.2);
+  flip(605, 225, 84, '+ 1', '− 1', 5.2, 5.8);
+  jetons(c, [{ s: '= ' }, { s: '2 − 2x', c: C_.ok }], 505, 305, { t: 30, a: ez(ph(t, 6.3, 7.1)) });
+  txt(c, '3 − 1 = 2', 720, 305, { t: 17, c: C_.gris, a: ez(ph(t, 6.6, 7.3)) });
+}},
+
+double: { titre: 'La double distributivité', dur: 9, draw: function(c, t){
+  fond(c);
+  const P = jetons(c, [{ s: '(' }, { s: 'x', c: C_.x }, { s: ' + ' }, { s: '2', c: C_.n }, { s: ')(' },
+                       { s: 'x', c: C_.x }, { s: ' + ' }, { s: '3', c: C_.n }, { s: ')' }], 220, 95, { t: 32 });
+  const pr = [0, 1, 2, 3].map(function(i){ return ph(t, .5 + i * .9, 1.2 + i * .9); });
+  arc(c, P[1].cx, P[5].cx, 74, 14, C_.x2, pr[0]);
+  arc(c, P[1].cx, P[7].cx, 74, 26, C_.x, pr[1]);
+  arc(c, P[3].cx, P[5].cx, 116, -14, C_.x, pr[2]);
+  arc(c, P[3].cx, P[7].cx, 116, -26, C_.n, pr[3]);
+  const x0 = 480, y0 = 46, cw = [170, 126], rh = [170, 84];
+  txt(c, 'x', x0 + 85, y0 - 16, { t: 20, c: C_.x }); txt(c, '3', x0 + 170 + 63, y0 - 16, { t: 20, c: C_.n });
+  txt(c, 'x', x0 - 16, y0 + 85, { t: 20, c: C_.x }); txt(c, '2', x0 - 16, y0 + 170 + 42, { t: 20, c: C_.n });
+  cellule(c, x0, y0, cw[0], rh[0], C_.x2, 'x²', ez(pr[0]), { t: 28 });
+  cellule(c, x0 + cw[0], y0, cw[1], rh[0], C_.x, '3x', ez(pr[1]), { t: 26 });
+  cellule(c, x0, y0 + rh[0], cw[0], rh[1], C_.x, '2x', ez(pr[2]), { t: 26 });
+  cellule(c, x0 + cw[0], y0 + rh[0], cw[1], rh[1], C_.n, '6', ez(pr[3]), { t: 26 });
+  const a2 = ez(ph(t, 4.4, 5.2));
+  const Q = jetons(c, [{ s: '= ' }, { s: 'x²', c: C_.x2 }, { s: ' + ' }, { s: '3x', c: C_.x }, { s: ' + ' },
+                       { s: '2x', c: C_.x }, { s: ' + ' }, { s: '6', c: C_.n }], 220, 205, { t: 28, a: a2 });
+  cadre(c, Q[3].x0, Q[5].x1, 205, 42, C_.x, ez(ph(t, 5.6, 6)));
+  jetons(c, [{ s: '= ' }, { s: 'x²', c: C_.x2 }, { s: ' + ' }, { s: '5x', c: C_.x }, { s: ' + ' }, { s: '6', c: C_.n }],
+         220, 280, { t: 30, a: ez(ph(t, 6.4, 7.2)) });
+}},
+
+carre: { titre: 'Le carré d’une somme', dur: 9, draw: function(c, t){
+  fond(c);
+  jetons(c, [{ s: '(x + 3)² = (x + 3)(x + 3)' }], 220, 70, { t: 24, a: ez(ph(t, .1, .6)) });
+  const x0 = 500, y0 = 44, cw = [170, 126], rh = [170, 126];
+  txt(c, 'x', x0 + 85, y0 - 16, { t: 20, c: C_.x }); txt(c, '3', x0 + 233, y0 - 16, { t: 20, c: C_.n });
+  txt(c, 'x', x0 - 16, y0 + 85, { t: 20, c: C_.x }); txt(c, '3', x0 - 16, y0 + 233, { t: 20, c: C_.n });
+  const pr = [0, 1, 2, 3].map(function(i){ return ez(ph(t, .8 + i * .9, 1.5 + i * .9)); });
+  cellule(c, x0, y0, cw[0], rh[0], C_.x2, 'x²', pr[0], { t: 28 });
+  cellule(c, x0 + cw[0], y0, cw[1], rh[0], C_.x, '3x', pr[1], { t: 26 });
+  cellule(c, x0, y0 + rh[0], cw[0], rh[1], C_.x, '3x', pr[2], { t: 26 });
+  cellule(c, x0 + cw[0], y0 + rh[0], cw[1], rh[1], C_.n, '9', pr[3], { t: 26 });
+  jetons(c, [{ s: '= ' }, { s: 'x²', c: C_.x2 }, { s: ' + ' }, { s: '3x + 3x', c: C_.x }, { s: ' + ' }, { s: '9', c: C_.n }],
+         220, 150, { t: 26, a: ez(ph(t, 4.6, 5.4)) });
+  jetons(c, [{ s: '= ' }, { s: 'x²', c: C_.x2 }, { s: ' + ' }, { s: '6x', c: C_.x }, { s: ' + ' }, { s: '9', c: C_.n }],
+         220, 215, { t: 30, a: ez(ph(t, 5.8, 6.6)) });
+  const w = ez(ph(t, 7, 7.8));
+  if (w > 0){
+    const P = jetons(c, [{ s: 'x² + 9', c: C_.neg }], 150, 300, { t: 26, a: w });
+    c.save(); c.globalAlpha = w; c.strokeStyle = C_.neg; c.lineWidth = 3;
+    c.beginPath(); c.moveTo(P[0].x0 - 4, 300); c.lineTo(P[0].x1 + 4, 300); c.stroke(); c.restore();
+    txt(c, 'FAUX : il manque 6x', 330, 300, { t: 17, c: C_.neg, a: w });
+  }
+}},
+
+factoriser: { titre: 'Factoriser : le chemin retour', dur: 8, draw: function(c, t){
+  fond(c);
+  jetons(c, [{ s: '4x', c: C_.x }, { s: ' + ' }, { s: '12', c: C_.n }], 200, 90, { t: 30, a: ez(ph(t, 0, .6)) });
+  jetons(c, [{ s: '= ' }, { s: '4', c: C_.fac }, { s: ' × x + ' }, { s: '4', c: C_.fac }, { s: ' × 3' }], 200, 160, { t: 28, a: ez(ph(t, 1.6, 2.4)) });
+  jetons(c, [{ s: '= ' }, { s: '4', c: C_.fac }, { s: '(x + 3)' }], 200, 230, { t: 32, a: ez(ph(t, 5.4, 6.2)) });
+  txt(c, 'facteur commun : 4', 200, 300, { t: 18, c: C_.fac, a: ez(ph(t, 2.4, 3)) });
+  const m = ez(ph(t, 3.4, 5)), xo = lp(700, 620, m), y0 = 110, H = 120;
+  cellule(c, 420, y0, 200, H, C_.x, '4x', 1, { t: 28 });
+  cellule(c, xo, y0, 90, H, C_.n, '12', 1, { t: 26 });
+  const puls = 1 + .25 * Math.sin(ph(t, 1.6, 3) * Math.PI * 3) * (ph(t, 1.6, 3) < 1 ? 1 : 0);
+  txt(c, '4', 404, y0 + H / 2, { t: 22 * puls, c: C_.fac });
+  txt(c, '4', xo - 16, y0 + H / 2, { t: 22 * puls, c: C_.fac, a: 1 - m });
+  txt(c, 'x', 520, y0 - 14, { t: 20, c: C_.x }); txt(c, '3', xo + 45, y0 - 14, { t: 20, c: C_.n });
+  const f = ez(ph(t, 5.2, 5.8));
+  if (f > 0){
+    c.save(); c.globalAlpha = f; c.strokeStyle = C_.fac; c.lineWidth = 4; c.strokeRect(418, y0 - 2, 294, H + 4); c.restore();
+    txt(c, 'x + 3', 565, y0 - 40, { t: 22, c: C_.fac, a: f });
+  }
+}},
+
+identite: { titre: 'Une différence de deux carrés', dur: 10.4, draw: function(c, t){
+  fond(c);
+  const A = 210, B = 84, x0 = 380, y0 = 50;
+  jetons(c, [{ s: 'x² − 9' }], 190, 80, { t: 32 });
+  txt(c, 'on enlève un carré de 3 sur 3', 190, 130, { t: 16, c: C_.neg, a: ez(ph(t, 2.6, 3.2)) * (1 - ez(ph(t, 8.6, 9))) });
+  jetons(c, [{ s: '= (x + 3)(x − 3)', c: C_.ok }], 190, 160, { t: 28, a: ez(ph(t, 8.8, 9.6)) });
+  txt(c, 'a² − b² = (a + b)(a − b)', 190, 300, { t: 19, c: C_.gris, a: ez(ph(t, 9.4, 10)) });
+  // R1 : bande du haut, toujours en place
+  cellule(c, x0, y0, A, A - B, C_.x2, '', 1);
+  // petit carré retiré
+  const ap = ez(ph(t, 1.4, 2.2)), dis = ez(ph(t, 2.8, 3.6));
+  if (ap > 0 && dis < 1){
+    c.save(); c.globalAlpha = ap * (1 - dis); c.fillStyle = 'rgba(220,38,38,.25)'; c.fillRect(x0 + A - B, y0 + A - B, B, B);
+    c.strokeStyle = C_.neg; c.lineWidth = 2.4; c.strokeRect(x0 + A - B, y0 + A - B, B, B); c.restore();
+    txt(c, '9', x0 + A - B / 2, y0 + A - B / 2, { t: 22, c: C_.neg, a: ap * (1 - dis) });
+  }
+  if (dis > 0 && ez(ph(t, 4.4, 5)) < 1){
+    c.save(); c.globalAlpha = dis * (1 - ez(ph(t, 4.4, 5))); c.setLineDash([6, 5]); c.strokeStyle = C_.gris; c.lineWidth = 1.5;
+    c.strokeRect(x0 + A - B, y0 + A - B, B, B); c.restore();
+  }
+  // pièce du bas à gauche, découpée puis tournée et posée à droite
+  /* la pièce glisse d'abord à droite, hors du carré, puis tourne et remonte : sans cela
+     elle traversait la bande du haut en tournant */
+  const m1 = ez(ph(t, 4.4, 5.3)), m2 = ez(ph(t, 5.3, 6.2)), m3 = ez(ph(t, 6.2, 7.1)), m = m3, ang = -Math.PI / 2 * m2;
+  const xg = x0 + A + 20 + (A - B) / 2;   /* tourne à l'écart, à droite du carré, puis se met en place */
+  const cx = lp(lp(x0 + (A - B) / 2, xg, m1), x0 + A + B / 2, m3), cy = lp(y0 + A - B + B / 2, y0 + (A - B) / 2, m3);
+  c.save(); c.translate(cx, cy); c.rotate(ang);
+  c.globalAlpha = .2; c.fillStyle = C_.x2; c.fillRect(-(A - B) / 2, -B / 2, A - B, B);
+  c.globalAlpha = 1; c.strokeStyle = C_.x2; c.lineWidth = 2.4; c.strokeRect(-(A - B) / 2 + 1, -B / 2 + 1, A - B - 2, B - 2);
+  c.restore();
+  const cut = ez(ph(t, 3.8, 4.4)) * (1 - m1);
+  if (cut > 0){ c.save(); c.globalAlpha = cut; c.setLineDash([8, 6]); c.strokeStyle = C_.neg; c.lineWidth = 2.5;
+    c.beginPath(); c.moveTo(x0 - 10, y0 + A - B); c.lineTo(x0 + A - B + 10, y0 + A - B); c.stroke(); c.restore(); }
+  const debut = 1 - ez(ph(t, 3.8, 4.4));
+  txt(c, 'x', x0 + A / 2, y0 - 16, { t: 20, c: C_.x, a: debut });
+  txt(c, 'x', x0 - 16, y0 + A / 2, { t: 20, c: C_.x, a: debut });
+  txt(c, 'x²', x0 + A / 2, y0 + (A - B) / 2, { t: 28, c: C_.x2, a: debut });
+  const fin = ez(ph(t, 7.4, 8.4));
+  if (fin > 0){
+    c.save(); c.globalAlpha = fin; c.strokeStyle = C_.ok; c.lineWidth = 4; c.strokeRect(x0 - 2, y0 - 2, A + B + 4, A - B + 4); c.restore();
+    txt(c, 'x + 3', x0 + (A + B) / 2, y0 - 18, { t: 22, c: C_.ok, a: fin });
+    txt(c, 'x − 3', x0 - 34, y0 + (A - B) / 2, { t: 20, c: C_.ok, a: fin });
+  }
+}},
+
+verifier: { titre: 'Vérifier avec un nombre', dur: 7.4, draw: function(c, t){
+  fond(c);
+  txt(c, 'On teste avec x = 2 dans chaque écriture', 440, 32, { t: 19, c: C_.gris });
+  const R = [
+    { g: '(x + 2)(x + 3)', d: '(2 + 2)(2 + 3) = 4 × 5 = 20', y: 110, a: .4, k: 0 },
+    { g: 'x² + 5x + 6', d: '2² + 5 × 2 + 6 = 4 + 10 + 6 = 20', y: 190, a: 2, k: 1 },
+    { g: 'x² + 6', d: '2² + 6 = 4 + 6 = 10', y: 270, a: 4.2, k: 2 }];
+  R.forEach(function(r){
+    const p = ez(ph(t, r.a, r.a + .6)), q = ez(ph(t, r.a + .6, r.a + 1.4));
+    txt(c, r.g, 160, r.y, { t: 24, c: r.k === 2 ? C_.neg : C_.txt, a: p });
+    if (r.k === 2) txt(c, 'autre réponse', 160, r.y + 26, { t: 13, c: C_.gris, a: p, b: false });
+    if (p > .5) fleche(c, 268, r.y, 306, r.y, C_.gris, 2.5);
+    txt(c, r.d, 320, r.y, { t: 22, al: 'left', a: q });
+  });
+  coche(c, 790, 190, 22, ez(ph(t, 3.4, 3.9)));
+  croix(c, 790, 270, 22, ez(ph(t, 5.6, 6.1)));
+  txt(c, '20 = 20 : juste    20 ≠ 10 : il y a une erreur', 440, 335, { t: 18, c: C_.fac, a: ez(ph(t, 6.2, 6.9)) });
+}}
+};
+
+/* Lecteur : dessine une animation sur un canvas, à l'échelle de l'écran. */
+const LECTEURS = [];
+function creerLecteur(cv, nom, o){
+  o = o || {}; const A = ANIMS[nom];
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = AW * dpr; cv.height = AH * dpr;
+  const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+  let t0 = null, raf = 0, actif = false;
+  function dessiner(t){ A.draw(c, t); }
+  function boucle(ts){
+    if (!actif) return;
+    if (t0 === null) t0 = ts;
+    let t = (ts - t0) / 1000;
+    if (o.boucle){ const per = A.dur + 1.8; t = t % per; if (t > A.dur) t = A.dur; }
+    else if (t >= A.dur){ dessiner(A.dur); actif = false; return; }
+    dessiner(t); raf = requestAnimationFrame(boucle);
+  }
+  const L = { nom: nom, dur: A.dur, dessiner: dessiner,
+    jouer: function(){ cancelAnimationFrame(raf); t0 = null; actif = true; raf = requestAnimationFrame(boucle); },
+    arreter: function(){ actif = false; cancelAnimationFrame(raf); },
+    enCours: function(){ return actif; } };
+  LECTEURS.push(L);
+  return L;
+}
+
+/* =====================================================================
+   ANALYSEUR D'EXPRESSIONS — en x, avec multiplication implicite.
+   Accepte : 3x²  3*x^2  -4+6x  2x(3x-1)  (x+2)(x-5)  x² etc.
+   ===================================================================== */
+function normaliser(s){
+  return String(s == null ? '' : s).replace(/[−–—]/g, '-').replace(/[×·*]/g, '*').replace(/,/g, '.')
+    .replace(/\s+/g, '').replace(/X/g, 'x').replace(/\^2/g, '²').replace(/\^3/g, '³');
+}
+function analyser(chaine){
+  const s = normaliser(chaine), T = []; let i = 0;
+  while (i < s.length){
+    const ch = s[i];
+    if (/[0-9.]/.test(ch)){ let j = i; while (j < s.length && /[0-9.]/.test(s[j])) j++;
+      const v = parseFloat(s.slice(i, j)); if (isNaN(v)) throw new Error('nombre'); T.push({ k: 'n', v: v }); i = j; continue; }
+    if (ch === 'x' || '+-*()²³^'.indexOf(ch) >= 0){ T.push({ k: ch }); i++; continue; }
+    throw new Error('caractere');
+  }
+  if (!T.length) throw new Error('vide');
+  let p = 0;
+  const voir = function(){ return T[p]; }, prendre = function(){ return T[p++]; };
+  function expr(){
+    const t = []; let sg = 1;
+    if (voir() && (voir().k === '+' || voir().k === '-')) sg = prendre().k === '-' ? -1 : 1;
+    t.push({ s: sg, n: terme() });
+    while (voir() && (voir().k === '+' || voir().k === '-')){ const g = prendre().k === '-' ? -1 : 1; t.push({ s: g, n: terme() }); }
+    return (t.length === 1 && t[0].s === 1) ? t[0].n : { k: 'add', t: t };
+  }
+  function terme(){
+    const f = [facteur()];
+    while (voir() && (voir().k === '*' || voir().k === 'n' || voir().k === 'x' || voir().k === '(')){
+      if (voir().k === '*') prendre();
+      f.push(facteur());
+    }
+    return f.length === 1 ? f[0] : { k: 'mul', f: f };
+  }
+  function facteur(){
+    let b = atome();
+    while (voir() && (voir().k === '²' || voir().k === '³' || voir().k === '^')){
+      const o = prendre(); let e = o.k === '²' ? 2 : (o.k === '³' ? 3 : null);
+      if (e === null){ const n = prendre(); if (!n || n.k !== 'n' || !Number.isInteger(n.v) || n.v > 6) throw new Error('puissance'); e = n.v; }
+      b = { k: 'pow', b: b, e: e };
+    }
+    return b;
+  }
+  function atome(){
+    const o = prendre(); if (!o) throw new Error('fin');
+    if (o.k === 'n') return { k: 'n', v: o.v };
+    if (o.k === 'x') return { k: 'x' };
+    if (o.k === '('){ const e = expr(); const f = prendre(); if (!f || f.k !== ')') throw new Error('parenthese'); return { k: 'par', e: e }; }
+    if (o.k === '-') return { k: 'neg', e: facteur() };
+    if (o.k === '+') return facteur();
+    throw new Error('symbole');
+  }
+  const r = expr(); if (p !== T.length) throw new Error('reste');
+  return r;
+}
+function padd(a, b, s){ const r = []; for (let i = 0; i < Math.max(a.length, b.length); i++) r[i] = (a[i] || 0) + s * (b[i] || 0); return r; }
+function pmul(a, b){ const r = []; for (let i = 0; i < a.length; i++) for (let j = 0; j < b.length; j++) r[i + j] = (r[i + j] || 0) + a[i] * b[j]; return r; }
+function poly(n){
+  switch (n.k){
+    case 'n': return [n.v];
+    case 'x': return [0, 1];
+    case 'par': return poly(n.e);
+    case 'neg': return padd([0], poly(n.e), -1);
+    case 'add': { let r = [0]; n.t.forEach(function(o){ r = padd(r, poly(o.n), o.s); }); return r; }
+    case 'mul': return n.f.reduce(function(a, f){ return pmul(a, poly(f)); }, [1]);
+    case 'pow': { let r = [1]; const b = poly(n.b); for (let i = 0; i < n.e; i++) r = pmul(r, b); return r; }
+  }
+  throw new Error('noeud');
+}
+function pegal(a, b){ for (let i = 0; i < Math.max(a.length, b.length); i++) if (Math.abs((a[i] || 0) - (b[i] || 0)) > 1e-9) return false; return true; }
+function pval(p, x){ return p.reduce(function(s, c, i){ return s + c * Math.pow(x, i); }, 0); }
+function contientPar(n){
+  if (!n || typeof n !== 'object') return false;
+  if (n.k === 'par') return true;
+  if (n.k === 'add') return n.t.some(function(o){ return contientPar(o.n); });
+  if (n.k === 'mul') return n.f.some(contientPar);
+  if (n.k === 'pow' || n.k === 'neg') return contientPar(n.b || n.e);
+  return false;
+}
+/* Forme développée réduite : pas de parenthèse, une seule fois chaque famille. */
+function estReduite(n){
+  if (contientPar(n)) return 'par';
+  const termes = n.k === 'add' ? n.t.map(function(o){ return o.n; }) : [n];
+  const deg = [];
+  for (const t of termes){
+    const p = poly(t), nz = [];
+    p.forEach(function(v, i){ if (Math.abs(v) > 1e-12) nz.push(i); });
+    if (nz.length > 1) return 'nonreduit';
+    if (nz.length === 1) deg.push(nz[0]);
+  }
+  return new Set(deg).size === deg.length ? 'ok' : 'nonreduit';
+}
+function pgcd(a, b){ a = Math.abs(a); b = Math.abs(b); while (b){ const r = a % b; a = b; b = r; } return a; }
+/* Forme factorisée : un produit contenant au moins une parenthèse. Renvoie 'ok', 'pasproduit',
+   ou le facteur qu'on peut encore sortir ('3', 'x'). */
+function estFactorisee(n){
+  let r = n;
+  if (r.k === 'add' && r.t.length === 1) r = r.t[0].n;
+  if (r.k === 'neg') r = r.e;
+  const fs = r.k === 'mul' ? r.f : [r];
+  const aPar = fs.some(function(f){ return f.k === 'par' || (f.k === 'pow' && f.b.k === 'par'); });
+  if (!aPar || (fs.length === 1 && r.k !== 'pow')) return 'pasproduit';
+  for (const f of fs){
+    const base = f.k === 'pow' ? f.b : f;
+    if (base.k !== 'par') continue;
+    const p = poly(base.e), nz = p.filter(function(v){ return Math.abs(v) > 1e-12; });
+    if (nz.length < 2) continue;
+    if (nz.every(function(v){ return Number.isInteger(v); })){
+      const g = nz.reduce(function(a, v){ return pgcd(a, v); }, 0);
+      if (g > 1) return String(g);
+    }
+    if (p.findIndex(function(v){ return Math.abs(v) > 1e-12; }) >= 1) return 'x';
+  }
+  return 'ok';
+}
+function nombreFr(v){ return String(Math.round(v * 1000) / 1000).replace('.', ',').replace('-', '−'); }
+
+/* =====================================================================
+   MINI-COURS — fenêtre avec une animation en boucle et l'essentiel
+   ===================================================================== */
+const MINI = {
+  valeur:     { anim: 'valeur', formule: 'Remplacer x par le nombre, entre parenthèses s’il est négatif',
+                pts: ['3x veut dire 3 × x', 'Le carré se calcule avant la multiplication', '(−2)² = 4 : le carré d’un négatif est positif'] },
+  reduire:    { anim: 'reduire', formule: 'On additionne seulement les termes de la même famille',
+                pts: ['Famille des x², famille des x, famille des nombres', '2x² + 4x² = 6x²  mais  x² + x reste x² + x', 'Le signe devant un terme voyage avec lui'] },
+  simple:     { anim: 'simple', formule: 'k(a + b) = ka + kb',
+                pts: ['Le facteur multiplie CHAQUE terme de la parenthèse', 'Le rectangle se coupe en deux aires', '5(2x − 3) = 10x − 15'] },
+  signe:      { anim: 'signe', formule: '−(a + b) = −a − b      −(a − b) = −a + b',
+                pts: ['Un − devant la parenthèse change tous les signes', 'Il faut changer le signe de CHAQUE terme', '−2(x − 3) = −2x + 6 : on multiplie aussi par −2'] },
+  double:     { anim: 'double', formule: '(a + b)(c + d) = ac + ad + bc + bd',
+                pts: ['Chaque terme de la 1re parenthèse multiplie chaque terme de la 2e', '4 flèches, donc 4 produits', 'Puis on réduit les termes de la même famille'] },
+  carre:      { anim: 'carre', formule: '(a + b)² = a² + 2ab + b²',
+                pts: ['(x + 3)² = (x + 3)(x + 3)', 'Le double produit 2ab ne doit jamais disparaître', '(x + 3)² n’est PAS égal à x² + 9'] },
+  factoriser: { anim: 'factoriser', formule: 'ka + kb = k(a + b)',
+                pts: ['Repérer le facteur commun à tous les termes', 'L’écrire devant, puis ce qui reste dans la parenthèse', 'Vérifier en redéveloppant'] },
+  identite:   { anim: 'identite', formule: 'a² − b² = (a + b)(a − b)',
+                pts: ['Repérer deux carrés séparés par un moins', 'x² − 49 : a = x et b = 7', '9x² − 4 : a = 3x et b = 2'] },
+  verifier:   { anim: 'verifier', formule: 'Deux écritures égales donnent le même résultat pour tout x',
+                pts: ['Choisir un nombre simple, par exemple x = 2', 'Calculer chaque écriture séparément', 'Résultats différents : il y a une erreur'] }
+};
+const miniEtat = { lecteur: null };
+function ouvrirMini(cle){
+  const M = MINI[cle]; if (!M) return;
+  let f = document.getElementById('mcFond');
+  if (!f){
+    f = document.createElement('div'); f.id = 'mcFond'; f.className = 'mc-fond';
+    f.innerHTML = '<div class="mc-boite" role="dialog" aria-modal="true" aria-labelledby="mcTitre">' +
+      '<div class="mc-tete"><span class="mc-etiq">Mini-cours</span><h3 id="mcTitre"></h3></div>' +
+      '<canvas id="mcCanvas" class="mc-canvas"></canvas>' +
+      '<div class="mc-formule" id="mcFormule"></div><ul class="mc-pts" id="mcPts"></ul>' +
+      '<div class="mc-btns"><button type="button" class="btn sec" id="mcRejouer">Rejouer</button>' +
+      '<button type="button" class="btn" id="mcFermer">Fermer</button></div></div>';
+    document.body.appendChild(f);
+    f.addEventListener('click', function(e){ if (e.target === f) fermerMini(); });
+    document.getElementById('mcFermer').addEventListener('click', fermerMini);
+    document.getElementById('mcRejouer').addEventListener('click', function(){ if (miniEtat.lecteur) miniEtat.lecteur.jouer(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') fermerMini(); });
+  }
+  document.getElementById('mcTitre').textContent = ANIMS[M.anim].titre;
+  document.getElementById('mcFormule').textContent = M.formule;
+  const ul = document.getElementById('mcPts'); ul.innerHTML = '';
+  M.pts.forEach(function(p){ const li = document.createElement('li'); li.textContent = p; ul.appendChild(li); });
+  if (miniEtat.lecteur) miniEtat.lecteur.arreter();
+  miniEtat.lecteur = creerLecteur(document.getElementById('mcCanvas'), M.anim, { boucle: true });
+  f.classList.add('ouvert');
+  miniEtat.lecteur.jouer();
+  document.getElementById('mcFermer').focus();
+}
+function fermerMini(){
+  const f = document.getElementById('mcFond'); if (!f) return;
+  f.classList.remove('ouvert');
+  if (miniEtat.lecteur) miniEtat.lecteur.arreter();   /* aucune animation ne tourne en arrière-plan */
+}
+/* Tout bouton portant data-mini ouvre le mini-cours correspondant. */
+document.addEventListener('click', function(e){
+  const b = e.target.closest && e.target.closest('[data-mini]');
+  if (b) ouvrirMini(b.getAttribute('data-mini'));
+});
+
+
+/* =====================================================================
+   DONNÉES DU TP — toutes les réponses ont été recalculées
+   type : num (nombre), expr (égalité seule), dev (développé réduit), fact (factorisé au maximum)
+   ===================================================================== */
+const CHAMPS = {
+ 1: [{ id: 'm1a', l: 'a) Pour x = 3', type: 'num', rep: 10 },
+     { id: 'm1b', l: 'b) Pour x = −1', type: 'num', rep: 6 },
+     { id: 'm1c', l: 'c) Pour x = 0', type: 'num', rep: 1 }],
+ 2: [{ id: 'm2a', l: 'Expression réduite', type: 'dev', rep: '2x²+6x-4' }],
+ 3: [{ id: 'm3a', l: 'a) Aire de la case A (bleue)', type: 'expr', rep: '10x' },
+     { id: 'm3b', l: 'b) Aire de la case B (orange)', type: 'expr', rep: '15' },
+     { id: 'm3c', l: 'c) 5(2x + 3) =', type: 'dev', rep: '10x+15' },
+     { id: 'm3d', l: 'd) 4(3x − 2) =', type: 'dev', rep: '12x-8' },
+     { id: 'm3e', l: 'e) x(x + 7) =', type: 'dev', rep: 'x²+7x' }],
+ 4: [{ id: 'm4a', l: 'a) −(3x − 4) =', type: 'dev', rep: '-3x+4' },
+     { id: 'm4b', l: 'b) 7 − (2x + 5) =', type: 'dev', rep: '2-2x' },
+     { id: 'm4c', l: 'c) 5x − 2(x − 3) =', type: 'dev', rep: '3x+6' }],
+ 5: [{ id: 'm5a', l: 'Case A', type: 'expr', rep: 'x²' },
+     { id: 'm5b', l: 'Case B', type: 'expr', rep: '2x' },
+     { id: 'm5c', l: 'Case C', type: 'expr', rep: '4x' },
+     { id: 'm5d', l: 'Case D', type: 'expr', rep: '8' },
+     { id: 'm5e', l: '(x + 4)(x + 2) =', type: 'dev', rep: 'x²+6x+8' },
+     { id: 'm5f', l: '(2x + 1)(x + 3) =', type: 'dev', rep: '2x²+7x+3' }],
+ 6: [{ id: 'm6a', l: 'a) (x − 3)(x + 5) =', type: 'dev', rep: 'x²+2x-15' },
+     { id: 'm6b', l: 'b) (2x − 1)(3x − 4) =', type: 'dev', rep: '6x²-11x+4' },
+     { id: 'm6c', l: 'c) (x + 6)² =', type: 'dev', rep: 'x²+12x+36' }],
+ 7: [{ id: 'm7a', l: 'a) 7x + 21 =', type: 'fact', rep: '7x+21' },
+     { id: 'm7b', l: 'b) 12x − 18 =', type: 'fact', rep: '12x-18' },
+     { id: 'm7c', l: 'c) x² + 9x =', type: 'fact', rep: 'x²+9x' },
+     { id: 'm7d', l: 'd) 10x² − 15x =', type: 'fact', rep: '10x²-15x' }],
+ 8: [{ id: 'm8a', l: 'a) (x + 2)(x + 5) + (x + 2)(2x − 1) =', type: 'fact', rep: '(x+2)(3x+4)' },
+     { id: 'm8b', l: 'b) x² − 49 =', type: 'fact', rep: 'x²-49' },
+     { id: 'm8c', l: 'c) 9x² − 4 =', type: 'fact', rep: '9x²-4' }]
+};
+const REUSSITE = {
+ 1: '2 × 3² − 3 × 3 + 1 = 18 − 9 + 1 = 10. Pour −1 : 2 × 1 + 3 + 1 = 6.',
+ 2: 'Les x² : −2x² + 4x² = 2x². Les x : 5x + x = 6x. Les nombres : 3 − 7 = −4.',
+ 3: 'Le rectangle se coupe en deux : 5 × 2x = 10x et 5 × 3 = 15. Le facteur multiplie chaque terme.',
+ 4: 'Le moins change chaque signe. En c) : −2 × (−3) = +6, puis 5x − 2x = 3x.',
+ 5: 'Quatre cases, quatre produits, puis on réduit : 2x + 4x = 6x.',
+ 6: 'En a) : 5x − 3x = 2x et −3 × 5 = −15. En c) : le double produit 2 × 6x = 12x ne disparaît pas.',
+ 7: 'On sort le plus grand facteur commun : le nombre ET x quand il est dans chaque terme.',
+ 8: 'En a), le facteur commun est la parenthèse (x + 2). En b) et c) : a² − b² = (a + b)(a − b).'
+};
+const CAS9 = [
+ { titre: 'Développer E = 3 − (x − 5)', lignes: ['E = 3 − x − 5', 'E = −2 − x'], err: 0,
+   expl: 'Ligne 1 fausse : −(−5) = +5. Il fallait E = 3 − x + 5 = 8 − x.' },
+ { titre: 'Développer F = (2x + 3)(x − 1)', lignes: ['F = 2x² − 2x + 3x − 3', 'F = 2x² + x − 3'], err: -1,
+   expl: 'Tout est juste. Avec x = 2 : 7 × 1 = 7 et 8 + 2 − 3 = 7.' },
+ { titre: 'Factoriser G = 6x² − 8x', lignes: ['G = 2x × 3x − 2x × 4', 'G = 2x(3x − 8)'], err: 1,
+   expl: 'Ligne 2 fausse : il reste 2x × 4, donc G = 2x(3x − 4).' }
+];
+const JETONS2 = [{ s: '5x', f: 1 }, { s: '+ 3', f: 2 }, { s: '− 2x²', f: 0 }, { s: '+ x', f: 1 }, { s: '− 7', f: 2 }, { s: '+ 4x²', f: 0 }];
+const COULF = ['#7c3aed', '#2563eb', '#ea580c'];
+
+/* =====================================================================
+   MOTEUR — progression, verrous, étoiles (3 au 1er essai, 2 au 2e, 1 ensuite)
+   ===================================================================== */
+const NB = 10, CLE = 'tp_calcul_litteral';
+const etat = { debloque: 1, etoiles: {} };
+const ESSAIS = {};
+function charger(){ try { const d = JSON.parse(localStorage.getItem(CLE)); if (d && d.debloque){ etat.debloque = d.debloque; etat.etoiles = d.etoiles || {}; } } catch (e){} }
+function sauver(){ try { localStorage.setItem(CLE, JSON.stringify(etat)); } catch (e){} }
+function totalEtoiles(){ return Object.keys(etat.etoiles).reduce(function(s, k){ return s + etat.etoiles[k]; }, 0); }
+function etoiles(n){ return '★'.repeat(n) + '☆'.repeat(3 - n); }
+function majProgression(){
+ const pr = document.getElementById('progression'); pr.innerHTML = '';
+ for (let n = 1; n <= NB; n++){
+  const s = document.createElement('div'); s.className = 'seg' + (n < etat.debloque ? ' ok' : (n === etat.debloque ? ' encours' : ''));
+  s.textContent = n === NB ? 'Bilan' : n; s.setAttribute('data-a', n); pr.appendChild(s);
+ }
+ document.getElementById('scoreTot').textContent = totalEtoiles();
+ for (let n = 2; n <= NB; n++){
+  const bo = document.querySelector('#a' + n + ' .boite'); let v = bo.querySelector('.verrou');
+  if (n > etat.debloque){
+   if (!v){ v = document.createElement('div'); v.className = 'verrou';
+    v.innerHTML = '<div class="cadenas"></div><div>Termine la mission ' + (n - 1) + ' pour déverrouiller</div>'; bo.appendChild(v); }
+  } else if (v) v.remove();
+ }
+ for (let n = 1; n < NB; n++){
+  const f = document.getElementById('fait' + n);
+  if (etat.etoiles[n]){ f.textContent = 'Mission réussie  ' + etoiles(etat.etoiles[n]); f.classList.add('vu'); }
+ }
+ bilan();
+}
+function reussir(n){
+ if (!etat.etoiles[n]){ const e = ESSAIS[n] || 0; etat.etoiles[n] = e === 0 ? 3 : (e === 1 ? 2 : 1); }
+ if (etat.debloque === n) etat.debloque = n + 1;
+ sauver(); majProgression();
+ setTimeout(function(){ const s = document.getElementById('a' + (n + 1)); if (s && s.scrollIntoView) s.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 1100);
+}
+function echec(n){ ESSAIS[n] = (ESSAIS[n] || 0) + 1; }
+
+/* ===== contrôle d'une réponse ===== */
+function controle(f, brut){
+ const v = String(brut == null ? '' : brut).trim();
+ if (!v) return { ok: false, m: 'réponse vide.' };
+ if (f.type === 'num'){
+  const x = Number(normaliser(v));
+  if (v === '' || isNaN(x)) return { ok: false, m: 'écris un nombre.' };
+  return Math.abs(x - f.rep) < 1e-9 ? { ok: true } : { ok: false, m: 'faux. Reprends le calcul étape par étape.' };
+ }
+ let n; try { n = analyser(v); } catch (e){ return { ok: false, m: 'expression non comprise : vérifie les signes et les parenthèses.' }; }
+ const p = poly(n), q = poly(analyser(f.rep));
+ if (!pegal(p, q)){
+  const xt = [2, 3, -1, 5].find(function(x){ return Math.abs(pval(p, x) - pval(q, x)) > 1e-9; });
+  return { ok: false, m: 'faux. Teste x = ' + nombreFr(xt) + ' : ta réponse vaut ' + nombreFr(pval(p, xt)) + ', il faut ' + nombreFr(pval(q, xt)) + '.' };
+ }
+ if (f.type === 'dev'){
+  const r = estReduite(n);
+  if (r === 'par') return { ok: false, m: 'égal, mais il reste des parenthèses : développe jusqu’au bout.' };
+  if (r === 'nonreduit') return { ok: false, m: 'égal, mais pas encore réduit : regroupe les termes de la même famille.' };
+ }
+ if (f.type === 'fact'){
+  const r = estFactorisee(n);
+  if (r === 'pasproduit') return { ok: false, m: 'égal, mais ce n’est pas un produit : mets le facteur commun devant une parenthèse.' };
+  if (r !== 'ok') return { ok: false, m: 'juste, mais on peut encore factoriser par ' + r + '.' };
+ }
+ return { ok: true };
+}
+function construireChamps(){
+ Object.keys(CHAMPS).forEach(function(n){
+  const z = document.getElementById('champs' + n);
+  CHAMPS[n].forEach(function(f){
+   const d = document.createElement('div'); d.className = 'chp';
+   const l = document.createElement('label'); l.setAttribute('for', f.id); l.innerHTML = '<span class="e">' + f.l + '</span>';
+   const i = document.createElement('input'); i.id = f.id; i.className = 'math'; i.autocomplete = 'off'; i.spellcheck = false;
+   i.setAttribute('autocapitalize', 'off'); i.placeholder = f.type === 'num' ? 'un nombre' : 'ta réponse';
+   i.addEventListener('keydown', function(e){ if (e.key === 'Enter') valider(+n); });
+   d.appendChild(l); d.appendChild(i); z.appendChild(d);
+  });
+ });
+}
+function valider(n){
+ if (n > etat.debloque) return;
+ const msgs = [];
+ CHAMPS[n].forEach(function(f){
+  const i = document.getElementById(f.id), r = controle(f, i.value);
+  i.classList.toggle('bon', r.ok); i.classList.toggle('faux', !r.ok);
+  if (!r.ok) msgs.push(f.l.replace(/\s*=\s*$/, '') + ' : ' + r.m);
+ });
+ const v = document.getElementById('verd' + n);
+ if (!msgs.length){ v.className = 'verdict ok'; v.textContent = 'Juste. ' + REUSSITE[n]; reussir(n); }
+ else {
+  echec(n); v.className = 'verdict ko';
+  v.innerHTML = '<b>' + (CHAMPS[n].length - msgs.length) + ' réponse(s) juste(s) sur ' + CHAMPS[n].length + '.</b><ul>' +
+   msgs.map(function(m){ return '<li>' + m.replace(/[<>&]/g, '') + '</li>'; }).join('') + '</ul>';
+ }
+}
+document.addEventListener('click', function(e){ const b = e.target.closest && e.target.closest('[data-valider]'); if (b) valider(+b.getAttribute('data-valider')); });
+
+/* ===== mission 2 : ranger les termes ===== */
+(function(){
+ const z = document.getElementById('jet2'); let sel = null, ranges = 0;
+ JETONS2.forEach(function(j, i){
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'jet'; b.textContent = j.s; b.setAttribute('data-i', i);
+  b.addEventListener('click', function(){ if (2 > etat.debloque) return;
+   z.querySelectorAll('.jet').forEach(function(x){ x.classList.remove('sel'); }); sel = i; b.classList.add('sel'); });
+  z.appendChild(b);
+ });
+ document.querySelectorAll('#a2 .bac').forEach(function(bac){
+  bac.addEventListener('click', function(){
+   if (sel === null) return;
+   const j = JETONS2[sel], f = +bac.getAttribute('data-f');
+   if (j.f === f){
+    const s = document.createElement('span'); s.textContent = j.s; s.style.borderColor = COULF[f]; s.style.color = COULF[f];
+    bac.querySelector('.zone').appendChild(s);
+    z.querySelector('[data-i="' + sel + '"]').remove(); sel = null; ranges++;
+    if (ranges === JETONS2.length) document.getElementById('partie2').classList.add('vu');
+   } else {
+    echec(2); bac.classList.remove('secoue'); void bac.offsetWidth; bac.classList.add('secoue');
+    const v = document.getElementById('verd2'); v.className = 'verdict ko';
+    v.textContent = 'Pas dans cette famille : regarde la puissance de x dans « ' + j.s + ' ».';
+    setTimeout(function(){ if (v.className.indexOf('ko') >= 0) v.textContent = ''; }, 2500);
+   }
+  });
+ });
+})();
+
+/* ===== mission 9 : trouver l'erreur ===== */
+(function(){
+ const z = document.getElementById('cas9'); let finis = 0;
+ CAS9.forEach(function(k){
+  const d = document.createElement('div'); d.className = 'cas';
+  d.innerHTML = '<div class="titre">' + k.titre + '</div>';
+  const choix = k.lignes.map(function(l, i){ return { t: l, v: i }; }).concat([{ t: 'Aucune erreur', v: -1 }]);
+  let fini = false;
+  choix.forEach(function(o){
+   const b = document.createElement('button'); b.type = 'button'; b.className = 'ligne' + (o.v === -1 ? ' aucune' : ''); b.textContent = o.t;
+   b.addEventListener('click', function(){
+    if (fini || 9 > etat.debloque) return;
+    if (o.v === k.err){
+     fini = true; b.classList.add('bon');
+     const e = document.createElement('div'); e.className = 'expl'; e.textContent = k.expl; d.appendChild(e);
+     finis++;
+     if (finis === CAS9.length){ const v = document.getElementById('verd9'); v.className = 'verdict ok';
+      v.textContent = 'Les trois cas sont résolus. Le test avec x = 2 trahit toujours une erreur.'; reussir(9); }
+    } else {
+     echec(9); b.classList.add('faux'); setTimeout(function(){ b.classList.remove('faux'); }, 900);
+    }
+   });
+   d.appendChild(b);
+  });
+  z.appendChild(d);
+ });
+})();
+
+/* ===== bilan ===== */
+const NOMS = ['Calculer', 'Réduire', 'Simple distributivité', 'Signe moins', 'Double distributivité',
+              'Signes et carrés', 'Factoriser', 'Factoriser expert', 'Trouver l’erreur'];
+function bilan(){
+ const z = document.getElementById('bilan'), t = totalEtoiles();
+ let h = '<table class="tab-bilan"><tr><th>Mission</th><th>Étoiles</th></tr>';
+ NOMS.forEach(function(nm, i){ const e = etat.etoiles[i + 1]; h += '<tr><td>' + (i + 1) + '. ' + nm + '</td><td class="etoiles">' + (e ? etoiles(e) : '—') + '</td></tr>'; });
+ h += '</table><p style="font-size:18px;font-weight:800;color:#155e75">Total : ' + t + ' étoiles sur 27</p>';
+ h += '<div class="cahiernote"><b>Les 3 réflexes</b> — un moins devant une parenthèse change tous les signes ; ' +
+      'on réduit famille par famille ; on vérifie avec x = 2.</div>';
+ z.innerHTML = h;
+}
+(function(){
+ const b = document.getElementById('recommencer'); let arme = false;
+ b.addEventListener('click', function(){
+  if (!arme){ arme = true; b.textContent = 'Clique encore pour tout effacer';
+   setTimeout(function(){ arme = false; b.textContent = 'Recommencer le TP'; }, 3000); return; }
+  try { localStorage.removeItem(CLE); } catch (e){}
+  location.reload();
+ });
+})();
+
+/* ===== clavier mathématique ===== */
+(function(){
+ let dernier = null;
+ document.addEventListener('focusin', function(e){ if (e.target.classList && e.target.classList.contains('math')) dernier = e.target; });
+ document.getElementById('clavier').addEventListener('mousedown', function(e){ e.preventDefault(); });
+ document.getElementById('clavier').addEventListener('click', function(e){
+  const b = e.target.closest('[data-car]'); if (!b || !dernier) return;
+  const c = b.getAttribute('data-car'), d = dernier.selectionStart == null ? dernier.value.length : dernier.selectionStart,
+        f = dernier.selectionEnd == null ? d : dernier.selectionEnd;
+  dernier.value = dernier.value.slice(0, d) + c + dernier.value.slice(f);
+  dernier.focus(); try { dernier.setSelectionRange(d + c.length, d + c.length); } catch (er){}
+ });
+})();
+
+/* ===== figures fixes ===== */
+function preparer(id){
+ const cv = document.getElementById(id), dpr = Math.min(2, window.devicePixelRatio || 1);
+ cv.width = AW * dpr; cv.height = AH * dpr; const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); fond(c); return c;
+}
+(function(){
+ const c = preparer('fig1');
+ function boite(x, w, l1, col, t){ c.save(); rr(c, x - w / 2, 130, w, 100, 16); c.fillStyle = '#f8fafc'; c.fill();
+  c.strokeStyle = col; c.lineWidth = 3; c.stroke(); c.restore(); txt(c, l1, x, 180, { t: t || 30, c: col }); }
+ boite(120, 140, 'x = 3', C_.n);
+ boite(440, 320, 'A = 2x² − 3x + 1', C_.fac, 26);
+ boite(760, 140, 'A = ?', C_.ok);
+ fleche(c, 198, 180, 272, 180, C_.gris, 4); fleche(c, 608, 180, 682, 180, C_.gris, 4);
+ txt(c, 'on remplace', 235, 112, { t: 15, c: C_.gris, b: false });   /* au-dessus des flèches : entre les cadres, ils les touchaient */
+ txt(c, 'on calcule', 645, 112, { t: 15, c: C_.gris, b: false });
+ txt(c, 'Le carré se calcule avant la multiplication.', 440, 290, { t: 17, c: C_.gris, b: false });
+})();
+(function(){
+ const c = preparer('fig3'), x0 = 250, y0 = 80, H = 150, w1 = 250, w2 = 120;
+ cellule(c, x0, y0, w1, H, C_.x, 'A', 1, { t: 40 }); cellule(c, x0 + w1, y0, w2, H, C_.n, 'B', 1, { t: 40 });
+ txt(c, '5', x0 - 20, y0 + H / 2, { t: 26, c: C_.fac });
+ txt(c, '2x', x0 + w1 / 2, y0 - 18, { t: 24, c: C_.x }); txt(c, '3', x0 + w1 + w2 / 2, y0 - 18, { t: 24, c: C_.n });
+ txt(c, 'aire totale = A + B', x0 + (w1 + w2) / 2, y0 + H + 34, { t: 18, c: C_.gris, b: false });
+})();
+(function(){
+ const c = preparer('fig5'), x0 = 420, y0 = 40, X = 150, u = 34, A = 4 * u, B = 2 * u;
+ jetons(c, [{ s: '(x + ' }, { s: '4', c: C_.n }, { s: ')(x + ' }, { s: '2', c: C_.n }, { s: ')' }], 200, 180, { t: 30 });
+ cellule(c, x0, y0, X, X, C_.x2, 'A', 1, { t: 34 }); cellule(c, x0 + X, y0, B, X, C_.x, 'B', 1, { t: 30 });
+ cellule(c, x0, y0 + X, X, A, C_.x, 'C', 1, { t: 30 }); cellule(c, x0 + X, y0 + X, B, A, C_.n, 'D', 1, { t: 30 });
+ txt(c, 'x', x0 + X / 2, y0 - 16, { t: 20, c: C_.x }); txt(c, '2', x0 + X + B / 2, y0 - 16, { t: 20, c: C_.n });
+ txt(c, 'x', x0 - 16, y0 + X / 2, { t: 20, c: C_.x }); txt(c, '4', x0 - 16, y0 + X + A / 2, { t: 20, c: C_.n });
+})();
+
+/* ===== INITIALISATION — à garder en dernier ===== */
+construireChamps(); charger(); majProgression();
+</script>
+</body>
+</html>
