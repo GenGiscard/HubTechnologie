@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP — Cinématique d’un moteur · CAPET SII · ESTIC</title>
+<style>
+:root{
+ --ink:#1e3a5f; --bleu:#1d4ed8; --bleu-fonce:#1e40af; --cyan:#0e7490; --orange:#ea580c;
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
+ --ombre:0 4px 14px rgba(30,58,95,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--bleu-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.tp{max-width:960px;margin:26px auto 6px;padding:0 20px}
+header.tp h1{font-size:32px;color:var(--cyan)}
+header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
+/* Barre de progression */
+.progression{max-width:960px;margin:16px auto;padding:0 20px;display:flex;gap:8px;align-items:center}
+.progression .seg{flex:1;height:10px;border-radius:6px;background:#e2e8f0;position:relative;transition:.3s}
+.progression .seg.ok{background:var(--vert)}
+.progression .seg.encours{background:var(--orange)}
+.progression .score{font-weight:800;color:var(--bleu-fonce);font-size:15px;white-space:nowrap}
+/* Activités */
+.acti{max-width:960px;margin:22px auto;padding:0 20px;position:relative}
+.boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:24px;border-top:5px solid var(--cyan);position:relative;overflow:hidden}
+.boite h2{font-size:21px;color:var(--cyan);display:flex;align-items:center;gap:10px}
+.boite h2 .badge{background:var(--cyan);color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.boite .consigne{margin:10px 0 16px;font-size:15px;color:var(--ink);background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.5}
+.verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
+.verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
+/* QCM */
+.question{margin:14px 0;padding:14px;background:#f8fafc;border-radius:12px}
+.question .q{font-weight:700;margin-bottom:10px;font-size:15px}
+.question svg{display:block;margin:6px 0 12px;background:#fff;border-radius:8px;border:1px solid #eef2f7}
+.rep{display:flex;flex-wrap:wrap;gap:8px}
+.rep button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 16px;font-size:14.5px;cursor:pointer;font-weight:600;color:var(--ink);transition:.15s}
+.rep button:hover{border-color:var(--cyan)}
+.rep button.bon{background:#dcfce7;border-color:var(--vert);color:#14532d}
+.rep button.faux{background:#fee2e2;border-color:var(--rouge);color:#7f1d1d}
+.rep button:disabled{cursor:default;opacity:.85}
+/* Simulateurs */
+.simu{display:grid;grid-template-columns:280px 1fr;gap:18px;margin-top:10px}
+.commandes{background:#f8fafc;border-radius:12px;padding:16px}
+.commandes label{display:block;font-size:13.5px;font-weight:700;color:var(--bleu-fonce);margin:12px 0 4px}
+.commandes input[type=range]{width:100%}
+.commandes .val{font-size:13px;color:var(--orange);font-weight:800}
+.commandes select{width:100%;padding:8px;border-radius:8px;border:2px solid #cbd5e1;font-size:14px;font-family:inherit}
+.commandes .info{font-size:12px;color:var(--gris);margin-top:4px;line-height:1.4}
+canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;border-radius:12px;display:block}
+.btnrow{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.btn{border:none;border-radius:10px;padding:11px 20px;font-size:15px;font-weight:800;cursor:pointer;color:#fff;background:var(--cyan)}
+.btn:hover{filter:brightness(1.08)}
+.btn.orange{background:var(--orange)}
+.btn.vert{background:var(--vert)}
+.btn:disabled{background:#cbd5e1;cursor:default}
+.verdict{margin-top:12px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:15px;display:none}
+.verdict.ok{display:block;background:#dcfce7;color:#14532d;border-left:5px solid var(--vert)}
+.verdict.ko{display:block;background:#fee2e2;color:#7f1d1d;border-left:5px solid var(--rouge)}
+.jauge{height:14px;border-radius:8px;background:#e2e8f0;overflow:hidden;margin-top:8px}
+.jauge div{height:100%;width:0%;background:var(--vert);transition:width .3s}
+.mission{display:inline-block;background:#fff7ed;border:1.5px dashed var(--orange);border-radius:10px;padding:8px 12px;font-size:13.5px;margin-top:8px}
+/* Code final */
+.codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#0e7490,#1d4ed8);border-radius:14px;padding:22px;color:#fff}
+.codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
+.codefinal a{color:#fde68a;font-weight:800}
+@media (max-width:760px){.simu{grid-template-columns:1fr}}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:68px;height:68px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:8.5px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1;letter-spacing:-.1px}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;margin:0 auto 1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+.rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
+
+
+.chp input.bon{border-color:#16a34a;background:#dcfce7}
+.chp input.faux{border-color:#dc2626;background:#fee2e2}
+.tri .item{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 12px;margin:8px 0;border:2px solid #e2e8f0;border-radius:12px;background:#fff;transition:.2s}
+.tri .item.bon{border-color:#16a34a;background:#f0fdf4}
+.tri .item.faux{border-color:#dc2626;background:#fef2f2}
+.tri .enonce{flex:1;min-width:220px;font-weight:700;font-size:15px}
+.tri .choix{display:flex;gap:8px;flex-wrap:wrap}
+.tri .choix button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:7px 13px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer;color:#334155}
+.tri .choix button.faux{border-color:#dc2626;background:#fee2e2}
+.tri .item.bon .choix button:disabled{opacity:.55;cursor:default}
+canvas.fig{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}
+.donnees{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:9px 13px;margin:8px 0;font-size:15px;line-height:1.7}
+.corrige-btn{margin-top:10px;background:#f0f9ff;color:#0369a1;border:1.5px solid #7dd3fc;
+ border-radius:9px;padding:7px 13px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer}
+.corrige-btn:hover{background:#e0f2fe}
+.corrige-bloc{display:none;margin-top:10px;border:1px solid #bae6fd;border-radius:12px;
+ background:#f8fcff;padding:12px 14px}
+.corrige-bloc.ouvert{display:block}
+.corrige-bloc .etape{display:flex;gap:10px;margin:6px 0;font-size:14.5px;line-height:1.5}
+.corrige-bloc .etape > span{flex:0 0 112px;font-weight:800;color:#0369a1;font-size:12px;
+ text-transform:uppercase;letter-spacing:.5px;padding-top:2px}
+.corrige-bloc .retenu{margin-top:8px;background:#ecfeff;border-left:4px solid #0e7490;
+ border-radius:8px;padding:8px 11px;font-size:14px}
+.copie-zone{margin-top:18px;border-top:2px dashed #cbd5e1;padding-top:14px}
+.copie-zone h3{color:#155e75;font-size:18px;margin-bottom:4px}
+.copie-zone .chapo-c{color:#64748b;font-size:13.5px;margin-bottom:10px}
+.copie-ex{border:1px solid #e9e2d4;border-radius:12px;padding:11px 14px;margin:10px 0;background:#fff}
+.copie-ex b.t{color:#7c2d12}
+@media print{.corrige-btn{display:none}.corrige-bloc{display:block}}
+</style>
+</head>
+<body>
+
+<!-- Logo ESTIC Don Bosco (officiel) -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="tp">
+ <h1>TP — Cinématique d’un moteur</h1>
+ <p>Un monocylindre à bielle-manivelle. Positions, vitesses, puis deux constructions graphiques classiques des sujets CAPET.</p>
+</header>
+
+<div class="progression" id="prog">
+ <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div><div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="score">★ <span id="scoreTot">0</span>pts</div>
+</div>
+
+<div class="acti" id="a1"><div class="boite">
+ <h2><span class="badge">1</span>Course et cylindrée</h2>
+ <div class="consigne">Le moteur ci-dessous a une manivelle de 40 mm et un alésage de 70 mm.</div>
+ <canvas class="fig" id="fig1" width="760" height="250"></canvas>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — écris la formule de la course, puis celle du volume balayé, avec les unités.</div>
+ <div id="champs1"></div>
+ <div class="btnrow"><button class="btn" id="verif1">Valider</button></div><div id="verd1"></div>
+</div></div>
+<div class="acti" id="a2"><div class="boite">
+ <h2><span class="badge">2</span>Vitesse du maneton</h2>
+ <div class="consigne">La manivelle tourne à 1 500 tr/min. Le point A est le maneton.</div>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — convertis N en rad/s, puis calcule V<sub>A</sub> en m/s.</div>
+ <div id="champs2"></div>
+ <div class="btnrow"><button class="btn" id="verif2">Valider</button></div><div id="verd2"></div>
+</div></div>
+<div class="acti" id="a3"><div class="boite">
+ <h2><span class="badge">3</span>Nature des mouvements</h2>
+ <div class="consigne">Classe chaque mouvement par rapport au repère indiqué. Un item faux reste actif.</div>
+ <div class="tri" id="tri3"></div><div id="verd3"></div>
+</div></div>
+<div class="acti" id="a4"><div class="boite">
+ <h2><span class="badge">4</span>Position du piston</h2>
+ <div class="consigne">La manivelle a tourné de θ = 60° depuis le point mort haut.</div>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — écris la loi x<sub>B</sub> = R cos θ + √(L² − R² sin² θ), puis l’application numérique.</div>
+ <div id="champs4"></div>
+ <div class="btnrow"><button class="btn" id="verif4">Valider</button></div><div id="verd4"></div>
+</div></div>
+<div class="acti" id="a5"><div class="boite">
+ <h2><span class="badge">5</span>Équiprojectivité</h2>
+ <div class="consigne">θ = 45°. Les angles mesurés sur le tracé : (V<sub>A</sub>, AB) = 34,8° et (V<sub>B</sub>, AB) = 10,2°.</div>
+ <div class="donnees">cos 34,8° = 0,821 · cos 10,2° = 0,984</div>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — trace V<sub>A</sub>, projette-la sur AB, reporte en B puis remonte jusqu’à l’axe du cylindre.</div>
+ <div id="champs5"></div>
+ <div class="btnrow"><button class="btn" id="verif5">Valider</button></div><div id="verd5"></div>
+</div></div>
+<div class="acti" id="a6"><div class="boite">
+ <h2><span class="badge">6</span>Centre instantané de rotation</h2>
+ <div class="consigne">θ = 45°, x<sub>B</sub> = 185,76 mm. I est à l’intersection de la droite OA et de la verticale en B.</div>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — place I, mesure IA et IB, puis applique V = ω × distance au CIR.</div>
+ <div id="champs6"></div>
+ <div class="btnrow"><button class="btn" id="verif6">Valider</button></div><div id="verd6"></div>
+</div></div>
+<div class="acti" id="a7"><div class="boite">
+ <h2><span class="badge">7</span>Bilan</h2>
+ <div class="consigne">Deux méthodes graphiques, un seul résultat : c’est ainsi qu’on se vérifie en épreuve.</div>
+ <div id="bilan7"></div>
+</div></div>
+<div class="acti"><div class="boite" style="text-align:center"><a class="btn" style="text-decoration:none;display:inline-block" href="01_cours_capet_cinematique.html">Revoir le cours</a></div></div>
+<script>
+
+'use strict';
+const CLE='tp_capet_cinematique';
+const etat={debloque:1,score:0,f:{}};
+function sauver(){ try{ localStorage.setItem(CLE, JSON.stringify({d:etat.debloque, s:etat.score, f:etat.f})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem(CLE)); if(d){ etat.debloque=d.d; etat.score=d.s; etat.f=d.f||{}; } }catch(e){} }
+function majProgression(){
+ document.querySelectorAll('.progression .seg').forEach(function(seg){
+  const n=+seg.dataset.a; seg.className='seg'+((n<etat.debloque||etat.f[n])?' ok':(n===etat.debloque?' encours':''));
+ });
+ document.getElementById('scoreTot').textContent=etat.score;
+ for(let n=2;n<=7;n++){
+  const acti=document.getElementById('a'+n); let v=acti.querySelector('.verrou');
+  if(n>etat.debloque){ if(!v){ v=document.createElement('div'); v.className='verrou';
+    v.innerHTML='<div class="cadenas"></div>Termine la mission '+(n-1)+' pour déverrouiller'; acti.querySelector('.boite').appendChild(v); } }
+  else if(v){ v.remove(); }
+ }
+}
+function reussir(n, pts, message){
+ etat.score+=pts; etat.f[n]=1; /* missions toutes visibles : elles peuvent être faites dans le désordre */
+ while(etat.f[etat.debloque]) etat.debloque++;
+ sauver(); majProgression();
+ if(n<7) setTimeout(function(){ document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}); },900);
+}
+function champsCalc(zoneId,liste){
+ const z=document.getElementById(zoneId); if(!z) return;
+ liste.forEach(function(c){
+  const d=document.createElement('div'); d.className='chp';
+  const l=document.createElement('label'); l.innerHTML=c.lbl; l.setAttribute('for',c.id);
+  const i=document.createElement('input'); i.id=c.id; i.autocomplete='off'; i.inputMode='decimal';
+  const u=document.createElement('span'); u.className='u'; u.innerHTML=c.u;
+  d.appendChild(l); d.appendChild(i); d.appendChild(u); z.appendChild(d);
+ });
+}
+function verifierCalc(liste,verdId,n,okTxt){
+ let bons=0;
+ liste.forEach(function(c){
+  const i=document.getElementById(c.id);
+  const v=parseFloat(String(i.value||'').replace(/\s/g,'').replace(',','.'));
+  const ok=isFinite(v)&&Math.abs(v-c.rep)<=c.tol;
+  i.classList.toggle('bon',ok); i.classList.toggle('faux',!ok); if(ok) bons++;
+ });
+ const v=document.getElementById(verdId);
+ if(bons===liste.length){ v.className='verdict ok'; v.innerHTML='✓ '+okTxt; reussir(n,3); return true; }
+ v.className='verdict ko'; v.innerHTML=bons+' résultat(s) juste(s) sur '+liste.length+'. Reprends le calcul faux sur ta copie.';
+ return false;
+}
+function brancher(n,liste,txt){
+ champsCalc('champs'+n,liste);
+ const b=document.getElementById('verif'+n);
+ b.addEventListener('click',function(){ if(verifierCalc(liste,'verd'+n,n,txt)) b.disabled=true; });
+}
+function trier(n,ITEMS,LIB,okTxt){
+ const zone=document.getElementById('tri'+n); let err=0,bons=0;
+ ITEMS.forEach(function(it){
+  const d=document.createElement('div'); d.className='item';
+  const p=document.createElement('div'); p.className='enonce'; p.innerHTML=it.t; d.appendChild(p);
+  const ch=document.createElement('div'); ch.className='choix';
+  Object.keys(LIB).forEach(function(code){
+   const b=document.createElement('button'); b.type='button'; b.textContent=LIB[code];
+   b.addEventListener('click',function(){
+    if(d.classList.contains('bon')) return;
+    if(code===it.c){
+     d.classList.remove('faux'); d.classList.add('bon'); ch.querySelectorAll('button').forEach(function(x){x.disabled=true;});
+     bons++;
+     if(bons===ITEMS.length){ const v=document.getElementById('verd'+n); v.className='verdict ok'; v.innerHTML='✓ '+okTxt; reussir(n, err===0?3:(err<=2?2:1)); }
+    } else { err++; d.classList.add('faux'); b.classList.add('faux'); setTimeout(function(){ d.classList.remove('faux'); b.classList.remove('faux'); },900); }
+   });
+   ch.appendChild(b);
+  });
+  d.appendChild(ch); zone.appendChild(d);
+ });
+}
+function T(c,s,x,y,t,co,al,b){c.font=(b===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const d=Math.hypot(x1-x0,y1-y0); if(d<1) return;
+ const L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+ c.strokeStyle=coul;c.fillStyle=coul;c.lineWidth=ep;c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();
+ c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();
+}
+function HACH(c,x,y,w,h,coul){ c.strokeStyle=coul;c.lineWidth=1;
+ for(let k=-h;k<w;k+=8){const t0=Math.max(0,-k),t1=Math.min(h,w-k); if(t1<=t0) continue; c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}
+ c.lineWidth=2;c.strokeRect(x,y,w,h); }
+function POINT(c,x,y,r,coul){c.fillStyle=coul;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill();}
+function COTE(c,x0,y0,x1,y1,txt,coul,dy){ c.strokeStyle=coul; c.lineWidth=1.2; FLECHE(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,coul); FLECHE(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,coul); T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy||-6),13,coul); }
+(function(){ const c=document.getElementById('fig1').getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,250);
+
+const O={x:150,y:170}, s=1.4, R=40, L=160, th=Math.PI/4, ax=R*Math.cos(th), ay=R*Math.sin(th), xb=ax+Math.sqrt(L*L-ay*ay);
+const A={x:O.x+ax*s,y:O.y-ay*s}, B={x:O.x+xb*s,y:O.y};
+c.fillStyle='#f1f5f9'; c.fillRect(O.x+(L-R)*s-30,O.y-30,2*R*s+90,60);
+HACH(c,O.x+(L-R)*s-30,O.y-44,2*R*s+90,14,'#94a3b8'); HACH(c,O.x+(L-R)*s-30,O.y+30,2*R*s+90,14,'#94a3b8');
+c.save(); c.setLineDash([5,5]); c.strokeStyle='#94a3b8'; c.lineWidth=1.3; c.beginPath(); c.arc(O.x,O.y,R*s,0,6.2832); c.stroke(); c.restore();
+c.strokeStyle='#0e7490'; c.lineWidth=7; c.lineCap='round'; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(A.x,A.y); c.stroke();
+c.strokeStyle='#7c3aed'; c.lineWidth=5; c.beginPath(); c.moveTo(A.x,A.y); c.lineTo(B.x,B.y); c.stroke(); c.lineCap='butt';
+c.fillStyle='#fed7aa'; c.strokeStyle='#ea580c'; c.lineWidth=2.5; c.fillRect(B.x-6,O.y-27,50,54); c.strokeRect(B.x-6,O.y-27,50,54);
+POINT(c,O.x,O.y,6,'#334155'); POINT(c,A.x,A.y,6,'#334155'); POINT(c,B.x,B.y,6,'#334155');
+T(c,'O',O.x-14,O.y+18,14,'#334155'); T(c,'A',A.x-4,A.y-12,14,'#334155'); T(c,'B',B.x+20,O.y-34,14,'#334155');
+c.strokeStyle='#ea580c'; c.lineWidth=2; c.beginPath(); c.arc(O.x,O.y,26,-th,0); c.stroke(); T(c,'θ',O.x+36,O.y-8,15,'#ea580c');
+T(c,'OA = R = 40 mm',560,60,15,'#0e7490','left'); T(c,'AB = L = 160 mm',560,88,15,'#7c3aed','left');
+T(c,'N = 1 500 tr/min',560,116,15,'#334155','left'); T(c,'alésage Ø 70 mm',560,144,15,'#ea580c','left');
+T(c,'x_B mesuré depuis O',560,200,13,'#64748b','left',false);
+
+})();
+brancher(1,[{"id": "c11", "lbl": "a) Course du piston", "rep": 80, "tol": 0.1, "u": "mm"}, {"id": "c12", "lbl": "b) Cylindrée (volume balayé)", "rep": 307.9, "tol": 0.5, "u": "cm³"}],"Course = 2R = 80 mm. Cylindrée = π × 70² / 4 × 80 = 307 876 mm³, soit 307,9 cm³. La longueur de bielle n’intervient pas.");
+brancher(2,[{"id": "c21", "lbl": "a) Vitesse angulaire ω", "rep": 157.08, "tol": 0.1, "u": "rad/s"}, {"id": "c22", "lbl": "b) Vitesse du point A", "rep": 6.28, "tol": 0.02, "u": "m/s"}],"ω = π × 1 500 / 30 = 157,08 rad/s. V<sub>A</sub> = ω × R = 157,08 × 0,040 = 6,28 m/s, perpendiculaire à OA.");
+trier(3,[{"t": "Manivelle / bâti", "c": "R"}, {"t": "Piston / cylindre", "c": "T"}, {"t": "Bielle / bâti", "c": "P"}, {"t": "Roue de vélo / cadre", "c": "R"}, {"t": "Nacelle de grande roue / sol", "c": "T"}, {"t": "Échelle qui glisse contre un mur / sol", "c": "P"}],{"R": "rotation", "T": "translation", "P": "mouvement plan"},"Piège classique : la nacelle de grande roue reste horizontale. Tous ses points décrivent des cercles identiques : c’est une <b>translation circulaire</b>, pas une rotation.");
+brancher(4,[{"id": "c41", "lbl": "a) Position x<sub>B</sub> du piston", "rep": 176.2, "tol": 0.1, "u": "mm"}, {"id": "c42", "lbl": "b) Distance parcourue depuis le point mort haut", "rep": 23.8, "tol": 0.1, "u": "mm"}],"x<sub>B</sub> = 40 × 0,5 + √(160² − 40² × 0,75) = 20 + 156,20 = 176,20 mm. Le point mort haut est à L + R = 200 mm : le piston a parcouru 23,8 mm.");
+brancher(5,[{"id": "c51", "lbl": "a) Projection commune des vitesses sur AB", "rep": 5.16, "tol": 0.03, "u": "m/s"}, {"id": "c52", "lbl": "b) Vitesse du piston V<sub>B</sub>", "rep": 5.24, "tol": 0.03, "u": "m/s"}],"Projection = 6,28 × cos 34,8° = 5,16 m/s. Même projection en B : V<sub>B</sub> = 5,16 / cos 10,2° = 5,24 m/s.");
+brancher(6,[{"id": "c61", "lbl": "a) Distance IA", "rep": 222.7, "tol": 0.5, "u": "mm"}, {"id": "c62", "lbl": "b) Distance IB", "rep": 185.8, "tol": 0.5, "u": "mm"}, {"id": "c63", "lbl": "c) Vitesse angulaire de la bielle", "rep": 28.2, "tol": 0.2, "u": "rad/s"}, {"id": "c64", "lbl": "d) Vitesse du piston V<sub>B</sub>", "rep": 5.24, "tol": 0.03, "u": "m/s"}],"I = (185,76 ; 185,76) car OA est à 45°. IA = √2 × 185,76 − 40 = 222,7 mm. ω<sub>bielle</sub> = 6,283 / 0,2227 = 28,2 rad/s. V<sub>B</sub> = 28,2 × 0,1858 = 5,24 m/s : même résultat que par équiprojectivité.");
+(function(){ const z=document.getElementById('bilan7'); const d=document.createElement('div'); d.className='verdict ok'; d.innerHTML="✓ Tu sais passer d’une rotation à une translation, calculer une position et trouver une vitesse de deux façons.<br><br><b>Le réflexe à garder :</b> toujours écrire la direction connue de chaque vitesse avant de construire. L’équiprojectivité est rapide, le CIR donne en plus la vitesse angulaire de la bielle."; z.appendChild(d); })();
+
+/* ===== INITIALISATION — À GARDER EN DERNIER ===== */
+charger(); majProgression();
+
+/* ===== CORRIGES_CAPET (voir _outils/ajouter_corriges_tp_capet.py) ===== */
+const CORRIGES={"1": "<div class=\"etape\"><span>Formule</span><div>course = 2R ; cylindrée = (π D² / 4) × course</div></div><div class=\"etape\"><span>Application</span><div>course = 2 × 40 = 80 mm. V = π × 70² / 4 × 80 = 3 848,5 × 80 = 307 876 mm³.</div></div><div class=\"etape\"><span>Résultat</span><div><b>course 80 mm</b> et <b>cylindrée 307,9 cm³</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — 1 cm³ = 1 000 mm³. La longueur de bielle ne joue ni sur la course ni sur la cylindrée.</div>", "2": "<div class=\"etape\"><span>Formule</span><div>ω = π N / 30 ; V<sub>A</sub> = ω × R</div></div><div class=\"etape\"><span>Application</span><div>ω = π × 1 500 / 30 = 157,08 rad/s. V<sub>A</sub> = 157,08 × 0,040.</div></div><div class=\"etape\"><span>Résultat</span><div><b>ω = 157,08 rad/s</b> et <b>V<sub>A</sub> = 6,28 m/s</b>, perpendiculaire à OA.</div></div><div class=\"retenu\"><b>À retenir</b> — R en mètres pour obtenir des m/s. Écrire aussi la direction : elle sert dans toutes les constructions qui suivent.</div>", "3": "<div class=\"etape\"><span>Règle de tri</span><div><b>Rotation</b> : un axe fixe, les points décrivent des cercles centrés sur cet axe. <b>Translation</b> : tout segment du solide garde sa direction, même si les trajectoires sont des cercles. <b>Mouvement plan</b> : ni l’un ni l’autre.</div></div><div class=\"retenu\"><b>À retenir</b> — la nacelle de grande roue est en translation CIRCULAIRE : tous ses points ont, à chaque instant, la même vitesse.</div>", "4": "<div class=\"etape\"><span>Formule</span><div>x<sub>B</sub> = R cos θ + √(L² − R² sin² θ) ; distance au PMH = (L + R) − x<sub>B</sub></div></div><div class=\"etape\"><span>Application</span><div>x<sub>B</sub> = 40 × 0,5 + √(25 600 − 1 600 × 0,75) = 20 + √24 400 = 20 + 156,20.</div></div><div class=\"etape\"><span>Résultat</span><div><b>x<sub>B</sub> = 176,2 mm</b> et <b>23,8 mm</b> depuis le point mort haut.</div></div><div class=\"retenu\"><b>À retenir</b> — avec une bielle infinie, on trouverait R(1 − cos θ) = 20 mm. La bielle finie ajoute 3,8 mm : c’est l’effet de λ = R/L.</div>", "5": "<div class=\"etape\"><span>Formule</span><div>V<sub>A</sub> cos(V<sub>A</sub>, AB) = V<sub>B</sub> cos(V<sub>B</sub>, AB)</div></div><div class=\"etape\"><span>Application</span><div>projection = 6,283 × 0,821 = 5,158 m/s. V<sub>B</sub> = 5,158 / 0,984.</div></div><div class=\"etape\"><span>Résultat</span><div><b>projection 5,16 m/s</b> et <b>V<sub>B</sub> = 5,24 m/s</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — en épreuve, la construction se fait sur le document réponse avec une échelle des vitesses : il faut l’écrire, par exemple 1 cm pour 1 m/s.</div>", "6": "<div class=\"etape\"><span>Formule</span><div>I = (OA) ∩ (perpendiculaire en B à l’axe) ; ω<sub>bielle</sub> = V<sub>A</sub> / IA ; V<sub>B</sub> = ω<sub>bielle</sub> × IB</div></div><div class=\"etape\"><span>Application</span><div>OA à 45° : I = (185,76 ; 185,76). IA = √2 × 185,76 − 40 = 222,7 mm ; IB = 185,8 mm. ω = 6,283 / 0,2227 = 28,2 rad/s ; V<sub>B</sub> = 28,2 × 0,1858.</div></div><div class=\"etape\"><span>Résultat</span><div><b>IA = 222,7 mm</b>, <b>IB = 185,8 mm</b>, <b>ω<sub>bielle</sub> = 28,2 rad/s</b>, <b>V<sub>B</sub> = 5,24 m/s</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — les deux méthodes donnent le même V<sub>B</sub> : écrire cette vérification croisée sur la copie montre la maîtrise.</div>"};
+const COPIE=[{"titre": "Un autre moteur", "enonce": "R = 30 mm, L = 120 mm, alésage 60 mm, N = 3 000 tr/min. Calculer la course, la cylindrée et V<sub>A</sub>.", "corrige": "<div class=\"etape\"><span>Formule</span><div>course = 2R ; V = π D²/4 × course ; V<sub>A</sub> = (πN/30) × R</div></div><div class=\"etape\"><span>Application</span><div>course = 60 mm ; V = π × 3 600 / 4 × 60 = 169 646 mm³ ; V<sub>A</sub> = 314,16 × 0,030.</div></div><div class=\"etape\"><span>Résultat</span><div><b>60 mm</b>, <b>169,6 cm³</b>, <b>V<sub>A</sub> = 9,42 m/s</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — doubler N double V<sub>A</sub> : les efforts d’inertie, eux, sont multipliés par 4.</div>"}, {"titre": "Manivelle à 90°", "enonce": "Moteur du TP, θ = 90°. Calculer x<sub>B</sub> et la distance parcourue depuis le point mort haut. Est-ce la moitié de la course ?", "corrige": "<div class=\"etape\"><span>Formule</span><div>x<sub>B</sub> = R cos θ + √(L² − R² sin² θ)</div></div><div class=\"etape\"><span>Application</span><div>x<sub>B</sub> = 0 + √(25 600 − 1 600) = 154,92 mm ; 200 − 154,92 = 45,08 mm.</div></div><div class=\"etape\"><span>Résultat</span><div><b>x<sub>B</sub> = 154,9 mm</b> : <b>45,1 mm</b> parcourus, plus que la demi-course de 40 mm.</div></div><div class=\"retenu\"><b>À retenir</b> — le piston passe la mi-course AVANT θ = 90° : la bielle rend le mouvement dissymétrique.</div>"}, {"titre": "La vitesse à 90°", "enonce": "Toujours θ = 90°. Trouver le CIR de la bielle et en déduire V<sub>B</sub>.", "corrige": "<div class=\"etape\"><span>Formule</span><div>I = intersection des perpendiculaires à V<sub>A</sub> et à V<sub>B</sub></div></div><div class=\"etape\"><span>Application</span><div>OA vertical : V<sub>A</sub> est horizontale, parallèle à V<sub>B</sub>. Les perpendiculaires sont parallèles : I est rejeté à l’infini.</div></div><div class=\"etape\"><span>Résultat</span><div>Bielle en <b>translation instantanée</b> : <b>V<sub>B</sub> = V<sub>A</sub> = 6,28 m/s</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — la vitesse maximale du piston est voisine de cette position, légèrement avant 90°.</div>"}];
+function poserCorrige(n,raison){
+ const a=document.getElementById('a'+n); if(!a || !CORRIGES[n]) return;
+ const bo=a.querySelector('.boite'); if(!bo || bo.querySelector('.corrige-btn')) return;
+ const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+ btn.textContent='Voir le corrigé détaillé'+(raison? ' ('+raison+')':'');
+ const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=CORRIGES[n];
+ btn.addEventListener('click',function(){
+  bl.classList.toggle('ouvert');
+  btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Voir')+' le corrigé détaillé';
+ });
+ bo.appendChild(btn); bo.appendChild(bl);
+}
+/* TOUT VISIBLE DÈS LE DÉPART — choix de Mat, pour les TP CAPET uniquement.
+   Les corrigés sont posés sur toutes les missions à l'ouverture, et le verrouillage
+   progressif est levé : sans cela, le corrigé d'une mission verrouillée resterait
+   sous son cadenas. Le score reste juste — `reussir` ajoute les points à chaque
+   réussite, et un bouton validé est désactivé. Seule la barre de progression
+   continue d'avancer dans l'ordre. */
+(function(){
+ Object.keys(CORRIGES).forEach(function(n){ poserCorrige(+n); });
+ const m0=majProgression;
+ majProgression=function(){
+  const x=m0.apply(this,arguments);
+  document.querySelectorAll('.acti .verrou').forEach(function(v){ v.remove(); });
+  return x;
+ };
+ majProgression();
+})();
+/* exercices sur copie, dans la mission bilan, accessibles sans terminer le TP */
+(function(){
+ const actis=document.querySelectorAll('.acti'); if(!actis.length) return;
+ const bo=actis[actis.length-1].querySelector('.boite'); if(!bo) return;
+ const z=document.createElement('div'); z.className='copie-zone';
+ z.innerHTML='<h3>Exercices sur copie</h3><div class="chapo-c">Rédige sur ta copie : '+
+  'formule, application numérique, résultat avec son unité. Compare ensuite au corrigé.</div>';
+ COPIE.forEach(function(ex,i){
+  const d=document.createElement('div'); d.className='copie-ex';
+  d.innerHTML='<b class="t">Exercice '+(i+1)+' — '+ex.titre+'</b><p style="margin:6px 0">'+ex.enonce+'</p>';
+  const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+  btn.textContent='Afficher le corrigé';
+  const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=ex.corrige;
+  btn.addEventListener('click',function(){
+   bl.classList.toggle('ouvert');
+   btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Afficher')+' le corrigé';
+  });
+  d.appendChild(btn); d.appendChild(bl); z.appendChild(d);
+ });
+ bo.appendChild(z);
+})();
+
+</script>
+</body>
+</html>

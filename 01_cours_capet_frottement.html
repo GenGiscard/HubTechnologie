@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Frottement et adhérence · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+.bascule{display:inline-flex;gap:8px;align-items:center;font-size:14px;font-weight:700;color:var(--accf)}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+
+select{font:600 15px 'Segoe UI',sans-serif;padding:6px 10px;border:2px solid #cbd5e1;border-radius:9px;background:#fff}
+.grille-btn{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.grille-btn button{background:#f8fafc;border:2px solid #e9e2d4;border-radius:9px;padding:6px 11px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer;color:#334155}
+.grille-btn button.actif{border-color:#0e7490;background:#ecfeff;color:#155e75}
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.modes button{background:#fff;border:2px solid #0e7490;color:#0e7490;border-radius:9px;padding:6px 12px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer}
+.modes button.actif{background:#0e7490;color:#fff}
+.lecture{font:700 16px 'Segoe UI',sans-serif;color:#155e75;text-align:center;margin:6px 0}
+.fiche{border:2px solid #0e7490;border-radius:14px;padding:12px 18px}
+.fiche p{margin:6px 0;font-size:16px}
+.fiche .f{font-family:'Cambria Math','Times New Roman',serif;font-weight:700;font-size:17px}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Frottement et adhérence</h1>
+ <p class="sous">Coulomb, le cône de frottement, l’embrayage et la courroie : le frottement qui gêne et celui qu’on exploite.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>Les lois de Coulomb</h2>
+ <div class="chapo">Incline le plan : le bloc tient tant que tan α reste sous f.</div>
+ <canvas id="cvF1" width="880" height="340"></canvas>
+ <div class="reglage"><label for="fA">Inclinaison α</label><input type="range" id="fA" min="0" max="40" step="1" value="10"><span id="fAv"></span></div>
+ <div class="reglage"><label for="fF">Coefficient f</label><input type="range" id="fF" min="0.1" max="0.7" step="0.05" value="0.3"><span id="fFv"></span></div>
+ <div class="formule">adhérence : T ≤ f N &nbsp;&nbsp;·&nbsp;&nbsp; glissement : T = f N</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Le cône de frottement</h2>
+ <div class="chapo">Tant que l’action de contact reste dans le cône, rien ne glisse.</div>
+ <canvas id="cvF2" width="880" height="250"></canvas>
+ <div class="formule">tan φ = f &nbsp;&nbsp;·&nbsp;&nbsp; f = 0,3 → φ = 16,7°</div>
+ <div class="retenir">Plan incliné : le bloc glisse dès que <b>α &gt; φ</b>. La masse ne compte pas.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Embrayage et frein à disque</h2>
+ <div class="chapo">Le couple transmis vient du frottement sur des couronnes pressées.</div>
+ <div class="formule">C = n · f · F · R<sub>moy</sub> &nbsp;&nbsp;·&nbsp;&nbsp; R<sub>moy</sub> = (R + r) / 2 (usure uniforme)</div>
+ <canvas id="cvF3" width="880" height="290"></canvas>
+ <div class="reglage"><label for="eN">Surfaces n</label><input type="range" id="eN" min="1" max="6" step="1" value="2"><span id="eNv"></span></div>
+ <div class="reglage"><label for="eF">Effort F</label><input type="range" id="eF" min="500" max="6000" step="100" value="3000"><span id="eFv"></span></div>
+ <div class="reglage"><label for="eR">R extérieur</label><input type="range" id="eR" min="80" max="150" step="5" value="110"><span id="eRv"></span></div>
+ <div class="reglage"><label for="er">r intérieur</label><input type="range" id="er" min="30" max="75" step="5" value="70"><span id="erv"></span></div>
+ <div class="piege"><b>Piège :</b> n compte les <b>surfaces</b> de frottement. Un disque serré entre deux plateaux en a 2.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>La courroie : relation d’Euler</h2>
+ <div class="chapo">Plus la courroie s’enroule, plus l’écart de tension transmissible est grand.</div>
+ <div class="formule">T<sub>1</sub> = T<sub>2</sub> · e<sup>f θ</sup> &nbsp;(θ en radians) &nbsp;&nbsp;·&nbsp;&nbsp; C = (T<sub>1</sub> − T<sub>2</sub>) · R</div>
+ <canvas id="cvF4" width="880" height="300"></canvas>
+ <div class="reglage"><label for="cT">Enroulement θ</label><input type="range" id="cT" min="120" max="180" step="5" value="170"><span id="cTv"></span></div>
+ <div class="reglage"><label for="cF">Coefficient f</label><input type="range" id="cF" min="0.1" max="0.6" step="0.05" value="0.3"><span id="cFv"></span></div>
+ <div class="reglage"><label for="c2">Tension T<sub>2</sub></label><input type="range" id="c2" min="50" max="400" step="10" value="200"><span id="c2v"></span></div>
+ <div class="piege"><b>Piège :</b> θ en <b>radians</b>. 170° = 2,967 rad.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>La méthode d’épreuve</h2>
+ <div class="methode"><b>MÉTHODE — exploiter le frottement</b>
+  <ol>
+   <li>Isoler le solide et placer N et T au contact.</li>
+   <li>Écrire la condition limite : T = f N, ou α = φ.</li>
+   <li>Embrayage : compter les surfaces, calculer R<sub>moy</sub>, puis C.</li>
+   <li>Courroie : convertir θ en radians, puis appliquer Euler.</li>
+   <li>Conclure avec un coefficient de sécurité sur f.</li>
+  </ol></div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<section class="bloc">
+ <h2>À retenir</h2>
+ <div class="fiche"><p class="f">T ≤ f N &nbsp;·&nbsp; tan φ = f &nbsp;·&nbsp; glissement si α &gt; φ</p>
+ <p class="f">C = n f F R<sub>moy</sub> &nbsp;·&nbsp; R<sub>moy</sub> = (R + r)/2</p>
+ <p class="f">T<sub>1</sub> = T<sub>2</sub> e<sup>fθ</sup> &nbsp;(θ en rad) &nbsp;·&nbsp; C = (T<sub>1</sub> − T<sub>2</sub>) R</p>
+ <p>f élevé recherché : freins, embrayages, courroies. f faible : paliers, glissières.</p></div>
+</section>
+
+<section class="bloc" style="text-align:center">
+ <a class="btn" style="text-decoration:none;display:inline-block" href="02_tp_capet_frottement.html">Passer au TP</a>
+</section>
+<footer>Préparation CAFEP-CAPET SII · Frottement et adhérence · ESTIC Don Bosco</footer>
+<script>
+
+'use strict';
+function T(c,s,x,y,t,co,al,b){c.font=(b===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const d=Math.hypot(x1-x0,y1-y0); if(d<1) return;
+ const L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+ c.strokeStyle=coul;c.fillStyle=coul;c.lineWidth=ep;c.lineCap='butt';
+ c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();
+ c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();
+}
+/* hachures bornées par calcul — jamais de clip() */
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8; c.strokeStyle=coul;c.lineWidth=1;
+ for(let k=-h;k<w;k+=p){const t0=Math.max(0,-k),t1=Math.min(h,w-k); if(t1<=t0) continue;
+  c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}
+ c.lineWidth=2;c.strokeRect(x,y,w,h);
+}
+function POINT(c,x,y,r,coul){c.fillStyle=coul;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill();}
+function TIRETS(c,x0,y0,x1,y1,coul,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=coul;c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();}
+function FR(v,n){return (Math.round(v*Math.pow(10,n))/Math.pow(10,n)).toFixed(n).replace('.',',').replace('-','−');}
+/* animation qui ne tourne que lorsque le canvas est visible */
+const ANIMS=[];
+function ANIMER(id,draw){
+ const cv=document.getElementById(id),c=cv.getContext('2d'); let raf=0; const t0=performance.now();
+ const A={actif:false};
+ function boucle(ts){draw(c,(ts-t0)/1000); raf=requestAnimationFrame(boucle);}
+ A.demarrer=function(){if(!raf){A.actif=true;raf=requestAnimationFrame(boucle);}};
+ A.arreter=function(){cancelAnimationFrame(raf);raf=0;A.actif=false;};
+ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?A.demarrer():A.arreter();});}).observe(cv);}
+ else A.demarrer();
+ draw(c,0); ANIMS.push(A); return A;
+}
+function CURSEUR(id,fmt,cb){const s=document.getElementById(id),o=document.getElementById(id+'v');
+ function maj(){if(o) o.textContent=fmt(+s.value); cb&&cb();} s.addEventListener('input',maj); maj(); return s;}
+function V(id){return +document.getElementById(id).value;}
+
+
+/* 1 · plan incliné animé */
+(function(){
+ let pos=0, avant=0;
+ ANIMER('cvF1',function(c,t){
+  const a=V('fA')*Math.PI/180, f=V('fF'), glisse=Math.tan(a)>f+1e-9, dt=Math.min(0.05,t-avant); avant=t;
+  if(glisse){ pos+=dt*(9.81*(Math.sin(a)-f*Math.cos(a)))*40; if(pos>230) pos=0; } else pos=Math.max(0,Math.min(pos,230));
+  c.fillStyle='#fff'; c.fillRect(0,0,880,340);
+  const O={x:90,y:300}, Lp=560, ex={x:Math.cos(a),y:-Math.sin(a)}, nz={x:-Math.sin(a),y:-Math.cos(a)};
+  c.fillStyle='#e7e5e4'; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(O.x+Lp*ex.x,O.y+Lp*ex.y); c.lineTo(O.x+Lp*ex.x,O.y); c.closePath(); c.fill();
+  c.strokeStyle='#78716c'; c.lineWidth=3; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(O.x+Lp*ex.x,O.y+Lp*ex.y); c.stroke();
+  T(c,'α',O.x+110,O.y-5,16,'#78716c');
+  const s=380-pos, P0={x:O.x+s*ex.x,y:O.y+s*ex.y};
+  c.save(); c.translate(P0.x,P0.y); c.rotate(-a); c.fillStyle=glisse?'#fecaca':'#bbf7d0'; c.strokeStyle=glisse?'#dc2626':'#16a34a'; c.lineWidth=2.5;
+  c.fillRect(-40,-56,80,56); c.strokeRect(-40,-56,80,56); c.restore();
+  const G={x:P0.x+nz.x*28,y:P0.y+nz.y*28}, k=0.6, Pw=196.2, N=Pw*Math.cos(a), Tn=Math.min(Pw*Math.sin(a),f*N), phi=Math.atan(f);
+  c.fillStyle='rgba(14,116,144,0.1)'; c.beginPath(); c.moveTo(P0.x,P0.y);
+  const ang0=Math.atan2(nz.y,nz.x); c.lineTo(P0.x+150*Math.cos(ang0-phi),P0.y+150*Math.sin(ang0-phi)); c.lineTo(P0.x+150*Math.cos(ang0+phi),P0.y+150*Math.sin(ang0+phi)); c.closePath(); c.fill();
+  TIRETS(c,P0.x,P0.y,P0.x+150*Math.cos(ang0-phi),P0.y+150*Math.sin(ang0-phi),'#0e7490',1.4); TIRETS(c,P0.x,P0.y,P0.x+150*Math.cos(ang0+phi),P0.y+150*Math.sin(ang0+phi),'#0e7490',1.4);
+  FLECHE(c,G.x,G.y,G.x,G.y+Pw*k,3,'#334155'); T(c,'P',G.x+12,G.y+Pw*k-4,15,'#334155','left');
+  FLECHE(c,P0.x,P0.y,P0.x+nz.x*N*k,P0.y+nz.y*N*k,3,'#2563eb'); T(c,'N',P0.x+nz.x*N*k-14,P0.y+nz.y*N*k,15,'#2563eb');
+  FLECHE(c,P0.x,P0.y,P0.x+ex.x*Tn*k,P0.y+ex.y*Tn*k,3,'#ea580c'); T(c,'T',P0.x+ex.x*Tn*k+10,P0.y+ex.y*Tn*k+16,15,'#ea580c');
+  T(c,'tan α = '+FR(Math.tan(a),3)+'   f = '+FR(f,2),700,50,16,'#155e75');
+  T(c,glisse?'GLISSEMENT':'ADHÉRENCE',700,86,22,glisse?'#dc2626':'#16a34a');
+  T(c,'N = '+FR(N,1)+' N',700,124,14,'#2563eb'); T(c,'T nécessaire = '+FR(Pw*Math.sin(a),1)+' N',700,148,14,'#ea580c');
+  T(c,'T max = f N = '+FR(f*N,1)+' N',700,172,14,'#ea580c'); T(c,'bloc de 20 kg · cône en turquoise',700,200,12,'#64748b',undefined,false);
+ });
+})();
+/* 2 · cône de frottement */
+(function(){
+ const c=document.getElementById('cvF2').getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,880,250);
+ const P={x:300,y:210}, phi=Math.atan(0.3);
+ HACH(c,120,210,360,14,'#94a3b8');
+ c.fillStyle='rgba(14,116,144,0.12)'; c.beginPath(); c.moveTo(P.x,P.y); c.lineTo(P.x-180*Math.sin(phi)*1.1,P.y-180); c.lineTo(P.x+180*Math.sin(phi)*1.1,P.y-180); c.closePath(); c.fill();
+ TIRETS(c,P.x,P.y,P.x-180*Math.tan(phi),P.y-180,'#0e7490',1.6); TIRETS(c,P.x,P.y,P.x+180*Math.tan(phi),P.y-180,'#0e7490',1.6);
+ TIRETS(c,P.x,P.y,P.x,P.y-190,'#94a3b8',1.2); T(c,'normale',P.x,P.y-196,12,'#64748b');
+ FLECHE(c,P.x,P.y,P.x+30,P.y-150,3.5,'#16a34a'); FLECHE(c,P.x,P.y,P.x+120,P.y-110,3.5,'#dc2626');
+ T(c,'φ',P.x-22,P.y-110,16,'#0e7490');
+ T(c,'dans le cône : adhérence',640,90,17,'#16a34a'); T(c,'hors du cône : glissement',640,130,17,'#dc2626');
+ T(c,'demi-angle φ, avec tan φ = f',640,170,14,'#0e7490',undefined,false);
+})();
+/* 3 · embrayage */
+(function(){
+ const c=document.getElementById('cvF3').getContext('2d'), rr=document.getElementById('er'), RR=document.getElementById('eR');
+ function dessiner(){
+  if(+rr.value>+RR.value-10){ rr.value=+RR.value-10; document.getElementById('erv').textContent=rr.value+' mm'; }
+  const n=V('eN'),F=V('eF'),R=V('eR'),r=V('er'),f=0.35,Rm=(R+r)/2,C=n*f*F*Rm/1000;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,290);
+  const O={x:190,y:145}, k=0.9;
+  c.fillStyle='#fde68a'; c.beginPath(); c.arc(O.x,O.y,R*k,0,6.2832); c.arc(O.x,O.y,r*k,0,6.2832,true); c.fill();
+  c.strokeStyle='#b45309'; c.lineWidth=2; c.beginPath(); c.arc(O.x,O.y,R*k,0,6.2832); c.stroke(); c.beginPath(); c.arc(O.x,O.y,r*k,0,6.2832); c.stroke();
+  c.save(); c.setLineDash([6,4]); c.strokeStyle='#dc2626'; c.lineWidth=2; c.beginPath(); c.arc(O.x,O.y,Rm*k,0,6.2832); c.stroke(); c.restore();
+  FLECHE(c,O.x,O.y,O.x+R*k,O.y,2,'#334155'); T(c,'R',O.x+R*k/2,O.y-6,14,'#334155');
+  FLECHE(c,O.x,O.y,O.x-r*k*.7,O.y+r*k*.7,2,'#334155'); T(c,'r',O.x-r*k*.45,O.y+r*k*.45+18,14,'#334155');
+  T(c,'R moy',O.x,O.y-Rm*k-6,13,'#dc2626');
+  const sx=470, sy=60;
+  for(let i=0;i<n;i++){ const y=sy+i*(180/n); c.fillStyle='#fde68a'; c.fillRect(sx,y,150,Math.max(6,180/n-10)); c.strokeStyle='#b45309'; c.strokeRect(sx,y,150,Math.max(6,180/n-10)); }
+  FLECHE(c,sx+75,sy-40,sx+75,sy-6,3,'#2563eb'); T(c,'F',sx+92,sy-26,15,'#2563eb','left');
+  T(c,n+' surface'+(n>1?'s':'')+' de frottement',sx+75,262,13,'#b45309');
+  T(c,'R moy = '+FR(Rm,1)+' mm',760,90,16,'#dc2626'); T(c,'f = 0,35',760,124,16,'#334155');
+  T(c,'C = '+n+' × 0,35 × '+F+' × '+FR(Rm/1000,3),760,166,13,'#64748b',undefined,false);
+  T(c,'C = '+FR(C,1)+' N·m',760,204,22,'#155e75');
+ }
+ CURSEUR('eN',function(v){return String(v);},dessiner); CURSEUR('eF',function(v){return v+' N';},dessiner);
+ CURSEUR('eR',function(v){return v+' mm';},dessiner); CURSEUR('er',function(v){return v+' mm';},dessiner);
+})();
+/* 4 · courroie */
+(function(){
+ const c=document.getElementById('cvF4').getContext('2d');
+ function dessiner(){
+  const th=V('cT')*Math.PI/180, f=V('cF'), T2=V('c2'), k=Math.exp(f*th), T1=T2*k, Cm=(T1-T2)*0.06;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,300);
+  const O={x:230,y:150}, r=90, au=Math.PI+th/2, al=Math.PI-th/2;
+  c.fillStyle='#e2e8f0'; c.strokeStyle='#475569'; c.lineWidth=2; c.beginPath(); c.arc(O.x,O.y,r,0,6.2832); c.fill(); c.stroke(); POINT(c,O.x,O.y,5,'#475569');
+  c.strokeStyle='#ea580c'; c.lineWidth=7; c.beginPath(); c.arc(O.x,O.y,r+4,al,au); c.stroke();
+  function brin(a,tens,col,lab){ const p={x:O.x+(r+4)*Math.cos(a),y:O.y+(r+4)*Math.sin(a)}; let d={x:-Math.sin(a),y:Math.cos(a)}; if(d.x<0) d={x:-d.x,y:-d.y};
+   c.strokeStyle=col; c.lineWidth=7; c.beginPath(); c.moveTo(p.x,p.y); c.lineTo(p.x+d.x*220,p.y+d.y*220); c.stroke();
+   const Lf=Math.min(90,tens*0.18); FLECHE(c,p.x+d.x*220,p.y+d.y*220,p.x+d.x*(220+Lf),p.y+d.y*(220+Lf),3.5,col);
+   T(c,lab,p.x+d.x*(228+Lf),p.y+d.y*(228+Lf)+(d.y<0?-8:20),15,col,'left'); }
+  brin(au,T1,'#dc2626','T1 = '+FR(T1,0)+' N (brin tendu)'); brin(al,T2,'#2563eb','T2 = '+T2+' N');
+  c.strokeStyle='#0e7490'; c.lineWidth=2; c.beginPath(); c.arc(O.x,O.y,40,al,au); c.stroke(); T(c,'θ',O.x-56,O.y+6,18,'#0e7490');
+  T(c,'θ = '+V('cT')+'° = '+FR(th,3)+' rad',230,284,14,'#0e7490');
+  T(c,'e^(fθ) = '+FR(k,3),700,70,16,'#155e75'); T(c,'C = (T1 − T2) × 0,06 m',700,104,14,'#64748b',undefined,false);
+  T(c,'C = '+FR(Cm,2)+' N·m',700,138,20,'#155e75');
+ }
+ CURSEUR('cT',function(v){return v+'°';},dessiner); CURSEUR('cF',function(v){return FR(v,2);},dessiner); CURSEUR('c2',function(v){return v+' N';},dessiner);
+})();
+
+const Q=[
+ {q:"Un solide reste immobile sur son appui tant que…",r:["N est plus grand que T","l’action de contact reste dans le cône de frottement","f est supérieur à 1"],b:1,
+  ex:"Adhérence : T ≤ fN, c’est-à-dire une résultante inclinée de moins de φ par rapport à la normale."},
+ {q:"f = 0,3 : à partir de quel angle le bloc glisse-t-il ?",r:["16,7°","30°","73,3°"],b:0,
+  ex:"φ = arctan 0,3 = 16,7°. La masse du bloc n’intervient pas."},
+ {q:"Embrayage, 2 surfaces, f = 0,4, F = 2 000 N, R<sub>moy</sub> = 0,1 m : couple ?",r:["80 N·m","160 N·m","320 N·m"],b:1,
+  ex:"C = 2 × 0,4 × 2 000 × 0,1 = 160 N·m."},
+ {q:"Dans la relation d’Euler, θ s’exprime en…",r:["degrés","radians","tours"],b:1,
+  ex:"L’exposant fθ est un nombre sans unité : θ doit être en radians."},
+ {q:"Pour transmettre plus de couple avec la même courroie, on peut…",r:["augmenter l’angle d’enroulement","diminuer la tension de pose","diminuer f"],b:0,
+  ex:"Un galet tendeur qui augmente θ augmente e^(fθ), donc l’écart de tension transmissible."},
+ {q:"Dans un palier lisse, on recherche…",r:["un coefficient de frottement faible","un coefficient élevé","un coefficient égal à 1"],b:0,
+  ex:"Le palier doit guider sans dissiper : f faible, grâce aux matériaux (bronze, PTFE) et à la lubrification."}
+];
+
+(function(){
+ const z=document.getElementById('questions'), choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.innerHTML=txt;
+   b.addEventListener('click',function(){ if(b.disabled) return; choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';}); b.style.fontWeight='800'; });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){ b.disabled=true; if(j===Q[i].b) b.classList.add('bon'); else if(choix[i]===j) b.classList.add('faux'); });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div'); e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko'); e.textContent=Q[i].ex; r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ'); b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+(n===Q.length?'Méthode acquise : passe au TP.':'Relis les explications, puis passe au TP.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Guidage en rotation par roulements · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+.bascule{display:inline-flex;gap:8px;align-items:center;font-size:14px;font-weight:700;color:var(--accf)}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+
+select{font:600 15px 'Segoe UI',sans-serif;padding:6px 10px;border:2px solid #cbd5e1;border-radius:9px;background:#fff}
+.grille-btn{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.grille-btn button{background:#f8fafc;border:2px solid #e9e2d4;border-radius:9px;padding:6px 11px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer;color:#334155}
+.grille-btn button.actif{border-color:#0e7490;background:#ecfeff;color:#155e75}
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.modes button{background:#fff;border:2px solid #0e7490;color:#0e7490;border-radius:9px;padding:6px 12px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer}
+.modes button.actif{background:#0e7490;color:#fff}
+.lecture{font:700 16px 'Segoe UI',sans-serif;color:#155e75;text-align:center;margin:6px 0}
+.fiche{border:2px solid #0e7490;border-radius:14px;padding:12px 18px}
+.fiche p{margin:6px 0;font-size:16px}
+.fiche .f{font-family:'Cambria Math','Times New Roman',serif;font-weight:700;font-size:17px}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Guidage en rotation par roulements</h1>
+ <p class="sous">Choisir, monter et dimensionner un roulement : trois règles de montage et une formule de durée de vie.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>Anatomie d’un roulement</h2>
+ <div class="chapo">Les billes roulent au lieu de frotter : la cage les garde régulièrement espacées.</div>
+ <canvas id="cvR1" width="880" height="300"></canvas>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Quel roulement pour quelle charge ?</h2>
+ <div class="chapo">La forme des éléments roulants fixe les charges acceptées.</div>
+ <canvas id="cvR2" width="880" height="260"></canvas>
+ <table>
+  <tr><th>Type</th><th>Charge radiale</th><th>Charge axiale</th></tr>
+  <tr><td>Billes à contact radial</td><td>moyenne</td><td>modérée, dans les deux sens</td></tr>
+  <tr><td>Rouleaux cylindriques</td><td>forte</td><td>aucune</td></tr>
+  <tr><td>Rouleaux coniques</td><td>forte</td><td>forte, un seul sens : montés par paire</td></tr>
+  <tr><td>Butée à billes</td><td>aucune</td><td>forte</td></tr>
+ </table>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Les règles de montage</h2>
+ <div class="chapo">L’arbre chauffe et s’allonge : un seul roulement doit le tenir axialement.</div>
+ <div class="modes" id="modesR"><button type="button" class="actif" data-m="0">Un fixe, un libre</button><button type="button" data-m="1">Deux roulements fixes</button></div>
+ <canvas id="cvR3" width="880" height="300"></canvas>
+ <div class="reglage"><label for="sT">Échauffement ΔT</label><input type="range" id="sT" min="0" max="60" step="5" value="0"><span id="sTv"></span></div>
+ <div class="lecture" id="lR3"></div>
+ <div class="retenir"><b>Règle 1 :</b> la bague qui tourne par rapport à la charge est montée <b>serrée</b>.<br><b>Règle 2 :</b> un roulement arrêté des deux côtés, l’autre <b>libre</b> axialement.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>La charge équivalente</h2>
+ <div class="chapo">On remplace charge radiale et axiale par une seule charge radiale fictive.</div>
+ <div class="formule">P = X F<sub>r</sub> + Y F<sub>a</sub> &nbsp;&nbsp;·&nbsp;&nbsp; si F<sub>a</sub> / F<sub>r</sub> ≤ e : P = F<sub>r</sub></div>
+ <div class="retenir">F<sub>r</sub> = 3 kN, F<sub>a</sub> = 1,5 kN, e = 0,3 : F<sub>a</sub>/F<sub>r</sub> = 0,5 &gt; e, donc P = 0,56 × 3 + 1,5 × 1,5 = <b>3,93 kN</b>.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>La durée de vie L<sub>10</sub></h2>
+ <div class="chapo">Durée atteinte par 90 % des roulements identiques, sous la même charge.</div>
+ <div class="formule">L<sub>10</sub> = (C / P)<sup>n</sup> &nbsp;millions de tours &nbsp;·&nbsp; n = 3 billes, 10/3 rouleaux &nbsp;·&nbsp; L<sub>10h</sub> = L<sub>10</sub> × 10⁶ / (60 N)</div>
+ <canvas id="cvR4" width="880" height="320"></canvas>
+ <div class="reglage"><label for="sC">C (kN)</label><input type="range" id="sC" min="5" max="40" step="0.5" value="14"><span id="sCv"></span></div>
+ <div class="reglage"><label for="sP">P (kN)</label><input type="range" id="sP" min="0.5" max="10" step="0.1" value="2"><span id="sPv"></span></div>
+ <div class="reglage"><label for="sN">N (tr/min)</label><input type="range" id="sN" min="100" max="3000" step="50" value="1500"><span id="sNv"></span></div>
+ <div class="reglage"><label for="sTy">Type</label><select id="sTy"><option value="3">billes (n = 3)</option><option value="3.333333">rouleaux (n = 10/3)</option></select></div>
+ <div class="piege"><b>Doubler la charge</b> divise la durée par 2³ = <b>8</b> pour un roulement à billes.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>La méthode d’épreuve</h2>
+ <div class="methode"><b>MÉTHODE — choisir un roulement</b>
+  <ol>
+   <li>Isoler l’arbre et calculer F<sub>r</sub> et F<sub>a</sub> sur chaque roulement.</li>
+   <li>Calculer P avec X et Y du catalogue.</li>
+   <li>Traduire la durée exigée en millions de tours.</li>
+   <li>En déduire C<sub>min</sub> = P × L<sub>10</sub><sup>1/n</sup>.</li>
+   <li>Retenir au catalogue le premier roulement de C ≥ C<sub>min</sub>.</li>
+  </ol></div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<section class="bloc">
+ <h2>À retenir</h2>
+ <div class="fiche"><p>Bague tournante par rapport à la charge : montée serrée. Un roulement fixe, un libre.</p>
+ <p class="f">P = X F<sub>r</sub> + Y F<sub>a</sub> &nbsp;(P = F<sub>r</sub> si F<sub>a</sub>/F<sub>r</sub> ≤ e)</p>
+ <p class="f">L<sub>10</sub> = (C/P)<sup>n</sup> &nbsp;·&nbsp; L<sub>10h</sub> = L<sub>10</sub> × 10⁶ / (60 N) &nbsp;·&nbsp; C<sub>min</sub> = P × L<sub>10</sub><sup>1/n</sup></p>
+ <p>n = 3 pour les billes, 10/3 pour les rouleaux. Charge × 2 : durée ÷ 8 (billes).</p></div>
+</section>
+
+<section class="bloc" style="text-align:center">
+ <a class="btn" style="text-decoration:none;display:inline-block" href="02_tp_capet_roulements.html">Passer au TP</a>
+</section>
+<footer>Préparation CAFEP-CAPET SII · Guidage en rotation par roulements · ESTIC Don Bosco</footer>
+<script>
+
+'use strict';
+function T(c,s,x,y,t,co,al,b){c.font=(b===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const d=Math.hypot(x1-x0,y1-y0); if(d<1) return;
+ const L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+ c.strokeStyle=coul;c.fillStyle=coul;c.lineWidth=ep;c.lineCap='butt';
+ c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();
+ c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();
+}
+/* hachures bornées par calcul — jamais de clip() */
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8; c.strokeStyle=coul;c.lineWidth=1;
+ for(let k=-h;k<w;k+=p){const t0=Math.max(0,-k),t1=Math.min(h,w-k); if(t1<=t0) continue;
+  c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}
+ c.lineWidth=2;c.strokeRect(x,y,w,h);
+}
+function POINT(c,x,y,r,coul){c.fillStyle=coul;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill();}
+function TIRETS(c,x0,y0,x1,y1,coul,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=coul;c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();}
+function FR(v,n){return (Math.round(v*Math.pow(10,n))/Math.pow(10,n)).toFixed(n).replace('.',',').replace('-','−');}
+/* animation qui ne tourne que lorsque le canvas est visible */
+const ANIMS=[];
+function ANIMER(id,draw){
+ const cv=document.getElementById(id),c=cv.getContext('2d'); let raf=0; const t0=performance.now();
+ const A={actif:false};
+ function boucle(ts){draw(c,(ts-t0)/1000); raf=requestAnimationFrame(boucle);}
+ A.demarrer=function(){if(!raf){A.actif=true;raf=requestAnimationFrame(boucle);}};
+ A.arreter=function(){cancelAnimationFrame(raf);raf=0;A.actif=false;};
+ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?A.demarrer():A.arreter();});}).observe(cv);}
+ else A.demarrer();
+ draw(c,0); ANIMS.push(A); return A;
+}
+function CURSEUR(id,fmt,cb){const s=document.getElementById(id),o=document.getElementById(id+'v');
+ function maj(){if(o) o.textContent=fmt(+s.value); cb&&cb();} s.addEventListener('input',maj); maj(); return s;}
+function V(id){return +document.getElementById(id).value;}
+
+
+/* 1 · roulement qui tourne */
+ANIMER('cvR1',function(c,t){
+ c.fillStyle='#fff'; c.fillRect(0,0,880,300);
+ const O={x:220,y:150}, wi=t*1.6, wc=wi*0.4;
+ function anneau(r1,r2,f,s){ c.fillStyle=f; c.beginPath(); c.arc(O.x,O.y,r1,0,6.2832); c.arc(O.x,O.y,r2,0,6.2832,true); c.fill(); c.strokeStyle=s; c.lineWidth=2; c.beginPath(); c.arc(O.x,O.y,r1,0,6.2832); c.stroke(); c.beginPath(); c.arc(O.x,O.y,r2,0,6.2832); c.stroke(); }
+ anneau(130,98,'#cbd5e1','#475569');
+ anneau(54,30,'#bae6fd','#0369a1');
+ c.fillStyle='#64748b'; c.beginPath(); c.arc(O.x,O.y,30,0,6.2832); c.fill();
+ c.fillStyle='#fff'; c.save(); c.translate(O.x,O.y); c.rotate(wi); c.fillRect(-3,-30,6,14); c.restore();
+ c.save(); c.setLineDash([4,4]); c.strokeStyle='#b45309'; c.lineWidth=2; c.beginPath(); c.arc(O.x,O.y,76,0,6.2832); c.stroke(); c.restore();
+ for(let i=0;i<10;i++){ const a=wc+i*6.2832/10, x=O.x+76*Math.cos(a), y=O.y+76*Math.sin(a);
+  c.fillStyle='#e2e8f0'; c.strokeStyle='#334155'; c.lineWidth=2; c.beginPath(); c.arc(x,y,20,0,6.2832); c.fill(); c.stroke();
+  c.fillStyle='#fff'; c.beginPath(); c.arc(x-6,y-6,5,0,6.2832); c.fill(); }
+ const pt=function(r,a){return [O.x+r*Math.cos(a),O.y+r*Math.sin(a)];};
+ const L=[pt(114,-0.75).concat(['bague extérieure : fixe, dans le logement','#475569',50]),pt(76,-0.3).concat(['billes : elles roulent','#334155',100]),
+          pt(76,0.3).concat(['cage : maintient l’écart entre billes','#b45309',150]),pt(42,0.75).concat(['bague intérieure : tourne avec l’arbre','#0369a1',200])];
+ L.forEach(function(l){ POINT(c,l[0],l[1],3.5,l[3]); c.strokeStyle=l[3]; c.lineWidth=1.2; c.beginPath(); c.moveTo(l[0],l[1]); c.lineTo(470,l[4]); c.lineTo(480,l[4]); c.stroke(); T(c,l[2],486,l[4]+5,15,l[3],'left'); });
+ T(c,'cage et billes tournent 2,5 fois moins vite que la bague intérieure',650,265,13,'#64748b',undefined,false);
+});
+/* 2 · quatre types et leurs charges */
+(function(){
+ const c=document.getElementById('cvR2').getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,880,260);
+ const P=[['billes',1,.5],['rouleaux cylindriques',1,0],['rouleaux coniques',1,1],['butée à billes',0,1]];
+ P.forEach(function(p,i){
+  const x=20+i*215, cx=x+95, y=70;
+  c.strokeStyle='#e9e2d4'; c.lineWidth=1; c.strokeRect(x,30,200,200); T(c,p[0],cx,52,14,'#155e75');
+  c.fillStyle='#cbd5e1'; c.strokeStyle='#475569'; c.lineWidth=2;
+  if(i===3){ c.fillRect(cx-55,y+30,110,16); c.strokeRect(cx-55,y+30,110,16); c.fillRect(cx-55,y+76,110,16); c.strokeRect(cx-55,y+76,110,16);
+   c.fillStyle='#e2e8f0'; c.beginPath(); c.arc(cx,y+61,15,0,6.2832); c.fill(); c.stroke(); }
+  else { c.fillRect(cx-40,y+10,80,22); c.strokeRect(cx-40,y+10,80,22); c.fillRect(cx-40,y+90,80,22); c.strokeRect(cx-40,y+90,80,22);
+   c.fillStyle='#e2e8f0';
+   if(i===0){ c.beginPath(); c.arc(cx,y+61,27,0,6.2832); c.fill(); c.stroke(); }
+   if(i===1){ c.fillRect(cx-22,y+33,44,56); c.strokeRect(cx-22,y+33,44,56); }
+   if(i===2){ c.save(); c.translate(cx,y+61); c.rotate(-0.45); c.beginPath(); c.moveTo(-26,-24); c.lineTo(26,-18); c.lineTo(26,18); c.lineTo(-26,24); c.closePath(); c.fill(); c.stroke(); c.restore(); } }
+  if(p[1]) FLECHE(c,cx+62,y+4,cx+62,y+52,3+3*p[1],'#dc2626');
+  if(p[2]) FLECHE(c,cx-82,y+150,cx-82+30+40*p[2],y+150,2+3*p[2],'#2563eb');
+  T(c,p[1]?'radiale':'pas de radiale',cx+62,y+150,12,p[1]?'#dc2626':'#94a3b8');
+  T(c,p[2]?'axiale':'pas d’axiale',cx-40,y+176,12,p[2]?'#2563eb':'#94a3b8');
+ });
+})();
+/* 3 · dilatation : un fixe un libre, ou deux fixes */
+(function(){
+ let mode=0; const c=document.getElementById('cvR3').getContext('2d');
+ document.querySelectorAll('#modesR button').forEach(function(b){b.addEventListener('click',function(){mode=+b.getAttribute('data-m');
+  document.querySelectorAll('#modesR button').forEach(function(x){x.classList.toggle('actif',x===b);}); dessiner();});});
+ function roul(x,y,fixe,col){ c.fillStyle='#e2e8f0'; c.strokeStyle=col; c.lineWidth=2.5; c.fillRect(x-16,y-34,32,24); c.strokeRect(x-16,y-34,32,24); c.fillRect(x-16,y+10,32,24); c.strokeRect(x-16,y+10,32,24);
+  c.beginPath(); c.arc(x,y-22,8,0,6.2832); c.stroke(); c.beginPath(); c.arc(x,y+22,8,0,6.2832); c.stroke();
+  if(fixe){ c.fillStyle='#475569'; c.fillRect(x-24,y-46,6,12); c.fillRect(x+18,y-46,6,12); c.fillRect(x-24,y+34,6,12); c.fillRect(x+18,y+34,6,12); } }
+ function dessiner(){
+  const dT=V('sT'), dl=dT*0.55, y=150, xa=230, xb=640+(mode===0?dl:0);
+  c.fillStyle='#fff'; c.fillRect(0,0,880,300);
+  HACH(c,120,y-80,620,30,'#94a3b8'); HACH(c,120,y+50,620,30,'#94a3b8');
+  const rouge=Math.round(dT/60*200), col='rgb('+(100+rouge)+','+(116-rouge/2)+','+(139-rouge/2)+')';
+  c.fillStyle=col; c.fillRect(150,y-10,560+dl,20);
+  roul(xa,y,true,'#0e7490'); roul(xb,y,mode===1,'#0e7490');
+  T(c,'fixe',xa,y+70,14,'#0e7490'); T(c,mode===0?'libre':'fixe',xb,y+70,14,'#0e7490');
+  const F=210000*12e-6*dT*Math.PI*15*15;
+  if(dT>0){
+   if(mode===0){ FLECHE(c,xb-30,y-60,xb+10,y-60,3,'#16a34a'); T(c,'la bague extérieure glisse dans le logement',440,30,15,'#16a34a'); }
+   else { FLECHE(c,xa+70,y,xa+24,y,4,'#dc2626'); FLECHE(c,xb-70,y,xb-24,y,4,'#dc2626'); T(c,'l’arbre ne peut pas s’allonger : il pousse sur les roulements',440,30,15,'#dc2626'); }
+  }
+  document.getElementById('lR3').textContent= mode===1&&dT>0
+   ? 'Effort si rien ne glisse : F = E·α·ΔT·S ≈ '+FR(F/1000,1)+' kN (arbre acier Ø 30, ΔT = '+dT+' °C)'
+   : 'Allongement d’un arbre acier de 300 mm : '+FR(300*12e-6*dT,3)+' mm pour ΔT = '+dT+' °C';
+ }
+ CURSEUR('sT',function(v){return v+' °C';},dessiner);
+})();
+/* 5 · durée de vie */
+(function(){
+ const c=document.getElementById('cvR4').getContext('2d'), ty=document.getElementById('sTy');
+ function dessiner(){
+  const C=V('sC'),P=V('sP'),N=V('sN'),n=+ty.value, L10=Math.pow(C/P,n), Lh=L10*1e6/(60*N);
+  c.fillStyle='#fff'; c.fillRect(0,0,880,320);
+  const gx=80,gy=30,gw=480,gh=240, Y=function(h){return gy+gh-(Math.log10(Math.max(h,1))-1)/5*gh;}, X=function(p){return gx+(p-0.5)/9.5*gw;};
+  c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+  [10,100,1000,10000,100000,1000000].forEach(function(h){ c.strokeStyle='#f1f5f9'; c.beginPath(); c.moveTo(gx,Y(h)); c.lineTo(gx+gw,Y(h)); c.stroke(); T(c,h>=1000?(h/1000)+' k':String(h),gx-6,Y(h)+4,11,'#64748b','right'); });
+  [1,2,4,6,8,10].forEach(function(p){ T(c,String(p),X(p),gy+gh+16,11,'#64748b'); });
+  T(c,'P (kN)',gx+gw/2,gy+gh+34,12,'#64748b'); T(c,'L10h (heures)',gx,gy-10,12,'#64748b','left');
+  c.save(); c.setLineDash([6,4]); c.strokeStyle='#16a34a'; c.lineWidth=1.5; c.beginPath(); c.moveTo(gx,Y(20000)); c.lineTo(gx+gw,Y(20000)); c.stroke(); c.restore();
+  T(c,'20 000 h',gx+gw-4,Y(20000)-6,11,'#16a34a','right');
+  c.strokeStyle='#0e7490'; c.lineWidth=2.5; c.beginPath(); let premier=true;
+  for(let p=0.5;p<=10.001;p+=0.1){ const h=Math.pow(C/p,n)*1e6/(60*N); const yy=Y(h); if(yy<gy||yy>gy+gh){premier=true;continue;} premier?c.moveTo(X(p),yy):c.lineTo(X(p),yy); premier=false; } c.stroke();
+  const yp=Y(Lh); if(yp>=gy&&yp<=gy+gh) POINT(c,X(P),yp,7,'#ea580c');
+  T(c,'L10 = (C/P)^n',720,70,17,'#155e75'); T(c,'= '+FR(L10,1)+' millions de tours',720,104,16,'#334155');
+  T(c,'L10h = '+FR(Lh,0)+' h',720,150,22,Lh>=20000?'#16a34a':'#ea580c');
+  T(c,'≈ '+FR(Lh/(8*220),1)+' ans à 8 h par jour',720,182,13,'#64748b',undefined,false);
+  T(c,'échelle logarithmique',gx+gw-4,gy+16,11,'#94a3b8','right',false);
+ }
+ CURSEUR('sC',function(v){return FR(v,1)+' kN';},dessiner); CURSEUR('sP',function(v){return FR(v,1)+' kN';},dessiner);
+ CURSEUR('sN',function(v){return v+' tr/min';},dessiner); ty.addEventListener('change',dessiner);
+})();
+
+const Q=[
+ {q:"Arbre tournant, charge fixe : quelle bague monter serrée ?",r:["la bague intérieure","la bague extérieure","les deux"],b:0,
+  ex:"La bague intérieure tourne par rapport à la charge : montée glissante, elle tournerait sur l’arbre et l’userait."},
+ {q:"Pourquoi laisser un roulement libre axialement ?",r:["pour réduire le bruit","pour absorber la dilatation de l’arbre","pour faciliter la lubrification"],b:1,
+  ex:"Un arbre d’acier de 300 mm s’allonge de 0,14 mm pour 40 °C : bloqué, il charge axialement les deux roulements."},
+ {q:"Roulement à billes, C = 14 kN, P = 2 kN : L<sub>10</sub> ?",r:["7 millions de tours","49 millions de tours","343 millions de tours"],b:2,
+  ex:"(14 / 2)³ = 7³ = 343 millions de tours."},
+ {q:"On double la charge d’un roulement à billes. Sa durée de vie…",r:["est divisée par 2","est divisée par 8","est divisée par 3"],b:1,
+  ex:"La durée varie comme (1/P)³ : (1/2)³ = 1/8."},
+ {q:"Fortes charges radiale ET axiale : quel type choisir ?",r:["rouleaux cylindriques","rouleaux coniques","butée à billes"],b:1,
+  ex:"Les rouleaux coniques reprennent les deux. Ils se montent par paire, car chacun n’arrête qu’un sens axial."},
+ {q:"F<sub>r</sub> = 4 kN, F<sub>a</sub> = 0,8 kN, e = 0,3 : charge équivalente P ?",r:["4 kN","4,8 kN","3,4 kN"],b:0,
+  ex:"F_a / F_r = 0,2 ≤ e : la charge axiale est négligeable, P = F_r = 4 kN."}
+];
+
+(function(){
+ const z=document.getElementById('questions'), choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.innerHTML=txt;
+   b.addEventListener('click',function(){ if(b.disabled) return; choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';}); b.style.fontWeight='800'; });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){ b.disabled=true; if(j===Q[i].b) b.classList.add('bon'); else if(choix[i]===j) b.classList.add('faux'); });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div'); e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko'); e.textContent=Q[i].ex; r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ'); b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+(n===Q.length?'Méthode acquise : passe au TP.':'Relis les explications, puis passe au TP.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>

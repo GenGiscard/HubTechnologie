@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP — Choisir un roulement · CAPET SII · ESTIC</title>
+<style>
+:root{
+ --ink:#1e3a5f; --bleu:#1d4ed8; --bleu-fonce:#1e40af; --cyan:#0e7490; --orange:#ea580c;
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
+ --ombre:0 4px 14px rgba(30,58,95,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--bleu-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.tp{max-width:960px;margin:26px auto 6px;padding:0 20px}
+header.tp h1{font-size:32px;color:var(--cyan)}
+header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
+/* Barre de progression */
+.progression{max-width:960px;margin:16px auto;padding:0 20px;display:flex;gap:8px;align-items:center}
+.progression .seg{flex:1;height:10px;border-radius:6px;background:#e2e8f0;position:relative;transition:.3s}
+.progression .seg.ok{background:var(--vert)}
+.progression .seg.encours{background:var(--orange)}
+.progression .score{font-weight:800;color:var(--bleu-fonce);font-size:15px;white-space:nowrap}
+/* Activités */
+.acti{max-width:960px;margin:22px auto;padding:0 20px;position:relative}
+.boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:24px;border-top:5px solid var(--cyan);position:relative;overflow:hidden}
+.boite h2{font-size:21px;color:var(--cyan);display:flex;align-items:center;gap:10px}
+.boite h2 .badge{background:var(--cyan);color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.boite .consigne{margin:10px 0 16px;font-size:15px;color:var(--ink);background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.5}
+.verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
+.verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
+/* QCM */
+.question{margin:14px 0;padding:14px;background:#f8fafc;border-radius:12px}
+.question .q{font-weight:700;margin-bottom:10px;font-size:15px}
+.question svg{display:block;margin:6px 0 12px;background:#fff;border-radius:8px;border:1px solid #eef2f7}
+.rep{display:flex;flex-wrap:wrap;gap:8px}
+.rep button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 16px;font-size:14.5px;cursor:pointer;font-weight:600;color:var(--ink);transition:.15s}
+.rep button:hover{border-color:var(--cyan)}
+.rep button.bon{background:#dcfce7;border-color:var(--vert);color:#14532d}
+.rep button.faux{background:#fee2e2;border-color:var(--rouge);color:#7f1d1d}
+.rep button:disabled{cursor:default;opacity:.85}
+/* Simulateurs */
+.simu{display:grid;grid-template-columns:280px 1fr;gap:18px;margin-top:10px}
+.commandes{background:#f8fafc;border-radius:12px;padding:16px}
+.commandes label{display:block;font-size:13.5px;font-weight:700;color:var(--bleu-fonce);margin:12px 0 4px}
+.commandes input[type=range]{width:100%}
+.commandes .val{font-size:13px;color:var(--orange);font-weight:800}
+.commandes select{width:100%;padding:8px;border-radius:8px;border:2px solid #cbd5e1;font-size:14px;font-family:inherit}
+.commandes .info{font-size:12px;color:var(--gris);margin-top:4px;line-height:1.4}
+canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;border-radius:12px;display:block}
+.btnrow{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.btn{border:none;border-radius:10px;padding:11px 20px;font-size:15px;font-weight:800;cursor:pointer;color:#fff;background:var(--cyan)}
+.btn:hover{filter:brightness(1.08)}
+.btn.orange{background:var(--orange)}
+.btn.vert{background:var(--vert)}
+.btn:disabled{background:#cbd5e1;cursor:default}
+.verdict{margin-top:12px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:15px;display:none}
+.verdict.ok{display:block;background:#dcfce7;color:#14532d;border-left:5px solid var(--vert)}
+.verdict.ko{display:block;background:#fee2e2;color:#7f1d1d;border-left:5px solid var(--rouge)}
+.jauge{height:14px;border-radius:8px;background:#e2e8f0;overflow:hidden;margin-top:8px}
+.jauge div{height:100%;width:0%;background:var(--vert);transition:width .3s}
+.mission{display:inline-block;background:#fff7ed;border:1.5px dashed var(--orange);border-radius:10px;padding:8px 12px;font-size:13.5px;margin-top:8px}
+/* Code final */
+.codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#0e7490,#1d4ed8);border-radius:14px;padding:22px;color:#fff}
+.codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
+.codefinal a{color:#fde68a;font-weight:800}
+@media (max-width:760px){.simu{grid-template-columns:1fr}}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:68px;height:68px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:8.5px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1;letter-spacing:-.1px}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;margin:0 auto 1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+.rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
+
+
+.chp input.bon{border-color:#16a34a;background:#dcfce7}
+.chp input.faux{border-color:#dc2626;background:#fee2e2}
+.tri .item{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 12px;margin:8px 0;border:2px solid #e2e8f0;border-radius:12px;background:#fff;transition:.2s}
+.tri .item.bon{border-color:#16a34a;background:#f0fdf4}
+.tri .item.faux{border-color:#dc2626;background:#fef2f2}
+.tri .enonce{flex:1;min-width:220px;font-weight:700;font-size:15px}
+.tri .choix{display:flex;gap:8px;flex-wrap:wrap}
+.tri .choix button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:7px 13px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer;color:#334155}
+.tri .choix button.faux{border-color:#dc2626;background:#fee2e2}
+.tri .item.bon .choix button:disabled{opacity:.55;cursor:default}
+canvas.fig{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}
+.donnees{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:9px 13px;margin:8px 0;font-size:15px;line-height:1.7}
+.corrige-btn{margin-top:10px;background:#f0f9ff;color:#0369a1;border:1.5px solid #7dd3fc;
+ border-radius:9px;padding:7px 13px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer}
+.corrige-btn:hover{background:#e0f2fe}
+.corrige-bloc{display:none;margin-top:10px;border:1px solid #bae6fd;border-radius:12px;
+ background:#f8fcff;padding:12px 14px}
+.corrige-bloc.ouvert{display:block}
+.corrige-bloc .etape{display:flex;gap:10px;margin:6px 0;font-size:14.5px;line-height:1.5}
+.corrige-bloc .etape > span{flex:0 0 112px;font-weight:800;color:#0369a1;font-size:12px;
+ text-transform:uppercase;letter-spacing:.5px;padding-top:2px}
+.corrige-bloc .retenu{margin-top:8px;background:#ecfeff;border-left:4px solid #0e7490;
+ border-radius:8px;padding:8px 11px;font-size:14px}
+.copie-zone{margin-top:18px;border-top:2px dashed #cbd5e1;padding-top:14px}
+.copie-zone h3{color:#155e75;font-size:18px;margin-bottom:4px}
+.copie-zone .chapo-c{color:#64748b;font-size:13.5px;margin-bottom:10px}
+.copie-ex{border:1px solid #e9e2d4;border-radius:12px;padding:11px 14px;margin:10px 0;background:#fff}
+.copie-ex b.t{color:#7c2d12}
+@media print{.corrige-btn{display:none}.corrige-bloc{display:block}}
+</style>
+</head>
+<body>
+
+<!-- Logo ESTIC Don Bosco (officiel) -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="tp">
+ <h1>TP — Choisir un roulement</h1>
+ <p>Charge équivalente, durée de vie et montage : la démarche complète d’un choix de roulement au catalogue.</p>
+</header>
+
+<div class="progression" id="prog">
+ <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div><div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="score">★ <span id="scoreTot">0</span>pts</div>
+</div>
+
+<div class="acti" id="a1"><div class="boite">
+ <h2><span class="badge">1</span>Durée de vie de base</h2>
+ <div class="consigne">Roulement à billes : C = 14 kN, e = 0,3. Charges : F<sub>r</sub> = 2 kN et F<sub>a</sub> = 0,4 kN. N = 1 500 tr/min.</div>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — compare d’abord F<sub>a</sub>/F<sub>r</sub> à e, puis calcule P, L<sub>10</sub> et L<sub>10h</sub>.</div>
+ <div id="champs1"></div>
+ <div class="btnrow"><button class="btn" id="verif1">Valider</button></div><div id="verd1"></div>
+</div></div>
+<div class="acti" id="a2"><div class="boite">
+ <h2><span class="badge">2</span>Doubler la charge</h2>
+ <div class="consigne">Même roulement, même vitesse. La charge équivalente passe à P = 4 kN.</div>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — calcule la nouvelle durée, puis le rapport avec la mission 1.</div>
+ <div id="champs2"></div>
+ <div class="btnrow"><button class="btn" id="verif2">Valider</button></div><div id="verd2"></div>
+</div></div>
+<div class="acti" id="a3"><div class="boite">
+ <h2><span class="badge">3</span>Serré ou glissant ?</h2>
+ <div class="consigne">Pour chaque bague, choisis l’ajustement. Un item faux reste actif.</div>
+ <div class="tri" id="tri3"></div><div id="verd3"></div>
+</div></div>
+<div class="acti" id="a4"><div class="boite">
+ <h2><span class="badge">4</span>Charge axiale non négligeable</h2>
+ <div class="consigne">Roulement à billes de la figure : C = 14 kN, e = 0,3, X = 0,56, Y = 1,5.</div>
+ <canvas class="fig" id="fig4" width="760" height="260"></canvas>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — compare F<sub>a</sub>/F<sub>r</sub> à e avant de choisir la formule de P.</div>
+ <div id="champs4"></div>
+ <div class="btnrow"><button class="btn" id="verif4">Valider</button></div><div id="verd4"></div>
+</div></div>
+<div class="acti" id="a5"><div class="boite">
+ <h2><span class="badge">5</span>Choisir au catalogue</h2>
+ <div class="consigne">On exige 20 000 h à 1 500 tr/min, sous P = 2 kN. Catalogue : C = 14 kN, 22,5 kN ou 36 kN.</div>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — traduis la durée en millions de tours, puis calcule C<sub>min</sub> = P × L<sub>10</sub><sup>1/3</sup>.</div>
+ <div id="champs5"></div>
+ <div class="btnrow"><button class="btn" id="verif5">Valider</button></div><div id="verd5"></div>
+</div></div>
+<div class="acti" id="a6"><div class="boite">
+ <h2><span class="badge">6</span>Passer aux rouleaux</h2>
+ <div class="consigne">Roulement à rouleaux cylindriques : C = 24 kN, P = 4 kN, N = 1 500 tr/min.</div>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — attention à l’exposant : n = 10/3 pour les rouleaux.</div>
+ <div id="champs6"></div>
+ <div class="btnrow"><button class="btn" id="verif6">Valider</button></div><div id="verd6"></div>
+</div></div>
+<div class="acti" id="a7"><div class="boite">
+ <h2><span class="badge">7</span>Bilan</h2>
+ <div class="consigne">Calcul et montage vont ensemble.</div>
+ <div id="bilan7"></div>
+</div></div>
+<div class="acti"><div class="boite" style="text-align:center"><a class="btn" style="text-decoration:none;display:inline-block" href="01_cours_capet_roulements.html">Revoir le cours</a></div></div>
+<script>
+
+'use strict';
+const CLE='tp_capet_roulements';
+const etat={debloque:1,score:0,f:{}};
+function sauver(){ try{ localStorage.setItem(CLE, JSON.stringify({d:etat.debloque, s:etat.score, f:etat.f})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem(CLE)); if(d){ etat.debloque=d.d; etat.score=d.s; etat.f=d.f||{}; } }catch(e){} }
+function majProgression(){
+ document.querySelectorAll('.progression .seg').forEach(function(seg){
+  const n=+seg.dataset.a; seg.className='seg'+((n<etat.debloque||etat.f[n])?' ok':(n===etat.debloque?' encours':''));
+ });
+ document.getElementById('scoreTot').textContent=etat.score;
+ for(let n=2;n<=7;n++){
+  const acti=document.getElementById('a'+n); let v=acti.querySelector('.verrou');
+  if(n>etat.debloque){ if(!v){ v=document.createElement('div'); v.className='verrou';
+    v.innerHTML='<div class="cadenas"></div>Termine la mission '+(n-1)+' pour déverrouiller'; acti.querySelector('.boite').appendChild(v); } }
+  else if(v){ v.remove(); }
+ }
+}
+function reussir(n, pts, message){
+ etat.score+=pts; etat.f[n]=1; /* missions toutes visibles : elles peuvent être faites dans le désordre */
+ while(etat.f[etat.debloque]) etat.debloque++;
+ sauver(); majProgression();
+ if(n<7) setTimeout(function(){ document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}); },900);
+}
+function champsCalc(zoneId,liste){
+ const z=document.getElementById(zoneId); if(!z) return;
+ liste.forEach(function(c){
+  const d=document.createElement('div'); d.className='chp';
+  const l=document.createElement('label'); l.innerHTML=c.lbl; l.setAttribute('for',c.id);
+  const i=document.createElement('input'); i.id=c.id; i.autocomplete='off'; i.inputMode='decimal';
+  const u=document.createElement('span'); u.className='u'; u.innerHTML=c.u;
+  d.appendChild(l); d.appendChild(i); d.appendChild(u); z.appendChild(d);
+ });
+}
+function verifierCalc(liste,verdId,n,okTxt){
+ let bons=0;
+ liste.forEach(function(c){
+  const i=document.getElementById(c.id);
+  const v=parseFloat(String(i.value||'').replace(/\s/g,'').replace(',','.'));
+  const ok=isFinite(v)&&Math.abs(v-c.rep)<=c.tol;
+  i.classList.toggle('bon',ok); i.classList.toggle('faux',!ok); if(ok) bons++;
+ });
+ const v=document.getElementById(verdId);
+ if(bons===liste.length){ v.className='verdict ok'; v.innerHTML='✓ '+okTxt; reussir(n,3); return true; }
+ v.className='verdict ko'; v.innerHTML=bons+' résultat(s) juste(s) sur '+liste.length+'. Reprends le calcul faux sur ta copie.';
+ return false;
+}
+function brancher(n,liste,txt){
+ champsCalc('champs'+n,liste);
+ const b=document.getElementById('verif'+n);
+ b.addEventListener('click',function(){ if(verifierCalc(liste,'verd'+n,n,txt)) b.disabled=true; });
+}
+function trier(n,ITEMS,LIB,okTxt){
+ const zone=document.getElementById('tri'+n); let err=0,bons=0;
+ ITEMS.forEach(function(it){
+  const d=document.createElement('div'); d.className='item';
+  const p=document.createElement('div'); p.className='enonce'; p.innerHTML=it.t; d.appendChild(p);
+  const ch=document.createElement('div'); ch.className='choix';
+  Object.keys(LIB).forEach(function(code){
+   const b=document.createElement('button'); b.type='button'; b.textContent=LIB[code];
+   b.addEventListener('click',function(){
+    if(d.classList.contains('bon')) return;
+    if(code===it.c){
+     d.classList.remove('faux'); d.classList.add('bon'); ch.querySelectorAll('button').forEach(function(x){x.disabled=true;});
+     bons++;
+     if(bons===ITEMS.length){ const v=document.getElementById('verd'+n); v.className='verdict ok'; v.innerHTML='✓ '+okTxt; reussir(n, err===0?3:(err<=2?2:1)); }
+    } else { err++; d.classList.add('faux'); b.classList.add('faux'); setTimeout(function(){ d.classList.remove('faux'); b.classList.remove('faux'); },900); }
+   });
+   ch.appendChild(b);
+  });
+  d.appendChild(ch); zone.appendChild(d);
+ });
+}
+function T(c,s,x,y,t,co,al,b){c.font=(b===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const d=Math.hypot(x1-x0,y1-y0); if(d<1) return;
+ const L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+ c.strokeStyle=coul;c.fillStyle=coul;c.lineWidth=ep;c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();
+ c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();
+}
+function HACH(c,x,y,w,h,coul){ c.strokeStyle=coul;c.lineWidth=1;
+ for(let k=-h;k<w;k+=8){const t0=Math.max(0,-k),t1=Math.min(h,w-k); if(t1<=t0) continue; c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}
+ c.lineWidth=2;c.strokeRect(x,y,w,h); }
+function POINT(c,x,y,r,coul){c.fillStyle=coul;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill();}
+function COTE(c,x0,y0,x1,y1,txt,coul,dy){ c.strokeStyle=coul; c.lineWidth=1.2; FLECHE(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,coul); FLECHE(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,coul); T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy||-6),13,coul); }
+brancher(1,[{"id": "r11", "lbl": "a) Charge équivalente P", "rep": 2, "tol": 0.01, "u": "kN"}, {"id": "r12", "lbl": "b) Durée L<sub>10</sub>", "rep": 343, "tol": 1, "u": "millions de tours"}, {"id": "r13", "lbl": "c) Durée L<sub>10h</sub>", "rep": 3811, "tol": 5, "u": "h"}],"F<sub>a</sub>/F<sub>r</sub> = 0,2 ≤ e : P = F<sub>r</sub> = 2 kN. L<sub>10</sub> = (14/2)³ = 343 millions de tours. L<sub>10h</sub> = 343·10⁶ / (60 × 1 500) = 3 811 h.");
+brancher(2,[{"id": "r21", "lbl": "a) Nouvelle durée L<sub>10h</sub>", "rep": 476.4, "tol": 1, "u": "h"}, {"id": "r22", "lbl": "b) Rapport des durées", "rep": 8, "tol": 0.05, "u": ""}],"L<sub>10</sub> = 3,5³ = 42,875 millions de tours, soit 476 h. La durée est divisée par 2³ = 8 : la charge est le paramètre le plus sensible.");
+trier(3,[{"t": "Arbre de moteur, charge fixe : bague intérieure", "c": "S"}, {"t": "Arbre de moteur, charge fixe : bague extérieure", "c": "G"}, {"t": "Roue de remorque sur fusée fixe : bague extérieure", "c": "S"}, {"t": "Roue de remorque sur fusée fixe : bague intérieure", "c": "G"}, {"t": "Poulie folle sur axe fixe : bague extérieure", "c": "S"}, {"t": "Poulie folle sur axe fixe : bague intérieure", "c": "G"}],{"S": "serré", "G": "glissant"},"La bague qui <b>tourne par rapport à la charge</b> est montée serrée. Pour une roue ou une poulie folle, c’est le moyeu qui tourne : la bague extérieure est serrée.");
+(function(){ const c=document.getElementById('fig4').getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,260);
+
+const y=120;
+c.fillStyle='#cbd5e1'; c.fillRect(120,y-14,520,28); c.strokeStyle='#475569'; c.lineWidth=2; c.strokeRect(120,y-14,520,28);
+[230,530].forEach(function(x){ c.fillStyle='#e2e8f0'; c.fillRect(x-18,y-44,36,26); c.strokeRect(x-18,y-44,36,26); c.fillRect(x-18,y+18,36,26); c.strokeRect(x-18,y+18,36,26);
+ c.beginPath(); c.arc(x,y-31,8,0,6.2832); c.stroke(); c.beginPath(); c.arc(x,y+31,8,0,6.2832); c.stroke(); });
+T(c,'roulement étudié',230,y-56,13,'#334155');
+FLECHE(c,230,y+120,230,y+48,4,'#dc2626'); T(c,'F_r = 3 kN',244,y+104,15,'#dc2626','left');
+FLECHE(c,100,y,160,y,4,'#2563eb'); T(c,'F_a = 1,5 kN',80,y-24,15,'#2563eb','left');
+
+})();
+brancher(4,[{"id": "r41", "lbl": "a) Rapport F<sub>a</sub>/F<sub>r</sub>", "rep": 0.5, "tol": 0.01, "u": ""}, {"id": "r42", "lbl": "b) Charge équivalente P", "rep": 3.93, "tol": 0.01, "u": "kN"}, {"id": "r43", "lbl": "c) Durée L<sub>10</sub>", "rep": 45.2, "tol": 0.3, "u": "millions de tours"}],"F<sub>a</sub>/F<sub>r</sub> = 0,5 &gt; e : P = 0,56 × 3 + 1,5 × 1,5 = 3,93 kN. L<sub>10</sub> = (14 / 3,93)³ = 45,2 millions de tours.");
+brancher(5,[{"id": "r51", "lbl": "a) Durée exigée L<sub>10</sub>", "rep": 1800, "tol": 2, "u": "millions de tours"}, {"id": "r52", "lbl": "b) Capacité minimale C<sub>min</sub>", "rep": 24.3, "tol": 0.1, "u": "kN"}, {"id": "r53", "lbl": "c) Capacité retenue", "rep": 36, "tol": 0, "u": "kN"}],"L<sub>10</sub> = 20 000 × 60 × 1 500 / 10⁶ = 1 800 millions de tours. C<sub>min</sub> = 2 × 1 800<sup>1/3</sup> = 24,3 kN. Le 22,5 kN est insuffisant : on retient 36 kN.");
+brancher(6,[{"id": "r61", "lbl": "a) Durée L<sub>10</sub>", "rep": 392.5, "tol": 1, "u": "millions de tours"}, {"id": "r62", "lbl": "b) Durée L<sub>10h</sub>", "rep": 4361, "tol": 10, "u": "h"}],"L<sub>10</sub> = 6<sup>10/3</sup> = 392,5 millions de tours. L<sub>10h</sub> = 392,5·10⁶ / 90 000 = 4 361 h.");
+(function(){ const z=document.getElementById('bilan7'); const d=document.createElement('div'); d.className='verdict ok'; d.innerHTML="✓ Tu sais calculer une charge équivalente, une durée de vie, et choisir au catalogue.<br><br><b>Le réflexe à garder :</b> le calcul ne suffit pas. Une réponse complète précise aussi les ajustements et quel roulement est arrêté axialement."; z.appendChild(d); })();
+
+/* ===== INITIALISATION — À GARDER EN DERNIER ===== */
+charger(); majProgression();
+
+/* ===== CORRIGES_CAPET (voir _outils/ajouter_corriges_tp_capet.py) ===== */
+const CORRIGES={"1": "<div class=\"etape\"><span>Formule</span><div>si F<sub>a</sub>/F<sub>r</sub> ≤ e : P = F<sub>r</sub> ; L<sub>10</sub> = (C/P)³ ; L<sub>10h</sub> = L<sub>10</sub> × 10⁶ / (60 N)</div></div><div class=\"etape\"><span>Application</span><div>F<sub>a</sub>/F<sub>r</sub> = 0,4 / 2 = 0,2 ≤ 0,3 : P = 2 kN. L<sub>10</sub> = 7³ = 343. L<sub>10h</sub> = 343·10⁶ / 90 000.</div></div><div class=\"etape\"><span>Résultat</span><div><b>P = 2 kN</b>, <b>L<sub>10</sub> = 343 millions de tours</b>, <b>L<sub>10h</sub> = 3 811 h</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — toujours tester F<sub>a</sub>/F<sub>r</sub> avant d’appliquer X et Y : ici la charge axiale ne compte pas.</div>", "2": "<div class=\"etape\"><span>Formule</span><div>L<sub>10</sub> = (C/P)³</div></div><div class=\"etape\"><span>Application</span><div>L<sub>10</sub> = (14/4)³ = 42,875 millions de tours ; L<sub>10h</sub> = 42,875·10⁶ / 90 000.</div></div><div class=\"etape\"><span>Résultat</span><div><b>476 h</b>, soit une durée <b>divisée par 8</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — la durée varie comme P<sup>−3</sup> : une erreur de 10 % sur la charge fait perdre 27 % de durée.</div>", "3": "<div class=\"etape\"><span>Règle de tri</span><div>La bague qui <b>tourne par rapport à la direction de la charge</b> est montée <b>serrée</b>. L’autre est glissante, ce qui facilite le montage et permet au roulement libre de coulisser.</div></div><div class=\"retenu\"><b>À retenir</b> — sous charge tournante, une bague glissante « roule » sur sa portée : c’est le laminage, qui use l’arbre ou le moyeu.</div>", "4": "<div class=\"etape\"><span>Formule</span><div>si F<sub>a</sub>/F<sub>r</sub> &gt; e : P = X F<sub>r</sub> + Y F<sub>a</sub> ; L<sub>10</sub> = (C/P)³</div></div><div class=\"etape\"><span>Application</span><div>F<sub>a</sub>/F<sub>r</sub> = 1,5 / 3 = 0,5 &gt; 0,3. P = 0,56 × 3 + 1,5 × 1,5 = 1,68 + 2,25. L<sub>10</sub> = (14 / 3,93)³.</div></div><div class=\"etape\"><span>Résultat</span><div><b>F<sub>a</sub>/F<sub>r</sub> = 0,5</b>, <b>P = 3,93 kN</b>, <b>L<sub>10</sub> = 45,2 millions de tours</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — la charge axiale pèse plus que la radiale dans P : Y = 1,5 contre X = 0,56.</div>", "5": "<div class=\"etape\"><span>Formule</span><div>L<sub>10</sub> = L<sub>10h</sub> × 60 N / 10⁶ ; C<sub>min</sub> = P × L<sub>10</sub><sup>1/3</sup></div></div><div class=\"etape\"><span>Application</span><div>L<sub>10</sub> = 20 000 × 60 × 1 500 / 10⁶ = 1 800. C<sub>min</sub> = 2 × 1 800<sup>1/3</sup> = 2 × 12,16.</div></div><div class=\"etape\"><span>Résultat</span><div><b>1 800 millions de tours</b>, <b>C<sub>min</sub> = 24,3 kN</b>, <b>C = 36 kN retenu</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — on prend le premier roulement AU-DESSUS de C<sub>min</sub>, jamais le plus proche : 22,5 kN ne donnerait que 15 400 h.</div>", "6": "<div class=\"etape\"><span>Formule</span><div>L<sub>10</sub> = (C/P)<sup>10/3</sup></div></div><div class=\"etape\"><span>Application</span><div>L<sub>10</sub> = 6<sup>10/3</sup> = 392,5 ; L<sub>10h</sub> = 392,5·10⁶ / 90 000.</div></div><div class=\"etape\"><span>Résultat</span><div><b>392,5 millions de tours</b> et <b>4 361 h</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — avec l’exposant 3, on aurait trouvé 216 millions de tours : l’erreur d’exposant coûte près de la moitié du résultat.</div>"};
+const COPIE=[{"titre": "Un roulement de ventilateur", "enonce": "C = 20 kN, P = 2,5 kN, N = 1 000 tr/min, roulement à billes. Calculer L<sub>10</sub> et L<sub>10h</sub>.", "corrige": "<div class=\"etape\"><span>Formule</span><div>L<sub>10</sub> = (C/P)³ ; L<sub>10h</sub> = L<sub>10</sub> × 10⁶ / (60 N)</div></div><div class=\"etape\"><span>Application</span><div>L<sub>10</sub> = 8³ = 512 ; L<sub>10h</sub> = 512·10⁶ / 60 000.</div></div><div class=\"etape\"><span>Résultat</span><div><b>512 millions de tours</b> et <b>8 533 h</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — à vitesse plus faible, la même durée en tours dure plus longtemps en heures.</div>"}, {"titre": "Charge équivalente", "enonce": "F<sub>r</sub> = 5 kN, F<sub>a</sub> = 2 kN, e = 0,3, X = 0,56, Y = 1,5. Calculer P.", "corrige": "<div class=\"etape\"><span>Formule</span><div>F<sub>a</sub>/F<sub>r</sub> comparé à e, puis P = X F<sub>r</sub> + Y F<sub>a</sub></div></div><div class=\"etape\"><span>Application</span><div>F<sub>a</sub>/F<sub>r</sub> = 0,4 &gt; 0,3 ; P = 0,56 × 5 + 1,5 × 2 = 2,8 + 3.</div></div><div class=\"etape\"><span>Résultat</span><div><b>P = 5,8 kN</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — P est supérieure à F<sub>r</sub> : la charge axiale aggrave la situation du roulement.</div>"}, {"titre": "Choix pour une broche", "enonce": "On exige 10 000 h à 3 000 tr/min sous P = 1,5 kN. Calculer C<sub>min</sub>.", "corrige": "<div class=\"etape\"><span>Formule</span><div>L<sub>10</sub> = L<sub>10h</sub> × 60 N / 10⁶ ; C<sub>min</sub> = P × L<sub>10</sub><sup>1/3</sup></div></div><div class=\"etape\"><span>Application</span><div>L<sub>10</sub> = 10 000 × 180 000 / 10⁶ = 1 800 ; C<sub>min</sub> = 1,5 × 12,16.</div></div><div class=\"etape\"><span>Résultat</span><div><b>C<sub>min</sub> = 18,2 kN</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — même nombre de tours qu’en mission 5 : seule la charge change le résultat.</div>"}];
+function poserCorrige(n,raison){
+ const a=document.getElementById('a'+n); if(!a || !CORRIGES[n]) return;
+ const bo=a.querySelector('.boite'); if(!bo || bo.querySelector('.corrige-btn')) return;
+ const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+ btn.textContent='Voir le corrigé détaillé'+(raison? ' ('+raison+')':'');
+ const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=CORRIGES[n];
+ btn.addEventListener('click',function(){
+  bl.classList.toggle('ouvert');
+  btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Voir')+' le corrigé détaillé';
+ });
+ bo.appendChild(btn); bo.appendChild(bl);
+}
+/* TOUT VISIBLE DÈS LE DÉPART — choix de Mat, pour les TP CAPET uniquement.
+   Les corrigés sont posés sur toutes les missions à l'ouverture, et le verrouillage
+   progressif est levé : sans cela, le corrigé d'une mission verrouillée resterait
+   sous son cadenas. Le score reste juste — `reussir` ajoute les points à chaque
+   réussite, et un bouton validé est désactivé. Seule la barre de progression
+   continue d'avancer dans l'ordre. */
+(function(){
+ Object.keys(CORRIGES).forEach(function(n){ poserCorrige(+n); });
+ const m0=majProgression;
+ majProgression=function(){
+  const x=m0.apply(this,arguments);
+  document.querySelectorAll('.acti .verrou').forEach(function(v){ v.remove(); });
+  return x;
+ };
+ majProgression();
+})();
+/* exercices sur copie, dans la mission bilan, accessibles sans terminer le TP */
+(function(){
+ const actis=document.querySelectorAll('.acti'); if(!actis.length) return;
+ const bo=actis[actis.length-1].querySelector('.boite'); if(!bo) return;
+ const z=document.createElement('div'); z.className='copie-zone';
+ z.innerHTML='<h3>Exercices sur copie</h3><div class="chapo-c">Rédige sur ta copie : '+
+  'formule, application numérique, résultat avec son unité. Compare ensuite au corrigé.</div>';
+ COPIE.forEach(function(ex,i){
+  const d=document.createElement('div'); d.className='copie-ex';
+  d.innerHTML='<b class="t">Exercice '+(i+1)+' — '+ex.titre+'</b><p style="margin:6px 0">'+ex.enonce+'</p>';
+  const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+  btn.textContent='Afficher le corrigé';
+  const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=ex.corrige;
+  btn.addEventListener('click',function(){
+   bl.classList.toggle('ouvert');
+   btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Afficher')+' le corrigé';
+  });
+  d.appendChild(btn); d.appendChild(bl); z.appendChild(d);
+ });
+ bo.appendChild(z);
+})();
+
+</script>
+</body>
+</html>

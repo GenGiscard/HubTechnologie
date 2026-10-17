@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Liaisons et hyperstatisme · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+.bascule{display:inline-flex;gap:8px;align-items:center;font-size:14px;font-weight:700;color:var(--accf)}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+
+select{font:600 15px 'Segoe UI',sans-serif;padding:6px 10px;border:2px solid #cbd5e1;border-radius:9px;background:#fff}
+.grille-btn{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.grille-btn button{background:#f8fafc;border:2px solid #e9e2d4;border-radius:9px;padding:6px 11px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer;color:#334155}
+.grille-btn button.actif{border-color:#0e7490;background:#ecfeff;color:#155e75}
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.modes button{background:#fff;border:2px solid #0e7490;color:#0e7490;border-radius:9px;padding:6px 12px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer}
+.modes button.actif{background:#0e7490;color:#fff}
+.lecture{font:700 16px 'Segoe UI',sans-serif;color:#155e75;text-align:center;margin:6px 0}
+.fiche{border:2px solid #0e7490;border-radius:14px;padding:12px 18px}
+.fiche p{margin:6px 0;font-size:16px}
+.fiche .f{font-family:'Cambria Math','Times New Roman',serif;font-weight:700;font-size:17px}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Liaisons et hyperstatisme</h1>
+ <p class="sous">Compter mobilités et inconnues pour savoir si un montage tolère les défauts… ou les subit.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>Les liaisons normalisées</h2>
+ <div class="chapo">Clique une liaison : ses mobilités s’affichent sur le trièdre.</div>
+ <div class="grille-btn" id="btnsL"></div>
+ <canvas id="cvL" width="880" height="300"></canvas>
+ <div class="formule">inconnues statiques = 6 − mobilités</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Le graphe des liaisons</h2>
+ <div class="chapo">Une pièce = un sommet. Une liaison = un arc. Un cycle = une boucle fermée.</div>
+ <canvas id="cvG" width="880" height="230"></canvas>
+ <div class="formule">γ = L − p + 1 &nbsp;&nbsp;(L liaisons, p pièces bâti compris)</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Le degré d’hyperstatisme</h2>
+ <div class="chapo">Combien de conditions géométriques le montage impose-t-il ?</div>
+ <div class="formule">h = m − N<sub>c</sub> + 6γ</div>
+ <table>
+  <tr><th>Terme</th><th>Signification</th></tr>
+  <tr><td>m</td><td>mobilités du mécanisme : utiles + internes</td></tr>
+  <tr><td>N<sub>c</sub></td><td>somme des mobilités de toutes les liaisons</td></tr>
+  <tr><td>γ</td><td>nombre de cycles du graphe</td></tr>
+ </table>
+ <div class="retenir"><b>h = 0</b> : isostatique, les défauts se rattrapent seuls. <b>h &gt; 0</b> : h conditions de précision à tenir.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Simulateur : guider un arbre</h2>
+ <div class="chapo">Choisis les deux liaisons, puis ajoute un défaut ou un échauffement.</div>
+ <div class="reglage"><label for="sA">En A</label><select id="sA"></select>
+  <label for="sB">En B</label><select id="sB"></select></div>
+ <canvas id="cvS" width="880" height="300"></canvas>
+ <div class="reglage"><label for="sD">Défaut d’alignement de B</label><input type="range" id="sD" min="0" max="10" value="0"><span id="sDv"></span></div>
+ <div class="reglage"><label for="sE">Dilatation de l’arbre</label><input type="range" id="sE" min="0" max="10" value="0"><span id="sEv"></span></div>
+ <div class="lecture" id="lS"></div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Trois pieds ou quatre ?</h2>
+ <div class="chapo">Sur un sol irrégulier, le tabouret ne boite jamais. La table, si.</div>
+ <canvas id="cvT" width="880" height="230"></canvas>
+ <div class="retenir">Trois pieds : h = 3 − 15 + 6 × 2 = <b>0</b>. Quatre pieds : h = 3 − 20 + 6 × 3 = <b>1</b>, un pied de trop.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>La méthode d’épreuve</h2>
+ <div class="methode"><b>MÉTHODE — étudier l’hyperstatisme</b>
+  <ol>
+   <li>Tracer le graphe des liaisons, compter L et p, en déduire γ.</li>
+   <li>Additionner les mobilités des liaisons : N<sub>c</sub>.</li>
+   <li>Compter les mobilités utiles et internes : m.</li>
+   <li>Calculer h, puis nommer les conditions géométriques qu’il impose.</li>
+   <li>Proposer des liaisons qui ramènent h à 0 sans créer de mobilité inutile.</li>
+  </ol></div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<section class="bloc">
+ <h2>À retenir</h2>
+ <div class="fiche"><p class="f">inconnues statiques = 6 − mobilités &nbsp;·&nbsp; γ = L − p + 1 &nbsp;·&nbsp; h = m − N<sub>c</sub> + 6γ</p>
+ <p>h = 0 : isostatique. h &gt; 0 : h conditions de coaxialité, de parallélisme ou de distance à tenir.</p>
+ <p>Arbre isostatique : rotule + linéaire annulaire. Deux pivots : h = 5.</p>
+ <p>Hyperstatique n’est pas une faute : c’est plus rigide, mais plus exigeant à fabriquer.</p></div>
+</section>
+
+<section class="bloc" style="text-align:center">
+ <a class="btn" style="text-decoration:none;display:inline-block" href="02_tp_capet_liaisons.html">Passer au TP</a>
+</section>
+<footer>Préparation CAFEP-CAPET SII · Liaisons et hyperstatisme · ESTIC Don Bosco</footer>
+<script>
+
+'use strict';
+function T(c,s,x,y,t,co,al,b){c.font=(b===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const d=Math.hypot(x1-x0,y1-y0); if(d<1) return;
+ const L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+ c.strokeStyle=coul;c.fillStyle=coul;c.lineWidth=ep;c.lineCap='butt';
+ c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();
+ c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();
+}
+/* hachures bornées par calcul — jamais de clip() */
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8; c.strokeStyle=coul;c.lineWidth=1;
+ for(let k=-h;k<w;k+=p){const t0=Math.max(0,-k),t1=Math.min(h,w-k); if(t1<=t0) continue;
+  c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}
+ c.lineWidth=2;c.strokeRect(x,y,w,h);
+}
+function POINT(c,x,y,r,coul){c.fillStyle=coul;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill();}
+function TIRETS(c,x0,y0,x1,y1,coul,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=coul;c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();}
+function FR(v,n){return (Math.round(v*Math.pow(10,n))/Math.pow(10,n)).toFixed(n).replace('.',',').replace('-','−');}
+/* animation qui ne tourne que lorsque le canvas est visible */
+const ANIMS=[];
+function ANIMER(id,draw){
+ const cv=document.getElementById(id),c=cv.getContext('2d'); let raf=0; const t0=performance.now();
+ const A={actif:false};
+ function boucle(ts){draw(c,(ts-t0)/1000); raf=requestAnimationFrame(boucle);}
+ A.demarrer=function(){if(!raf){A.actif=true;raf=requestAnimationFrame(boucle);}};
+ A.arreter=function(){cancelAnimationFrame(raf);raf=0;A.actif=false;};
+ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?A.demarrer():A.arreter();});}).observe(cv);}
+ else A.demarrer();
+ draw(c,0); ANIMS.push(A); return A;
+}
+function CURSEUR(id,fmt,cb){const s=document.getElementById(id),o=document.getElementById(id+'v');
+ function maj(){if(o) o.textContent=fmt(+s.value); cb&&cb();} s.addEventListener('input',maj); maj(); return s;}
+function V(id){return +document.getElementById(id).value;}
+
+
+/* mobilités dans l’ordre Tx Ty Tz Rx Ry Rz */
+const LIAISONS=[
+ {n:'Encastrement',m:[0,0,0,0,0,0],ex:'pièces soudées ou vissées'},
+ {n:'Pivot',m:[0,0,0,1,0,0],ex:'charnière de porte'},
+ {n:'Glissière',m:[1,0,0,0,0,0],ex:'tiroir de commode'},
+ {n:'Hélicoïdale',m:[1,0,0,1,0,0],ex:'vis et écrou : rotation et translation liées',lie:true},
+ {n:'Pivot glissant',m:[1,0,0,1,0,0],ex:'vérin, axe dans un alésage long'},
+ {n:'Sphérique à doigt',m:[0,0,0,0,1,1],ex:'levier de vitesse'},
+ {n:'Appui plan',m:[1,1,0,0,0,1],ex:'livre posé sur une table'},
+ {n:'Rotule',m:[0,0,0,1,1,1],ex:'épaule, boule d’attelage'},
+ {n:'Linéaire annulaire',m:[1,0,0,1,1,1],ex:'roulement à billes seul, sphère dans un cylindre'},
+ {n:'Linéaire rectiligne',m:[1,1,0,1,0,1],ex:'cylindre posé sur un plan'},
+ {n:'Ponctuelle',m:[1,1,0,1,1,1],ex:'bille posée sur un plan'}];
+(function(){
+ const c=document.getElementById('cvL').getContext('2d'), z=document.getElementById('btnsL');
+ const O={x:230,y:170}, AX=[{x:150,y:0,n:'x'},{x:-90,y:72,n:'y'},{x:0,y:-120,n:'z'}];
+ function rot(ax,col){ /* ellipse autour de l’axe, avec pointe */
+  const cx=O.x+ax.x*.62, cy=O.y+ax.y*.62, ang=Math.atan2(ax.y,ax.x);
+  c.save(); c.translate(cx,cy); c.rotate(ang); c.strokeStyle=col; c.lineWidth=3;
+  c.beginPath(); c.ellipse(0,0,9,26,0,-2.4,2.1); c.stroke();
+  const a=2.1, px=9*Math.cos(a), py=26*Math.sin(a); c.fillStyle=col;
+  c.beginPath(); c.moveTo(px+8,py-2); c.lineTo(px-6,py-6); c.lineTo(px-2,py+9); c.closePath(); c.fill(); c.restore();
+ }
+ function dessiner(i){
+  const L=LIAISONS[i]; c.fillStyle='#fff'; c.fillRect(0,0,880,300);
+  AX.forEach(function(ax,k){
+   c.strokeStyle='#94a3b8'; c.lineWidth=1.6; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(O.x+ax.x,O.y+ax.y); c.stroke();
+   T(c,ax.n,O.x+ax.x*1.12,O.y+ax.y*1.12+5,16,'#64748b');
+   if(L.m[k]) FLECHE(c,O.x+ax.x*.25,O.y+ax.y*.25,O.x+ax.x*.95,O.y+ax.y*.95,4,'#2563eb');
+   if(L.m[k+3]) rot(ax,'#ea580c');
+  });
+  POINT(c,O.x,O.y,5,'#334155');
+  const nb=L.lie?1:L.m.reduce(function(a,b){return a+b;},0);
+  T(c,L.n,620,60,24,'#155e75');
+  ['Tx','Ty','Tz','Rx','Ry','Rz'].forEach(function(n,k){
+   const x=470+k*52, y=96, on=L.m[k]; c.fillStyle=on?(k<3?'#dbeafe':'#ffedd5'):'#f1f5f9'; c.fillRect(x,y,46,36);
+   c.strokeStyle=on?(k<3?'#2563eb':'#ea580c'):'#cbd5e1'; c.lineWidth=2; c.strokeRect(x,y,46,36);
+   T(c,n,x+23,y+24,15,on?(k<3?'#2563eb':'#ea580c'):'#94a3b8');
+  });
+  T(c,'mobilités : '+nb,620,170,18,'#334155'); T(c,'inconnues statiques : '+(6-nb),620,200,18,'#334155');
+  if(L.lie) T(c,'rotation et translation liées par le pas',620,226,13,'#ea580c',undefined,false);
+  T(c,'Exemple : '+L.ex,620,258,14,'#64748b',undefined,false);
+  T(c,'bleu : translations libres · orange : rotations libres',230,288,12,'#64748b',undefined,false);
+  [].forEach.call(z.children,function(b,j){b.classList.toggle('actif',j===i);});
+ }
+ LIAISONS.forEach(function(L,i){const b=document.createElement('button'); b.type='button'; b.textContent=L.n; b.addEventListener('click',function(){dessiner(i);}); z.appendChild(b);});
+ dessiner(1);
+})();
+/* 2 · graphe */
+(function(){
+ const c=document.getElementById('cvG').getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,880,230);
+ function noeud(x,y,t,s){ c.fillStyle='#ecfeff'; c.strokeStyle='#0e7490'; c.lineWidth=2.5; c.beginPath(); c.arc(x,y,34,0,6.2832); c.fill(); c.stroke(); T(c,t,x,y+6,18,'#155e75'); T(c,s,x,y+56,13,'#64748b',undefined,false); }
+ c.strokeStyle='#ea580c'; c.lineWidth=3;
+ c.beginPath(); c.moveTo(214,98); c.quadraticCurveTo(330,20,446,98); c.stroke();
+ c.beginPath(); c.moveTo(214,132); c.quadraticCurveTo(330,210,446,132); c.stroke();
+ T(c,'pivot en A',330,48,15,'#ea580c'); T(c,'pivot en B',330,196,15,'#ea580c');
+ noeud(180,115,'0','bâti'); noeud(480,115,'1','arbre');
+ T(c,'L = 2 liaisons',700,80,17,'#334155'); T(c,'p = 2 pièces',700,110,17,'#334155'); T(c,'γ = 2 − 2 + 1 = 1 cycle',700,150,18,'#155e75');
+})();
+/* 4 · simulateur d’arbre */
+(function(){
+ const TYP=[{n:'pivot',nc:1,rot:true,ax:true},{n:'pivot glissant',nc:2,rot:true,ax:false},{n:'rotule',nc:3,rot:false,ax:true},{n:'linéaire annulaire',nc:4,rot:false,ax:false}];
+ const sA=document.getElementById('sA'), sB=document.getElementById('sB');
+ TYP.forEach(function(t,i){[sA,sB].forEach(function(s){const o=document.createElement('option'); o.value=i; o.textContent=t.n; s.appendChild(o);});});
+ sA.value=0; sB.value=0;
+ const c=document.getElementById('cvS').getContext('2d');
+ function palier(x,y,t,col){
+  c.strokeStyle=col; c.lineWidth=2.5; c.fillStyle='#fff';
+  if(t.n==='pivot'||t.n==='pivot glissant'){ c.fillRect(x-20,y-22,40,44); c.strokeRect(x-20,y-22,40,44);
+   if(t.n==='pivot'){ c.lineWidth=4; c.beginPath(); c.moveTo(x-26,y-14); c.lineTo(x-26,y+14); c.moveTo(x+26,y-14); c.lineTo(x+26,y+14); c.stroke(); } }
+  else { c.beginPath(); c.arc(x,y,18,0,6.2832); c.fill(); c.stroke();
+   if(t.n==='linéaire annulaire'){ c.beginPath(); c.moveTo(x-28,y-20); c.lineTo(x+28,y-20); c.moveTo(x-28,y+20); c.lineTo(x+28,y+20); c.stroke(); } }
+  c.strokeStyle='#94a3b8'; c.lineWidth=2; c.beginPath(); c.moveTo(x,y+(t.n.indexOf('pivot')===0?22:20)); c.lineTo(x,250); c.stroke(); HACH(c,x-30,250,60,12,'#94a3b8');
+ }
+ function dessiner(){
+  const a=TYP[+sA.value], b=TYP[+sB.value], d=V('sD')*2.2, e=V('sE')*2.2;
+  const m=(!a.ax&&!b.ax)?2:1, nc=a.nc+b.nc, h=m-nc+6;
+  const flex=d>0&&(a.rot||b.rot), axial=e>0&&a.ax&&b.ax;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,300);
+  const xa=230, xb=650, y=140, col=flex||axial?'#dc2626':'#16a34a';
+  c.strokeStyle=col; c.lineWidth=12; c.lineCap='round'; c.beginPath(); c.moveTo(120,y);
+  if(flex){ c.bezierCurveTo(330,y-d*1.5,520,y+d*2.4,xb,y-d); c.lineTo(760+e,y-d*1.25); }
+  else { const pente=-d/(xb-xa); c.lineTo(760+e,y+pente*(760+e-xa)); }
+  c.stroke(); c.lineCap='butt';
+  palier(xa,y,a,'#0e7490'); palier(xb,y-d,b,'#0e7490');
+  T(c,'A',xa,y-38,15,'#155e75'); T(c,'B',xb,y-d-38,15,'#155e75');
+  if(axial){ FLECHE(c,xa-70,y-56,xa-20,y-56,3,'#dc2626'); FLECHE(c,xb+70,y-d-56,xb+20,y-d-56,3,'#dc2626'); T(c,'effort axial parasite',440,40,15,'#dc2626'); }
+  else if(e>0){ T(c,'la dilatation glisse librement',440,40,15,'#16a34a'); }
+  if(flex) T(c,'arbre forcé : contraintes internes',440,274,15,'#dc2626');
+  else if(d>0) T(c,'l’arbre s’incline librement',440,274,15,'#16a34a');
+  T(c,'N_c = '+nc+'  ·  m = '+m+'  ·  γ = 1  ·  h = '+m+' − '+nc+' + 6 = '+h,440,20+0,15,'#155e75');
+  let v;
+  if(m===2) v='Attention : m = 2, rien n’arrête l’arbre axialement. Il faut une butée.';
+  else if(h===0) v='Isostatique : aucun défaut ne crée d’effort parasite.';
+  else v='Hyperstatique d’ordre '+h+' : '+(a.rot||b.rot?'coaxialité exigée':'')+(a.rot||b.rot?(a.ax&&b.ax?' et ':''):'')+(a.ax&&b.ax?'distance AB exigée':'')+'.';
+  document.getElementById('lS').textContent=v;
+ }
+ sA.addEventListener('change',dessiner); sB.addEventListener('change',dessiner);
+ CURSEUR('sD',function(v){return v?v+' / 10':'aucun';},dessiner); CURSEUR('sE',function(v){return v?v+' / 10':'aucune';},dessiner);
+})();
+/* 5 · tabourets */
+(function(){
+ const c=document.getElementById('cvT').getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,880,230);
+ function sol(x0,x1){ c.strokeStyle='#78716c'; c.lineWidth=3; c.beginPath(); for(let x=x0;x<=x1;x+=4){const y=190+6*Math.sin((x-x0)/22); x===x0?c.moveTo(x,y):c.lineTo(x,y);} c.stroke(); }
+ const s=function(x,x0){return 190+6*Math.sin((x-x0)/22)+(x0===480?16*Math.exp(-Math.pow((x-755)/28,2)):0);};
+ function sol(x0,x1){ c.strokeStyle='#78716c'; c.lineWidth=3; c.beginPath(); for(let x=x0;x<=x1;x+=4){const y=s(x,x0); x===x0?c.moveTo(x,y):c.lineTo(x,y);} c.stroke(); }
+ sol(60,400); sol(480,820);
+ c.fillStyle='#fed7aa'; c.strokeStyle='#b45309'; c.lineWidth=2.5; c.fillRect(110,80,240,18); c.strokeRect(110,80,240,18);
+ [130,230,330].forEach(function(x){ c.beginPath(); c.moveTo(x,98); c.lineTo(x,s(x,60)); c.stroke(); POINT(c,x,s(x,60),5,'#16a34a'); });
+ c.fillStyle='#fed7aa'; c.strokeStyle='#b45309'; c.lineWidth=2.5; c.fillRect(530,80,240,18); c.strokeRect(530,80,240,18);
+ const pieds=[545,620,690,755], yb=Math.max.apply(null,[545,620,690].map(function(x){return s(x,480);}));
+ pieds.forEach(function(x,i){ const yt=i<3?s(x,480):yb; c.strokeStyle='#b45309'; c.beginPath(); c.moveTo(x,98); c.lineTo(x,yt); c.stroke();
+  if(i<3) POINT(c,x,yt,5,'#16a34a'); });
+ const yg=s(755,480); if(yb<yg){ c.strokeStyle='#dc2626'; c.lineWidth=2; c.beginPath(); c.moveTo(748,yb); c.lineTo(762,yb); c.moveTo(748,yg); c.lineTo(762,yg); c.stroke(); }
+ T(c,'tabouret 3 pieds : h = 0',230,40,17,'#16a34a'); T(c,'table 4 pieds : h = 1',650,40,17,'#dc2626');
+ T(c,'un pied ne touche pas',760,222,13,'#dc2626',undefined,false);
+})();
+
+const Q=[
+ {q:"Combien d’inconnues statiques transmet une liaison pivot ?",r:["1","5","6"],b:1,
+  ex:"Une pivot laisse 1 mobilité (la rotation) : elle transmet 6 − 1 = 5 inconnues."},
+ {q:"Combien de mobilités pour une linéaire annulaire ?",r:["2","4","5"],b:1,
+  ex:"Sphère dans un cylindre : 3 rotations et la translation le long de l’axe, soit 4 mobilités."},
+ {q:"Arbre guidé par deux pivots coaxiales : h ?",r:["0","1","5"],b:2,
+  ex:"γ = 1, N_c = 2, m = 1 : h = 1 − 2 + 6 = 5. Il faut une coaxialité parfaite des deux paliers."},
+ {q:"Que signifie h = 0 ?",r:["le mécanisme ne bouge pas","le montage tolère les défauts sans contrainte interne","le montage est impossible à réaliser"],b:1,
+  ex:"Isostatique : les défauts géométriques se traduisent par de petits déplacements, pas par des efforts parasites."},
+ {q:"Quel couple de liaisons rend l’arbre isostatique ?",r:["pivot + pivot","rotule + rotule","rotule + linéaire annulaire"],b:2,
+  ex:"N_c = 3 + 4 = 7, m = 1 : h = 1 − 7 + 6 = 0. C’est le modèle d’un montage à deux roulements à billes."},
+ {q:"Pourquoi une table à quatre pieds peut-elle être bancale ?",r:["h = 1 : un appui de trop pour un sol non plan","h = 0","elle a une mobilité de trop"],b:0,
+  ex:"Trois points suffisent à définir un plan. Le quatrième appui impose une condition : sol parfaitement plan."}
+];
+
+(function(){
+ const z=document.getElementById('questions'), choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.innerHTML=txt;
+   b.addEventListener('click',function(){ if(b.disabled) return; choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';}); b.style.fontWeight='800'; });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){ b.disabled=true; if(j===Q[i].b) b.classList.add('bon'); else if(choix[i]===j) b.classList.add('faux'); });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div'); e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko'); e.textContent=Q[i].ex; r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ'); b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+(n===Q.length?'Méthode acquise : passe au TP.':'Relis les explications, puis passe au TP.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>

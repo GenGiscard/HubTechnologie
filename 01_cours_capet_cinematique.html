@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Cinématique : la bielle-manivelle · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+.bascule{display:inline-flex;gap:8px;align-items:center;font-size:14px;font-weight:700;color:var(--accf)}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+
+select{font:600 15px 'Segoe UI',sans-serif;padding:6px 10px;border:2px solid #cbd5e1;border-radius:9px;background:#fff}
+.grille-btn{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.grille-btn button{background:#f8fafc;border:2px solid #e9e2d4;border-radius:9px;padding:6px 11px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer;color:#334155}
+.grille-btn button.actif{border-color:#0e7490;background:#ecfeff;color:#155e75}
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.modes button{background:#fff;border:2px solid #0e7490;color:#0e7490;border-radius:9px;padding:6px 12px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer}
+.modes button.actif{background:#0e7490;color:#fff}
+.lecture{font:700 16px 'Segoe UI',sans-serif;color:#155e75;text-align:center;margin:6px 0}
+.fiche{border:2px solid #0e7490;border-radius:14px;padding:12px 18px}
+.fiche p{margin:6px 0;font-size:16px}
+.fiche .f{font-family:'Cambria Math','Times New Roman',serif;font-weight:700;font-size:17px}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Cinématique : la bielle-manivelle</h1>
+ <p class="sous">Une rotation devient une translation. Positions, vitesses, et deux constructions graphiques qui rapportent des points.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>Trois solides, trois mouvements</h2>
+ <div class="chapo">Chaque point laisse sa trace : on lit le mouvement sur la trajectoire.</div>
+ <canvas id="cv1" width="880" height="330"></canvas>
+ <div class="retenir">Manivelle : <b>rotation</b>. Piston : <b>translation</b>. Bielle : <b>mouvement plan</b> quelconque.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>La loi entrée-sortie</h2>
+ <div class="chapo">Position du piston en fonction de l’angle de la manivelle.</div>
+ <div class="formule">x<sub>B</sub> = R cos θ + √(L² − R² sin² θ) &nbsp;&nbsp;·&nbsp;&nbsp; course = 2R</div>
+ <canvas id="cv2" width="880" height="330"></canvas>
+ <div class="reglage"><label for="s2R">R (mm)</label><input type="range" id="s2R" min="20" max="60" step="5" value="40"><span id="s2Rv"></span></div>
+ <div class="reglage"><label for="s2L">L (mm)</label><input type="range" id="s2L" min="80" max="240" step="10" value="160"><span id="s2Lv"></span></div>
+ <div class="reglage"><label for="s2T">θ (°)</label><input type="range" id="s2T" min="0" max="360" step="5" value="60"><span id="s2Tv"></span></div>
+ <div class="retenir">La course ne dépend que de R. La bielle déforme la sinusoïde, d’autant plus que <b>λ = R/L</b> est grand.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Vitesse d’un point de la manivelle</h2>
+ <div class="chapo">Le point A tourne autour de O : sa vitesse est perpendiculaire à OA.</div>
+ <canvas id="cv3" width="880" height="270"></canvas>
+ <div class="formule">V<sub>A</sub> = ω × R &nbsp;&nbsp;·&nbsp;&nbsp; ω = π N / 30 &nbsp;(N en tr/min, ω en rad/s)</div>
+ <div class="piege"><b>Piège :</b> R en mètres pour obtenir des m/s. N = 1 500 tr/min et R = 40 mm donnent V<sub>A</sub> = 6,28 m/s.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>L’équiprojectivité</h2>
+ <div class="chapo">Deux points d’un même solide : même projection de vitesse sur la droite qui les joint.</div>
+ <div class="formule">V<sub>A</sub> · AB = V<sub>B</sub> · AB</div>
+ <canvas id="cv4" width="880" height="360"></canvas>
+ <div class="reglage"><label for="s4T">θ (°)</label><input type="range" id="s4T" min="0" max="360" step="1" value="45"><span id="s4Tv"></span></div>
+ <div class="lecture" id="l4"></div>
+ <div class="retenir">On projette V<sub>A</sub> sur AB, on reporte la même longueur en B, puis on remonte jusqu’à la direction de V<sub>B</sub>.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>Le centre instantané de rotation</h2>
+ <div class="chapo">À chaque instant, la bielle tourne autour d’un point I : son CIR.</div>
+ <div class="formule">V<sub>B</sub> = V<sub>A</sub> × IB / IA &nbsp;&nbsp;·&nbsp;&nbsp; ω<sub>bielle</sub> = V<sub>A</sub> / IA</div>
+ <canvas id="cv5" width="880" height="440"></canvas>
+ <div class="reglage"><label for="s5T">θ (°)</label><input type="range" id="s5T" min="15" max="75" step="1" value="45"><span id="s5Tv"></span></div>
+ <div class="lecture" id="l5"></div>
+ <div class="retenir">I est à l’intersection des perpendiculaires aux vitesses de A (la droite OA) et de B (la verticale en B).</div>
+ <div class="piege"><b>Cas particulier :</b> manivelle verticale, les deux perpendiculaires sont parallèles. I part à l’infini : la bielle est en translation instantanée, V<sub>B</sub> = V<sub>A</sub>.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>La méthode d’épreuve</h2>
+ <div class="methode"><b>MÉTHODE — trouver V<sub>B</sub> graphiquement</b>
+  <ol>
+   <li>Calculer V<sub>A</sub> = ωR et la tracer perpendiculaire à OA.</li>
+   <li>Écrire la direction connue de V<sub>B</sub> : l’axe du cylindre.</li>
+   <li>Projeter V<sub>A</sub> sur AB, reporter en B, remonter : équiprojectivité.</li>
+   <li>Ou chercher I et appliquer le rapport des distances : CIR.</li>
+   <li>Mesurer, convertir avec l’échelle des vitesses, vérifier par le calcul.</li>
+  </ol></div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<section class="bloc">
+ <h2>À retenir</h2>
+ <div class="fiche"><p class="f">course = 2R &nbsp;·&nbsp; x<sub>B</sub> = R cos θ + √(L² − R² sin² θ)</p>
+ <p class="f">V<sub>A</sub> = ωR &nbsp;·&nbsp; ω = πN/30</p>
+ <p>Équiprojectivité : même projection des vitesses sur la droite AB.</p>
+ <p>CIR : intersection des perpendiculaires aux vitesses ; V = ω × distance au CIR.</p></div>
+</section>
+
+<section class="bloc" style="text-align:center">
+ <a class="btn" style="text-decoration:none;display:inline-block" href="02_tp_capet_cinematique.html">Passer au TP</a>
+</section>
+<footer>Préparation CAFEP-CAPET SII · Cinématique : la bielle-manivelle · ESTIC Don Bosco</footer>
+<script>
+
+'use strict';
+function T(c,s,x,y,t,co,al,b){c.font=(b===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const d=Math.hypot(x1-x0,y1-y0); if(d<1) return;
+ const L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+ c.strokeStyle=coul;c.fillStyle=coul;c.lineWidth=ep;c.lineCap='butt';
+ c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();
+ c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();
+}
+/* hachures bornées par calcul — jamais de clip() */
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8; c.strokeStyle=coul;c.lineWidth=1;
+ for(let k=-h;k<w;k+=p){const t0=Math.max(0,-k),t1=Math.min(h,w-k); if(t1<=t0) continue;
+  c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}
+ c.lineWidth=2;c.strokeRect(x,y,w,h);
+}
+function POINT(c,x,y,r,coul){c.fillStyle=coul;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill();}
+function TIRETS(c,x0,y0,x1,y1,coul,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=coul;c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();}
+function FR(v,n){return (Math.round(v*Math.pow(10,n))/Math.pow(10,n)).toFixed(n).replace('.',',').replace('-','−');}
+/* animation qui ne tourne que lorsque le canvas est visible */
+const ANIMS=[];
+function ANIMER(id,draw){
+ const cv=document.getElementById(id),c=cv.getContext('2d'); let raf=0; const t0=performance.now();
+ const A={actif:false};
+ function boucle(ts){draw(c,(ts-t0)/1000); raf=requestAnimationFrame(boucle);}
+ A.demarrer=function(){if(!raf){A.actif=true;raf=requestAnimationFrame(boucle);}};
+ A.arreter=function(){cancelAnimationFrame(raf);raf=0;A.actif=false;};
+ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?A.demarrer():A.arreter();});}).observe(cv);}
+ else A.demarrer();
+ draw(c,0); ANIMS.push(A); return A;
+}
+function CURSEUR(id,fmt,cb){const s=document.getElementById(id),o=document.getElementById(id+'v');
+ function maj(){if(o) o.textContent=fmt(+s.value); cb&&cb();} s.addEventListener('input',maj); maj(); return s;}
+function V(id){return +document.getElementById(id).value;}
+
+
+const Rm=40, Lm=160, VA=1500*Math.PI/30*Rm/1000;
+function geo(R,L,th){const ax=R*Math.cos(th),ay=R*Math.sin(th);return {ax:ax,ay:ay,xb:ax+Math.sqrt(L*L-ay*ay)};}
+function mecanisme(c,O,s,R,L,th,o){
+ o=o||{}; const g=geo(R,L,th), A={x:O.x+g.ax*s,y:O.y-g.ay*s}, B={x:O.x+g.xb*s,y:O.y};
+ const x1=O.x+(L-R)*s-34, x2=O.x+(L+R)*s+40;
+ c.fillStyle='#f1f5f9'; c.fillRect(x1,O.y-30,x2-x1,60);
+ HACH(c,x1,O.y-44,x2-x1,14,'#94a3b8'); HACH(c,x1,O.y+30,x2-x1,14,'#94a3b8');
+ c.fillStyle='#94a3b8'; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(O.x-16,O.y+26); c.lineTo(O.x+16,O.y+26); c.closePath(); c.fill();
+ HACH(c,O.x-26,O.y+26,52,10,'#94a3b8');
+ c.strokeStyle='#0e7490'; c.lineWidth=7; c.lineCap='round'; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(A.x,A.y); c.stroke();
+ c.strokeStyle='#7c3aed'; c.lineWidth=5; c.beginPath(); c.moveTo(A.x,A.y); c.lineTo(B.x,B.y); c.stroke(); c.lineCap='butt';
+ c.fillStyle='#fed7aa'; c.strokeStyle='#ea580c'; c.lineWidth=2.5; c.fillRect(B.x-6,O.y-27,50,54); c.strokeRect(B.x-6,O.y-27,50,54);
+ POINT(c,O.x,O.y,6,'#334155'); POINT(c,A.x,A.y,6,'#334155'); POINT(c,B.x,B.y,6,'#334155');
+ if(!o.sansLettres){ T(c,'O',O.x-14,O.y-10,14,'#334155'); T(c,'A',A.x-12,A.y-10,14,'#334155'); T(c,'B',B.x+2,B.y-34,14,'#334155'); }
+ return {A:A,B:B,g:g};
+}
+/* 1 · animation des trois mouvements */
+ANIMER('cv1',function(c,t){
+ c.fillStyle='#fff'; c.fillRect(0,0,880,330);
+ const O={x:140,y:170}, s=2.0, th=t*1.3;
+ c.save(); c.setLineDash([5,5]); c.strokeStyle='#0e7490'; c.lineWidth=1.6; c.beginPath(); c.arc(O.x,O.y,Rm*s,0,6.2832); c.stroke(); c.restore();
+ c.strokeStyle='#7c3aed'; c.lineWidth=1.8; c.beginPath();
+ for(let i=0;i<=120;i++){const a=i/120*6.2832,g=geo(Rm,Lm,a),mx=(g.ax+g.xb)/2,my=g.ay/2; const X=O.x+mx*s,Y=O.y-my*s; i?c.lineTo(X,Y):c.moveTo(X,Y);} c.stroke();
+ c.strokeStyle='#ea580c'; c.lineWidth=4; c.beginPath(); c.moveTo(O.x+(Lm-Rm)*s,O.y+50); c.lineTo(O.x+(Lm+Rm)*s,O.y+50); c.stroke();
+ const m=mecanisme(c,O,s,Rm,Lm,th);
+ const M={x:(m.A.x+m.B.x)/2,y:(m.A.y+m.B.y)/2}; POINT(c,M.x,M.y,5,'#7c3aed'); T(c,'M',M.x,M.y-10,13,'#7c3aed');
+ POINT(c,m.B.x,O.y+50,5,'#ea580c');
+ const L=[['#0e7490','A (manivelle) : un cercle'],['#7c3aed','M (milieu de bielle) : courbe fermée'],['#ea580c','B (piston) : un segment']];
+ L.forEach(function(l,i){ c.fillStyle=l[0]; c.fillRect(590,96+i*40,18,6); T(c,l[1],616,103+i*40,14,l[0],'left'); });
+ T(c,'Trajectoires par rapport au bâti',720,62,15,'#155e75');
+});
+/* 2 · loi entrée-sortie */
+(function(){
+ const c=document.getElementById('cv2').getContext('2d');
+ function dessiner(){
+  const R=V('s2R'),L=V('s2L'),th=V('s2T')*Math.PI/180;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,330);
+  const s=Math.min(1.5,330/(L+R+40)), O={x:40,y:180};
+  const m=mecanisme(c,O,s,R,L,th);
+  T(c,'x_B = '+FR(m.g.xb,1)+' mm',O.x+(L+R)*s/2+20,O.y+82,15,'#ea580c');
+  const gx=470,gy=40,gw=380,gh=240, xmin=L-R, xmax=L+R;
+  c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+  const X=function(a){return gx+a/360*gw;}, Y=function(v){return gy+gh-(v-xmin)/(xmax-xmin)*gh;};
+  c.save(); c.setLineDash([5,4]); c.strokeStyle='#94a3b8'; c.lineWidth=1.5; c.beginPath();
+  for(let a=0;a<=360;a+=4){const v=L+R*Math.cos(a*Math.PI/180); a?c.lineTo(X(a),Y(v)):c.moveTo(X(a),Y(v));} c.stroke(); c.restore();
+  c.strokeStyle='#ea580c'; c.lineWidth=2.6; c.beginPath();
+  for(let a=0;a<=360;a+=2){const v=geo(R,L,a*Math.PI/180).xb; a?c.lineTo(X(a),Y(v)):c.moveTo(X(a),Y(v));} c.stroke();
+  POINT(c,X(V('s2T')),Y(m.g.xb),6,'#ea580c');
+  [0,90,180,270,360].forEach(function(a){T(c,a+'°',X(a),gy+gh+16,11,'#64748b');});
+  T(c,FR(xmax,0),gx-6,gy+5,11,'#64748b','right'); T(c,FR(xmin,0),gx-6,gy+gh,11,'#64748b','right');
+  T(c,'x_B (mm)',gx,gy-10,12,'#64748b','left');
+  T(c,'course 2R = '+(2*R)+' mm   ·   λ = R/L = '+FR(R/L,2),gx+gw/2,gy+gh+38,13,'#155e75');
+  T(c,'tirets : sinusoïde pure',gx+gw,gy-10,11,'#94a3b8','right',false);
+ }
+ CURSEUR('s2R',function(v){return v+' mm';},dessiner); CURSEUR('s2L',function(v){return v+' mm';},dessiner); CURSEUR('s2T',function(v){return v+'°';},dessiner);
+})();
+/* 3 · vitesse de A */
+(function(){
+ const c=document.getElementById('cv3').getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,880,270);
+ const O={x:300,y:190}, r=110, th=40*Math.PI/180, A={x:O.x+r*Math.cos(th),y:O.y-r*Math.sin(th)};
+ c.save(); c.setLineDash([5,5]); c.strokeStyle='#94a3b8'; c.beginPath(); c.arc(O.x,O.y,r,0,6.2832); c.stroke(); c.restore();
+ c.strokeStyle='#0e7490'; c.lineWidth=7; c.lineCap='round'; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(A.x,A.y); c.stroke(); c.lineCap='butt';
+ POINT(c,O.x,O.y,6,'#334155'); POINT(c,A.x,A.y,6,'#334155'); T(c,'O',O.x-14,O.y+4,15,'#334155'); T(c,'A',A.x+14,A.y+6,15,'#334155');
+ const k=100, vx=-Math.sin(th)*k, vy=-Math.cos(th)*k; FLECHE(c,A.x,A.y,A.x+vx,A.y+vy,3.5,'#dc2626');
+ T(c,'V_A',A.x+vx-24,A.y+vy+4,16,'#dc2626');
+ const q=12, ux=Math.cos(th),uy=-Math.sin(th), px=-Math.sin(th),py=-Math.cos(th);
+ c.strokeStyle='#334155'; c.lineWidth=1.5; c.beginPath(); c.moveTo(A.x-ux*q,A.y-uy*q); c.lineTo(A.x-ux*q+px*q,A.y-uy*q+py*q); c.lineTo(A.x+px*q,A.y+py*q); c.stroke();
+ c.strokeStyle='#ea580c'; c.lineWidth=2.5; c.beginPath(); c.arc(O.x,O.y,34,-0.2,-1.3,true); c.stroke();
+ FLECHE(c,O.x+34*Math.cos(-1.2),O.y+34*Math.sin(-1.2),O.x+34*Math.cos(-1.32),O.y+34*Math.sin(-1.32),2.5,'#ea580c');
+ T(c,'ω',O.x+44,O.y-36,17,'#ea580c'); T(c,'R',(O.x+A.x)/2+10,(O.y+A.y)/2+18,15,'#0e7490');
+ T(c,'V_A ⟂ OA',640,110,18,'#dc2626'); T(c,'V_A = ω × R',640,145,18,'#155e75');
+ T(c,'1 500 tr/min · R = 40 mm  →  6,28 m/s',640,180,14,'#64748b',undefined,false);
+})();
+/* 4 · équiprojectivité */
+(function(){
+ const c=document.getElementById('cv4').getContext('2d');
+ function dessiner(){
+  const thd=V('s4T'), th=thd*Math.PI/180; c.fillStyle='#fff'; c.fillRect(0,0,880,360);
+  const O={x:150,y:220}, s=2.2, m=mecanisme(c,O,s,Rm,Lm,th), A=m.A, B=m.B, k=16;
+  const ux=(B.x-A.x)/Math.hypot(B.x-A.x,B.y-A.y), uy=(B.y-A.y)/Math.hypot(B.x-A.x,B.y-A.y);
+  TIRETS(c,A.x-ux*60,A.y-uy*60,B.x+ux*110,B.y+uy*110,'#cbd5e1',1.2);
+  const va={x:-Math.sin(th)*VA,y:-Math.cos(th)*VA}, p=va.x*ux+va.y*uy, vb=p/ux;
+  FLECHE(c,A.x,A.y,A.x+va.x*k,A.y+va.y*k,3,'#dc2626'); T(c,'V_A',A.x+va.x*k-18,A.y+va.y*k-6,14,'#dc2626');
+  const PA={x:A.x+ux*p*k,y:A.y+uy*p*k}, PB={x:B.x+ux*p*k,y:B.y+uy*p*k};
+  TIRETS(c,A.x+va.x*k,A.y+va.y*k,PA.x,PA.y,'#16a34a',1.4);
+  c.strokeStyle='#16a34a'; c.lineWidth=6; c.beginPath(); c.moveTo(A.x,A.y); c.lineTo(PA.x,PA.y); c.moveTo(B.x,B.y); c.lineTo(PB.x,PB.y); c.stroke();
+  if(Math.abs(vb)>0.05){ FLECHE(c,B.x,B.y+0.1,B.x+vb*k,B.y,3,'#2563eb'); TIRETS(c,B.x+vb*k,B.y,PB.x,PB.y,'#16a34a',1.4); T(c,'V_B',B.x+vb*k,B.y+24,14,'#2563eb'); }
+  T(c,'projection identique en A et en B',700,40,14,'#16a34a');
+  document.getElementById('l4').textContent='V_A = '+FR(VA,2)+' m/s  ·  projection sur AB = '+FR(Math.abs(p),2)+' m/s  ·  V_B = '+FR(Math.abs(vb),2)+' m/s';
+ }
+ CURSEUR('s4T',function(v){return v+'°';},dessiner);
+})();
+/* 5 · CIR */
+(function(){
+ const c=document.getElementById('cv5').getContext('2d');
+ function dessiner(){
+  const thd=V('s5T'), th=thd*Math.PI/180; c.fillStyle='#fff'; c.fillRect(0,0,880,440);
+  const O={x:110,y:380}, s=1.35, m=mecanisme(c,O,s,Rm,Lm,th,{}), A=m.A, B=m.B, g=m.g;
+  const yi=g.xb*Math.tan(th), I={x:O.x+g.xb*s,y:O.y-yi*s};
+  const IA=Math.hypot(g.xb-g.ax,yi-g.ay), IB=yi, w2=VA*1000/IA, vb=VA*IB/IA;
+  const yv=Math.max(14,I.y);
+  TIRETS(c,O.x,O.y,O.x+(I.x-O.x)*Math.min(1,(O.y-yv)/(O.y-I.y)),yv,'#7c3aed',1.6);
+  TIRETS(c,B.x,B.y,B.x,yv,'#7c3aed',1.6);
+  const k=12, va={x:-Math.sin(th)*VA*k,y:-Math.cos(th)*VA*k};
+  FLECHE(c,A.x,A.y,A.x+va.x,A.y+va.y,3,'#dc2626'); T(c,'V_A',A.x+va.x-20,A.y+va.y,14,'#dc2626');
+  FLECHE(c,B.x,B.y+0.1,B.x-vb*k,B.y,3,'#2563eb'); T(c,'V_B',B.x-vb*k-6,B.y+24,14,'#2563eb');
+  if(I.y>=14){ POINT(c,I.x,I.y,7,'#7c3aed'); T(c,'I',I.x+14,I.y+5,17,'#7c3aed','left');
+   c.strokeStyle='#7c3aed'; c.lineWidth=2; c.beginPath(); c.moveTo(I.x,I.y); c.lineTo(A.x,A.y); c.stroke(); }
+  else { FLECHE(c,B.x+40,60,B.x+40,18,2.2,'#7c3aed'); T(c,'I plus haut',B.x+52,40,13,'#7c3aed','left'); }
+  T(c,'IA = '+FR(IA,1)+' mm',650,120,15,'#7c3aed','left'); T(c,'IB = '+FR(IB,1)+' mm',650,148,15,'#7c3aed','left');
+  T(c,'ω bielle = '+FR(w2,1)+' rad/s',650,186,15,'#155e75','left'); T(c,'V_B = '+FR(vb,2)+' m/s',650,214,15,'#2563eb','left');
+  document.getElementById('l5').textContent='V_B = V_A × IB / IA = '+FR(VA,2)+' × '+FR(IB,1)+' / '+FR(IA,1)+' = '+FR(vb,2)+' m/s';
+ }
+ CURSEUR('s5T',function(v){return v+'°';},dessiner);
+})();
+
+const Q=[
+ {q:"Trajectoire de l’axe B du piston par rapport au bâti ?",r:["un cercle","un segment de droite","une courbe quelconque"],b:1,
+  ex:"Le piston est en translation rectiligne dans le cylindre : tous ses points décrivent des segments."},
+ {q:"Course du piston pour R = 35 mm et L = 140 mm ?",r:["35 mm","70 mm","140 mm"],b:1,
+  ex:"La course vaut 2R = 70 mm. La longueur de bielle ne change pas la course."},
+ {q:"N = 3 000 tr/min et R = 50 mm : V<sub>A</sub> ?",r:["1,57 m/s","15,7 m/s","150 m/s"],b:1,
+  ex:"ω = π × 3 000 / 30 = 314,2 rad/s, puis V = 314,2 × 0,050 = 15,7 m/s."},
+ {q:"Que dit l’équiprojectivité ?",r:["deux points ont la même vitesse","les projections des vitesses sur AB sont égales","la vitesse est nulle au CIR"],b:1,
+  ex:"Pour deux points d’un même solide, la distance AB ne varie pas : leurs vitesses ont la même projection sur AB."},
+ {q:"Où se trouve le CIR de la bielle ?",r:["au milieu de AB","au centre O de la manivelle","à l’intersection des perpendiculaires aux vitesses de A et B"],b:2,
+  ex:"Chaque vitesse est perpendiculaire au rayon issu du CIR : I est sur les deux perpendiculaires."},
+ {q:"Manivelle verticale (θ = 90°) : que vaut V<sub>B</sub> ?",r:["0","V<sub>A</sub>","2 V<sub>A</sub>"],b:1,
+  ex:"Le CIR est à l’infini : la bielle est en translation instantanée, V_B = V_A = ωR."}
+];
+
+(function(){
+ const z=document.getElementById('questions'), choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.innerHTML=txt;
+   b.addEventListener('click',function(){ if(b.disabled) return; choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';}); b.style.fontWeight='800'; });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){ b.disabled=true; if(j===Q[i].b) b.classList.add('bon'); else if(choix[i]===j) b.classList.add('faux'); });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div'); e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko'); e.textContent=Q[i].ex; r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ'); b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+(n===Q.length?'Méthode acquise : passe au TP.':'Relis les explications, puis passe au TP.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>

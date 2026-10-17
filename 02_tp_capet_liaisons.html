@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP — Liaisons et hyperstatisme · CAPET SII · ESTIC</title>
+<style>
+:root{
+ --ink:#1e3a5f; --bleu:#1d4ed8; --bleu-fonce:#1e40af; --cyan:#0e7490; --orange:#ea580c;
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626;
+ --ombre:0 4px 14px rgba(30,58,95,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);padding-bottom:70px}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--cyan);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--bleu-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.tp{max-width:960px;margin:26px auto 6px;padding:0 20px}
+header.tp h1{font-size:32px;color:var(--cyan)}
+header.tp p{color:var(--gris);margin-top:6px;font-size:15.5px}
+/* Barre de progression */
+.progression{max-width:960px;margin:16px auto;padding:0 20px;display:flex;gap:8px;align-items:center}
+.progression .seg{flex:1;height:10px;border-radius:6px;background:#e2e8f0;position:relative;transition:.3s}
+.progression .seg.ok{background:var(--vert)}
+.progression .seg.encours{background:var(--orange)}
+.progression .score{font-weight:800;color:var(--bleu-fonce);font-size:15px;white-space:nowrap}
+/* Activités */
+.acti{max-width:960px;margin:22px auto;padding:0 20px;position:relative}
+.boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:24px;border-top:5px solid var(--cyan);position:relative;overflow:hidden}
+.boite h2{font-size:21px;color:var(--cyan);display:flex;align-items:center;gap:10px}
+.boite h2 .badge{background:var(--cyan);color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.boite .consigne{margin:10px 0 16px;font-size:15px;color:var(--ink);background:#ecfeff;border-left:4px solid var(--cyan);padding:10px 14px;border-radius:0 10px 10px 0;line-height:1.5}
+.verrou{position:absolute;inset:0;background:rgba(248,250,252,.82);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:16px;font-weight:700;color:var(--gris)}
+.verrou .cadenas{font-size:42px}
+.canvatp{width:100%;display:block;border:1px solid #e2e8f0;border-radius:12px;background:#fdfdfd;cursor:pointer}
+.etiqbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.etiqbar button{border:2px solid #cbd5e1;background:#fff;border-radius:20px;padding:8px 16px;font-size:13.5px;font-weight:800;cursor:pointer;transition:.15s}
+.etiqbar button.sel{border-color:var(--orange);background:#fff7ed;transform:scale(1.05)}
+.etiqbar button.pose{opacity:.35;text-decoration:line-through;cursor:default}
+.sliderrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}
+.sliderrow input[type=range]{flex:1;min-width:180px;accent-color:var(--orange)}
+.sliderrow .val{font-weight:900;font-size:19px;min-width:96px;text-align:center;background:#f1f5f9;border-radius:10px;padding:8px 10px}
+/* QCM */
+.question{margin:14px 0;padding:14px;background:#f8fafc;border-radius:12px}
+.question .q{font-weight:700;margin-bottom:10px;font-size:15px}
+.question svg{display:block;margin:6px 0 12px;background:#fff;border-radius:8px;border:1px solid #eef2f7}
+.rep{display:flex;flex-wrap:wrap;gap:8px}
+.rep button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 16px;font-size:14.5px;cursor:pointer;font-weight:600;color:var(--ink);transition:.15s}
+.rep button:hover{border-color:var(--cyan)}
+.rep button.bon{background:#dcfce7;border-color:var(--vert);color:#14532d}
+.rep button.faux{background:#fee2e2;border-color:var(--rouge);color:#7f1d1d}
+.rep button:disabled{cursor:default;opacity:.85}
+/* Simulateurs */
+.simu{display:grid;grid-template-columns:280px 1fr;gap:18px;margin-top:10px}
+.commandes{background:#f8fafc;border-radius:12px;padding:16px}
+.commandes label{display:block;font-size:13.5px;font-weight:700;color:var(--bleu-fonce);margin:12px 0 4px}
+.commandes input[type=range]{width:100%}
+.commandes .val{font-size:13px;color:var(--orange);font-weight:800}
+.commandes select{width:100%;padding:8px;border-radius:8px;border:2px solid #cbd5e1;font-size:14px;font-family:inherit}
+.commandes .info{font-size:12px;color:var(--gris);margin-top:4px;line-height:1.4}
+canvas.simcv{width:100%;height:auto;background:#fdfdfd;border:1px solid #eef2f7;border-radius:12px;display:block}
+.btnrow{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.btn{border:none;border-radius:10px;padding:11px 20px;font-size:15px;font-weight:800;cursor:pointer;color:#fff;background:var(--cyan)}
+.btn:hover{filter:brightness(1.08)}
+.btn.orange{background:var(--orange)}
+.btn.vert{background:var(--vert)}
+.btn:disabled{background:#cbd5e1;cursor:default}
+.verdict{margin-top:12px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:15px;display:none}
+.verdict.ok{display:block;background:#dcfce7;color:#14532d;border-left:5px solid var(--vert)}
+.verdict.ko{display:block;background:#fee2e2;color:#7f1d1d;border-left:5px solid var(--rouge)}
+.jauge{height:14px;border-radius:8px;background:#e2e8f0;overflow:hidden;margin-top:8px}
+.jauge div{height:100%;width:0%;background:var(--vert);transition:width .3s}
+.mission{display:inline-block;background:#fff7ed;border:1.5px dashed var(--orange);border-radius:10px;padding:8px 12px;font-size:13.5px;margin-top:8px}
+/* Code final */
+.codefinal{display:none;margin-top:16px;text-align:center;background:linear-gradient(135deg,#0e7490,#1d4ed8);border-radius:14px;padding:22px;color:#fff}
+.codefinal .code{font-size:34px;font-weight:900;letter-spacing:6px;background:rgba(255,255,255,.15);border-radius:10px;display:inline-block;padding:8px 22px;margin:10px 0}
+.codefinal a{color:#fde68a;font-weight:800}
+@media (max-width:760px){.simu{grid-template-columns:1fr}}
+
+/* ===== Calculatrice flottante ===== */
+#calcBtn{position:fixed;right:18px;bottom:18px;z-index:900;width:68px;height:68px;border-radius:50%;
+ border:none;background:#0f172a;color:#fff;font-size:8.5px;font-weight:900;cursor:pointer;
+ box-shadow:0 6px 18px rgba(15,23,42,.35);line-height:1.1;letter-spacing:-.1px}
+#calcBtn:hover{background:#1e293b}
+#calcBtn .ic{display:block;margin:0 auto 1px}
+#calcPan{position:fixed;right:18px;bottom:88px;z-index:901;width:238px;background:#f8fafc;
+ border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.28);
+ padding:10px;display:none;font-family:'Segoe UI',system-ui,sans-serif}
+#calcPan.on{display:block}
+#calcPan .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:move}
+#calcPan .tete b{font-size:12.5px;color:#334155;letter-spacing:.5px}
+#calcPan .tete button{border:none;background:#e2e8f0;border-radius:8px;width:24px;height:24px;
+ font-size:15px;font-weight:900;color:#334155;cursor:pointer}
+#calcEcr{background:#0f172a;color:#f8fafc;border-radius:10px;padding:9px 11px;text-align:right;
+ font-family:'Consolas',monospace;margin-bottom:8px}
+#calcEcr .op{font-size:11px;color:#94a3b8;height:14px;overflow:hidden}
+#calcEcr .val{font-size:25px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+#calcGr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#calcGr button{border:none;border-radius:9px;padding:11px 0;font-size:16px;font-weight:800;
+ background:#fff;border:1px solid #e2e8f0;color:#0f172a;cursor:pointer}
+#calcGr button:hover{background:#e2e8f0}
+#calcGr button.f{background:#e2e8f0}
+#calcGr button.eq{background:#0f172a;color:#fff}
+#calcGr button.op{background:#dbeafe;color:#1e40af}
+@media print{#calcBtn,#calcPan{display:none!important}}
+.rep button.choisi{outline:3px solid var(--acc,#0e7490);font-weight:900}
+
+.chp{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap}
+.chp label{font-size:15px;flex:1;min-width:240px;line-height:1.6}
+.chp input{width:130px;border:1px solid #d8cdb4;border-radius:8px;padding:8px;font-size:15px;text-align:center;font-weight:700;font-family:inherit}
+.chp input.large{width:100%;text-align:left;font-weight:400}
+.chp .u{font-size:14px;color:#8a8378;min-width:40px}
+.cahiernote{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;padding:11px 15px;margin:10px 0;font-size:15px;line-height:1.7}
+
+
+.chp input.bon{border-color:#16a34a;background:#dcfce7}
+.chp input.faux{border-color:#dc2626;background:#fee2e2}
+.tri .item{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 12px;margin:8px 0;border:2px solid #e2e8f0;border-radius:12px;background:#fff;transition:.2s}
+.tri .item.bon{border-color:#16a34a;background:#f0fdf4}
+.tri .item.faux{border-color:#dc2626;background:#fef2f2}
+.tri .enonce{flex:1;min-width:220px;font-weight:700;font-size:15px}
+.tri .choix{display:flex;gap:8px;flex-wrap:wrap}
+.tri .choix button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:7px 13px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer;color:#334155}
+.tri .choix button.faux{border-color:#dc2626;background:#fee2e2}
+.tri .item.bon .choix button:disabled{opacity:.55;cursor:default}
+canvas.fig{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}
+.donnees{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:9px 13px;margin:8px 0;font-size:15px;line-height:1.7}
+.corrige-btn{margin-top:10px;background:#f0f9ff;color:#0369a1;border:1.5px solid #7dd3fc;
+ border-radius:9px;padding:7px 13px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer}
+.corrige-btn:hover{background:#e0f2fe}
+.corrige-bloc{display:none;margin-top:10px;border:1px solid #bae6fd;border-radius:12px;
+ background:#f8fcff;padding:12px 14px}
+.corrige-bloc.ouvert{display:block}
+.corrige-bloc .etape{display:flex;gap:10px;margin:6px 0;font-size:14.5px;line-height:1.5}
+.corrige-bloc .etape > span{flex:0 0 112px;font-weight:800;color:#0369a1;font-size:12px;
+ text-transform:uppercase;letter-spacing:.5px;padding-top:2px}
+.corrige-bloc .retenu{margin-top:8px;background:#ecfeff;border-left:4px solid #0e7490;
+ border-radius:8px;padding:8px 11px;font-size:14px}
+.copie-zone{margin-top:18px;border-top:2px dashed #cbd5e1;padding-top:14px}
+.copie-zone h3{color:#155e75;font-size:18px;margin-bottom:4px}
+.copie-zone .chapo-c{color:#64748b;font-size:13.5px;margin-bottom:10px}
+.copie-ex{border:1px solid #e9e2d4;border-radius:12px;padding:11px 14px;margin:10px 0;background:#fff}
+.copie-ex b.t{color:#7c2d12}
+@media print{.corrige-btn{display:none}.corrige-bloc{display:block}}
+</style>
+</head>
+<body>
+
+<!-- Logo ESTIC Don Bosco (officiel) -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="tp">
+ <h1>TP — Liaisons et hyperstatisme</h1>
+ <p>Compter, calculer, puis corriger un montage : la démarche attendue dans toutes les études de guidage du CAPET.</p>
+</header>
+
+<div class="progression" id="prog">
+ <div class="seg" data-a="1"></div><div class="seg" data-a="2"></div><div class="seg" data-a="3"></div><div class="seg" data-a="4"></div><div class="seg" data-a="5"></div><div class="seg" data-a="6"></div><div class="seg" data-a="7"></div>
+ <div class="score">★ <span id="scoreTot">0</span>pts</div>
+</div>
+
+<div class="acti" id="a1"><div class="boite">
+ <h2><span class="badge">1</span>Les inconnues statiques</h2>
+ <div class="consigne">Pour chaque liaison, donne le nombre d’inconnues statiques transmises.</div>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — dessine chaque liaison et écris son torseur d’actions transmissibles.</div>
+ <div id="champs1"></div>
+ <div class="btnrow"><button class="btn" id="verif1">Valider</button></div><div id="verd1"></div>
+</div></div>
+<div class="acti" id="a2"><div class="boite">
+ <h2><span class="badge">2</span>Un arbre sur deux pivots</h2>
+ <div class="consigne">L’arbre 1 est guidé par deux liaisons pivot coaxiales. Seule sa rotation est utile.</div>
+ <canvas class="fig" id="fig2" width="760" height="250"></canvas>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — trace le graphe des liaisons, puis calcule γ, N<sub>c</sub> et h.</div>
+ <div id="champs2"></div>
+ <div class="btnrow"><button class="btn" id="verif2">Valider</button></div><div id="verd2"></div>
+</div></div>
+<div class="acti" id="a3"><div class="boite">
+ <h2><span class="badge">3</span>Isostatique ou hyperstatique ?</h2>
+ <div class="consigne">Classe chaque montage. Un item faux reste actif.</div>
+ <div class="tri" id="tri3"></div><div id="verd3"></div>
+</div></div>
+<div class="acti" id="a4"><div class="boite">
+ <h2><span class="badge">4</span>La table à quatre pieds</h2>
+ <div class="consigne">Le plateau repose sur le sol par quatre liaisons ponctuelles. Mobilités du plateau : 2 translations et 1 rotation dans le plan du sol.</div>
+ <canvas class="fig" id="fig4" width="760" height="250"></canvas>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — trace le graphe : deux sommets, quatre arcs.</div>
+ <div id="champs4"></div>
+ <div class="btnrow"><button class="btn" id="verif4">Valider</button></div><div id="verd4"></div>
+</div></div>
+<div class="acti" id="a5"><div class="boite">
+ <h2><span class="badge">5</span>La bielle-manivelle</h2>
+ <div class="consigne">Bâti, manivelle, bielle, piston. Trois liaisons pivot d’axes parallèles, et une glissière entre le piston et le bâti. Une seule mobilité utile.</div>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — le graphe forme une seule boucle : bâti – manivelle – bielle – piston – bâti.</div>
+ <div id="champs5"></div>
+ <div class="btnrow"><button class="btn" id="verif5">Valider</button></div><div id="verd5"></div>
+</div></div>
+<div class="acti" id="a6"><div class="boite">
+ <h2><span class="badge">6</span>Choisir le bon couple de liaisons</h2>
+ <div class="consigne">Calcule h pour un arbre guidé par chacun de ces couples de liaisons.</div>
+ <div class="cahiernote"><b>SUR TA COPIE</b> — pour chaque couple : N<sub>c</sub>, m, puis h = m − N<sub>c</sub> + 6.</div>
+ <div id="champs6"></div>
+ <div class="btnrow"><button class="btn" id="verif6">Valider</button></div><div id="verd6"></div>
+</div></div>
+<div class="acti" id="a7"><div class="boite">
+ <h2><span class="badge">7</span>Bilan</h2>
+ <div class="consigne">Une formule, mais surtout une interprétation.</div>
+ <div id="bilan7"></div>
+</div></div>
+<div class="acti"><div class="boite" style="text-align:center"><a class="btn" style="text-decoration:none;display:inline-block" href="01_cours_capet_liaisons.html">Revoir le cours</a></div></div>
+<script>
+
+'use strict';
+const CLE='tp_capet_liaisons';
+const etat={debloque:1,score:0,f:{}};
+function sauver(){ try{ localStorage.setItem(CLE, JSON.stringify({d:etat.debloque, s:etat.score, f:etat.f})); }catch(e){} }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem(CLE)); if(d){ etat.debloque=d.d; etat.score=d.s; etat.f=d.f||{}; } }catch(e){} }
+function majProgression(){
+ document.querySelectorAll('.progression .seg').forEach(function(seg){
+  const n=+seg.dataset.a; seg.className='seg'+((n<etat.debloque||etat.f[n])?' ok':(n===etat.debloque?' encours':''));
+ });
+ document.getElementById('scoreTot').textContent=etat.score;
+ for(let n=2;n<=7;n++){
+  const acti=document.getElementById('a'+n); let v=acti.querySelector('.verrou');
+  if(n>etat.debloque){ if(!v){ v=document.createElement('div'); v.className='verrou';
+    v.innerHTML='<div class="cadenas"></div>Termine la mission '+(n-1)+' pour déverrouiller'; acti.querySelector('.boite').appendChild(v); } }
+  else if(v){ v.remove(); }
+ }
+}
+function reussir(n, pts, message){
+ etat.score+=pts; etat.f[n]=1; /* missions toutes visibles : elles peuvent être faites dans le désordre */
+ while(etat.f[etat.debloque]) etat.debloque++;
+ sauver(); majProgression();
+ if(n<7) setTimeout(function(){ document.getElementById('a'+(n+1)).scrollIntoView({behavior:'smooth'}); },900);
+}
+function champsCalc(zoneId,liste){
+ const z=document.getElementById(zoneId); if(!z) return;
+ liste.forEach(function(c){
+  const d=document.createElement('div'); d.className='chp';
+  const l=document.createElement('label'); l.innerHTML=c.lbl; l.setAttribute('for',c.id);
+  const i=document.createElement('input'); i.id=c.id; i.autocomplete='off'; i.inputMode='decimal';
+  const u=document.createElement('span'); u.className='u'; u.innerHTML=c.u;
+  d.appendChild(l); d.appendChild(i); d.appendChild(u); z.appendChild(d);
+ });
+}
+function verifierCalc(liste,verdId,n,okTxt){
+ let bons=0;
+ liste.forEach(function(c){
+  const i=document.getElementById(c.id);
+  const v=parseFloat(String(i.value||'').replace(/\s/g,'').replace(',','.'));
+  const ok=isFinite(v)&&Math.abs(v-c.rep)<=c.tol;
+  i.classList.toggle('bon',ok); i.classList.toggle('faux',!ok); if(ok) bons++;
+ });
+ const v=document.getElementById(verdId);
+ if(bons===liste.length){ v.className='verdict ok'; v.innerHTML='✓ '+okTxt; reussir(n,3); return true; }
+ v.className='verdict ko'; v.innerHTML=bons+' résultat(s) juste(s) sur '+liste.length+'. Reprends le calcul faux sur ta copie.';
+ return false;
+}
+function brancher(n,liste,txt){
+ champsCalc('champs'+n,liste);
+ const b=document.getElementById('verif'+n);
+ b.addEventListener('click',function(){ if(verifierCalc(liste,'verd'+n,n,txt)) b.disabled=true; });
+}
+function trier(n,ITEMS,LIB,okTxt){
+ const zone=document.getElementById('tri'+n); let err=0,bons=0;
+ ITEMS.forEach(function(it){
+  const d=document.createElement('div'); d.className='item';
+  const p=document.createElement('div'); p.className='enonce'; p.innerHTML=it.t; d.appendChild(p);
+  const ch=document.createElement('div'); ch.className='choix';
+  Object.keys(LIB).forEach(function(code){
+   const b=document.createElement('button'); b.type='button'; b.textContent=LIB[code];
+   b.addEventListener('click',function(){
+    if(d.classList.contains('bon')) return;
+    if(code===it.c){
+     d.classList.remove('faux'); d.classList.add('bon'); ch.querySelectorAll('button').forEach(function(x){x.disabled=true;});
+     bons++;
+     if(bons===ITEMS.length){ const v=document.getElementById('verd'+n); v.className='verdict ok'; v.innerHTML='✓ '+okTxt; reussir(n, err===0?3:(err<=2?2:1)); }
+    } else { err++; d.classList.add('faux'); b.classList.add('faux'); setTimeout(function(){ d.classList.remove('faux'); b.classList.remove('faux'); },900); }
+   });
+   ch.appendChild(b);
+  });
+  d.appendChild(ch); zone.appendChild(d);
+ });
+}
+function T(c,s,x,y,t,co,al,b){c.font=(b===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const d=Math.hypot(x1-x0,y1-y0); if(d<1) return;
+ const L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+ c.strokeStyle=coul;c.fillStyle=coul;c.lineWidth=ep;c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();
+ c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();
+}
+function HACH(c,x,y,w,h,coul){ c.strokeStyle=coul;c.lineWidth=1;
+ for(let k=-h;k<w;k+=8){const t0=Math.max(0,-k),t1=Math.min(h,w-k); if(t1<=t0) continue; c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}
+ c.lineWidth=2;c.strokeRect(x,y,w,h); }
+function POINT(c,x,y,r,coul){c.fillStyle=coul;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill();}
+function COTE(c,x0,y0,x1,y1,txt,coul,dy){ c.strokeStyle=coul; c.lineWidth=1.2; FLECHE(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,coul); FLECHE(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,coul); T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy||-6),13,coul); }
+brancher(1,[{"id": "l11", "lbl": "a) Liaison pivot", "rep": 5, "tol": 0, "u": ""}, {"id": "l12", "lbl": "b) Appui plan", "rep": 3, "tol": 0, "u": ""}, {"id": "l13", "lbl": "c) Linéaire annulaire", "rep": 2, "tol": 0, "u": ""}, {"id": "l14", "lbl": "d) Rotule", "rep": 3, "tol": 0, "u": ""}],"Inconnues = 6 − mobilités : pivot 6 − 1 = 5, appui plan 6 − 3 = 3, linéaire annulaire 6 − 4 = 2, rotule 6 − 3 = 3.");
+(function(){ const c=document.getElementById('fig2').getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,250);
+
+const y=120;
+c.strokeStyle='#0e7490'; c.lineWidth=12; c.lineCap='round'; c.beginPath(); c.moveTo(90,y); c.lineTo(670,y); c.stroke(); c.lineCap='butt';
+[200,560].forEach(function(x,i){ c.fillStyle='#fff'; c.strokeStyle='#334155'; c.lineWidth=2.5; c.fillRect(x-20,y-22,40,44); c.strokeRect(x-20,y-22,40,44);
+ c.lineWidth=4; c.beginPath(); c.moveTo(x-26,y-14); c.lineTo(x-26,y+14); c.moveTo(x+26,y-14); c.lineTo(x+26,y+14); c.stroke();
+ c.strokeStyle='#94a3b8'; c.lineWidth=2; c.beginPath(); c.moveTo(x,y+22); c.lineTo(x,200); c.stroke(); HACH(c,x-30,200,60,12,'#94a3b8');
+ T(c,i?'B : pivot':'A : pivot',x,y-34,14,'#334155'); });
+T(c,'arbre 1',380,y-20,14,'#0e7490'); T(c,'bâti 0',380,230,13,'#64748b');
+
+})();
+brancher(2,[{"id": "l21", "lbl": "a) Nombre de cycles γ", "rep": 1, "tol": 0, "u": ""}, {"id": "l22", "lbl": "b) Somme des mobilités N<sub>c</sub>", "rep": 2, "tol": 0, "u": ""}, {"id": "l23", "lbl": "c) Degré d’hyperstatisme h", "rep": 5, "tol": 0, "u": ""}],"γ = 2 − 2 + 1 = 1. N<sub>c</sub> = 1 + 1 = 2. h = 1 − 2 + 6 = 5 : coaxialité des deux paliers en deux directions, parallélisme en deux directions, et distance axiale.");
+trier(3,[{"t": "Arbre : rotule + linéaire annulaire", "c": "I"}, {"t": "Arbre : pivot + pivot", "c": "H"}, {"t": "Arbre : rotule + rotule", "c": "H"}, {"t": "Arbre : pivot + linéaire annulaire", "c": "H"}, {"t": "Tabouret à 3 pieds sur le sol", "c": "I"}, {"t": "Table à 4 pieds sur le sol", "c": "H"}],{"I": "isostatique", "H": "hyperstatique"},"Seul le couple rotule + linéaire annulaire donne h = 0 pour un arbre. Rotule + rotule : h = 1, la distance entre les rotules doit être exacte.");
+(function(){ const c=document.getElementById('fig4').getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,250);
+
+c.strokeStyle='#78716c'; c.lineWidth=3; c.beginPath(); c.moveTo(80,200); c.lineTo(680,200); c.stroke(); HACH(c,80,200,600,12,'#a8a29e');
+c.fillStyle='#fed7aa'; c.strokeStyle='#b45309'; c.lineWidth=2.5; c.fillRect(170,80,420,20); c.strokeRect(170,80,420,20);
+[190,320,440,570].forEach(function(x,i){ c.strokeStyle='#b45309'; c.lineWidth=3; c.beginPath(); c.moveTo(x,100); c.lineTo(x,196); c.stroke(); POINT(c,x,198,5,'#dc2626'); T(c,'P'+(i+1),x,226,13,'#dc2626'); });
+T(c,'plateau 1',380,70,14,'#b45309'); T(c,'sol 0',650,190,13,'#64748b');
+T(c,'chaque pied : liaison ponctuelle avec le sol',380,30,14,'#334155',undefined,false);
+
+})();
+brancher(4,[{"id": "l41", "lbl": "a) Nombre de cycles γ", "rep": 3, "tol": 0, "u": ""}, {"id": "l42", "lbl": "b) N<sub>c</sub>", "rep": 20, "tol": 0, "u": ""}, {"id": "l43", "lbl": "c) Mobilités m", "rep": 3, "tol": 0, "u": ""}, {"id": "l44", "lbl": "d) Degré d’hyperstatisme h", "rep": 1, "tol": 0, "u": ""}],"γ = 4 − 2 + 1 = 3. N<sub>c</sub> = 4 × 5 = 20. h = 3 − 20 + 6 × 3 = 1 : les quatre extrémités des pieds doivent être coplanaires.");
+brancher(5,[{"id": "l51", "lbl": "a) Nombre de cycles γ", "rep": 1, "tol": 0, "u": ""}, {"id": "l52", "lbl": "b) N<sub>c</sub>", "rep": 4, "tol": 0, "u": ""}, {"id": "l53", "lbl": "c) Degré d’hyperstatisme h", "rep": 3, "tol": 0, "u": ""}],"γ = 4 − 4 + 1 = 1. N<sub>c</sub> = 1 + 1 + 1 + 1 = 4. h = 1 − 4 + 6 = 3 : c’est un mécanisme plan, les axes des pivots doivent rester parallèles entre eux et perpendiculaires à la glissière. Remplacer les deux pivots de la bielle par une rotule et une linéaire annulaire ramène h à 0.");
+brancher(6,[{"id": "l61", "lbl": "a) Pivot + linéaire annulaire", "rep": 2, "tol": 0, "u": ""}, {"id": "l62", "lbl": "b) Pivot glissant + rotule", "rep": 2, "tol": 0, "u": ""}, {"id": "l63", "lbl": "c) Rotule + linéaire annulaire", "rep": 0, "tol": 0, "u": ""}],"a) N<sub>c</sub> = 5, h = 1 − 5 + 6 = 2. b) N<sub>c</sub> = 5, h = 2. c) N<sub>c</sub> = 7, h = 0 : c’est le modèle d’un montage à deux roulements à billes, un fixe et un libre.");
+(function(){ const z=document.getElementById('bilan7'); const d=document.createElement('div'); d.className='verdict ok'; d.innerHTML="✓ Tu sais compter les inconnues, tracer un graphe et calculer h.<br><br><b>Le réflexe à garder :</b> un résultat h &gt; 0 se traduit toujours par des conditions géométriques à NOMMER : coaxialité, parallélisme, distance. C’est cette traduction qui rapporte des points, pas le chiffre seul."; z.appendChild(d); })();
+
+/* ===== INITIALISATION — À GARDER EN DERNIER ===== */
+charger(); majProgression();
+
+/* ===== CORRIGES_CAPET (voir _outils/ajouter_corriges_tp_capet.py) ===== */
+const CORRIGES={"1": "<div class=\"etape\"><span>Formule</span><div>inconnues statiques = 6 − mobilités</div></div><div class=\"etape\"><span>Application</span><div>pivot : 6 − 1 ; appui plan : 6 − 3 ; linéaire annulaire : 6 − 4 ; rotule : 6 − 3.</div></div><div class=\"etape\"><span>Résultat</span><div><b>5</b>, <b>3</b>, <b>2</b> et <b>3</b> inconnues.</div></div><div class=\"retenu\"><b>À retenir</b> — le torseur s’écrit au point caractéristique : centre de la rotule, centre de la sphère pour la linéaire annulaire.</div>", "2": "<div class=\"etape\"><span>Formule</span><div>γ = L − p + 1 ; h = m − N<sub>c</sub> + 6γ</div></div><div class=\"etape\"><span>Application</span><div>γ = 2 − 2 + 1 = 1. N<sub>c</sub> = 1 + 1 = 2. h = 1 − 2 + 6.</div></div><div class=\"etape\"><span>Résultat</span><div><b>γ = 1</b>, <b>N<sub>c</sub> = 2</b>, <b>h = 5</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — les 5 conditions : coaxialité des alésages (2 translations, 2 rotations) et distance axiale entre les épaulements.</div>", "3": "<div class=\"etape\"><span>Règle de tri</span><div>Un arbre en rotation est isostatique si N<sub>c</sub> = 7 avec m = 1 : seul <b>rotule + linéaire annulaire</b> y parvient. Pour un appui sur le sol, <b>trois</b> points définissent un plan, le quatrième est de trop.</div></div><div class=\"retenu\"><b>À retenir</b> — hyperstatique n’est pas une faute : deux pivots donnent un montage plus rigide, si la fabrication suit.</div>", "4": "<div class=\"etape\"><span>Formule</span><div>γ = L − p + 1 ; N<sub>c</sub> = 4 × 5 ; h = m − N<sub>c</sub> + 6γ</div></div><div class=\"etape\"><span>Application</span><div>γ = 4 − 2 + 1 = 3. N<sub>c</sub> = 20. m = 3. h = 3 − 20 + 18.</div></div><div class=\"etape\"><span>Résultat</span><div><b>γ = 3</b>, <b>N<sub>c</sub> = 20</b>, <b>m = 3</b>, <b>h = 1</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — la condition : les quatre extrémités des pieds coplanaires, ET un sol plan. D’où les cales sous les tables de bistrot.</div>", "5": "<div class=\"etape\"><span>Formule</span><div>γ = L − p + 1 ; h = m − N<sub>c</sub> + 6γ</div></div><div class=\"etape\"><span>Application</span><div>γ = 4 − 4 + 1 = 1. N<sub>c</sub> = 1 + 1 + 1 + 1 = 4. h = 1 − 4 + 6.</div></div><div class=\"etape\"><span>Résultat</span><div><b>γ = 1</b>, <b>N<sub>c</sub> = 4</b>, <b>h = 3</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — h = 3 pour tout mécanisme plan à une boucle modélisé en 3D : 2 conditions de parallélisme et 1 de perpendicularité. Une étude en modèle plan donnerait h = 0.</div>", "6": "<div class=\"etape\"><span>Formule</span><div>m = 1 (2 si aucune liaison n’arrête la translation axiale) ; h = m − N<sub>c</sub> + 6</div></div><div class=\"etape\"><span>Application</span><div>a) N<sub>c</sub> = 1 + 4 = 5. b) N<sub>c</sub> = 2 + 3 = 5. c) N<sub>c</sub> = 3 + 4 = 7.</div></div><div class=\"etape\"><span>Résultat</span><div><b>a) h = 2</b>, <b>b) h = 2</b>, <b>c) h = 0</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — avant de calculer h, vérifier que l’arbre est bien arrêté axialement : sinon m = 2 et le montage ne fonctionne pas.</div>"};
+const COPIE=[{"titre": "Deux pivots glissants", "enonce": "Un arbre est guidé par deux pivots glissants coaxiales. Calculer h et conclure sur le montage.", "corrige": "<div class=\"etape\"><span>Formule</span><div>N<sub>c</sub> = 2 + 2 ; h = m − N<sub>c</sub> + 6</div></div><div class=\"etape\"><span>Application</span><div>aucune liaison n’arrête la translation : m = 2 (rotation utile + translation). h = 2 − 4 + 6.</div></div><div class=\"etape\"><span>Résultat</span><div><b>h = 4</b>, et l’arbre est <b>libre axialement</b> : il faut ajouter une butée.</div></div><div class=\"retenu\"><b>À retenir</b> — un calcul de h ne dispense pas de lire les mobilités : m = 2 est ici un défaut de conception.</div>"}, {"titre": "Une porte à trois gonds", "enonce": "Une porte est articulée sur le bâti par trois pivots coaxiales. Calculer h.", "corrige": "<div class=\"etape\"><span>Formule</span><div>γ = L − p + 1 ; h = m − N<sub>c</sub> + 6γ</div></div><div class=\"etape\"><span>Application</span><div>γ = 3 − 2 + 1 = 2. N<sub>c</sub> = 3. h = 1 − 3 + 12.</div></div><div class=\"etape\"><span>Résultat</span><div><b>h = 10</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — trois gonds coaxiaux sont difficiles à aligner : on accepte ce montage parce que les gonds tolèrent du jeu.</div>"}, {"titre": "Rendre la porte isostatique", "enonce": "Proposer deux liaisons pour articuler la porte sans hyperstatisme, et vérifier par le calcul.", "corrige": "<div class=\"etape\"><span>Formule</span><div>rotule en haut + linéaire annulaire en bas</div></div><div class=\"etape\"><span>Application</span><div>N<sub>c</sub> = 3 + 4 = 7 ; m = 1 ; γ = 1. h = 1 − 7 + 6.</div></div><div class=\"etape\"><span>Résultat</span><div><b>h = 0</b>.</div></div><div class=\"retenu\"><b>À retenir</b> — c’est le principe du gond à pivot sphérique : la porte se monte même si les supports sont mal alignés.</div>"}];
+function poserCorrige(n,raison){
+ const a=document.getElementById('a'+n); if(!a || !CORRIGES[n]) return;
+ const bo=a.querySelector('.boite'); if(!bo || bo.querySelector('.corrige-btn')) return;
+ const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+ btn.textContent='Voir le corrigé détaillé'+(raison? ' ('+raison+')':'');
+ const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=CORRIGES[n];
+ btn.addEventListener('click',function(){
+  bl.classList.toggle('ouvert');
+  btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Voir')+' le corrigé détaillé';
+ });
+ bo.appendChild(btn); bo.appendChild(bl);
+}
+/* TOUT VISIBLE DÈS LE DÉPART — choix de Mat, pour les TP CAPET uniquement.
+   Les corrigés sont posés sur toutes les missions à l'ouverture, et le verrouillage
+   progressif est levé : sans cela, le corrigé d'une mission verrouillée resterait
+   sous son cadenas. Le score reste juste — `reussir` ajoute les points à chaque
+   réussite, et un bouton validé est désactivé. Seule la barre de progression
+   continue d'avancer dans l'ordre. */
+(function(){
+ Object.keys(CORRIGES).forEach(function(n){ poserCorrige(+n); });
+ const m0=majProgression;
+ majProgression=function(){
+  const x=m0.apply(this,arguments);
+  document.querySelectorAll('.acti .verrou').forEach(function(v){ v.remove(); });
+  return x;
+ };
+ majProgression();
+})();
+/* exercices sur copie, dans la mission bilan, accessibles sans terminer le TP */
+(function(){
+ const actis=document.querySelectorAll('.acti'); if(!actis.length) return;
+ const bo=actis[actis.length-1].querySelector('.boite'); if(!bo) return;
+ const z=document.createElement('div'); z.className='copie-zone';
+ z.innerHTML='<h3>Exercices sur copie</h3><div class="chapo-c">Rédige sur ta copie : '+
+  'formule, application numérique, résultat avec son unité. Compare ensuite au corrigé.</div>';
+ COPIE.forEach(function(ex,i){
+  const d=document.createElement('div'); d.className='copie-ex';
+  d.innerHTML='<b class="t">Exercice '+(i+1)+' — '+ex.titre+'</b><p style="margin:6px 0">'+ex.enonce+'</p>';
+  const btn=document.createElement('button'); btn.type='button'; btn.className='corrige-btn';
+  btn.textContent='Afficher le corrigé';
+  const bl=document.createElement('div'); bl.className='corrige-bloc'; bl.innerHTML=ex.corrige;
+  btn.addEventListener('click',function(){
+   bl.classList.toggle('ouvert');
+   btn.textContent=(bl.classList.contains('ouvert')? 'Masquer':'Afficher')+' le corrigé';
+  });
+  d.appendChild(btn); d.appendChild(bl); z.appendChild(d);
+ });
+ bo.appendChild(z);
+})();
+
+</script>
+</body>
+</html>
