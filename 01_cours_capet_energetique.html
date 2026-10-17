@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Énergétique : puissance et rendement · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+.bascule{display:inline-flex;gap:8px;align-items:center;font-size:14px;font-weight:700;color:var(--accf)}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+
+select{font:600 15px 'Segoe UI',sans-serif;padding:6px 10px;border:2px solid #cbd5e1;border-radius:9px;background:#fff}
+.grille-btn{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.grille-btn button{background:#f8fafc;border:2px solid #e9e2d4;border-radius:9px;padding:6px 11px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer;color:#334155}
+.grille-btn button.actif{border-color:#0e7490;background:#ecfeff;color:#155e75}
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.modes button{background:#fff;border:2px solid #0e7490;color:#0e7490;border-radius:9px;padding:6px 12px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer}
+.modes button.actif{background:#0e7490;color:#fff}
+.lecture{font:700 16px 'Segoe UI',sans-serif;color:#155e75;text-align:center;margin:6px 0}
+.fiche{border:2px solid #0e7490;border-radius:14px;padding:12px 18px}
+.fiche p{margin:6px 0;font-size:16px}
+.fiche .f{font-family:'Cambria Math','Times New Roman',serif;font-weight:700;font-size:17px}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Énergétique : puissance et rendement</h1>
+ <p class="sous">Suivre la puissance du moteur jusqu’à la charge, compter les pertes, ramener les inerties sur un seul arbre.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>Deux formules de puissance</h2>
+ <div class="chapo">En translation, effort fois vitesse. En rotation, couple fois vitesse angulaire.</div>
+ <div class="formule">P = F × V &nbsp;&nbsp;·&nbsp;&nbsp; P = C × ω</div>
+ <canvas id="cvE1" width="880" height="260"></canvas>
+ <div class="retenir">Treuil : 500 kg montés à 0,4 m/s. P = 500 × 9,81 × 0,4 = <b>1 962 W</b> utiles.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>La chaîne des rendements</h2>
+ <div class="chapo">Chaque composant perd un peu de puissance : les rendements se multiplient.</div>
+ <canvas id="cvE2" width="880" height="300"></canvas>
+ <div class="reglage"><label for="e1">Moteur η₁</label><input type="range" id="e1" min="0.6" max="0.98" step="0.01" value="0.85"><span id="e1v"></span></div>
+ <div class="reglage"><label for="e2">Réducteur η₂</label><input type="range" id="e2" min="0.5" max="0.98" step="0.01" value="0.9"><span id="e2v"></span></div>
+ <div class="reglage"><label for="e3">Tambour η₃</label><input type="range" id="e3" min="0.6" max="0.99" step="0.01" value="0.95"><span id="e3v"></span></div>
+ <div class="formule">η = η₁ × η₂ × η₃ &nbsp;&nbsp;·&nbsp;&nbsp; P<sub>absorbée</sub> = P<sub>utile</sub> / η</div>
+ <div class="piege"><b>Piège :</b> on <b>divise</b> par η pour remonter vers le moteur. Multiplier donne un moteur trop petit.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>L’énergie cinétique</h2>
+ <div class="chapo">Ce que le moteur doit fournir pour lancer, ce que le frein doit dissiper pour arrêter.</div>
+ <div class="formule">translation : E<sub>c</sub> = ½ m V² &nbsp;&nbsp;·&nbsp;&nbsp; rotation : E<sub>c</sub> = ½ J ω²</div>
+ <canvas id="cvE3" width="880" height="260"></canvas>
+ <div class="reglage"><label for="eV">Vitesse du véhicule</label><input type="range" id="eV" min="10" max="130" step="5" value="90"><span id="eVv"></span></div>
+ <div class="retenir">Vitesse au <b>carré</b> : rouler à 130 au lieu de 90 km/h double presque l’énergie à dissiper au freinage.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Ramener les inerties sur l’arbre moteur</h2>
+ <div class="chapo">On égale les énergies cinétiques : chaque inertie est vue à travers le rapport de réduction.</div>
+ <div class="formule">J<sub>éq</sub> = J<sub>m</sub> + J<sub>charge</sub> × k² + m × (V / ω<sub>m</sub>)² &nbsp;&nbsp;(k = ω<sub>charge</sub> / ω<sub>m</sub>)</div>
+ <canvas id="cvE4" width="880" height="280"></canvas>
+ <div class="reglage"><label for="eK">Rapport k = 1/…</label><input type="range" id="eK" min="1" max="30" step="1" value="10"><span id="eKv"></span></div>
+ <div class="lecture" id="lE4"></div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>La méthode d’épreuve</h2>
+ <div class="methode"><b>MÉTHODE — choisir un moteur</b>
+  <ol>
+   <li>Calculer la puissance utile côté charge, en régime établi.</li>
+   <li>Remonter la chaîne en divisant par chaque rendement.</li>
+   <li>Ramener toutes les inerties sur l’arbre moteur.</li>
+   <li>Ajouter le couple d’accélération J<sub>éq</sub> dω/dt au couple résistant ramené.</li>
+   <li>Retenir un moteur qui couvre le régime établi ET le démarrage.</li>
+  </ol></div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<section class="bloc">
+ <h2>À retenir</h2>
+ <div class="fiche"><p class="f">P = F V &nbsp;·&nbsp; P = C ω &nbsp;·&nbsp; η = η₁ η₂ η₃ &nbsp;·&nbsp; P<sub>abs</sub> = P<sub>u</sub> / η</p>
+ <p class="f">E<sub>c</sub> = ½ m V² &nbsp;·&nbsp; E<sub>c</sub> = ½ J ω²</p>
+ <p class="f">J<sub>éq</sub> = J<sub>m</sub> + J<sub>c</sub> k² + m (V/ω<sub>m</sub>)²</p>
+ <p>Un réducteur 1/10 divise par 100 l’inertie de la charge vue du moteur.</p></div>
+</section>
+
+<section class="bloc" style="text-align:center">
+ <a class="btn" style="text-decoration:none;display:inline-block" href="02_tp_capet_energetique.html">Passer au TP</a>
+</section>
+<footer>Préparation CAFEP-CAPET SII · Énergétique : puissance et rendement · ESTIC Don Bosco</footer>
+<script>
+
+'use strict';
+function T(c,s,x,y,t,co,al,b){c.font=(b===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const d=Math.hypot(x1-x0,y1-y0); if(d<1) return;
+ const L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+ c.strokeStyle=coul;c.fillStyle=coul;c.lineWidth=ep;c.lineCap='butt';
+ c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();
+ c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();
+}
+/* hachures bornées par calcul — jamais de clip() */
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8; c.strokeStyle=coul;c.lineWidth=1;
+ for(let k=-h;k<w;k+=p){const t0=Math.max(0,-k),t1=Math.min(h,w-k); if(t1<=t0) continue;
+  c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}
+ c.lineWidth=2;c.strokeRect(x,y,w,h);
+}
+function POINT(c,x,y,r,coul){c.fillStyle=coul;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill();}
+function TIRETS(c,x0,y0,x1,y1,coul,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=coul;c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();}
+function FR(v,n){return (Math.round(v*Math.pow(10,n))/Math.pow(10,n)).toFixed(n).replace('.',',').replace('-','−');}
+/* animation qui ne tourne que lorsque le canvas est visible */
+const ANIMS=[];
+function ANIMER(id,draw){
+ const cv=document.getElementById(id),c=cv.getContext('2d'); let raf=0; const t0=performance.now();
+ const A={actif:false};
+ function boucle(ts){draw(c,(ts-t0)/1000); raf=requestAnimationFrame(boucle);}
+ A.demarrer=function(){if(!raf){A.actif=true;raf=requestAnimationFrame(boucle);}};
+ A.arreter=function(){cancelAnimationFrame(raf);raf=0;A.actif=false;};
+ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?A.demarrer():A.arreter();});}).observe(cv);}
+ else A.demarrer();
+ draw(c,0); ANIMS.push(A); return A;
+}
+function CURSEUR(id,fmt,cb){const s=document.getElementById(id),o=document.getElementById(id+'v');
+ function maj(){if(o) o.textContent=fmt(+s.value); cb&&cb();} s.addEventListener('input',maj); maj(); return s;}
+function V(id){return +document.getElementById(id).value;}
+
+
+/* 1 · treuil animé */
+ANIMER('cvE1',function(c,t){
+ c.fillStyle='#fff'; c.fillRect(0,0,880,260);
+ const R=40, cx=200, cy=60, h=40+((t*30)%120);
+ HACH(c,120,20,160,12,'#94a3b8');
+ c.fillStyle='#e2e8f0'; c.strokeStyle='#475569'; c.lineWidth=2; c.beginPath(); c.arc(cx,cy+20,R,0,6.2832); c.fill(); c.stroke();
+ c.save(); c.translate(cx,cy+20); c.rotate(-t*0.75); c.strokeStyle='#475569'; c.beginPath(); c.moveTo(0,0); c.lineTo(R,0); c.stroke(); c.restore();
+ const yb=240-h; c.strokeStyle='#334155'; c.lineWidth=2; c.beginPath(); c.moveTo(cx+R,cy+20); c.lineTo(cx+R,yb); c.stroke();
+ c.fillStyle='#fed7aa'; c.strokeStyle='#ea580c'; c.fillRect(cx+R-30,yb,60,40); c.strokeRect(cx+R-30,yb,60,40); T(c,'500 kg',cx+R,yb+25,13,'#9a3412');
+ FLECHE(c,cx+R+50,yb+40,cx+R+50,yb-10,3,'#16a34a'); T(c,'V = 0,4 m/s',cx+R+62,yb+20,13,'#16a34a','left');
+ T(c,'P = F × V',620,80,20,'#155e75'); T(c,'= 4 905 N × 0,4 m/s',620,116,15,'#334155'); T(c,'= 1 962 W',620,152,22,'#ea580c');
+});
+/* 2 · chaîne des rendements */
+(function(){
+ const c=document.getElementById('cvE2').getContext('2d');
+ function dessiner(){
+  const e=[V('e1'),V('e2'),V('e3')], Pu=1962, eta=e[0]*e[1]*e[2], Pa=Pu/eta;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,300);
+  const noms=['moteur','réducteur','tambour'], x0=40, w=200, hmax=150, k=hmax/Pa;
+  let P=Pa;
+  T(c,'réseau',x0,40,13,'#64748b','left');
+  for(let i=0;i<4;i++){
+   const x=x0+i*w, hgt=P*k;
+   c.fillStyle='#bae6fd'; c.fillRect(x,180-hgt/2,i<3?130:90,hgt);
+   T(c,FR(P,0)+' W',x+(i<3?65:45),180+hgt/2+18,13,'#0369a1');
+   if(i<3){
+    const Pn=P*e[i], perte=P-Pn;
+    c.fillStyle='#e2e8f0'; c.strokeStyle='#475569'; c.lineWidth=2; c.fillRect(x+120,80,70,200); c.strokeRect(x+120,80,70,200);
+    c.fillStyle='#fca5a5'; c.fillRect(x+125,180-hgt/2,60,perte*k);
+    T(c,noms[i],x+155,70,13,'#334155'); T(c,'η = '+FR(e[i],2),x+155,296,12,'#334155');
+    T(c,'−'+FR(perte,0)+' W',x+155,180-hgt/2-8,12,'#dc2626');
+    P=Pn;
+   }
+  }
+  T(c,'charge',x0+3*w+45,70,13,'#334155');
+  T(c,'η global = '+FR(eta,3),440,30,17,'#155e75'); T(c,'rouge : pertes',840,30,12,'#dc2626','right',false);
+ }
+ ['e1','e2','e3'].forEach(function(id){CURSEUR(id,function(v){return FR(v,2);},dessiner);});
+})();
+/* 3 · énergie cinétique */
+(function(){
+ const c=document.getElementById('cvE3').getContext('2d');
+ function dessiner(){
+  const kmh=V('eV'), v=kmh/3.6, E=0.5*1200*v*v;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,260);
+  c.fillStyle='#bfdbfe'; c.strokeStyle='#2563eb'; c.lineWidth=2.5; c.beginPath(); c.roundRect(60,110,180,60,12); c.fill(); c.stroke();
+  POINT(c,100,176,14,'#334155'); POINT(c,200,176,14,'#334155'); T(c,'1 200 kg',150,146,15,'#1e3a8a');
+  FLECHE(c,250,140,250+v*4,140,3.5,'#16a34a'); T(c,FR(v,1)+' m/s',260+v*2,128,14,'#16a34a');
+  const gx=480, gw=360; c.fillStyle='#f1f5f9'; c.fillRect(gx,100,gw,40);
+  c.fillStyle='#ea580c'; c.fillRect(gx,100,Math.min(gw,E/800000*gw),40);
+  T(c,'E_c = ½ m V² = '+FR(E/1000,0)+' kJ',gx+gw/2,80,18,'#155e75');
+  T(c,'barre pleine : 800 kJ',gx+gw,164,11,'#64748b','right',false);
+ }
+ CURSEUR('eV',function(v){return v+' km/h';},dessiner);
+})();
+/* 4 · inertie ramenée */
+(function(){
+ const c=document.getElementById('cvE4').getContext('2d');
+ function dessiner(){
+  const n=V('eK'), Jm=0.002, Jc=1.5, Jr=Jc/(n*n), Jeq=Jm+Jr;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,280);
+  c.fillStyle='#e2e8f0'; c.strokeStyle='#475569'; c.lineWidth=2;
+  c.fillRect(60,100,100,80); c.strokeRect(60,100,100,80); T(c,'moteur',110,144,13,'#334155'); T(c,'J_m = 0,002',110,200,12,'#334155');
+  c.fillStyle='#e2e8f0'; c.fillRect(220,90,110,100); c.strokeRect(220,90,110,100); T(c,'réducteur',275,136,13,'#334155'); T(c,'k = 1/'+n,275,156,13,'#7c3aed');
+  c.fillStyle='#fde68a'; c.beginPath(); c.arc(450,140,70,0,6.2832); c.fill(); c.stroke(); T(c,'J = 1,5 kg·m²',450,145,13,'#92400e');
+  c.strokeStyle='#334155'; c.lineWidth=6; c.beginPath(); c.moveTo(160,140); c.lineTo(220,140); c.moveTo(330,140); c.lineTo(380,140); c.stroke();
+  const bx=600, bw=240, k=bw/0.02;
+  c.fillStyle='#0e7490'; c.fillRect(bx,100,Math.min(bw,Jm*k),26); c.fillStyle='#ea580c'; c.fillRect(bx+Jm*k,100,Math.min(bw-Jm*k,Jr*k),26);
+  c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(bx,100,bw,26);
+  T(c,'vu du moteur',bx+bw/2,86,13,'#334155'); T(c,'bleu : moteur · orange : charge ramenée',bx+bw/2,150,11,'#64748b',undefined,false);
+  T(c,Jeq>0.02?'charge dominante : hors échelle':'',bx+bw/2,172,12,'#dc2626');
+  document.getElementById('lE4').textContent='J ramenée = 1,5 / '+(n*n)+' = '+FR(Jr,4)+' kg·m²  ·  J_éq = '+FR(Jeq,4)+' kg·m²';
+ }
+ CURSEUR('eK',function(v){return '1/'+v;},dessiner);
+})();
+
+const Q=[
+ {q:"Couple 20 N·m à 150 rad/s : puissance ?",r:["170 W","3 000 W","7,5 W"],b:1,
+  ex:"P = C × ω = 20 × 150 = 3 000 W."},
+ {q:"Trois rendements 0,9 : rendement global ?",r:["0,9","0,73","2,7"],b:1,
+  ex:"η = 0,9³ = 0,729 : les pertes se cumulent."},
+ {q:"P utile 1 000 W, η global 0,8 : puissance absorbée ?",r:["800 W","1 000 W","1 250 W"],b:2,
+  ex:"P_abs = P_u / η = 1 000 / 0,8 = 1 250 W. Le moteur fournit plus que la charge ne reçoit."},
+ {q:"Voiture de 1 000 kg à 20 m/s : énergie cinétique ?",r:["10 kJ","200 kJ","400 kJ"],b:1,
+  ex:"E_c = ½ × 1 000 × 20² = 200 000 J = 200 kJ."},
+ {q:"Réducteur 1/10 : une inertie de 2 kg·m² sur l’arbre lent vaut, ramenée au moteur…",r:["0,02 kg·m²","0,2 kg·m²","20 kg·m²"],b:0,
+  ex:"J ramenée = 2 × (1/10)² = 0,02 kg·m²."},
+ {q:"Pourquoi dimensionner le moteur aussi au démarrage ?",r:["le couple d’inertie s’ajoute au couple résistant","le rendement est meilleur","la vitesse est maximale"],b:0,
+  ex:"Pendant l’accélération, le moteur doit fournir J_éq dω/dt en plus : c’est souvent le cas dimensionnant."}
+];
+
+(function(){
+ const z=document.getElementById('questions'), choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.innerHTML=txt;
+   b.addEventListener('click',function(){ if(b.disabled) return; choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';}); b.style.fontWeight='800'; });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){ b.disabled=true; if(j===Q[i].b) b.classList.add('bon'); else if(choix[i]===j) b.classList.add('faux'); });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div'); e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko'); e.textContent=Q[i].ex; r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ'); b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+(n===Q.length?'Méthode acquise : passe au TP.':'Relis les explications, puis passe au TP.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>

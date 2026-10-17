@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Dynamique : le principe fondamental · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+.bascule{display:inline-flex;gap:8px;align-items:center;font-size:14px;font-weight:700;color:var(--accf)}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+
+select{font:600 15px 'Segoe UI',sans-serif;padding:6px 10px;border:2px solid #cbd5e1;border-radius:9px;background:#fff}
+.grille-btn{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.grille-btn button{background:#f8fafc;border:2px solid #e9e2d4;border-radius:9px;padding:6px 11px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer;color:#334155}
+.grille-btn button.actif{border-color:#0e7490;background:#ecfeff;color:#155e75}
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.modes button{background:#fff;border:2px solid #0e7490;color:#0e7490;border-radius:9px;padding:6px 12px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer}
+.modes button.actif{background:#0e7490;color:#fff}
+.lecture{font:700 16px 'Segoe UI',sans-serif;color:#155e75;text-align:center;margin:6px 0}
+.fiche{border:2px solid #0e7490;border-radius:14px;padding:12px 18px}
+.fiche p{margin:6px 0;font-size:16px}
+.fiche .f{font-family:'Cambria Math','Times New Roman',serif;font-weight:700;font-size:17px}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Dynamique : le principe fondamental</h1>
+ <p class="sous">Faire accélérer, freiner, démarrer : le principe fondamental de la dynamique en translation et en rotation.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>Translation : ΣF = m a</h2>
+ <div class="chapo">La résultante des forces fixe l’accélération. Règle effort, résistance et masse.</div>
+ <canvas id="cvD1" width="880" height="320"></canvas>
+ <div class="reglage"><label for="dF">Effort moteur F</label><input type="range" id="dF" min="0" max="600" step="10" value="300"><span id="dFv"></span></div>
+ <div class="reglage"><label for="dR">Résistance</label><input type="range" id="dR" min="0" max="300" step="10" value="60"><span id="dRv"></span></div>
+ <div class="reglage"><label for="dM">Masse m</label><input type="range" id="dM" min="40" max="300" step="10" value="120"><span id="dMv"></span></div>
+ <div class="formule">a = (F − F<sub>r</sub>) / m &nbsp;·&nbsp; v = a t &nbsp;·&nbsp; x = ½ a t²</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Le moment d’inertie</h2>
+ <div class="chapo">Même masse, même rayon : l’anneau résiste plus que le disque.</div>
+ <canvas id="cvD2" width="880" height="300"></canvas>
+ <div class="btnrow"><button class="btn" id="dGo" type="button">Relancer la course</button></div>
+ <table>
+  <tr><th>Solide</th><th>Moment d’inertie autour de son axe</th></tr>
+  <tr><td>Disque ou cylindre plein</td><td>J = ½ m R²</td></tr>
+  <tr><td>Anneau ou tube mince</td><td>J = m R²</td></tr>
+  <tr><td>Barre autour d’une extrémité</td><td>J = ⅓ m L²</td></tr>
+ </table>
+ <div class="retenir">La matière loin de l’axe compte au <b>carré</b> de sa distance. Un volant d’inertie met sa masse en périphérie.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>Rotation : ΣC = J dω/dt</h2>
+ <div class="chapo">Un moteur démarre une charge : le couple en excès sert à accélérer.</div>
+ <canvas id="cvD3" width="880" height="320"></canvas>
+ <div class="reglage"><label for="dC">Couple moteur</label><input type="range" id="dC" min="10" max="40" step="1" value="20"><span id="dCv"></span></div>
+ <div class="reglage"><label for="dCr">Couple résistant</label><input type="range" id="dCr" min="0" max="18" step="1" value="8"><span id="dCrv"></span></div>
+ <div class="reglage"><label for="dJ">Inertie J</label><input type="range" id="dJ" min="0.04" max="0.4" step="0.02" value="0.12"><span id="dJv"></span></div>
+ <div class="lecture" id="lD3"></div>
+ <div class="piege"><b>Piège :</b> ω en rad/s. 1 500 tr/min = 157 rad/s, pas 1 500.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Le cas du levage</h2>
+ <div class="chapo">Pour faire monter une charge en accélérant, il faut vaincre le poids ET l’inertie.</div>
+ <div class="formule">T − m g = m a &nbsp;→&nbsp; T = m (g + a)</div>
+ <div class="retenir">Ascenseur de 800 kg, a = 1 m/s² vers le haut : T = 800 × 10,81 = <b>8 648 N</b>, soit 10 % de plus qu’à l’arrêt.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>La méthode d’épreuve</h2>
+ <div class="methode"><b>MÉTHODE — appliquer le principe fondamental</b>
+  <ol>
+   <li>Isoler le solide, choisir un sens positif.</li>
+   <li>Faire le bilan des actions extérieures, poids compris.</li>
+   <li>Écrire ΣF = m a en translation, ou ΣC = J dω/dt en rotation.</li>
+   <li>Calculer l’accélération, puis la durée ou la distance.</li>
+   <li>Vérifier les unités : N, kg, m/s², N·m, kg·m², rad/s².</li>
+  </ol></div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<section class="bloc">
+ <h2>À retenir</h2>
+ <div class="fiche"><p class="f">ΣF = m a &nbsp;·&nbsp; ΣC = J dω/dt</p>
+ <p class="f">disque J = ½ m R² &nbsp;·&nbsp; anneau J = m R²</p>
+ <p class="f">v = a t &nbsp;·&nbsp; x = ½ a t² &nbsp;·&nbsp; ω = (dω/dt) t &nbsp;·&nbsp; θ = ½ (dω/dt) t²</p>
+ <p>Levage : T = m (g + a) en montée accélérée.</p></div>
+</section>
+
+<section class="bloc" style="text-align:center">
+ <a class="btn" style="text-decoration:none;display:inline-block" href="02_tp_capet_dynamique.html">Passer au TP</a>
+</section>
+<footer>Préparation CAFEP-CAPET SII · Dynamique : le principe fondamental · ESTIC Don Bosco</footer>
+<script>
+
+'use strict';
+function T(c,s,x,y,t,co,al,b){c.font=(b===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const d=Math.hypot(x1-x0,y1-y0); if(d<1) return;
+ const L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+ c.strokeStyle=coul;c.fillStyle=coul;c.lineWidth=ep;c.lineCap='butt';
+ c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();
+ c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();
+}
+/* hachures bornées par calcul — jamais de clip() */
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8; c.strokeStyle=coul;c.lineWidth=1;
+ for(let k=-h;k<w;k+=p){const t0=Math.max(0,-k),t1=Math.min(h,w-k); if(t1<=t0) continue;
+  c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}
+ c.lineWidth=2;c.strokeRect(x,y,w,h);
+}
+function POINT(c,x,y,r,coul){c.fillStyle=coul;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill();}
+function TIRETS(c,x0,y0,x1,y1,coul,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=coul;c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();}
+function FR(v,n){return (Math.round(v*Math.pow(10,n))/Math.pow(10,n)).toFixed(n).replace('.',',').replace('-','−');}
+/* animation qui ne tourne que lorsque le canvas est visible */
+const ANIMS=[];
+function ANIMER(id,draw){
+ const cv=document.getElementById(id),c=cv.getContext('2d'); let raf=0; const t0=performance.now();
+ const A={actif:false};
+ function boucle(ts){draw(c,(ts-t0)/1000); raf=requestAnimationFrame(boucle);}
+ A.demarrer=function(){if(!raf){A.actif=true;raf=requestAnimationFrame(boucle);}};
+ A.arreter=function(){cancelAnimationFrame(raf);raf=0;A.actif=false;};
+ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?A.demarrer():A.arreter();});}).observe(cv);}
+ else A.demarrer();
+ draw(c,0); ANIMS.push(A); return A;
+}
+function CURSEUR(id,fmt,cb){const s=document.getElementById(id),o=document.getElementById(id+'v');
+ function maj(){if(o) o.textContent=fmt(+s.value); cb&&cb();} s.addEventListener('input',maj); maj(); return s;}
+function V(id){return +document.getElementById(id).value;}
+
+
+/* 1 · chariot */
+(function(){
+ let x=0, v=0, avant=0;
+ ['dF','dR','dM'].forEach(function(id){ CURSEUR(id,function(val){return id==='dM'?val+' kg':val+' N';},function(){x=0;v=0;}); });
+ ANIMER('cvD1',function(c,t){
+  const F=V('dF'),Fr=V('dR'),m=V('dM'), net=F>Fr?F-Fr:0, a=net/m, dt=Math.min(0.05,t-avant); avant=t;
+  v+=a*dt; x+=v*dt*40; if(x>520){x=0;v=0;}
+  c.fillStyle='#fff'; c.fillRect(0,0,880,320);
+  c.strokeStyle='#94a3b8'; c.lineWidth=3; c.beginPath(); c.moveTo(40,230); c.lineTo(840,230); c.stroke(); HACH(c,40,230,800,12,'#cbd5e1');
+  const X=120+x;
+  c.fillStyle='#bfdbfe'; c.strokeStyle='#2563eb'; c.lineWidth=2.5; c.fillRect(X-50,160,100,56); c.strokeRect(X-50,160,100,56);
+  POINT(c,X-30,222,8,'#334155'); POINT(c,X+30,222,8,'#334155'); T(c,m+' kg',X,194,15,'#1e3a8a');
+  if(F>0) FLECHE(c,X+50,188,X+50+F*0.18,188,3.5,'#16a34a');
+  if(Fr>0) FLECHE(c,X-50,200,X-50-Fr*0.18,200,3.5,'#dc2626');
+  T(c,'F',X+60+F*0.18,184,15,'#16a34a','left'); T(c,'F_r',X-62-Fr*0.18,206,15,'#dc2626','right');
+  T(c,'a = ('+F+' − '+Fr+') / '+m+' = '+FR(a,2)+' m/s²',440,50,18,'#155e75');
+  T(c,F<=Fr?'F ≤ F_r : le chariot n’accélère pas':'v = '+FR(v,2)+' m/s',440,84,15,F<=Fr?'#dc2626':'#334155');
+ });
+})();
+/* 2 · course disque contre anneau */
+(function(){
+ let t0=performance.now()/1000;
+ document.getElementById('dGo').addEventListener('click',function(){t0=performance.now()/1000;});
+ ANIMER('cvD2',function(c){
+  const t=Math.min(performance.now()/1000-t0,6), a=10*Math.PI/180, g=9.81;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,300);
+  const O={x:60,y:60}, L=760, ex={x:Math.cos(a),y:Math.sin(a)};
+  c.strokeStyle='#78716c'; c.lineWidth=3; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(O.x+L*ex.x,O.y+L*ex.y); c.stroke();
+  [[2/3,'#0e7490','disque plein  J = ½ m R²',0],[1/2,'#ea580c','anneau  J = m R²',1]].forEach(function(s){
+   const acc=g*Math.sin(a)*s[0], d=Math.min(L-40,0.5*acc*t*t*90), r=24, cx=O.x+d*ex.x-Math.sin(a)*r*(1+s[3]*0), cy=O.y+d*ex.y-Math.cos(a)*r;
+   const ox=s[3]?0:0, oy=s[3]?110:0;
+   if(s[3]){ c.strokeStyle='#d6d3d1'; c.lineWidth=3; c.beginPath(); c.moveTo(O.x,O.y+oy); c.lineTo(O.x+L*ex.x,O.y+L*ex.y+oy); c.stroke(); }
+   const X=cx+ox, Y=cy+oy, ang=d/r;
+   c.lineWidth=3; c.strokeStyle=s[1];
+   if(s[3]){ c.beginPath(); c.arc(X,Y,r,0,6.2832); c.stroke(); c.beginPath(); c.arc(X,Y,r-6,0,6.2832); c.stroke(); }
+   else { c.fillStyle=s[1]; c.globalAlpha=0.3; c.beginPath(); c.arc(X,Y,r,0,6.2832); c.fill(); c.globalAlpha=1; c.beginPath(); c.arc(X,Y,r,0,6.2832); c.stroke(); }
+   c.beginPath(); c.moveTo(X,Y); c.lineTo(X+r*Math.cos(ang),Y+r*Math.sin(ang)); c.stroke();
+   T(c,s[2],640,40+s[3]*110+60,14,s[1]);
+  });
+  T(c,'même masse, même rayon, même pente',260,280,13,'#64748b',undefined,false);
+ });
+})();
+/* 3 · démarrage d’un moteur */
+(function(){
+ const c=document.getElementById('cvD3').getContext('2d');
+ function dessiner(){
+  const C=V('dC'),Cr=V('dCr'),J=V('dJ'), acc=(C-Cr)/J, wc=157.08, td=wc/acc, tmax=3;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,320);
+  const gx=80,gy=30,gw=520,gh=240, X=function(t){return gx+t/tmax*gw;}, Y=function(w){return gy+gh-w/180*gh;};
+  c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+  [0,1,2,3].forEach(function(t){T(c,t+' s',X(t),gy+gh+16,11,'#64748b');}); [0,50,100,150].forEach(function(w){T(c,String(w),gx-6,Y(w)+4,11,'#64748b','right');});
+  T(c,'ω (rad/s)',gx,gy-10,12,'#64748b','left');
+  c.save(); c.setLineDash([5,4]); c.strokeStyle='#94a3b8'; c.beginPath(); c.moveTo(gx,Y(wc)); c.lineTo(gx+gw,Y(wc)); c.stroke(); c.restore();
+  T(c,'1 500 tr/min',gx+gw-4,Y(wc)-6,11,'#64748b','right');
+  c.strokeStyle='#0e7490'; c.lineWidth=3; c.beginPath(); c.moveTo(X(0),Y(0));
+  if(td<=tmax){ c.lineTo(X(td),Y(wc)); c.lineTo(X(tmax),Y(wc)); } else c.lineTo(X(tmax),Y(acc*tmax)); c.stroke();
+  T(c,'dω/dt = '+FR(acc,1)+' rad/s²',750,90,17,'#155e75');
+  T(c,'t = '+FR(td,2)+' s',750,130,22,'#ea580c');
+  T(c,'pour atteindre 157 rad/s',750,156,12,'#64748b',undefined,false);
+  document.getElementById('lD3').textContent='dω/dt = ('+C+' − '+Cr+') / '+FR(J,2)+' = '+FR(acc,1)+' rad/s²  ·  t = 157,08 / '+FR(acc,1)+' = '+FR(td,2)+' s';
+ }
+ CURSEUR('dC',function(v){return v+' N·m';},dessiner); CURSEUR('dCr',function(v){return v+' N·m';},dessiner); CURSEUR('dJ',function(v){return FR(v,2)+' kg·m²';},dessiner);
+})();
+
+const Q=[
+ {q:"Chariot de 100 kg, effort net 250 N : accélération ?",r:["0,4 m/s²","2,5 m/s²","25 m/s²"],b:1,
+  ex:"a = ΣF / m = 250 / 100 = 2,5 m/s²."},
+ {q:"Disque de 4 kg, rayon 0,2 m : moment d’inertie ?",r:["0,08 kg·m²","0,16 kg·m²","0,8 kg·m²"],b:0,
+  ex:"J = ½ m R² = 0,5 × 4 × 0,04 = 0,08 kg·m²."},
+ {q:"Même masse, même rayon : quel solide démarre le plus vite sous le même couple ?",r:["l’anneau","le disque plein","ils démarrent pareil"],b:1,
+  ex:"Le disque a une inertie deux fois plus faible : son accélération angulaire est deux fois plus grande."},
+ {q:"Couple moteur 30 N·m, couple résistant 10 N·m, J = 0,2 kg·m² : dω/dt ?",r:["50 rad/s²","100 rad/s²","150 rad/s²"],b:1,
+  ex:"dω/dt = (30 − 10) / 0,2 = 100 rad/s²."},
+ {q:"Combien de temps pour atteindre 100 rad/s avec dω/dt = 50 rad/s² ?",r:["0,5 s","2 s","5 000 s"],b:1,
+  ex:"Mouvement uniformément accéléré : t = ω / (dω/dt) = 100 / 50 = 2 s."},
+ {q:"Charge de 200 kg montée avec a = 0,5 m/s², g = 9,81 : tension du câble ?",r:["1 962 N","2 062 N","100 N"],b:1,
+  ex:"T = m (g + a) = 200 × 10,31 = 2 062 N."}
+];
+
+(function(){
+ const z=document.getElementById('questions'), choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.innerHTML=txt;
+   b.addEventListener('click',function(){ if(b.disabled) return; choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';}); b.style.fontWeight='800'; });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){ b.disabled=true; if(j===Q[i].b) b.classList.add('bon'); else if(choix[i]===j) b.classList.add('faux'); });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div'); e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko'); e.textContent=Q[i].ex; r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ'); b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+(n===Q.length?'Méthode acquise : passe au TP.':'Relis les explications, puis passe au TP.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>

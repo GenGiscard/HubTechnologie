@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Hydraulique et pneumatique · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+.bascule{display:inline-flex;gap:8px;align-items:center;font-size:14px;font-weight:700;color:var(--accf)}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+
+select{font:600 15px 'Segoe UI',sans-serif;padding:6px 10px;border:2px solid #cbd5e1;border-radius:9px;background:#fff}
+.grille-btn{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.grille-btn button{background:#f8fafc;border:2px solid #e9e2d4;border-radius:9px;padding:6px 11px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer;color:#334155}
+.grille-btn button.actif{border-color:#0e7490;background:#ecfeff;color:#155e75}
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.modes button{background:#fff;border:2px solid #0e7490;color:#0e7490;border-radius:9px;padding:6px 12px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer}
+.modes button.actif{background:#0e7490;color:#fff}
+.lecture{font:700 16px 'Segoe UI',sans-serif;color:#155e75;text-align:center;margin:6px 0}
+.fiche{border:2px solid #0e7490;border-radius:14px;padding:12px 18px}
+.fiche p{margin:6px 0;font-size:16px}
+.fiche .f{font-family:'Cambria Math','Times New Roman',serif;font-weight:700;font-size:17px}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Hydraulique et pneumatique</h1>
+ <p class="sous">Pression, débit, effort d’un vérin : de la presse de Pascal au choix entre huile et air comprimé.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>La pression et le principe de Pascal</h2>
+ <div class="chapo">La pression se transmet partout dans le liquide : un petit effort soulève une grosse charge.</div>
+ <canvas id="cvH1" width="880" height="300"></canvas>
+ <div class="reglage"><label for="hF">Effort sur le petit piston</label><input type="range" id="hF" min="50" max="400" step="10" value="200"><span id="hFv"></span></div>
+ <div class="formule">p = F / S &nbsp;&nbsp;·&nbsp;&nbsp; 1 bar = 10⁵ Pa = 0,1 MPa = 0,1 N/mm²</div>
+ <div class="piege"><b>Piège :</b> en N et mm², la pression sort en MPa. 100 bar = 10 MPa.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>Le vérin double effet</h2>
+ <div class="chapo">En sortie, l’huile pousse sur tout le piston. En rentrée, la tige mange de la surface.</div>
+ <canvas id="cvH2" width="880" height="300"></canvas>
+ <div class="reglage"><label for="hD">Alésage D</label><input type="range" id="hD" min="32" max="125" step="1" value="63"><span id="hDv"></span></div>
+ <div class="reglage"><label for="hd">Tige d</label><input type="range" id="hd" min="12" max="70" step="1" value="36"><span id="hdv"></span></div>
+ <div class="reglage"><label for="hp">Pression p</label><input type="range" id="hp" min="10" max="250" step="10" value="100"><span id="hpv"></span></div>
+ <div class="reglage"><label for="hQ">Débit Q</label><input type="range" id="hQ" min="5" max="60" step="1" value="20"><span id="hQv"></span></div>
+ <div class="formule">F = p × S &nbsp;·&nbsp; V = Q / S &nbsp;·&nbsp; en rentrée : S − s</div>
+ <div class="retenir">Rentrée : effort plus faible, mais vitesse plus grande pour le même débit.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>La puissance hydraulique</h2>
+ <div class="chapo">Pression fois débit : c’est ce que la pompe transmet au fluide.</div>
+ <div class="formule">P = p × Q &nbsp;&nbsp;(Pa × m³/s = W) &nbsp;·&nbsp; P<sub>moteur</sub> = P / η<sub>pompe</sub></div>
+ <div class="retenir">100 bar et 20 L/min : P = 10⁷ × 3,33·10⁻⁴ = <b>3 333 W</b>. Avec η = 0,85, le moteur fournit 3,9 kW.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Huile ou air comprimé ?</h2>
+ <div class="chapo">L’huile est incompressible et travaille sous forte pression. L’air est rapide, propre, mais élastique.</div>
+ <table>
+  <tr><th></th><th>Hydraulique</th><th>Pneumatique</th></tr>
+  <tr><td>Pression usuelle</td><td>100 à 350 bar</td><td>6 à 8 bar</td></tr>
+  <tr><td>Efforts</td><td>très grands</td><td>faibles à moyens</td></tr>
+  <tr><td>Arrêt en position intermédiaire</td><td>précis</td><td>difficile : l’air se comprime</td></tr>
+  <tr><td>Vitesse, propreté</td><td>moyenne, risque de fuite d’huile</td><td>rapide, propre</td></tr>
+ </table>
+ <div class="formule">pneumatique : F<sub>utile</sub> = p × S × taux de charge (≈ 0,6 à 0,8)</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>La méthode d’épreuve</h2>
+ <div class="methode"><b>MÉTHODE — dimensionner un vérin</b>
+  <ol>
+   <li>Identifier l’effort maximal et le sens où il s’exerce : sortie ou rentrée.</li>
+   <li>Calculer la surface utile nécessaire : S = F / p.</li>
+   <li>En déduire D, puis choisir l’alésage normalisé supérieur.</li>
+   <li>Calculer le débit pour la vitesse voulue : Q = S × V.</li>
+   <li>Calculer la puissance de la pompe, puis celle du moteur.</li>
+  </ol></div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<section class="bloc">
+ <h2>À retenir</h2>
+ <div class="fiche"><p class="f">p = F / S &nbsp;·&nbsp; 1 bar = 0,1 MPa</p>
+ <p class="f">F<sub>sortie</sub> = p S &nbsp;·&nbsp; F<sub>rentrée</sub> = p (S − s) &nbsp;·&nbsp; V = Q / S</p>
+ <p class="f">P = p Q &nbsp;·&nbsp; P<sub>moteur</sub> = P / η</p>
+ <p>Hydraulique : gros efforts, positions précises. Pneumatique : rapide, propre, efforts modérés.</p></div>
+</section>
+
+<section class="bloc" style="text-align:center">
+ <a class="btn" style="text-decoration:none;display:inline-block" href="02_tp_capet_hydraulique.html">Passer au TP</a>
+</section>
+<footer>Préparation CAFEP-CAPET SII · Hydraulique et pneumatique · ESTIC Don Bosco</footer>
+<script>
+
+'use strict';
+function T(c,s,x,y,t,co,al,b){c.font=(b===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const d=Math.hypot(x1-x0,y1-y0); if(d<1) return;
+ const L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+ c.strokeStyle=coul;c.fillStyle=coul;c.lineWidth=ep;c.lineCap='butt';
+ c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();
+ c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();
+}
+/* hachures bornées par calcul — jamais de clip() */
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8; c.strokeStyle=coul;c.lineWidth=1;
+ for(let k=-h;k<w;k+=p){const t0=Math.max(0,-k),t1=Math.min(h,w-k); if(t1<=t0) continue;
+  c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}
+ c.lineWidth=2;c.strokeRect(x,y,w,h);
+}
+function POINT(c,x,y,r,coul){c.fillStyle=coul;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill();}
+function TIRETS(c,x0,y0,x1,y1,coul,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=coul;c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();}
+function FR(v,n){return (Math.round(v*Math.pow(10,n))/Math.pow(10,n)).toFixed(n).replace('.',',').replace('-','−');}
+/* animation qui ne tourne que lorsque le canvas est visible */
+const ANIMS=[];
+function ANIMER(id,draw){
+ const cv=document.getElementById(id),c=cv.getContext('2d'); let raf=0; const t0=performance.now();
+ const A={actif:false};
+ function boucle(ts){draw(c,(ts-t0)/1000); raf=requestAnimationFrame(boucle);}
+ A.demarrer=function(){if(!raf){A.actif=true;raf=requestAnimationFrame(boucle);}};
+ A.arreter=function(){cancelAnimationFrame(raf);raf=0;A.actif=false;};
+ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?A.demarrer():A.arreter();});}).observe(cv);}
+ else A.demarrer();
+ draw(c,0); ANIMS.push(A); return A;
+}
+function CURSEUR(id,fmt,cb){const s=document.getElementById(id),o=document.getElementById(id+'v');
+ function maj(){if(o) o.textContent=fmt(+s.value); cb&&cb();} s.addEventListener('input',maj); maj(); return s;}
+function V(id){return +document.getElementById(id).value;}
+
+
+/* 1 · presse de Pascal */
+(function(){
+ const c=document.getElementById('cvH1').getContext('2d');
+ function dessiner(){
+  const F=V('hF'), s1=Math.PI*10*10, s2=Math.PI*100*100, p=F/s1, F2=p*s2;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,300);
+  c.fillStyle='#fde68a'; c.fillRect(100,230,520,40); c.fillRect(100,150,40,80); c.fillRect(360,140,260,90);
+  c.strokeStyle='#475569'; c.lineWidth=3;
+  c.beginPath(); c.moveTo(96,80); c.lineTo(96,274); c.lineTo(624,274); c.lineTo(624,110); c.moveTo(144,80); c.lineTo(144,226); c.lineTo(356,226); c.lineTo(356,110); c.stroke();
+  c.fillStyle='#94a3b8'; c.fillRect(98,140,44,10); c.fillRect(358,128,264,12);
+  FLECHE(c,120,70,120,136,3.5,'#2563eb'); T(c,'F = '+F+' N',120,60,14,'#2563eb');
+  FLECHE(c,490,124,490,124-Math.min(100,F2/250),4,'#dc2626'); T(c,'F₂ = '+FR(F2,0).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' N',490,20+Math.max(0,100-Math.min(100,F2/250)),15,'#dc2626');
+  T(c,'Ø 20',120,170,12,'#334155'); T(c,'Ø 200',490,190,13,'#334155');
+  T(c,'p = '+FR(p,3)+' MPa',760,120,17,'#155e75'); T(c,'= '+FR(p*10,1)+' bar',760,150,15,'#334155');
+  T(c,'surfaces × 100',760,200,13,'#7c3aed'); T(c,'effort × 100',760,224,13,'#7c3aed');
+ }
+ CURSEUR('hF',function(v){return v+' N';},dessiner);
+})();
+/* 2 · vérin double effet animé */
+(function(){
+ const c=document.getElementById('cvH2').getContext('2d'); let sens=1, x=0, avant=0;
+ ['hD','hd','hp','hQ'].forEach(function(id){ CURSEUR(id,function(v){return id==='hp'?v+' bar':(id==='hQ'?v+' L/min':v+' mm');},function(){ const D=document.getElementById('hD'), d=document.getElementById('hd'); if(+d.value>+D.value-10){ d.value=+D.value-10; document.getElementById('hdv').textContent=d.value+' mm'; } }); });
+ ANIMER('cvH2',function(_,t){
+  const D=V('hD'), d=V('hd'), p=V('hp')/10, Q=V('hQ')/60000, S=Math.PI*D*D/4, s=Math.PI*d*d/4;
+  const Fs=p*S, Fr=p*(S-s), Vs=Q/(S*1e-6), Vr=Q/((S-s)*1e-6), dt=Math.min(0.05,t-avant); avant=t;
+  x+=sens*(sens>0?Vs:Vr)*dt*600; if(x>200){x=200;sens=-1;} if(x<0){x=0;sens=1;}
+  c.fillStyle='#fff'; c.fillRect(0,0,880,300);
+  const y=140, h=Math.max(40,D*1.2), ht=Math.max(10,d*1.2), x0=80, L=300, px=x0+20+x;
+  c.fillStyle=sens>0?'#fca5a5':'#bfdbfe'; c.fillRect(x0,y-h/2,px-x0,h);
+  c.fillStyle=sens>0?'#bfdbfe':'#fca5a5'; c.fillRect(px+16,y-h/2,x0+L-px-16,h);
+  c.strokeStyle='#334155'; c.lineWidth=3; c.strokeRect(x0,y-h/2,L,h);
+  c.fillStyle='#475569'; c.fillRect(px,y-h/2,16,h); c.fillStyle='#94a3b8'; c.fillRect(px+16,y-ht/2,L+60,ht);
+  T(c,sens>0?'SORTIE : huile côté fond':'RENTRÉE : huile côté tige',x0+L/2,y-h/2-14,14,sens>0?'#dc2626':'#2563eb');
+  T(c,'F sortie = '+FR(Fs/1000,1)+' kN',720,90,16,'#dc2626'); T(c,'V sortie = '+FR(Vs,3)+' m/s',720,116,14,'#dc2626');
+  T(c,'F rentrée = '+FR(Fr/1000,1)+' kN',720,170,16,'#2563eb'); T(c,'V rentrée = '+FR(Vr,3)+' m/s',720,196,14,'#2563eb');
+  T(c,'rouge : sous pression · bleu : retour au réservoir',440,288,12,'#64748b',undefined,false);
+ });
+})();
+
+const Q=[
+ {q:"Combien vaut 50 bar en MPa ?",r:["0,5 MPa","5 MPa","50 MPa"],b:1,
+  ex:"1 bar = 0,1 MPa, donc 50 bar = 5 MPa."},
+ {q:"Vérin de surface 2 000 mm² sous 10 MPa : effort en sortie ?",r:["200 N","2 000 N","20 000 N"],b:2,
+  ex:"F = p × S = 10 N/mm² × 2 000 mm² = 20 000 N."},
+ {q:"Pourquoi l’effort est-il plus faible en rentrée de tige ?",r:["la pression baisse","la tige réduit la surface utile","le débit augmente"],b:1,
+  ex:"En rentrée, l’huile pousse sur la couronne annulaire S − s."},
+ {q:"Même débit : quelle course est la plus rapide ?",r:["la sortie","la rentrée","elles sont identiques"],b:1,
+  ex:"V = Q / S : la surface annulaire est plus petite, la rentrée est plus rapide."},
+ {q:"100 bar et 30 L/min : puissance hydraulique ?",r:["3 kW","5 kW","50 kW"],b:1,
+  ex:"P = 10⁷ Pa × 30·10⁻³ / 60 m³/s = 5 000 W."},
+ {q:"On doit arrêter une charge lourde avec précision à mi-course : quelle énergie choisir ?",r:["pneumatique","hydraulique","indifférent"],b:1,
+  ex:"L’huile est quasi incompressible : le vérin hydraulique tient sa position. L’air se comprimerait."}
+];
+
+(function(){
+ const z=document.getElementById('questions'), choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.innerHTML=txt;
+   b.addEventListener('click',function(){ if(b.disabled) return; choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';}); b.style.fontWeight='800'; });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){ b.disabled=true; if(j===Q[i].b) b.classList.add('bon'); else if(choix[i]===j) b.classList.add('faux'); });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div'); e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko'); e.textContent=Q[i].ex; r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ'); b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+(n===Q.length?'Méthode acquise : passe au TP.':'Relis les explications, puis passe au TP.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>

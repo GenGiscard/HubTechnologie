@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — Choisir un matériau et un procédé · CAPET SII · ESTIC</title>
+<style>
+:root{--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--viol:#7c3aed;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.62}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:28px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 10px}
+.sous{font-size:16.5px;color:#5b544a;max-width:720px;margin:0 auto}
+section.bloc{max-width:920px;margin:24px auto;background:#fff;border:1px solid var(--bord);
+ border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}
+h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 10px;font-size:17px;margin-right:9px}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:12px}
+p{margin:8px 0;font-size:16px}
+canvas{display:block;width:100%;max-width:880px;height:auto;margin:12px auto;
+ background:#fff;border:1px solid var(--bord);border-radius:12px}
+.formule{background:#f8fafc;border:1px solid var(--bord);border-left:5px solid var(--viol);
+ border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;text-align:center;
+ font-family:'Cambria Math','Times New Roman',serif}
+.retenir{background:#ecfeff;border-left:5px solid var(--acc);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.piege{background:#fef2f2;border-left:5px solid var(--rouge);border-radius:10px;
+ padding:10px 15px;margin:11px 0;font-size:15.5px}
+.methode{background:#fff7ed;border:2px dashed #fb923c;border-radius:12px;
+ padding:11px 16px;margin:12px 0;font-size:15.5px}
+.methode ol{margin:6px 0 0 20px;line-height:1.9}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f8fafc;color:var(--accf)}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;
+ font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.verdict{margin-top:9px;font-size:15px;padding:9px 13px;border-radius:9px}
+.verdict.ok{background:#f0fdf4;color:#166534}
+.verdict.ko{background:#fef2f2;color:#991b1b}
+.reglage{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.reglage label{font-size:14px;font-weight:700;color:var(--accf)}
+input[type=range]{flex:1;min-width:200px}
+.bascule{display:inline-flex;gap:8px;align-items:center;font-size:14px;font-weight:700;color:var(--accf)}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+
+select{font:600 15px 'Segoe UI',sans-serif;padding:6px 10px;border:2px solid #cbd5e1;border-radius:9px;background:#fff}
+.grille-btn{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.grille-btn button{background:#f8fafc;border:2px solid #e9e2d4;border-radius:9px;padding:6px 11px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer;color:#334155}
+.grille-btn button.actif{border-color:#0e7490;background:#ecfeff;color:#155e75}
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.modes button{background:#fff;border:2px solid #0e7490;color:#0e7490;border-radius:9px;padding:6px 12px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer}
+.modes button.actif{background:#0e7490;color:#fff}
+.lecture{font:700 16px 'Segoe UI',sans-serif;color:#155e75;text-align:center;margin:6px 0}
+.fiche{border:2px solid #0e7490;border-radius:14px;padding:12px 18px}
+.fiche p{margin:6px 0;font-size:16px}
+.fiche .f{font-family:'Cambria Math','Times New Roman',serif;font-weight:700;font-size:17px}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="cours">
+ <div class="eyebrow">Préparation CAFEP-CAPET SII · ingénierie mécanique</div>
+ <h1>Choisir un matériau et un procédé</h1>
+ <p class="sous">Lire un essai de traction, construire un indice de performance, puis choisir le procédé adapté à la série.</p>
+</header>
+
+<section class="bloc">
+ <h2><span class="num">1</span>L’essai de traction</h2>
+ <div class="chapo">On tire sur une éprouvette jusqu’à rupture : la courbe livre E, R<sub>e</sub> et R<sub>m</sub>.</div>
+ <canvas id="cvM1" width="880" height="330"></canvas>
+ <div class="formule">σ = F / S₀ &nbsp;·&nbsp; ε = ΔL / L₀ &nbsp;·&nbsp; E = σ / ε (zone élastique) &nbsp;·&nbsp; A % = 100 (L<sub>u</sub> − L₀) / L₀</div>
+ <div class="retenir">Zone élastique : la pièce revient. Au-delà de <b>R<sub>e</sub></b>, elle garde une déformation. <b>R<sub>m</sub></b> est le maximum.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">2</span>L’indice de performance</h2>
+ <div class="chapo">Le meilleur matériau n’est pas le plus résistant, mais celui qui remplit la fonction au moindre poids.</div>
+ <table>
+  <tr><th>Fonction</th><th>Objectif</th><th>Indice à minimiser</th></tr>
+  <tr><td>Tirant en traction, résistant</td><td>masse mini</td><td>ρ / R<sub>e</sub></td></tr>
+  <tr><td>Tirant en traction, rigide</td><td>masse mini</td><td>ρ / E</td></tr>
+  <tr><td>Poutre en flexion, rigide</td><td>masse mini</td><td>ρ / E<sup>1/2</sup></td></tr>
+ </table>
+ <canvas id="cvM2" width="880" height="300"></canvas>
+ <div class="reglage"><label for="mF">Effort F</label><input type="range" id="mF" min="2" max="30" step="1" value="10"><span id="mFv"></span></div>
+ <div class="piege"><b>Piège :</b> comparer les R<sub>e</sub> seuls désigne l’acier. Rapportés à la masse, le titane et l’aluminium gagnent.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">3</span>La carte des matériaux</h2>
+ <div class="chapo">Module en fonction de la masse volumique : chaque famille occupe sa zone.</div>
+ <canvas id="cvM3" width="880" height="360"></canvas>
+ <div class="modes" id="modesM"><button type="button" class="actif" data-p="1">Tirant rigide : pente 1</button><button type="button" data-p="2">Poutre rigide : pente 2</button></div>
+ <div class="retenir">Les matériaux <b>au-dessus</b> de la droite guide sont meilleurs que ceux placés dessous.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">4</span>Choisir le procédé</h2>
+ <div class="chapo">La forme, le matériau et la taille de série décident du procédé.</div>
+ <table>
+  <tr><th>Famille</th><th>Exemples</th><th>Série typique</th></tr>
+  <tr><td>Moulage</td><td>fonderie sable, sous pression, injection plastique</td><td>sable : unitaire ; sous pression, injection : grande série</td></tr>
+  <tr><td>Déformation</td><td>forgeage, emboutissage, pliage</td><td>moyenne à grande série</td></tr>
+  <tr><td>Enlèvement de matière</td><td>tournage, fraisage, rectification</td><td>unitaire, ou finition de précision</td></tr>
+  <tr><td>Frittage, fabrication additive</td><td>poudres compactées, impression 3D</td><td>frittage : grande série ; additif : prototype</td></tr>
+ </table>
+ <div class="retenir">Une pièce forgée a des fibres continues : meilleure tenue en fatigue qu’une pièce usinée dans la masse.</div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">5</span>La méthode d’épreuve</h2>
+ <div class="methode"><b>MÉTHODE — justifier un choix de matériau</b>
+  <ol>
+   <li>Traduire la fonction : traction, flexion, résistance ou rigidité.</li>
+   <li>Écrire la masse en fonction de la contrainte imposée.</li>
+   <li>Isoler l’indice de performance et le calculer pour chaque candidat.</li>
+   <li>Vérifier les autres critères : coût, corrosion, mise en forme.</li>
+   <li>Associer un procédé cohérent avec la série et la forme.</li>
+  </ol></div>
+</section>
+
+<section class="bloc">
+ <h2><span class="num">6</span>Exercices</h2>
+ <div class="chapo">Six questions. Une seule réponse par question.</div>
+ <div id="questions"></div>
+ <div style="margin:12px 0"><button class="btn" id="verifier" type="button">Vérifier mes réponses</button></div>
+ <div id="bilanQ"></div>
+</section>
+
+<section class="bloc">
+ <h2>À retenir</h2>
+ <div class="fiche"><p class="f">σ = F/S₀ &nbsp;·&nbsp; E = σ/ε &nbsp;·&nbsp; A % = 100 (L<sub>u</sub> − L₀)/L₀</p>
+ <p class="f">tirant résistant : ρ/R<sub>e</sub> &nbsp;·&nbsp; tirant rigide : ρ/E &nbsp;·&nbsp; poutre rigide : ρ/E<sup>1/2</sup></p>
+ <p>Procédé : moulage, déformation, enlèvement de matière, frittage. La série tranche entre eux.</p></div>
+</section>
+
+<section class="bloc" style="text-align:center">
+ <a class="btn" style="text-decoration:none;display:inline-block" href="02_tp_capet_materiaux.html">Passer au TP</a>
+</section>
+<footer>Préparation CAFEP-CAPET SII · Choisir un matériau et un procédé · ESTIC Don Bosco</footer>
+<script>
+
+'use strict';
+function T(c,s,x,y,t,co,al,b){c.font=(b===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#3f3a34';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);}
+function FLECHE(c,x0,y0,x1,y1,ep,coul){
+ const d=Math.hypot(x1-x0,y1-y0); if(d<1) return;
+ const L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+ c.strokeStyle=coul;c.fillStyle=coul;c.lineWidth=ep;c.lineCap='butt';
+ c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();
+ c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();
+}
+/* hachures bornées par calcul — jamais de clip() */
+function HACH(c,x,y,w,h,coul,pas){
+ const p=pas||8; c.strokeStyle=coul;c.lineWidth=1;
+ for(let k=-h;k<w;k+=p){const t0=Math.max(0,-k),t1=Math.min(h,w-k); if(t1<=t0) continue;
+  c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}
+ c.lineWidth=2;c.strokeRect(x,y,w,h);
+}
+function POINT(c,x,y,r,coul){c.fillStyle=coul;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill();}
+function TIRETS(c,x0,y0,x1,y1,coul,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=coul;c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();}
+function FR(v,n){return (Math.round(v*Math.pow(10,n))/Math.pow(10,n)).toFixed(n).replace('.',',').replace('-','−');}
+/* animation qui ne tourne que lorsque le canvas est visible */
+const ANIMS=[];
+function ANIMER(id,draw){
+ const cv=document.getElementById(id),c=cv.getContext('2d'); let raf=0; const t0=performance.now();
+ const A={actif:false};
+ function boucle(ts){draw(c,(ts-t0)/1000); raf=requestAnimationFrame(boucle);}
+ A.demarrer=function(){if(!raf){A.actif=true;raf=requestAnimationFrame(boucle);}};
+ A.arreter=function(){cancelAnimationFrame(raf);raf=0;A.actif=false;};
+ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?A.demarrer():A.arreter();});}).observe(cv);}
+ else A.demarrer();
+ draw(c,0); ANIMS.push(A); return A;
+}
+function CURSEUR(id,fmt,cb){const s=document.getElementById(id),o=document.getElementById(id+'v');
+ function maj(){if(o) o.textContent=fmt(+s.value); cb&&cb();} s.addEventListener('input',maj); maj(); return s;}
+function V(id){return +document.getElementById(id).value;}
+
+
+/* 1 · essai de traction animé */
+ANIMER('cvM1',function(c,t){
+ c.fillStyle='#fff'; c.fillRect(0,0,880,330);
+ const k=Math.min(1,(t%7)/6), gx=380,gy=30,gw=460,gh=250;
+ function sig(e){ if(e<0.0013) return 210000*e; if(e<0.02) return 270+ (e-0.0013)*200; if(e<0.15) return 274+146*Math.sin((e-0.02)/0.13*Math.PI/2); return 420-(e-0.15)/0.07*90; }
+ const emax=0.22, X=function(e){return gx+e/emax*gw;}, Y=function(s){return gy+gh-s/450*gh;};
+ c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+ T(c,'σ (MPa)',gx,gy-10,12,'#64748b','left'); T(c,'ε',gx+gw,gy+gh+18,12,'#64748b','right');
+ const ecur=k*emax; c.strokeStyle='#ea580c'; c.lineWidth=3; c.beginPath();
+ for(let e=0;e<=ecur;e+=0.0005){ const yy=Y(sig(e)); e?c.lineTo(X(e),yy):c.moveTo(X(e),yy); } c.stroke();
+ if(k>0.2){ c.save(); c.setLineDash([4,4]); c.strokeStyle='#2563eb'; c.beginPath(); c.moveTo(gx,Y(270)); c.lineTo(X(0.02),Y(270)); c.stroke(); c.restore(); T(c,'R_e = 270',X(0.02)+6,Y(270)+4,12,'#2563eb','left'); }
+ if(k>0.7){ c.save(); c.setLineDash([4,4]); c.strokeStyle='#dc2626'; c.beginPath(); c.moveTo(gx,Y(420)); c.lineTo(X(0.15),Y(420)); c.stroke(); c.restore(); T(c,'R_m = 420',X(0.15),Y(420)-8,12,'#dc2626'); }
+ T(c,'zone élastique : pente E',X(0.004)+8,Y(150),11,'#0e7490','left',false);
+ /* éprouvette */
+ const L0=160, Lc=L0*(1+ecur*1.4), cx=170, neck=ecur>0.15?(ecur-0.15)/0.07:0, casse=k>=0.99;
+ c.fillStyle='#94a3b8'; c.fillRect(cx-30,40,60,30); c.fillRect(cx-30,40+30+Lc,60,30);
+ c.fillStyle='#cbd5e1'; c.strokeStyle='#475569'; c.lineWidth=2;
+ const w=20*(1-ecur*0.8);
+ c.beginPath(); c.moveTo(cx-w,70); c.lineTo(cx-w*(1-neck*0.6),70+Lc/2); c.lineTo(cx-w,70+Lc); c.lineTo(cx+w,70+Lc); c.lineTo(cx+w*(1-neck*0.6),70+Lc/2); c.lineTo(cx+w,70); c.closePath(); c.fill(); c.stroke();
+ if(casse){ c.strokeStyle='#dc2626'; c.lineWidth=3; c.beginPath(); c.moveTo(cx-18,70+Lc/2); c.lineTo(cx+18,70+Lc/2); c.stroke(); }
+ FLECHE(c,cx,38,cx,8,3,'#334155'); FLECHE(c,cx,100+Lc+2,cx,100+Lc+30,3,'#334155');
+});
+/* 2 · tirants comparés */
+(function(){
+ const c=document.getElementById('cvM2').getContext('2d');
+ const MAT=[['acier','#475569',300,7800],['aluminium','#0ea5e9',250,2700],['titane','#a855f7',900,4500]];
+ function dessiner(){
+  const F=V('mF')*1000, s=2;
+  c.fillStyle='#fff'; c.fillRect(0,0,880,300);
+  MAT.forEach(function(m,i){
+   const S=F*s/m[2], masse=m[3]*S*1e-6, x=100+i*260, w=Math.sqrt(S)*1.6;
+   c.fillStyle=m[1]; c.globalAlpha=0.35; c.fillRect(x-w/2,40,w,170); c.globalAlpha=1; c.strokeStyle=m[1]; c.lineWidth=2; c.strokeRect(x-w/2,40,w,170);
+   T(c,m[0],x,232,15,m[1]); T(c,'S = '+FR(S,1)+' mm²',x,254,13,'#334155'); T(c,'masse = '+FR(masse,3)+' kg/m',x,276,14,'#ea580c');
+   T(c,'ρ/R_e = '+FR(m[3]/m[2],1),x+70,120,12,'#64748b','left',false);
+  });
+  T(c,'tirant de 1 m · coefficient de sécurité 2',440,22,13,'#155e75');
+ }
+ CURSEUR('mF',function(v){return v+' kN';},dessiner);
+})();
+/* 3 · carte d’Ashby simplifiée */
+(function(){
+ const c=document.getElementById('cvM3').getContext('2d'); let pente=1;
+ const FAM=[['mousses',0.05,0.3,0.002,0.05,'#fca5a5'],['élastomères',0.9,1.6,0.001,0.1,'#fdba74'],['polymères',0.9,2.2,0.3,4,'#fde68a'],
+  ['bois',0.4,0.9,5,20,'#bef264'],['composites',1.3,1.9,15,150,'#86efac',-30],['alliages légers',2.6,4.6,45,115,'#7dd3fc',24],['aciers',7,8.2,100,220,'#a5b4fc',26],['céramiques',2.2,6,150,450,'#d8b4fe']];
+ document.querySelectorAll('#modesM button').forEach(function(b){b.addEventListener('click',function(){pente=+b.getAttribute('data-p');
+  document.querySelectorAll('#modesM button').forEach(function(x){x.classList.toggle('actif',x===b);}); dessiner();});});
+ function dessiner(){
+  c.fillStyle='#fff'; c.fillRect(0,0,880,360);
+  const gx=80,gy=20,gw=560,gh=300, lx=function(r){return gx+(Math.log10(r)+1.5)/2.8*gw;}, ly=function(E){return gy+gh-(Math.log10(E)+3)/7*gh;};
+  c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+  [0.1,1,10].forEach(function(r){T(c,String(r).replace('.',','),lx(r),gy+gh+16,11,'#64748b');}); [0.001,0.1,10,1000].forEach(function(E){T(c,String(E).replace('.',','),gx-6,ly(E)+4,11,'#64748b','right');});
+  T(c,'ρ (t/m³)',gx+gw,gy+gh+34,12,'#64748b','right'); T(c,'E (GPa)',gx,gy+12,12,'#64748b','left');
+  FAM.forEach(function(f){ const x1=lx(f[1]),x2=lx(f[2]),y1=ly(f[4]),y2=ly(f[3]); c.fillStyle=f[5]; c.globalAlpha=0.75; c.beginPath(); c.ellipse((x1+x2)/2,(y1+y2)/2,Math.max(14,(x2-x1)/2),Math.max(10,(y2-y1)/2),0,0,6.2832); c.fill(); c.globalAlpha=1; T(c,f[0],(x1+x2)/2,(y1+y2)/2+4+(f[6]||0),11.5,'#1e293b'); });
+  /* droite guide : E^(1/p)/ρ constant passant par l’acier */
+  c.save(); c.setLineDash([7,5]); c.strokeStyle='#dc2626'; c.lineWidth=2; c.beginPath();
+  const C0=Math.pow(210,1/pente)/7.8; let prem=true;
+  for(let r=0.03;r<=10;r*=1.1){ const E=Math.pow(C0*r,pente), y=ly(E); if(y<gy||y>gy+gh){prem=true;continue;} prem?c.moveTo(lx(r),y):c.lineTo(lx(r),y); prem=false; }
+  c.stroke(); c.restore();
+  T(c,pente===1?'E/ρ constant':'E^½/ρ constant',770,60,15,'#dc2626');
+  T(c,pente===1?'tirant rigide léger':'poutre rigide légère',770,86,13,'#334155');
+  T(c,'au-dessus de la droite :',770,130,12,'#16a34a',undefined,false); T(c,'mieux que l’acier',770,148,12,'#16a34a',undefined,false);
+ }
+ dessiner();
+})();
+
+const Q=[
+ {q:"Éprouvette de 50 mm², rupture à 21 000 N : résistance R<sub>m</sub> ?",r:["42 MPa","420 MPa","1 050 MPa"],b:1,
+  ex:"R_m = F_max / S₀ = 21 000 / 50 = 420 MPa."},
+ {q:"σ = 140 MPa pour ε = 0,002 en zone élastique : module E ?",r:["70 GPa","280 GPa","0,28 GPa"],b:0,
+  ex:"E = 140 / 0,002 = 70 000 MPa = 70 GPa : c’est un alliage d’aluminium."},
+ {q:"Tirant léger devant résister à un effort donné : quel indice minimiser ?",r:["ρ / R_e","R_e / ρ","ρ × E"],b:0,
+  ex:"La section nécessaire vaut F / R_e, la masse ρ L F / R_e : on minimise ρ / R_e."},
+ {q:"Acier ρ/R_e = 26, aluminium 10,8, titane 5 : le tirant le plus léger est en…",r:["acier","aluminium","titane"],b:2,
+  ex:"Le plus petit indice donne la plus petite masse : titane, 5 fois plus léger que l’acier."},
+ {q:"Carter en aluminium, 100 000 pièces par an : quel procédé ?",r:["fonderie au sable","moulage sous pression","usinage dans la masse"],b:1,
+  ex:"Le moulage sous pression amortit son moule coûteux sur une grande série, avec un bon état de surface."},
+ {q:"Pourquoi forger une bielle plutôt que l’usiner dans un bloc ?",r:["c’est moins cher en unitaire","les fibres suivent la forme : meilleure tenue en fatigue","le forgeage est plus précis"],b:1,
+  ex:"Le fibrage continu améliore la tenue aux efforts alternés, essentielle pour une bielle."}
+];
+
+(function(){
+ const z=document.getElementById('questions'), choix=new Array(Q.length).fill(-1);
+ Q.forEach(function(o,i){
+  const d=document.createElement('div'); d.style.margin='14px 0';
+  const h=document.createElement('p'); h.innerHTML='<b>'+(i+1)+'.</b> '+o.q; d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach(function(txt,j){
+   const b=document.createElement('button'); b.type='button'; b.innerHTML=txt;
+   b.addEventListener('click',function(){ if(b.disabled) return; choix[i]=j;
+    [].forEach.call(r.children,function(x){x.style.fontWeight='';}); b.style.fontWeight='800'; });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+ document.getElementById('verifier').addEventListener('click',function(){
+  let n=0;
+  document.querySelectorAll('#questions .rep').forEach(function(r,i){
+   [].forEach.call(r.children,function(b,j){ b.disabled=true; if(j===Q[i].b) b.classList.add('bon'); else if(choix[i]===j) b.classList.add('faux'); });
+   if(choix[i]===Q[i].b) n++;
+   const e=document.createElement('div'); e.className='verdict '+(choix[i]===Q[i].b?'ok':'ko'); e.textContent=Q[i].ex; r.parentNode.appendChild(e);
+  });
+  const b=document.getElementById('bilanQ'); b.className='retenir';
+  b.innerHTML='<b>'+n+' bonne(s) réponse(s) sur '+Q.length+'.</b> '+(n===Q.length?'Méthode acquise : passe au TP.':'Relis les explications, puis passe au TP.');
+  this.disabled=true;
+ });
+})();
+</script>
+</body>
+</html>
