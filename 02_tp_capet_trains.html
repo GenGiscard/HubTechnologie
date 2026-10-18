@@ -696,5 +696,112 @@ function poserCorrige(n,raison){
 
 
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ Object.keys(D).forEach(function(k){
+  var a=document.getElementById('a'+k); if(!a) return;
+  var cons=a.querySelector('.consigne'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  cons.parentNode.insertBefore(cv,cons.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+/* Schémas du TP CAPET « trains d’engrenages » */
+/* train épicycloïdal vu de face : couronne, planétaire, 3 satellites, porte-satellites */
+function EPI(c,x,y,o){
+ var Rc=o.Rc||100, rp=o.rp||25, rs=(Rc-rp)/2, d=rp+rs;
+ /* couronne : anneau + denture intérieure suggérée */
+ c.beginPath(); c.arc(x,y,Rc+18,0,6.2832); c.arc(x,y,Rc,0,6.2832,true); c.fillStyle=o.couronneBloquee?'#e2e8f0':'#fde68a'; c.fill();
+ c.strokeStyle='#b45309'; c.lineWidth=2; c.beginPath(); c.arc(x,y,Rc+18,0,6.2832); c.stroke(); c.beginPath(); c.arc(x,y,Rc,0,6.2832); c.stroke();
+ for(var k=0;k<48;k++){ var a=k*Math.PI/24; SC.SEG(c,x+Rc*Math.cos(a),y+Rc*Math.sin(a),x+(Rc-5)*Math.cos(a),y+(Rc-5)*Math.sin(a),'#b45309',2); }
+ if(o.couronneBloquee) SC.HACH(c,x+Rc+18,y-14,30,28,'#64748b');
+ /* porte-satellites */
+ c.strokeStyle=o.psBloque?'#64748b':'#7c3aed'; c.lineWidth=7; c.lineCap='round';
+ for(var i=0;i<3;i++){ var b=-Math.PI/2+i*2*Math.PI/3; c.beginPath(); c.moveTo(x,y); c.lineTo(x+d*Math.cos(b),y+d*Math.sin(b)); c.stroke(); }
+ c.lineCap='butt';
+ for(var j=0;j<3;j++){ var b2=-Math.PI/2+j*2*Math.PI/3; SC.ROUE(c,x+d*Math.cos(b2),y+d*Math.sin(b2),rs-6,Math.max(10,Math.round(rs/2.6)),'#0e7490'); }
+ SC.ROUE(c,x,y,rp-3,Math.max(8,Math.round(rp/2.6)),'#dc2626');
+}
+function LEG(c,x,y,l){ l.forEach(function(e,i){ c.fillStyle=e[0]; c.fillRect(x,y+i*24-10,14,10); SC.T(c,e[1],x+22,y+i*24,13,e[2]||'#334155','left'); }); }
+/* train ordinaire en ligne : liste de [rayon, z, axe] */
+function PAIRE(c,x1,y,r1,z1,r2,z2,co1,co2){ SC.ROUE(c,x1,y,r1,z1,co1||'#0e7490'); SC.ROUE(c,x1+r1+r2+4,y,r2,z2,co2||'#7c3aed'); return x1+r1+r2+4; }
+
+SCHEMAS({
+ '1': {h:290, titre:'Train épicycloïdal : planétaire 20 dents, couronne 80 dents', draw:function(c){
+   EPI(c,200,158,{Rc:100,rp:25});
+   LEG(c,420,90,[['#dc2626','planétaire : Zp = 20 dents'],['#0e7490','satellites : Zs = ?','#dc2626'],['#b45309','couronne : Zc = 80 dents'],['#7c3aed','porte-satellites']]);
+   SC.T(c,'raison basique λ = ?',540,210,14,'#dc2626');
+ }},
+ '2': {h:290, titre:'Couronne bloquée : entrée planétaire, sortie porte-satellites', draw:function(c){
+   EPI(c,200,158,{Rc:100,rp:25,couronneBloquee:true});
+   SC.T(c,'bâti',333,200,12,'#64748b');
+   LEG(c,420,80,[['#dc2626','entrée : planétaire, 1 450 tr/min'],['#94a3b8','couronne : ω = 0'],['#7c3aed','sortie : porte-satellites, ω = ?','#dc2626']]);
+   SC.T(c,'Zp = 20 · Zc = 80',540,190,13,'#334155');
+ }},
+ '4': {h:290, titre:'Réducteur à deux étages (schéma cinématique)', draw:function(c){
+   var y1=250, y2=170, y3=98;
+   function roue(x,y,r,co,z){ SC.RECT(c,x-7,y-r,14,2*r,'#fff',co,2.5); SC.T(c,z,x+12,y-r+12,12,co,'left'); }
+   SC.RECT(c,20,y1-24,80,48,'#fef3c7','#b45309'); SC.T(c,'moteur',60,y1+5,12,'#92400e');
+   SC.SEG(c,100,y1,260,y1,'#334155',4); SC.SEG(c,180,y2,460,y2,'#334155',4); SC.SEG(c,380,y3,620,y3,'#334155',4);
+   roue(220,y1,16,'#0e7490','16'); roue(220,y2,64,'#7c3aed','64'); roue(420,y2,18,'#0e7490','18'); roue(420,y3,54,'#7c3aed','54');
+   SC.T(c,'1 450 tr/min',60,y1-34,12,'#92400e');
+   SC.FL(c,620,y3,680,y3,3,'#dc2626'); SC.T(c,'sortie',690,y3+5,12,'#dc2626','left');
+   SC.T(c,'rapport global = ?',600,200,13,'#dc2626'); SC.T(c,'N sortie = ?',600,224,13,'#dc2626');
+ }},
+ '5': {h:220, titre:'Couple et rendement d’un réducteur 1/12', draw:function(c){
+   var y=110;
+   SC.FL(c,40,y,140,y,4,'#ea580c'); SC.T(c,'C = 2,4 N·m',30,y-14,13,'#ea580c','left');
+   SC.RECT(c,150,y-50,150,100,'#ecfeff','#0e7490'); SC.T(c,'étage 1',225,y-4,13,'#155e75'); SC.T(c,'η = 0,97',225,y+16,12,'#334155');
+   SC.SEG(c,300,y,340,y,'#334155',4);
+   SC.RECT(c,340,y-50,150,100,'#ecfeff','#0e7490'); SC.T(c,'étage 2',415,y-4,13,'#155e75'); SC.T(c,'η = 0,97',415,y+16,12,'#334155');
+   SC.FL(c,490,y,600,y,4,'#dc2626'); SC.T(c,'C sortie = ?',650,y+5,13,'#dc2626');
+   SC.T(c,'rapport global 1/12',320,y+84,13,'#334155');
+ }},
+ '6': {h:300, titre:'Géométrie du premier étage, puis porte-satellites bloqué', draw:function(c){
+   var y=170, x1=70, xb=x1+22+88+4;
+   SC.ROUE(c,x1,y,22,16,'#0e7490'); SC.ROUE(c,xb,y,88,64,'#7c3aed');
+   SC.TIRETS(c,x1,y,x1,y+118); SC.TIRETS(c,xb,y,xb,y+118);
+   SC.COTE(c,x1,y+112,xb,y+112,'entraxe a = ?','#dc2626',-8);
+   SC.T(c,'Z = 16',x1,y-34,12,'#0e7490'); SC.T(c,'d = ?',x1-30,y+50,12,'#dc2626'); SC.T(c,'Z = 64',xb,y-16,12,'#7c3aed');
+   SC.T(c,'module m = 2,5 mm',20,52,12,'#334155','left');
+   EPI(c,590,140,{Rc:88,rp:22,psBloque:true});
+   SC.T(c,'porte-satellites bloqué',590,268,12,'#64748b'); SC.T(c,'ω couronne / ω planétaire = ?',590,290,13,'#dc2626'); }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>

@@ -1189,5 +1189,130 @@ window.MINICOURS={ ouvrir:ouvrir, fermer:fermer, notions:N };
 })();
 
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ document.querySelectorAll('#questions .q').forEach(function(q){
+  var b=q.querySelector('.num b'); if(!b) return; var k=b.textContent.replace('Question','').trim();
+  if(!D[k]) return; var p=q.querySelector('p'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  p.parentNode.insertBefore(cv,p.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+/* Schémas du sujet CAPET — arbre de sortie de réducteur */
+function POUTRE(c,x0,x1,y,ep){ SC.RECT(c,x0,y-(ep||8),x1-x0,2*(ep||8),'#dbeafe','#1d4ed8',2); }
+function SECT(c,x,y,r,txt,co){ SC.CERCLE(c,x,y,r,'#dbeafe',co||'#1d4ed8',2); SC.COTE(c,x-r,y+r+16,x+r,y+r+16,txt,'#334155',16); }
+function MOM(c,x,y,r,co){ co=co||'#dc2626'; c.strokeStyle=co; c.lineWidth=3; c.beginPath(); c.arc(x,y,r,-2.3,2.3); c.stroke();
+ var a=2.3, px=x+r*Math.cos(a), py=y+r*Math.sin(a); SC.FL(c,px+10*Math.sin(a),py-10*Math.cos(a),px-2*Math.sin(a),py+2*Math.cos(a),3,co); }
+function TOR(c,x,y,ry,co){ co=co||'#7c3aed'; c.strokeStyle=co; c.lineWidth=3; c.beginPath(); c.ellipse(x,y,9,ry,0,-1.9,1.9); c.stroke();
+ var px=x+9*Math.cos(1.9), py=y+ry*Math.sin(1.9); SC.FL(c,px+6,py-4,px-4,py+3,3,co); }
+/* demi-profil d’arbre épaulé ou rainuré, vu de côté */
+function EPAUL(c,x,y){ c.fillStyle='#dbeafe'; c.strokeStyle='#1d4ed8'; c.lineWidth=2; c.beginPath();
+ c.moveTo(x-200,y-40); c.lineTo(x-10,y-40); c.quadraticCurveTo(x,y-40,x+2,y-52); c.lineTo(x+2,y-58); c.lineTo(x+200,y-58);
+ c.lineTo(x+200,y+58); c.lineTo(x+2,y+58); c.lineTo(x+2,y+52); c.quadraticCurveTo(x,y+40,x-10,y+40); c.lineTo(x-200,y+40); c.closePath(); c.fill(); c.stroke();
+ SC.TIRETS(c,x-220,y,x+220,y,'#94a3b8',1); }
+function RAINURE(c,x,y){ SC.RECT(c,x-200,y-45,400,90,'#dbeafe','#1d4ed8',2); c.fillStyle='#fff'; c.beginPath(); c.moveTo(x-70,y-45); c.lineTo(x-70,y-32);
+ c.arc(x-58,y-32,12,Math.PI,Math.PI/2,true); c.lineTo(x+58,y-20); c.arc(x+58,y-32,12,Math.PI/2,0,true); c.lineTo(x+70,y-45); c.closePath(); c.fill();
+ c.strokeStyle='#1d4ed8'; c.stroke(); SC.TIRETS(c,x-220,y,x+220,y,'#94a3b8',1); }
+
+SCHEMAS({
+ 'A1': {h:250, titre:'Arbre sur deux appuis, charge sous la roue', draw:function(c){
+   var xa=130, xb=630, y=120, xr=xa+100/300*500;
+   POUTRE(c,xa-20,xb+20,y); SC.APPUI(c,xa,y+8); SC.APPUI(c,xb,y+8,true);
+   SC.T(c,'A',xa-22,y-14,15); SC.T(c,'B',xb+22,y-14,15);
+   SC.FL(c,xr,y-80,xr,y-10,3.5,'#dc2626'); SC.T(c,'Ft = 4 000 N',xr+10,y-60,14,'#dc2626','left');
+   SC.FL(c,xa-40,y+70,xa-40,y+20,2.5,'#16a34a'); SC.T(c,'R_A = ?',xa-48,y+56,13,'#16a34a','right');
+   SC.FL(c,xb+40,y+70,xb+40,y+20,2.5,'#16a34a'); SC.T(c,'R_B = ?',xb+48,y+56,13,'#16a34a','left');
+   SC.COTE(c,xa,y+90,xr,y+90,'100',undefined,-6); SC.COTE(c,xa,y+116,xb,y+116,'300',undefined,-6);
+ }},
+ 'A2': {h:250, titre:'Effort tangentiel sur la roue', draw:function(c){
+   var O={x:250,y:130}; SC.ROUE(c,O.x,O.y,75,24,'#0e7490'); SC.CERCLE(c,O.x,O.y,20,'#dbeafe','#1d4ed8',2);
+   SC.FL(c,O.x+92,O.y-60,O.x+92,O.y,3.5,'#dc2626'); SC.T(c,'Ft = 4 000 N',O.x+104,O.y-36,14,'#dc2626','left');
+   SC.COTE(c,O.x-75,O.y+100,O.x+75,O.y+100,'Ø primitif 150',undefined,16);
+   SC.T(c,'moment de torsion transmis',570,110,14,'#7c3aed'); SC.T(c,'Mt = ?',570,142,17,'#7c3aed');
+ }},
+ 'A3': {h:260, titre:'Moment fléchissant aux deux sections', draw:function(c){
+   var x0=110, x1=650, y=190, X=function(d){return x0+d/300*(x1-x0);}, H=120;
+   SC.SEG(c,x0,y,x1,y,'#334155',2);
+   c.fillStyle='rgba(220,38,38,.12)'; c.beginPath(); c.moveTo(X(0),y); c.lineTo(X(100),y-H); c.lineTo(X(300),y); c.closePath(); c.fill();
+   c.strokeStyle='#dc2626'; c.lineWidth=2.5; c.beginPath(); c.moveTo(X(0),y); c.lineTo(X(100),y-H); c.lineTo(X(300),y); c.stroke();
+   SC.TIRETS(c,X(60),y,X(60),y-H*0.6,'#ea580c',1.6); SC.TIRETS(c,X(100),y,X(100),y-H,'#1d4ed8',1.6);
+   SC.T(c,'épaulement : M = ?',X(60)-8,y-H*0.6-10,13,'#ea580c','right'); SC.T(c,'roue : M = ?',X(100)+8,y-H-8,13,'#1d4ed8','left');
+   SC.T(c,'A',X(0),y+20,13); SC.T(c,'B',X(300),y+20,13); SC.T(c,'60',X(60),y+20,12,'#64748b'); SC.T(c,'100',X(100),y+20,12,'#64748b');
+   SC.T(c,'x (mm)',X(300)+30,y+5,12,'#64748b','left');
+ }},
+ 'B1': {h:250, titre:'Section de l’épaulement : Ø 40', draw:function(c){
+   SECT(c,190,120,70,'Ø 40');
+   SC.T(c,'flexion : Mf de la question A3',490,80,14,'#dc2626'); SC.T(c,'torsion : Mt de la question A2',490,110,14,'#7c3aed');
+   SC.T(c,'I/v = ?   σ nom = ?   τ nom = ?',490,170,15,'#155e75');
+ }},
+ 'B2': {h:260, titre:'Concentration de contraintes à l’épaulement', draw:function(c){
+   EPAUL(c,300,140); SC.FL(c,370,50,304,92,1.6,'#ea580c'); SC.T(c,'congé r/d = 0,05',376,48,13,'#ea580c','left');
+   SC.T(c,'Ø 40',150,145,13,'#334155'); SC.T(c,'Kt flexion = 1,8',640,110,14,'#dc2626'); SC.T(c,'Kt torsion = 1,5',640,140,14,'#7c3aed');
+   SC.T(c,'σ éq = ?',640,190,16,'#155e75');
+ }},
+ 'C1': {h:250, titre:'Section sous la roue : Ø 45 avec rainure', draw:function(c){
+   var O={x:190,y:120}; SC.CERCLE(c,O.x,O.y,76,'#dbeafe','#1d4ed8',2);
+   c.fillStyle='#fff'; c.fillRect(O.x-14,O.y-78,28,24); c.strokeStyle='#1d4ed8'; c.lineWidth=2; c.strokeRect(O.x-14,O.y-78,28,24);
+   SC.COTE(c,O.x-76,O.y+94,O.x+76,O.y+94,'Ø 45',undefined,16); SC.FL(c,O.x+80,O.y-84,O.x+16,O.y-68,1.4,'#1d4ed8'); SC.T(c,'rainure',O.x+86,O.y-80,12,'#1d4ed8','left');
+   SC.T(c,'flexion : Mf sous la roue (A3)',500,90,14,'#dc2626'); SC.T(c,'torsion : Mt (A2)',500,120,14,'#7c3aed');
+   SC.T(c,'σ nom = ?   τ nom = ?',500,175,15,'#155e75');
+ }},
+ 'C2': {h:250, titre:'Concentration de contraintes au fond de la rainure', draw:function(c){
+   RAINURE(c,300,140); SC.FL(c,400,60,354,104,1.6,'#ea580c'); SC.T(c,'fond arrondi',406,58,13,'#ea580c','left');
+   SC.T(c,'Kt flexion = 2,1',640,110,14,'#dc2626'); SC.T(c,'Kt torsion = 1,7',640,140,14,'#7c3aed'); SC.T(c,'σ éq = ?',640,190,16,'#155e75');
+ }},
+ 'C3': {h:240, titre:'Comparer à la résistance pratique', draw:function(c){
+   var y0=200, H=140;
+   [['épaulement',230,'#ea580c'],['rainure',400,'#1d4ed8']].forEach(function(b){ c.fillStyle=b[2]; c.globalAlpha=.3; c.fillRect(b[1]-40,y0-H*0.55,80,H*0.55); c.globalAlpha=1;
+     c.strokeStyle=b[2]; c.lineWidth=2; c.strokeRect(b[1]-40,y0-H*0.55,80,H*0.55); SC.T(c,b[0],b[1],y0+18,13,b[2]); SC.T(c,'σ éq',b[1],y0-H*0.55-8,12,b[2]); });
+   SC.SEG(c,140,y0,500,y0,'#334155',2); SC.TIRETS(c,140,y0-H,500,y0-H,'#16a34a',2); SC.T(c,'Rpe = Re / s = ?',510,y0-H+5,14,'#16a34a','left');
+   SC.T(c,'Re = 650 MPa · s = 4',600,110,13,'#334155');
+ }},
+ 'D1': {h:250, titre:'Avec et sans concentration de contraintes', draw:function(c){
+   var x0=120, x1=640, y=180, xr=380;
+   SC.SEG(c,x0,y,x1,y,'#334155',1.5);
+   SC.TIRETS(c,x0,y-50,x1,y-50,'#64748b',1.6); SC.T(c,'sans Kt : σ éq = ?',x0,y-58,13,'#64748b','left');
+   c.strokeStyle='#dc2626'; c.lineWidth=2.5; c.beginPath(); for(var x=x0;x<=x1;x+=4){ var p=Math.exp(-Math.pow((x-xr)/30,2)); var yy=y-50-p*60; x===x0?c.moveTo(x,yy):c.lineTo(x,yy);} c.stroke();
+   SC.T(c,'avec Kt : pic au fond de rainure',xr+40,y-110,13,'#dc2626','left');
+   SC.T(c,'position le long de l’arbre',x1,y+20,12,'#64748b','right'); SC.T(c,'rainure',xr,y+20,12,'#1d4ed8');
+ }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>

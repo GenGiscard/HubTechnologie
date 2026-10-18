@@ -376,5 +376,92 @@ function poserCorrige(n,raison){
 })();
 
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ Object.keys(D).forEach(function(k){
+  var a=document.getElementById('a'+k); if(!a) return;
+  var cons=a.querySelector('.consigne'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  cons.parentNode.insertBefore(cv,cons.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+SCHEMAS({
+ '2': {h:220, titre:'Flux de puissance, du réseau à la charge', draw:function(c){
+   var B=[['moteur','0,85'],['réducteur','0,90'],['tambour','0,95']];
+   SC.T(c,'réseau',50,118,13,'#64748b');
+   SC.FL(c,80,112,120,112,4,'#0369a1'); SC.T(c,'P abs ?',100,96,12,'#0369a1');
+   B.forEach(function(b,i){ var x=130+i*190; SC.RECT(c,x,80,120,64,'#ecfeff','#0e7490');
+     SC.T(c,b[0],x+60,106,13,'#155e75'); SC.T(c,'η = '+b[1],x+60,128,13,'#334155');
+     SC.FL(c,x+60,144,x+60,188,3,'#dc2626'); SC.T(c,'pertes',x+92,176,11,'#dc2626','left');
+     SC.FL(c,x+120,112,x+190,112,4,'#0369a1'); });
+   SC.T(c,'charge',700,106,13,'#334155'); SC.T(c,'P utile',700,128,13,'#0369a1'); SC.T(c,'(mission 1)',700,146,11,'#0369a1');
+ }},
+ '4': {h:230, titre:'Deux réserves d’énergie cinétique', draw:function(c){
+   c.fillStyle='#bfdbfe'; c.strokeStyle='#2563eb'; c.lineWidth=2.5; c.beginPath(); c.roundRect(60,100,190,60,12); c.fill(); c.stroke();
+   SC.PT(c,100,166,13); SC.PT(c,210,166,13); SC.T(c,'1 200 kg',155,136,14,'#1e3a8a');
+   SC.FL(c,260,128,340,128,3.5,'#16a34a'); SC.T(c,'90 km/h',300,116,13,'#16a34a');
+   SC.CERCLE(c,560,130,70,'#fde68a','#b45309',3); SC.PT(c,560,130,4);
+   c.strokeStyle='#0e7490'; c.lineWidth=3; c.beginPath(); c.arc(560,130,86,-2.4,-0.9); c.stroke();
+   SC.FL(c,560+86*Math.cos(-1.1),130+86*Math.sin(-1.1),560+86*Math.cos(-0.85),130+86*Math.sin(-0.85),3,'#0e7490');
+   SC.T(c,'J = 0,8 kg·m²',560,224,13,'#92400e'); SC.T(c,'3 000 tr/min',690,60,13,'#0e7490');
+   SC.T(c,'E = ?',155,212,14,'#ea580c'); SC.T(c,'E = ?',690,140,14,'#ea580c');
+ }},
+ '5': {h:230, titre:'Inerties vues depuis l’arbre moteur', draw:function(c){
+   SC.RECT(c,50,90,110,70,'#e2e8f0','#475569'); SC.T(c,'moteur',105,122,13); SC.T(c,'J = 0,002',105,142,12,'#334155');
+   SC.SEG(c,160,125,230,125,'#334155',6);
+   SC.RECT(c,230,80,120,90,'#e2e8f0','#475569'); SC.T(c,'réducteur',290,118,13); SC.T(c,'k = 1/10',290,140,13,'#7c3aed');
+   SC.SEG(c,350,125,430,125,'#334155',6);
+   SC.CERCLE(c,500,125,70,'#fde68a','#b45309',2); SC.T(c,'tambour + charge',500,120,12,'#92400e'); SC.T(c,'1,5 kg·m²',500,140,12,'#92400e');
+   SC.T(c,'arbre rapide',140,200,12,'#64748b'); SC.T(c,'arbre lent',440,214,12,'#64748b');
+   SC.T(c,'J éq ?',660,125,15,'#ea580c');
+ }},
+ '6': {h:240, titre:'Démarrage : couple moteur', draw:function(c){
+   var gx=70,gy=40,gw=300,gh=160;
+   c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+   SC.SEG(c,gx,gy+gh,gx+gw*0.55,gy+20,'#0e7490',3); SC.SEG(c,gx+gw*0.55,gy+20,gx+gw,gy+20,'#0e7490',3);
+   SC.T(c,'150 rad/s',gx-4,gy+24,11,'#64748b','right'); SC.T(c,'0,5 s',gx+gw*0.55,gy+gh+16,11,'#64748b'); SC.T(c,'ω',gx,gy-8,12,'#64748b','left');
+   SC.RECT(c,450,90,110,70,'#e2e8f0','#475569'); SC.T(c,'moteur',505,130,13);
+   SC.SEG(c,560,125,680,125,'#334155',6);
+   SC.T(c,'J éq (mission 5)',620,80,12,'#334155'); SC.T(c,'C résistant = 2 N·m',620,190,12,'#dc2626');
+   SC.T(c,'C moteur ?',505,190,13,'#16a34a');
+ }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>

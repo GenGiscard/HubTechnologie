@@ -373,5 +373,91 @@ function poserCorrige(n,raison){
 })();
 
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ Object.keys(D).forEach(function(k){
+  var a=document.getElementById('a'+k); if(!a) return;
+  var cons=a.querySelector('.consigne'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  cons.parentNode.insertBefore(cv,cons.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+SCHEMAS({
+ '2': {h:220, titre:'Deux volants de même masse', draw:function(c){
+   SC.CERCLE(c,220,120,70,'rgba(14,116,144,.25)','#0e7490',3); SC.PT(c,220,120,4); SC.COTE(c,220,120,290,120,'R = 0,15 m','#334155');
+   c.lineWidth=12; SC.CERCLE(c,540,120,64,null,'#ea580c',12); SC.PT(c,540,120,4);
+   SC.T(c,'disque plein · 8 kg',220,210,13,'#0e7490'); SC.T(c,'anneau mince · 8 kg',540,210,13,'#ea580c');
+ }},
+ '4': {h:250, titre:'Arbre moteur isolé au démarrage', draw:function(c){
+   SC.RECT(c,60,90,130,90,'#e2e8f0','#475569'); SC.T(c,'moteur',125,140,14);
+   SC.SEG(c,190,135,520,135,'#334155',8);
+   SC.CERCLE(c,560,135,60,'#fde68a','#b45309',2); SC.T(c,'charge',560,140,13,'#92400e');
+   SC.T(c,'J = 0,12 kg·m²',560,222,13,'#92400e');
+   c.strokeStyle='#16a34a'; c.lineWidth=3; c.beginPath(); c.arc(300,135,34,-2.4,0.6); c.stroke();
+   SC.FL(c,300+34*Math.cos(0.4),135+34*Math.sin(0.4),300+34*Math.cos(0.65),135+34*Math.sin(0.65),3,'#16a34a');
+   SC.T(c,'C moteur = 20 N·m',300,82,13,'#16a34a');
+   c.strokeStyle='#dc2626'; c.lineWidth=3; c.beginPath(); c.arc(420,135,34,0.6,3.6); c.stroke();
+   SC.FL(c,420+34*Math.cos(3.4),135+34*Math.sin(3.4),420+34*Math.cos(3.65),135+34*Math.sin(3.65),3,'#dc2626');
+   SC.T(c,'C résistant = 8 N·m',420,200,13,'#dc2626');
+   SC.T(c,'0 → 1 500 tr/min : durée ?',125,222,13,'#155e75');
+ }},
+ '5': {h:250, titre:'Meule freinée', draw:function(c){
+   SC.CERCLE(c,250,150,80,'#e7e5e4','#57534e',3); SC.CERCLE(c,250,150,18,'#fff','#57534e',2);
+   SC.T(c,'J = 0,5 kg·m²',250,246,13,'#334155');
+   c.strokeStyle='#0e7490'; c.lineWidth=3; c.beginPath(); c.arc(250,150,98,-2.6,-1.0); c.stroke();
+   SC.FL(c,250+98*Math.cos(-1.2),150+98*Math.sin(-1.2),250+98*Math.cos(-0.95),150+98*Math.sin(-0.95),3,'#0e7490');
+   SC.T(c,'ω₀ : 3 000 tr/min',40,70,13,'#0e7490','left');
+   SC.RECT(c,338,120,34,60,'#fecaca','#dc2626'); SC.T(c,'frein',390,144,13,'#dc2626','left');
+   SC.T(c,'C = 25 N·m',390,164,13,'#dc2626','left');
+   SC.T(c,'arrêt : durée ? tours ?',600,210,13,'#155e75');
+ }},
+ '6': {h:300, titre:'Cabine isolée au démarrage', draw:function(c){
+   SC.HACH(c,140,40,200,12);
+   SC.CERCLE(c,240,92,40,'#fde68a','#b45309',2); SC.PT(c,240,92,4); SC.T(c,'R = 0,25 m',190,96,12,'#92400e','right');
+   SC.SEG(c,280,92,280,170,'#334155',2);
+   SC.RECT(c,220,170,120,80,'#bfdbfe','#2563eb'); SC.T(c,'800 kg',280,216,15,'#1e3a8a');
+   SC.FL(c,280,170,280,128,3,'#16a34a'); SC.T(c,'T ?',292,148,14,'#16a34a','left');
+   SC.FL(c,300,250,300,292,3,'#334155'); SC.T(c,'P = m g',312,282,13,'#334155','left');
+   SC.FL(c,420,260,420,190,3,'#7c3aed'); SC.T(c,'a = 1 m/s²',432,230,14,'#7c3aed','left');
+   SC.T(c,'g = 9,81 N/kg',600,130,13,'#64748b'); SC.T(c,'couple sur le tambour ?',600,160,13,'#155e75');
+ }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>

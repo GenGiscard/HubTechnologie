@@ -1210,5 +1210,153 @@ window.MINICOURS={ ouvrir:ouvrir, fermer:fermer, notions:N };
 })();
 
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ document.querySelectorAll('#questions .q').forEach(function(q){
+  var b=q.querySelector('.num b'); if(!b) return; var k=b.textContent.replace('Question','').trim();
+  if(!D[k]) return; var p=q.querySelector('p'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  p.parentNode.insertBefore(cv,p.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+/* Schémas du sujet type CAPET « grue d’atelier à vérin » */
+var GX=110, GY=292, GK=170;   /* origine O et échelle : 170 px par mètre */
+function P_(x,y){ return {x:GX+x*GK, y:GY-y*GK}; }
+function GRUE(c,o){
+ o=o||{}; var A=P_(0,1.2), B=P_(1.5,1.2), C=P_(0,0.5), D=P_(o.xD||0.6,1.2);
+ if(!o.sansMat){ SC.RECT(c,A.x-14,A.y,14,GY-A.y,'#e2e8f0','#475569'); SC.HACH(c,A.x-50,GY,90,10); }
+ SC.SEG(c,A.x,A.y,B.x,B.y,'#0e7490',10);
+ if(!o.sansVerin){ SC.SEG(c,C.x,C.y,D.x,D.y,'#7c3aed',7); SC.PIVOT(c,C.x,C.y,7); }
+ SC.PIVOT(c,A.x,A.y,8); SC.PIVOT(c,D.x,D.y,7);
+ SC.T(c,'A',A.x-24,A.y-6,14); SC.T(c,'B',B.x+18,B.y-6,14); SC.T(c,'D',D.x+4,D.y-16,14);
+ if(!o.sansVerin) SC.T(c,'C',C.x-24,C.y+5,14);
+ return {A:A,B:B,C:C,D:D};
+}
+SCHEMAS({
+ 'A2': {h:280, titre:'On isole la flèche AB', draw:function(c){
+   var A={x:130,y:110}, B={x:130+1.5*GK,y:110}, D={x:130+0.6*GK,y:110}, C={x:130,y:110+0.7*GK};
+   SC.SEG(c,A.x,A.y,B.x,B.y,'#0e7490',10); SC.PIVOT(c,A.x,A.y,8); SC.PT(c,D.x,D.y,6); SC.PT(c,B.x,B.y,6);
+   SC.T(c,'A',A.x-4,A.y-18,14); SC.T(c,'D',D.x+4,D.y-16,14); SC.T(c,'B',B.x+16,B.y-10,14);
+   SC.FL(c,B.x,B.y+8,B.x,B.y+90,3.5,'#dc2626'); SC.T(c,'P = 5 000 N',B.x+10,B.y+76,13,'#dc2626','left');
+   var ux=(D.x-C.x), uy=(D.y-C.y), n=Math.hypot(ux,uy); SC.TIRETS(c,D.x-ux/n*70,D.y-uy/n*70,D.x,D.y,'#7c3aed',2);
+   SC.T(c,'action du vérin : direction CD',D.x-40,D.y+96,12,'#7c3aed');
+   SC.FL(c,A.x-60,A.y,A.x-14,A.y,2.5,'#2563eb'); SC.FL(c,A.x,A.y+60,A.x,A.y+14,2.5,'#2563eb'); SC.T(c,'A_x ?',A.x-66,A.y-8,12,'#2563eb'); SC.T(c,'A_y ?',A.x+10,A.y+64,12,'#2563eb','left');
+   SC.T(c,'inconnues scalaires = ?   ·   équations dans le plan = ?',400,262,13,'#dc2626');
+ }},
+ 'A3': {h:300, titre:'Géométrie du vérin CD', draw:function(c){
+   var g=GRUE(c,{});
+   SC.TIRETS(c,g.C.x,g.C.y,g.D.x,g.C.y,'#64748b'); SC.TIRETS(c,g.D.x,g.C.y,g.D.x,g.D.y,'#64748b');
+   SC.COTE(c,g.C.x,g.C.y+24,g.D.x,g.C.y+24,'0,60 m','#334155',16);
+   SC.COTE(c,g.D.x+24,g.C.y,g.D.x+24,g.D.y,'','#334155'); SC.T(c,'0,70 m',g.D.x+32,(g.C.y+g.D.y)/2+4,12,'#334155','left');
+   c.strokeStyle='#ea580c'; c.lineWidth=2; c.beginPath(); c.arc(g.C.x,g.C.y,40,-Math.atan2(0.7,0.6),0); c.stroke(); SC.T(c,'α ?',g.C.x+48,g.C.y-12,13,'#dc2626','left');
+   SC.T(c,'longueur CD = ?',590,90,13,'#dc2626'); SC.T(c,'angle avec l’horizontale = ?',590,114,13,'#dc2626');
+   SC.T(c,'A (0 ; 1,20)  D (0,60 ; 1,20)',590,160,12,'#334155'); SC.T(c,'C (0 ; 0,50)  B (1,50 ; 1,20)',590,182,12,'#334155');
+ }},
+ 'B1': {h:300, titre:'Moment en A : le bras de levier du vérin', draw:function(c){
+   var g=GRUE(c,{});
+   var ux=g.D.x-g.C.x, uy=g.D.y-g.C.y, n=Math.hypot(ux,uy); ux/=n; uy/=n;
+   var t=(g.A.x-g.C.x)*ux+(g.A.y-g.C.y)*uy, H={x:g.C.x+ux*t,y:g.C.y+uy*t};
+   SC.TIRETS(c,g.C.x,g.C.y,H.x+ux*20,H.y+uy*20,'#7c3aed');
+   SC.SEG(c,g.A.x,g.A.y,H.x,H.y,'#ea580c',2.5); SC.PT(c,H.x,H.y,4,'#ea580c'); SC.T(c,'d = ?',(g.A.x+H.x)/2+12,(g.A.y+H.y)/2-6,13,'#dc2626','left');
+   SC.FL(c,g.B.x,g.B.y+8,g.B.x,g.B.y+80,3.5,'#dc2626'); SC.T(c,'P = 5 000 N',g.B.x+10,g.B.y+70,13,'#dc2626','left');
+   SC.COTE(c,g.A.x,g.A.y-28,g.B.x,g.A.y-28,'1,50 m','#334155');
+   SC.T(c,'effort du vérin F = ?',600,200,13,'#dc2626');
+ }},
+ 'B2': {h:260, titre:'Projection de l’effort du vérin', draw:function(c){
+   var D={x:300,y:200}, a=49.4*Math.PI/180, L=150;
+   SC.FL(c,D.x,D.y,D.x+L*Math.cos(a),D.y-L*Math.sin(a),4,'#7c3aed'); SC.T(c,'F (B1)',D.x+L*Math.cos(a)+10,D.y-L*Math.sin(a)+4,13,'#7c3aed','left');
+   SC.TIRETS(c,D.x+L*Math.cos(a),D.y-L*Math.sin(a),D.x+L*Math.cos(a),D.y,'#94a3b8'); SC.TIRETS(c,D.x+L*Math.cos(a),D.y-L*Math.sin(a),D.x,D.y-L*Math.sin(a),'#94a3b8');
+   SC.FL(c,D.x,D.y,D.x+L*Math.cos(a),D.y,3,'#2563eb'); SC.FL(c,D.x,D.y,D.x,D.y-L*Math.sin(a),3,'#2563eb');
+   SC.T(c,'F_x = ?',D.x+L*Math.cos(a)/2,D.y+22,13,'#dc2626'); SC.T(c,'F_y = ?',D.x-12,D.y-L*Math.sin(a)/2,13,'#dc2626','right');
+   c.strokeStyle='#ea580c'; c.lineWidth=2; c.beginPath(); c.arc(D.x,D.y,36,-a,0); c.stroke(); SC.T(c,'α (A3)',D.x+44,D.y-14,12,'#ea580c','left');
+   SC.PT(c,D.x,D.y,6); SC.T(c,'D',D.x-10,D.y+20,14);
+ }},
+ 'B3': {h:280, titre:'Action du mât sur la flèche en A', draw:function(c){
+   var A={x:130,y:150}, B={x:130+1.5*GK,y:150}, D={x:130+0.6*GK,y:150}, a=49.4*Math.PI/180;
+   SC.SEG(c,A.x,A.y,B.x,B.y,'#0e7490',10); SC.PIVOT(c,A.x,A.y,8); SC.PT(c,D.x,D.y,6); SC.PT(c,B.x,B.y,6);
+   SC.T(c,'A',A.x-4,A.y-18,14); SC.T(c,'D',D.x-16,D.y-14,14); SC.T(c,'B',B.x+16,B.y-10,14);
+   SC.FL(c,B.x,B.y+8,B.x,B.y+90,3.5,'#dc2626'); SC.T(c,'5 000 N',B.x+10,B.y+76,13,'#dc2626','left');
+   SC.FL(c,D.x,D.y,D.x+90*Math.cos(a),D.y-90*Math.sin(a),3.5,'#7c3aed'); SC.T(c,'F vérin (B1, B2)',D.x+64,D.y-76,12,'#7c3aed','left');
+   SC.FL(c,A.x-70,A.y,A.x-12,A.y,2.5,'#2563eb'); SC.FL(c,A.x,A.y+70,A.x,A.y+12,2.5,'#2563eb');
+   SC.T(c,'A_x = ?',A.x-76,A.y-8,12,'#dc2626'); SC.T(c,'A_y = ?',A.x+10,A.y+70,12,'#dc2626','left');
+   SC.T(c,'norme de l’action en A = ?',590,230,13,'#dc2626');
+ }},
+ 'B4': {h:300, titre:'Trois forces concourantes', draw:function(c){
+   var K=100, O={x:130,y:290}, Q=function(x,y){return {x:O.x+x*K,y:O.y-y*K};};
+   var A=Q(0,1.2), B=Q(1.5,1.2), C=Q(0,0.5), D=Q(0.6,1.2);
+   SC.SEG(c,A.x,A.y,B.x,B.y,'#0e7490',8); SC.SEG(c,C.x,C.y,D.x,D.y,'#7c3aed',5);
+   SC.PIVOT(c,A.x,A.y,7); SC.PIVOT(c,C.x,C.y,6); SC.PT(c,D.x,D.y,5); SC.PT(c,B.x,B.y,5);
+   SC.T(c,'A',A.x-18,A.y+4,13); SC.T(c,'B',B.x+16,B.y+18,13); SC.T(c,'C',C.x-18,C.y+4,13); SC.T(c,'D',D.x+14,D.y+16,13);
+   var I={x:B.x, y:C.y-(B.x-C.x)*(D.y-C.y)/(D.x-C.x)*-1};
+   I.y=C.y+(B.x-C.x)*(D.y-C.y)/(D.x-C.x);
+   SC.TIRETS(c,D.x,D.y,I.x,I.y,'#7c3aed'); SC.TIRETS(c,B.x,B.y+40,I.x,I.y,'#dc2626');
+   SC.PT(c,I.x,I.y,7,'#ea580c'); SC.T(c,'I (x = ? ; y = ?)',I.x+14,I.y+5,13,'#dc2626','left');
+   SC.TIRETS(c,A.x,A.y,I.x,I.y,'#2563eb'); SC.T(c,'tirets bleus : direction de l’action en A',560,250,12,'#2563eb');
+ }},
+ 'C1': {h:240, titre:'Le vérin : section et pression', draw:function(c){
+   var y=120;
+   SC.RECT(c,120,y-50,320,100,'#f8fafc','#334155',3);
+   c.fillStyle='#fca5a5'; c.fillRect(122,y-48,170,96); SC.RECT(c,292,y-48,16,96,'#475569','#475569',1);
+   SC.RECT(c,308,y-14,250,28,'#94a3b8','#64748b',1);
+   SC.COTE(c,90,y-50,90,y+50,''); SC.T(c,'Ø 50 mm',84,y+4,12,'#334155','right');
+   SC.FL(c,560,y,640,y,4,'#7c3aed'); SC.T(c,'F (B1)',650,y+5,13,'#7c3aed','left');
+   SC.T(c,'section S = ?   ·   pression nécessaire p = ? bar',380,206,13,'#dc2626');
+   SC.T(c,'pompe : 150 bar maxi',380,228,12,'#334155');
+ }},
+ 'C2': {h:250, titre:'L’axe en A, en cisaillement double', draw:function(c){
+   var x=380, y=140;
+   SC.RECT(c,x-140,y-70,60,140,'#e2e8f0','#475569'); SC.RECT(c,x+80,y-70,60,140,'#e2e8f0','#475569'); SC.T(c,'chape (mât)',x-110,y+92,12,'#475569'); SC.T(c,'chape (mât)',x+110,y+92,12,'#475569');
+   SC.RECT(c,x-70,y-50,140,100,'#cffafe','#0e7490'); SC.T(c,'flèche',x,y+70,12,'#0e7490');
+   SC.RECT(c,x-160,y-12,320,24,'#94a3b8','#334155'); SC.T(c,'axe Ø 16 mm',x,y+5,12,'#fff');
+   [x-75,x+75].forEach(function(xx){ SC.SEG(c,xx,y-22,xx,y+22,'#dc2626',3); });
+   SC.T(c,'2 sections cisaillées',x,y+36,13,'#dc2626');
+   SC.FL(c,x,y-96,x,y-54,3,'#2563eb'); SC.T(c,'action en A (B3)',x-10,y-80,12,'#2563eb','right');
+   SC.T(c,'C35 : R_e = 335 MPa · s = 3',620,40,12,'#334155'); SC.T(c,'τ = ?   ·   τ adm = ?',620,230,13,'#dc2626');
+ }},
+ 'D1': {h:300, titre:'On recule l’attache D à 0,90 m de A', draw:function(c){
+   var g=GRUE(c,{xD:0.9}); var D0=P_(0.6,1.2);
+   SC.TIRETS(c,g.C.x,g.C.y,D0.x,D0.y,'#c4b5fd',2); SC.PT(c,D0.x,D0.y,4,'#c4b5fd'); SC.T(c,'ancienne position',D0.x-24,D0.y-12,11,'#7c3aed');
+   SC.FL(c,g.B.x,g.B.y+8,g.B.x,g.B.y+80,3.5,'#dc2626'); SC.T(c,'P = 5 000 N',g.B.x+10,g.B.y+70,13,'#dc2626','left');
+   SC.COTE(c,g.A.x,g.A.y-28,g.D.x,g.A.y-28,'0,90 m','#334155');
+   SC.T(c,'nouvel effort du vérin = ?',600,210,13,'#dc2626');
+ }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>

@@ -9,6 +9,75 @@
 > `index.html` : un seul fichier, plus de doublon. Ne jamais recréer
 > `000_portail_technologie.html`.
 
+
+
+
+
+## Schémas dans les TP et sujets CAPET (18/10/2026)
+
+174 schémas ajoutés aux 14 TP et 14 sujets types CAPET : un par mission de calcul (TP)
+et par question de calcul (sujets, parties A à D). Les valeurs de l'énoncé y figurent,
+jamais les résultats (« ? » ou renvoi à la question précédente).
+- Dessins : `_outils/schemas_capet/<page>.js` (un fichier par page), bibliothèque
+  commune `_outils/schemas_capet/_lib.js` (objet SC), aperçu `_apercu.js`.
+- Injection : `python3 _outils/ajouter_schemas_capet.py [pages]` — relançable, remplace
+  le bloc SCHEMAS_CAPET. TP : canvas sous la consigne. Sujet : canvas sous l'énoncé.
+- ORDRE après toute régénération : générateur → corrigés (TP) ou mini-cours (sujets)
+  → schémas.
+
+## CAPET SII mécanique — série 2 : 4 séquences complètes (17/10/2026)
+
+Dynamique, énergétique, hydraulique et pneumatique, matériaux et procédés : cours, TP et
+sujet type pour chacune, placés après « Frottement » dans l'index et le suivi (niveau SI).
+- Cours : `01_cours_capet_{dynamique,energetique,hydraulique,materiaux}.html`
+  (générateur `_outils/creer_cours_capet_meca2.py`, qui réutilise `page()` de la série 1).
+- TP : `02_tp_capet_{…}.html` (générateur `_outils/creer_tp_capet_meca2.py`), corrigés et
+  exercices sur copie dans `_outils/corriges_tp_capet.py`, puis injection.
+- Sujets types : `05_capet_sii_{…}.html` — monte-charge, ascenseur à contrepoids,
+  fendeuse de bûches, manivelle de pédalier (générateur `_outils/creer_sujets_capet_meca2.py`).
+  Mini-cours : 7 notions ajoutées à `minicours.js` (pfd, momentinertie, energiecinetique,
+  verindebit, traction, indiceperf, flexionrect).
+
+## CAPET SII mécanique — 4 séquences (17/10/2026)
+
+Quatre séquences cours + TP ajoutées après « Spécification géométrique » dans `index.html`
+et dans le suivi des classes (niveau SI).
+- Cinématique : `01_cours_capet_cinematique.html` (bielle-manivelle animée, loi x(θ),
+  équiprojectivité et CIR réglables) + `02_tp_capet_cinematique.html`.
+- Liaisons et hyperstatisme : `01_cours_capet_liaisons.html` (11 liaisons sur trièdre,
+  simulateur d'arbre sur deux paliers) + `02_tp_capet_liaisons.html`.
+- Roulements : `01_cours_capet_roulements.html` (anatomie animée, dilatation, L10 en
+  échelle log) + `02_tp_capet_roulements.html`.
+- Frottement : `01_cours_capet_frottement.html` (plan incliné animé, embrayage, courroie
+  d'Euler) + `02_tp_capet_frottement.html`.
+TP : 7 missions, tout visible dès l'ouverture, progression acceptant le désordre,
+clés `tp_capet_<thème>`. Corrigés et 3 exercices sur copie par TP dans
+`_outils/corriges_tp_capet.py`, injectés par `_outils/ajouter_corriges_tp_capet.py`.
+Générateurs : `_outils/creer_cours_capet_meca.py` et `_outils/creer_tp_capet_meca.py`
+(relancer le générateur de TP efface les corrigés : relancer ensuite l'injection).
+Sujets types (4 h, /100, réponses vérifiables uniquement : valeurs et choix uniques) :
+`05_capet_sii_cinematique.html` (compresseur), `05_capet_sii_liaisons.html` (convoyeur,
+vérin de hayon, tiroir), `05_capet_sii_roulements.html` (arbre de réducteur),
+`05_capet_sii_frottement.html` (tondeuse autoportée). Générateur
+`_outils/creer_sujets_capet_meca.py`, puis `_outils/ajouter_minicours.py` (9 notions
+ajoutées à `minicours.js` : vitesseangulaire, loientree, equiprojectivite, cir,
+hyperstatisme, chargeequiv, coulomb, embrayage, courroie).
+
+## Mathématiques — calcul littéral (16/10/2026)
+
+Nouvelle section « Mathématiques — cycle 4 » dans `index.html`, placée après la
+Troisième. Séquence sans hub : la carte mène directement au cours et au TP.
+- `01_cours_calcul_litteral.html` — 9 animations (valeur, réduire, simple et double
+  distributivité, signe moins, (a + b)², factoriser, a² − b², vérifier), simulateur
+  (x + a)(x + b), vérificateur de deux écritures, 7 QCM, trace écrite à la fin.
+- `02_tp_calcul_litteral.html` — 9 missions + bilan, verrouillage, étoiles /27, clé
+  locale `tp_calcul_litteral`. Mini-cours (fenêtre animée) sur les missions 4 à 9.
+  Réponses saisies vérifiées par un analyseur d'expressions : égalité exacte des
+  polynômes, puis forme exigée (développée réduite, ou factorisée au maximum).
+Sources dans `/home/claude/maths/` (commun.js, commun.css, cours.html, tp.html, build.py).
+
+> Volontairement HORS du suivi des classes : la régénération du suivi ne reconnaît que
+> les sections Cinquième, Quatrième, Troisième et Lycée.
 ## Comment reprendre dans une conversation neuve
 
 1. Télécharge `portail_technologie_complet.zip` (il contient tout l'état courant).
@@ -558,6 +627,740 @@ aucun résidu du moteur `champs9`/`verif9`, code final intact.
 > Le TP mix énergie n'a donc plus de mission « tracer ». Les 29 autres TP la
 > conservent : si Mat veut la retirer ailleurs, reprendre la même méthode.
 
+## Points Kahoot : accents et lettres liées (01/10/2026)
+
+Demande de Mat : qu'un accent oublié, par l'élève ou par lui, n'empêche pas la
+correspondance. Vérification : les accents étaient DÉJÀ ignorés (Hélène = Helene,
+majuscules accentuées comprises). Mais le test a révélé un vrai trou : les lettres
+liées æ et œ ne se décomposent pas comme un accent et étaient SUPPRIMÉES —
+« Lætitia » donnait « ltitia », jamais égal à « laetitia ».
+Correction : œ → oe et æ → ae avant toute comparaison, dans les 32 évaluations
+(`normB`, `motsB`), le tableau de bord et `_outils/bonus_kahoot_groupes.py`.
+Testé dans une vraie évaluation : accents dans les deux sens, majuscules accentuées,
+ligatures dans les deux sens, copie de groupe, et contrôle négatif (un autre élève
+de même nom de famille n'est pas pris).
+
+## Évaluations écrites ajoutées aux hubs (30/09/2026)
+
+Cartes « Évaluation écrite » (tag « Individuel · à imprimer », ouverture dans un nouvel
+onglet) :
+- hub énergies 5e → `04_evaluation_ecrite_ponts_energies_5e.pdf` (carte 6, Kahoot
+  renuméroté 7) ;
+- hub transmissions 4e → `04_evaluation_ecrite_energie_transmissions_4e.pdf` (carte 5).
+Versions **SANS corrigé** uniquement : les hubs sont accessibles aux élèves. Les
+versions complètes restent hors du portail.
+
+## Points Kahoot : valeur 0,25 ajoutée (30/09/2026)
+
+Demande de Mat : pouvoir saisir 0,25 (le minimum était 0,5).
+- Tableau de bord : option 0,25 dans la liste des points.
+- **Piège évité** : les évaluations arrondissaient le bonus et la note finale AU
+  DIXIÈME — 0,25 serait devenu 0,3, et 12,4 + 0,25 aurait donné 12,7. Arrondis passés
+  AU CENTIÈME dans les 32 évaluations (total par élève, note finale individuelle,
+  détail des copies de groupe) et dans `_outils/bonus_kahoot_groupes.py`.
+Règles inchangées : elles acceptent tout nombre de 0 exclu à 5.
+Testé : seul 12,4 + 0,25 = 12,65 ; groupe « +0,25 = 12,65 » ; deux 0,25 cumulés = 12,9.
+
+## Points Kahoot : bouton « Effacer les points consommés » (30/09/2026)
+
+Demande de Mat. Bouton sur la ligne du résumé de la section Kahoot. Il suit le filtre
+« Afficher » : une classe choisie → seuls ses points consommés ; sinon toutes les
+classes. Les points DISPONIBLES ne sont jamais touchés, même rangés sous le même élève
+qu'un point consommé. Confirmation avec le nombre de points et la portée.
+Aucune modification des règles : le nœud `bonus` autorisait déjà la suppression.
+Testé : filtre de classe, toutes classes, confirmation refusée.
+
+## Tableau de bord : outils de diagnostic Kahoot retirés (30/09/2026)
+
+À la demande de Mat, retrait du « Tester une copie » et du « Vérifier les évaluations
+en ligne » — outils de diagnostic devenus inutiles une fois les points Kahoot
+opérationnels. Retirés : les deux encadrés, leurs gestionnaires de clic et le script
+KAHOOT_TESTEUR. Retirer les seuls boutons aurait laissé le code chercher des éléments
+absents et fait planter toute la section Kahoot.
+Vérifié : liste, ajout de points, détail Kahoot des résultats et section d'effacement
+intacts.
+
+## Effacer des copies depuis le tableau de bord (30/09/2026)
+
+Demande de Mat : un bouton pour effacer les données des évaluations quand il y en a
+trop, en GARDANT les points Kahoot.
+
+Section « Effacer des copies » (marqueur NETTOYAGE_EVALUATIONS) :
+- une évaluation ou toutes, et en option seulement les copies antérieures à une date ;
+- confirmation en tapant EFFACER ;
+- **sauvegarde CSV téléchargée AVANT tout effacement** (mêmes colonnes que l'export,
+  Kahoot compris) ;
+- case « afficher un bouton Supprimer sur chaque copie » pour retirer une copie de
+  test — colonne masquée le reste du temps.
+Seul le nœud `evaluations` est touché : le nœud `bonus` (points Kahoot) jamais.
+
+RÈGLES FIREBASE MODIFIÉES — à recoller :
+- `evaluations` et `evaluations/$sequence` : `.write` autorisé UNIQUEMENT pour une
+  suppression (`!newData.exists()`) ;
+- `$copie` : création OU suppression, **toujours pas de modification** d'une copie
+  existante — une note ne peut pas être falsifiée.
+
+> CONTREPARTIE DE SÉCURITÉ, signalée à Mat : les copies n'étaient jusqu'ici que
+> « ajout seul ». Sans authentification, n'importe qui connaissant l'adresse de la
+> base peut désormais EFFACER des copies (pas les modifier). Même niveau que le nœud
+> `bonus`, déjà modifiable. La sauvegarde CSV systématique limite la perte.
+
+Testé sur base simulée : évaluation entière, effacement par date, confirmation
+incorrecte (rien effacé, rien téléchargé), copie unique en mode nettoyage, aucune
+requête sur `bonus`.
+
+## Points Kahoot : conservés quand la note est déjà de 20/20 (29/09/2026)
+
+Demande de Mat : « si les élèves avaient déjà 20/20 à l'éval avant application des
+points Kahoot, ne consomme pas les points, sinon c'est injuste ».
+
+Règle, dans les 32 évaluations : note AVANT bonus ≥ 20 → points ni ajoutés ni
+consommés, CONSERVÉS pour une prochaine évaluation. L'élève voit « Points Kahoot
+conservés pour une prochaine évaluation : tu as déjà 20/20 » ; la copie enregistre
+« points conservés, note déjà à 20/20 », visible au tableau de bord. Vaut aussi pour
+les copies de groupe à 20/20.
+
+> Limite non traitée, signalée à Mat : à 19,5 avec +1, le bonus est plafonné à 20 et
+> le demi-point excédentaire est perdu mais consommé. Une consommation PARTIELLE
+> demanderait de réduire la valeur du point restant plutôt que de le marquer consommé.
+
+> Conteneur réinitialisé en cours de travail : corpus restauré depuis
+> `portail_technologie_complet.zip` (dernière livraison), jsdom réinstallé.
+
+> Piège de test : les questions des évaluations des sorciers sont MÉLANGÉES à
+> l'affichage. Viser la bonne réponse par le rang affiché donnait une fausse note ;
+> il faut passer par `dataset.qi`, l'index d'origine.
+
+Testé : 20/20 seul, 20/20 en groupe, 19/20 (bonus toujours appliqué), sorciers 12/12,
+32/32 évaluations se chargent sans erreur.
+
+## Blocage des activités d'étiquetage corrigé (28/09/2026)
+
+Signalé par Mat sur « Habille le vélo » : « parfois, une fois les 3 choix cliqués,
+ça ne passe pas à la suite et on ne peut plus cliquer sur rien ».
+
+Cause reproduite : dans `widgetEtiquettes`, poser une étiquette sur un élément qui en
+portait DÉJÀ une effaçait l'ancienne du schéma, mais son bouton restait marqué
+« posé » — donc impossible à reprendre (`if(b.classList.contains('pose'))return`).
+La zone qu'elle devait occuper restait à « ? », Valider ne s'activait jamais :
+l'élève était bloqué sans issue. Le « parfois » = seulement si l'élève change d'avis
+en posant sur un élément déjà rempli.
+
+Correction, marqueur `ETIQUETTES_REPRISE`, dans les **30 évaluations** qui utilisent
+ce widget — le bug n'était pas propre au vélo :
+- l'étiquette déplacée hors d'une zone redevient disponible ;
+- une étiquette posée peut être reprise et déplacée ;
+- après validation, étiquettes et schéma sont figés (`fini`).
+
+> Piège d'édition : le fragment `valider.disabled=true; let pts=0;` apparaît DEUX fois
+> par fichier (une autre fonction l'emploie). L'outil n'écrivant rien sans
+> correspondance unique, aucun fichier n'a été abîmé ; ancre élargie à la ligne
+> `zonesDef.forEach` propre au widget.
+
+> Piège de test : les formes cliquables ne sont pas dans l'ordre de la consigne
+> (pédalier, pignon, chaîne). Viser une cible par son RANG a d'abord donné un
+> résultat trompeur ; elles sont désormais visées par leur géométrie.
+
+Vérifié : blocage reproduit puis levé, déplacement d'étiquette, parcours complet à
+3/3, verrouillage après validation, 30/30 évaluations sans régression.
+
+## Points Kahoot — v3 : correspondance par présence, erreurs visibles (28/09/2026)
+
+Captures de Mat après dépôt et règles à jour : quatre copies de test, aucun point
+consommé. Analyse ligne par ligne :
+- « Person Phillipe FOFO / Michel Hugo François » : c'est MA RÈGLE qui échouait.
+  L'appariement par position cherchait « Person Michel » (1er nom, 1er prénom) et
+  ratait Hugo, placé en 2e. Règle trop stricte pour l'usage réel.
+- une copie « ABANDON » : pas de bonus par conception (copies terminées seulement).
+- deux copies au nom aligné, que mes tests reconnaissent : ancienne version en ligne
+  à ce moment-là, OU lecture des points échouant silencieusement — indécidable d'ici.
+
+v3, 32 évaluations + testeur du tableau de bord :
+- **Correspondance par PRÉSENCE** du nom parmi les noms ET du prénom parmi les
+  prénoms, dans les deux sens. L'appariement par position est retiré.
+  Contrepartie assumée : le cas très rare d'un élève hors du groupe dont le nom ET le
+  prénom figurent tous deux dans le groupe serait pris à tort.
+- **Lecture refusée ou impossible = plus jamais silencieuse** : affichée à l'élève en
+  orange (« lecture des points impossible (refus HTTP 401). Préviens ton
+  professeur ») et ENREGISTRÉE dans la copie, visible au tableau de bord.
+- **Trace systématique** : chaque copie porte `bonus_eleves` = détail, erreur, ou
+  « aucun ». Le tableau de bord marque « version sans Kahoot » toute copie datée du
+  28/09/2026 ou après qui n'a PAS cette trace — produite par un fichier ancien.
+
+> Leçon : un mécanisme qui échoue en silence ne se diagnostique pas à distance.
+> Chaque issue possible (appliqué, aucun point, lecture refusée, ancienne version)
+> doit laisser une trace lisible, côté élève ET côté professeur.
+
+## Points Kahoot — outils de diagnostic et champs inversés (28/09/2026)
+
+Nouveau retour de Mat : « toujours pas », sans autre précision. Impossible de voir le
+site ni la base depuis ici : plutôt que de deviner une troisième fois, trois ajouts.
+
+- **Testeur de correspondance** au tableau de bord : classe + nom et prénom recopiés
+  EXACTEMENT comme le groupe les a écrits → la MÊME règle que les évaluations (code
+  copié depuis `bonus_kahoot_groupes.py`, encapsulé) dit si des points seraient
+  appliqués, et sinon liste les points disponibles de la classe pour comparaison.
+- **Champs inversés tolérés** : le testeur a révélé qu'un groupe écrivant les prénoms
+  dans « Nom » et les noms dans « Prénom » ne correspondait à rien — erreur très
+  courante chez les élèves. Appariement et correspondance exacte acceptent désormais
+  les deux sens, sans rouvrir le faux positif « Bultez Hugo ».
+- **Repère sur l'écran de fin** : une ligne « Points Kahoot » s'affiche TOUJOURS, grise
+  quand aucun point n'est en attente. Son ABSENCE prouve que le navigateur a chargé
+  l'ancienne version de l'évaluation (fichier non déposé, ou cache).
+
+Diagnostic à mener avec Mat : 1) vérification en ligne 32/32 ? 2) testeur avec les
+noms exacts ? 3) ligne Kahoot présente sur l'écran de fin de l'élève ?
+
+## Points Kahoot — échec en ligne : un problème de DÉPLOIEMENT (28/09/2026)
+
+Retour de Mat après la v2 : « ça ne marche toujours pas, points non consommés, pas
+de détail par élève ». Vérifié : le fichier `04_evaluation_transmissions.html` de
+l'archive contient bien la v2. Cause la plus probable, et de ma responsabilité : aux
+deux livraisons Kahoot, je n'ai présenté SÉPARÉMENT que les règles et le tableau de
+bord ; les 32 évaluations modifiées n'étaient que dans l'archive complète. Une
+évaluation restée à l'ancienne version ne connaît pas les points : rien n'est
+consommé et aucun détail n'est envoyé — exactement le symptôme observé.
+
+Corrections :
+- **Bouton « Vérifier les évaluations en ligne »** dans la section Kahoot : relit
+  chaque évaluation TELLE QUE LE SITE LA SERT (requête sans cache) et y cherche le code
+  v2. Liste les fichiers restés anciens, à redéposer.
+- **Archive ciblée `mise_a_jour_points_kahoot.zip`** : les 33 fichiers exacts à mettre
+  en ligne (32 évaluations + tableau de bord), au lieu du corpus entier.
+
+> Leçon : quand une correction touche beaucoup de fichiers, livrer la LISTE ET le lot
+> exacts à déployer, et fournir un moyen de vérifier le déploiement. Présenter
+> quelques fichiers en évidence laisse croire que ce sont les seuls à changer.
+
+## Points Kahoot — copies de GROUPE (28/09/2026)
+
+Retour de Mat, captures à l'appui : un point saisi pour « Person Hugo » (3B) n'était
+pas utilisé quand son groupe remettait l'évaluation. Le groupe avait écrit ses cinq
+noms dans un seul champ : « Person Bultez Voituret Craygues Zin » / « Hugo Alexandre
+Emma Laura Hamza ». La v1 ne cherchait qu'une correspondance exacte. Cas non prévu.
+
+v2 — `_outils/bonus_kahoot_groupes.py`, 32 évaluations :
+- lecture de tous les points de la CLASSE, puis correspondance : exacte pour une
+  copie individuelle ; pour un groupe écrivant autant de noms que de prénoms,
+  **appariement par position** (1er nom avec 1er prénom…) ; sinon présence du nom
+  parmi les noms ET du prénom parmi les prénoms, noms composés compris ;
+- **copie de groupe : la note du GROUPE reste inchangée** — sinon les cinq
+  profiteraient du point d'un seul. Le bonus est noté par élève dans le nouveau champ
+  `bonus_eleves` (« Hugo Person +1 = 17,5 »), affiché à l'élève, sous la note au
+  tableau de bord, et dans une colonne « Kahoot » de l'export CSV ;
+- points consommés après envoi réussi, individuels ou de groupe.
+
+> RÈGLES FIREBASE À RECOLLER : nouveau champ `bonus_eleves` sur les copies.
+
+> L'appariement par position a évité un faux positif dans les tests : un « Bultez
+> Hugo » hors du groupe (+2) n'est PAS pris, car dans la copie Bultez va avec
+> Alexandre. Une simple recherche de présence l'aurait attribué à tort.
+
+> Règle corrigée avant livraison : une correspondance EXACTE désigne toujours une
+> copie individuelle — sinon un élève seul au nom composé (« Le Gall » / « Anne
+> Marie ») était pris pour un groupe et son point n'était pas ajouté.
+
+Testé : le groupe de la capture, Hugo seul, nom composé seul, même nom dans une autre
+classe (aucun mélange), évaluations des sorciers en groupe, tableau de bord et export,
+30/30 évaluations sans régression.
+
+## Points Kahoot appliqués automatiquement aux évaluations (28/09/2026)
+
+Demande de Mat : saisir dans le tableau de bord les points gagnés aux Kahoot, et
+qu'ils s'ajoutent automatiquement à la note de la prochaine évaluation, puis soient
+marqués comme consommés.
+
+- **Tableau de bord** (`000_tableau_de_bord.html`) : section « Points Kahoot » —
+  classe (liste), nom, prénom, points (0,5 à 3), motif. Liste avec l'état de chaque
+  point : « disponible » ou « consommé · nom de l'évaluation · date ». Suppression
+  possible des seuls points disponibles. Résumé disponibles / consommés, filtre par
+  classe. Pastille « +x » à côté de la note dans les résultats.
+- **Évaluations** — les 30 du gabarit ACTIVITES (outil `ajouter_bonus_kahoot.py`)
+  et les 2 des sorciers : à la remise, lecture des points non consommés, ajout à la
+  note sur 20 **plafonnée à 20**, envoi avec `note20` (finale), `note20_brute` et
+  `bonus`, puis marquage consommé **SEULEMENT si l'envoi a réussi**. L'élève voit
+  « dont x point(s) Kahoot ajouté(s) à ta note de … ».
+- Identification : classe + nom + prénom, normalisés (sans accents, majuscules ni
+  espaces), MÊME fonction des deux côtés. La classe est choisie dans une liste, ce
+  qui élimine les fautes sur la classe.
+- Les copies ABANDONNÉES ne reçoivent pas de bonus.
+
+> **RÈGLES FIREBASE À RECOLLER** : nouveau nœud `bonus` (points de 0 à 5, champs
+> contrôlés), et deux champs ajoutés aux copies, `note20_brute` et `bonus`. Sans
+> cela, les copies avec bonus sont REJETÉES — les règles refusent tout champ inconnu.
+
+> Limites connues : au-delà de 20, les points en excès sont perdus mais consommés.
+> Si l'envoi réussit et que le marquage échoue (coupure réseau à cet instant précis),
+> les points resteraient disponibles pour l'évaluation suivante. Comme tout le reste
+> du portail, le nœud n'est pas protégé par authentification.
+
+Testé : saisie sans accent reconnue, points déjà consommés ignorés, plafond à 20,
+envoi raté sans consommation, élève sans points inchangé, tableau de bord (ajout,
+suppression, états, pastille), 30/30 évaluations sans régression.
+
+> Un défaut de ma part corrigé en cours de route : en réutilisant le bloc de code
+> partagé pour les évaluations des sorciers, je l'ai découpé avec un caractère de
+> trop — un guillemet isolé qui cassait tout le script. Repéré par la vérification
+> de syntaxe systématique.
+
+## TP « Spécifier une pièce » : cadres dessinés (24/09/2026)
+
+Retour de Mat : « je n'arrive pas à résoudre la première question du premier
+exercice, il manque une information ? ». Aucune DONNÉE ne manquait — la question a)
+se lit directement dans le cadre, réponse 0,30 mm. Mais le cadre était écrit comme
+une ligne de texte, « localisation · Ø 0,3 · A · B », sans rien qui ressemble à un
+cadre de tolérance, et sans figure de la pièce : la question PARAISSAIT incomplète.
+
+Correction : deux figures dessinées.
+- **Mission 1** : la plaque vue de face, le trou, les références A et B posées sur
+  leurs faces, les cotes théoriques exactes encadrées (60 et 80), et le cadre à
+  quatre cases relié au trou, légendé symbole / zone / références.
+- **Mission 4** : le trou coté Ø 12,00 à 12,20 et le cadre avec le M entouré dans
+  SA propre case — une première version le dessinait par-dessus la case A.
+Symboles tracés sur canvas, pas en Unicode.
+
+> Leçon : une spécification géométrique ne se transcrit PAS en texte. Un cadre de
+> tolérance est un objet graphique ; le réduire à une ligne fait perdre l'essentiel
+> de l'information perçue, même si toutes les valeurs y figurent.
+
+## TP CAPET : tout visible dès le départ (24/09/2026)
+
+Retour de Mat : « pour Spécifier une pièce, je n'ai pas de correction ». Les
+corrigés étaient bien présents dans les six TP, mais CACHÉS : ils n'apparaissaient
+qu'après réussite ou trois échecs, et les exercices sur copie étaient sous le verrou
+du bilan. En ouvrant le TP pour le vérifier, Mat ne voyait donc rien. Défaut de
+conception de ma part, pas d'injection : je n'avais pas assez expliqué ce comportement.
+
+Choix de Mat : **tout visible dès le départ, pour les séquences CAPET uniquement.**
+- corrigé détaillé posé sur CHAQUE mission à l'ouverture ;
+- **verrouillage progressif levé** sur les six TP CAPET — indispensable, sinon le
+  corrigé d'une mission verrouillée restait sous son cadenas ;
+- exercices sur copie accessibles sans terminer le TP.
+Le score reste juste : `reussir` ajoute les points à chaque réussite et un bouton
+validé est désactivé ; seule la barre de progression avance toujours dans l'ordre.
+
+> Les TP hors CAPET GARDENT leur verrouillage et n'ont aucun corrigé : vérifié.
+
+> Leçon : un contenu masqué par défaut doit être signalé explicitement à la
+> livraison, avec la façon de le faire apparaître. Sinon, il est perçu comme absent.
+
+## Corrigés détaillés et exercices sur copie dans les six TP CAPET (24/09/2026)
+
+Demandé par Mat : corrigés expliqués sur les exercices des TP, et des exercices à
+faire sur copie. Outil `_outils/ajouter_corriges_tp_capet.py`, contenus dans
+`_outils/corriges_tp_capet.py`. Idempotent (marqueur CORRIGES_CAPET).
+
+- **Corrigé détaillé** sur chaque mission — 40 au total, dont les 4 missions de
+  calcul ajoutées aux TP axe et statique (repris de `calculs_tp.json`). Trame fixe :
+  formule, application numérique, résultat, À RETENIR. Le bouton apparaît :
+  à la RÉUSSITE de la mission (on enveloppe `reussir`) ; ou après TROIS validations
+  infructueuses, avec la mention « après 3 essais », pour ne pas laisser un élève
+  bloqué ; et au RECHARGEMENT pour les missions déjà franchies.
+- **Exercices sur copie** : 3 par TP, soit 18, placés dans la mission bilan — ils se
+  découvrent SOUS LE VERROU, une fois le TP terminé. Corrigé à afficher soi-même,
+  SANS correction automatique, conformément à la règle de Mat.
+  Toutes les valeurs recalculées avant rédaction.
+
+> **Défaut repéré au rendu, invisible aux tests** : les lignes du corrigé étaient en
+> flex, et le contenu y était posé nu. Or un conteneur flex transforme chaque
+> morceau (texte, indice, gras) en bloc séparé : les indices ω<sub>p</sub>
+> remontaient comme des exposants, et les espaces disparaissaient (« 0,20et290 »).
+> Correction : envelopper le contenu dans UN élément. Règle : ne jamais poser du
+> texte riche directement dans une ligne flex.
+
+Vérifié : 6/6 TP — aucun corrigé au départ, déblocage après 3 échecs, restauration au
+rechargement, exercices sous verrou ; parcours complets toujours à 18 ; mini-cours et
+verrouillage des 32 TP intacts.
+
+## Mini-cours étendus aux deux derniers sujets CAPET (24/09/2026)
+
+Quatre notions ajoutées à la bibliothèque, qui passe à **30** : zone de tolérance
+de position, exigence du maximum de matière, système de références, cote de réglage.
+Sujet GPS : 11 boutons. Sujet cotation : 9 boutons — la question B2, purement
+économique, n'en reçoit pas.
+
+> **Les deux nouveaux sujets avaient hérité du CODE du bouton** (le gabarit venait
+> d'un sujet déjà équipé) mais ni de la bibliothèque ni du gestionnaire de clic, qui
+> se trouvaient APRÈS la zone extraite. Sans correspondances, aucun bouton ne
+> s'affichait — le défaut était donc invisible. Vérifier ce qu'un gabarit emporte
+> réellement, pas ce qu'il semble contenir.
+
+> **Bibliothèque unifiée** : chaque fichier embarquait la version de la bibliothèque
+> du jour de son équipement. Les 75 fichiers portent désormais la même version, à
+> 30 notions. À refaire après toute modification de `_outils/minicours.js`.
+
+Un défaut corrigé au rendu : dans l'animation du maximum de matière, le cercle du trou
+et celui de la zone se superposaient presque exactement. Ils sont désormais dessinés
+côte à côte.
+
+Vérifié après propagation : 13/13 sujets, 32/32 TP avec verrouillage intact, 30/30
+évaluations sans aucun bouton avant la remise.
+
+## Sixième séquence CAPET — Spécification géométrique et conception (24/09/2026)
+
+Demandée par Mat, **distincte de la séquence cotation** : celle-ci traite les chaînes
+de cotes DIMENSIONNELLES ; la nouvelle porte sur la spécification GÉOMÉTRIQUE (ISO
+GPS) et sur les choix de conception qui la justifient. **Séquence complète** : cours, TP et sujet type.
+
+- `01_cours_capet_gps.html` — pourquoi la cote ne suffit pas (deux pièces aux mêmes
+  cotes, l'une se monte, l'autre non), les quatre familles, le cadre et la zone, le
+  système de références 3-2-1, une **méthode de conception en cinq étapes** qui part
+  de la fonction, et le maximum de matière.
+  **Simulateur** : diamètre réel du trou, écart de position de l'axe, et une case à
+  cocher pour l'exigence du maximum de matière. Cas clé vérifié : trou 10,06 et écart
+  0,12 donnent une pièce REFUSÉE sans maximum de matière (zone Ø0,20 pour Ø0,24
+  nécessaire) et ACCEPTÉE avec (zone portée à Ø0,26).
+- `02_tp_capet_gps.html` — lecture d'un cadre, contrôle d'une position par l'écart
+  radial, tri des familles, bonus de maximum de matière, diamètre virtuel et montage
+  garanti, système de références. Parcours testé, score 18.
+
+> **Symboles GPS DESSINÉS sur canvas**, pas écrits en Unicode : les caractères de
+> planéité, localisation ou coaxialité ne s'affichent pas dans toutes les polices, et
+> un symbole absent rendrait l'exercice incompréhensible.
+
+> Mission 2 : l'axe est décalé de 0,12 en x et 0,16 en y, chacun sous la limite de
+> 0,15 — et pourtant la pièce est refusée, l'écart radial valant 0,20. C'est LA
+> confusion typique entre tolérancement dimensionnel et géométrique.
+
+> Le cours insiste sur l'erreur de conception la plus coûteuse : prendre en référence
+> une surface commode à mesurer plutôt que la surface fonctionnelle.
+
+Deux défauts corrigés au rendu sur le schéma du cadre : légendes superposées, et
+libellé de la zone collé au titre.
+
+`05_capet_sii_gps.html` — support : la **flasque de fixation d'un moteur**. 5 documents
+dont un dessin de face portant trois cadres de tolérance dessinés (localisation des
+4 trous au maximum de matière, planéité de A, perpendicularité du centrage B), et un
+relevé de contrôle réel. **13 questions, 100 points**, dont 16 d'exploitation.
+
+> **Le cas central** : trou mesuré 9,14, axe décalé de 0,09 et 0,12. Écart radial 0,15,
+> soit Ø0,30 nécessaire. Avec le maximum de matière la zone accordée est Ø0,34 :
+> CONFORME. Sans, Ø0,20 : REFUSÉE. Le maximum de matière sauve une pièce parfaitement
+> montable qu'un contrôle rigide aurait mise au rebut.
+
+> **Partie D, les vrais choix de conception** : pourquoi le maximum de matière convient
+> aux trous de fixation (la fonction est le passage de la vis) mais serait à proscrire
+> sur le centrage (la fonction est l'alignement, un plus grand diamètre ne compense
+> rien) ; et les conséquences d'une référence prise sur la face arrière, commode à
+> palper mais non fonctionnelle.
+
+Testé : 100/100, barème juste sans reprise. Un défaut corrigé au rendu : deux
+libellés posés sur les hachures du carter, sortis avec des lignes de rappel.
+
+## Cinquième séquence CAPET — Cotation fonctionnelle (24/09/2026)
+
+**Séquence complète** : cours, TP et sujet type. C'était le dernier grand domaine
+mécanique de l'écrit sans séquence.
+
+`01_cours_capet_cotation.html` — la cote condition (un jeu, jamais coté sur un dessin
+de définition), le tracé d'une chaîne avec sa méthode en quatre étapes, les valeurs
+extrêmes, et la répartition des tolérances (égale, pondérée, cote de réglage).
+
+**Simulateur** : deux curseurs règlent les tolérances de A et de B/C, et la plage de
+jeu obtenue se superpose à la plage autorisée. On voit la barre passer du rouge au
+bleu quand la condition devient tenable. Exemple de départ volontairement NON
+conforme — A ± 0,15 donne un jeu de 0,75 à 1,25 pour une condition de 0,80 à 1,20.
+
+> **La propriété à retenir**, mise en avant dans le cours et vérifiable d'un coup
+> d'œil : l'IT de la condition est la SOMME des IT des cotes de la chaîne. Elle
+> détecte la plupart des erreurs de calcul, et explique pourquoi on cherche toujours
+> à raccourcir les chaînes.
+
+> Exercice 6 : quelle cote resserrer pour gagner 0,10 mm ? La réponse n'est pas « la
+> plus grande » — toutes les tolérances pèsent identiquement dans la somme. Le critère
+> est économique, pas géométrique.
+
+Un défaut corrigé au rendu : le libellé du vecteur A touchait le titre du schéma.
+
+`02_tp_capet_cotation.html` — 6 cas : calcul des jeux extrêmes (2,00 / 1,80 / 2,20,
+IT 0,40), conclusion face à une condition qui n'autorise que 0,30 — il faut retirer
+0,10 d'intervalle ; tri cote condition / cote fonctionnelle ; répartition égale des
+tolérances ; chaîne à QUATRE cotes donnant le MÊME jeu nominal mais un IT de 0,48 ;
+enfin lecture d'un ajustement 30 H8/f7 (jeu de 0,020 à 0,074). Parcours testé,
+score 18, chargement propre.
+
+> **La mission 5 est construite en miroir de la mission 1** : même jeu nominal de
+> 2,00 mm, mais une cote de plus, donc un intervalle qui passe de 0,40 à 0,48. La
+> comparaison directe fait comprendre qu'allonger une chaîne dégrade toujours la
+> maîtrise du jeu, et que cela ne se rattrape pas en resserrant.
+
+> Piège signalé dans le corrigé de la mission 4 : confondre l'INTERVALLE (0,10) et
+> la tolérance symétrique (± 0,05). C'est l'erreur la plus fréquente de l'exercice.
+
+`05_capet_sii_cotation.html` — support : l'**arbre d'une pompe centrifuge** sur deux
+roulements et une entretoise, jeu axial réglé par une **cale** sous le couvercle.
+5 documents, **12 questions, 100 points**, dont 21 d'exploitation pédagogique.
+Introduit la notion absente du TP : la **cote de réglage**.
+
+> **Le raisonnement du sujet** : la chaîne produit 0,40 mm de dispersion pour 0,10
+> autorisé — impossible par tolérancement. La solution « tout resserrer » demande
+> ± 0,0125 mm par cote, soit un coût × 4, et surtout se heurte aux roulements du
+> commerce dont la largeur est imposée. La cale, choisie après mesure de chaque pompe,
+> absorbe toute la dispersion : 9 épaisseurs au pas de 0,05 couvrent la production,
+> avec un jeu toujours compris entre 0,075 et 0,125.
+
+> Partie D : avantage et inconvénient de la cote de réglage, puis raccourcir la chaîne
+> — un épaulement sur l'arbre supprime l'entretoise et fait tomber l'IT de 0,40 à 0,30.
+
+Testé : 100/100, barème juste sans reprise. Libellés sortis des hachures du carter.
+
+## Évaluations des sorciers reliées aux hubs (24/09/2026)
+
+Incohérence résolue : le bloc prof des hubs ponts et énergies affichait les codes
+`SORCIER7` et `SORCIER2`, alors qu'AUCUNE carte ne menait à ces évaluations. Les
+élèves recevaient le code d'une page qu'ils ne pouvaient pas atteindre depuis le hub ;
+il fallait repasser par le portail.
+
+Choix de Mat : **ajouter les cartes**. Chacune est placée juste après l'évaluation
+classique, et les cartes suivantes ont été renumérotées — le hub des ponts passe à
+9 cartes, celui des énergies à 8.
+
+> Vérifié : les codes annoncés dans le bloc prof correspondent maintenant exactement
+> aux cartes présentes (ARCHE62 + SORCIER7, WATT118 + SORCIER2).
+
+## Quatre sujets type DNB créés (24/09/2026)
+
+Les cours « Comment ça marche » qui n'avaient pas leur sujet en ont un :
+`05_brevet_epingle_linge.html`, `fermeture_eclair`, `thermostat`, `differentiel`.
+Même gabarit que les trois précédents : 3 documents, 6 questions, 25 points,
+correction seulement à la remise. Les 7 inventions traitées ont désormais toutes
+leur cours ET leur sujet.
+
+Calculs vérifiés avant rédaction : épingle, bras 45/12 = 3,75 donc 8 N deviennent
+30 N, et 10,7 N suffisent pour les 40 N d'un drap mouillé ; fermeture, 60 cm × 5 =
+300 emboîtements, chacun ne supportant que 0,4 N sur les 120 N de traction ;
+thermostat, 1 400 € × 7 % = 98 € pour un seul degré ; différentiel, 90 + 110 = 200
+= 2 × 100, d'où 120 tr/min en virage serré et 0 tr/min quand l'autre roue patine.
+
+> Chaque sujet garde un temps de recul en dernière question : choix bois/plastique,
+> cas d'usage de la bande auto-agrippante, boucle fermée sans électronique, solution
+> au patinage et son inconvénient.
+
+> Un point que je trouve efficace sur la fermeture éclair : la question 5 fait
+> expliquer pourquoi UNE dent tordue rend les 300 autres inutiles. C'est la faiblesse
+> des systèmes en série, transposable bien au-delà de l'objet.
+
+Testé : 25/25 sur les quatre. Trois chevauchements corrigés au rendu.
+
+## Bouton « Mini-cours » sur chaque question des sujets CAPET (24/09/2026)
+
+Demandé par Mat : un bouton par exercice ouvrant un mini-cours avec schémas,
+animations, explications et formules.
+
+> **Choix de conception** : une notion, un mini-cours — PAS une explication par
+> question. Plusieurs questions d'un même sujet mobilisent la même notion (le moment
+> d'une force, Willis, la concentration de contraintes) : écrire un texte par question
+> aurait produit des dizaines de redites, impossibles à maintenir. Chaque question
+> pointe vers une entrée de la bibliothèque `_outils/minicours.js`.
+
+**26 notions animées**, couvrant les 11 sujets du corpus : poutre sur deux appuis, moment d'une force, solide à deux
+forces, solide à trois forces, moment fléchissant, module de flexion et de torsion,
+concentration de contraintes, contrainte équivalente, train ordinaire, Willis,
+rendement, vis à billes, inertie équivalente, profil trapézoïdal, pression de vérin,
+cisaillement simple et double.
+
+Chaque entrée fournit un titre, une ou deux formules, trois lignes d'explication et un
+**schéma animé** — la charge se déplace sur la poutre, le rayon de congé varie et Kt
+avec lui, le dynamique des trois forces se ferme, le train épicycloïdal tourne.
+
+Outil : `python3 _outils/ajouter_minicours.py [--dry]`, idempotent. La bibliothèque
+est **intégrée dans chaque fichier** : les sujets restent autonomes hors ligne.
+Aperçu visuel : `python3 _outils/apercu_minicours.py` puis `verif_rendu2.js`.
+
+> Les questions d'exploitation pédagogique (partie E) n'ont pas de bouton : elles ne
+> portent sur aucune notion de calcul.
+
+> **L'animation est arrêtée à la fermeture** (`cancelAnimationFrame`) : vérifié par
+> test, aucune boucle ne continue en arrière-plan une fois le panneau refermé.
+
+**Étendu le 24/09 aux 7 autres sujets** — 5 DNB, Bac SI, BTS CPI. Notions ajoutées
+pour ces niveaux : chaîne d'énergie, puissance et énergie, vitesse-distance-durée,
+résolution d'une mesure, chaîne de cotes, durée de vie d'un roulement, liaisons et
+degrés de liberté, puis débit-volume-durée, pourcentage et proportion, et comptage
+de combinaisons.
+
+> **Correspondances révisées avant application.** Mon premier jet rattachait
+> « nombre de clés possibles » à la puissance électrique et « durée de remplissage »
+> au même mini-cours : deux rapprochements faux, qui auraient induit les élèves en
+> erreur. Plutôt que de forcer la correspondance, j'ai écrit les trois notions qui
+> manquaient réellement (débit, proportion, combinaisons). Une correspondance
+> approximative est pire que pas de bouton du tout.
+
+**Étendu le 24/09 aux missions de calcul des TP** — outil
+`_outils/ajouter_minicours_tp.py`, **63 boutons sur 32 TP**. Le bouton se pose dans
+le titre de la mission, à côté du badge. Une mission sans notion adaptée n'en reçoit
+PAS : c'est le cas du chemin critique en gestion de projet, qui ne correspond à
+aucune entrée de la bibliothèque. Mieux vaut aucune aide qu'une aide hors sujet.
+
+> Test spécifique ajouté : le **verrouillage progressif doit rester intact**. Poser
+> des boutons dans les titres de mission aurait pu perturber le moteur — vérifié sur
+> les 32 TP, le nombre de verrous correspond toujours au nombre de missions moins une.
+
+**Étendu le 24/09 aux 30 évaluations — mais SEULEMENT APRÈS LA REMISE.** Demande
+explicite de Mat : « je ne veux pas que ça s'affiche tant que la copie n'a pas été
+rendue ». Le bouton n'est donc pas posé sur l'activité pendant l'épreuve, mais sur
+la LIGNE DE RÉSULTAT de l'écran de bilan — écran qui n'existe qu'une fois la copie
+envoyée. L'élève relit sa note et ouvre le rappel de la notion sur laquelle il a
+perdu des points.
+Outil : `_outils/ajouter_minicours_eval.py`, table dans `minicours_evals.json`.
+**61 boutons**, un par activité de CALCUL. Les activités d'étiquetage ou de
+reconnaissance n'en reçoivent pas : elles ne reposent sur aucune formule.
+
+> Identifier les activités de calcul a demandé un détour : remonter à l'accolade
+> précédant `activiteCalcul` tombait sur le corps de `render`, où le titre ne figure
+> pas. Il a fallu repérer les titres, puis tester la présence d'un appel de calcul
+> ENTRE deux titres consécutifs. 61 activités sur 214.
+
+> **Test spécifique** : le harnais parcourt toute l'évaluation AVANT la remise et
+> échoue si un seul bouton apparaît. Vérifié sur les 30 évaluations.
+
+Vérifié : **206 boutons au total** — 82 sur les 11 sujets type, 63 sur les 32 TP, 61 au bilan des 30 évaluations — toutes les notions visées existent, les
+26 dessins s'animent sans erreur à six instants différents, l'animation s'arrête à
+la fermeture, et trois libellés qui débordaient du canvas ont été rentrés.
+
+## Séquence CAPET RDM complétée — sujet type (24/09/2026)
+
+`05_capet_sii_rdm.html` — support : l'**arbre de sortie d'un réducteur**, portant un
+épaulement ET une rainure de clavette. 5 documents, **12 questions, 100 points**,
+dont 18 d'exploitation pédagogique. **Les quatre séquences CAPET sont complètes** :
+axe linéaire, statique, trains, RDM — chacune avec cours, TP et sujet.
+
+Chaîne vérifiée : RA = 2 667 N, RB = 1 333 N, Mt = 300 N·m, Mf de 160 N·m à
+l'épaulement et 266,7 N·m sous la roue. Épaulement Ø40 : σ 25,5 et τ 23,9, majorés à
+45,8 et 35,8 par Kt 1,8 / 1,5, soit σéq = 85,0 MPa. Clavette Ø45 : σ 29,8 et τ 16,8,
+majorés à 62,6 et 28,5 par Kt 2,1 / 1,7, soit σéq = 84,7 MPa. Rpe = 162,5 MPa.
+
+> **LE POINT REMARQUABLE DU SUJET** : les deux sections aboutissent à 85,0 et
+> 84,7 MPa, soit **0,4 % d'écart**. AUCUNE ne domine — il fallait les vérifier toutes
+> les deux. Le diamètre plus grand sous la roue compense presque exactement le
+> coefficient de concentration plus sévère de la clavette. C'est le contre-exemple
+> parfait de l'idée reçue « la section critique est celle du moment maximal », que la
+> question E2 fait précisément analyser.
+
+> **D1 — portée de l'hypothèse** : sans les Kt, la section de la clavette donnerait
+> 44,9 MPa au lieu de 84,7, soit une sous-estimation de 89 %, presque un facteur deux.
+
+> Les Kt sont appliqués SÉPARÉMENT en flexion et en torsion, avant la combinaison —
+> et non globalement à la contrainte équivalente, ce qui serait une approximation.
+
+Testé : 100/100, barème juste sans reprise.
+
+## Quatrième séquence CAPET — Résistance des matériaux (24/09/2026)
+
+Cours et TP ; le sujet type reste à écrire. Quatrième et dernier pilier du socle
+mécanique de l'écrit, après l'axe linéaire, la statique et les trains.
+
+- `01_cours_capet_rdm.html` — les quatre sollicitations simples en tableau, les trois
+  cas de charge en flexion, la **concentration de contraintes** et la contrainte
+  équivalente √(σ² + 4τ²). Méthode de vérification en six étapes.
+  **Simulateur** : diamètre et moment réglables, courbe σ(d) avec la limite pratique
+  tracée — on voit la contrainte s'effondrer en 1/d³. 6 exercices corrigés.
+- `02_tp_capet_rdm.html` — 6 cas : flexion d'un arbre de 25 mm (130,4 MPa contre
+  111,7 admissibles, donc DÉJÀ non conforme), dimensionnement pour 80 MPa (d ≥ 29,4,
+  on retient 30), tri des sollicitations, torsion (28,3 contre 55,8 : sans problème),
+  **concentration Kt = 2,1** qui porte la contrainte à 273,8 MPa soit 2,5 fois la
+  limite, et contrainte équivalente 142,2 MPa contre 158,7 pour la somme naïve.
+  Parcours testé, score 18, chargement propre.
+
+> **Le fil conducteur** : la pièce ne casse pas où la contrainte moyenne est la plus
+> forte, mais au premier congé. La mission 5 le chiffre — un calcul sans Kt concluait
+> à un léger dépassement, la réalité est un facteur 2,5. Le bilan insiste sur le
+> réflexe attendu : chercher activement les changements de section avant de conclure.
+
+> Trois défauts corrigés au rendu : la courbe de contrainte venait buter sur le titre
+> du schéma de concentration, l'étiquette du congé tombait dans la zone de la courbe,
+> et le libellé d'axe du simulateur sortait du canvas une fois pivoté.
+
+## Séquence CAPET Trains complétée — sujet type (24/09/2026)
+
+`05_capet_sii_trains.html` — support : un **treuil de levage à deux vitesses**,
+train épicycloïdal 30/90 avec frein sur la couronne et embrayage planétaire-couronne.
+5 documents, **12 questions, 100 points**, dont 19 d'exploitation pédagogique.
+Les trois séquences CAPET sont désormais complètes : axe linéaire, statique, trains.
+
+Chaîne vérifiée avant rédaction : satellites 30 dents, montage à 3 satellites possible
+((30+90)/3 = 40), λ = −3, rapport lent 1/4, tambour 60,4 tr/min et câble 0,506 m/s ;
+en prise directe le train tourne d'un bloc, rapport 1, câble 2,025 m/s. Effort 3 924 N,
+couple tambour 313,9 N·m, rendement global 0,931.
+
+> **Le ressort du sujet** : en vitesse lente il faut 14,05 N·m, le moteur en donne 18
+> — cela passe. En prise directe il faudrait **53,94 N·m**, soit trois fois trop : le
+> treuil est INCAPABLE de lever la charge dans cette configuration. La partie D fait
+> chercher à quoi sert alors ce rapport (manœuvre à vide, approche du crochet), et
+> conclut qu'un dimensionnement se juge **usage par usage**, pas rapport par rapport.
+
+> **D2 — cohérence énergétique** : puissance de levage 1 986 W contre 2 133 W fournis
+> par le moteur ; le quotient vaut 0,931, exactement le rendement trouvé en C2. La
+> vérification croisée valide toute la chaîne de calculs.
+
+> **E2 — erreur d'élève** : « la prise directe est meilleure, son rendement est plus
+> élevé ». Confusion entre rendement et capacité. La remédiation proposée passe par un
+> tableau à deux colonnes où la contradiction apparaît d'elle-même.
+
+Testé : 100/100, barème juste sans reprise. Un défaut corrigé au rendu : le libellé du
+frein, cadré à droite, sortait du canvas.
+
+## Troisième séquence CAPET — Trains d'engrenages (24/09/2026)
+
+Cours et TP ; le sujet type reste à écrire.
+
+- `01_cours_capet_trains.html` — train ordinaire (rapport = produit, signe en (−1)ⁿ,
+  roue folle), couple et rendement (les rendements se MULTIPLIENT), puis le train
+  **épicycloïdal et la formule de Willis**. Méthode en six étapes. Deux encadrés
+  « piège » : compter les roues au lieu des contacts, et appliquer le rapport d'un
+  train ordinaire à un épicycloïdal — erreur qui ne se signale pas.
+  **Simulateur de denture** : planétaire et couronne réglables, avec la raison
+  basique, le rapport, la denture des satellites et la **condition de montage à trois
+  satellites** ((Zp + Zc) divisible par 3). 6 exercices corrigés.
+- `02_tp_capet_trains.html` — 6 cas : raison basique et denture des satellites,
+  couronne bloquée (rapport 1/5 sur 20/80), tri ordinaire/épicycloïdal, deux étages
+  en série (1/12), couple et rendement (0,97² = 0,941), enfin géométrie et
+  **inversion de fonction** — porte-satellites bloqué, le rapport devient λ = −4 :
+  la sortie tourne quatre fois plus VITE et en sens inverse.
+  Toutes les réponses recalculées indépendamment. Parcours testé, score 18.
+
+> **Piège du recyclage, encore** : le moteur repris du TP de statique bouclait
+> `for(let n=2;n<=9;n++)` — parce que ce TP était passé de 7 à 9 missions avec les
+> exercices de calcul ajoutés la veille. Le nouveau TP n'en ayant que 7, `a8` et `a9`
+> étaient introuvables et le script plantait AU CHARGEMENT, alors que tout le parcours
+> fonctionnait ensuite. Toujours vérifier les DEUX bornes du moteur après extraction,
+> et regarder les erreurs de chargement même quand les tests fonctionnels passent.
+
+> Trois défauts corrigés au rendu du cours : la légende du schéma épicycloïdal était
+> positionnée par un décalage et sa première entrée sortait du canvas ; la légende du
+> bas chevauchait la couronne ; les nombres s'affichaient avec un point décimal.
+
+## Séquence CAPET Statique complétée — sujet type (24/09/2026)
+
+`05_capet_sii_statique.html` — support : une **grue d'atelier hydraulique**, flèche
+articulée relevée par un vérin. 5 documents, **13 questions, 100 points**, 5 parties,
+dont **21 points d'exploitation pédagogique**. La séquence statique est donc complète :
+cours, TP, sujet.
+
+Deux documents dessinés : l'architecture cotée de la grue, et une **résolution
+graphique amorcée** où les supports du vérin et de la charge sont tracés, avec leur
+point de concours I — l'élève doit tracer le troisième support et fermer le dynamique.
+
+Chaîne vérifiée avant rédaction : vérin à 49,4°, bras de levier 0,456 m, effort
+16 460 N (plus de 3 fois la charge), composantes 10 710 et 12 500 N, action en A
+de 13 080 N avec **les DEUX composantes négatives**, pression 83,8 bar contre 150
+disponibles, cisaillement double 32,5 MPa contre 55,8 admissibles.
+
+Le sujet est construit autour de trois points que le jury attend :
+- **B4 — vérification croisée** : la pente de AI vaut 0,70, exactement le rapport
+  7 500 / 10 710 du calcul. La géométrie confirme l'algèbre.
+- **D2 — critique de l'hypothèse** : négliger le poids de la flèche SOUS-ESTIME
+  l'effort réel. L'hypothèse va dans le sens défavorable à la sécurité.
+- **E2 — erreur d'élève** : « la flèche pousse sur le mât vers le haut ». Faux, car
+  le vérin pousse avec 12 500 N contre 5 000 N de charge. Remédiation par le tracé
+  graphique plutôt que par la correction du signe.
+
+Testé : 100/100.
+
+> Deux défauts corrigés au rendu : le point de concours I, à 2,25 m, sortait du cadre
+> à l'échelle du document 1 — le document 4 a désormais **son propre repère** ; et
+> deux étiquettes chevauchaient le mât puis la légende du bas.
+
 ## Seconde séquence CAPET — Statique (05/09/2026)
 
 Deux fichiers, sans sujet type pour l'instant.
@@ -761,6 +1564,56 @@ points, aux index 4, 9 et 10 d'origine.
 > statistiques par question mélangeront donc anciennes et nouvelles tant que ces
 > copies restent dans la base. À vider si Mat veut des stats propres.
 
+## Deux missions de calcul en plus dans les TP (21/09/2026)
+
+Demandé par Mat : « les TP doivent avoir 2 exercices de plus, avec des calculs, pour
+occuper les élèves plus longtemps. » Outil : `python3 _outils/ajouter_calculs_tp.py
+[--dry]`, idempotent, avec les énoncés dans `_outils/calculs_tp.json`.
+
+**TERMINÉ : les 32 TP au gabarit standard** sont traités (9 → 11 missions, 8 → 10
+pour le mix énergie, 7 → 9 pour les deux TP CAPET). Les 4 TP restants du corpus ont
+un gabarit différent (`dd_carnet`, `lecture_plan`, `materiaux`, `station_meteo_v3`)
+et sortent de l'outil — à traiter à la main si besoin.
+
+> **Les réponses ne sont JAMAIS saisies à la main** : le script qui fabrique le JSON
+> les CALCULE à partir des données de l'énoncé. Énoncé et corrigé ne peuvent donc pas
+> diverger — c'est le seul garde-fou fiable quand on écrit des dizaines d'exercices.
+
+> **Le piège de l'insertion** : ajouter deux missions oblige à décaler le bilan
+> (`aN` → `aN+2`, badge, appel à `reussir`), à ajouter deux segments à la barre de
+> progression ET à décaler LES DEUX bornes du moteur (`for(let n=2;n<=N;n++)` et
+> `if(n<N) setTimeout`). Sans ce décalage la chaîne de verrouillage casse et toutes
+> les missions s'ouvrent d'un coup — même défaut que lors du retrait d'une mission au
+> TP mix énergie. L'outil refuse d'ailleurs tout TP dont la numérotation est déjà
+> incohérente, plutôt que d'aggraver le désordre.
+
+Contenus : portée et flèche d'un viaduc, nombre de panneaux solaires et rendement
+d'une centrale, rapport de transmission et pignon-crémaillère, autonomie et coût de
+recharge d'un VAE, développement et vitesse d'un vélo, vitesse d'un robot et
+temporisation à programmer, facture de chauffage et retour sur investissement d'un
+thermostat, durée de téléchargement et partage de débit.
+
+Vérifié : 32/32 TP avec numérotation cohérente, 2 verrous au départ des nouvelles
+missions, calculs acceptés aux bonnes valeurs et refusés sur une erreur classique
+(rapport de transmission inversé), 36/36 TP se chargent proprement.
+
+## Tableaux de bord : plus récent en haut (21/09/2026)
+
+Demandé par Mat : la dernière copie reçue en haut de liste.
+- **Tableaux intégrés (30 évaluations)** : triaient par classe puis nom. Désormais
+  par date décroissante, sur l'horodatage brut (`Date.parse`).
+- **Tableau global** (`000_tableau_de_bord.html`) : il était CENSÉ trier par date
+  décroissante (`tri={col:'date',sens:-1}`) mais **ne le faisait pas** — la date y
+  était stockée DÉJÀ FORMATÉE (« 21/09/2026 ») et le tri comparait ce texte, donc par
+  jour du mois : le 06/10 passait derrière le 21/09, et deux copies du même jour
+  n'étaient pas départagées. Ajout d'un champ `ts` (horodatage) utilisé pour trier la
+  colonne Date ; l'affichage montre maintenant la date ET l'heure.
+- `05_tableau_bord_materiaux.html` : déjà correct (tri sur `timestamp` brut), non modifié.
+Vérifié sur 4 copies de dates croisées : même ordre exact dans les deux tableaux.
+
+> Leçon : ne jamais trier sur une valeur mise en forme pour l'affichage. Garder la
+> valeur brute pour le tri, formater seulement au moment d'afficher.
+
 ## Copie envoyée même en cas d'abandon, reprise verrouillée (06/09/2026)
 
 Demandé par Mat : les résultats ne partaient qu'à la fin ; un élève pouvait donc
@@ -826,6 +1679,21 @@ Les copies terminées portent désormais `statut:'terminee'`.
 > rattrapée** à la réouverture suivante. Testé sur les deux gabarits, avec une base
 > simulée qui refuse puis accepte le champ `statut` : les 3 cas donnent le bon
 > message, et aucun doublon (l'identifiant fixe l'interdit : la règle refuse d'écraser).
+
+> **CORRECTIF v2.1 (21/09) — faux refus lors d'un RECHARGEMENT.** Test de Mat sur
+> l'éco-conception : « Copie NON transmise (Permission denied) » alors que les règles
+> étaient à jour (l'éval des ponts fonctionnait). Cause, reproduite en forçant
+> l'ordre des requêtes : COURSE entre deux envois. Au rechargement, l'ancienne page
+> envoie sa copie en partant et la nouvelle démarre aussitôt : elle LIT (copie pas
+> encore arrivée), l'envoi de sortie ATTERRIT, elle ÉCRIT → la règle interdit
+> d'écraser (`!data.exists()`) → « Permission denied ». **Le refus signifiait que la
+> copie était déjà là.** La copie de test de Mat est donc très probablement en base.
+> Correction : attente de 1,5 s avant la vérification, et surtout **relecture après
+> un refus** avant de conclure. Vérifié dans l'ordre forcé (« bien reçue »), sur les
+> deux gabarits, et non-régression des 3 scénarios de règles (vrai refus toujours
+> signalé, rattrapage, cas normal).
+> Leçon : un refus d'écriture sur une règle « ajout seul » est AMBIGU — il peut
+> vouloir dire « déjà présent ». Toujours relire avant d'annoncer un échec.
 
 Tableaux de bord : une pastille rouge **ABANDON** s'affiche à côté du nom, dans le
 tableau intégré à chaque évaluation et dans `000_tableau_de_bord.html`.

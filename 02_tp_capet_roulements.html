@@ -374,5 +374,99 @@ function poserCorrige(n,raison){
 })();
 
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ Object.keys(D).forEach(function(k){
+  var a=document.getElementById('a'+k); if(!a) return;
+  var cons=a.querySelector('.consigne'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  cons.parentNode.insertBefore(cv,cons.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+/* roulement vu en coupe : (x,y) centre, demi-hauteur e = distance arbre-bille */
+function ROUL(c,x,y,e,rouleaux){ [y-e,y+e].forEach(function(yy){ c.fillStyle='#e2e8f0'; c.strokeStyle='#475569'; c.lineWidth=2;
+ c.fillRect(x-16,yy-14,32,28); c.strokeRect(x-16,yy-14,32,28);
+ if(rouleaux){ c.fillStyle='#fff'; c.fillRect(x-8,yy-8,16,16); c.strokeRect(x-8,yy-8,16,16); } else { c.fillStyle='#fff'; c.beginPath(); c.arc(x,yy,8,0,6.2832); c.fill(); c.stroke(); } }); }
+function ARBRE_H(c,x0,x1,y,ep){ c.fillStyle='#cbd5e1'; c.strokeStyle='#475569'; c.lineWidth=2; c.fillRect(x0,y-(ep||12),x1-x0,2*(ep||12)); c.strokeRect(x0,y-(ep||12),x1-x0,2*(ep||12)); }
+function FACE(c,x,y,R,rouleaux,ang){ ang=ang||0; SC.CERCLE(c,x,y,R,'#e2e8f0','#475569',2); SC.CERCLE(c,x,y,R*0.78,'#fff','#475569',1.5); SC.CERCLE(c,x,y,R*0.5,'#bae6fd','#0369a1',2); SC.CERCLE(c,x,y,R*0.32,'#64748b','#475569',1);
+ for(var k=0;k<9;k++){ var a=ang+k*6.2832/9, bx=x+R*0.64*Math.cos(a), by=y+R*0.64*Math.sin(a); c.fillStyle='#fff'; c.strokeStyle='#334155'; c.lineWidth=1.5;
+  if(rouleaux){ c.save(); c.translate(bx,by); c.rotate(a); c.fillRect(-R*0.1,-R*0.12,R*0.2,R*0.24); c.strokeRect(-R*0.1,-R*0.12,R*0.2,R*0.24); c.restore(); }
+  else { c.beginPath(); c.arc(bx,by,R*0.11,0,6.2832); c.fill(); c.stroke(); } } }
+
+SCHEMAS({
+ '1': {h:250, titre:'Roulement à billes chargé', draw:function(c){
+   var y=125; ARBRE_H(c,90,430,y); ROUL(c,260,y,26);
+   SC.FL(c,260,y+110,260,y+42,4,'#dc2626'); SC.T(c,'F_r = 2 kN',274,y+96,14,'#dc2626','left');
+   SC.FL(c,100,y-46,170,y-46,3.5,'#2563eb'); SC.T(c,'F_a = 0,4 kN',100,y-58,14,'#2563eb','left');
+   SC.T(c,'C = 14 kN · e = 0,3',600,90,15,'#334155'); SC.T(c,'N = 1 500 tr/min',600,120,15,'#334155');
+   SC.T(c,'P = ?   L10 = ?   L10h = ?',600,170,15,'#dc2626');
+ }},
+ '2': {h:240, titre:'Même roulement, charge doublée', draw:function(c){
+   [[190,2,'P = 2 kN','mission 1'],[520,4,'P = 4 kN','L10h = ?']].forEach(function(q){
+     FACE(c,q[0],140,62,false,0.3); SC.FL(c,q[0],72-12*q[1],q[0],72,2+1.5*q[1],'#dc2626');
+     SC.T(c,q[2],q[0]+40,62,15,'#dc2626','left'); SC.T(c,q[3],q[0],222,14,q[3]==='mission 1'?'#64748b':'#dc2626');
+   });
+   SC.FL(c,300,140,410,140,3,'#334155'); SC.T(c,'× 2',355,130,15,'#334155');
+   SC.T(c,'rapport des durées = ?',355,170,13,'#dc2626');
+ }},
+ '3': {h:280, titre:'Qui tourne par rapport à la charge ?', draw:function(c){
+   [[190,'arbre tournant, charge fixe',true],[560,'moyeu tournant, axe fixe',false]].forEach(function(q){
+     var x=q[0], y=155; FACE(c,x,y,70,false,0.2);
+     c.strokeStyle='#ea580c'; c.lineWidth=3; var r=q[2]?26:84;
+     c.beginPath(); c.arc(x,y,r,-0.6,-1.9,true); c.stroke(); SC.FL(c,x+r*Math.cos(-1.8),y+r*Math.sin(-1.8),x+r*Math.cos(-1.95),y+r*Math.sin(-1.95),3,'#ea580c');
+     SC.FL(c,x,y-118,x,y-76,3.5,'#dc2626'); SC.T(c,'charge fixe',x-14,y-100,12,'#dc2626','right');
+     SC.T(c,q[1],x,262,13,'#155e75');
+   });
+   SC.T(c,'orange : bague qui tourne',375,240,12,'#ea580c',undefined,false);
+ }},
+ '5': {h:260, titre:'Choisir au catalogue', draw:function(c){
+   [[140,14],[300,22.5],[460,36]].forEach(function(q){ FACE(c,q[0],115,30+q[1]*1.3,false,0.2); SC.T(c,'C = '+String(q[1]).replace('.',',')+' kN',q[0],230,14,'#334155'); });
+   SC.T(c,'exigé : 20 000 h',650,90,15,'#155e75'); SC.T(c,'N = 1 500 tr/min',650,118,14,'#334155'); SC.T(c,'P = 2 kN',650,146,14,'#dc2626');
+   SC.T(c,'C min = ?   C retenu = ?',650,190,14,'#dc2626');
+ }},
+ '6': {h:240, titre:'Roulement à rouleaux cylindriques', draw:function(c){
+   var y=125; ARBRE_H(c,80,420,y); ROUL(c,250,y,26,true);
+   SC.FL(c,250,y+100,250,y+42,4,'#dc2626'); SC.T(c,'P = 4 kN',264,y+88,14,'#dc2626','left');
+   SC.T(c,'C = 24 kN',600,80,15,'#334155'); SC.T(c,'exposant n = 10/3',600,108,14,'#7c3aed'); SC.T(c,'N = 1 500 tr/min',600,136,14,'#334155');
+   SC.T(c,'L10 = ?   L10h = ?',600,180,15,'#dc2626');
+ }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>

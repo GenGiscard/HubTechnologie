@@ -754,5 +754,95 @@ function piece(c,ox,oy,coul){
 })();
 })();
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ Object.keys(D).forEach(function(k){
+  var a=document.getElementById('a'+k); if(!a) return;
+  var cons=a.querySelector('.consigne'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  cons.parentNode.insertBefore(cv,cons.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+/* Schémas du TP CAPET — spécification géométrique */
+SCHEMAS({
+ '2': {h:280, titre:'Position réelle de l’axe dans la zone Ø 0,3', draw:function(c){
+   var O={x:260,y:150}, k=400;
+   SC.CERCLE(c,O.x,O.y,0.15*k,'rgba(22,163,74,.15)','#16a34a',2);
+   SC.SEG(c,O.x-110,O.y,O.x+110,O.y,'#cbd5e1',1); SC.SEG(c,O.x,O.y-110,O.x,O.y+110,'#cbd5e1',1);
+   SC.T(c,'x',O.x+118,O.y+5,12,'#64748b','left'); SC.T(c,'y',O.x,O.y-116,12,'#64748b');
+   var P={x:O.x+0.12*k,y:O.y-0.16*k};
+   SC.TIRETS(c,O.x,P.y,P.x,P.y,'#7c3aed',1.2); SC.TIRETS(c,P.x,O.y,P.x,P.y,'#7c3aed',1.2);
+   SC.SEG(c,O.x,O.y,P.x,P.y,'#dc2626',2.5); SC.PT(c,O.x,O.y,4,'#334155'); SC.PT(c,P.x,P.y,6,'#dc2626');
+   SC.T(c,'0,12',(O.x+P.x)/2,O.y+18,12,'#7c3aed'); SC.T(c,'0,16',P.x+8,(O.y+P.y)/2+4,12,'#7c3aed','left');
+   SC.T(c,'écart = ?',P.x+14,P.y-8,13,'#dc2626','left');
+   SC.T(c,'zone Ø 0,3',O.x-62,O.y+80,12,'#16a34a','right');
+   SC.T(c,'position théorique exacte',560,110,13,'#334155'); SC.T(c,'axe réel mesuré',560,140,13,'#dc2626');
+   SC.T(c,'échelle agrandie',560,190,12,'#64748b',undefined,false);
+ }},
+ '5': {h:280, titre:'Le cas le plus défavorable pour la vis', draw:function(c){
+   var O={x:230,y:150};
+   SC.CERCLE(c,O.x,O.y,100,'#e0f2fe','#0284c7',2.5); SC.T(c,'trou au maximum de matière : Ø 12,00',560,70,13,'#0284c7');
+   SC.CERCLE(c,O.x,O.y,82,null,'#dc2626',2); c.save(); c.setLineDash([5,4]); SC.CERCLE(c,O.x,O.y,82,null,'#dc2626',2); c.restore();
+   SC.CERCLE(c,O.x,O.y,62,'#cbd5e1','#334155',2); SC.T(c,'vis Ø 11',O.x,O.y+5,14,'#334155');
+   SC.T(c,'cercle rouge : diamètre virtuel = ?',560,200,13,'#dc2626');
+   SC.T(c,'localisation Ø 0,25 au maximum de matière',560,100,13,'#334155');
+   SC.T(c,'le trou peut se décaler dans sa zone :',560,140,12,'#64748b',undefined,false);
+   SC.T(c,'l’ouverture efficace rétrécit',560,160,12,'#64748b',undefined,false);
+ }},
+ '6': {h:300, titre:'Mise en position 3-2-1', draw:function(c){
+   /* pavé en perspective cavalière */
+   var x=200,y=110,w=280,h=90,dx=90,dy=-55;
+   c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=2;
+   c.beginPath(); c.moveTo(x,y); c.lineTo(x+dx,y+dy); c.lineTo(x+w+dx,y+dy); c.lineTo(x+w,y); c.closePath(); c.fill(); c.stroke();
+   c.fillStyle='#bae6fd'; c.beginPath(); c.moveTo(x+w,y); c.lineTo(x+w+dx,y+dy); c.lineTo(x+w+dx,y+h+dy); c.lineTo(x+w,y+h); c.closePath(); c.fill(); c.stroke();
+   c.fillStyle='#f0f9ff'; c.fillRect(x,y,w,h); c.strokeRect(x,y,w,h);
+   /* A : 3 appuis sous la face inférieure */
+   [[x+40,y+h],[x+w/2,y+h],[x+w-40,y+h]].forEach(function(p,i){ SC.FL(c,p[0],p[1]+46,p[0],p[1]+4,2.5,'#16a34a'); });
+   SC.T(c,'A : appui plan, 3 points',x+w/2,y+h+64,13,'#16a34a');
+   /* B : 2 points sur la face avant gauche (côté) */
+   [[x-46,y+25],[x-46,y+70]].forEach(function(p){ SC.FL(c,p[0],p[1],x-3,p[1],2.5,'#ea580c'); });
+   SC.T(c,'B : 2 points',x-52,y+50,13,'#ea580c','right');
+   /* C : 1 point sur la face latérale droite */
+   SC.FL(c,x+w+dx+60,y+h/2+dy/2+10,x+w+dx/2+4,y+h/2+dy/2+10,2.5,'#7c3aed'); SC.T(c,'C : 1 point',x+w+dx+66,y+h/2+dy/2+15,13,'#7c3aed','left');
+   SC.T(c,'degrés supprimés par chaque référence : ?',380,290,12,'#64748b',undefined,false);
+ }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>

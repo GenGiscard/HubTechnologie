@@ -1297,5 +1297,104 @@ window.MINICOURS={ ouvrir:ouvrir, fermer:fermer, notions:N };
 })();
 
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ document.querySelectorAll('#questions .q').forEach(function(q){
+  var b=q.querySelector('.num b'); if(!b) return; var k=b.textContent.replace('Question','').trim();
+  if(!D[k]) return; var p=q.querySelector('p'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  p.parentNode.insertBefore(cv,p.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+function ASC(c,x,cab,cp,avecCP){
+ SC.HACH(c,x-80,20,190,12);
+ SC.CERCLE(c,x,62,30,'#e2e8f0','#475569',2);
+ SC.SEG(c,x-30,62,x-30,120,'#334155',2);
+ SC.RECT(c,x-80,120,100,70,'#bfdbfe','#2563eb'); SC.T(c,cab,x-30,160,13,'#1e3a8a');
+ if(avecCP){ SC.SEG(c,x+30,62,x+30,140,'#334155',2); SC.RECT(c,x+14,140,34,70,'#cbd5e1','#475569'); SC.T(c,cp,x+58,180,12,'#334155','left'); }
+}
+SCHEMAS({
+ 'A1': {h:240, titre:'Sans contrepoids', draw:function(c){
+   ASC(c,150,'1 000 kg','',false); SC.FL(c,34,200,34,140,3,'#16a34a'); SC.T(c,'1 m/s',34,128,12,'#16a34a');
+   SC.T(c,'le moteur porte toute la cabine',520,110,13,'#334155'); SC.T(c,'P utile ?',520,145,15,'#ea580c');
+ }},
+ 'A2': {h:240, titre:'Avec contrepoids', draw:function(c){
+   ASC(c,150,'1 000 kg','800 kg',true); SC.FL(c,34,200,34,140,3,'#16a34a'); SC.T(c,'1 m/s',34,128,12,'#16a34a');
+   SC.T(c,'le moteur ne compense que l’écart',520,110,13,'#334155'); SC.T(c,'P utile ?',520,145,15,'#ea580c');
+ }},
+ 'B1': {h:210, titre:'Chaîne de puissance', draw:function(c){
+   SC.T(c,'réseau',50,104,13,'#64748b');
+   SC.FL(c,80,100,140,100,4,'#0369a1'); SC.T(c,'P abs ?',110,84,12,'#0369a1');
+   SC.RECT(c,140,70,140,60,'#ecfeff','#0e7490'); SC.T(c,'moteur',210,96,13,'#155e75'); SC.T(c,'η = 0,9',210,116,12);
+   SC.FL(c,280,100,340,100,4,'#0369a1');
+   SC.RECT(c,340,70,140,60,'#ecfeff','#0e7490'); SC.T(c,'réducteur',410,96,13,'#155e75'); SC.T(c,'η = 0,8',410,116,12);
+   SC.FL(c,480,100,560,100,4,'#0369a1'); SC.T(c,'P utile (A2)',640,104,13,'#0369a1');
+   SC.T(c,'η global ?',310,170,14,'#ea580c');
+ }},
+ 'B2': {h:240, titre:'Cabine vide en montée', draw:function(c){
+   ASC(c,150,'600 kg','800 kg',true); SC.FL(c,34,200,34,140,3,'#16a34a'); SC.T(c,'monte',34,128,12,'#16a34a');
+   SC.T(c,'le contrepoids est le plus lourd',520,120,13,'#334155');
+ }},
+ 'C1': {h:240, titre:'Masses en mouvement à 1 m/s', draw:function(c){
+   ASC(c,150,'1 000 kg','800 kg',true);
+   SC.FL(c,34,200,34,140,3,'#16a34a'); SC.FL(c,270,150,270,210,3,'#16a34a'); SC.T(c,'1 m/s',34,128,12,'#16a34a');
+   SC.T(c,'poulie : R = 0,3 m · J = 4 kg·m²',520,80,12,'#334155');
+   SC.T(c,'E translation ?',520,130,14,'#ea580c'); SC.T(c,'E poulie ?',520,160,14,'#ea580c');
+ }},
+ 'C2': {h:230, titre:'Tout ramener sur l’arbre moteur', draw:function(c){
+   SC.RECT(c,50,85,110,70,'#e2e8f0','#475569'); SC.T(c,'moteur',105,116,13); SC.T(c,'J = 0,05',105,136,12);
+   SC.SEG(c,160,120,230,120,'#334155',6); SC.RECT(c,230,90,100,60,'#e2e8f0','#475569'); SC.T(c,'réducteur',280,124,12);
+   SC.SEG(c,330,120,390,120,'#334155',6); SC.CERCLE(c,430,120,40,'#e2e8f0','#475569',2); SC.T(c,'J = 4',430,125,12);
+   SC.RECT(c,520,80,90,40,'#bfdbfe','#2563eb'); SC.T(c,'1 800 kg',565,105,12,'#1e3a8a');
+   SC.T(c,'à 1 m/s',565,140,12,'#16a34a');
+   SC.T(c,'ω moteur = 1 500 tr/min',105,190,12,'#334155'); SC.T(c,'J éq ?',430,200,15,'#ea580c');
+ }},
+ 'D1': {h:240, titre:'Couple moteur au démarrage', draw:function(c){
+   var gx=70,gy=40,gw=300,gh=150;
+   c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+   SC.SEG(c,gx,gy+gh,gx+200,gy+20,'#0e7490',3); SC.SEG(c,gx+200,gy+20,gx+gw,gy+20,'#0e7490',3);
+   SC.T(c,'157 rad/s',gx-4,gy+24,11,'#64748b','right'); SC.T(c,'2 s',gx+200,gy+gh+16,11,'#64748b'); SC.T(c,'ω',gx,gy-8,12,'#64748b','left');
+   SC.T(c,'C inertie = J éq × dω/dt',570,80,13,'#7c3aed');
+   SC.T(c,'C régime : 200 kg, η = 0,8',570,115,13,'#dc2626');
+   SC.T(c,'C total ?',570,160,15,'#16a34a');
+ }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>

@@ -1275,5 +1275,144 @@ window.MINICOURS={ ouvrir:ouvrir, fermer:fermer, notions:N };
 })();
 
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ document.querySelectorAll('#questions .q').forEach(function(q){
+  var b=q.querySelector('.num b'); if(!b) return; var k=b.textContent.replace('Question','').trim();
+  if(!D[k]) return; var p=q.querySelector('p'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  p.parentNode.insertBefore(cv,p.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+/* Schémas du sujet type CAPET « axe linéaire à vis à billes » */
+function AXE(c,o){
+ o=o||{};
+ var y=o.y||150;
+ /* moteur */
+ SC.RECT(c,40,y-40,110,80,'#fef3c7','#b45309'); SC.T(c,'moteur',95,y-4,13,'#92400e'); SC.T(c,o.jm||'',95,y+16,11,'#92400e',undefined,false);
+ /* accouplement */
+ SC.RECT(c,150,y-14,22,28,'#e2e8f0','#475569');
+ /* vis */
+ c.fillStyle='#cbd5e1'; c.fillRect(172,y-9,470,18); c.strokeStyle='#64748b'; c.lineWidth=1;
+ for(var x=176;x<640;x+=9){ c.beginPath(); c.moveTo(x,y-9); c.lineTo(x+6,y+9); c.stroke(); }
+ SC.T(c,o.jv||'vis',530,y+30,11,'#475569',undefined,false);
+ /* paliers */
+ [190,630].forEach(function(x){ SC.RECT(c,x-8,y+9,16,30,'#94a3b8','#475569'); SC.HACH(c,x-20,y+39,40,8); });
+ /* écrou + chariot */
+ var xc=o.xc||430;
+ SC.RECT(c,xc-36,y-16,72,32,'#bfdbfe','#2563eb'); SC.RECT(c,xc-70,y-70,140,54,'#dbeafe','#2563eb');
+ SC.T(c,o.m||'chariot',xc,y-38,14,'#1e3a8a');
+ /* rotation */
+ c.strokeStyle='#ea580c'; c.lineWidth=2.5; c.beginPath(); c.ellipse(300,y,10,26,0,-1.2,1.9); c.stroke();
+ SC.FL(c,300+10*Math.cos(1.6),y+26*Math.sin(1.6),300+10*Math.cos(2.1),y+26*Math.sin(2.1),2.5,'#ea580c');
+ SC.T(c,o.w||'ω',300,y+48,14,'#ea580c');
+ /* avance */
+ if(o.V) { SC.FL(c,xc-40,y-86,xc+40,y-86,3,'#16a34a'); SC.T(c,o.V,xc+48,y-81,13,'#16a34a','left'); }
+ if(o.F) { SC.FL(c,xc-70,y-44,xc-130,y-44,3,'#dc2626'); SC.T(c,o.F,xc-136,y-39,13,'#dc2626','right'); }
+ if(o.p) SC.T(c,o.p,508,y-22,13,'#475569','left');
+}
+function DONNEES(c,x,y,l){ l.forEach(function(s,i){ SC.T(c,s,x,y+i*22,13,i===l.length-1&&s.indexOf('?')>=0?'#dc2626':'#334155','left'); }); }
+
+function BLOC(c,x,y,w,h,l1,l2,co,fond){ SC.RECT(c,x,y,w,h,fond||'#ecfeff',co||'#0e7490'); SC.T(c,l1,x+w/2,y+h/2-4,13,co||'#155e75'); if(l2) SC.T(c,l2,x+w/2,y+h/2+16,12,'#334155'); }
+
+SCHEMAS({
+ 'A2': {h:240, titre:'Loi entrée-sortie de la vis à billes', draw:function(c){
+   AXE(c,{y:150,p:'pas p = 10 mm/tr',V:'V',w:'ω',m:'chariot'});
+   SC.T(c,'k = V / ω = ?   (en m/rad)',380,226,14,'#dc2626');
+ }},
+ 'A3': {h:240, titre:'Vitesse de rotation à l’avance maximale', draw:function(c){
+   AXE(c,{y:150,p:'p = 10 mm/tr',V:'V max = 0,5 m/s',w:'N = ? · ω = ?',m:'chariot'});
+   SC.T(c,'1 tour de vis = 10 mm d’avance',380,226,13,'#155e75');
+ }},
+ 'B1': {h:240, titre:'La masse en mouvement, vue depuis l’arbre de la vis', draw:function(c){
+   AXE(c,{y:150,p:'p = 10 mm/tr',m:'M = 250 kg',jv:'vis'});
+   SC.T(c,'J éq de la masse = ?',380,226,14,'#dc2626');
+ }},
+ 'B2': {h:220, titre:'Inertie totale ramenée à l’arbre moteur', draw:function(c){
+   BLOC(c,40,70,170,70,'rotor moteur','6,0·10⁻⁴ kg·m²','#b45309','#fef3c7');
+   SC.T(c,'+',235,112,22,'#334155');
+   BLOC(c,260,70,170,70,'vis à billes','8,0·10⁻⁴ kg·m²');
+   SC.T(c,'+',455,112,22,'#334155');
+   BLOC(c,480,70,190,70,'masse ramenée','résultat de B1','#2563eb','#dbeafe');
+   SC.T(c,'J total = ?   ·   part de la masse = ? %',380,186,14,'#dc2626');
+ }},
+ 'B3': {h:240, titre:'De l’accélération du chariot à celle de la vis', draw:function(c){
+   AXE(c,{y:150,p:'p = 10 mm/tr',V:'a = 2 m/s²',w:'dω/dt = ?',m:'M = 250 kg'});
+ }},
+ 'B4': {h:250, titre:'Couple moteur en phase d’accélération', draw:function(c){
+   AXE(c,{y:160,p:'p = 10 mm/tr · η = 0,90',V:'a = 2 m/s²',F:'F_f = 200 N',m:'M = 250 kg'});
+   SC.T(c,'C inertie = ?   +   C effort = ?   =   C total = ?',380,240,13,'#dc2626');
+ }},
+ 'B5': {h:260, titre:'Où la puissance est-elle maximale ?', draw:function(c){
+   var gx=80, gy=50, gw=420, gh=160, t1=0.25, tt=1.85, X=function(t){return gx+t/tt*gw;}, Y=function(v){return gy+gh-v/0.6*gh;};
+   c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+   c.strokeStyle='#0e7490'; c.lineWidth=3; c.beginPath(); c.moveTo(X(0),Y(0)); c.lineTo(X(t1),Y(0.5)); c.lineTo(X(tt-t1),Y(0.5)); c.lineTo(X(tt),Y(0)); c.stroke();
+   SC.PT(c,X(t1),Y(0.5),7,'#dc2626'); SC.T(c,'C maxi ET ω maxi',X(t1)+12,Y(0.5)-12,12,'#dc2626','left');
+   SC.T(c,'V (m/s)',gx,gy-8,12,'#64748b','left'); SC.T(c,'t',gx+gw+10,gy+gh+4,12,'#64748b','left'); SC.T(c,'0,5',gx-8,Y(0.5)+4,12,'#64748b','right');
+   SC.T(c,'fin d’accélération :',630,110,13,'#334155'); SC.T(c,'C total de B4',630,134,13,'#334155'); SC.T(c,'ω à V = 0,5 m/s',630,158,13,'#334155');
+   SC.T(c,'P max = ?',630,196,15,'#dc2626');
+ }},
+ 'C3': {h:260, titre:'Profil trapézoïdal sur 800 mm', draw:function(c){
+   var gx=80, gy=50, gw=560, gh=150, X=function(t){return gx+t*gw;}, Y=function(v){return gy+gh-v/0.6*gh;};
+   c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+   c.fillStyle='rgba(14,116,144,.12)'; c.beginPath(); c.moveTo(X(0),Y(0)); c.lineTo(X(0.14),Y(0.5)); c.lineTo(X(0.86),Y(0.5)); c.lineTo(X(1),Y(0)); c.closePath(); c.fill();
+   c.strokeStyle='#0e7490'; c.lineWidth=3; c.beginPath(); c.moveTo(X(0),Y(0)); c.lineTo(X(0.14),Y(0.5)); c.lineTo(X(0.86),Y(0.5)); c.lineTo(X(1),Y(0)); c.stroke();
+   SC.T(c,'0,5 m/s',gx-6,Y(0.5)+4,12,'#64748b','right'); SC.T(c,'a = 2 m/s²',X(0.07)-4,Y(0.25)-6,12,'#0e7490','right');
+   SC.T(c,'aire = 800 mm',X(0.5),Y(0.12),13,'#155e75');
+   SC.COTE(c,X(0),gy+gh+22,X(0.14),gy+gh+22,'t_a = ?','#dc2626',16);
+   SC.COTE(c,X(0),gy+gh+50,X(1),gy+gh+50,'durée totale = ?','#dc2626',-6);
+   SC.T(c,'distance pendant t_a = ?',X(0.5),Y(0.32),13,'#dc2626');
+ }},
+ 'D1': {h:280, titre:'Codeur incrémental lu en quadrature', draw:function(c){
+   var x=170, y=135, r=90;
+   SC.CERCLE(c,x,y,r,'#f1f5f9','#475569',2);
+   for(var k=0;k<60;k++){ var a=k*Math.PI/30; c.fillStyle='#334155'; c.save(); c.translate(x+(r-12)*Math.cos(a),y+(r-12)*Math.sin(a)); c.rotate(a); c.fillRect(-6,-2,12,4); c.restore(); }
+   SC.PT(c,x,y,6,'#475569'); SC.T(c,'2 500 points / tour',x,y+r+24,13,'#334155');
+   /* signaux A et B */
+   var sx=360, w=24;
+   ['A','B'].forEach(function(n,i){ var y0=80+i*70; c.strokeStyle=i?'#7c3aed':'#0e7490'; c.lineWidth=2.5; c.beginPath(); c.moveTo(sx,y0+30);
+    for(var k=0;k<7;k++){ var xx=sx+k*2*w+(i?w/2:0); c.lineTo(xx,y0+30); c.lineTo(xx,y0); c.lineTo(xx+w,y0); c.lineTo(xx+w,y0+30); } c.stroke();
+    SC.T(c,'voie '+n,sx-10,y0+20,12,i?'#7c3aed':'#0e7490','right'); });
+   SC.T(c,'4 fronts par période',sx+170,62,12,'#334155');
+   SC.T(c,'impulsions par tour = ?   ·   résolution du chariot = ? µm',380,270,13,'#dc2626');
+ }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>

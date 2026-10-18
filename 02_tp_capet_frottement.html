@@ -391,5 +391,83 @@ function poserCorrige(n,raison){
 })();
 
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ Object.keys(D).forEach(function(k){
+  var a=document.getElementById('a'+k); if(!a) return;
+  var cons=a.querySelector('.consigne'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  cons.parentNode.insertBefore(cv,cons.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+function PLAN(c,O,L,a,co){ var ex=Math.cos(a), ey=-Math.sin(a); c.fillStyle='#e7e5e4'; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(O.x+L*ex,O.y+L*ey); c.lineTo(O.x+L*ex,O.y); c.closePath(); c.fill();
+ SC.SEG(c,O.x,O.y,O.x+L*ex,O.y+L*ey,co||'#78716c',3); SC.SEG(c,O.x,O.y,O.x+L*ex+10,O.y,'#a8a29e',1.5); return {x:ex,y:ey}; }
+function BLOC(c,P,a,w,h,fond,trait,txt){ c.save(); c.translate(P.x,P.y); c.rotate(-a); c.fillStyle=fond; c.strokeStyle=trait; c.lineWidth=2.5; c.fillRect(-w/2,-h,w,h); c.strokeRect(-w/2,-h,w,h); if(txt){ c.fillStyle='#1e3a8a'; c.font='bold 13px Segoe UI'; c.textAlign='center'; c.fillText(txt,0,-h/2+5);} c.restore(); }
+function COURROIE(c,M,r1,B,r2,col1,col2){ var d=B.x-M.x, a=Math.asin((r2-r1)/d);
+ SC.CERCLE(c,M.x,M.y,r1,'#e2e8f0','#475569',2); SC.CERCLE(c,B.x,B.y,r2,'#e2e8f0','#475569',2); SC.PT(c,M.x,M.y,4,'#475569'); SC.PT(c,B.x,B.y,4,'#475569');
+ SC.SEG(c,M.x-r1*Math.sin(a),M.y-r1*Math.cos(a),B.x-r2*Math.sin(a),B.y-r2*Math.cos(a),col1||'#dc2626',6);
+ SC.SEG(c,M.x-r1*Math.sin(a),M.y+r1*Math.cos(a),B.x-r2*Math.sin(a),B.y+r2*Math.cos(a),col2||'#2563eb',6);
+ c.strokeStyle='#ea580c'; c.lineWidth=6; c.beginPath(); c.arc(M.x,M.y,r1+3,Math.PI/2+a,3*Math.PI/2-a); c.stroke(); return a; }
+function DISQUE(c,O,R,r){ c.fillStyle='#fde68a'; c.beginPath(); c.arc(O.x,O.y,R,0,6.2832); c.arc(O.x,O.y,r,0,6.2832,true); c.fill(); SC.CERCLE(c,O.x,O.y,R,null,'#b45309',2); SC.CERCLE(c,O.x,O.y,r,null,'#b45309',2); }
+
+SCHEMAS({
+ '2': {h:260, titre:'On incline le plan jusqu’au glissement', draw:function(c){
+   var O={x:70,y:220}, a=17*Math.PI/180, e=PLAN(c,O,470,a);
+   var P={x:O.x+300*e.x,y:O.y+300*e.y}; BLOC(c,P,a,90,56,'#bfdbfe','#2563eb','20 kg');
+   c.strokeStyle='#78716c'; c.lineWidth=2; c.beginPath(); c.arc(O.x,O.y,90,-a,0); c.stroke(); SC.T(c,'α = ?',O.x+120,O.y-10,14,'#dc2626');
+   SC.FL(c,O.x+420,O.y-40,O.x+420,O.y-110,2.5,'#64748b'); SC.T(c,'on incline',O.x+432,O.y-80,12,'#64748b','left',false);
+   SC.T(c,'f = 0,3',650,70,16,'#334155'); SC.T(c,'à la limite : T = f N',650,100,13,'#155e75');
+ }},
+ '5': {h:250, titre:'Effort presseur nécessaire', draw:function(c){
+   DISQUE(c,{x:170,y:130},100,64); SC.COTE(c,170,130,270,130,'R = 110','#334155'); SC.COTE(c,170,130,170-45,130+45,'','#334155'); SC.T(c,'r = 70',112,186,12,'#334155');
+   var x=420; SC.RECT(c,x,40,26,170,'#cbd5e1'); SC.RECT(c,x+64,40,26,170,'#cbd5e1'); SC.RECT(c,x+30,58,30,134,'#fde68a','#b45309');
+   SC.FL(c,x-70,125,x-4,125,4,'#2563eb'); SC.T(c,'F = ?',x-40,112,15,'#dc2626');
+   SC.T(c,'2 surfaces',x+45,232,12,'#b45309');
+   SC.T(c,'C = 250 N·m',650,100,16,'#155e75'); SC.T(c,'f = 0,35',650,130,15,'#334155');
+ }},
+ '6': {h:260, titre:'Courroie plate sur la poulie motrice', draw:function(c){
+   var M={x:170,y:135}, B={x:520,y:135}; COURROIE(c,M,60,B,90);
+   SC.T(c,'R = 60 mm',M.x,M.y+30,12,'#334155'); SC.T(c,'θ = 170°',M.x-104,M.y+5,14,'#ea580c');
+   SC.T(c,'T1 = ? (brin tendu)',345,50,14,'#dc2626'); SC.T(c,'T2 = 200 N',345,236,14,'#2563eb');
+   SC.T(c,'f = 0,3',680,110,16,'#334155'); SC.T(c,'C = ?',680,140,16,'#dc2626');
+ }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>

@@ -1197,5 +1197,108 @@ window.MINICOURS={ ouvrir:ouvrir, fermer:fermer, notions:N };
 })();
 
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ document.querySelectorAll('#questions .q').forEach(function(q){
+  var b=q.querySelector('.num b'); if(!b) return; var k=b.textContent.replace('Question','').trim();
+  if(!D[k]) return; var p=q.querySelector('p'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  p.parentNode.insertBefore(cv,p.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+function PLAN(c,O,L,a,co){ var ex=Math.cos(a), ey=-Math.sin(a); c.fillStyle='#e7e5e4'; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(O.x+L*ex,O.y+L*ey); c.lineTo(O.x+L*ex,O.y); c.closePath(); c.fill();
+ SC.SEG(c,O.x,O.y,O.x+L*ex,O.y+L*ey,co||'#78716c',3); SC.SEG(c,O.x,O.y,O.x+L*ex+10,O.y,'#a8a29e',1.5); return {x:ex,y:ey}; }
+function BLOC(c,P,a,w,h,fond,trait,txt){ c.save(); c.translate(P.x,P.y); c.rotate(-a); c.fillStyle=fond; c.strokeStyle=trait; c.lineWidth=2.5; c.fillRect(-w/2,-h,w,h); c.strokeRect(-w/2,-h,w,h); if(txt){ c.fillStyle='#1e3a8a'; c.font='bold 13px Segoe UI'; c.textAlign='center'; c.fillText(txt,0,-h/2+5);} c.restore(); }
+function COURROIE(c,M,r1,B,r2,col1,col2){ var d=B.x-M.x, a=Math.asin((r2-r1)/d);
+ SC.CERCLE(c,M.x,M.y,r1,'#e2e8f0','#475569',2); SC.CERCLE(c,B.x,B.y,r2,'#e2e8f0','#475569',2); SC.PT(c,M.x,M.y,4,'#475569'); SC.PT(c,B.x,B.y,4,'#475569');
+ SC.SEG(c,M.x-r1*Math.sin(a),M.y-r1*Math.cos(a),B.x-r2*Math.sin(a),B.y-r2*Math.cos(a),col1||'#dc2626',6);
+ SC.SEG(c,M.x-r1*Math.sin(a),M.y+r1*Math.cos(a),B.x-r2*Math.sin(a),B.y+r2*Math.cos(a),col2||'#2563eb',6);
+ c.strokeStyle='#ea580c'; c.lineWidth=6; c.beginPath(); c.arc(M.x,M.y,r1+3,Math.PI/2+a,3*Math.PI/2-a); c.stroke(); return a; }
+function DISQUE(c,O,R,r){ c.fillStyle='#fde68a'; c.beginPath(); c.arc(O.x,O.y,R,0,6.2832); c.arc(O.x,O.y,r,0,6.2832,true); c.fill(); SC.CERCLE(c,O.x,O.y,R,null,'#b45309',2); SC.CERCLE(c,O.x,O.y,r,null,'#b45309',2); }
+
+function TONDEUSE(c,P,a,txt){ c.save(); c.translate(P.x,P.y); c.rotate(-a); c.fillStyle='#bbf7d0'; c.strokeStyle='#16a34a'; c.lineWidth=2.5; c.fillRect(-70,-58,140,38); c.strokeRect(-70,-58,140,38);
+ c.fillStyle='#334155'; c.beginPath(); c.arc(-45,-16,16,0,6.2832); c.arc(45,-16,16,0,6.2832); c.fill(); if(txt){ c.fillStyle='#166534'; c.font='bold 13px Segoe UI'; c.textAlign='center'; c.fillText(txt,0,-34); } c.restore(); }
+SCHEMAS({
+ 'A1': {h:260, titre:'Pente maximale sans patinage', draw:function(c){
+   var O={x:70,y:225}, a=20*Math.PI/180, e=PLAN(c,O,460,a);
+   TONDEUSE(c,{x:O.x+270*e.x,y:O.y+270*e.y},a,'250 kg');
+   c.strokeStyle='#78716c'; c.lineWidth=2; c.beginPath(); c.arc(O.x,O.y,90,-a,0); c.stroke(); SC.T(c,'α = ?',O.x+120,O.y-10,14,'#dc2626');
+   SC.T(c,'f = 0,6 (pneu / herbe)',640,80,15,'#334155'); SC.T(c,'toutes roues motrices',640,108,13,'#64748b',undefined,false);
+   SC.T(c,'pente = ? %',640,150,15,'#dc2626');
+ }},
+ 'B1': {h:270, titre:'Courroie sur la poulie motrice', draw:function(c){
+   var M={x:170,y:140}, B={x:530,y:140}; COURROIE(c,M,48,B,96);
+   SC.T(c,'R = 40 mm',M.x,M.y+80,12,'#334155'); SC.T(c,'θ = 160°',M.x-90,M.y+5,14,'#ea580c');
+   SC.T(c,'T1 = ? (brin tendu)',345,112,14,'#dc2626'); SC.T(c,'T2 = 120 N',345,180,14,'#2563eb');
+   SC.T(c,'f = 0,5',690,120,15,'#334155'); SC.T(c,'C = ?',690,150,15,'#dc2626');
+ }},
+ 'B2': {h:220, titre:'Puissance transmissible', draw:function(c){
+   SC.CERCLE(c,180,115,60,'#e2e8f0','#475569',2); SC.PT(c,180,115,4,'#475569');
+   c.strokeStyle='#ea580c'; c.lineWidth=3; c.beginPath(); c.arc(180,115,78,-0.3,-1.6,true); c.stroke(); SC.FL(c,180+78*Math.cos(-1.5),115+78*Math.sin(-1.5),180+78*Math.cos(-1.65),115+78*Math.sin(-1.65),3,'#ea580c');
+   SC.T(c,'N = 3 000 tr/min',180,210,13,'#ea580c'); SC.T(c,'C : question B1',280,160,13,'#334155','left');
+   SC.T(c,'P = C × ω',560,100,18,'#155e75'); SC.T(c,'P = ?',560,140,16,'#dc2626');
+ }},
+ 'C1': {h:260, titre:'Embrayage multidisque', draw:function(c){
+   DISQUE(c,{x:170,y:135},96,64); SC.COTE(c,170,135,266,135,'R = 60','#334155'); SC.COTE(c,170,135,125,180,'','#334155'); SC.T(c,'r = 40',112,200,12,'#334155');
+   var x=380; for(var i=0;i<5;i++){ var gar=i%2===1; SC.RECT(c,x+i*34,50+(gar?10:0),22,gar?150:170,gar?'#fde68a':'#cbd5e1',gar?'#b45309':'#475569'); }
+   SC.FL(c,x-80,135,x-4,135,4,'#2563eb'); SC.T(c,'F = 1 500 N',x-46,120,13,'#2563eb');
+   SC.T(c,'4 surfaces de frottement',x+80,244,12,'#b45309');
+   SC.T(c,'f = 0,3',670,110,15,'#334155'); SC.T(c,'R moy = ?',670,140,15,'#dc2626'); SC.T(c,'C = ?',670,166,15,'#dc2626');
+ }},
+ 'C2': {h:240, titre:'Effort presseur pour 120 N·m', draw:function(c){
+   var x=200; for(var i=0;i<5;i++){ var gar=i%2===1; SC.RECT(c,x+i*34,40+(gar?10:0),22,gar?150:170,gar?'#fde68a':'#cbd5e1',gar?'#b45309':'#475569'); }
+   SC.FL(c,x-70,125,x-4,125,4,'#2563eb'); SC.T(c,'F = ?',x-38,110,15,'#dc2626');
+   c.strokeStyle='#ea580c'; c.lineWidth=3; c.beginPath(); c.arc(x+250,125,40,-0.4,-2.6,true); c.stroke(); SC.FL(c,x+250+40*Math.cos(-2.5),125+40*Math.sin(-2.5),x+250+40*Math.cos(-2.65),125+40*Math.sin(-2.65),3,'#ea580c');
+   SC.T(c,'C = 120 N·m',x+250,190,14,'#ea580c');
+   SC.T(c,'4 surfaces · f = 0,3',650,110,14,'#334155'); SC.T(c,'R = 60 · r = 40 mm',650,136,14,'#334155');
+ }},
+ 'D1': {h:290, titre:'Stationnement en pente : une roue freinée', draw:function(c){
+   var O={x:60,y:250}, a=15*Math.PI/180, e=PLAN(c,O,430,a);
+   var P={x:O.x+250*e.x,y:O.y+250*e.y}; TONDEUSE(c,P,a,'250 kg');
+   c.strokeStyle='#78716c'; c.lineWidth=2; c.beginPath(); c.arc(O.x,O.y,90,-a,0); c.stroke(); SC.T(c,'15°',O.x+110,O.y-8,14,'#78716c');
+   SC.FL(c,P.x-90*e.x,P.y-90*e.y+0,P.x-40*e.x,P.y-40*e.y,3,'#dc2626'); SC.T(c,'retenue = ?',P.x-110*e.x,P.y-110*e.y-16,13,'#dc2626');
+   var R={x:620,y:140}; SC.CERCLE(c,R.x,R.y,70,'#334155','#1e293b',2); SC.CERCLE(c,R.x,R.y,40,'#fde68a','#b45309',2); SC.PT(c,R.x,R.y,4,'#1e293b');
+   SC.T(c,'roue R = 200 mm',R.x,R.y+96,12,'#334155'); SC.T(c,'disque : R moy = 80 mm',R.x,R.y+116,12,'#b45309');
+   SC.T(c,'2 surfaces · f = 0,4',R.x,R.y+136,12,'#334155');
+   SC.T(c,'couple = ?   effort presseur = ?',R.x-40,R.y-90,13,'#dc2626');
+ }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>

@@ -1200,5 +1200,107 @@ window.MINICOURS={ ouvrir:ouvrir, fermer:fermer, notions:N };
 })();
 
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ document.querySelectorAll('#questions .q').forEach(function(q){
+  var b=q.querySelector('.num b'); if(!b) return; var k=b.textContent.replace('Question','').trim();
+  if(!D[k]) return; var p=q.querySelector('p'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  p.parentNode.insertBefore(cv,p.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+/* Schémas du sujet CAPET — flasque de moteur */
+function AXES(c,O,L){ SC.SEG(c,O.x-L,O.y,O.x+L,O.y,'#cbd5e1',1); SC.SEG(c,O.x,O.y-L,O.x,O.y+L,'#cbd5e1',1); SC.T(c,'x',O.x+L+8,O.y+5,12,'#64748b','left'); SC.T(c,'y',O.x,O.y-L-6,12,'#64748b'); }
+SCHEMAS({
+ 'A3': {h:270, titre:'Trois références, trois mises en position', draw:function(c){
+   var y=140;
+   SC.HACH(c,330,40,90,200); c.fillStyle='#fff'; c.fillRect(330,y-34,40,68); c.strokeStyle='#475569'; c.lineWidth=2; c.strokeRect(330,y-34,40,68);
+   c.fillStyle='#e0f2fe'; c.strokeStyle='#0284c7'; c.lineWidth=2.4; c.fillRect(280,y-100,50,200); c.strokeRect(280,y-100,50,200); c.fillRect(330,y-32,36,64); c.strokeRect(330,y-32,36,64);
+   c.fillStyle='#16a34a'; c.fillRect(314,y+50,40,9);
+   c.strokeStyle='#dc2626'; c.lineWidth=4; c.beginPath(); c.moveTo(330,y-100); c.lineTo(330,y-34); c.moveTo(330,y+34); c.lineTo(330,y+100); c.stroke();
+   SC.FL(c,140,y-70,326,y-70,1.6,'#dc2626'); SC.T(c,'A : face d’appui',130,y-66,13,'#dc2626','right');
+   SC.FL(c,560,y,370,y,1.6,'#0284c7'); SC.T(c,'B : centrage',566,y+4,13,'#0284c7','left');
+   SC.FL(c,560,y+80,356,y+56,1.6,'#16a34a'); SC.T(c,'C : pion',566,y+84,13,'#16a34a','left');
+   SC.T(c,'degrés supprimés : A = ?   B = ?   C = ?',380,262,13,'#334155');
+ }},
+ 'B2': {h:270, titre:'Zone de perpendicularité du centrage', draw:function(c){
+   var yA=230, x=300;
+   SC.SEG(c,120,yA,480,yA,'#dc2626',3); SC.T(c,'référence A',125,yA+20,12,'#dc2626','left');
+   c.fillStyle='rgba(22,163,74,.15)'; c.fillRect(x-40,50,80,yA-50); c.strokeStyle='#16a34a'; c.lineWidth=2; c.strokeRect(x-40,50,80,yA-50);
+   SC.TIRETS(c,x,40,x,yA,'#334155',1.2); SC.SEG(c,x-22,yA-6,x+26,58,'#0284c7',3);
+   SC.COTE(c,x-40,40,x+40,40,'Ø 0,03',undefined,-6);
+   SC.T(c,'axe réel',x+34,70,12,'#0284c7','left'); SC.T(c,'perpendiculaire idéale',x-48,120,12,'#334155','right');
+   SC.T(c,'cylindre de zone ⟂ A',600,110,14,'#16a34a'); SC.T(c,'écart maximal de l’axe = ?',600,150,14,'#155e75');
+   SC.T(c,'échelle très agrandie',600,190,12,'#64748b',undefined,false);
+ }},
+ 'B3': {h:260, titre:'Zone de localisation d’un trou de fixation', draw:function(c){
+   var O={x:260,y:145}, r=90; AXES(c,O,104);
+   SC.CERCLE(c,O.x,O.y,r,'rgba(22,163,74,.15)','#16a34a',2); SC.PT(c,O.x,O.y,4);
+   SC.COTE(c,O.x,O.y,O.x+r*Math.cos(-0.7),O.y+r*Math.sin(-0.7),'',  '#7c3aed'); SC.T(c,'écart max = ?',O.x+70,O.y-62,12,'#7c3aed','left');
+   SC.T(c,'zone Ø ? au maximum de matière',600,110,14,'#16a34a'); SC.T(c,'centre : position théorique exacte',600,140,12,'#334155');
+   SC.T(c,'par rapport à A, B, C',600,162,12,'#334155');
+ }},
+ 'C1': {h:250, titre:'Trou n° 1 : mesuré contre maximum de matière', draw:function(c){
+   var O={x:230,y:140};
+   SC.CERCLE(c,O.x,O.y,95,'#e0f2fe','#0284c7',2.5);
+   c.save(); c.setLineDash([5,4]); SC.CERCLE(c,O.x,O.y,82,null,'#334155',2); c.restore();
+   SC.T(c,'cercle plein : trou mesuré Ø 9,14',580,190,13,'#0284c7'); SC.T(c,'tirets : maximum de matière Ø 9,00',580,214,13,'#334155');
+   SC.T(c,'bonus = ?',580,100,15,'#ea580c'); SC.T(c,'zone accordée = Ø 0,2 + bonus = ?',580,135,13,'#16a34a');
+ }},
+ 'C2': {h:270, titre:'Position mesurée de l’axe du trou n° 1', draw:function(c){
+   var O={x:260,y:150}, k=600; AXES(c,O,104);
+   var P={x:O.x+0.09*k,y:O.y-0.12*k};
+   SC.CERCLE(c,O.x,O.y,0.1*k,null,'#16a34a',2); SC.T(c,'Ø 0,2',O.x-62,O.y+62,12,'#16a34a','right');
+   SC.TIRETS(c,O.x,P.y,P.x,P.y,'#7c3aed',1.2); SC.TIRETS(c,P.x,O.y,P.x,P.y,'#7c3aed',1.2);
+   SC.SEG(c,O.x,O.y,P.x,P.y,'#dc2626',2.5); SC.PT(c,O.x,O.y,4); SC.PT(c,P.x,P.y,6,'#dc2626');
+   SC.T(c,'0,09',(O.x+P.x)/2,O.y+18,12,'#7c3aed'); SC.T(c,'0,12',P.x+8,(O.y+P.y)/2+4,12,'#7c3aed','left');
+   SC.T(c,'écart radial = ?',P.x+12,P.y-10,13,'#dc2626','left');
+   SC.T(c,'zone nécessaire = ?',600,120,14,'#155e75'); SC.T(c,'à comparer à Ø 0,2 et à la zone de C1',600,150,12,'#334155');
+ }},
+ 'C3': {h:260, titre:'Diamètre virtuel et passage de la vis', draw:function(c){
+   var O={x:250,y:135};
+   SC.CERCLE(c,O.x,O.y,100,'#e0f2fe','#0284c7',2.5); c.save(); c.setLineDash([5,4]); SC.CERCLE(c,O.x,O.y,86,null,'#dc2626',2); c.restore();
+   SC.CERCLE(c,O.x,O.y,62,'#cbd5e1','#334155',2); SC.T(c,'vis Ø 8',O.x,O.y+5,14,'#334155');
+   SC.T(c,'trou au maximum de matière : Ø 9,00',580,90,13,'#0284c7'); SC.T(c,'localisation Ø 0,2',580,118,13,'#16a34a');
+   SC.T(c,'cercle rouge : diamètre virtuel = ?',580,160,13,'#dc2626'); SC.T(c,'jeu minimal = ?',580,188,13,'#dc2626');
+ }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>

@@ -382,5 +382,111 @@ function poserCorrige(n,raison){
 })();
 
 </script>
+<!-- SCHEMAS_CAPET debut -->
+<style>canvas.schema-capet{display:block;width:100%;max-width:760px;height:auto;margin:10px auto;border:1px solid #e9e2d4;border-radius:12px;background:#fff}</style>
+<script>
+/* SCHEMAS_CAPET */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+function SCHEMAS(D){
+ Object.keys(D).forEach(function(k){
+  var a=document.getElementById('a'+k); if(!a) return;
+  var cons=a.querySelector('.consigne'); var cv=document.createElement('canvas');
+  cv.width=760; cv.height=D[k].h||240; cv.className='schema-capet';
+  cv.setAttribute('aria-label',D[k].titre||'schéma');
+  cons.parentNode.insertBefore(cv,cons.nextSibling);
+  var c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,760,cv.height);
+  try{ if(D[k].titre) SC.TITRE(c,D[k].titre); D[k].draw(c); }catch(e){ console.error('schéma '+k,e); }
+ });
+}
+function MECA(c,O,s,R,L,th,o){
+ o=o||{}; var ax=R*Math.cos(th), ay=R*Math.sin(th), xb=ax+Math.sqrt(L*L-ay*ay);
+ var A={x:O.x+ax*s,y:O.y-ay*s}, B={x:O.x+xb*s,y:O.y};
+ var x1=O.x+(L-R)*s-30, x2=O.x+(L+R)*s+50;
+ c.fillStyle='#f1f5f9'; c.fillRect(x1,O.y-26,x2-x1,52);
+ SC.HACH(c,x1,O.y-38,x2-x1,12); SC.HACH(c,x1,O.y+26,x2-x1,12);
+ c.save(); c.setLineDash([5,5]); c.strokeStyle='#cbd5e1'; c.lineWidth=1.3; c.beginPath(); c.arc(O.x,O.y,R*s,0,6.2832); c.stroke(); c.restore();
+ c.fillStyle='#94a3b8'; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(O.x-13,O.y+22); c.lineTo(O.x+13,O.y+22); c.closePath(); c.fill();
+ c.strokeStyle='#0e7490'; c.lineWidth=6; c.lineCap='round'; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(A.x,A.y); c.stroke();
+ c.strokeStyle='#7c3aed'; c.lineWidth=4; c.beginPath(); c.moveTo(A.x,A.y); c.lineTo(B.x,B.y); c.stroke(); c.lineCap='butt';
+ c.fillStyle='#fed7aa'; c.strokeStyle='#ea580c'; c.lineWidth=2; c.fillRect(B.x-6,O.y-23,42,46); c.strokeRect(B.x-6,O.y-23,42,46);
+ SC.PT(c,O.x,O.y,5); SC.PT(c,A.x,A.y,5); SC.PT(c,B.x,B.y,5);
+ if(!o.sansLettres){ SC.T(c,'O',O.x-14,O.y-6,13); SC.T(c,'A',A.x-12,A.y-8,13); SC.T(c,'B',B.x+16,O.y+5,13); }
+ return {A:A,B:B,xb:xb};
+}
+function ANGLE(c,O,r,a0,a1,txt,co,dx,dy){ c.strokeStyle=co||'#ea580c'; c.lineWidth=2; c.beginPath(); c.arc(O.x,O.y,r,-a1,-a0); c.stroke(); if(txt) SC.T(c,txt,O.x+(dx||r+14),O.y+(dy||-6),13,co||'#ea580c'); }
+
+SCHEMAS({
+ '2': {h:250, titre:'Vitesse du maneton A', draw:function(c){
+   var O={x:250,y:160}, r=72, th=50*Math.PI/180, A={x:O.x+r*Math.cos(th),y:O.y-r*Math.sin(th)};
+   c.save(); c.setLineDash([5,5]); c.strokeStyle='#cbd5e1'; c.beginPath(); c.arc(O.x,O.y,r,0,6.2832); c.stroke(); c.restore();
+   SC.SEG(c,O.x,O.y,A.x,A.y,'#0e7490',7); SC.PT(c,O.x,O.y,5); SC.PT(c,A.x,A.y,5);
+   SC.T(c,'O',O.x-14,O.y+5,13); SC.T(c,'A',A.x+14,A.y+4,13);
+   SC.T(c,'R = 40 mm',O.x+r*0.5*Math.cos(th)-50,O.y-r*0.5*Math.sin(th)+2,12,'#0e7490');
+   SC.FL(c,A.x,A.y,A.x-Math.sin(th)*62,A.y-Math.cos(th)*62,3,'#dc2626'); SC.T(c,'V_A = ?',A.x-Math.sin(th)*62-36,A.y-Math.cos(th)*62+4,13,'#dc2626');
+   c.strokeStyle='#ea580c'; c.lineWidth=2.5; c.beginPath(); c.arc(O.x,O.y,30,-0.3,-1.4,true); c.stroke();
+   SC.FL(c,O.x+30*Math.cos(-1.3),O.y+30*Math.sin(-1.3),O.x+30*Math.cos(-1.42),O.y+30*Math.sin(-1.42),2.5,'#ea580c');
+   SC.T(c,'ω = ?',O.x+52,O.y-30,13,'#ea580c');
+   SC.T(c,'N = 1 500 tr/min',560,110,15,'#334155'); SC.T(c,'V_A perpendiculaire à OA',560,140,13,'#64748b',undefined,false);
+ }},
+ '4': {h:260, titre:'Position du piston à θ = 60°', draw:function(c){
+   var O={x:110,y:150}, s=1.9, m=MECA(c,O,s,40,160,Math.PI/3);
+   ANGLE(c,O,24,0,Math.PI/3,'θ = 60°','#ea580c',44,-10);
+   var xP=O.x+200*s; SC.TIRETS(c,xP,O.y-50,xP,O.y+60,'#16a34a'); SC.T(c,'PMH (θ = 0)',xP,O.y-56,12,'#16a34a');
+   SC.COTE(c,O.x,O.y+70,m.B.x,O.y+70,'x_B = ?','#ea580c',-6);
+   SC.COTE(c,m.B.x,O.y+96,xP,O.y+96,'?','#16a34a',-6);
+   SC.T(c,'R = 40 mm · L = 160 mm',600,220,13,'#334155');
+ }},
+ '5': {h:300, titre:'Équiprojectivité à θ = 45°', draw:function(c){
+   var O={x:110,y:190}, s=1.9, th=Math.PI/4, m=MECA(c,O,s,40,160,th,{});
+   var A=m.A,B=m.B, d=Math.hypot(B.x-A.x,B.y-A.y), ux=(B.x-A.x)/d, uy=(B.y-A.y)/d;
+   SC.TIRETS(c,A.x-ux*70,A.y-uy*70,B.x+ux*90,B.y+uy*90,'#cbd5e1');
+   var k=14, vx=-Math.sin(th)*6.28*k, vy=-Math.cos(th)*6.28*k;
+   SC.FL(c,A.x,A.y,A.x+vx,A.y+vy,3,'#dc2626'); SC.T(c,'V_A = 6,28 m/s',A.x+vx-6,A.y+vy-8,12,'#dc2626');
+   SC.TIRETS(c,B.x,B.y,B.x-110,B.y,'#2563eb'); SC.T(c,'direction de V_B : axe du cylindre',B.x-60,B.y+64,12,'#2563eb');
+   SC.T(c,'(V_A, AB) = 34,8°',650,70,14,'#dc2626'); SC.T(c,'(V_B, AB) = 10,2°',650,96,14,'#2563eb');
+   SC.T(c,'projection commune = ?',650,128,13,'#16a34a'); SC.T(c,'V_B = ?',650,152,13,'#2563eb');
+ }},
+ '6': {h:320, titre:'Centre instantané de rotation de la bielle à θ = 45°', draw:function(c){
+   var O={x:90,y:270}, s=1.2, th=Math.PI/4, m=MECA(c,O,s,40,160,th,{});
+   var I={x:O.x+185.76*s,y:O.y-185.76*s};
+   SC.TIRETS(c,O.x,O.y,I.x,I.y,'#7c3aed',1.6); SC.TIRETS(c,m.B.x,m.B.y,I.x,I.y,'#7c3aed',1.6);
+   SC.PT(c,I.x,I.y,6,'#7c3aed'); SC.T(c,'I',I.x+14,I.y+5,15,'#7c3aed');
+   var k=10, vx=-Math.sin(th)*6.28*k, vy=-Math.cos(th)*6.28*k;
+   SC.FL(c,m.A.x,m.A.y,m.A.x+vx,m.A.y+vy,3,'#dc2626'); SC.T(c,'V_A',m.A.x+vx-14,m.A.y+vy-4,12,'#dc2626');
+   SC.T(c,'x_B = 185,76 mm',560,90,14,'#334155'); SC.T(c,'IA = ?   IB = ?',560,124,14,'#7c3aed');
+   SC.T(c,'ω bielle = ?   V_B = ?',560,156,14,'#2563eb');
+   SC.T(c,'I : droite OA ∩ verticale en B',560,196,12,'#64748b',undefined,false);
+ }}
+});
+
+})();
+</script>
+<!-- SCHEMAS_CAPET fin -->
 </body>
 </html>
