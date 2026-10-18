@@ -92,7 +92,7 @@ const Q=[
  {n:'C1',cours:'hyperstatisme',pts:16,"t": "PARTIE C — VÉRIN DE HAYON. Bâti, corps, tige, hayon : rotule, pivot glissant, rotule, pivot. Calculez γ, N<sub>c</sub>, m et h.", "champs": [{"id": "c1a", "l": "γ :", "rep": 1, "tol": 0, "u": ""}, {"id": "c1b", "l": "N<sub>c</sub> :", "rep": 9, "tol": 0, "u": ""}, {"id": "c1c", "l": "m :", "rep": 3, "tol": 0, "u": ""}, {"id": "c1d", "l": "h :", "rep": 0, "tol": 0, "u": ""}], "corr": "<b>γ = 4 − 4 + 1 = 1</b>. <b>N<sub>c</sub> = 3 + 2 + 3 + 1 = 9</b>. Mobilités : l’ouverture du hayon, plus la rotation du corps et celle de la tige autour de leur axe, soit <b>m = 3</b>. <b>h = 3 − 9 + 6 = 0</b>."},
  {n:'C2',cours:'hyperstatisme',pts:6,"t": "Pourquoi monte-t-on un vérin entre deux rotules ?", "choix": {"id": "xC2", "o": ["pour réduire le coût des pièces", "pour que la tige ne transmette qu’un effort axial, sans flexion", "pour augmenter la course du vérin"], "b": 1}, "corr": "Entre deux rotules, le vérin est une <b>bielle</b> : il ne transmet qu’un effort selon son axe. La tige ne subit aucune flexion parasite, ce qui protège les joints."},
  {n:'D1',cours:'hyperstatisme',pts:14,"t": "PARTIE D — TIROIR. Calculez h pour chacune des trois variantes du document 4.", "champs": [{"id": "d1a", "l": "Deux glissières :", "rep": 5, "tol": 0, "u": ""}, {"id": "d1b", "l": "Pivot glissant + appui plan :", "rep": 2, "tol": 0, "u": ""}, {"id": "d1c", "l": "Pivot glissant + ponctuelle :", "rep": 0, "tol": 0, "u": ""}], "corr": "m = 1 dans les trois cas. Deux glissières : N<sub>c</sub> = 2, <b>h = 5</b>. Pivot glissant + appui plan : N<sub>c</sub> = 5, <b>h = 2</b>. Pivot glissant + ponctuelle : N<sub>c</sub> = 7, <b>h = 0</b>."},
- {n:'E1',pts:8,"t": "PARTIE E — EXPLOITATION PÉDAGOGIQUE. Des élèves trouvent h = −1 pour le vérin. Quelle est l’origine la plus probable de leur erreur ?", "choix": {"id": "xE1", "o": ["ils ont oublié les mobilités internes du corps et de la tige", "ils ont compté une liaison de trop", "la formule ne s’applique pas aux vérins"], "b": 0}, "corr": "Un résultat négatif signale toujours des <b>mobilités oubliées</b>. Ici, les rotations propres du corps et de la tige autour de leur axe sont des mobilités internes : m = 3, pas 1."},
+ {n:'E1',pts:8,"t": "PARTIE E — EXPLOITATION PÉDAGOGIQUE. Des élèves trouvent h = −2 pour le vérin. Quelle est l’origine la plus probable de leur erreur ?", "choix": {"id": "xE1", "o": ["ils ont oublié les mobilités internes du corps et de la tige", "ils ont compté une liaison de trop", "la formule ne s’applique pas aux vérins"], "b": 0}, "corr": "Un résultat négatif signale toujours des <b>mobilités oubliées</b>. Ici, les rotations propres du corps et de la tige autour de leur axe sont des mobilités internes : m = 3, pas 1."},
  {n:'E2',pts:8,"t": "Pour faire comprendre ce qu’est un montage hyperstatique, quelle activité est la plus parlante ?", "choix": {"id": "xE2", "o": ["poser un tabouret à 3 pieds et une table à 4 pieds sur un sol irrégulier, puis relier l’observation au calcul de h", "faire mémoriser le tableau des liaisons normalisées", "faire calculer h sur dix mécanismes sans les observer"], "b": 0}, "corr": "Le tabouret à trois pieds et la table à quatre pieds rendent l’hyperstatisme <b>visible</b> : la table boite sur un sol irrégulier. Le calcul vient ensuite formaliser l’observation."}
 ];
 
@@ -1154,6 +1154,118 @@ courroie:{
   T(c,'θ = '+Math.round(th*180/Math.PI)+'°',cx-20,cy+5,15,'#ea580c');
   T(c,'f = 0,3   e^(fθ) = '+k.toFixed(2).replace('.',','),560,110,15,'#155e75');
   T(c,'T₁ = '+k.toFixed(2).replace('.',',')+' × T₂',560,150,17,'#dc2626');
+ }},
+
+/* ----- CAPET mécanique, série 2 : dynamique, énergétique, hydraulique, matériaux ----- */
+pfd:{
+ titre:'Principe fondamental de la dynamique',
+ formules:['translation : ΣF = m a','rotation autour d’un axe fixe : ΣC = J dω/dt'],
+ texte:['On isole le solide, on choisit un sens positif, on fait le bilan COMPLET des actions, poids compris.',
+        'Levage en montée accélérée : T − m g = m a, donc T = m (g + a).',
+        'Accélération constante : v = a t, x = ½ a t², et de même ω = (dω/dt) t en rotation.'],
+ dessin:function(c,t){
+  const a=osc(t,6), x=80+a*360;
+  c.strokeStyle='#94a3b8'; c.lineWidth=3; c.beginPath(); c.moveTo(40,200); c.lineTo(660,200); c.stroke();
+  c.fillStyle='#bfdbfe'; c.strokeStyle='#2563eb'; c.lineWidth=2; c.fillRect(x,140,110,56); c.strokeRect(x,140,110,56);
+  T(c,'m',x+55,174,16,'#1e3a8a');
+  FL(c,x+110,160,x+190,160,3,'#16a34a'); T(c,'F',x+200,165,15,'#16a34a','left');
+  FL(c,x,180,x-50,180,3,'#dc2626'); T(c,'F_r',x-58,185,14,'#dc2626','right');
+  T(c,'a = (F − F_r) / m',350,60,20,'#155e75');
+  T(c,'l’effort NET fait accélérer',350,250,13,'#5b544a');
+ }},
+
+momentinertie:{
+ titre:'Moment d’inertie',
+ formules:['disque plein : J = ½ m R²   ·   anneau : J = m R²','barre autour d’une extrémité : J = ⅓ m L²'],
+ texte:['J mesure la résistance d’un solide à la mise en rotation, en kg·m².',
+        'La matière compte au CARRÉ de sa distance à l’axe : l’anneau vaut deux fois le disque de même masse.',
+        'Les inerties autour d’un même axe s’additionnent.'],
+ dessin:function(c,t){
+  const a=t*1.2;
+  [[200,'#0e7490','disque : ½ m R²',0],[480,'#ea580c','anneau : m R²',1]].forEach(function(q){
+   c.strokeStyle=q[1]; c.lineWidth=3;
+   if(q[3]){ c.lineWidth=12; c.beginPath(); c.arc(q[0],140,74,0,6.284); c.stroke(); c.lineWidth=3; }
+   else { c.fillStyle=q[1]; c.globalAlpha=0.3; c.beginPath(); c.arc(q[0],140,80,0,6.284); c.fill(); c.globalAlpha=1; c.beginPath(); c.arc(q[0],140,80,0,6.284); c.stroke(); }
+   c.beginPath(); c.moveTo(q[0],140); c.lineTo(q[0]+80*Math.cos(a*(q[3]?0.6:1)),140+80*Math.sin(a*(q[3]?0.6:1))); c.stroke();
+   T(c,q[2],q[0],254,14,q[1]);
+  });
+  T(c,'même couple : l’anneau démarre deux fois moins vite',350,30,13,'#5b544a');
+ }},
+
+energiecinetique:{
+ titre:'Énergie cinétique',
+ formules:['translation : E = ½ m V²','rotation : E = ½ J ω²'],
+ texte:['C’est l’énergie que le moteur doit fournir pour lancer, et que le frein doit dissiper pour arrêter.',
+        'La vitesse est au carré : rouler deux fois plus vite, c’est quatre fois plus d’énergie.',
+        'Convertir d’abord : km/h ÷ 3,6 donne des m/s ; tr/min × π / 30 donne des rad/s.'],
+ dessin:function(c,t){
+  const v=10+30*osc(t,6), E=0.5*1200*v*v/1000;
+  c.fillStyle='#bfdbfe'; c.strokeStyle='#2563eb'; c.lineWidth=2; c.beginPath(); c.roundRect(60,120,160,56,10); c.fill(); c.stroke();
+  c.fillStyle='#334155'; c.beginPath(); c.arc(95,182,12,0,6.284); c.arc(185,182,12,0,6.284); c.fill();
+  FL(c,230,148,230+v*4,148,3,'#16a34a'); T(c,v.toFixed(0)+' m/s',250+v*2,136,13,'#16a34a');
+  c.fillStyle='#f1f5f9'; c.fillRect(420,120,240,36); c.fillStyle='#ea580c'; c.fillRect(420,120,Math.min(240,E/1000*240),36);
+  T(c,'E = '+E.toFixed(0)+' kJ',540,100,18,'#155e75'); T(c,'1 200 kg',140,153,13,'#1e3a8a');
+ }},
+
+verindebit:{
+ titre:'Vérin : vitesse, débit et puissance',
+ formules:['V = Q / S   (Q en m³/s, S en m²)','P = p × Q   (Pa × m³/s = W)'],
+ texte:['En rentrée, la surface utile est la couronne S − s : la tige rentre plus vite qu’elle ne sort.',
+        '1 L/min = 1/60 000 m³/s. 100 bar = 10⁷ Pa.',
+        'La puissance du moteur de pompe vaut p Q / η.'],
+ dessin:function(c,t){
+  const x=osc(t,5)*180, y=140;
+  c.strokeStyle='#334155'; c.lineWidth=3; c.strokeRect(100,y-45,300,90);
+  c.fillStyle='#fca5a5'; c.fillRect(102,y-43,40+x,86); c.fillStyle='#475569'; c.fillRect(142+x,y-43,14,86);
+  c.fillStyle='#94a3b8'; c.fillRect(156+x,y-14,270,28);
+  FL(c,60,y,100,y,3,'#dc2626'); T(c,'Q',60,y-12,15,'#dc2626');
+  T(c,'V = Q / S',560,110,20,'#155e75'); T(c,'P = p × Q',560,150,20,'#7c3aed');
+ }},
+
+traction:{
+ titre:'Essai de traction',
+ formules:['σ = F / S₀   ·   ε = ΔL / L₀   ·   E = σ / ε','A % = 100 (L_u − L₀) / L₀'],
+ texte:['La droite du début est la zone élastique : sa pente est le module d’Young E.',
+        'R_e marque la fin du comportement élastique, R_m le maximum de la courbe.',
+        'On calcule toujours avec la section INITIALE S₀.'],
+ dessin:function(c,t){
+  const k=Math.min(1,(t%6)/5), gx=120,gy=30,gw=460,gh=220;
+  c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+  c.strokeStyle='#ea580c'; c.lineWidth=3; c.beginPath(); c.moveTo(gx,gy+gh);
+  const pts=[[0.04,0.55],[0.12,0.57],[0.45,0.92],[0.7,0.96],[0.9,0.8]];
+  let last=[0,0]; pts.forEach(function(p){ if(p[0]<=k){ c.lineTo(gx+p[0]*gw,gy+gh-p[1]*gh); last=p; } }); c.stroke();
+  T(c,'R_e',gx-8,gy+gh-0.55*gh+4,13,'#2563eb','right'); T(c,'R_m',gx-8,gy+gh-0.96*gh+4,13,'#dc2626','right');
+  T(c,'pente E',gx+60,gy+gh-60,12,'#0e7490','left');
+ }},
+
+indiceperf:{
+ titre:'Indice de performance d’un matériau',
+ formules:['tirant résistant : ρ / R_e   ·   tirant rigide : ρ / E','poutre rigide : ρ / E^½   ·   poutre résistante : ρ / R_e^½'],
+ texte:['On écrit la masse de la pièce, puis on remplace la dimension libre grâce à la condition à respecter.',
+        'Ce qui ne dépend plus que du matériau est l’indice : le plus petit donne la pièce la plus légère.',
+        'On compare des indices, jamais une propriété isolée.'],
+ dessin:function(c,t){
+  const M=[['acier',26,'#475569'],['aluminium',10.8,'#0ea5e9'],['titane',5,'#a855f7']], i=Math.floor(t/2)%3;
+  M.forEach(function(m,k){ const y=70+k*60, w=m[1]*16, on=k===i;
+   c.fillStyle=m[2]; c.globalAlpha=on?0.9:0.4; c.fillRect(180,y,w,34); c.globalAlpha=1;
+   T(c,m[0],170,y+23,14,m[2],'right'); T(c,'ρ/R_e = '+String(m[1]).replace('.',','),190+w,y+23,13,'#334155','left'); });
+  T(c,'plus la barre est courte, plus le tirant est léger',350,270,13,'#5b544a');
+ }},
+
+flexionrect:{
+ titre:'Flexion d’une section rectangulaire',
+ formules:['σ = M / (I/v)   ·   rectangle b × h : I/v = b h² / 6','condition : σ ≤ R_e / s'],
+ texte:['M est le moment fléchissant maximal, souvent effort × bras de levier à l’encastrement.',
+        'La hauteur h compte au carré : on oriente la plus grande dimension dans le plan de flexion.',
+        'En isolant h, on obtient la hauteur minimale : h² = 6 M s / (b R_e).'],
+ dessin:function(c,t){
+  const f=8+12*osc(t,4);
+  c.fillStyle='#94a3b8'; c.fillRect(60,80,30,140);
+  c.strokeStyle='#0e7490'; c.lineWidth=22; c.beginPath(); c.moveTo(90,150); c.quadraticCurveTo(260,150,420,150+f); c.stroke();
+  FL(c,420,90+f,420,136+f,3,'#dc2626'); T(c,'F',434,100+f,15,'#dc2626','left');
+  T(c,'M = F × L',250,60,16,'#155e75');
+  c.strokeStyle='#334155'; c.lineWidth=2; c.strokeRect(540,110,30,70); T(c,'b',555,200,13,'#334155'); T(c,'h',585,150,13,'#334155','left');
+  T(c,'I/v = b h² / 6',560,240,15,'#7c3aed');
  }}
 };
 
@@ -1307,5 +1419,309 @@ SCHEMAS({
 })();
 </script>
 <!-- SCHEMAS_CAPET fin -->
+<!-- CORRIGES_DETAILLES debut -->
+<style>
+.detail-corr{margin-top:12px;border-top:2px dashed #bae6fd;padding-top:10px;text-align:left}
+.detail-corr .dc-tete{font:800 13px 'Segoe UI',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#0369a1;margin-bottom:4px}
+.detail-corr .dc-etapes{margin:4px 0 8px 22px;font-size:14.5px;line-height:1.65;color:#1e293b}
+.detail-corr .dc-etapes li{margin:5px 0;padding-left:2px}
+.detail-corr .dc-anim{margin:8px 0;text-align:center}
+.detail-corr canvas{display:block;width:100%;max-width:760px;height:auto;margin:0 auto 6px;border:1px solid #e9e2d4;border-radius:12px;background:#fff}
+.detail-corr .dc-btn{background:#fff;color:#0e7490;border:2px solid #0e7490;border-radius:9px;padding:6px 12px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;margin:4px 6px 4px 0}
+.detail-corr .dc-mc{color:#c2410c;border-color:#fdba74;background:#fff7ed}
+.detail-corr .dc-verif{background:#f0fdf4;border-left:4px solid #16a34a;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:14px;line-height:1.55}
+.detail-corr .dc-piege{background:#fef2f2;border-left:4px solid #dc2626;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:14px;line-height:1.55}
+@media print{.detail-corr .dc-btn{display:none}}
+</style>
+<script>
+/* CORRIGES_DETAILLES */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+/* ===== CORRIGES_DETAILLES — moteur commun =====
+   DETAILS(D, MINI) : D = { clé : { etapes:[html…], anim:{h, titre, duree, draw:function(c,t){…}},
+                                    mc:'notion', piege:'html', verif:'html' } }
+   Clés : '1'…'7' missions de TP, 'c1'…'c3' exercices sur copie, 'A1'… questions de sujet.
+   MINI : notions de mini-cours propres à la page, ajoutées à la bibliothèque MINICOURS.
+   L’animation ne tourne que lorsque le canvas est visible ; « Rejouer » la reprend à zéro. */
+function ANIM_CORR(cv,a){
+ var c=cv.getContext('2d'), raf=0, t0=performance.now(), vis=false;
+ function img(ts){ var t=(ts-t0)/1000; c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+  try{ if(a.titre) SC.TITRE(c,a.titre); a.draw(c,t); }catch(e){ console.error(e); cancelAnimationFrame(raf); raf=0; return; }
+  raf=requestAnimationFrame(img); }
+ function go(){ if(!raf){ raf=requestAnimationFrame(img);} }
+ function stop(){ cancelAnimationFrame(raf); raf=0; }
+ if('IntersectionObserver' in window) new IntersectionObserver(function(es){ es.forEach(function(e){ vis=e.isIntersecting; vis?go():stop(); }); }).observe(cv);
+ else go();
+ c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+ return function(){ t0=performance.now(); go(); };
+}
+function ENRICHIR(hote,d){
+ if(!hote || hote.querySelector('.detail-corr')) return;
+ var z=document.createElement('div'); z.className='detail-corr';
+ var h='<div class="dc-tete">Corrigé pas à pas</div>';
+ if(d.etapes){ h+='<ol class="dc-etapes">'; d.etapes.forEach(function(e){ h+='<li>'+e+'</li>'; }); h+='</ol>'; }
+ z.innerHTML=h;
+ if(d.anim){
+  var f=document.createElement('div'); f.className='dc-anim';
+  var cv=document.createElement('canvas'); cv.width=760; cv.height=d.anim.h||260; f.appendChild(cv);
+  var b=document.createElement('button'); b.type='button'; b.className='dc-btn'; b.textContent='Rejouer l’animation'; f.appendChild(b);
+  z.appendChild(f); var rejouer=ANIM_CORR(cv,d.anim); b.addEventListener('click',rejouer);
+ }
+ if(d.verif){ var v=document.createElement('div'); v.className='dc-verif'; v.innerHTML='<b>Vérification</b> — '+d.verif; z.appendChild(v); }
+ if(d.piege){ var p=document.createElement('div'); p.className='dc-piege'; p.innerHTML='<b>Erreur fréquente</b> — '+d.piege; z.appendChild(p); }
+ if(d.mc && window.MINICOURS && window.MINICOURS.notions[d.mc]){
+  var m=document.createElement('button'); m.type='button'; m.className='dc-btn dc-mc';
+  m.textContent='Mini-cours : '+window.MINICOURS.notions[d.mc].titre;
+  m.addEventListener('click',function(){ window.MINICOURS.ouvrir(d.mc); }); z.appendChild(m);
+ }
+ hote.appendChild(z);
+}
+function DETAILS(D,MINI){
+ if(MINI && window.MINICOURS) Object.keys(MINI).forEach(function(k){ window.MINICOURS.notions[k]=MINI[k]; });
+ var sujet=!!document.getElementById('rendre');
+ if(!sujet){
+  Object.keys(D).forEach(function(k){
+   var hote=null;
+   if(/^c\d$/.test(k)){ var ex=document.querySelectorAll('.copie-ex')[+k.slice(1)-1]; hote=ex && ex.querySelector('.corrige-bloc'); }
+   else { var a=document.getElementById('a'+k); hote=a && a.querySelector('.boite > .corrige-bloc'); }
+   ENRICHIR(hote,D[k]);
+  });
+ } else {
+  document.getElementById('rendre').addEventListener('click',function(){
+   document.querySelectorAll('#resultat .corr').forEach(function(cr){
+    var b=cr.querySelector('b'); if(!b) return; var k=b.textContent.replace('Question','').trim();
+    if(D[k]) ENRICHIR(cr,D[k]);
+   });
+  });
+ }
+}
+
+/* Corrigés détaillés — liaisons et hyperstatisme */
+function K(t,a,b){ return Math.max(0,Math.min(1,(t-a)/(b-a))); }
+function NOEUD(c,x,y,lab,sous){ SC.CERCLE(c,x,y,24,'#ecfeff','#0e7490',2.5); SC.T(c,lab,x,y+6,16,'#155e75'); if(sous) SC.T(c,sous,x,y+42,11,'#64748b',undefined,false); }
+/* arc de a vers b, courbé de « b » px, révélé si p > 0 */
+function ARC(c,A,B,bend,lab,p,co){
+ if(p<=0) return; co=co||'#ea580c';
+ var mx=(A.x+B.x)/2, my=(A.y+B.y)/2, dx=B.x-A.x, dy=B.y-A.y, d=Math.hypot(dx,dy), nx=-dy/d, ny=dx/d, cx=mx+nx*bend, cy=my+ny*bend;
+ c.save(); c.globalAlpha=Math.min(1,p*1.5); c.strokeStyle=co; c.lineWidth=2.5; c.beginPath(); c.moveTo(A.x,A.y); c.quadraticCurveTo(cx,cy,B.x,B.y); c.stroke();
+ if(lab){ var lx=0.25*A.x+0.5*cx+0.25*B.x, ly=0.25*A.y+0.5*cy+0.25*B.y, o; c.font='bold 12px Segoe UI'; o=(bend>0?1:-1)*(15+Math.abs(nx)*c.measureText(lab).width/2); SC.T(c,lab,lx+nx*o,ly+ny*o+4,12,co); }
+ c.restore();
+}
+/* lignes de calcul qui apparaissent l’une après l’autre à partir de t0 */
+function LIGNES(c,t,t0,x,y,L,pas){ pas=pas||26; L.forEach(function(l,i){ if(t>t0+i*0.8) SC.T(c,l[0],x,y+i*pas,l[2]||14,l[1]||'#155e75','left'); }); }
+/* grille des 6 mobilités : m = [Tx,Ty,Tz,Rx,Ry,Rz] */
+function DDL(c,x,y,m,p){ ['Tx','Ty','Tz','Rx','Ry','Rz'].forEach(function(n,k){ var on=m[k], X=x+k*44;
+ c.fillStyle=p<=0?'#f8fafc':(on?(k<3?'#dbeafe':'#ffedd5'):'#f1f5f9'); c.fillRect(X,y,40,26); c.strokeStyle=on&&p>0?(k<3?'#2563eb':'#ea580c'):'#cbd5e1'; c.lineWidth=1.5; c.strokeRect(X,y,40,26);
+ SC.T(c,n,X+20,y+18,12,on&&p>0?(k<3?'#2563eb':'#ea580c'):'#94a3b8'); }); }
+function TABLE_LIAISONS(c,t,rows){
+ rows.forEach(function(r,i){ var y=48+i*48, p=K(t,0.4+i*0.9,1+i*0.9);
+  SC.T(c,r[0],150,y+18,13,'#334155','right'); DDL(c,170,y,r[1],p);
+  if(p>=1){ var m=r[1].reduce(function(a,b){return a+b;},0); SC.T(c,'m = '+m+'   →   6 − '+m+' = '+(6-m)+' inconnues',450,y+18,13,'#155e75','left'); } });
+}
+/* arbre sur deux paliers : défaut d’alignement absorbé (iso) ou arbre forcé */
+function ARBRE(c,y,iso,d,lab){
+ var xa=150, xb=520, pente=-d/(xb-xa), Y=function(x){return y+pente*(x-xa);};
+ c.strokeStyle=iso?'#16a34a':'#dc2626'; c.lineWidth=9; c.lineCap='round'; c.beginPath();
+ if(iso){ c.moveTo(80,Y(80)); c.lineTo(600,Y(600)); }
+ else { c.moveTo(80,y); c.lineTo(xa,y); c.bezierCurveTo(260,y+d*1.2,420,y-d*2.2,xb,y-d); c.lineTo(600,y-d); }
+ c.stroke(); c.lineCap='butt';
+ if(iso){ SC.CERCLE(c,xa,y,13,'#fff','#334155',2); SC.CERCLE(c,xb,y-d,13,'#fff','#334155',2); SC.SEG(c,xb-20,y-d-17,xb+20,y-d-17,'#334155',2); SC.SEG(c,xb-20,y-d+17,xb+20,y-d+17,'#334155',2); }
+ else { SC.RECT(c,xa-15,y-15,30,30,'#fff','#334155',2); SC.RECT(c,xb-15,y-d-15,30,30,'#fff','#334155',2); }
+ SC.T(c,lab,620,y+5,13,iso?'#16a34a':'#dc2626','left');
+}
+
+
+var P0={x:140,y:140}, P1={x:420,y:140};
+DETAILS({
+ 'A1': {
+  etapes:[
+   '<b>Règle.</b> Inconnues statiques = 6 − mobilités laissées par la liaison.',
+   '<b>Pivot glissant.</b> 1 translation + 1 rotation selon l’axe : 6 − 2 = 4.',
+   '<b>Ponctuelle.</b> Seule la translation normale est bloquée : 6 − 5 = 1.',
+   '<b>Linéaire rectiligne.</b> 2 translations + 2 rotations : 6 − 4 = 2.',
+   '<b>Linéaire annulaire.</b> 1 translation + 3 rotations : 6 − 4 = 2.',
+   '<b>Conclure.</b> 4, 1, 2 et 2 inconnues.'],
+  anim:{h:250, titre:'Six degrés de liberté, moins ceux laissés', draw:function(c,t){
+   TABLE_LIAISONS(c,t,[['pivot glissant',[1,0,0,1,0,0]],['ponctuelle',[1,1,0,1,1,1]],['linéaire rectiligne',[1,1,0,1,0,1]],['linéaire annulaire',[1,0,0,1,1,1]]]);
+  }},
+  verif:'la ponctuelle ne transmet qu’une force normale au contact : 1 inconnue.',
+  piege:'confondre linéaire rectiligne (cylindre sur plan) et linéaire annulaire (sphère dans un cylindre).',
+  mc:'liaisons'
+ },
+ 'A2': {
+  etapes:[
+   '<b>Modèle.</b> Roulement A : rotule ; roulement B : linéaire annulaire.',
+   '<b>Graphe.</b> Bâti 0, tambour 1, deux arcs : L = 2, p = 2, γ = 1.',
+   '<b>N<sub>c</sub>.</b> 3 + 4 = 7.',
+   '<b>m.</b> Seule la rotation du tambour : m = 1.',
+   '<b>h.</b> h = 1 − 7 + 6 = 0.',
+   '<b>Conclure.</b> Isostatique : un défaut d’alignement des logements ne crée aucun effort parasite.'],
+  anim:{h:270, titre:'Solution 1 : rotule + linéaire annulaire', draw:function(c,t){
+   ARC(c,P0,P1,-60,'rotule A',K(t,0.3,1)); ARC(c,P0,P1,60,'linéaire annulaire B',K(t,1,1.7));
+   NOEUD(c,P0.x,P0.y,'0','bâti'); NOEUD(c,P1.x,P1.y,'1','tambour');
+   LIGNES(c,t,2,520,90,[['γ = 2 − 2 + 1 = 1'],['N_c = 3 + 4 = 7'],['m = 1','#334155'],['h = 1 − 7 + 6 = 0','#16a34a',16]]);
+  }},
+  verif:'les inconnues : 3 + 2 = 5, exactement ce qu’il faut pour bloquer 5 degrés sur 6.',
+  piege:'oublier la translation axiale de la linéaire annulaire et compter N<sub>c</sub> = 6.',
+  mc:'hyperstatisme'
+ },
+ 'A3': {
+  etapes:[
+   '<b>Un roulement à billes rotule légèrement</b> : on le modélise par une rotule ou une LA.',
+   '<b>Arrêté axialement</b> (bagues bloquées des deux côtés) : il fixe le centre, c’est une rotule.',
+   '<b>Libre axialement</b> : son centre peut glisser, c’est une linéaire annulaire.',
+   '<b>Écarter les autres choix.</b> Rouleaux coniques en X : quasi-pivot, rigide. Paliers longs : pivots glissants.',
+   '<b>Conclure.</b> Un roulement à billes fixe, un roulement à billes libre.'],
+  anim:{h:240, titre:'Un roulement fixe, un roulement libre', draw:function(c,t){
+   var x=12*Math.sin(t*1.5);
+   SC.SEG(c,80,120,660+x,120,'#0e7490',10);
+   [[200,true],[540,false]].forEach(function(r){ var X=r[0]+(r[1]?0:x);
+    SC.CERCLE(c,X,96,10,'#e2e8f0','#334155',2); SC.CERCLE(c,X,144,10,'#e2e8f0','#334155',2);
+    if(r[1]){ c.fillStyle='#334155'; c.fillRect(X-20,78,6,16); c.fillRect(X+14,78,6,16); c.fillRect(X-20,146,6,16); c.fillRect(X+14,146,6,16); }
+    SC.T(c,r[1]?'arrêté : rotule':'libre : linéaire annulaire',r[0],196,13,r[1]?'#155e75':'#ea580c'); });
+   SC.T(c,'la dilatation de l’arbre se fait librement côté B',380,226,12,'#64748b',undefined,false);
+  }},
+  verif:'c’est le montage classique d’un arbre court : simple, peu coûteux, insensible aux défauts.',
+  piege:'modéliser chaque roulement à billes par une pivot : on obtiendrait h = 5, loin du comportement réel.',
+  mc:'hyperstatisme'
+ },
+ 'B1': {
+  etapes:[
+   '<b>Graphe.</b> Trois arcs entre bâti et tambour : 2 pivots glissants, 1 ponctuelle.',
+   '<b>Cycles.</b> γ = L − p + 1 = 3 − 2 + 1 = 2.',
+   '<b>N<sub>c</sub>.</b> 2 + 2 + 5 = 9.',
+   '<b>m.</b> La butée arrête la translation : m = 1.',
+   '<b>h.</b> h = 1 − 9 + 6 × 2 = 4.',
+   '<b>Conclure.</b> h = 4 : deux paliers longs imposent leur coaxialité.'],
+  anim:{h:270, titre:'Solution 2 : trois liaisons en parallèle', draw:function(c,t){
+   ARC(c,P0,P1,-80,'pivot glissant',K(t,0.3,0.9)); ARC(c,P0,P1,0,'pivot glissant',K(t,0.9,1.5)); ARC(c,P0,P1,80,'ponctuelle (butée)',K(t,1.5,2.1));
+   NOEUD(c,P0.x,P0.y,'0','bâti'); NOEUD(c,P1.x,P1.y,'1','tambour');
+   LIGNES(c,t,2.4,520,80,[['L = 3   p = 2','#334155'],['γ = 2'],['N_c = 2 + 2 + 5 = 9'],['m = 1','#334155'],['h = 1 − 9 + 12 = 4','#dc2626',16]]);
+  }},
+  verif:'sans butée : N<sub>c</sub> = 4, m = 2, γ = 1, h = 2 − 4 + 6 = 4 aussi, mais l’arbre n’est plus arrêté.',
+  piege:'garder γ = 1 alors qu’il y a trois liaisons entre deux pièces.',
+  mc:'hyperstatisme'
+ },
+ 'B2': {
+  etapes:[
+   '<b>Origine du h = 4.</b> Les deux pivots glissants bloquent chacun 2 translations et 2 rotations radiales.',
+   '<b>Conflit.</b> Le second palier rebloque les mêmes degrés que le premier.',
+   '<b>Condition.</b> Pour monter sans forcer, les deux alésages doivent être coaxiaux.',
+   '<b>La butée</b> ne bloque que la translation axiale, non redondante : aucune condition.',
+   '<b>Conclure.</b> Coaxialité des alésages des deux paliers.'],
+  anim:{h:240, titre:'Deux alésages décalés forcent l’arbre', draw:function(c,t){
+   var d=12*(0.5-0.5*Math.cos(t*1.5));
+   ARBRE(c,120,false,d,'arbre forcé');
+   SC.T(c,'défaut de coaxialité',335,200,13,'#dc2626');
+  }},
+  verif:'en fabrication : alésages usinés en une seule prise, ou tolérance de coaxialité serrée.',
+  piege:'citer « planéité de la butée » : la butée n’est pas en conflit avec les paliers.',
+  mc:'hyperstatisme'
+ },
+ 'C1': {
+  etapes:[
+   '<b>Graphe.</b> Boucle bâti – corps – tige – hayon – bâti : L = 4, p = 4.',
+   '<b>Cycles.</b> γ = 4 − 4 + 1 = 1.',
+   '<b>N<sub>c</sub>.</b> Rotule 3 + pivot glissant 2 + rotule 3 + pivot 1 = 9.',
+   '<b>Mobilité utile.</b> L’ouverture du hayon : 1.',
+   '<b>Mobilités internes.</b> Rotation du corps sur son axe, rotation de la tige sur son axe : 2.',
+   '<b>m = 3.</b> h = 3 − 9 + 6 = 0.',
+   '<b>Conclure.</b> Isostatique : le vérin se monte sans alignement précis de ses attaches.'],
+  anim:{h:290, titre:'Le vérin dans sa boucle', draw:function(c,t){
+   var N=[{x:150,y:80,l:'0',s:'bâti'},{x:370,y:80,l:'1',s:'corps'},{x:370,y:230,l:'2',s:'tige'},{x:150,y:230,l:'3',s:'hayon'}];
+   var lab=['rotule','pivot glissant','rotule','pivot'];
+   for(var i=0;i<4;i++) ARC(c,N[i],N[(i+1)%4],0,lab[i],K(t,0.3+i*0.5,0.8+i*0.5));
+   N.forEach(function(n,i){ NOEUD(c,n.x,n.y,n.l); SC.T(c,n.s,n.x+(i===0||i===3?-34:34),n.y+5,11,'#64748b',i===0||i===3?'right':'left',false); });
+   LIGNES(c,t,2.6,520,70,[['γ = 1'],['N_c = 3 + 2 + 3 + 1 = 9'],['m = 1 utile + 2 internes = 3','#334155'],['h = 3 − 9 + 6 = 0','#16a34a',16]]);
+  }},
+  verif:'un h négatif aurait signalé des mobilités oubliées : c’est le piège de la partie E.',
+  piege:'prendre m = 1 et trouver h = −2.',
+  mc:'hyperstatisme'
+ },
+ 'C2': {
+  etapes:[
+   '<b>Isoler le vérin</b> (corps + tige).',
+   '<b>Actions.</b> Deux rotules, sans couple : deux forces seulement, en leurs centres.',
+   '<b>Équilibre d’un solide soumis à 2 forces :</b> forces égales, opposées, portées par la droite des centres.',
+   '<b>Conséquence.</b> Le vérin ne transmet qu’un effort selon son axe.',
+   '<b>Conclure.</b> Pas de flexion parasite de la tige : joints et guidage protégés.'],
+  anim:{h:240, titre:'Entre deux rotules, l’effort suit l’axe', draw:function(c,t){
+   var A={x:150,y:190}, B={x:560,y:70}, k=K(t,0.5,1.8), ux=(B.x-A.x), uy=(B.y-A.y), d=Math.hypot(ux,uy); ux/=d; uy/=d;
+   SC.SEG(c,A.x,A.y,A.x+ux*230,A.y+uy*230,'#475569',16); SC.SEG(c,A.x+ux*230,A.y+uy*230,B.x,B.y,'#0e7490',6);
+   SC.CERCLE(c,A.x,A.y,10,'#fff','#334155',2); SC.CERCLE(c,B.x,B.y,10,'#fff','#334155',2);
+   SC.FL(c,B.x+ux*12,B.y+uy*12,B.x+ux*(12+70*k),B.y+uy*(12+70*k),3,'#dc2626'); SC.FL(c,A.x-ux*12,A.y-uy*12,A.x-ux*(12+70*k),A.y-uy*(12+70*k),3,'#dc2626');
+   SC.T(c,'F',B.x+ux*90+12,B.y+uy*90,14,'#dc2626','left'); SC.T(c,'−F',A.x-ux*90-12,A.y-uy*90+12,14,'#dc2626','right');
+   SC.T(c,'deux forces colinéaires à l’axe',560,210,13,'#155e75');
+  }},
+  verif:'on dit que le vérin travaille « en bielle » : traction ou compression pure.',
+  piege:'répondre « augmenter la course » : le montage n’agit pas sur la course.',
+  mc:'hyperstatisme'
+ },
+ 'D1': {
+  etapes:[
+   '<b>Cadre commun.</b> Deux liaisons entre bâti et tiroir : γ = 1 ; mobilité utile : m = 1.',
+   '<b>Deux glissières.</b> N<sub>c</sub> = 1 + 1 = 2 ; h = 1 − 2 + 6 = 5.',
+   '<b>Pivot glissant + appui plan.</b> N<sub>c</sub> = 2 + 3 = 5 ; h = 2.',
+   '<b>Pivot glissant + ponctuelle.</b> N<sub>c</sub> = 2 + 5 = 7 ; h = 0.',
+   '<b>Lire.</b> Deux glissières : rails parallèles en 5 conditions, très exigeant.',
+   '<b>Conclure.</b> 5, 2 et 0 : la troisième variante est isostatique.'],
+  anim:{h:250, titre:'Trois guidages du tiroir', draw:function(c,t){
+   var C=[['2 glissières','1 + 1 = 2','5','#dc2626'],['pivot glissant + appui plan','2 + 3 = 5','2','#dc2626'],['pivot glissant + ponctuelle','2 + 5 = 7','0','#16a34a']];
+   C.forEach(function(q,i){ var x=130+i*250, p=K(t,0.4+i,1.2+i);
+    SC.RECT(c,x-110,60,220,150,'#f8fafc',p>0?q[3]:'#e2e8f0',2);
+    SC.T(c,q[0],x,88,12,'#334155'); if(p>=0.3) SC.T(c,'N_c = '+q[1],x,128,14,'#155e75'); if(p>=1) SC.T(c,'h = '+q[2],x,176,22,q[3]); });
+  }},
+  verif:'la ponctuelle n’empêche que le basculement du tiroir autour du rail cylindrique : exactement le degré manquant.',
+  piege:'compter pour la ponctuelle 1 mobilité au lieu de 5 : on trouverait N<sub>c</sub> = 3 et h = 4.',
+  mc:'hyperstatisme'
+ },
+ 'E1': {
+  etapes:[
+   '<b>Diagnostiquer.</b> h = −2 est impossible : h compte des conditions, il est toujours positif ou nul.',
+   '<b>Chercher l’oubli.</b> L’erreur porte presque toujours sur m.',
+   '<b>Identifier.</b> Corps et tige peuvent tourner sur leur axe sans rien changer : 2 mobilités internes.',
+   '<b>Corriger.</b> m = 3, puis h = 0.',
+   '<b>Remédier.</b> Faire manipuler une maquette pour repérer les mouvements « qui ne servent à rien ».'],
+  piege:'corriger le résultat sans faire comprendre ce qu’est une mobilité interne.'
+ },
+ 'E2': {
+  etapes:[
+   '<b>Objectif.</b> Rendre l’hyperstatisme observable avant de le calculer.',
+   '<b>Manipulation.</b> Tabouret à 3 pieds et table à 4 pieds sur un sol irrégulier.',
+   '<b>Constat.</b> Le tabouret repose toujours sur ses 3 pieds ; la table boite.',
+   '<b>Formaliser.</b> Calcul de h : 0 pour 3 pieds, 1 pour 4 pieds.',
+   '<b>Transférer.</b> Même démarche sur un arbre à deux paliers.'],
+  piege:'enchaîner dix calculs de h sans observation : la formule reste sans signification.'
+ }
+});
+
+})();
+</script>
+<!-- CORRIGES_DETAILLES fin -->
 </body>
 </html>

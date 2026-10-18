@@ -13,6 +13,21 @@
 
 
 
+
+## Corrigés détaillés CAPET (18/10/2026)
+
+286 corrigés enrichis : 14 TP (6 missions + 3 exercices sur copie) et 14 sujets types (toutes
+les questions). Chacun : étapes numérotées, animation (canvas animé, « Rejouer »),
+vérification, erreur fréquente, bouton mini-cours. Partie E des sujets : étapes seules.
+- Données : `_outils/corriges_detail/<page>.js` (DETAILS({...}, {notions propres})).
+- Moteur `_outils/corriges_detail/_moteur.js`, injecteur `_outils/ajouter_corriges_detailles.py`
+  (relançable), aperçu `_outils/corriges_detail/_apercu.js`.
+- Bibliothèque de mini-cours rafraîchie dans les 6 anciens sujets (toutes les notions).
+- ORDRE COMPLET après régénération : générateur → corrigés (TP) / mini-cours (sujets)
+  → schémas → corrigés détaillés.
+- Corrections d'énoncés : TP trains mission 6 (rapport ωplanétaire ÷ ωcouronne = −4),
+  sujet hydraulique E1 (800 000 N), sujet liaisons E1 (h = −2).
+
 ## Schémas dans les TP et sujets CAPET (18/10/2026)
 
 174 schémas ajoutés aux 14 TP et 14 sujets types CAPET : un par mission de calcul (TP)

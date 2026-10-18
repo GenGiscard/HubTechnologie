@@ -1416,5 +1416,295 @@ SCHEMAS({
 })();
 </script>
 <!-- SCHEMAS_CAPET fin -->
+<!-- CORRIGES_DETAILLES debut -->
+<style>
+.detail-corr{margin-top:12px;border-top:2px dashed #bae6fd;padding-top:10px;text-align:left}
+.detail-corr .dc-tete{font:800 13px 'Segoe UI',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#0369a1;margin-bottom:4px}
+.detail-corr .dc-etapes{margin:4px 0 8px 22px;font-size:14.5px;line-height:1.65;color:#1e293b}
+.detail-corr .dc-etapes li{margin:5px 0;padding-left:2px}
+.detail-corr .dc-anim{margin:8px 0;text-align:center}
+.detail-corr canvas{display:block;width:100%;max-width:760px;height:auto;margin:0 auto 6px;border:1px solid #e9e2d4;border-radius:12px;background:#fff}
+.detail-corr .dc-btn{background:#fff;color:#0e7490;border:2px solid #0e7490;border-radius:9px;padding:6px 12px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;margin:4px 6px 4px 0}
+.detail-corr .dc-mc{color:#c2410c;border-color:#fdba74;background:#fff7ed}
+.detail-corr .dc-verif{background:#f0fdf4;border-left:4px solid #16a34a;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:14px;line-height:1.55}
+.detail-corr .dc-piege{background:#fef2f2;border-left:4px solid #dc2626;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:14px;line-height:1.55}
+@media print{.detail-corr .dc-btn{display:none}}
+</style>
+<script>
+/* CORRIGES_DETAILLES */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+/* ===== CORRIGES_DETAILLES — moteur commun =====
+   DETAILS(D, MINI) : D = { clé : { etapes:[html…], anim:{h, titre, duree, draw:function(c,t){…}},
+                                    mc:'notion', piege:'html', verif:'html' } }
+   Clés : '1'…'7' missions de TP, 'c1'…'c3' exercices sur copie, 'A1'… questions de sujet.
+   MINI : notions de mini-cours propres à la page, ajoutées à la bibliothèque MINICOURS.
+   L’animation ne tourne que lorsque le canvas est visible ; « Rejouer » la reprend à zéro. */
+function ANIM_CORR(cv,a){
+ var c=cv.getContext('2d'), raf=0, t0=performance.now(), vis=false;
+ function img(ts){ var t=(ts-t0)/1000; c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+  try{ if(a.titre) SC.TITRE(c,a.titre); a.draw(c,t); }catch(e){ console.error(e); cancelAnimationFrame(raf); raf=0; return; }
+  raf=requestAnimationFrame(img); }
+ function go(){ if(!raf){ raf=requestAnimationFrame(img);} }
+ function stop(){ cancelAnimationFrame(raf); raf=0; }
+ if('IntersectionObserver' in window) new IntersectionObserver(function(es){ es.forEach(function(e){ vis=e.isIntersecting; vis?go():stop(); }); }).observe(cv);
+ else go();
+ c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+ return function(){ t0=performance.now(); go(); };
+}
+function ENRICHIR(hote,d){
+ if(!hote || hote.querySelector('.detail-corr')) return;
+ var z=document.createElement('div'); z.className='detail-corr';
+ var h='<div class="dc-tete">Corrigé pas à pas</div>';
+ if(d.etapes){ h+='<ol class="dc-etapes">'; d.etapes.forEach(function(e){ h+='<li>'+e+'</li>'; }); h+='</ol>'; }
+ z.innerHTML=h;
+ if(d.anim){
+  var f=document.createElement('div'); f.className='dc-anim';
+  var cv=document.createElement('canvas'); cv.width=760; cv.height=d.anim.h||260; f.appendChild(cv);
+  var b=document.createElement('button'); b.type='button'; b.className='dc-btn'; b.textContent='Rejouer l’animation'; f.appendChild(b);
+  z.appendChild(f); var rejouer=ANIM_CORR(cv,d.anim); b.addEventListener('click',rejouer);
+ }
+ if(d.verif){ var v=document.createElement('div'); v.className='dc-verif'; v.innerHTML='<b>Vérification</b> — '+d.verif; z.appendChild(v); }
+ if(d.piege){ var p=document.createElement('div'); p.className='dc-piege'; p.innerHTML='<b>Erreur fréquente</b> — '+d.piege; z.appendChild(p); }
+ if(d.mc && window.MINICOURS && window.MINICOURS.notions[d.mc]){
+  var m=document.createElement('button'); m.type='button'; m.className='dc-btn dc-mc';
+  m.textContent='Mini-cours : '+window.MINICOURS.notions[d.mc].titre;
+  m.addEventListener('click',function(){ window.MINICOURS.ouvrir(d.mc); }); z.appendChild(m);
+ }
+ hote.appendChild(z);
+}
+function DETAILS(D,MINI){
+ if(MINI && window.MINICOURS) Object.keys(MINI).forEach(function(k){ window.MINICOURS.notions[k]=MINI[k]; });
+ var sujet=!!document.getElementById('rendre');
+ if(!sujet){
+  Object.keys(D).forEach(function(k){
+   var hote=null;
+   if(/^c\d$/.test(k)){ var ex=document.querySelectorAll('.copie-ex')[+k.slice(1)-1]; hote=ex && ex.querySelector('.corrige-bloc'); }
+   else { var a=document.getElementById('a'+k); hote=a && a.querySelector('.boite > .corrige-bloc'); }
+   ENRICHIR(hote,D[k]);
+  });
+ } else {
+  document.getElementById('rendre').addEventListener('click',function(){
+   document.querySelectorAll('#resultat .corr').forEach(function(cr){
+    var b=cr.querySelector('b'); if(!b) return; var k=b.textContent.replace('Question','').trim();
+    if(D[k]) ENRICHIR(cr,D[k]);
+   });
+  });
+ }
+}
+
+/* aides locales d'animation */
+var F=function(v,n){var s=(Math.round(v*Math.pow(10,n))/Math.pow(10,n)).toFixed(n).split('.');s[0]=s[0].replace(/\B(?=(\d{3})+(?!\d))/g,' ');return s.join(',');};
+var K=function(t,a,b){return Math.max(0,Math.min(1,(t-a)/(b-a)));};
+var GRAPHE=function(c,o,p){
+ var X=function(v){return o.x+v/o.xmax*o.w;}, Y=function(v){return o.y+o.h-v/o.ymax*o.h;};
+ c.strokeStyle='#cbd5e1';c.lineWidth=1;c.strokeRect(o.x,o.y,o.w,o.h);
+ (o.tx||[]).forEach(function(v){SC.T(c,F(v,o.nx||0),X(v),o.y+o.h+15,11,'#64748b');});
+ (o.ty||[]).forEach(function(v){SC.T(c,F(v,o.ny||0),o.x-6,Y(v)+4,11,'#64748b','right');});
+ SC.T(c,o.yl,o.x,o.y-7,12,'#64748b','left'); SC.T(c,o.xl,o.x+o.w+16,o.y+o.h+4,12,'#64748b','left');
+ if(o.aire&&p>0){var pa=Math.min(p,(o.aireMax||o.xmax)/o.xmax);c.fillStyle=o.aire;c.beginPath();c.moveTo(X(0),Y(0));for(var j=0;j<=80*pa;j++){var u=j/80*o.xmax;c.lineTo(X(u),Y(o.f(u)));}c.lineTo(X(o.xmax*pa),Y(0));c.closePath();c.fill();}
+ c.strokeStyle=o.col||'#0e7490';c.lineWidth=3;c.beginPath();
+ for(var i=0;i<=80*p;i++){var w=i/80*o.xmax,v=o.f(w);i?c.lineTo(X(w),Y(v)):c.moveTo(X(w),Y(v));}c.stroke();
+ return {X:X,Y:Y};
+};
+var BOITE=function(c,x,y,w,h,l1,l2,fond,trait,col){SC.RECT(c,x,y,w,h,fond||'#ecfeff',trait||'#0e7490',2);SC.T(c,l1,x+w/2,y+(l2?h/2-3:h/2+5),13,col||'#155e75');if(l2)SC.T(c,l2,x+w/2,y+h/2+15,12,'#334155',undefined,false);};
+var ROTOR=function(c,x,y,r,ang,col){SC.CERCLE(c,x,y,r,'#e2e8f0',col||'#475569',2);c.strokeStyle=col||'#475569';c.lineWidth=3;c.beginPath();c.moveTo(x,y);c.lineTo(x+r*Math.cos(ang),y+r*Math.sin(ang));c.stroke();SC.PT(c,x,y,3);};
+var CABINE=function(c,x,y,w,h,txt,fond,trait){SC.RECT(c,x,y,w,h,fond||'#bfdbfe',trait||'#2563eb',2);SC.T(c,txt,x+w/2,y+h/2+5,13,'#1e3a8a');};
+var PILE=function(c,x,y,w,parts,echelle,k){ /* barre horizontale empilée : parts=[[valeur,couleur,libellé]] */
+ var xx=x; parts.forEach(function(q,i){var L=q[0]*echelle*Math.min(1,Math.max(0,k*parts.length-i));c.fillStyle=q[1];c.fillRect(xx,y,L,w);if(L>2&&q[2])SC.T(c,q[2],xx+L/2,y+w+15,11,q[1]);xx+=L;});return xx;};
+DETAILS({
+ 'A1': {
+  etapes:[
+   '<b>Lire le profil de vitesse</b> : de 0 à 0,6 m/s en 1,2 s, montée linéaire.',
+   '<b>Hypothèse</b> : accélération constante pendant le démarrage.',
+   '<b>Accélération</b> : a = Δv / Δt = 0,6 / 1,2 = <b>0,5 m/s²</b>.',
+   '<b>Distance</b> : x = ½ a t² = 0,5 × 0,5 × 1,2² = <b>0,36 m</b>.',
+   '<b>Lecture graphique</b> : c’est l’aire du triangle sous v(t), ½ × 1,2 × 0,6.'],
+  anim:{h:270, titre:'Phase de démarrage de la plateforme', draw:function(c,t){
+   var g={x:110,y:50,w:440,h:160,xmax:2.5,ymax:0.8,tx:[0,0.5,1,1.5,2,2.5],nx:1,ty:[0,0.2,0.4,0.6,0.8],ny:1,xl:'t (s)',yl:'v (m/s)',f:function(u){return Math.min(0.5*u,0.6);},aire:t>3.6?'rgba(234,88,12,.18)':null,aireMax:1.2};
+   var r=GRAPHE(c,g,K(t,0.3,3.2));
+   if(t>3.2){ SC.TIRETS(c,r.X(1.2),r.Y(0),r.X(1.2),r.Y(0.6),'#ea580c'); SC.T(c,'1,2 s',r.X(1.2)+6,r.Y(0.25),12,'#ea580c','left'); }
+   if(t>3.8) SC.T(c,'aire = 0,36 m',r.X(0.75),r.Y(0.12),12,'#ea580c');
+   if(t>1.5) SC.T(c,'a = 0,6 / 1,2 = 0,5 m/s²',660,110,13,'#155e75');
+  }},
+  verif:'36 cm pour démarrer : la plateforme atteint sa vitesse sans à-coup, en un peu plus d’un mètre de course totale par seconde.',
+  piege:'calculer la distance avec v × t = 0,72 m, comme si la vitesse était déjà atteinte au départ.',
+  mc:'pfd'
+ },
+ 'A2': {
+  etapes:[
+   '<b>Isoler la plateforme</b> (400 kg) : poids m g vers le bas, tension T vers le haut.',
+   '<b>Sens positif vers le haut</b>, celui de l’accélération au démarrage.',
+   '<b>PFD</b> : T − m g = m a, donc T = m (g + a).',
+   '<b>Démarrage</b> : T = 400 × (9,81 + 0,5) = <b>4 124 N</b>.',
+   '<b>Régime établi</b>, a = 0 : T = m g = 400 × 9,81 = <b>3 924 N</b>.',
+   '<b>Écart</b> : 200 N, exactement m a.'],
+  anim:{h:270, titre:'Tension au démarrage, puis en régime établi', draw:function(c,t){
+   var dem=t<4.5;
+   SC.SEG(c,200,30,200,110,'#334155',2); CABINE(c,155,110,90,60,'400 kg');
+   SC.FL(c,200,170,200,250,3,'#334155'); SC.T(c,'P = 3 924 N',210,244,13,'#334155','left');
+   var L=dem?86:80; if(t>0.8){ SC.FL(c,240,110,240,110-L*K(t,0.8,1.8),3,'#16a34a'); SC.T(c,'T',252,70,14,'#16a34a','left'); }
+   if(dem&&t>1.2){ SC.FL(c,320,170,320,130,2.5,'#ea580c'); SC.T(c,'a = 0,5 m/s²',330,154,12,'#ea580c','left'); }
+   SC.T(c,dem?'DÉMARRAGE':'RÉGIME ÉTABLI',560,60,15,dem?'#ea580c':'#0e7490');
+   if(t>2) SC.T(c,dem?'T = 400 × (9,81 + 0,5)':'a = 0 : T = m g',560,100,14,'#334155');
+   if(t>2.8) SC.T(c,dem?'T = 4 124 N':'T = 3 924 N',560,140,20,'#16a34a');
+   if(!dem) SC.T(c,'démarrage : 4 124 N',560,190,12,'#64748b',undefined,false);
+  }},
+  verif:'au démarrage le câble porte 5 % de plus qu’en régime : l’accélération est douce, 0,5 m/s² pour 9,81 de g.',
+  piege:'écrire T = m a = 200 N en oubliant le poids, ou ajouter g et a en N sans multiplier par m.',
+  mc:'pfd'
+ },
+ 'B1': {
+  etapes:[
+   '<b>Relier tambour et câble</b> : sans glissement, V = ω<sub>t</sub> R, donc dω<sub>t</sub>/dt = a / R.',
+   '<b>Accélération angulaire</b> : 0,5 / 0,15 = <b>3,33 rad/s²</b>.',
+   '<b>Isoler le tambour</b> : couple d’entraînement C<sub>t</sub>, couple du câble T R qui s’oppose, inertie J<sub>t</sub>.',
+   '<b>PFD en rotation</b> : C<sub>t</sub> − T R = J<sub>t</sub> dω<sub>t</sub>/dt.',
+   '<b>Terme de charge</b> : T R = 4 124 × 0,15 = 618,6 N·m.',
+   '<b>Terme d’inertie</b> : 1,2 × 3,33 = 4,0 N·m.',
+   '<b>Total</b> : C<sub>t</sub> = <b>622,6 N·m</b>. L’inertie du tambour ne pèse que 0,6 %.'],
+  anim:{h:280, titre:'Le tambour isolé', draw:function(c,t){
+   ROTOR(c,170,130,70,-t*0.6,'#b45309'); SC.T(c,'J_t = 1,2 kg·m²',170,228,12,'#b45309');
+   SC.COTE(c,170,130,240,130,'R = 0,15',  '#b45309');
+   if(t>0.6){ SC.FL(c,240,130,240,250,3,'#dc2626'); SC.T(c,'T = 4 124 N',250,242,13,'#dc2626','left'); }
+   if(t>1.3){ c.strokeStyle='#16a34a'; c.lineWidth=3; c.beginPath(); c.arc(170,130,95,3.5,4.8); c.stroke(); SC.FL(c,170+95*Math.cos(4.7),130+95*Math.sin(4.7),170+95*Math.cos(4.85),130+95*Math.sin(4.85),3,'#16a34a'); SC.T(c,'C_t ?',80,50,14,'#16a34a'); }
+   var x=PILE(c,400,120,32,[[618.6,'#dc2626','T × R = 618,6'],[4,'#7c3aed','']],0.34,K(t,2.2,3.6));
+   if(t>3.6){ SC.T(c,'+ J dω/dt = 4,0',x+8,142,12,'#7c3aed','left'); SC.T(c,'C_t = 622,6 N·m',560,210,18,'#155e75'); }
+   if(t>2) SC.T(c,'dω/dt = 0,5 / 0,15 = 3,33 rad/s²',560,80,13,'#334155');
+  }},
+  verif:'622,6 N·m pour un tambour de 30 cm de diamètre levant 400 kg : cohérent avec T R ≈ 4 kN × 0,15 m.',
+  piege:'utiliser T de régime (3 924 N) au démarrage, ou oublier de diviser a par R.',
+  mc:'momentinertie'
+ },
+ 'B2': {
+  etapes:[
+   '<b>Vitesse angulaire du tambour</b> : ω<sub>t</sub> = V / R = 0,6 / 0,15 = <b>4 rad/s</b>.',
+   '<b>Traverser le réducteur</b> : rapport 1/30, le moteur tourne 30 fois plus vite.',
+   '<b>Vitesse du moteur</b> : ω<sub>m</sub> = 30 × 4 = 120 rad/s.',
+   '<b>Convertir</b> : N = ω × 30 / π = 120 × 30 / π = <b>1 146 tr/min</b>.'],
+  anim:{h:250, titre:'De la plateforme au moteur', draw:function(c,t){
+   var etapes=[['plateforme','0,6 m/s','#2563eb'],['tambour','4 rad/s','#b45309'],['moteur','120 rad/s','#0e7490'],['moteur','1 146 tr/min','#0e7490']];
+   var ops=['÷ R = 0,15','× 30','× 30 / π'];
+   etapes.forEach(function(q,i){ if(t<0.3+i*1.1) return; BOITE(c,30+i*185,90,140,64,q[0],q[1],'#fff',q[2],q[2]);
+    if(i<3&&t>0.9+i*1.1){ SC.FL(c,172+i*185,122,213+i*185,122,2,'#64748b'); SC.T(c,ops[i],192+i*185,180,12,'#7c3aed'); } });
+  }},
+  piege:'diviser par 30 au lieu de multiplier : le réducteur fait tourner le moteur PLUS vite que le tambour.',
+  mc:'vitesseangulaire'
+ },
+ 'C1': {
+  etapes:[
+   '<b>Accélération du rotor</b> : dω<sub>m</sub>/dt = 30 × 3,33 = 100 rad/s².',
+   '<b>Couple d’inertie du rotor</b> : J<sub>m</sub> dω<sub>m</sub>/dt = 0,01 × 100 = <b>1 N·m</b>.',
+   '<b>Ramener le couple du tambour</b> : diviser par le rapport ET par le rendement, le moteur doit couvrir les pertes.',
+   '<b>Application</b> : 622,6 / (30 × 0,9) = 622,6 / 27 = <b>23,06 N·m</b>.',
+   '<b>Total</b> : C<sub>m</sub> = 1 + 23,06 = <b>24,06 N·m</b>.'],
+  anim:{h:270, titre:'Du couple du tambour au couple moteur', draw:function(c,t){
+   BOITE(c,40,90,120,60,'tambour','622,6 N·m','#fef3c7','#b45309','#92400e');
+   if(t>0.8){ SC.FL(c,162,120,262,120,2,'#64748b'); SC.T(c,'÷ (30 × 0,9)',212,108,12,'#7c3aed'); }
+   if(t>1.6) BOITE(c,265,90,120,60,'ramené','23,06 N·m','#ecfeff','#0e7490');
+   var x=PILE(c,440,104,32,[[23.06,'#0e7490','ramené 23,06'],[1,'#ea580c','']],9,K(t,2.4,3.8));
+   if(t>3.8){ SC.T(c,'+ rotor 1',x+6,124,12,'#ea580c','left'); SC.T(c,'C_m = 24,06 N·m',570,200,18,'#155e75'); }
+   if(t>2.4) SC.T(c,'rotor : 0,01 × 100 = 1 N·m',212,210,12,'#ea580c');
+  }},
+  verif:'le rendement augmente le couple demandé : sans pertes il suffirait de 622,6 / 30 = 20,75 N·m.',
+  piege:'multiplier par le rendement (622,6 × 0,9 / 30 = 18,7 N·m) : le moteur serait sous-dimensionné.',
+  mc:'inertieequiv'
+ },
+ 'C2': {
+  etapes:[
+   '<b>Décélération</b> : de 0,6 m/s à 0 en 0,3 s, soit 2 m/s².',
+   '<b>Sens</b> : la plateforme monte en ralentissant, l’accélération est dirigée vers le BAS.',
+   '<b>PFD, sens positif vers le haut</b> : T − m g = m × (− 2).',
+   '<b>Application</b> : T = 400 × (9,81 − 2) = <b>3 124 N</b>.',
+   '<b>Interprétation</b> : le câble se détend partiellement, la plateforme « s’allège ».'],
+  anim:{h:270, titre:'Arrêt d’urgence en montée', draw:function(c,t){
+   SC.SEG(c,200,30,200,110,'#334155',2); CABINE(c,155,110,90,60,'400 kg');
+   SC.FL(c,120,170,120,120,2.5,'#2563eb'); SC.T(c,'v',108,150,13,'#2563eb','right');
+   if(t>0.8){ SC.FL(c,320,120,320,170,2.5,'#ea580c'); SC.T(c,'a = 2 m/s²',330,150,12,'#ea580c','left'); }
+   SC.FL(c,200,170,200,250,3,'#334155'); SC.T(c,'P = 3 924 N',210,244,13,'#334155','left');
+   if(t>1.6){ SC.FL(c,240,110,240,48,3,'#16a34a'); SC.T(c,'T',252,70,14,'#16a34a','left'); }
+   if(t>2.4) SC.T(c,'T = 400 × (9,81 − 2)',560,100,14,'#334155');
+   if(t>3.2) SC.T(c,'T = 3 124 N < P',560,140,20,'#16a34a');
+  }},
+  piege:'prendre a vers le haut parce que la plateforme monte : T = 4 724 N, faux.',
+  mc:'pfd'
+ },
+ 'D1': {
+  etapes:[
+   '<b>Écrire T = m (g + a)</b>, a compté positivement vers le haut.',
+   '<b>Démarrage en montée</b> : la vitesse vers le haut augmente, a vers le haut, T &gt; m g.',
+   '<b>Freinage en descente</b> : la vitesse vers le bas diminue, a aussi vers le haut, T &gt; m g.',
+   '<b>Arrêt en montée</b> : a vers le bas, T &lt; m g.',
+   '<b>Conclusion</b> : les deux premiers cas chargent le plus le câble.'],
+  anim:{h:270, titre:'Où pointe l’accélération ?', draw:function(c,t){
+   var cas=[['démarrage en montée',1,1,'#16a34a'],['freinage en descente',-1,1,'#16a34a'],['arrêt en montée',1,-1,'#dc2626']];
+   cas.forEach(function(q,i){ if(t<0.4+i*1.2) return; var x=130+i*250;
+    CABINE(c,x-40,90,80,50,'cabine'); SC.FL(c,x-60,q[1]>0?140:95,x-60,q[1]>0?95:140,2.5,'#2563eb'); SC.T(c,'v',x-70,122,12,'#2563eb','right');
+    SC.FL(c,x+60,q[2]>0?140:95,x+60,q[2]>0?95:140,2.5,'#ea580c'); SC.T(c,'a',x+70,122,12,'#ea580c','left');
+    SC.T(c,q[0],x,180,13,'#334155'); SC.T(c,q[2]>0?'T > m g':'T < m g',x,210,15,q[3]); });
+  }},
+  piege:'croire que seule la montée est critique : le freinage en descente donne la même tension.',
+  mc:'pfd'
+ },
+ 'D2': {
+  etapes:[
+   '<b>Hypothèse</b> : décélération constante de 2 m/s² depuis 0,6 m/s.',
+   '<b>Formule sans le temps</b> : v² = 2 a d, donc d = v² / (2 a).',
+   '<b>Application</b> : d = 0,6² / (2 × 2) = 0,36 / 4 = <b>0,09 m</b>.',
+   '<b>Contrôle graphique</b> : aire du triangle ½ × 0,3 × 0,6 = 0,09 m.'],
+  anim:{h:260, titre:'Distance d’arrêt = aire sous v(t)', draw:function(c,t){
+   var g={x:110,y:50,w:440,h:160,xmax:0.4,ymax:0.8,tx:[0,0.1,0.2,0.3,0.4],nx:1,ty:[0,0.2,0.4,0.6,0.8],ny:1,xl:'t (s)',yl:'v (m/s)',f:function(u){return Math.max(0,0.6-2*u);},aire:t>3.4?'rgba(234,88,12,.18)':null,aireMax:0.3};
+   var r=GRAPHE(c,g,K(t,0.3,3));
+   if(t>3.6) SC.T(c,'aire = ½ × 0,3 × 0,6 = 0,09 m',r.X(0.2),r.Y(0.45),13,'#ea580c','left');
+  }},
+  piege:'diviser 0,36 par 2 seulement : 0,18 m, en oubliant le facteur a.',
+  mc:'pfd'
+ },
+ 'E1': {
+  etapes:[
+   '<b>Repérer l’erreur</b> : T = m a omet le poids dans le bilan des actions.',
+   '<b>Test de cohérence</b> : pour a = 0, la formule donne T = 0, la plateforme tomberait.',
+   '<b>Faire constater</b> la contradiction avec la réalité : à l’arrêt, le câble porte la charge.',
+   '<b>Faire refaire le bilan</b> complet : poids ET tension, puis T − m g = m a.'],
+  piege:'corriger directement la formule à la place de l’élève : il ne découvre pas l’oubli et le reproduira.'
+ },
+ 'E2': {
+  etapes:[
+   '<b>Objectif</b> : rendre visible l’effet de J sur la durée de démarrage.',
+   '<b>Manipulation</b> : même moteur, volants d’inertie différents, mesure de la durée de démarrage.',
+   '<b>Exploitation</b> : tracer t en fonction de J, constater la proportionnalité.',
+   '<b>Formalisation</b> : comparer à t = J ω / (C − C<sub>r</sub>).'],
+  piege:'donner d’emblée les formules de J sans manipulation : la notion reste abstraite.'
+ }
+});
+
+})();
+</script>
+<!-- CORRIGES_DETAILLES fin -->
 </body>
 </html>

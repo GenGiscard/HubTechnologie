@@ -88,7 +88,7 @@ const Q=[
  {n:'C2',cours:'verindebit',pts:6,"t": "Les fendeuses du commerce utilisent souvent une pompe à deux étages. Quel en est l’intérêt ?", "choix": {"id": "xC2", "o": ["augmenter l’effort maximal", "approcher vite à basse pression, fendre lentement à haute pression, avec le même moteur", "réduire le bruit"], "b": 1}, "corr": "Grand débit à basse pression pour l’<b>approche rapide</b>, petit débit à haute pression pour le fendage : on gagne du temps sans augmenter la puissance du moteur."},
  {n:'D1',cours:'pression',pts:16,"t": "PARTIE D — BRIDAGE PNEUMATIQUE. Calculez l’effort utile d’un vérin Ø 40, puis l’alésage minimal pour 1 000 N, et l’alésage normalisé retenu.", "champs": [{"id": "d1a", "l": "Effort utile du Ø 40 :", "rep": 528, "tol": 3, "u": "N"}, {"id": "d1b", "l": "Alésage minimal :", "rep": 55.1, "tol": 0.3, "u": "mm"}, {"id": "d1c", "l": "Alésage retenu :", "rep": 63, "tol": 0, "u": "mm"}], "corr": "Ø 40 : S = 1 257 mm², F = 0,6 × 1 257 × 0,7 = <b>528 N</b> : insuffisant. S<sub>min</sub> = 1 000 / (0,6 × 0,7) = 2 381 mm², D<sub>min</sub> = <b>55,1 mm</b>. On retient <b>63 mm</b>."},
  {n:'D2',cours:'pression',pts:6,"t": "Pourquoi le bridage du poste de sciage est-il pneumatique plutôt qu’hydraulique ?", "choix": {"id": "xD2", "o": ["l’effort de 1 000 N exige l’hydraulique", "effort modéré, cadence rapide, énergie disponible et propre", "l’air permet un positionnement plus précis"], "b": 1}, "corr": "L’effort est modéré et la cadence élevée : l’air comprimé, déjà disponible dans l’atelier, est <b>rapide et propre</b>, sans risque de fuite d’huile sur le bois."},
- {n:'E1',pts:8,"t": "PARTIE E — EXPLOITATION PÉDAGOGIQUE. Un élève trouve un effort de 50 MN en multipliant 159 bar par 5 027 mm². Quelle est l’erreur ?", "choix": {"id": "xE1", "o": ["il n’a pas converti les bars en MPa", "il a pris le diamètre au lieu de la surface", "il a oublié la tige"], "b": 0}, "corr": "Il a multiplié des <b>bars</b> par des mm² : 1 bar = 0,1 N/mm². Travailler en MPa (N/mm²) avec des mm² donne directement des newtons."},
+ {n:'E1',pts:8,"t": "PARTIE E — EXPLOITATION PÉDAGOGIQUE. Un élève trouve un effort de 800 000 N en multipliant 159 bar par 5 027 mm². Quelle est l’erreur ?", "choix": {"id": "xE1", "o": ["il n’a pas converti les bars en MPa", "il a pris le diamètre au lieu de la surface", "il a oublié la tige"], "b": 0}, "corr": "Il a multiplié des <b>bars</b> par des mm² : 1 bar = 0,1 N/mm². Travailler en MPa (N/mm²) avec des mm² donne directement des newtons."},
  {n:'E2',pts:8,"t": "Pour faire découvrir la relation F = p × S, quelle activité est la plus pertinente ?", "choix": {"id": "xE2", "o": ["mesurer au dynamomètre l’effort de plusieurs vérins de diamètres différents sous la même pression", "faire lire un catalogue de vérins", "calculer la puissance d’une pompe"], "b": 0}, "corr": "Mesurer l’effort de vérins de diamètres différents sous une même pression fait apparaître la <b>proportionnalité à la surface</b>, donc au carré du diamètre."}
 ];
 
@@ -1397,5 +1397,294 @@ SCHEMAS({
 })();
 </script>
 <!-- SCHEMAS_CAPET fin -->
+<!-- CORRIGES_DETAILLES debut -->
+<style>
+.detail-corr{margin-top:12px;border-top:2px dashed #bae6fd;padding-top:10px;text-align:left}
+.detail-corr .dc-tete{font:800 13px 'Segoe UI',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#0369a1;margin-bottom:4px}
+.detail-corr .dc-etapes{margin:4px 0 8px 22px;font-size:14.5px;line-height:1.65;color:#1e293b}
+.detail-corr .dc-etapes li{margin:5px 0;padding-left:2px}
+.detail-corr .dc-anim{margin:8px 0;text-align:center}
+.detail-corr canvas{display:block;width:100%;max-width:760px;height:auto;margin:0 auto 6px;border:1px solid #e9e2d4;border-radius:12px;background:#fff}
+.detail-corr .dc-btn{background:#fff;color:#0e7490;border:2px solid #0e7490;border-radius:9px;padding:6px 12px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;margin:4px 6px 4px 0}
+.detail-corr .dc-mc{color:#c2410c;border-color:#fdba74;background:#fff7ed}
+.detail-corr .dc-verif{background:#f0fdf4;border-left:4px solid #16a34a;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:14px;line-height:1.55}
+.detail-corr .dc-piege{background:#fef2f2;border-left:4px solid #dc2626;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:14px;line-height:1.55}
+@media print{.detail-corr .dc-btn{display:none}}
+</style>
+<script>
+/* CORRIGES_DETAILLES */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+/* ===== CORRIGES_DETAILLES — moteur commun =====
+   DETAILS(D, MINI) : D = { clé : { etapes:[html…], anim:{h, titre, duree, draw:function(c,t){…}},
+                                    mc:'notion', piege:'html', verif:'html' } }
+   Clés : '1'…'7' missions de TP, 'c1'…'c3' exercices sur copie, 'A1'… questions de sujet.
+   MINI : notions de mini-cours propres à la page, ajoutées à la bibliothèque MINICOURS.
+   L’animation ne tourne que lorsque le canvas est visible ; « Rejouer » la reprend à zéro. */
+function ANIM_CORR(cv,a){
+ var c=cv.getContext('2d'), raf=0, t0=performance.now(), vis=false;
+ function img(ts){ var t=(ts-t0)/1000; c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+  try{ if(a.titre) SC.TITRE(c,a.titre); a.draw(c,t); }catch(e){ console.error(e); cancelAnimationFrame(raf); raf=0; return; }
+  raf=requestAnimationFrame(img); }
+ function go(){ if(!raf){ raf=requestAnimationFrame(img);} }
+ function stop(){ cancelAnimationFrame(raf); raf=0; }
+ if('IntersectionObserver' in window) new IntersectionObserver(function(es){ es.forEach(function(e){ vis=e.isIntersecting; vis?go():stop(); }); }).observe(cv);
+ else go();
+ c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+ return function(){ t0=performance.now(); go(); };
+}
+function ENRICHIR(hote,d){
+ if(!hote || hote.querySelector('.detail-corr')) return;
+ var z=document.createElement('div'); z.className='detail-corr';
+ var h='<div class="dc-tete">Corrigé pas à pas</div>';
+ if(d.etapes){ h+='<ol class="dc-etapes">'; d.etapes.forEach(function(e){ h+='<li>'+e+'</li>'; }); h+='</ol>'; }
+ z.innerHTML=h;
+ if(d.anim){
+  var f=document.createElement('div'); f.className='dc-anim';
+  var cv=document.createElement('canvas'); cv.width=760; cv.height=d.anim.h||260; f.appendChild(cv);
+  var b=document.createElement('button'); b.type='button'; b.className='dc-btn'; b.textContent='Rejouer l’animation'; f.appendChild(b);
+  z.appendChild(f); var rejouer=ANIM_CORR(cv,d.anim); b.addEventListener('click',rejouer);
+ }
+ if(d.verif){ var v=document.createElement('div'); v.className='dc-verif'; v.innerHTML='<b>Vérification</b> — '+d.verif; z.appendChild(v); }
+ if(d.piege){ var p=document.createElement('div'); p.className='dc-piege'; p.innerHTML='<b>Erreur fréquente</b> — '+d.piege; z.appendChild(p); }
+ if(d.mc && window.MINICOURS && window.MINICOURS.notions[d.mc]){
+  var m=document.createElement('button'); m.type='button'; m.className='dc-btn dc-mc';
+  m.textContent='Mini-cours : '+window.MINICOURS.notions[d.mc].titre;
+  m.addEventListener('click',function(){ window.MINICOURS.ouvrir(d.mc); }); z.appendChild(m);
+ }
+ hote.appendChild(z);
+}
+function DETAILS(D,MINI){
+ if(MINI && window.MINICOURS) Object.keys(MINI).forEach(function(k){ window.MINICOURS.notions[k]=MINI[k]; });
+ var sujet=!!document.getElementById('rendre');
+ if(!sujet){
+  Object.keys(D).forEach(function(k){
+   var hote=null;
+   if(/^c\d$/.test(k)){ var ex=document.querySelectorAll('.copie-ex')[+k.slice(1)-1]; hote=ex && ex.querySelector('.corrige-bloc'); }
+   else { var a=document.getElementById('a'+k); hote=a && a.querySelector('.boite > .corrige-bloc'); }
+   ENRICHIR(hote,D[k]);
+  });
+ } else {
+  document.getElementById('rendre').addEventListener('click',function(){
+   document.querySelectorAll('#resultat .corr').forEach(function(cr){
+    var b=cr.querySelector('b'); if(!b) return; var k=b.textContent.replace('Question','').trim();
+    if(D[k]) ENRICHIR(cr,D[k]);
+   });
+  });
+ }
+}
+
+/* Corrigés détaillés — sujet type : fendeuse de bûches et bridage pneumatique */
+function K(t,d,t0){ return Math.max(0,Math.min(1,(t-(t0||0))/d)); }
+function VER(c,x,y,L,H,ht,p,sortie){
+ var px=x+20+p*(L-60);
+ c.fillStyle=sortie?'#fca5a5':'#bfdbfe'; c.fillRect(x,y,px-x,H);
+ c.fillStyle=sortie?'#bfdbfe':'#fca5a5'; c.fillRect(px+16,y,x+L-px-16,H);
+ c.strokeStyle='#334155'; c.lineWidth=3; c.strokeRect(x,y,L,H);
+ c.fillStyle='#475569'; c.fillRect(px,y,16,H);
+ c.fillStyle='#94a3b8'; c.fillRect(px+16,y+H/2-ht/2,Math.min(px+L-20,742)-(px+16),ht);
+ return px;
+}
+function BARRE(c,x,y,w,h,k,co,lab,val){
+ c.fillStyle='#f1f5f9'; c.fillRect(x,y,w,h); c.fillStyle=co; c.fillRect(x,y,w*k,h);
+ c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(x,y,w,h);
+ SC.T(c,lab,x-8,y+h/2+5,13,'#334155','right'); if(val) SC.T(c,val,x+w*k+8,y+h/2+5,13,co,'left');
+}
+
+DETAILS({
+ 'A1': {
+  etapes:[
+   '<b>Hypothèse.</b> Le fendage se fait en sortie de tige : l’huile pousse sur toute la surface du piston.',
+   '<b>Surface du piston.</b> S = π × 80² / 4 = 5 027 mm².',
+   '<b>Isoler la pression.</b> F = p × S donc p = F / S.',
+   '<b>Application.</b> p = 80 000 N / 5 027 mm² = 15,92 N/mm² = 15,92 MPa.',
+   '<b>Convertir en bar.</b> 1 MPa = 10 bar : p = 159,2 bar.',
+   '<b>Conclure.</b> Pression atteignable sans difficulté par une petite centrale (limite usuelle 200 à 250 bar).'],
+  anim:{h:270, titre:'La bûche résiste : la pression monte jusqu’à 159 bar', draw:function(c,t){
+   var k=K(t,4);
+   VER(c,60,90,280,90,40,0.45,true);
+   c.fillStyle='#d6a26a'; c.strokeStyle='#92400e'; c.lineWidth=2; c.beginPath(); c.ellipse(500,135,80,40,0,0,6.2832); c.fill(); c.stroke();
+   c.fillStyle='#64748b'; c.beginPath(); c.moveTo(585,135); c.lineTo(630,100); c.lineTo(630,170); c.closePath(); c.fill(); c.fillRect(630,95,24,80);
+   SC.FL(c,370,60,430,60,3.5,'#dc2626'); SC.T(c,'80 kN',400,50,14,'#dc2626');
+   /* manomètre */
+   var a=Math.PI*0.85+k*1.15*Math.PI*0.64; SC.CERCLE(c,150,226,30,'#fff','#334155',2);
+   SC.SEG(c,150,226,150+24*Math.cos(a),226+24*Math.sin(a),'#dc2626',3);
+   SC.T(c,'p = '+(159.2*k).toFixed(1).replace('.',',')+' bar',200,232,14,'#dc2626','left');
+   SC.T(c,'S = 5 027 mm²',200,75,13,'#7f1d1d');
+  }},
+  verif:'159 bar × 5 027 mm² ÷ 10 = 80 000 N : on retrouve bien l’effort de fendage.',
+  piege:'diviser 80 000 par 80 mm (le diamètre) ou oublier le /4 de la surface : pressions absurdes.',
+  mc:'pression'
+ },
+ 'A2': {
+  etapes:[
+   '<b>Rôle du limiteur.</b> Il ouvre vers le réservoir dès que la pression atteint 180 bar : c’est la pression maximale.',
+   '<b>Convertir.</b> 180 bar = 18 MPa.',
+   '<b>Effort maximal.</b> F = p × S = 18 × 5 027 = 90 478 N.',
+   '<b>Résultat.</b> F<sub>max</sub> = 90,5 kN.',
+   '<b>Marge.</b> 90,5 / 80 = 1,13 : 13 % de réserve pour les bûches noueuses.',
+   '<b>Sécurité.</b> Au-delà, l’huile retourne au réservoir : ni le vérin ni la pompe ne sont détruits.'],
+  anim:{h:240, titre:'Le tarage du limiteur fixe l’effort maximal', draw:function(c,t){
+   var k=K(t,3);
+   BARRE(c,230,70,420,34,k*80/100,'#d97706','besoin du fendage',k>=1?'80 kN':'');
+   BARRE(c,230,130,420,34,k*90.5/100,'#dc2626','maxi à 180 bar',k>=1?'90,5 kN':'');
+   if(t>3.5){ SC.TIRETS(c,230+420*0.8,60,230+420*0.8,175,'#d97706'); SC.T(c,'marge 13 %',230+420*0.85,200,13,'#16a34a'); }
+  }},
+  piege:'confondre pression de tarage et pression de travail : la pompe ne fournit que la pression que la charge exige.',
+  mc:'pression'
+ },
+ 'B1': {
+  etapes:[
+   '<b>Hypothèse.</b> Tout le débit entre côté fond ; fuites négligées.',
+   '<b>Débit en SI.</b> Q = 12 L/min = 12·10⁻³ / 60 = 2·10⁻⁴ m³/s.',
+   '<b>Surface en SI.</b> S = 5 027 mm² = 5,027·10⁻³ m².',
+   '<b>Vitesse de sortie.</b> V = Q / S = 2·10⁻⁴ / 5,027·10⁻³ = 0,0398 m/s, soit 4 cm/s.',
+   '<b>Durée de la course.</b> t = course / V = 0,5 / 0,0398 = 12,6 s.',
+   '<b>Conclure.</b> Plus de 12 s par bûche : c’est lent, d’où l’intérêt de la pompe à deux étages.'],
+  anim:{h:250, titre:'Course de 500 mm à 4 cm/s', draw:function(c,t){
+   var p=Math.min(1,t/6.3);
+   VER(c,120,80,460,80,36,p,true);
+   SC.FL(c,40,120,118,120,3,'#dc2626'); SC.T(c,'12 L/min',40,106,13,'#dc2626','left');
+   SC.T(c,'t = '+(12.57*p).toFixed(1).replace('.',',')+' s',350,210,16,'#334155');
+   SC.T(c,'animation accélérée × 2',350,234,11,'#94a3b8','center',false);
+  }},
+  verif:'12 L/min = 200 cm³/s ; 200 / 50,27 cm² = 3,98 cm/s.',
+  piege:'diviser 12 par 5 027 sans conversion : 0,0024, un résultat sans unité ni sens.',
+  mc:'verindebit'
+ },
+ 'B2': {
+  etapes:[
+   '<b>Surface de la tige.</b> s = π × 45² / 4 = 1 590 mm².',
+   '<b>Surface annulaire.</b> S − s = 5 027 − 1 590 = 3 436 mm² = 3,436·10⁻³ m².',
+   '<b>Vitesse de rentrée.</b> V = Q / (S − s) = 2·10⁻⁴ / 3,436·10⁻³ = 0,0582 m/s.',
+   '<b>Durée du retour.</b> t = 0,5 / 0,0582 = 8,6 s.',
+   '<b>Comparer.</b> Retour 1,46 fois plus rapide que l’aller : rapport des surfaces 5 027 / 3 436.',
+   '<b>Conclure.</b> Cycle complet : 12,6 + 8,6 = 21,2 s par bûche.'],
+  anim:{h:250, titre:'En rentrée, le débit remplit la couronne', draw:function(c,t){
+   var p=1-Math.min(1,t/4.3);
+   VER(c,120,80,460,80,36,p,false);
+   SC.FL(c,540,40,540,78,3,'#dc2626'); SC.T(c,'12 L/min',552,52,13,'#dc2626','left');
+   SC.T(c,'couronne : 3 436 mm²',350,200,14,'#2563eb');
+   SC.T(c,'t = '+(8.59*(1-p)).toFixed(1).replace('.',',')+' s',350,228,16,'#334155');
+  }},
+  verif:'12,6 / 8,6 = 1,46 et 5 027 / 3 436 = 1,46 : les vitesses sont dans le rapport inverse des surfaces.',
+  piege:'prendre la surface de la tige (1 590 mm²) au lieu de la couronne : vitesse 3 fois trop grande.',
+  mc:'verindebit'
+ },
+ 'C1': {
+  etapes:[
+   '<b>Unités SI.</b> p = 159,2 bar = 15,92·10⁶ Pa ; Q = 2·10⁻⁴ m³/s.',
+   '<b>Puissance hydraulique.</b> P = p × Q = 15,92·10⁶ × 2·10⁻⁴ = 3 183 W.',
+   '<b>Hypothèse.</b> Le rendement 0,85 de la pompe regroupe fuites et frottements.',
+   '<b>Puissance du moteur.</b> On remonte vers la source en divisant : 3 183 / 0,85 = 3 745 W.',
+   '<b>Choisir.</b> Moteur normalisé de 4 kW.',
+   '<b>Remarque.</b> La puissance n’est maximale que pendant le fendage : en approche, la pression est faible.'],
+  anim:{h:250, titre:'Du moteur au vérin', draw:function(c,t){
+   var k=K(t,3);
+   c.fillStyle='#bae6fd'; c.fillRect(40,70,170*Math.min(1,k*2),110); SC.T(c,'3 745 W',125,60,13,'#0369a1');
+   SC.RECT(c,230,50,110,150,'#ecfeff','#0e7490',2); SC.T(c,'pompe',285,120,13,'#155e75'); SC.T(c,'η = 0,85',285,140,12,'#334155');
+   if(k>0.5){ c.fillStyle='#fca5a5'; c.fillRect(245,180,80,16*Math.min(1,(k-0.5)*2)); SC.T(c,'562 W perdus',285,222,12,'#dc2626'); }
+   if(k>0.6){ c.fillStyle='#fde68a'; c.fillRect(360,79,300*Math.min(1,(k-0.6)*2.5),93); }
+   if(k>=1) SC.T(c,'P = p × Q = 3 183 W',510,60,13,'#92400e');
+  }},
+  verif:'3 183 W = 80 000 N × 0,0398 m/s : on retrouve la puissance mécanique F × V du vérin.',
+  piege:'multiplier par 0,85 : on obtiendrait 2,7 kW, un moteur qui calerait au fendage.',
+  mc:'verindebit'
+ },
+ 'C2': {
+  etapes:[
+   '<b>Constat.</b> L’approche vers la bûche ne demande presque pas d’effort, mais prend du temps.',
+   '<b>Premier étage.</b> Grand débit, basse pression : la tige approche vite.',
+   '<b>Second étage.</b> Dès que la pression monte, petit débit à haute pression : le fendage.',
+   '<b>Puissance.</b> P = p × Q reste à peu près constante : grand Q × petit p, puis petit Q × grand p.',
+   '<b>Conclure.</b> On gagne du temps sans surdimensionner le moteur.'],
+  anim:{h:240, titre:'Même puissance, deux régimes', draw:function(c,t){
+   var k=K(t,3), gx=120, gy=40, gw=440, gh=160;
+   c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+   SC.T(c,'Q (L/min)',gx,gy-6,12,'#64748b','left'); SC.T(c,'p (bar)',gx+gw,gy+gh+16,12,'#64748b','right');
+   c.strokeStyle='#7c3aed'; c.lineWidth=3; c.beginPath();
+   for(var i=0;i<=60*k;i++){ var p=10+i*3, Q=Math.min(40,2600/p); var X=gx+p/200*gw, Y=gy+gh-Q/45*gh; i?c.lineTo(X,Y):c.moveTo(X,Y); } c.stroke();
+   if(k>=1){ SC.T(c,'approche : grand débit',gx+20,gy+56,12,'#16a34a','left'); SC.T(c,'fendage : haute pression',gx+gw-10,gy+gh-20,12,'#dc2626','right'); }
+  }},
+  piege:'croire que la pompe à deux étages augmente l’effort maximal : c’est le limiteur qui le fixe.',
+  mc:'verindebit'
+ },
+ 'D1': {
+  etapes:[
+   '<b>Ø 40, surface.</b> S = π × 40² / 4 = 1 257 mm².',
+   '<b>Effort utile du Ø 40.</b> F = p × S × τ = 0,6 × 1 257 × 0,7 = 528 N : insuffisant pour 1 000 N.',
+   '<b>Surface minimale.</b> S<sub>min</sub> = F / (p × τ) = 1 000 / (0,6 × 0,7) = 2 381 mm².',
+   '<b>Diamètre minimal.</b> D = √(4 × 2 381 / π) = 55,1 mm.',
+   '<b>Choisir.</b> Alésage normalisé supérieur : 63 mm (50 serait trop petit).',
+   '<b>Vérifier.</b> Ø 63 : 0,6 × 3 117 × 0,7 = 1 309 N ≥ 1 000 N.'],
+  anim:{h:250, titre:'Ø 40 insuffisant, Ø 63 retenu', draw:function(c,t){
+   var k=K(t,3);
+   [[40,'#dc2626','528 N'],[50,'#94a3b8','825 N'],[63,'#16a34a','1 309 N']].forEach(function(a,i){
+    var x=150+i*210, r=a[0]*1.1*Math.min(1,k*1.4);
+    SC.CERCLE(c,x,115,r,i===2?'rgba(22,163,74,.2)':null,a[1],2.5); SC.T(c,'Ø '+a[0],x,208,14,a[1]); if(k>=1) SC.T(c,a[2],x,228,13,a[1]);
+   });
+   if(k>=1){ c.save(); c.setLineDash([5,4]); SC.CERCLE(c,570,115,55.1*1.1,null,'#7c3aed',1.5); c.restore(); SC.T(c,'Ø mini 55,1',700,60,12,'#7c3aed'); }
+   SC.T(c,'besoin : 1 000 N',380,40,13,'#334155');
+  }},
+  verif:'Ø 50 : 0,6 × 1 963 × 0,7 = 825 N &lt; 1 000 N, il faut bien passer au Ø 63.',
+  piege:'oublier le taux de charge : on trouverait D = 46 mm et on choisirait un Ø 50, qui calerait.',
+  mc:'pression'
+ },
+ 'D2': {
+  etapes:[
+   '<b>Effort.</b> 1 000 N : largement à la portée d’un vérin pneumatique de Ø 63.',
+   '<b>Cadence.</b> Un bridage par coupe : l’air comprimé assure des mouvements rapides.',
+   '<b>Énergie disponible.</b> Le réseau d’air existe déjà dans l’atelier : pas de centrale à ajouter.',
+   '<b>Propreté.</b> Aucune huile sur le bois : pas de taches ni de risque de glissade.',
+   '<b>Conclure.</b> Pneumatique : effort modéré, cadence rapide, énergie disponible et propre.'],
+  piege:'invoquer la précision de positionnement : c’est au contraire un point faible de l’air comprimé.',
+  mc:'pression'
+ },
+ 'E1': {
+  etapes:[
+   '<b>Repérer l’erreur.</b> L’élève a multiplié des bars par des mm² : le produit n’a pas d’unité cohérente.',
+   '<b>Diagnostiquer.</b> 1 bar = 0,1 N/mm² : il faut écrire p = 15,92 MPa avant tout calcul, F sort alors en N.',
+   '<b>Remédier.</b> Faire écrire chaque grandeur avec son unité, puis convertir AVANT de calculer.',
+   '<b>Outil.</b> Tableau de conversions bar, MPa, N/mm² affiché en classe ; vérification par ordre de grandeur.'],
+  piege:'corriger seulement le résultat sans faire expliciter l’unité : l’erreur se reproduira.'
+ },
+ 'E2': {
+  etapes:[
+   '<b>Objectif.</b> Faire découvrir que l’effort est proportionnel à la surface, donc au carré du diamètre.',
+   '<b>Activité.</b> Plusieurs vérins de diamètres différents, même pression, effort mesuré au dynamomètre.',
+   '<b>Exploitation.</b> Tracer F en fonction de S : une droite passant par l’origine, de pente p.',
+   '<b>Institutionnaliser.</b> Écrire F = p × S seulement après la mesure.'],
+  piege:'donner la formule d’abord puis faire vérifier : la démarche n’est plus une découverte.'
+ }
+});
+
+})();
+</script>
+<!-- CORRIGES_DETAILLES fin -->
 </body>
 </html>

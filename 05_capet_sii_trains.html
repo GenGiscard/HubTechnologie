@@ -1155,6 +1155,276 @@ cisaillement:{
   T(c, dbl? 'τ = T / (2 S)' : 'τ = T / S', 620, 140, 18, dbl? '#16a34a':'#dc2626');
   T(c, dbl? 'la contrainte est DIVISÉE PAR DEUX':'toute la charge sur une seule section',
     620, 176, 12, '#5b544a');
+ }},
+
+/* ----- CAPET mécanique : cinématique, liaisons, roulements, frottement ----- */
+vitesseangulaire:{
+ titre:'Vitesse angulaire et vitesse d’un point',
+ formules:['ω = π N / 30   (N en tr/min, ω en rad/s)','V = ω × R   (R en mètres)'],
+ texte:['La vitesse d’un point d’un solide en rotation est perpendiculaire au rayon.',
+        'Plus le point est loin de l’axe, plus il va vite : V est proportionnelle à R.',
+        '1 500 tr/min donnent 157 rad/s : sur un rayon de 40 mm, V = 6,28 m/s.'],
+ dessin:function(c,t){
+  const cx=230, cy=150, a=t*1.4;
+  c.strokeStyle='#cbd5e1'; c.lineWidth=1.5; [50,95].forEach(function(r){ c.beginPath(); c.arc(cx,cy,r,0,6.284); c.stroke(); });
+  c.strokeStyle='#0e7490'; c.lineWidth=6; c.lineCap='round'; c.beginPath(); c.moveTo(cx,cy); c.lineTo(cx+95*Math.cos(a),cy+95*Math.sin(a)); c.stroke(); c.lineCap='butt';
+  [[50,'#7c3aed'],[95,'#ea580c']].forEach(function(q){
+   const x=cx+q[0]*Math.cos(a), y=cy+q[0]*Math.sin(a), k=q[0]*0.7;
+   FL(c,x,y,x-Math.sin(a)*k,y+Math.cos(a)*k,2.8,q[1]); c.fillStyle='#334155'; c.beginPath(); c.arc(x,y,5,0,6.284); c.fill(); });
+  T(c,'V perpendiculaire au rayon',520,120,15,'#ea580c'); T(c,'deux fois plus loin : deux fois plus vite',520,150,13,'#7c3aed');
+  T(c,'V = ω × R',520,200,20,'#155e75');
+ }},
+
+loientree:{
+ titre:'Loi entrée-sortie de la bielle-manivelle',
+ formules:['x = R cos θ + √(L² − R² sin² θ)','course = 2R   ·   x varie entre L − R et L + R'],
+ texte:['x se mesure depuis le centre O de la manivelle jusqu’à l’axe du piston.',
+        'Point mort haut : θ = 0, x = L + R. Point mort bas : θ = 180°, x = L − R.',
+        'La bielle rend le mouvement dissymétrique : à θ = 90°, le piston a dépassé la mi-course.'],
+ dessin:function(c,t){
+  const R=45, L=180, O={x:110,y:150}, th=t*1.2, ax=R*Math.cos(th), ay=R*Math.sin(th), xb=ax+Math.sqrt(L*L-ay*ay);
+  c.strokeStyle='#cbd5e1'; c.lineWidth=1.4; c.beginPath(); c.arc(O.x,O.y,R,0,6.284); c.stroke();
+  c.fillStyle='#f1f5f9'; c.fillRect(O.x+L-R-30,O.y-26,2*R+90,52);
+  c.strokeStyle='#0e7490'; c.lineWidth=6; c.lineCap='round'; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(O.x+ax,O.y-ay); c.stroke();
+  c.strokeStyle='#7c3aed'; c.lineWidth=4; c.beginPath(); c.moveTo(O.x+ax,O.y-ay); c.lineTo(O.x+xb,O.y); c.stroke(); c.lineCap='butt';
+  c.fillStyle='#fed7aa'; c.strokeStyle='#ea580c'; c.lineWidth=2; c.fillRect(O.x+xb-6,O.y-22,44,44); c.strokeRect(O.x+xb-6,O.y-22,44,44);
+  FL(c,O.x,O.y+50,O.x+xb,O.y+50,1.6,'#ea580c'); T(c,'x = '+xb.toFixed(1).replace('.',',')+' mm',O.x+xb/2,O.y+72,13,'#ea580c');
+  T(c,'R = 45 · L = 180',560,90,14,'#334155'); T(c,'course = 90 mm',560,120,14,'#155e75');
+ }},
+
+equiprojectivite:{
+ titre:'Équiprojectivité',
+ formules:['V_A · AB = V_B · AB','V_A cos(V_A, AB) = V_B cos(V_B, AB)'],
+ texte:['Deux points d’un même solide restent à distance constante : leurs vitesses ont la même projection sur AB.',
+        'On projette V_A sur AB, on reporte la même longueur en B, puis on remonte jusqu’à la direction connue de V_B.',
+        'Il faut connaître au départ une vitesse complète et la direction de l’autre.'],
+ dessin:function(c,t){
+  const A={x:170,y:190}, B={x:520,y:120}, d=Math.hypot(B.x-A.x,B.y-A.y), ux=(B.x-A.x)/d, uy=(B.y-A.y)/d;
+  c.strokeStyle='#7c3aed'; c.lineWidth=5; c.beginPath(); c.moveTo(A.x,A.y); c.lineTo(B.x,B.y); c.stroke();
+  const va={x:40,y:-110}, p=va.x*ux+va.y*uy, k=Math.min(1,(t%4)/2);
+  FL(c,A.x,A.y,A.x+va.x,A.y+va.y,3,'#dc2626'); T(c,'V_A',A.x+va.x-22,A.y+va.y,14,'#dc2626');
+  c.strokeStyle='#16a34a'; c.lineWidth=6; c.beginPath(); c.moveTo(A.x,A.y); c.lineTo(A.x+ux*p,A.y+uy*p); c.stroke();
+  c.beginPath(); c.moveTo(B.x,B.y); c.lineTo(B.x+ux*p*k,B.y+uy*p*k); c.stroke();
+  if(k>=1){ const vb=p/ux; FL(c,B.x,B.y,B.x+vb,B.y,3,'#2563eb'); T(c,'V_B',B.x+vb+10,B.y+20,14,'#2563eb'); }
+  T(c,'même projection en A et en B',350,262,14,'#16a34a');
+ }},
+
+cir:{
+ titre:'Centre instantané de rotation',
+ formules:['I = intersection des perpendiculaires aux vitesses','V_M = ω × IM   ·   V_B / V_A = IB / IA'],
+ texte:['À un instant donné, un solide en mouvement plan tourne autour de son CIR.',
+        'Chaque vitesse est perpendiculaire au segment qui joint I au point.',
+        'Si les deux perpendiculaires sont parallèles, I est à l’infini : translation instantanée.'],
+ dessin:function(c,t){
+  const I={x:520,y:40}, A={x:170,y:140}, B={x:520,y:245};
+  c.save(); c.setLineDash([5,4]); c.strokeStyle='#7c3aed'; c.lineWidth=1.6;
+  c.beginPath(); c.moveTo(I.x,I.y); c.lineTo(A.x,A.y); c.moveTo(I.x,I.y); c.lineTo(B.x,B.y); c.stroke(); c.restore();
+  c.strokeStyle='#334155'; c.lineWidth=5; c.beginPath(); c.moveTo(A.x,A.y); c.lineTo(B.x,B.y); c.stroke();
+  const s=0.6+0.4*osc(t,4), dA=Math.hypot(A.x-I.x,A.y-I.y), dB=B.y-I.y;
+  const vA={x:-(A.y-I.y)/dA*dA*0.28*s,y:(A.x-I.x)/dA*dA*0.28*s};
+  FL(c,A.x,A.y,A.x+vA.x,A.y+vA.y,3,'#dc2626'); FL(c,B.x,B.y,B.x-dB*0.28*s,B.y,3,'#2563eb');
+  c.fillStyle='#7c3aed'; c.beginPath(); c.arc(I.x,I.y,7,0,6.284); c.fill(); T(c,'I',I.x+16,I.y+5,16,'#7c3aed');
+  T(c,'V_A',A.x+vA.x-10,A.y+vA.y-8,14,'#dc2626'); T(c,'V_B',B.x-dB*0.28*s,B.y+24,14,'#2563eb');
+  T(c,'V proportionnelle à la distance au CIR',300,40,13,'#155e75');
+ }},
+
+hyperstatisme:{
+ titre:'Degré d’hyperstatisme',
+ formules:['h = m − N_c + 6γ   ·   γ = L − p + 1','inconnues statiques d’une liaison = 6 − mobilités'],
+ texte:['N_c additionne les mobilités de toutes les liaisons ; m compte les mobilités utiles et internes.',
+        'h = 0 : les défauts de fabrication se rattrapent sans effort parasite.',
+        'h > 0 : h conditions géométriques à tenir (coaxialité, parallélisme, distance).'],
+ dessin:function(c,t){
+  const d=10*osc(t,4), y=140;
+  const iso=Math.floor(t/4)%2===0;
+  c.strokeStyle=iso?'#16a34a':'#dc2626'; c.lineWidth=10; c.lineCap='round'; c.beginPath(); c.moveTo(90,y);
+  if(iso) c.lineTo(610,y-d*1.3); else c.bezierCurveTo(260,y-d*1.6,430,y+d*2,520,y-d); if(!iso) c.lineTo(610,y-d*1.2);
+  c.stroke(); c.lineCap='butt';
+  c.fillStyle='#fff'; c.strokeStyle='#0e7490'; c.lineWidth=2.5;
+  if(iso){ c.beginPath(); c.arc(180,y-d*0.25,16,0,6.284); c.fill(); c.stroke(); c.beginPath(); c.arc(520,y-d,16,0,6.284); c.fill(); c.stroke(); }
+  else { c.fillRect(162,y-20,36,40); c.strokeRect(162,y-20,36,40); c.fillRect(502,y-d-20,36,40); c.strokeRect(502,y-d-20,36,40); }
+  T(c,iso?'rotule + linéaire annulaire : h = 0':'pivot + pivot : h = 5',350,50,16,iso?'#16a34a':'#dc2626');
+  T(c,iso?'le défaut d’alignement est absorbé':'le défaut d’alignement force l’arbre',350,250,13,'#5b544a');
+ }},
+
+chargeequiv:{
+ titre:'Charge équivalente d’un roulement',
+ formules:['si F_a / F_r ≤ e :   P = F_r','si F_a / F_r > e :   P = X F_r + Y F_a'],
+ texte:['P est une charge radiale fictive qui use le roulement autant que F_r et F_a réunies.',
+        'e, X et Y se lisent dans le catalogue du fabricant.',
+        'Toujours tester le rapport F_a / F_r AVANT de choisir la formule.'],
+ dessin:function(c,t){
+  const cx=200, cy=150, fa=40+60*osc(t,6);
+  c.strokeStyle='#475569'; c.lineWidth=2.4; c.beginPath(); c.arc(cx,cy,74,0,6.284); c.stroke(); c.beginPath(); c.arc(cx,cy,36,0,6.284); c.stroke();
+  for(let k=0;k<9;k++){ const b=k*2*Math.PI/9+t*0.6; c.fillStyle='#0e7490'; c.beginPath(); c.arc(cx+55*Math.cos(b),cy+55*Math.sin(b),10,0,6.284); c.fill(); }
+  FL(c,cx,cy-140,cx,cy-84,3.4,'#dc2626'); T(c,'F_r = 100',cx+48,cy-118,13,'#dc2626');
+  FL(c,cx-170,cy,cx-170+fa,cy,3.4,'#2563eb'); T(c,'F_a = '+Math.round(fa),cx-150,cy-14,13,'#2563eb');
+  const r=fa/100, P=r<=0.3?100:0.56*100+1.5*fa;
+  T(c,'F_a / F_r = '+r.toFixed(2).replace('.',','),520,110,15,'#334155');
+  T(c,r<=0.3?'≤ e = 0,3 : P = F_r':'> e = 0,3 : P = X F_r + Y F_a',520,145,14,'#155e75');
+  T(c,'P = '+Math.round(P),520,185,20,'#7c3aed');
+ }},
+
+coulomb:{
+ titre:'Lois de Coulomb et cône de frottement',
+ formules:['adhérence : T ≤ f N   ·   glissement : T = f N','tan φ = f   ·   plan incliné : glissement si α > φ'],
+ texte:['N est la composante normale de l’action de contact, T sa composante tangentielle.',
+        'Tant que l’action reste dans le cône de demi-angle φ, rien ne glisse.',
+        'Sur un plan incliné, la masse se simplifie : seul l’angle compte.'],
+ dessin:function(c,t){
+  const a=(5+30*osc(t,8))*Math.PI/180, f=0.4, gl=Math.tan(a)>f, O={x:80,y:240};
+  c.strokeStyle='#78716c'; c.lineWidth=3; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(O.x+420*Math.cos(a),O.y-420*Math.sin(a)); c.stroke();
+  c.save(); c.translate(O.x+260*Math.cos(a),O.y-260*Math.sin(a)); c.rotate(-a); c.fillStyle=gl?'#fecaca':'#bbf7d0'; c.strokeStyle=gl?'#dc2626':'#16a34a'; c.lineWidth=2;
+  c.fillRect(-35,-46,70,46); c.strokeRect(-35,-46,70,46); c.restore();
+  T(c,'α = '+Math.round(a*180/Math.PI)+'°',560,90,16,'#334155'); T(c,'φ = 21,8° (f = 0,4)',560,120,14,'#0e7490');
+  T(c,gl?'GLISSEMENT':'ADHÉRENCE',560,170,20,gl?'#dc2626':'#16a34a');
+ }},
+
+embrayage:{
+ titre:'Couple d’un embrayage ou d’un frein',
+ formules:['C = n · f · F · R_moy','R_moy = (R + r) / 2   (usure uniforme)'],
+ texte:['n compte les SURFACES de frottement : un disque serré entre deux plateaux en a 2.',
+        'Le couple croît avec le rayon moyen : on frotte loin de l’axe.',
+        'Un frein à disque suit la même formule, une des pièces étant fixe.'],
+ dessin:function(c,t){
+  const cx=200, cy=150, a=t*2;
+  c.fillStyle='#fde68a'; c.beginPath(); c.arc(cx,cy,110,0,6.284); c.arc(cx,cy,60,0,6.284,true); c.fill();
+  c.strokeStyle='#b45309'; c.lineWidth=2; c.beginPath(); c.arc(cx,cy,110,0,6.284); c.stroke(); c.beginPath(); c.arc(cx,cy,60,0,6.284); c.stroke();
+  c.save(); c.setLineDash([6,4]); c.strokeStyle='#dc2626'; c.beginPath(); c.arc(cx,cy,85,0,6.284); c.stroke(); c.restore();
+  for(let k=0;k<6;k++){ const b=a+k*1.047; c.fillStyle='#b45309'; c.beginPath(); c.arc(cx+85*Math.cos(b),cy+85*Math.sin(b),5,0,6.284); c.fill(); }
+  T(c,'R_moy',cx,cy-90,13,'#dc2626');
+  T(c,'2 surfaces · f = 0,35',520,100,15,'#334155'); T(c,'F = 3 000 N · R_moy = 90 mm',520,130,14,'#334155');
+  T(c,'C = 189 N·m',520,180,20,'#155e75');
+ }},
+
+courroie:{
+ titre:'Transmission par courroie : relation d’Euler',
+ formules:['T₁ = T₂ · e^(f θ)   (θ en radians)','C = (T₁ − T₂) · R   ·   P = C · ω'],
+ texte:['T₁ est la tension du brin tendu, T₂ celle du brin mou.',
+        'Plus l’angle d’enroulement θ est grand, plus l’écart de tension transmissible augmente.',
+        'C’est la petite poulie, au plus faible enroulement, qui limite le couple.'],
+ dessin:function(c,t){
+  const cx=200, cy=150, r=70, th=(120+60*osc(t,6))*Math.PI/180, au=Math.PI+th/2, al=Math.PI-th/2;
+  c.fillStyle='#e2e8f0'; c.strokeStyle='#475569'; c.lineWidth=2; c.beginPath(); c.arc(cx,cy,r,0,6.284); c.fill(); c.stroke();
+  c.strokeStyle='#ea580c'; c.lineWidth=6; c.beginPath(); c.arc(cx,cy,r+3,al,au); c.stroke();
+  [au,al].forEach(function(a,i){ const x=cx+(r+3)*Math.cos(a), y=cy+(r+3)*Math.sin(a); let dx=-Math.sin(a), dy=Math.cos(a); if(dx<0){dx=-dx;dy=-dy;}
+   c.strokeStyle=i?'#2563eb':'#dc2626'; c.lineWidth=6; c.beginPath(); c.moveTo(x,y); c.lineTo(x+dx*200,y+dy*200); c.stroke(); });
+  const k=Math.exp(0.3*th);
+  T(c,'θ = '+Math.round(th*180/Math.PI)+'°',cx-20,cy+5,15,'#ea580c');
+  T(c,'f = 0,3   e^(fθ) = '+k.toFixed(2).replace('.',','),560,110,15,'#155e75');
+  T(c,'T₁ = '+k.toFixed(2).replace('.',',')+' × T₂',560,150,17,'#dc2626');
+ }},
+
+/* ----- CAPET mécanique, série 2 : dynamique, énergétique, hydraulique, matériaux ----- */
+pfd:{
+ titre:'Principe fondamental de la dynamique',
+ formules:['translation : ΣF = m a','rotation autour d’un axe fixe : ΣC = J dω/dt'],
+ texte:['On isole le solide, on choisit un sens positif, on fait le bilan COMPLET des actions, poids compris.',
+        'Levage en montée accélérée : T − m g = m a, donc T = m (g + a).',
+        'Accélération constante : v = a t, x = ½ a t², et de même ω = (dω/dt) t en rotation.'],
+ dessin:function(c,t){
+  const a=osc(t,6), x=80+a*360;
+  c.strokeStyle='#94a3b8'; c.lineWidth=3; c.beginPath(); c.moveTo(40,200); c.lineTo(660,200); c.stroke();
+  c.fillStyle='#bfdbfe'; c.strokeStyle='#2563eb'; c.lineWidth=2; c.fillRect(x,140,110,56); c.strokeRect(x,140,110,56);
+  T(c,'m',x+55,174,16,'#1e3a8a');
+  FL(c,x+110,160,x+190,160,3,'#16a34a'); T(c,'F',x+200,165,15,'#16a34a','left');
+  FL(c,x,180,x-50,180,3,'#dc2626'); T(c,'F_r',x-58,185,14,'#dc2626','right');
+  T(c,'a = (F − F_r) / m',350,60,20,'#155e75');
+  T(c,'l’effort NET fait accélérer',350,250,13,'#5b544a');
+ }},
+
+momentinertie:{
+ titre:'Moment d’inertie',
+ formules:['disque plein : J = ½ m R²   ·   anneau : J = m R²','barre autour d’une extrémité : J = ⅓ m L²'],
+ texte:['J mesure la résistance d’un solide à la mise en rotation, en kg·m².',
+        'La matière compte au CARRÉ de sa distance à l’axe : l’anneau vaut deux fois le disque de même masse.',
+        'Les inerties autour d’un même axe s’additionnent.'],
+ dessin:function(c,t){
+  const a=t*1.2;
+  [[200,'#0e7490','disque : ½ m R²',0],[480,'#ea580c','anneau : m R²',1]].forEach(function(q){
+   c.strokeStyle=q[1]; c.lineWidth=3;
+   if(q[3]){ c.lineWidth=12; c.beginPath(); c.arc(q[0],140,74,0,6.284); c.stroke(); c.lineWidth=3; }
+   else { c.fillStyle=q[1]; c.globalAlpha=0.3; c.beginPath(); c.arc(q[0],140,80,0,6.284); c.fill(); c.globalAlpha=1; c.beginPath(); c.arc(q[0],140,80,0,6.284); c.stroke(); }
+   c.beginPath(); c.moveTo(q[0],140); c.lineTo(q[0]+80*Math.cos(a*(q[3]?0.6:1)),140+80*Math.sin(a*(q[3]?0.6:1))); c.stroke();
+   T(c,q[2],q[0],254,14,q[1]);
+  });
+  T(c,'même couple : l’anneau démarre deux fois moins vite',350,30,13,'#5b544a');
+ }},
+
+energiecinetique:{
+ titre:'Énergie cinétique',
+ formules:['translation : E = ½ m V²','rotation : E = ½ J ω²'],
+ texte:['C’est l’énergie que le moteur doit fournir pour lancer, et que le frein doit dissiper pour arrêter.',
+        'La vitesse est au carré : rouler deux fois plus vite, c’est quatre fois plus d’énergie.',
+        'Convertir d’abord : km/h ÷ 3,6 donne des m/s ; tr/min × π / 30 donne des rad/s.'],
+ dessin:function(c,t){
+  const v=10+30*osc(t,6), E=0.5*1200*v*v/1000;
+  c.fillStyle='#bfdbfe'; c.strokeStyle='#2563eb'; c.lineWidth=2; c.beginPath(); c.roundRect(60,120,160,56,10); c.fill(); c.stroke();
+  c.fillStyle='#334155'; c.beginPath(); c.arc(95,182,12,0,6.284); c.arc(185,182,12,0,6.284); c.fill();
+  FL(c,230,148,230+v*4,148,3,'#16a34a'); T(c,v.toFixed(0)+' m/s',250+v*2,136,13,'#16a34a');
+  c.fillStyle='#f1f5f9'; c.fillRect(420,120,240,36); c.fillStyle='#ea580c'; c.fillRect(420,120,Math.min(240,E/1000*240),36);
+  T(c,'E = '+E.toFixed(0)+' kJ',540,100,18,'#155e75'); T(c,'1 200 kg',140,153,13,'#1e3a8a');
+ }},
+
+verindebit:{
+ titre:'Vérin : vitesse, débit et puissance',
+ formules:['V = Q / S   (Q en m³/s, S en m²)','P = p × Q   (Pa × m³/s = W)'],
+ texte:['En rentrée, la surface utile est la couronne S − s : la tige rentre plus vite qu’elle ne sort.',
+        '1 L/min = 1/60 000 m³/s. 100 bar = 10⁷ Pa.',
+        'La puissance du moteur de pompe vaut p Q / η.'],
+ dessin:function(c,t){
+  const x=osc(t,5)*180, y=140;
+  c.strokeStyle='#334155'; c.lineWidth=3; c.strokeRect(100,y-45,300,90);
+  c.fillStyle='#fca5a5'; c.fillRect(102,y-43,40+x,86); c.fillStyle='#475569'; c.fillRect(142+x,y-43,14,86);
+  c.fillStyle='#94a3b8'; c.fillRect(156+x,y-14,270,28);
+  FL(c,60,y,100,y,3,'#dc2626'); T(c,'Q',60,y-12,15,'#dc2626');
+  T(c,'V = Q / S',560,110,20,'#155e75'); T(c,'P = p × Q',560,150,20,'#7c3aed');
+ }},
+
+traction:{
+ titre:'Essai de traction',
+ formules:['σ = F / S₀   ·   ε = ΔL / L₀   ·   E = σ / ε','A % = 100 (L_u − L₀) / L₀'],
+ texte:['La droite du début est la zone élastique : sa pente est le module d’Young E.',
+        'R_e marque la fin du comportement élastique, R_m le maximum de la courbe.',
+        'On calcule toujours avec la section INITIALE S₀.'],
+ dessin:function(c,t){
+  const k=Math.min(1,(t%6)/5), gx=120,gy=30,gw=460,gh=220;
+  c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+  c.strokeStyle='#ea580c'; c.lineWidth=3; c.beginPath(); c.moveTo(gx,gy+gh);
+  const pts=[[0.04,0.55],[0.12,0.57],[0.45,0.92],[0.7,0.96],[0.9,0.8]];
+  let last=[0,0]; pts.forEach(function(p){ if(p[0]<=k){ c.lineTo(gx+p[0]*gw,gy+gh-p[1]*gh); last=p; } }); c.stroke();
+  T(c,'R_e',gx-8,gy+gh-0.55*gh+4,13,'#2563eb','right'); T(c,'R_m',gx-8,gy+gh-0.96*gh+4,13,'#dc2626','right');
+  T(c,'pente E',gx+60,gy+gh-60,12,'#0e7490','left');
+ }},
+
+indiceperf:{
+ titre:'Indice de performance d’un matériau',
+ formules:['tirant résistant : ρ / R_e   ·   tirant rigide : ρ / E','poutre rigide : ρ / E^½   ·   poutre résistante : ρ / R_e^½'],
+ texte:['On écrit la masse de la pièce, puis on remplace la dimension libre grâce à la condition à respecter.',
+        'Ce qui ne dépend plus que du matériau est l’indice : le plus petit donne la pièce la plus légère.',
+        'On compare des indices, jamais une propriété isolée.'],
+ dessin:function(c,t){
+  const M=[['acier',26,'#475569'],['aluminium',10.8,'#0ea5e9'],['titane',5,'#a855f7']], i=Math.floor(t/2)%3;
+  M.forEach(function(m,k){ const y=70+k*60, w=m[1]*16, on=k===i;
+   c.fillStyle=m[2]; c.globalAlpha=on?0.9:0.4; c.fillRect(180,y,w,34); c.globalAlpha=1;
+   T(c,m[0],170,y+23,14,m[2],'right'); T(c,'ρ/R_e = '+String(m[1]).replace('.',','),190+w,y+23,13,'#334155','left'); });
+  T(c,'plus la barre est courte, plus le tirant est léger',350,270,13,'#5b544a');
+ }},
+
+flexionrect:{
+ titre:'Flexion d’une section rectangulaire',
+ formules:['σ = M / (I/v)   ·   rectangle b × h : I/v = b h² / 6','condition : σ ≤ R_e / s'],
+ texte:['M est le moment fléchissant maximal, souvent effort × bras de levier à l’encastrement.',
+        'La hauteur h compte au carré : on oriente la plus grande dimension dans le plan de flexion.',
+        'En isolant h, on obtient la hauteur minimale : h² = 6 M s / (b R_e).'],
+ dessin:function(c,t){
+  const f=8+12*osc(t,4);
+  c.fillStyle='#94a3b8'; c.fillRect(60,80,30,140);
+  c.strokeStyle='#0e7490'; c.lineWidth=22; c.beginPath(); c.moveTo(90,150); c.quadraticCurveTo(260,150,420,150+f); c.stroke();
+  FL(c,420,90+f,420,136+f,3,'#dc2626'); T(c,'F',434,100+f,15,'#dc2626','left');
+  T(c,'M = F × L',250,60,16,'#155e75');
+  c.strokeStyle='#334155'; c.lineWidth=2; c.strokeRect(540,110,30,70); T(c,'b',555,200,13,'#334155'); T(c,'h',585,150,13,'#334155','left');
+  T(c,'I/v = b h² / 6',560,240,15,'#7c3aed');
  }}
 };
 
@@ -1338,5 +1608,332 @@ SCHEMAS({
 })();
 </script>
 <!-- SCHEMAS_CAPET fin -->
+<!-- CORRIGES_DETAILLES debut -->
+<style>
+.detail-corr{margin-top:12px;border-top:2px dashed #bae6fd;padding-top:10px;text-align:left}
+.detail-corr .dc-tete{font:800 13px 'Segoe UI',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#0369a1;margin-bottom:4px}
+.detail-corr .dc-etapes{margin:4px 0 8px 22px;font-size:14.5px;line-height:1.65;color:#1e293b}
+.detail-corr .dc-etapes li{margin:5px 0;padding-left:2px}
+.detail-corr .dc-anim{margin:8px 0;text-align:center}
+.detail-corr canvas{display:block;width:100%;max-width:760px;height:auto;margin:0 auto 6px;border:1px solid #e9e2d4;border-radius:12px;background:#fff}
+.detail-corr .dc-btn{background:#fff;color:#0e7490;border:2px solid #0e7490;border-radius:9px;padding:6px 12px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;margin:4px 6px 4px 0}
+.detail-corr .dc-mc{color:#c2410c;border-color:#fdba74;background:#fff7ed}
+.detail-corr .dc-verif{background:#f0fdf4;border-left:4px solid #16a34a;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:14px;line-height:1.55}
+.detail-corr .dc-piege{background:#fef2f2;border-left:4px solid #dc2626;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:14px;line-height:1.55}
+@media print{.detail-corr .dc-btn{display:none}}
+</style>
+<script>
+/* CORRIGES_DETAILLES */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+/* ===== CORRIGES_DETAILLES — moteur commun =====
+   DETAILS(D, MINI) : D = { clé : { etapes:[html…], anim:{h, titre, duree, draw:function(c,t){…}},
+                                    mc:'notion', piege:'html', verif:'html' } }
+   Clés : '1'…'7' missions de TP, 'c1'…'c3' exercices sur copie, 'A1'… questions de sujet.
+   MINI : notions de mini-cours propres à la page, ajoutées à la bibliothèque MINICOURS.
+   L’animation ne tourne que lorsque le canvas est visible ; « Rejouer » la reprend à zéro. */
+function ANIM_CORR(cv,a){
+ var c=cv.getContext('2d'), raf=0, t0=performance.now(), vis=false;
+ function img(ts){ var t=(ts-t0)/1000; c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+  try{ if(a.titre) SC.TITRE(c,a.titre); a.draw(c,t); }catch(e){ console.error(e); cancelAnimationFrame(raf); raf=0; return; }
+  raf=requestAnimationFrame(img); }
+ function go(){ if(!raf){ raf=requestAnimationFrame(img);} }
+ function stop(){ cancelAnimationFrame(raf); raf=0; }
+ if('IntersectionObserver' in window) new IntersectionObserver(function(es){ es.forEach(function(e){ vis=e.isIntersecting; vis?go():stop(); }); }).observe(cv);
+ else go();
+ c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+ return function(){ t0=performance.now(); go(); };
+}
+function ENRICHIR(hote,d){
+ if(!hote || hote.querySelector('.detail-corr')) return;
+ var z=document.createElement('div'); z.className='detail-corr';
+ var h='<div class="dc-tete">Corrigé pas à pas</div>';
+ if(d.etapes){ h+='<ol class="dc-etapes">'; d.etapes.forEach(function(e){ h+='<li>'+e+'</li>'; }); h+='</ol>'; }
+ z.innerHTML=h;
+ if(d.anim){
+  var f=document.createElement('div'); f.className='dc-anim';
+  var cv=document.createElement('canvas'); cv.width=760; cv.height=d.anim.h||260; f.appendChild(cv);
+  var b=document.createElement('button'); b.type='button'; b.className='dc-btn'; b.textContent='Rejouer l’animation'; f.appendChild(b);
+  z.appendChild(f); var rejouer=ANIM_CORR(cv,d.anim); b.addEventListener('click',rejouer);
+ }
+ if(d.verif){ var v=document.createElement('div'); v.className='dc-verif'; v.innerHTML='<b>Vérification</b> — '+d.verif; z.appendChild(v); }
+ if(d.piege){ var p=document.createElement('div'); p.className='dc-piege'; p.innerHTML='<b>Erreur fréquente</b> — '+d.piege; z.appendChild(p); }
+ if(d.mc && window.MINICOURS && window.MINICOURS.notions[d.mc]){
+  var m=document.createElement('button'); m.type='button'; m.className='dc-btn dc-mc';
+  m.textContent='Mini-cours : '+window.MINICOURS.notions[d.mc].titre;
+  m.addEventListener('click',function(){ window.MINICOURS.ouvrir(d.mc); }); z.appendChild(m);
+ }
+ hote.appendChild(z);
+}
+function DETAILS(D,MINI){
+ if(MINI && window.MINICOURS) Object.keys(MINI).forEach(function(k){ window.MINICOURS.notions[k]=MINI[k]; });
+ var sujet=!!document.getElementById('rendre');
+ if(!sujet){
+  Object.keys(D).forEach(function(k){
+   var hote=null;
+   if(/^c\d$/.test(k)){ var ex=document.querySelectorAll('.copie-ex')[+k.slice(1)-1]; hote=ex && ex.querySelector('.corrige-bloc'); }
+   else { var a=document.getElementById('a'+k); hote=a && a.querySelector('.boite > .corrige-bloc'); }
+   ENRICHIR(hote,D[k]);
+  });
+ } else {
+  document.getElementById('rendre').addEventListener('click',function(){
+   document.querySelectorAll('#resultat .corr').forEach(function(cr){
+    var b=cr.querySelector('b'); if(!b) return; var k=b.textContent.replace('Question','').trim();
+    if(D[k]) ENRICHIR(cr,D[k]);
+   });
+  });
+ }
+}
+
+/* Corrigés détaillés — sujet type treuil à deux vitesses */
+function EPI(c,cx,cy,o){
+ var k=o.k||1, rp=o.zp*k, rc=o.zc*k, rs=(rc-rp)/2, zs=(o.zc-o.zp)/2;
+ c.save(); c.translate(cx,cy); c.rotate(o.ac||0);
+ c.fillStyle=o.couronneFond||'#e2e8f0'; c.beginPath(); c.arc(0,0,rc+14,0,6.2832); c.arc(0,0,rc+2,0,6.2832,true); c.fill();
+ c.strokeStyle='#475569'; c.lineWidth=2; c.beginPath(); c.arc(0,0,rc+14,0,6.2832); c.stroke();
+ for(var i=0;i<o.zc;i++){ var a=i*6.2832/o.zc; c.fillStyle=o.couronneFond||'#e2e8f0'; c.beginPath(); c.moveTo((rc+3)*Math.cos(a-0.03),(rc+3)*Math.sin(a-0.03)); c.lineTo((rc-3)*Math.cos(a),(rc-3)*Math.sin(a)); c.lineTo((rc+3)*Math.cos(a+0.03),(rc+3)*Math.sin(a+0.03)); c.fill(); }
+ c.strokeStyle='#64748b'; c.lineWidth=1; c.beginPath(); c.arc(0,0,rc,0,6.2832); c.stroke(); c.restore();
+ for(var j=0;j<3;j++){ var b=(o.aps||0)+j*2.0944; SC.ROUE(c,cx+(rp+rs)*Math.cos(b),cy+(rp+rs)*Math.sin(b),rs,zs,'#7c3aed',o.as||0); }
+ c.strokeStyle='#ea580c'; c.lineWidth=5; c.lineCap='round';
+ for(var j2=0;j2<3;j2++){ var b2=(o.aps||0)+j2*2.0944; c.beginPath(); c.moveTo(cx,cy); c.lineTo(cx+(rp+rs)*Math.cos(b2),cy+(rp+rs)*Math.sin(b2)); c.stroke(); }
+ c.lineCap='butt'; SC.ROUE(c,cx,cy,rp,o.zp,'#0e7490',o.ap||0);
+}
+function LIGNES(c,x,y,t,L,dt,taille){ L.forEach(function(l,i){ if(t>i*(dt||1)) SC.T(c,l[0],x,y+i*26,taille||14,l[1]||'#334155','left'); }); }
+/* chaîne du treuil : moteur → train → réducteur 1/6 → tambour → câble */
+function CHAINE(c,t,valeurs,actif){
+ var X=[20,170,330,480], noms=['moteur','train','réducteur 1/6','tambour Ø 160'];
+ for(var i=0;i<4;i++){ var on=actif>=i; SC.RECT(c,X[i],70,120,54,on?'#ecfeff':'#f8fafc',on?'#0e7490':'#cbd5e1',2); SC.T(c,noms[i],X[i]+60,102,13,on?'#155e75':'#94a3b8');
+  if(i<3) SC.FL(c,X[i]+122,97,X[i+1]-2,97,2,on?'#0e7490':'#cbd5e1');
+  if(valeurs[i] && t>i*1.1) SC.T(c,valeurs[i],X[i]+60,150,13,'#dc2626'); }
+}
+DETAILS({
+ 'A1': {
+  etapes:[
+   '<b>Écrire la condition géométrique.</b> Rayons proportionnels aux dentures : Z<sub>c</sub> = Z<sub>p</sub> + 2 Z<sub>s</sub>.',
+   '<b>Isoler Z<sub>s</sub>.</b> Z<sub>s</sub> = (Z<sub>c</sub> − Z<sub>p</sub>) / 2 = (90 − 30) / 2 = <b>30 dents</b>.',
+   '<b>Condition de montage.</b> n satellites régulièrement répartis exigent (Z<sub>p</sub> + Z<sub>c</sub>) / n entier.',
+   '<b>Application.</b> (30 + 90) / 3 = <b>40</b>, entier.',
+   '<b>Conclure.</b> Trois satellites à 120° se montent : chaque satellite engrène dans la même position relative.'],
+  anim:{h:290, titre:'Trois satellites de 30 dents à 120°', draw:function(c,t){
+   EPI(c,180,155,{k:1.05,zp:30,zc:90,ap:0.25*t,as:-0.25*t,aps:0,couronneFond:'#e2e8f0'});
+   LIGNES(c,370,80,t,[['Z_s = (90 − 30) / 2'],['Z_s = 30 dents','#7c3aed'],['(Z_p + Z_c) / 3 = 120 / 3'],['= 40 : entier','#16a34a'],['montage à 3 satellites possible','#16a34a']],1,14);
+  }},
+  verif:'30 + 2 × 30 = 90 : on retrouve la couronne. Satellites et planétaire ont ici la même taille, ce que montre le dessin.',
+  piege:'tester (Z<sub>c</sub> − Z<sub>p</sub>) / 3 au lieu de (Z<sub>p</sub> + Z<sub>c</sub>) / 3 : 20, entier aussi par hasard, mais la condition est fausse.',
+  mc:'willis'
+ },
+ 'A2': {
+  etapes:[
+   '<b>Se placer dans le repère du porte-satellites.</b> Le train devient ordinaire : planétaire → satellite → couronne.',
+   '<b>Rapport dans ce repère.</b> λ = (−Z<sub>p</sub>/Z<sub>s</sub>) × (Z<sub>s</sub>/Z<sub>c</sub>) = − Z<sub>c</sub>/Z<sub>p</sub>.',
+   '<b>Application.</b> λ = − 90 / 30 = <b>−3</b>.',
+   '<b>Écrire Willis en entier.</b> (ω<sub>p</sub> − ω<sub>ps</sub>) / (ω<sub>c</sub> − ω<sub>ps</sub>) = −3.',
+   '<b>Ne rien substituer encore.</b> Les vitesses nulles se remplacent ensuite, configuration par configuration.'],
+  anim:{h:280, titre:'Vu du porte-satellites, le train est ordinaire', draw:function(c,t){
+   var wp=1.0;
+   EPI(c,170,150,{k:1.0,zp:30,zc:90,ap:wp*t,as:-wp*t,aps:0,ac:-wp/3*t});
+   SC.T(c,'porte-satellites pris comme repère',170,282,12,'#ea580c');
+   LIGNES(c,350,70,t,[['planétaire → satellite : −30/30'],['satellite → couronne : +30/90'],['λ = − 90 / 30 = −3','#dc2626'],['(ω_p − ω_ps) / (ω_c − ω_ps) = −3','#155e75']],1.2,14);
+   if(t>5) SC.T(c,'couronne : 3 fois moins vite, sens inverse',350,200,13,'#64748b','left',false);
+  }},
+  verif:'signe négatif : dans le repère du porte-satellites, couronne et planétaire tournent en sens inverse, comme le montre l’animation.',
+  piege:'substituer ω<sub>c</sub> = 0 dès la première ligne, puis perdre ω<sub>ps</sub> au dénominateur.',
+  mc:'willis'
+ },
+ 'A3': {
+  etapes:[
+   '<b>Partir de Willis.</b> (ω<sub>p</sub> − ω<sub>ps</sub>) / (ω<sub>c</sub> − ω<sub>ps</sub>) = −3.',
+   '<b>Frein serré sur la couronne.</b> ω<sub>c</sub> = 0, donc (ω<sub>p</sub> − ω<sub>ps</sub>) / (− ω<sub>ps</sub>) = −3.',
+   '<b>Développer.</b> ω<sub>p</sub> − ω<sub>ps</sub> = 3 ω<sub>ps</sub>, soit ω<sub>p</sub> = 4 ω<sub>ps</sub>.',
+   '<b>Rapport.</b> ω<sub>ps</sub> / ω<sub>p</sub> = 1/4 = Z<sub>p</sub> / (Z<sub>p</sub> + Z<sub>c</sub>) = 30 / 120 = <b>0,25</b>.',
+   '<b>Conclure.</b> Rapport positif inférieur à 1 : réduction par 4, même sens de rotation.'],
+  anim:{h:290, titre:'Couronne freinée : le porte-satellites fait 1 tour quand le planétaire en fait 4', draw:function(c,t){
+   var wp=1.0, wps=0.25, ws=wps+(wp-wps)*(-1);
+   EPI(c,170,155,{k:1.0,zp:30,zc:90,ap:wp*t,as:ws*t,aps:wps*t,couronneFond:'#fecaca'});
+   SC.T(c,'couronne freinée',170,288,12,'#dc2626');
+   SC.T(c,'planétaire : '+(wp*t/6.2832).toFixed(1).replace('.',',')+' tour(s)',350,60,14,'#0e7490','left');
+   SC.T(c,'porte-satellites : '+(wps*t/6.2832).toFixed(2).replace('.',',')+' tour(s)',350,86,14,'#ea580c','left');
+   LIGNES(c,350,130,t,[['(ω_p − ω_ps) / (0 − ω_ps) = −3'],['ω_p = 4 ω_ps'],['ω_ps / ω_p = 30 / 120 = 0,25','#dc2626']],1.3,14);
+  }},
+  verif:'1 450 × 0,25 = 362,5 tr/min en sortie de train, une valeur plausible pour l’étape suivante.',
+  piege:'répondre Z<sub>p</sub>/Z<sub>c</sub> = 1/3 comme pour un train ordinaire.',
+  mc:'willis'
+ },
+ 'B1': {
+  etapes:[
+   '<b>Sortie du train.</b> N<sub>ps</sub> = 1 450 × 0,25 = 362,5 tr/min.',
+   '<b>Réducteur fixe.</b> N<sub>tambour</sub> = 362,5 / 6 = <b>60,4 tr/min</b>.',
+   '<b>Vitesse du câble.</b> Le câble s’enroule sur le tambour : v = π D N / 60.',
+   '<b>Application.</b> v = π × 0,160 × 60,4 / 60 = <b>0,506 m/s</b>.',
+   '<b>Interpréter.</b> 0,506 × 60 ≈ 30 m par minute : une vitesse de levage réaliste pour un treuil de chantier.'],
+  anim:{h:270, titre:'La vitesse se propage le long de la chaîne', draw:function(c,t){
+   CHAINE(c,t,['1 450 tr/min','× 0,25 → 362,5','÷ 6 → 60,4 tr/min','v = 0,506 m/s'],3);
+   var y=(Math.max(0,t-3.5)*12)%30;
+   SC.CERCLE(c,640,196,22,'#fde68a','#b45309',2); SC.SEG(c,662,196,662,236-y,'#334155',2);
+   SC.RECT(c,642,236-y,40,22,'#bfdbfe','#2563eb',2); SC.T(c,'400 kg',662,251-y,11,'#1e3a8a');
+   SC.FL(c,700,250,700,212,2.5,'#16a34a');
+   if(t>4.4) SC.T(c,'v = π × 0,160 × 60,4 / 60',300,220,14,'#155e75');
+  }},
+  verif:'unités : D en mètres et N en tr/min, divisé par 60 pour passer en secondes.',
+  piege:'oublier le réducteur 1/6, ou prendre le rayon dans π D N / 60 : on obtient 0,253 m/s.',
+  mc:'vitesse'
+ },
+ 'B2': {
+  etapes:[
+   '<b>Embrayage serré.</b> Planétaire et couronne tournent à la même vitesse : ω<sub>p</sub> = ω<sub>c</sub>.',
+   '<b>Willis.</b> (ω<sub>p</sub> − ω<sub>ps</sub>) / (ω<sub>p</sub> − ω<sub>ps</sub>) = −3 n’est possible que si ω<sub>p</sub> = ω<sub>ps</sub>.',
+   '<b>Interpréter.</b> Aucun mouvement relatif : le train tourne d’un bloc, rapport <b>1</b>.',
+   '<b>Vitesse du tambour.</b> N = 1 450 / 6 = 241,7 tr/min.',
+   '<b>Vitesse du câble.</b> v = π × 0,160 × 241,7 / 60 = <b>2,025 m/s</b>, quatre fois plus vite qu’en vitesse lente.'],
+  anim:{h:290, titre:'Embrayage serré : tout le train tourne d’un bloc', draw:function(c,t){
+   var w=0.6;
+   EPI(c,170,155,{k:1.0,zp:30,zc:90,ap:w*t,as:w*t,aps:w*t,ac:w*t,couronneFond:'#bbf7d0'});
+   SC.T(c,'planétaire, satellites, porte-satellites et couronne solidaires',380,288,12,'#16a34a');
+   LIGNES(c,350,70,t,[['ω_p = ω_c'],['⇒ ω_ps = ω_p : rapport 1'],['N tambour = 1 450 / 6 = 241,7 tr/min'],['v = 2,025 m/s','#dc2626']],1.2,14);
+  }},
+  verif:'2,025 / 0,506 = 4 : le rapport du train vaut bien 1/4 en vitesse lente et 1 en prise directe.',
+  piege:'chercher un rapport par Willis en remplaçant une vitesse par zéro : aucune n’est nulle dans cette configuration.',
+  mc:'trainordinaire'
+ },
+ 'C1': {
+  etapes:[
+   '<b>Isoler la charge.</b> En levage à vitesse constante, le câble équilibre le poids.',
+   '<b>Effort dans le câble.</b> F = m g = 400 × 9,81 = <b>3 924 N</b>.',
+   '<b>Isoler le tambour.</b> Le câble agit tangentiellement, à la distance R = D / 2 = 0,080 m de l’axe.',
+   '<b>Couple.</b> C = F × R = 3 924 × 0,080 = <b>313,9 N·m</b>.',
+   '<b>Conclure.</b> C’est le couple que la chaîne doit délivrer au tambour.'],
+  anim:{h:270, titre:'Le couple naît du bras de levier R', draw:function(c,t){
+   var cx=220, cy=120, R=60;
+   SC.CERCLE(c,cx,cy,R,'#fde68a','#b45309',2.5); SC.PT(c,cx,cy,5);
+   SC.SEG(c,cx+R,cy,cx+R,230,'#334155',2); SC.RECT(c,cx+R-24,230,48,30,'#bfdbfe','#2563eb',2); SC.T(c,'400 kg',cx+R,250,12,'#1e3a8a');
+   if(t>0.8){ SC.FL(c,cx+R+40,190,cx+R+40,260,3,'#dc2626'); SC.T(c,'P = 3 924 N',cx+R+50,230,13,'#dc2626','left'); }
+   if(t>1.8){ SC.FL(c,cx+R,cy+30,cx+R,cy+90,3,'#dc2626'); SC.T(c,'F',cx+R+12,cy+70,14,'#dc2626','left'); }
+   if(t>2.6){ SC.COTE(c,cx,cy,cx+R,cy,'R = 0,080 m','#334155',-8); }
+   if(t>3.4){ c.strokeStyle='#7c3aed'; c.lineWidth=3; c.beginPath(); c.arc(cx,cy,R+16,0.2,1.4); c.stroke(); SC.FL(c,cx+(R+16)*Math.cos(1.3),cy+(R+16)*Math.sin(1.3),cx+(R+16)*Math.cos(1.45),cy+(R+16)*Math.sin(1.45),2.5,'#7c3aed'); }
+   LIGNES(c,440,110,t-3.4,[['C = F × R'],['C = 3 924 × 0,080'],['C = 313,9 N·m','#7c3aed']],0.8,15);
+  }},
+  verif:'ordre de grandeur : 4 kN au bout d’un bras de 8 cm donnent environ 300 N·m.',
+  piege:'prendre le diamètre (0,160 m) comme bras de levier : on double le couple, 627,8 N·m.',
+  mc:'momentforce'
+ },
+ 'C2': {
+  etapes:[
+   '<b>Rendement global.</b> Train et réducteur en série : η = 0,96 × 0,97 = <b>0,931</b>.',
+   '<b>Rapport global.</b> Tambour / moteur = 0,25 × 1/6 = 1/24.',
+   '<b>Remonter vers le moteur.</b> On divise le couple par la démultiplication ET par le rendement.',
+   '<b>Application.</b> C<sub>m</sub> = 313,9 / (24 × 0,931) = <b>14,05 N·m</b>.',
+   '<b>Comparer.</b> 14,05 &lt; 18 N·m disponibles : le levage est possible.',
+   '<b>Marge.</b> (18 − 14,05) / 18 ≈ 22 % de réserve.'],
+  anim:{h:270, titre:'On remonte la chaîne en divisant par le rapport et le rendement', draw:function(c,t){
+   CHAINE(c,0,[],3);
+   var V=[['313,9 N·m',480],['÷ 6 ÷ 0,97 → 53,9',330],['÷ 4 ÷ 0,96 → 14,05 N·m',170]];
+   V.forEach(function(v,i){ if(t>i*1.1) SC.T(c,v[0],v[1]+60,150,13,'#dc2626'); });
+   if(t>3.4){ var x0=120, w=500; c.fillStyle='#f1f5f9'; c.fillRect(x0,200,w,26); c.fillStyle='#16a34a'; c.fillRect(x0,200,w*14.05/20,26);
+    SC.SEG(c,x0+w*18/20,190,x0+w*18/20,236,'#dc2626',2.5); SC.T(c,'18 N·m disponibles',x0+w*18/20,256,12,'#dc2626');
+    SC.T(c,'14,05 N·m nécessaires',x0+w*14.05/40,218,12,'#fff'); }
+  }},
+  verif:'puissance : 14,05 × 151,8 = 2 133 W au moteur, 1 986 W au câble ; le rapport vaut bien 0,931.',
+  piege:'multiplier par le rendement au lieu de diviser : on trouverait 12,2 N·m, un moteur sous-dimensionné.',
+  mc:'rendement'
+ },
+ 'C3': {
+  etapes:[
+   '<b>Prise directe.</b> Le train a un rapport 1 ; seul le réducteur 1/6 démultiplie.',
+   '<b>Rendement.</b> Le train tourne d’un bloc, sans engrènement actif : on ne garde que η = 0,97.',
+   '<b>Couple moteur.</b> C<sub>m</sub> = 313,9 / (6 × 0,97) = <b>53,94 N·m</b>.',
+   '<b>Comparer.</b> 53,94 / 18 ≈ 3 : il faudrait trois fois le couple disponible.',
+   '<b>Conclure.</b> En prise directe, le treuil ne peut pas lever la charge nominale : le moteur calerait.'],
+  anim:{h:240, titre:'Prise directe : le couple demandé dépasse 3 fois le disponible', draw:function(c,t){
+   var x0=80, w=600, k=w/60, f=Math.min(1,t/2.5);
+   c.fillStyle='#f1f5f9'; c.fillRect(x0,90,w,34); c.fillStyle='#dc2626'; c.fillRect(x0,90,53.94*k*f,34);
+   SC.SEG(c,x0+18*k,76,x0+18*k,140,'#16a34a',3); SC.T(c,'18 N·m disponibles',x0+18*k,160,13,'#16a34a');
+   if(t>2.6){ SC.T(c,'53,94 N·m nécessaires',x0+53.94*k,72,14,'#dc2626'); SC.T(c,'313,9 / (6 × 0,97) = 53,94 N·m',380,205,15,'#155e75'); }
+  }},
+  verif:'53,94 / 14,05 ≈ 3,8, proche du rapport 4 perdu, corrigé du léger gain de rendement.',
+  piege:'conclure que la prise directe est meilleure parce que son rendement est plus élevé.',
+  mc:'rendement'
+ },
+ 'D1': {
+  etapes:[
+   '<b>Partir du résultat C3.</b> En prise directe, le moteur ne peut pas lever 400 kg.',
+   '<b>Chercher les cas sans charge nominale.</b> Crochet à vide, descente, approche, charge légère.',
+   '<b>Vitesse disponible.</b> 2,025 m/s, quatre fois plus vite : on gagne du temps sur ces phases.',
+   '<b>Usage.</b> Vitesse lente pour lever la charge, prise directe pour les déplacements à vide.',
+   '<b>Conclure.</b> Un rapport se juge selon l’usage prévu, pas sur la charge maximale seule.'],
+  anim:{h:240, titre:'Deux vitesses, deux usages', draw:function(c,t){
+   function crochet(x,v,charge,lab,co){ var y=60+((t*v)%120); SC.SEG(c,x,40,x,y,'#334155',2); if(charge){ SC.RECT(c,x-26,y,52,30,'#bfdbfe','#2563eb',2); SC.T(c,'400 kg',x,y+20,11,'#1e3a8a'); } else { c.strokeStyle='#334155'; c.lineWidth=3; c.beginPath(); c.arc(x,y+8,8,0,3.14); c.stroke(); }
+    SC.T(c,lab,x,230,13,co); }
+   crochet(200,15,true,'vitesse lente : lever la charge','#0e7490');
+   crochet(540,60,false,'prise directe : crochet à vide','#ea580c');
+  }},
+  piege:'répondre que la prise directe ne sert à rien : elle divise par 4 la durée des manœuvres à vide.',
+  mc:'rendement'
+ },
+ 'D2': {
+  etapes:[
+   '<b>Puissance de levage.</b> P = F × v = 3 924 × 0,506 = <b>1 986 W</b>.',
+   '<b>Vitesse angulaire du moteur.</b> ω = 1 450 × 2π / 60 = 151,8 rad/s.',
+   '<b>Puissance moteur.</b> P = C × ω = 14,05 × 151,8 = <b>2 133 W</b>.',
+   '<b>Pertes.</b> 2 133 − 1 986 = 147 W dissipés en chaleur.',
+   '<b>Recouper.</b> 1 986 / 2 133 = 0,931 : c’est exactement le rendement trouvé en C2.'],
+  anim:{h:250, titre:'Bilan de puissance : la chaîne de calcul est cohérente', draw:function(c,t){
+   var f=Math.min(1,t/1.5), x0=80, k=0.25;
+   c.fillStyle='#0e7490'; c.fillRect(x0,70,2133*k*f,40); SC.T(c,'moteur : 2 133 W',x0,62,13,'#0e7490','left');
+   if(t>1.8){ var g=Math.min(1,(t-1.8)/1.5); c.fillStyle='#16a34a'; c.fillRect(x0,150,1986*k*g,40); SC.T(c,'levage : 1 986 W',x0,142,13,'#16a34a','left');
+    c.fillStyle='rgba(220,38,38,.35)'; c.fillRect(x0+1986*k,150,147*k*g,40); }
+   if(t>3.5){ SC.T(c,'pertes 147 W',x0+1986*k+18,212,13,'#dc2626','center'); SC.T(c,'1 986 / 2 133 = 0,931 = η',380,232,15,'#155e75'); }
+  }},
+  verif:'deux méthodes indépendantes, mécanique côté charge et électromécanique côté moteur, donnent le même rendement.',
+  piege:'comparer des puissances avec des unités différentes, par exemple N en tr/min dans P = C × ω.',
+  mc:'puissance'
+ },
+ 'E1': {
+  etapes:[
+   '<b>Choisir la compétence.</b> CO5.2 ou CO6.2 : caractériser la chaîne d’énergie, simuler la loi entrée-sortie.',
+   '<b>Construire l’activité.</b> En îlots, mesurer la vitesse du câble dans les deux configurations.',
+   '<b>Confronter.</b> Comparer rapports mesurés et rapports calculés par Willis.',
+   '<b>Exploiter.</b> Avec un wattmètre, estimer le rendement réel et commenter l’écart.',
+   '<b>Fixer la production.</b> Compte rendu : protocole, tableau de mesures, écarts modèle-mesure interprétés.'],
+  piege:'proposer une activité purement calculatoire : la compétence visée exige une confrontation modèle-mesure.'
+ },
+ 'E2': {
+  etapes:[
+   '<b>Identifier la confusion.</b> L’élève confond rendement et capacité à fournir le couple.',
+   '<b>Chiffrer.</b> Prise directe : η = 0,97 mais 53,94 N·m requis. Vitesse lente : η = 0,931 et 14,05 N·m.',
+   '<b>Hiérarchiser les critères.</b> D’abord pouvoir lever la charge, ensuite seulement économiser l’énergie.',
+   '<b>Remédiation.</b> Tableau à deux colonnes, rendement et couple nécessaire, pour les deux configurations.',
+   '<b>Laisser conclure l’élève.</b> La contradiction apparaît d’elle-même et il construit le bon critère.'],
+  piege:'corriger en donnant la bonne réponse sans faire calculer : la conception erronée resurgira au prochain sujet.'
+ }
+});
+
+})();
+</script>
+<!-- CORRIGES_DETAILLES fin -->
 </body>
 </html>

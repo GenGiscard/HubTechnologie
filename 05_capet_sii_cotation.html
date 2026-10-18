@@ -1124,6 +1124,276 @@ cisaillement:{
   T(c, dbl? 'τ = T / (2 S)' : 'τ = T / S', 620, 140, 18, dbl? '#16a34a':'#dc2626');
   T(c, dbl? 'la contrainte est DIVISÉE PAR DEUX':'toute la charge sur une seule section',
     620, 176, 12, '#5b544a');
+ }},
+
+/* ----- CAPET mécanique : cinématique, liaisons, roulements, frottement ----- */
+vitesseangulaire:{
+ titre:'Vitesse angulaire et vitesse d’un point',
+ formules:['ω = π N / 30   (N en tr/min, ω en rad/s)','V = ω × R   (R en mètres)'],
+ texte:['La vitesse d’un point d’un solide en rotation est perpendiculaire au rayon.',
+        'Plus le point est loin de l’axe, plus il va vite : V est proportionnelle à R.',
+        '1 500 tr/min donnent 157 rad/s : sur un rayon de 40 mm, V = 6,28 m/s.'],
+ dessin:function(c,t){
+  const cx=230, cy=150, a=t*1.4;
+  c.strokeStyle='#cbd5e1'; c.lineWidth=1.5; [50,95].forEach(function(r){ c.beginPath(); c.arc(cx,cy,r,0,6.284); c.stroke(); });
+  c.strokeStyle='#0e7490'; c.lineWidth=6; c.lineCap='round'; c.beginPath(); c.moveTo(cx,cy); c.lineTo(cx+95*Math.cos(a),cy+95*Math.sin(a)); c.stroke(); c.lineCap='butt';
+  [[50,'#7c3aed'],[95,'#ea580c']].forEach(function(q){
+   const x=cx+q[0]*Math.cos(a), y=cy+q[0]*Math.sin(a), k=q[0]*0.7;
+   FL(c,x,y,x-Math.sin(a)*k,y+Math.cos(a)*k,2.8,q[1]); c.fillStyle='#334155'; c.beginPath(); c.arc(x,y,5,0,6.284); c.fill(); });
+  T(c,'V perpendiculaire au rayon',520,120,15,'#ea580c'); T(c,'deux fois plus loin : deux fois plus vite',520,150,13,'#7c3aed');
+  T(c,'V = ω × R',520,200,20,'#155e75');
+ }},
+
+loientree:{
+ titre:'Loi entrée-sortie de la bielle-manivelle',
+ formules:['x = R cos θ + √(L² − R² sin² θ)','course = 2R   ·   x varie entre L − R et L + R'],
+ texte:['x se mesure depuis le centre O de la manivelle jusqu’à l’axe du piston.',
+        'Point mort haut : θ = 0, x = L + R. Point mort bas : θ = 180°, x = L − R.',
+        'La bielle rend le mouvement dissymétrique : à θ = 90°, le piston a dépassé la mi-course.'],
+ dessin:function(c,t){
+  const R=45, L=180, O={x:110,y:150}, th=t*1.2, ax=R*Math.cos(th), ay=R*Math.sin(th), xb=ax+Math.sqrt(L*L-ay*ay);
+  c.strokeStyle='#cbd5e1'; c.lineWidth=1.4; c.beginPath(); c.arc(O.x,O.y,R,0,6.284); c.stroke();
+  c.fillStyle='#f1f5f9'; c.fillRect(O.x+L-R-30,O.y-26,2*R+90,52);
+  c.strokeStyle='#0e7490'; c.lineWidth=6; c.lineCap='round'; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(O.x+ax,O.y-ay); c.stroke();
+  c.strokeStyle='#7c3aed'; c.lineWidth=4; c.beginPath(); c.moveTo(O.x+ax,O.y-ay); c.lineTo(O.x+xb,O.y); c.stroke(); c.lineCap='butt';
+  c.fillStyle='#fed7aa'; c.strokeStyle='#ea580c'; c.lineWidth=2; c.fillRect(O.x+xb-6,O.y-22,44,44); c.strokeRect(O.x+xb-6,O.y-22,44,44);
+  FL(c,O.x,O.y+50,O.x+xb,O.y+50,1.6,'#ea580c'); T(c,'x = '+xb.toFixed(1).replace('.',',')+' mm',O.x+xb/2,O.y+72,13,'#ea580c');
+  T(c,'R = 45 · L = 180',560,90,14,'#334155'); T(c,'course = 90 mm',560,120,14,'#155e75');
+ }},
+
+equiprojectivite:{
+ titre:'Équiprojectivité',
+ formules:['V_A · AB = V_B · AB','V_A cos(V_A, AB) = V_B cos(V_B, AB)'],
+ texte:['Deux points d’un même solide restent à distance constante : leurs vitesses ont la même projection sur AB.',
+        'On projette V_A sur AB, on reporte la même longueur en B, puis on remonte jusqu’à la direction connue de V_B.',
+        'Il faut connaître au départ une vitesse complète et la direction de l’autre.'],
+ dessin:function(c,t){
+  const A={x:170,y:190}, B={x:520,y:120}, d=Math.hypot(B.x-A.x,B.y-A.y), ux=(B.x-A.x)/d, uy=(B.y-A.y)/d;
+  c.strokeStyle='#7c3aed'; c.lineWidth=5; c.beginPath(); c.moveTo(A.x,A.y); c.lineTo(B.x,B.y); c.stroke();
+  const va={x:40,y:-110}, p=va.x*ux+va.y*uy, k=Math.min(1,(t%4)/2);
+  FL(c,A.x,A.y,A.x+va.x,A.y+va.y,3,'#dc2626'); T(c,'V_A',A.x+va.x-22,A.y+va.y,14,'#dc2626');
+  c.strokeStyle='#16a34a'; c.lineWidth=6; c.beginPath(); c.moveTo(A.x,A.y); c.lineTo(A.x+ux*p,A.y+uy*p); c.stroke();
+  c.beginPath(); c.moveTo(B.x,B.y); c.lineTo(B.x+ux*p*k,B.y+uy*p*k); c.stroke();
+  if(k>=1){ const vb=p/ux; FL(c,B.x,B.y,B.x+vb,B.y,3,'#2563eb'); T(c,'V_B',B.x+vb+10,B.y+20,14,'#2563eb'); }
+  T(c,'même projection en A et en B',350,262,14,'#16a34a');
+ }},
+
+cir:{
+ titre:'Centre instantané de rotation',
+ formules:['I = intersection des perpendiculaires aux vitesses','V_M = ω × IM   ·   V_B / V_A = IB / IA'],
+ texte:['À un instant donné, un solide en mouvement plan tourne autour de son CIR.',
+        'Chaque vitesse est perpendiculaire au segment qui joint I au point.',
+        'Si les deux perpendiculaires sont parallèles, I est à l’infini : translation instantanée.'],
+ dessin:function(c,t){
+  const I={x:520,y:40}, A={x:170,y:140}, B={x:520,y:245};
+  c.save(); c.setLineDash([5,4]); c.strokeStyle='#7c3aed'; c.lineWidth=1.6;
+  c.beginPath(); c.moveTo(I.x,I.y); c.lineTo(A.x,A.y); c.moveTo(I.x,I.y); c.lineTo(B.x,B.y); c.stroke(); c.restore();
+  c.strokeStyle='#334155'; c.lineWidth=5; c.beginPath(); c.moveTo(A.x,A.y); c.lineTo(B.x,B.y); c.stroke();
+  const s=0.6+0.4*osc(t,4), dA=Math.hypot(A.x-I.x,A.y-I.y), dB=B.y-I.y;
+  const vA={x:-(A.y-I.y)/dA*dA*0.28*s,y:(A.x-I.x)/dA*dA*0.28*s};
+  FL(c,A.x,A.y,A.x+vA.x,A.y+vA.y,3,'#dc2626'); FL(c,B.x,B.y,B.x-dB*0.28*s,B.y,3,'#2563eb');
+  c.fillStyle='#7c3aed'; c.beginPath(); c.arc(I.x,I.y,7,0,6.284); c.fill(); T(c,'I',I.x+16,I.y+5,16,'#7c3aed');
+  T(c,'V_A',A.x+vA.x-10,A.y+vA.y-8,14,'#dc2626'); T(c,'V_B',B.x-dB*0.28*s,B.y+24,14,'#2563eb');
+  T(c,'V proportionnelle à la distance au CIR',300,40,13,'#155e75');
+ }},
+
+hyperstatisme:{
+ titre:'Degré d’hyperstatisme',
+ formules:['h = m − N_c + 6γ   ·   γ = L − p + 1','inconnues statiques d’une liaison = 6 − mobilités'],
+ texte:['N_c additionne les mobilités de toutes les liaisons ; m compte les mobilités utiles et internes.',
+        'h = 0 : les défauts de fabrication se rattrapent sans effort parasite.',
+        'h > 0 : h conditions géométriques à tenir (coaxialité, parallélisme, distance).'],
+ dessin:function(c,t){
+  const d=10*osc(t,4), y=140;
+  const iso=Math.floor(t/4)%2===0;
+  c.strokeStyle=iso?'#16a34a':'#dc2626'; c.lineWidth=10; c.lineCap='round'; c.beginPath(); c.moveTo(90,y);
+  if(iso) c.lineTo(610,y-d*1.3); else c.bezierCurveTo(260,y-d*1.6,430,y+d*2,520,y-d); if(!iso) c.lineTo(610,y-d*1.2);
+  c.stroke(); c.lineCap='butt';
+  c.fillStyle='#fff'; c.strokeStyle='#0e7490'; c.lineWidth=2.5;
+  if(iso){ c.beginPath(); c.arc(180,y-d*0.25,16,0,6.284); c.fill(); c.stroke(); c.beginPath(); c.arc(520,y-d,16,0,6.284); c.fill(); c.stroke(); }
+  else { c.fillRect(162,y-20,36,40); c.strokeRect(162,y-20,36,40); c.fillRect(502,y-d-20,36,40); c.strokeRect(502,y-d-20,36,40); }
+  T(c,iso?'rotule + linéaire annulaire : h = 0':'pivot + pivot : h = 5',350,50,16,iso?'#16a34a':'#dc2626');
+  T(c,iso?'le défaut d’alignement est absorbé':'le défaut d’alignement force l’arbre',350,250,13,'#5b544a');
+ }},
+
+chargeequiv:{
+ titre:'Charge équivalente d’un roulement',
+ formules:['si F_a / F_r ≤ e :   P = F_r','si F_a / F_r > e :   P = X F_r + Y F_a'],
+ texte:['P est une charge radiale fictive qui use le roulement autant que F_r et F_a réunies.',
+        'e, X et Y se lisent dans le catalogue du fabricant.',
+        'Toujours tester le rapport F_a / F_r AVANT de choisir la formule.'],
+ dessin:function(c,t){
+  const cx=200, cy=150, fa=40+60*osc(t,6);
+  c.strokeStyle='#475569'; c.lineWidth=2.4; c.beginPath(); c.arc(cx,cy,74,0,6.284); c.stroke(); c.beginPath(); c.arc(cx,cy,36,0,6.284); c.stroke();
+  for(let k=0;k<9;k++){ const b=k*2*Math.PI/9+t*0.6; c.fillStyle='#0e7490'; c.beginPath(); c.arc(cx+55*Math.cos(b),cy+55*Math.sin(b),10,0,6.284); c.fill(); }
+  FL(c,cx,cy-140,cx,cy-84,3.4,'#dc2626'); T(c,'F_r = 100',cx+48,cy-118,13,'#dc2626');
+  FL(c,cx-170,cy,cx-170+fa,cy,3.4,'#2563eb'); T(c,'F_a = '+Math.round(fa),cx-150,cy-14,13,'#2563eb');
+  const r=fa/100, P=r<=0.3?100:0.56*100+1.5*fa;
+  T(c,'F_a / F_r = '+r.toFixed(2).replace('.',','),520,110,15,'#334155');
+  T(c,r<=0.3?'≤ e = 0,3 : P = F_r':'> e = 0,3 : P = X F_r + Y F_a',520,145,14,'#155e75');
+  T(c,'P = '+Math.round(P),520,185,20,'#7c3aed');
+ }},
+
+coulomb:{
+ titre:'Lois de Coulomb et cône de frottement',
+ formules:['adhérence : T ≤ f N   ·   glissement : T = f N','tan φ = f   ·   plan incliné : glissement si α > φ'],
+ texte:['N est la composante normale de l’action de contact, T sa composante tangentielle.',
+        'Tant que l’action reste dans le cône de demi-angle φ, rien ne glisse.',
+        'Sur un plan incliné, la masse se simplifie : seul l’angle compte.'],
+ dessin:function(c,t){
+  const a=(5+30*osc(t,8))*Math.PI/180, f=0.4, gl=Math.tan(a)>f, O={x:80,y:240};
+  c.strokeStyle='#78716c'; c.lineWidth=3; c.beginPath(); c.moveTo(O.x,O.y); c.lineTo(O.x+420*Math.cos(a),O.y-420*Math.sin(a)); c.stroke();
+  c.save(); c.translate(O.x+260*Math.cos(a),O.y-260*Math.sin(a)); c.rotate(-a); c.fillStyle=gl?'#fecaca':'#bbf7d0'; c.strokeStyle=gl?'#dc2626':'#16a34a'; c.lineWidth=2;
+  c.fillRect(-35,-46,70,46); c.strokeRect(-35,-46,70,46); c.restore();
+  T(c,'α = '+Math.round(a*180/Math.PI)+'°',560,90,16,'#334155'); T(c,'φ = 21,8° (f = 0,4)',560,120,14,'#0e7490');
+  T(c,gl?'GLISSEMENT':'ADHÉRENCE',560,170,20,gl?'#dc2626':'#16a34a');
+ }},
+
+embrayage:{
+ titre:'Couple d’un embrayage ou d’un frein',
+ formules:['C = n · f · F · R_moy','R_moy = (R + r) / 2   (usure uniforme)'],
+ texte:['n compte les SURFACES de frottement : un disque serré entre deux plateaux en a 2.',
+        'Le couple croît avec le rayon moyen : on frotte loin de l’axe.',
+        'Un frein à disque suit la même formule, une des pièces étant fixe.'],
+ dessin:function(c,t){
+  const cx=200, cy=150, a=t*2;
+  c.fillStyle='#fde68a'; c.beginPath(); c.arc(cx,cy,110,0,6.284); c.arc(cx,cy,60,0,6.284,true); c.fill();
+  c.strokeStyle='#b45309'; c.lineWidth=2; c.beginPath(); c.arc(cx,cy,110,0,6.284); c.stroke(); c.beginPath(); c.arc(cx,cy,60,0,6.284); c.stroke();
+  c.save(); c.setLineDash([6,4]); c.strokeStyle='#dc2626'; c.beginPath(); c.arc(cx,cy,85,0,6.284); c.stroke(); c.restore();
+  for(let k=0;k<6;k++){ const b=a+k*1.047; c.fillStyle='#b45309'; c.beginPath(); c.arc(cx+85*Math.cos(b),cy+85*Math.sin(b),5,0,6.284); c.fill(); }
+  T(c,'R_moy',cx,cy-90,13,'#dc2626');
+  T(c,'2 surfaces · f = 0,35',520,100,15,'#334155'); T(c,'F = 3 000 N · R_moy = 90 mm',520,130,14,'#334155');
+  T(c,'C = 189 N·m',520,180,20,'#155e75');
+ }},
+
+courroie:{
+ titre:'Transmission par courroie : relation d’Euler',
+ formules:['T₁ = T₂ · e^(f θ)   (θ en radians)','C = (T₁ − T₂) · R   ·   P = C · ω'],
+ texte:['T₁ est la tension du brin tendu, T₂ celle du brin mou.',
+        'Plus l’angle d’enroulement θ est grand, plus l’écart de tension transmissible augmente.',
+        'C’est la petite poulie, au plus faible enroulement, qui limite le couple.'],
+ dessin:function(c,t){
+  const cx=200, cy=150, r=70, th=(120+60*osc(t,6))*Math.PI/180, au=Math.PI+th/2, al=Math.PI-th/2;
+  c.fillStyle='#e2e8f0'; c.strokeStyle='#475569'; c.lineWidth=2; c.beginPath(); c.arc(cx,cy,r,0,6.284); c.fill(); c.stroke();
+  c.strokeStyle='#ea580c'; c.lineWidth=6; c.beginPath(); c.arc(cx,cy,r+3,al,au); c.stroke();
+  [au,al].forEach(function(a,i){ const x=cx+(r+3)*Math.cos(a), y=cy+(r+3)*Math.sin(a); let dx=-Math.sin(a), dy=Math.cos(a); if(dx<0){dx=-dx;dy=-dy;}
+   c.strokeStyle=i?'#2563eb':'#dc2626'; c.lineWidth=6; c.beginPath(); c.moveTo(x,y); c.lineTo(x+dx*200,y+dy*200); c.stroke(); });
+  const k=Math.exp(0.3*th);
+  T(c,'θ = '+Math.round(th*180/Math.PI)+'°',cx-20,cy+5,15,'#ea580c');
+  T(c,'f = 0,3   e^(fθ) = '+k.toFixed(2).replace('.',','),560,110,15,'#155e75');
+  T(c,'T₁ = '+k.toFixed(2).replace('.',',')+' × T₂',560,150,17,'#dc2626');
+ }},
+
+/* ----- CAPET mécanique, série 2 : dynamique, énergétique, hydraulique, matériaux ----- */
+pfd:{
+ titre:'Principe fondamental de la dynamique',
+ formules:['translation : ΣF = m a','rotation autour d’un axe fixe : ΣC = J dω/dt'],
+ texte:['On isole le solide, on choisit un sens positif, on fait le bilan COMPLET des actions, poids compris.',
+        'Levage en montée accélérée : T − m g = m a, donc T = m (g + a).',
+        'Accélération constante : v = a t, x = ½ a t², et de même ω = (dω/dt) t en rotation.'],
+ dessin:function(c,t){
+  const a=osc(t,6), x=80+a*360;
+  c.strokeStyle='#94a3b8'; c.lineWidth=3; c.beginPath(); c.moveTo(40,200); c.lineTo(660,200); c.stroke();
+  c.fillStyle='#bfdbfe'; c.strokeStyle='#2563eb'; c.lineWidth=2; c.fillRect(x,140,110,56); c.strokeRect(x,140,110,56);
+  T(c,'m',x+55,174,16,'#1e3a8a');
+  FL(c,x+110,160,x+190,160,3,'#16a34a'); T(c,'F',x+200,165,15,'#16a34a','left');
+  FL(c,x,180,x-50,180,3,'#dc2626'); T(c,'F_r',x-58,185,14,'#dc2626','right');
+  T(c,'a = (F − F_r) / m',350,60,20,'#155e75');
+  T(c,'l’effort NET fait accélérer',350,250,13,'#5b544a');
+ }},
+
+momentinertie:{
+ titre:'Moment d’inertie',
+ formules:['disque plein : J = ½ m R²   ·   anneau : J = m R²','barre autour d’une extrémité : J = ⅓ m L²'],
+ texte:['J mesure la résistance d’un solide à la mise en rotation, en kg·m².',
+        'La matière compte au CARRÉ de sa distance à l’axe : l’anneau vaut deux fois le disque de même masse.',
+        'Les inerties autour d’un même axe s’additionnent.'],
+ dessin:function(c,t){
+  const a=t*1.2;
+  [[200,'#0e7490','disque : ½ m R²',0],[480,'#ea580c','anneau : m R²',1]].forEach(function(q){
+   c.strokeStyle=q[1]; c.lineWidth=3;
+   if(q[3]){ c.lineWidth=12; c.beginPath(); c.arc(q[0],140,74,0,6.284); c.stroke(); c.lineWidth=3; }
+   else { c.fillStyle=q[1]; c.globalAlpha=0.3; c.beginPath(); c.arc(q[0],140,80,0,6.284); c.fill(); c.globalAlpha=1; c.beginPath(); c.arc(q[0],140,80,0,6.284); c.stroke(); }
+   c.beginPath(); c.moveTo(q[0],140); c.lineTo(q[0]+80*Math.cos(a*(q[3]?0.6:1)),140+80*Math.sin(a*(q[3]?0.6:1))); c.stroke();
+   T(c,q[2],q[0],254,14,q[1]);
+  });
+  T(c,'même couple : l’anneau démarre deux fois moins vite',350,30,13,'#5b544a');
+ }},
+
+energiecinetique:{
+ titre:'Énergie cinétique',
+ formules:['translation : E = ½ m V²','rotation : E = ½ J ω²'],
+ texte:['C’est l’énergie que le moteur doit fournir pour lancer, et que le frein doit dissiper pour arrêter.',
+        'La vitesse est au carré : rouler deux fois plus vite, c’est quatre fois plus d’énergie.',
+        'Convertir d’abord : km/h ÷ 3,6 donne des m/s ; tr/min × π / 30 donne des rad/s.'],
+ dessin:function(c,t){
+  const v=10+30*osc(t,6), E=0.5*1200*v*v/1000;
+  c.fillStyle='#bfdbfe'; c.strokeStyle='#2563eb'; c.lineWidth=2; c.beginPath(); c.roundRect(60,120,160,56,10); c.fill(); c.stroke();
+  c.fillStyle='#334155'; c.beginPath(); c.arc(95,182,12,0,6.284); c.arc(185,182,12,0,6.284); c.fill();
+  FL(c,230,148,230+v*4,148,3,'#16a34a'); T(c,v.toFixed(0)+' m/s',250+v*2,136,13,'#16a34a');
+  c.fillStyle='#f1f5f9'; c.fillRect(420,120,240,36); c.fillStyle='#ea580c'; c.fillRect(420,120,Math.min(240,E/1000*240),36);
+  T(c,'E = '+E.toFixed(0)+' kJ',540,100,18,'#155e75'); T(c,'1 200 kg',140,153,13,'#1e3a8a');
+ }},
+
+verindebit:{
+ titre:'Vérin : vitesse, débit et puissance',
+ formules:['V = Q / S   (Q en m³/s, S en m²)','P = p × Q   (Pa × m³/s = W)'],
+ texte:['En rentrée, la surface utile est la couronne S − s : la tige rentre plus vite qu’elle ne sort.',
+        '1 L/min = 1/60 000 m³/s. 100 bar = 10⁷ Pa.',
+        'La puissance du moteur de pompe vaut p Q / η.'],
+ dessin:function(c,t){
+  const x=osc(t,5)*180, y=140;
+  c.strokeStyle='#334155'; c.lineWidth=3; c.strokeRect(100,y-45,300,90);
+  c.fillStyle='#fca5a5'; c.fillRect(102,y-43,40+x,86); c.fillStyle='#475569'; c.fillRect(142+x,y-43,14,86);
+  c.fillStyle='#94a3b8'; c.fillRect(156+x,y-14,270,28);
+  FL(c,60,y,100,y,3,'#dc2626'); T(c,'Q',60,y-12,15,'#dc2626');
+  T(c,'V = Q / S',560,110,20,'#155e75'); T(c,'P = p × Q',560,150,20,'#7c3aed');
+ }},
+
+traction:{
+ titre:'Essai de traction',
+ formules:['σ = F / S₀   ·   ε = ΔL / L₀   ·   E = σ / ε','A % = 100 (L_u − L₀) / L₀'],
+ texte:['La droite du début est la zone élastique : sa pente est le module d’Young E.',
+        'R_e marque la fin du comportement élastique, R_m le maximum de la courbe.',
+        'On calcule toujours avec la section INITIALE S₀.'],
+ dessin:function(c,t){
+  const k=Math.min(1,(t%6)/5), gx=120,gy=30,gw=460,gh=220;
+  c.strokeStyle='#cbd5e1'; c.lineWidth=1; c.strokeRect(gx,gy,gw,gh);
+  c.strokeStyle='#ea580c'; c.lineWidth=3; c.beginPath(); c.moveTo(gx,gy+gh);
+  const pts=[[0.04,0.55],[0.12,0.57],[0.45,0.92],[0.7,0.96],[0.9,0.8]];
+  let last=[0,0]; pts.forEach(function(p){ if(p[0]<=k){ c.lineTo(gx+p[0]*gw,gy+gh-p[1]*gh); last=p; } }); c.stroke();
+  T(c,'R_e',gx-8,gy+gh-0.55*gh+4,13,'#2563eb','right'); T(c,'R_m',gx-8,gy+gh-0.96*gh+4,13,'#dc2626','right');
+  T(c,'pente E',gx+60,gy+gh-60,12,'#0e7490','left');
+ }},
+
+indiceperf:{
+ titre:'Indice de performance d’un matériau',
+ formules:['tirant résistant : ρ / R_e   ·   tirant rigide : ρ / E','poutre rigide : ρ / E^½   ·   poutre résistante : ρ / R_e^½'],
+ texte:['On écrit la masse de la pièce, puis on remplace la dimension libre grâce à la condition à respecter.',
+        'Ce qui ne dépend plus que du matériau est l’indice : le plus petit donne la pièce la plus légère.',
+        'On compare des indices, jamais une propriété isolée.'],
+ dessin:function(c,t){
+  const M=[['acier',26,'#475569'],['aluminium',10.8,'#0ea5e9'],['titane',5,'#a855f7']], i=Math.floor(t/2)%3;
+  M.forEach(function(m,k){ const y=70+k*60, w=m[1]*16, on=k===i;
+   c.fillStyle=m[2]; c.globalAlpha=on?0.9:0.4; c.fillRect(180,y,w,34); c.globalAlpha=1;
+   T(c,m[0],170,y+23,14,m[2],'right'); T(c,'ρ/R_e = '+String(m[1]).replace('.',','),190+w,y+23,13,'#334155','left'); });
+  T(c,'plus la barre est courte, plus le tirant est léger',350,270,13,'#5b544a');
+ }},
+
+flexionrect:{
+ titre:'Flexion d’une section rectangulaire',
+ formules:['σ = M / (I/v)   ·   rectangle b × h : I/v = b h² / 6','condition : σ ≤ R_e / s'],
+ texte:['M est le moment fléchissant maximal, souvent effort × bras de levier à l’encastrement.',
+        'La hauteur h compte au carré : on oriente la plus grande dimension dans le plan de flexion.',
+        'En isolant h, on obtient la hauteur minimale : h² = 6 M s / (b R_e).'],
+ dessin:function(c,t){
+  const f=8+12*osc(t,4);
+  c.fillStyle='#94a3b8'; c.fillRect(60,80,30,140);
+  c.strokeStyle='#0e7490'; c.lineWidth=22; c.beginPath(); c.moveTo(90,150); c.quadraticCurveTo(260,150,420,150+f); c.stroke();
+  FL(c,420,90+f,420,136+f,3,'#dc2626'); T(c,'F',434,100+f,15,'#dc2626','left');
+  T(c,'M = F × L',250,60,16,'#155e75');
+  c.strokeStyle='#334155'; c.lineWidth=2; c.strokeRect(540,110,30,70); T(c,'b',555,200,13,'#334155'); T(c,'h',585,150,13,'#334155','left');
+  T(c,'I/v = b h² / 6',560,240,15,'#7c3aed');
  }}
 };
 
@@ -1273,5 +1543,380 @@ SCHEMAS({
 })();
 </script>
 <!-- SCHEMAS_CAPET fin -->
+<!-- CORRIGES_DETAILLES debut -->
+<style>
+.detail-corr{margin-top:12px;border-top:2px dashed #bae6fd;padding-top:10px;text-align:left}
+.detail-corr .dc-tete{font:800 13px 'Segoe UI',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#0369a1;margin-bottom:4px}
+.detail-corr .dc-etapes{margin:4px 0 8px 22px;font-size:14.5px;line-height:1.65;color:#1e293b}
+.detail-corr .dc-etapes li{margin:5px 0;padding-left:2px}
+.detail-corr .dc-anim{margin:8px 0;text-align:center}
+.detail-corr canvas{display:block;width:100%;max-width:760px;height:auto;margin:0 auto 6px;border:1px solid #e9e2d4;border-radius:12px;background:#fff}
+.detail-corr .dc-btn{background:#fff;color:#0e7490;border:2px solid #0e7490;border-radius:9px;padding:6px 12px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;margin:4px 6px 4px 0}
+.detail-corr .dc-mc{color:#c2410c;border-color:#fdba74;background:#fff7ed}
+.detail-corr .dc-verif{background:#f0fdf4;border-left:4px solid #16a34a;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:14px;line-height:1.55}
+.detail-corr .dc-piege{background:#fef2f2;border-left:4px solid #dc2626;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:14px;line-height:1.55}
+@media print{.detail-corr .dc-btn{display:none}}
+</style>
+<script>
+/* CORRIGES_DETAILLES */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+/* ===== CORRIGES_DETAILLES — moteur commun =====
+   DETAILS(D, MINI) : D = { clé : { etapes:[html…], anim:{h, titre, duree, draw:function(c,t){…}},
+                                    mc:'notion', piege:'html', verif:'html' } }
+   Clés : '1'…'7' missions de TP, 'c1'…'c3' exercices sur copie, 'A1'… questions de sujet.
+   MINI : notions de mini-cours propres à la page, ajoutées à la bibliothèque MINICOURS.
+   L’animation ne tourne que lorsque le canvas est visible ; « Rejouer » la reprend à zéro. */
+function ANIM_CORR(cv,a){
+ var c=cv.getContext('2d'), raf=0, t0=performance.now(), vis=false;
+ function img(ts){ var t=(ts-t0)/1000; c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+  try{ if(a.titre) SC.TITRE(c,a.titre); a.draw(c,t); }catch(e){ console.error(e); cancelAnimationFrame(raf); raf=0; return; }
+  raf=requestAnimationFrame(img); }
+ function go(){ if(!raf){ raf=requestAnimationFrame(img);} }
+ function stop(){ cancelAnimationFrame(raf); raf=0; }
+ if('IntersectionObserver' in window) new IntersectionObserver(function(es){ es.forEach(function(e){ vis=e.isIntersecting; vis?go():stop(); }); }).observe(cv);
+ else go();
+ c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+ return function(){ t0=performance.now(); go(); };
+}
+function ENRICHIR(hote,d){
+ if(!hote || hote.querySelector('.detail-corr')) return;
+ var z=document.createElement('div'); z.className='detail-corr';
+ var h='<div class="dc-tete">Corrigé pas à pas</div>';
+ if(d.etapes){ h+='<ol class="dc-etapes">'; d.etapes.forEach(function(e){ h+='<li>'+e+'</li>'; }); h+='</ol>'; }
+ z.innerHTML=h;
+ if(d.anim){
+  var f=document.createElement('div'); f.className='dc-anim';
+  var cv=document.createElement('canvas'); cv.width=760; cv.height=d.anim.h||260; f.appendChild(cv);
+  var b=document.createElement('button'); b.type='button'; b.className='dc-btn'; b.textContent='Rejouer l’animation'; f.appendChild(b);
+  z.appendChild(f); var rejouer=ANIM_CORR(cv,d.anim); b.addEventListener('click',rejouer);
+ }
+ if(d.verif){ var v=document.createElement('div'); v.className='dc-verif'; v.innerHTML='<b>Vérification</b> — '+d.verif; z.appendChild(v); }
+ if(d.piege){ var p=document.createElement('div'); p.className='dc-piege'; p.innerHTML='<b>Erreur fréquente</b> — '+d.piege; z.appendChild(p); }
+ if(d.mc && window.MINICOURS && window.MINICOURS.notions[d.mc]){
+  var m=document.createElement('button'); m.type='button'; m.className='dc-btn dc-mc';
+  m.textContent='Mini-cours : '+window.MINICOURS.notions[d.mc].titre;
+  m.addEventListener('click',function(){ window.MINICOURS.ouvrir(d.mc); }); z.appendChild(m);
+ }
+ hote.appendChild(z);
+}
+function DETAILS(D,MINI){
+ if(MINI && window.MINICOURS) Object.keys(MINI).forEach(function(k){ window.MINICOURS.notions[k]=MINI[k]; });
+ var sujet=!!document.getElementById('rendre');
+ if(!sujet){
+  Object.keys(D).forEach(function(k){
+   var hote=null;
+   if(/^c\d$/.test(k)){ var ex=document.querySelectorAll('.copie-ex')[+k.slice(1)-1]; hote=ex && ex.querySelector('.corrige-bloc'); }
+   else { var a=document.getElementById('a'+k); hote=a && a.querySelector('.boite > .corrige-bloc'); }
+   ENRICHIR(hote,D[k]);
+  });
+ } else {
+  document.getElementById('rendre').addEventListener('click',function(){
+   document.querySelectorAll('#resultat .corr').forEach(function(cr){
+    var b=cr.querySelector('b'); if(!b) return; var k=b.textContent.replace('Question','').trim();
+    if(D[k]) ENRICHIR(cr,D[k]);
+   });
+  });
+ }
+}
+
+
+/* ---- aides de dessin propres à ces corrigés ---- */
+function P(t,a,b){return Math.max(0,Math.min(1,(t-a)/(b-a)));}
+function F(v,n){return (Math.round(v*Math.pow(10,n))/Math.pow(10,n)).toFixed(n).replace('.',',');}
+function LIGNES(c,t,t0,L,x,y,dy,al,taille){ L.forEach(function(l,i){ if(t>=t0+i*0.8) SC.T(c,l[0],x,y+i*(dy||22),taille||13,l[1]||'#334155',al||'center'); }); }
+function VEC(c,x0,x1,y,lab,co,k){ if(k<=0) return; var xe=x0+(x1-x0)*k; SC.SEG(c,x0,y-6,x0,y+6,co,2); if(Math.abs(xe-x0)>3) SC.FL(c,x0,y,xe,y,2.5,co); if(k>=1&&lab) SC.T(c,lab,(x0+x1)/2,y-8,12.5,co); }
+function CHAINE(c,t,d){
+ d.surf.forEach(function(s){ SC.SEG(c,s[0],d.y0,s[0],d.y1,'#94a3b8',2); if(s[1]) SC.T(c,s[1],s[0],d.y1+14,11,'#64748b','center',false); });
+ var dt=d.dt||0.9; d.cotes.forEach(function(q,i){ VEC(c,q[0],q[1],q[2],q[3],q[4]||'#2563eb',P(t,0.3+i*dt,0.3+(i+1)*dt)); });
+ var tc=0.3+d.cotes.length*dt; if(d.cond) VEC(c,d.cond[0],d.cond[1],d.cond[2],d.cond[3],'#dc2626',P(t,tc,tc+0.8));
+ return tc+0.9; }
+function XA(x0,x1,v0,v1,v){return x0+(v-v0)/(v1-v0)*(x1-x0);}
+function AXE(c,x0,x1,y,v0,v1,pas,dec){ SC.SEG(c,x0,y,x1,y,'#94a3b8',1.5); for(var v=v0;v<=v1+1e-9;v+=pas){ var x=XA(x0,x1,v0,v1,v); SC.SEG(c,x,y-4,x,y+4,'#94a3b8',1.5); SC.T(c,F(v,dec),x,y+17,11,'#64748b','center',false);} }
+function INTER(c,xa,xb,y,h,fond,trait,lab){ if(xb<=xa) return; c.fillStyle=fond; c.fillRect(xa,y-h/2,xb-xa,h); c.strokeStyle=trait; c.lineWidth=2; c.strokeRect(xa,y-h/2,xb-xa,h); if(lab) SC.T(c,lab,(xa+xb)/2,y+4,12,trait); }
+function SYMB(c,s,x,y,co){ c.strokeStyle=co; c.lineWidth=2; c.beginPath();
+ if(s==='loc'){ c.arc(x,y,5,0,6.2832); c.moveTo(x-10,y); c.lineTo(x+10,y); c.moveTo(x,y-10); c.lineTo(x,y+10); }
+ else if(s==='plan'){ c.moveTo(x-10,y+5); c.lineTo(x-4,y-5); c.lineTo(x+10,y-5); c.lineTo(x+4,y+5); c.closePath(); }
+ else if(s==='perp'){ c.moveTo(x-10,y+7); c.lineTo(x+10,y+7); c.moveTo(x,y+7); c.lineTo(x,y-9); }
+ else if(s==='para'){ c.moveTo(x-8,y+7); c.lineTo(x-2,y-7); c.moveTo(x+2,y+7); c.lineTo(x+8,y-7); }
+ else if(s==='circ'){ c.arc(x,y,8,0,6.2832); }
+ else if(s==='coax'){ c.arc(x,y,4,0,6.2832); c.moveTo(x+9,y); c.arc(x,y,9,0,6.2832); }
+ c.stroke(); }
+function CADRE(c,x,y,cases,co){ var cx=x; cases.forEach(function(k){ var w=k.w||40; c.fillStyle=k.on?'#fef9c3':'#fff'; c.strokeStyle=co; c.lineWidth=1.8; c.fillRect(cx,y,w,28); c.strokeRect(cx,y,w,28); if(k.sym) SYMB(c,k.sym,cx+w/2,y+14,co); else SC.T(c,k.t,cx+w/2,y+19,12.5,co); cx+=w; }); return cx; }
+function ZONE(c,x,y,r,co,fond,ep){ c.beginPath(); c.arc(x,y,Math.max(0.5,r),0,6.2832); if(fond){c.fillStyle=fond;c.fill();} c.strokeStyle=co; c.lineWidth=ep||2; c.stroke(); }
+function CROIX(c,x,y,co,s){ s=s||9; SC.SEG(c,x-s,y,x+s,y,co,1.5); SC.SEG(c,x,y-s,x,y+s,co,1.5); }
+/* écart de position : centre (cx,cy), échelle k px/mm, décalages dx, dy (mm), zones (diamètres mm) */
+function ECART(c,t,cx,cy,k,dx,dy,zAut,zNec,labAut,labNec){
+ var px=cx+dx*k*P(t,0.3,1.3), py=cy-dy*k*P(t,1.3,2.3);
+ CROIX(c,cx,cy,'#64748b',12); SC.T(c,'O',cx-12,cy+16,11,'#64748b','center',false);
+ ZONE(c,cx,cy,zAut*k/2*P(t,0,0.6),'#16a34a','rgba(22,163,74,.10)');
+ if(t>0.3){ SC.TIRETS(c,cx,cy,px,cy,'#2563eb',2); }
+ if(t>1.3){ SC.TIRETS(c,px,cy,px,py,'#7c3aed',2); }
+ if(t>1.3) SC.T(c,'x = '+F(dx,2),(cx+cx+dx*k)/2,cy+16,12,'#2563eb');
+ if(t>2.3) SC.T(c,'y = '+F(dy,2),cx+dx*k+8,(cy+py)/2+4,12,'#7c3aed','left');
+ SC.PT(c,px,py,5,'#dc2626');
+ if(t>2.6){ var k2=P(t,2.6,3.4); SC.FL(c,cx,cy,cx+(px-cx)*k2,cy+(py-cy)*k2,2.5,'#dc2626'); }
+ if(t>3.6){ ZONE(c,cx,cy,zNec*k/2*P(t,3.6,4.4),'#dc2626',null,2); }
+ SC.T(c,labAut,cx,cy+zNec*k/2+22,12,'#16a34a'); if(t>4.4) SC.T(c,labNec,cx,cy+zNec*k/2+40,12,'#dc2626');
+}
+/* trois points d’appui 3-2-1 sur une pièce, compteur de degrés */
+function TROIS21(c,t,x,y){
+ c.fillStyle='#dbeafe'; c.strokeStyle='#2563eb'; c.lineWidth=2;
+ c.beginPath(); c.moveTo(x,y); c.lineTo(x+240,y); c.lineTo(x+300,y-60); c.lineTo(x+60,y-60); c.closePath(); c.fill(); c.stroke();
+ c.beginPath(); c.moveTo(x,y); c.lineTo(x,y-90); c.lineTo(x+60,y-150); c.lineTo(x+60,y-60); c.closePath(); c.fillStyle='#e0f2fe'; c.fill(); c.stroke();
+ c.beginPath(); c.moveTo(x+240,y); c.lineTo(x+240,y-90); c.lineTo(x+300,y-150); c.lineTo(x+300,y-60); c.closePath(); c.fillStyle='#bfdbfe'; c.fill(); c.stroke();
+ var A=[[x+70,y-20],[x+210,y-15],[x+150,y-48]], B=[[x+20,y-50],[x+40,y-100]], C=[[x+270,y-90]];
+ var dl=6;
+ if(t>0.4){ A.forEach(function(p,i){ if(t>0.4+i*0.4) SC.PT(c,p[0],p[1],6,'#dc2626'); }); if(t>1.6){ dl=3; SC.T(c,'A : appui plan, 3 points',x+380,y-130,13,'#dc2626','left'); } }
+ if(t>2.0){ B.forEach(function(p,i){ if(t>2.0+i*0.4) SC.PT(c,p[0],p[1],6,'#ea580c'); }); if(t>2.8){ dl=1; SC.T(c,'B : appui linéaire, 2 points',x+380,y-104,13,'#ea580c','left'); } }
+ if(t>3.2){ SC.PT(c,C[0][0],C[0][1],6,'#7c3aed'); if(t>3.6){ dl=0; SC.T(c,'C : butée, 1 point',x+380,y-78,13,'#7c3aed','left'); } }
+ SC.T(c,'degrés de liberté restants : '+dl,x+380,y-30,15,dl?'#334155':'#16a34a','left');
+}
+
+/* montage de la pompe : carter, roulements, entretoise, couvercle, cale */
+function POMPE(c,t,opt){
+ opt=opt||{};
+ var x0=110, xf=610, y=70, h=110;
+ SC.HACH(c,x0-40,y-20,40,h+40,'#94a3b8'); SC.T(c,'fond du carter',x0-20,y-28,11,'#64748b','center',false);
+ SC.RECT(c,x0,y+18,120,h-36,'#e2e8f0','#475569'); SC.T(c,'roulement 1',x0+60,y+h/2+4,12,'#334155');
+ SC.RECT(c,x0+120,y+30,240,h-60,'#fde68a','#b45309'); SC.T(c,opt.sansD?'épaulement':'entretoise',x0+240,y+h/2+4,12,'#92400e');
+ SC.RECT(c,x0+360,y+18,120,h-36,'#e2e8f0','#475569'); SC.T(c,'roulement 2',x0+420,y+h/2+4,12,'#334155');
+ SC.HACH(c,xf,y-20,24,h+40,'#475569'); SC.T(c,'couvercle',xf+12,y-28,11,'#475569');
+ if(opt.cale){ var ke=opt.cale; c.fillStyle='#bbf7d0'; c.fillRect(xf-22*ke,y,22*ke,h); c.strokeStyle='#16a34a'; c.lineWidth=2; c.strokeRect(xf-22*ke,y,22*ke,h); }
+ return {x0:x0,xf:xf,y:y,h:h};
+}
+DETAILS({
+ 'A1': {
+  etapes:[
+   '<b>Partir de la condition.</b> X est l’espace entre le roulement 2 et le couvercle.',
+   '<b>Parcourir la chaîne.</b> Du fond du carter au couvercle par A, puis retour par D, C, B.',
+   '<b>Compter les pièces traversées.</b> Carter, roulement 1, roulement 2, entretoise : <b>4 cotes</b>.',
+   '<b>Écrire la relation.</b> X = A − B − C − D.',
+   '<b>Calculer le nominal.</b> X = 100 − 19 − 19 − 58 = <b>4,00 mm</b>.',
+   '<b>Vérifier la règle.</b> Une seule cote par pièce : la chaîne est minimale.'],
+  anim:{h:290, titre:'Chaîne de cotes de l’espace X (non à l’échelle)', draw:function(c,t){
+   var m=POMPE(c,t), yA=215, x0=m.x0, xf=m.xf;
+   var fin=0.3, L=[[x0,xf,yA,'A = 100','#2563eb'],[x0,x0+120,248,'B = 19','#0e7490'],[x0+120,x0+360,248,'D = 58','#0e7490'],[x0+360,x0+480,248,'C = 19','#0e7490']];
+   L.forEach(function(q,i){ VEC(c,q[0],q[1],q[2],q[3],q[4],P(t,0.3+i*0.8,1.1+i*0.8)); });
+   if(t>3.6) VEC(c,x0+480,xf,182,'X','#dc2626',P(t,3.6,4.4));
+   if(t>4.6) SC.T(c,'X = 100 − 19 − 19 − 58 = 4,00 mm',380,280,14,'#dc2626');
+  }},
+  verif:'A est la seule cote qui « contient » X ; B, C et D sont toutes du côté opposé.',
+  piege:'ajouter la largeur du couvercle ou de la cale dans la chaîne de X : elles n’interviennent pas dans l’espace disponible.',
+  mc:'chainecotes'
+ },
+ 'A2': {
+  etapes:[
+   '<b>Lire les tolérances.</b> Les quatre cotes sont à ± 0,05 mm, soit un IT de 0,10 mm chacune.',
+   '<b>Appliquer la loi.</b> IT<sub>X</sub> = IT<sub>A</sub> + IT<sub>B</sub> + IT<sub>C</sub> + IT<sub>D</sub>.',
+   '<b>Calculer.</b> IT<sub>X</sub> = 4 × 0,10 = <b>0,40 mm</b>.',
+   '<b>X minimal.</b> 99,95 − 19,05 − 19,05 − 58,05 = <b>3,80 mm</b>.',
+   '<b>X maximal.</b> 100,05 − 18,95 − 18,95 − 57,95 = <b>4,20 mm</b>.',
+   '<b>Contrôler.</b> 4,20 − 3,80 = 0,40 mm, centré sur 4,00.'],
+  anim:{h:240, titre:'Quatre tolérances qui s’additionnent', draw:function(c,t){
+   var x0=120,x1=640,v0=3.7,v1=4.3; AXE(c,x0,x1,200,v0,v1,0.1,2);
+   var noms=['A','B','C','D'], cols=['#2563eb','#0e7490','#7c3aed','#ea580c'];
+   var a=XA(x0,x1,v0,v1,3.80), w=(XA(x0,x1,v0,v1,3.90)-a);
+   for(var i=0;i<4;i++){ var k=P(t,0.3+i*0.7,0.9+i*0.7); if(k>0) INTER(c,a+i*w,a+i*w+w*k,110,36,'rgba(37,99,235,.10)',cols[i],k>=1?noms[i]+' : 0,10':''); }
+   if(t>3.4){ SC.SEG(c,a,140,a,184,'#dc2626',2); SC.SEG(c,a+4*w,140,a+4*w,184,'#dc2626',2); SC.T(c,'3,80',a,164,12,'#dc2626','right'); SC.T(c,'4,20',a+4*w+4,164,12,'#dc2626','left'); }
+   if(t>4) SC.T(c,'IT X = 0,40 mm',380,60,15,'#dc2626');
+  }},
+  verif:'la somme des IT est indépendante des nominaux : 4 cotes à 0,10 donnent toujours 0,40.',
+  piege:'additionner les demi-tolérances (4 × 0,05 = 0,20) et l’appeler IT.',
+  mc:'chainecotes'
+ },
+ 'A3': {
+  etapes:[
+   '<b>Lire la condition.</b> 0,05 ≤ J ≤ 0,15 mm.',
+   '<b>Calculer l’IT autorisé.</b> 0,15 − 0,05 = <b>0,10 mm</b>.',
+   '<b>Comparer.</b> La chaîne produit 0,40 mm, quatre fois plus que les 0,10 mm autorisés.',
+   '<b>Conclure.</b> Le tolérancement seul ne peut PAS tenir le jeu avec ces cotes.',
+   '<b>Identifier la parade.</b> Une cale choisie au montage absorbe toute la dispersion.'],
+  anim:{h:230, titre:'0,40 produits pour 0,10 autorisés', draw:function(c,t){
+   var x0=140, s=1000, k=P(t,0.3,1.2), k2=P(t,1.5,2.4);
+   INTER(c,x0,x0+0.40*s*k,90,40,'rgba(37,99,235,.15)','#2563eb',k>=1?'chaîne : 0,40 mm':'');
+   INTER(c,x0,x0+0.10*s*k2,160,40,'rgba(22,163,74,.2)','#16a34a',k2>=1?'0,10':'');
+   if(t>2.6) SC.T(c,'condition : 0,10 mm',x0+0.10*s+12,165,13,'#16a34a','left');
+   if(t>3.4) SC.T(c,'× 4 : impossible sans réglage',x0+0.40*s+20,96,14,'#dc2626','left');
+  }},
+  verif:'même en divisant chaque tolérance par 4, on atteindrait ± 0,0125 mm : la partie B montre que c’est irréaliste.',
+  piege:'conclure que la pompe ne fonctionnera pas : elle fonctionnera, grâce à la cale de réglage.',
+  mc:'cotereglage'
+ },
+ 'B1': {
+  etapes:[
+   '<b>Fixer la cible.</b> L’IT de la condition doit valoir 0,10 mm.',
+   '<b>Répartir également.</b> 0,10 / 4 = <b>0,025 mm</b> d’IT par cote.',
+   '<b>Passer au ±.</b> 0,025 / 2 = <b>± 0,0125 mm</b>.',
+   '<b>Écrire une cote.</b> D = 58 ± 0,0125 : une précision de rectification.',
+   '<b>Contrôler.</b> 4 × 0,025 = 0,10 mm : la condition serait tenue.'],
+  anim:{h:220, titre:'0,10 mm à partager entre quatre cotes', draw:function(c,t){
+   var x0=120,L=520,k=P(t,0.3,1.2); INTER(c,x0,x0+L*k,80,34,'rgba(22,163,74,.18)','#16a34a',k>=1?'IT autorisé : 0,10 mm':'');
+   var n=['A','B','C','D'],cols=['#2563eb','#0e7490','#7c3aed','#ea580c'];
+   for(var i=0;i<4;i++){ var ki=P(t,1.4+i*0.5,1.9+i*0.5); if(ki>0) INTER(c,x0+i*L/4,x0+i*L/4+L/4*ki,140,34,'rgba(37,99,235,.10)',cols[i],ki>=1?n[i]+' : 0,025':''); }
+   if(t>4) SC.T(c,'soit ± 0,0125 mm sur chaque cote',380,200,14,'#dc2626');
+  }},
+  verif:'± 0,0125 mm = 12,5 µm : l’ordre de grandeur d’une rectification, pas d’un tournage courant.',
+  piege:'confondre IT et ± : écrire ± 0,025 double l’intervalle de la condition.',
+  mc:'chainecotes'
+ },
+ 'B2': {
+  etapes:[
+   '<b>Lire le document 4.</b> Tenir ± 0,0125 mm impose une rectification systématique.',
+   '<b>Chiffrer.</b> Le coût de chaque pièce est multiplié par environ 4.',
+   '<b>Repérer les pièces achetées.</b> B et C sont des roulements du commerce.',
+   '<b>Constater l’impossibilité.</b> Leur largeur est tolérancée par le fabricant : on ne peut pas la resserrer.',
+   '<b>Conclure.</b> La solution par tolérancement est irréaliste, techniquement et économiquement.'],
+  anim:{h:240, titre:'Coût d’une pièce selon la précision exigée', draw:function(c,t){
+   var k=P(t,0.4,1.4), k2=P(t,1.6,3);
+   SC.RECT(c,150,200-40*k,90,40*k,'#bbf7d0','#16a34a'); SC.T(c,'± 0,05 : × 1',195,222,13,'#16a34a');
+   SC.RECT(c,330,200-160*k2,90,160*k2,'#fecaca','#dc2626'); SC.T(c,'± 0,0125 : × 4',375,222,13,'#dc2626');
+   if(t>3.3){ SC.RECT(c,520,90,170,80,'#e2e8f0','#475569'); SC.T(c,'roulements B et C',605,118,13,'#334155'); SC.T(c,'tolérance imposée',605,140,12,'#dc2626'); SC.T(c,'par le fabricant',605,158,12,'#dc2626'); }
+  }},
+  verif:'une solution de conception se juge sur la faisabilité ET sur le coût, jamais sur la seule géométrie.',
+  piege:'supposer qu’on peut commander des roulements « plus précis » : les classes de précision existent, mais à un coût sans rapport avec une pompe.',
+  mc:'cotereglage'
+ },
+ 'C1': {
+  etapes:[
+   '<b>Écrire la relation.</b> Avec la cale : J = X − e.',
+   '<b>Isoler l’inconnue.</b> e = X − J.',
+   '<b>Choisir le jeu visé.</b> Le centre de la condition : J = 0,10 mm.',
+   '<b>Calculer.</b> e = 3,97 − 0,10 = <b>3,87 mm</b>.',
+   '<b>Interpréter.</b> La cale est choisie APRÈS mesure : elle absorbe la dispersion de la pompe n° 17.'],
+  anim:{h:270, titre:'La cale comble l’espace mesuré', draw:function(c,t){
+   var x0=120, s=130;
+   VEC(c,x0,x0+3.97*s,90,'X mesuré = 3,97','#2563eb',P(t,0.3,1.3));
+   var k=P(t,1.6,2.8); if(k>0){ c.fillStyle='#bbf7d0'; c.fillRect(x0,120,3.87*s*k,40); c.strokeStyle='#16a34a'; c.lineWidth=2; c.strokeRect(x0,120,3.87*s*k,40); }
+   if(k>=1) SC.T(c,'cale e = 3,87',x0+3.87*s/2,145,13,'#166534');
+   if(t>3.2){ VEC(c,x0+3.87*s,x0+3.97*s,190,'','#dc2626',1); SC.T(c,'J = 0,10',x0+3.92*s,214,13,'#dc2626'); }
+   if(t>4) SC.T(c,'e = X − J = 3,97 − 0,10 = 3,87 mm',380,252,14,'#334155');
+  }},
+  verif:'avec 3,87 mm, J = 0,10 mm : exactement le milieu de [0,05 ; 0,15].',
+  piege:'calculer e = X + J : la cale ferait alors déborder le couvercle, jeu négatif.',
+  mc:'cotereglage'
+ },
+ 'C2': {
+  etapes:[
+   '<b>Lister les cales disponibles.</b> Pas de 0,05 : 3,80 · 3,85 · 3,90…',
+   '<b>Placer l’idéal.</b> 3,87 se trouve entre 3,85 et 3,90.',
+   '<b>Choisir la plus proche.</b> 3,85 mm (écart 0,02 contre 0,03).',
+   '<b>Calculer le jeu.</b> J = 3,97 − 3,85 = <b>0,12 mm</b>.',
+   '<b>Conclure.</b> 0,05 ≤ 0,12 ≤ 0,15 : pompe <b>conforme</b>.'],
+  anim:{h:240, titre:'Choisir la cale la plus proche de l’idéal', draw:function(c,t){
+   var x0=110,x1=650,v0=3.75,v1=4.00; AXE(c,x0,x1,180,v0,v1,0.05,2);
+   [3.80,3.85,3.90,3.95].forEach(function(v,i){ if(t>0.3+i*0.3){ var x=XA(x0,x1,v0,v1,v); c.fillStyle=v===3.85&&t>2.4?'#16a34a':'#94a3b8'; c.fillRect(x-4,130,8,40); } });
+   if(t>1.6){ var xi=XA(x0,x1,v0,v1,3.87); SC.FL(c,xi,80,xi,126,2.5,'#dc2626'); SC.T(c,'idéal 3,87',xi,72,13,'#dc2626'); }
+   if(t>2.4) SC.T(c,'retenue 3,85',XA(x0,x1,v0,v1,3.85)-10,120,13,'#16a34a','right');
+   if(t>3.2) SC.T(c,'J = 3,97 − 3,85 = 0,12 mm : conforme',380,228,14,'#16a34a');
+  }},
+  verif:'avec 3,90 mm, le jeu serait 0,07 mm : conforme aussi, mais moins centré.',
+  piege:'prendre 3,90 en arrondissant « au-dessus » : le jeu se rapproche de la limite basse.',
+  mc:'cotereglage'
+ },
+ 'C3': {
+  etapes:[
+   '<b>Rappeler l’étendue de X.</b> De 3,80 à 4,20 mm (question A2).',
+   '<b>Cale la plus fine.</b> 3,80 − 0,10 = <b>3,70 mm</b>.',
+   '<b>Cale la plus épaisse.</b> 4,20 − 0,10 = <b>4,10 mm</b>.',
+   '<b>Compter les épaisseurs.</b> (4,10 − 3,70) / 0,05 + 1 = <b>9</b>.',
+   '<b>Vérifier le pire arrondi.</b> Écart maxi 0,025 : le jeu reste entre 0,075 et 0,125 mm.'],
+  anim:{h:240, titre:'La gamme de cales couvre toute la dispersion', draw:function(c,t){
+   var x0=90,x1=670,v0=3.6,v1=4.3; AXE(c,x0,x1,190,v0,v1,0.1,1);
+   INTER(c,XA(x0,x1,v0,v1,3.80),XA(x0,x1,v0,v1,4.20)*P(t,0.3,1.2)+XA(x0,x1,v0,v1,3.80)*(1-P(t,0.3,1.2)),70,26,'rgba(37,99,235,.15)','#2563eb',t>1.2?'X : 3,80 à 4,20':'');
+   for(var i=0;i<9;i++){ if(t>1.5+i*0.3){ var v=3.70+i*0.05, x=XA(x0,x1,v0,v1,v); c.fillStyle='#16a34a'; c.fillRect(x-3,120,6,50); } }
+   if(t>4.3) SC.T(c,'9 cales : 3,70 à 4,10 par pas de 0,05',380,236,14,'#16a34a');
+  }},
+  verif:'9 épaisseurs = 8 intervalles de 0,05 = 0,40 mm : la même étendue que X.',
+  piege:'oublier le « + 1 » : 8 intervalles délimitent 9 épaisseurs.',
+  mc:'cotereglage'
+ },
+ 'D1': {
+  etapes:[
+   '<b>Avantage 1.</b> Les pièces gardent des tolérances larges et bon marché.',
+   '<b>Avantage 2.</b> Les roulements du commerce conviennent tels quels.',
+   '<b>Avantage 3.</b> La condition est tenue sur CHAQUE pompe, quelle que soit la dispersion.',
+   '<b>Inconvénient 1.</b> Une mesure et un choix au montage : du temps d’assemblage.',
+   '<b>Inconvénient 2.</b> Neuf épaisseurs de cales à stocker et à gérer.',
+   '<b>Inconvénient 3.</b> Un risque d’erreur de l’opérateur, à maîtriser par une procédure.'],
+  anim:{h:240, titre:'Le réglage déplace la précision de l’usinage vers le montage', draw:function(c,t){
+   SC.T(c,'AVANTAGES',200,56,15,'#16a34a'); SC.T(c,'INCONVÉNIENTS',560,56,15,'#dc2626');
+   LIGNES(c,t,0.4,[['tolérances larges','#166534'],['roulements standard','#166534'],['condition tenue partout','#166534']],200,96,40,'center',14);
+   LIGNES(c,t,2.8,[['mesure au montage','#991b1b'],['stock de 9 cales','#991b1b'],['risque d’erreur','#991b1b']],560,96,40,'center',14);
+   SC.SEG(c,380,70,380,220,'#cbd5e1',2);
+  }},
+  verif:'une bonne réponse donne au moins un argument de coût et un argument d’organisation.',
+  piege:'citer « la cale coûte cher » : une cale est une pièce bon marché, c’est le temps de réglage qui coûte.',
+  mc:'cotereglage'
+ },
+ 'D2': {
+  etapes:[
+   '<b>Chercher une pièce à supprimer.</b> L’entretoise ne fait que transmettre une cote.',
+   '<b>Modifier la conception.</b> Un épaulement usiné sur l’arbre remplace l’entretoise.',
+   '<b>Recompter la chaîne.</b> Il reste A, B, C et la cote d’épaulement : D disparaît de la chaîne de X.',
+   '<b>Effet.</b> Si la nouvelle cote vaut ± 0,05, l’IT tombe de 0,40 à <b>0,30 mm</b>.',
+   '<b>Retenir le principe.</b> Raccourcir une chaîne est plus efficace que resserrer ses tolérances.'],
+  anim:{h:270, titre:'Supprimer un maillon réduit la dispersion', draw:function(c,t){
+   var sans=t>2.5; POMPE(c,t,{sansD:sans});
+   var k=sans?P(t,2.5,3.5):0;
+   SC.T(c,sans?'épaulement sur l’arbre : une cote de moins':'4 cotes : IT = 0,40 mm',380,216,14,sans?'#16a34a':'#2563eb');
+   if(t>3.8) SC.T(c,'IT = 0,30 mm',380,244,15,'#16a34a');
+  }},
+  verif:'chaque cote retirée d’une chaîne retire son IT de celui de la condition.',
+  piege:'proposer de resserrer les tolérances : c’est l’inverse de la question, et le plus coûteux.',
+  mc:'chainecotes'
+ },
+ 'E1': {
+  etapes:[
+   '<b>Choisir la compétence.</b> CO4.2 et CO8.1 : traduire une condition en chaîne de cotes, puis mesurer et régler.',
+   '<b>Organiser l’activité.</b> En îlots, chaque groupe trace la chaîne de X sur le dessin d’ensemble.',
+   '<b>Mesurer.</b> Au comparateur, l’espace X de plusieurs sous-ensembles réels.',
+   '<b>Régler.</b> Choisir la cale, monter, contrôler le jeu obtenu.',
+   '<b>Produire.</b> Une fiche de réglage par sous-ensemble et un tableur calculant la cale.',
+   '<b>Évaluer.</b> La cohérence entre le calcul et la mesure.'],
+  verif:'une séance réussie relie un calcul à une manipulation réelle et à une production évaluable.',
+  piege:'proposer une séance de pur calcul : la cote de réglage n’a de sens qu’au contact du montage réel.'
+ },
+ 'E2': {
+  etapes:[
+   '<b>Reconnaître la part de vérité.</b> Techniquement, des pièces plus précises tiendraient la condition.',
+   '<b>Identifier l’oubli 1.</b> Le coût : ± 0,0125 mm multiplie le prix de chaque pièce par 4 environ.',
+   '<b>Identifier l’oubli 2.</b> L’impossibilité : la largeur des roulements du commerce est imposée.',
+   '<b>Diagnostiquer.</b> L’élève raisonne en géométrie pure, sans intégrer la fabrication.',
+   '<b>Remédier.</b> Lui faire chiffrer les deux solutions dans un tableau : pièces, montage, faisabilité.',
+   '<b>Faire conclure.</b> Concevoir, c’est arbitrer, pas chercher la précision maximale.'],
+  verif:'la remédiation fait découvrir l’arbitrage par l’élève lui-même, au lieu de le lui affirmer.',
+  piege:'répondre « c’est trop cher » sans faire chiffrer : l’élève n’en est pas convaincu.'
+ }
+});
+
+})();
+</script>
+<!-- CORRIGES_DETAILLES fin -->
 </body>
 </html>

@@ -1789,5 +1789,306 @@ SCHEMAS({
 })();
 </script>
 <!-- SCHEMAS_CAPET fin -->
+<!-- CORRIGES_DETAILLES debut -->
+<style>
+.detail-corr{margin-top:12px;border-top:2px dashed #bae6fd;padding-top:10px;text-align:left}
+.detail-corr .dc-tete{font:800 13px 'Segoe UI',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#0369a1;margin-bottom:4px}
+.detail-corr .dc-etapes{margin:4px 0 8px 22px;font-size:14.5px;line-height:1.65;color:#1e293b}
+.detail-corr .dc-etapes li{margin:5px 0;padding-left:2px}
+.detail-corr .dc-anim{margin:8px 0;text-align:center}
+.detail-corr canvas{display:block;width:100%;max-width:760px;height:auto;margin:0 auto 6px;border:1px solid #e9e2d4;border-radius:12px;background:#fff}
+.detail-corr .dc-btn{background:#fff;color:#0e7490;border:2px solid #0e7490;border-radius:9px;padding:6px 12px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;margin:4px 6px 4px 0}
+.detail-corr .dc-mc{color:#c2410c;border-color:#fdba74;background:#fff7ed}
+.detail-corr .dc-verif{background:#f0fdf4;border-left:4px solid #16a34a;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:14px;line-height:1.55}
+.detail-corr .dc-piege{background:#fef2f2;border-left:4px solid #dc2626;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:14px;line-height:1.55}
+@media print{.detail-corr .dc-btn{display:none}}
+</style>
+<script>
+/* CORRIGES_DETAILLES */
+(function(){
+/* ===== SCHEMAS_CAPET — bibliothèque de dessin commune (injectée dans chaque page) =====
+   Toutes les fonctions reçoivent le contexte c. Coordonnées en pixels du canvas
+   (largeur 760). Aucun clip(). Textes en Segoe UI gras par défaut. */
+var SC={
+ T:function(c,s,x,y,t,co,al,gras){c.font=(gras===false?'':'bold ')+(t||13)+'px Segoe UI';c.fillStyle=co||'#334155';c.textAlign=al||'center';c.textBaseline='alphabetic';c.fillText(s,x,y);},
+ FL:function(c,x0,y0,x1,y1,ep,co){var d=Math.hypot(x1-x0,y1-y0);if(d<1)return;var L=Math.max(9,ep*2.8),W=Math.max(7,ep*2.3),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx,bx=x1-tx*L,by=y1-ty*L;
+  c.strokeStyle=co;c.fillStyle=co;c.lineWidth=ep;c.lineCap='butt';c.beginPath();c.moveTo(x0,y0);c.lineTo(bx,by);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(bx+nx*W/2,by+ny*W/2);c.lineTo(bx-nx*W/2,by-ny*W/2);c.closePath();c.fill();},
+ HACH:function(c,x,y,w,h,co){co=co||'#94a3b8';c.strokeStyle=co;c.lineWidth=1;for(var k=-h;k<w;k+=8){var t0=Math.max(0,-k),t1=Math.min(h,w-k);if(t1<=t0)continue;c.beginPath();c.moveTo(x+k+t0,y+t0);c.lineTo(x+k+t1,y+t1);c.stroke();}c.lineWidth=2;c.strokeRect(x,y,w,h);},
+ PT:function(c,x,y,r,co){c.fillStyle=co||'#334155';c.beginPath();c.arc(x,y,r||5,0,6.2832);c.fill();},
+ TIRETS:function(c,x0,y0,x1,y1,co,ep){c.save();c.setLineDash([6,5]);c.strokeStyle=co||'#94a3b8';c.lineWidth=ep||1.4;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();},
+ /* cote avec flèches aux deux bouts et texte centré (dy décale le texte) */
+ COTE:function(c,x0,y0,x1,y1,txt,co,dy){co=co||'#64748b';SC.FL(c,(x0+x1)/2,(y0+y1)/2,x0,y0,1.2,co);SC.FL(c,(x0+x1)/2,(y0+y1)/2,x1,y1,1.2,co);if(txt)SC.T(c,txt,(x0+x1)/2,(y0+y1)/2+(dy===undefined?-6:dy),12,co);},
+ RECT:function(c,x,y,w,h,fond,trait,ep){c.fillStyle=fond||'#e2e8f0';c.fillRect(x,y,w,h);c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.strokeRect(x,y,w,h);},
+ CERCLE:function(c,x,y,r,fond,trait,ep){c.beginPath();c.arc(x,y,r,0,6.2832);if(fond){c.fillStyle=fond;c.fill();}c.strokeStyle=trait||'#475569';c.lineWidth=ep||2;c.stroke();},
+ SEG:function(c,x0,y0,x1,y1,co,ep){c.strokeStyle=co||'#334155';c.lineWidth=ep||2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();},
+ /* appui fixe (triangle + hachures) et appui à rouleaux, sommet en (x,y) */
+ APPUI:function(c,x,y,rouleaux){c.fillStyle='#94a3b8';c.beginPath();c.moveTo(x,y);c.lineTo(x-14,y+22);c.lineTo(x+14,y+22);c.closePath();c.fill();if(rouleaux){SC.PT(c,x-8,y+27,4,'#64748b');SC.PT(c,x+8,y+27,4,'#64748b');SC.HACH(c,x-20,y+32,40,8);}else SC.HACH(c,x-20,y+22,40,8);},
+ ENCASTR:function(c,x,y,h){SC.HACH(c,x-14,y-h/2,14,h);},
+ /* pivot normalisé (cercle) et glissière (rectangle) */
+ PIVOT:function(c,x,y,r){SC.CERCLE(c,x,y,r||9,'#fff','#334155',2);},
+ RESSORT:function(c,x0,y0,x1,y1,n,a,co){var d=Math.hypot(x1-x0,y1-y0),tx=(x1-x0)/d,ty=(y1-y0)/d,nx=-ty,ny=tx;n=n||8;a=a||8;c.strokeStyle=co||'#475569';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);for(var i=1;i<2*n;i++){var u=i/(2*n),s=(i%2?1:-1)*a;c.lineTo(x0+tx*d*u+nx*s,y0+ty*d*u+ny*s);}c.lineTo(x1,y1);c.stroke();},
+ /* roue dentée simple, centre (x,y), rayon primitif r, z dents */
+ ROUE:function(c,x,y,r,z,co,ang){co=co||'#0e7490';ang=ang||0;c.fillStyle='#fff';c.strokeStyle=co;c.lineWidth=2;c.beginPath();var h=Math.max(4,r*0.12);for(var k=0;k<z;k++){var a0=ang+2*Math.PI*k/z,da=2*Math.PI/z;[[r-h/2,a0],[r+h/2,a0+da*0.2],[r+h/2,a0+da*0.45],[r-h/2,a0+da*0.65]].forEach(function(q,i){var px=x+q[0]*Math.cos(q[1]),py=y+q[0]*Math.sin(q[1]);(k===0&&i===0)?c.moveTo(px,py):c.lineTo(px,py);});}c.closePath();c.fill();c.stroke();SC.PT(c,x,y,3,co);},
+ TITRE:function(c,s){SC.T(c,s,380,22,14,'#155e75');}
+};
+
+/* ===== CORRIGES_DETAILLES — moteur commun =====
+   DETAILS(D, MINI) : D = { clé : { etapes:[html…], anim:{h, titre, duree, draw:function(c,t){…}},
+                                    mc:'notion', piege:'html', verif:'html' } }
+   Clés : '1'…'7' missions de TP, 'c1'…'c3' exercices sur copie, 'A1'… questions de sujet.
+   MINI : notions de mini-cours propres à la page, ajoutées à la bibliothèque MINICOURS.
+   L’animation ne tourne que lorsque le canvas est visible ; « Rejouer » la reprend à zéro. */
+function ANIM_CORR(cv,a){
+ var c=cv.getContext('2d'), raf=0, t0=performance.now(), vis=false;
+ function img(ts){ var t=(ts-t0)/1000; c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+  try{ if(a.titre) SC.TITRE(c,a.titre); a.draw(c,t); }catch(e){ console.error(e); cancelAnimationFrame(raf); raf=0; return; }
+  raf=requestAnimationFrame(img); }
+ function go(){ if(!raf){ raf=requestAnimationFrame(img);} }
+ function stop(){ cancelAnimationFrame(raf); raf=0; }
+ if('IntersectionObserver' in window) new IntersectionObserver(function(es){ es.forEach(function(e){ vis=e.isIntersecting; vis?go():stop(); }); }).observe(cv);
+ else go();
+ c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+ return function(){ t0=performance.now(); go(); };
+}
+function ENRICHIR(hote,d){
+ if(!hote || hote.querySelector('.detail-corr')) return;
+ var z=document.createElement('div'); z.className='detail-corr';
+ var h='<div class="dc-tete">Corrigé pas à pas</div>';
+ if(d.etapes){ h+='<ol class="dc-etapes">'; d.etapes.forEach(function(e){ h+='<li>'+e+'</li>'; }); h+='</ol>'; }
+ z.innerHTML=h;
+ if(d.anim){
+  var f=document.createElement('div'); f.className='dc-anim';
+  var cv=document.createElement('canvas'); cv.width=760; cv.height=d.anim.h||260; f.appendChild(cv);
+  var b=document.createElement('button'); b.type='button'; b.className='dc-btn'; b.textContent='Rejouer l’animation'; f.appendChild(b);
+  z.appendChild(f); var rejouer=ANIM_CORR(cv,d.anim); b.addEventListener('click',rejouer);
+ }
+ if(d.verif){ var v=document.createElement('div'); v.className='dc-verif'; v.innerHTML='<b>Vérification</b> — '+d.verif; z.appendChild(v); }
+ if(d.piege){ var p=document.createElement('div'); p.className='dc-piege'; p.innerHTML='<b>Erreur fréquente</b> — '+d.piege; z.appendChild(p); }
+ if(d.mc && window.MINICOURS && window.MINICOURS.notions[d.mc]){
+  var m=document.createElement('button'); m.type='button'; m.className='dc-btn dc-mc';
+  m.textContent='Mini-cours : '+window.MINICOURS.notions[d.mc].titre;
+  m.addEventListener('click',function(){ window.MINICOURS.ouvrir(d.mc); }); z.appendChild(m);
+ }
+ hote.appendChild(z);
+}
+function DETAILS(D,MINI){
+ if(MINI && window.MINICOURS) Object.keys(MINI).forEach(function(k){ window.MINICOURS.notions[k]=MINI[k]; });
+ var sujet=!!document.getElementById('rendre');
+ if(!sujet){
+  Object.keys(D).forEach(function(k){
+   var hote=null;
+   if(/^c\d$/.test(k)){ var ex=document.querySelectorAll('.copie-ex')[+k.slice(1)-1]; hote=ex && ex.querySelector('.corrige-bloc'); }
+   else { var a=document.getElementById('a'+k); hote=a && a.querySelector('.boite > .corrige-bloc'); }
+   ENRICHIR(hote,D[k]);
+  });
+ } else {
+  document.getElementById('rendre').addEventListener('click',function(){
+   document.querySelectorAll('#resultat .corr').forEach(function(cr){
+    var b=cr.querySelector('b'); if(!b) return; var k=b.textContent.replace('Question','').trim();
+    if(D[k]) ENRICHIR(cr,D[k]);
+   });
+  });
+ }
+}
+
+/* Corrigés détaillés — TP CAPET « statique » */
+function ph(t,a,b){ return Math.max(0,Math.min(1,(t-a)/(b-a))); }
+function LIGNES(c,L,t,x,y,dy,al){ L.forEach(function(l,i){ if(t>=l[1]){ c.globalAlpha=ph(t,l[1],l[1]+0.4); SC.T(c,l[0],x,y+i*(dy||26),l[3]||14,l[2]||'#334155',al||'left'); c.globalAlpha=1; } }); }
+/* flèche qui « pousse » progressivement depuis son origine */
+function FLK(c,x0,y0,x1,y1,k,ep,co){ if(k<=0.02) return; SC.FL(c,x0,y0,x0+(x1-x0)*k,y0+(y1-y0)*k,ep,co); }
+function MUR(c,x,y0,y1){ SC.HACH(c,x-16,y0,16,y1-y0); }
+/* potence : mur en x0, bras de longueur L (m) à l’échelle s, tirant attaché à xa (m) incliné de ang (deg), charge F en bout */
+function POTENCE(c,t,x0,y,s,L,xa,ang,F,T,Ax,Ay){
+ var a=ang*Math.PI/180, xb=x0+L*s, xd=x0+xa*s, yc=y-xa*s*Math.tan(a);
+ MUR(c,x0,yc-20,y+40);
+ var iso=ph(t,0.6,1.2);
+ SC.SEG(c,x0,y,xb,y,'#334155',7); SC.SEG(c,xd,y,x0,yc,'#64748b',3);
+ SC.PIVOT(c,x0,y,7); SC.PIVOT(c,xd,y,6); SC.PIVOT(c,x0,yc,6);
+ SC.T(c,'A',x0+14,y+22,13); SC.T(c,'B',xb,y+22,13); SC.T(c,'D',xd,y+22,13); SC.T(c,'C',x0+14,yc-6,13);
+ if(iso>0){ c.save(); c.globalAlpha=iso; c.setLineDash([6,5]); c.strokeStyle='#0e7490'; c.lineWidth=1.6; c.strokeRect(x0+6,y-26,L*s+8,52); c.restore(); }
+ var k1=ph(t,1.3,2.0), k2=ph(t,2.0,2.7), k3=ph(t,2.7,3.4), u=55;
+ FLK(c,xb,y,xb,y+u,k1,3,'#dc2626'); if(k1>0.9) SC.T(c,F,xb+8,y+u-4,13,'#dc2626','left');
+ FLK(c,xd,y,xd-u*1.4*Math.cos(a),y-u*1.4*Math.sin(a),k2,3,'#7c3aed'); if(k2>0.9) SC.T(c,T,xd-u*1.4*Math.cos(a)+30,y-u*1.4*Math.sin(a)-4,13,'#7c3aed','left');
+ if(Ax){ FLK(c,x0,y,x0+u,y,k3,3,'#0e7490'); FLK(c,x0,y,x0,y+u*0.6,k3,3,'#0e7490'); if(k3>0.9){ SC.T(c,Ax,x0+u+4,y-6,12,'#0e7490','left'); SC.T(c,Ay,x0+6,y+u*0.6+16,12,'#0e7490','left'); } }
+}
+DETAILS({
+ '1': {
+  etapes:[
+   '<b>Isoler le bras AB.</b> Actions extérieures : charge F en B, tension T du tirant en D, action du mur en A.',
+   '<b>Choisir le point de moment A</b> : les deux inconnues A<sub>x</sub> et A<sub>y</sub> y ont un moment nul.',
+   '<b>Écrire ΣM<sub>/A</sub> = 0.</b> T × sin 40° × 0,75 = F × 1,00 : seule la composante verticale de T a un bras de levier.',
+   '<b>Isoler T.</b> T = 2 500 / (0,643 × 0,75) = 5 186 N.',
+   '<b>Écrire ΣF<sub>x</sub> = 0.</b> A<sub>x</sub> = T cos 40° = 5 186 × 0,766 = 3 973 N.',
+   '<b>Écrire ΣF<sub>y</sub> = 0.</b> A<sub>y</sub> = F − T sin 40° = 2 500 − 3 333 = −833 N.',
+   '<b>Interpréter le signe.</b> A<sub>y</sub> négatif : le mur retient le bras vers le bas, le tirant soulève plus que la charge.'],
+  anim:{h:330, titre:'Potence : isoler le bras, puis les moments en A', draw:function(c,t){
+   POTENCE(c,t,90,250,270,1.00,0.75,40,'F = 2 500 N','T','A_x','A_y');
+   LIGNES(c,[['ΣM/A = 0',3.6,'#155e75',15],['T sin 40° × 0,75 = 2 500 × 1,00',4.1],['T = 5 186 N',4.7,'#7c3aed',15],
+             ['A_x = T cos 40° = 3 973 N',5.3,'#0e7490'],['A_y = 2 500 − 3 333 = −833 N',5.9,'#0e7490']],t,470,70,30);
+  }},
+  verif:'résolution graphique : le bras est soumis à trois forces, leurs supports concourent. Le point de concours fixe la direction de A et confirme A<sub>y</sub> < 0.',
+  piege:'prendre T × 0,75 comme moment : le bras de levier de T vaut 0,75 × sin 40°, pas 0,75.',
+  mc:'momentforce'
+ },
+ '2': {
+  etapes:[
+   '<b>Rappeler la règle du plan</b> : mobilités + inconnues statiques = 3.',
+   '<b>Pivot</b> : 1 rotation libre, donc 2 inconnues, les deux composantes de la force.',
+   '<b>Appui plan (ou ponctuel)</b> : 2 mobilités, donc 1 inconnue, l’effort normal.',
+   '<b>Encastrement</b> : aucune mobilité, donc 3 inconnues, deux forces et un moment.',
+   '<b>Conclure</b> : on compte les inconnues avant de calculer, pour savoir si 3 équations suffiront.'],
+  anim:{h:240, titre:'Mobilités + inconnues = 3 dans le plan', draw:function(c,t){
+   var L=[['pivot',2,'#0e7490'],['appui plan',1,'#ea580c'],['encastrement',3,'#7c3aed']];
+   L.forEach(function(l,i){ var x=130+i*250, y=130, k=ph(t,0.4+i*1.2,1.2+i*1.2);
+    SC.T(c,l[0],x,60,15,l[2]);
+    if(i===0){ SC.PIVOT(c,x,y,10); SC.APPUI(c,x,y+10,false); FLK(c,x,y,x+60,y,k,3,l[2]); FLK(c,x,y,x,y-60,k,3,l[2]); }
+    if(i===1){ SC.RECT(c,x-40,y-20,80,20,'#fed7aa','#ea580c'); SC.HACH(c,x-60,y,120,10); FLK(c,x,y,x,y-70,k,3,l[2]); }
+    if(i===2){ SC.ENCASTR(c,x-40,y,70); SC.SEG(c,x-40,y,x+50,y,'#334155',7); FLK(c,x-40,y,x+20,y,k,3,l[2]); FLK(c,x-40,y,x-40,y-60,k,3,l[2]);
+     if(k>0.9){ c.strokeStyle=l[2]; c.lineWidth=2.5; c.beginPath(); c.arc(x-40,y,30,0.3,1.6); c.stroke(); } }
+    if(k>0.95) SC.T(c,l[1]+' inconnue'+(l[1]>1?'s':''),x,220,15,l[2]);
+   });
+  }},
+  piege:'compter 3 inconnues pour un pivot : sa rotation est libre, il ne transmet aucun moment.',
+  mc:'liaisons'
+ },
+ '3': {
+  etapes:[
+   '<b>Tracer la frontière</b> du système isolé : ici {bras + tirant}.',
+   '<b>Pour chaque action, repérer ses deux acteurs.</b> Les deux dans le système : intérieure. Un seul : extérieure.',
+   '<b>Extérieures</b> : mur sur bras en A, mur sur tirant en C, charge en B, pesanteur.',
+   '<b>Intérieure</b> : l’action du tirant sur le bras en D, et sa réciproque.',
+   '<b>Conclure</b> : les actions intérieures s’annulent deux à deux, elles n’entrent pas dans le bilan.'],
+  anim:{h:280, titre:'Frontière d’isolement : {bras + tirant}', draw:function(c,t){
+   POTENCE(c,0,90,240,300,1.00,0.75,40,'','',null,null);
+   var k=ph(t,0.3,1.2); c.save(); c.globalAlpha=k; c.setLineDash([7,5]); c.strokeStyle='#16a34a'; c.lineWidth=2;
+   c.beginPath(); c.moveTo(104,30); c.lineTo(420,214); c.lineTo(420,268); c.lineTo(104,268); c.closePath(); c.stroke(); c.restore();
+   LIGNES(c,[['extérieures : mur en A, mur en C,',1.6,'#dc2626'],['charge en B, pesanteur',2.0,'#dc2626'],['intérieure : tirant ↔ bras en D',2.8,'#16a34a',15]],t,470,90,30);
+  }},
+  piege:'faire entrer l’action du tirant dans le bilan alors que le tirant est dans le système : on la compterait deux fois.',
+  mc:'deuxforces'
+ },
+ '4': {
+  etapes:[
+   '<b>Isoler le pied-de-biche</b> : effort de la main, action de la charge, action du pivot O.',
+   '<b>Écrire ΣM<sub>/O</sub> = 0</b> pour éliminer l’action du pivot.',
+   '<b>Équilibrer les moments.</b> Charge × 0,07 = 120 × 0,35.',
+   '<b>Rapport de levier.</b> 0,35 / 0,07 = 5.',
+   '<b>Charge.</b> 120 × 5 = 600 N.',
+   '<b>Interpréter</b> : la charge monte cinq fois moins que la main ne descend, le travail se conserve.'],
+  anim:{h:260, titre:'Levier inter-appui : moments autour de O', draw:function(c,t){
+   var a=0.12*Math.sin(Math.min(t,4)*1.4)*ph(t,0,0.5), O={x:250,y:170}, sc=900;
+   function P(d){ return {x:O.x+d*sc*Math.cos(a), y:O.y-d*sc*Math.sin(a)}; }
+   var g=P(-0.07), d=P(0.35);
+   SC.SEG(c,g.x,g.y,d.x,d.y,'#334155',7); SC.APPUI(c,O.x,O.y+5,false); SC.T(c,'O',O.x+16,O.y+20,13);
+   SC.FL(c,d.x,d.y-60,d.x,d.y-6,3,'#16a34a'); SC.T(c,'120 N',d.x+8,d.y-44,13,'#16a34a','left');
+   SC.FL(c,g.x,g.y-6,g.x,g.y-60,3,'#dc2626'); SC.T(c,'charge ?',g.x-10,g.y-66,13,'#dc2626','right');
+   SC.COTE(c,g.x,O.y+50,O.x,O.y+50,'0,07 m','#64748b',16); SC.COTE(c,O.x,O.y+50,d.x,O.y+50,'0,35 m','#64748b',16);
+   LIGNES(c,[['charge × 0,07 = 120 × 0,35',2.0,'#334155'],['rapport = 0,35 / 0,07 = 5',2.7,'#155e75'],['charge = 600 N',3.4,'#dc2626',16]],t,300,60,28);
+  }},
+  verif:'moments : 600 × 0,07 = 42 N·m et 120 × 0,35 = 42 N·m.',
+  piege:'inverser le rapport (0,07 / 0,35) : on trouverait 24 N, moins que l’effort appliqué, absurde pour un levier.',
+  mc:'momentforce'
+ },
+ '5': {
+  etapes:[
+   '<b>Isoler la poutre AB</b> : charge P, réactions verticales R<sub>A</sub> et R<sub>B</sub>.',
+   '<b>Écrire ΣM<sub>/A</sub> = 0</b> pour éliminer R<sub>A</sub> : R<sub>B</sub> × 3,00 = 4 000 × 1,00.',
+   '<b>Calculer R<sub>B</sub>.</b> R<sub>B</sub> = 4 000 / 3 = 1 333 N.',
+   '<b>Écrire ΣF<sub>y</sub> = 0.</b> R<sub>A</sub> + R<sub>B</sub> = 4 000.',
+   '<b>Calculer R<sub>A</sub>.</b> R<sub>A</sub> = 4 000 − 1 333 = 2 667 N.',
+   '<b>Interpréter</b> : l’appui le plus proche de la charge en reprend les deux tiers.'],
+  anim:{h:270, titre:'Poutre sur deux appuis : moments en A', draw:function(c,t){
+   var xA=120, xB=600, y=150, xP=xA+(xB-xA)/3;
+   SC.SEG(c,xA,y,xB,y,'#334155',8); SC.APPUI(c,xA,y+4,false); SC.APPUI(c,xB,y+4,true);
+   SC.T(c,'A',xA-16,y-10,14); SC.T(c,'B',xB+16,y-10,14);
+   SC.FL(c,xP,y-80,xP,y-6,3.5,'#dc2626'); SC.T(c,'P = 4 000 N',xP+10,y-60,13,'#dc2626','left');
+   SC.COTE(c,xA,y+60,xP,y+60,'1,00 m','#64748b',16); SC.COTE(c,xA,y+95,xB,y+95,'3,00 m','#64748b',16);
+   var k1=ph(t,1.5,2.3), k2=ph(t,3.0,3.8);
+   FLK(c,xB,y+40,xB,y+40-80*k1/1,1,3,'#2563eb'); if(k1>0.9) SC.T(c,'R_B = 1 333 N',xB-10,y-50,13,'#2563eb','right');
+   FLK(c,xA,y+40,xA,y+40-160*k2/1,1,3,'#2563eb'); if(k2>0.9) SC.T(c,'R_A = 2 667 N',xA+10,y-110,13,'#2563eb','left');
+   LIGNES(c,[['ΣM/A : R_B × 3 = 4 000 × 1',0.8,'#155e75'],['ΣF_y : R_A = 4 000 − R_B',2.4,'#155e75']],t,400,46,24);
+  }},
+  verif:'ΣM<sub>/B</sub> = 0 donne directement R<sub>A</sub> × 3 = 4 000 × 2, soit 2 667 N : même résultat.',
+  piege:'prendre le bras de levier de P depuis B (2,00 m) dans l’équation des moments en A.',
+  mc:'poutre2appuis'
+ },
+ '6': {
+  etapes:[
+   '<b>Isoler la poulie</b> : deux brins tendus à 1 800 N, et l’action de l’axe.',
+   '<b>Hypothèse</b> : poulie sans frottement, la tension est la même dans les deux brins.',
+   '<b>Écrire ΣF = 0</b> : l’axe équilibre la somme vectorielle des deux tensions.',
+   '<b>Construire la somme</b> : deux vecteurs de 1 800 N à 90° forment la diagonale d’un carré.',
+   '<b>Calculer.</b> R = 2 T cos(θ / 2) = 2 × 1 800 × cos 45° = 2 546 N.',
+   '<b>Orienter</b> : R est dirigée selon la bissectrice des brins, à 45°.'],
+  anim:{h:280, titre:'Somme vectorielle des deux brins', draw:function(c,t){
+   var O={x:230,y:140}, r=40;
+   SC.CERCLE(c,O.x,O.y,r,'#e2e8f0','#475569',2); SC.PT(c,O.x,O.y,4);
+   SC.SEG(c,O.x-r,O.y,O.x-r,270,'#334155',3); SC.SEG(c,O.x,O.y-r,470,O.y-r,'#334155',3);
+   SC.FL(c,O.x-r,O.y+60,O.x-r,O.y+140,3,'#dc2626'); SC.T(c,'T = 1 800 N',O.x-r-8,O.y+150,13,'#dc2626','right');
+   SC.FL(c,O.x+60,O.y-r,O.x+140,O.y-r,3,'#dc2626'); SC.T(c,'T = 1 800 N',O.x+150,O.y-r-8,13,'#dc2626','left');
+   var Q={x:540,y:70}, k=ph(t,1.0,1.8), k2=ph(t,1.8,2.6), k3=ph(t,2.8,3.6);
+   SC.T(c,'polygone des forces',600,52,13,'#155e75');
+   FLK(c,Q.x,Q.y,Q.x,Q.y+108,k,3,'#dc2626'); if(k>0.9) SC.T(c,'brin 1',Q.x-8,Q.y+60,12,'#dc2626','right');
+   FLK(c,Q.x,Q.y+108,Q.x+108,Q.y+108,k2,3,'#dc2626'); if(k2>0.9) SC.T(c,'brin 2',Q.x+54,Q.y+128,12,'#dc2626');
+   FLK(c,Q.x+108,Q.y+108,Q.x,Q.y,k3,3.5,'#2563eb');
+   if(k3>0.9){ SC.T(c,'R = 2 546 N',Q.x+70,Q.y+40,14,'#2563eb','left'); SC.T(c,'action de l’axe, à 45°',Q.x+70,Q.y+60,12,'#2563eb','left',false); }
+   LIGNES(c,[['R = 2 × 1 800 × cos 45°',4.0,'#155e75'],['R = 2 546 N',4.6,'#2563eb',16]],t,330,236,22);
+  }},
+  verif:'Pythagore : √(1 800² + 1 800²) = 1 800 × √2 = 2 546 N.',
+  piege:'répondre 1 800 N : l’axe porte la somme vectorielle des deux brins, pas la tension d’un seul.',
+  mc:'deuxforces'
+ },
+ 'c1': {
+  etapes:['<b>Isoler la poutre</b> de 4,00 m : charge 3 000 N à 1,00 m de A, réactions R<sub>A</sub> et R<sub>B</sub>.',
+   '<b>ΣM<sub>/A</sub> = 0.</b> R<sub>B</sub> × 4,00 = 3 000 × 1,00, donc R<sub>B</sub> = 750 N.',
+   '<b>ΣF<sub>y</sub> = 0.</b> R<sub>A</sub> = 3 000 − 750 = 2 250 N.',
+   '<b>Vérifier</b> par ΣM<sub>/B</sub> : R<sub>A</sub> × 4 = 3 000 × 3, soit 2 250 N.',
+   '<b>Interpréter</b> : la charge au quart de la portée donne trois quarts à A.'],
+  anim:{h:270, titre:'Poutre de 4 m, charge au quart', draw:function(c,t){
+   var xA=120, xB=600, y=140, xP=xA+(xB-xA)/4;
+   SC.SEG(c,xA,y,xB,y,'#334155',8); SC.APPUI(c,xA,y+4,false); SC.APPUI(c,xB,y+4,true);
+   SC.FL(c,xP,y-80,xP,y-6,3.5,'#dc2626'); SC.T(c,'3 000 N',xP+10,y-60,13,'#dc2626','left');
+   SC.COTE(c,xA,y+60,xP,y+60,'1,00 m','#64748b',16); SC.COTE(c,xA,y+90,xB,y+90,'4,00 m','#64748b',16);
+   var k1=ph(t,1,1.8), k2=ph(t,2,2.8);
+   FLK(c,xB,y+40,xB,y-10,k1,3,'#2563eb'); if(k1>0.9) SC.T(c,'R_B = 750 N',xB-10,y-20,13,'#2563eb','right');
+   FLK(c,xA,y+40,xA,y-110,k2,3,'#2563eb'); if(k2>0.9) SC.T(c,'R_A = 2 250 N',xA+10,y-100,13,'#2563eb','left');
+  }},
+  verif:'R<sub>A</sub> + R<sub>B</sub> = 3 000 N.', piege:'partager la charge à moitié entre les appuis.', mc:'poutre2appuis'
+ },
+ 'c2': {
+  etapes:['<b>Isoler le bras</b> : charge 1 500 N à 2,00 m, tension T à 1,50 m, action du mur en A.',
+   '<b>ΣM<sub>/A</sub> = 0.</b> T × sin 30° × 1,50 = 1 500 × 2,00.',
+   '<b>Calculer.</b> T = 3 000 / (0,5 × 1,50) = 3 000 / 0,75 = 4 000 N.',
+   '<b>Comparer</b> : la tension vaut 2,7 fois la charge.',
+   '<b>Expliquer</b> : sin 30° = 0,5 réduit de moitié le bras de levier utile du tirant.'],
+  anim:{h:310, titre:'Tirant à 30° : le bras de levier s’effondre', draw:function(c,t){
+   POTENCE(c,t,90,230,190,2.00,1.50,30,'1 500 N','T',null,null);
+   LIGNES(c,[['T × sin 30° × 1,50 = 1 500 × 2,00',3.6,'#334155'],['T = 3 000 / 0,75',4.2,'#334155'],['T = 4 000 N',4.8,'#7c3aed',16]],t,500,90,30);
+  }},
+  verif:'moments : 4 000 × 0,5 × 1,5 = 3 000 N·m = 1 500 × 2.', piege:'utiliser cos 30° : c’est la composante PERPENDICULAIRE au bras qui crée le moment.', mc:'momentforce'
+ },
+ 'c3': {
+  etapes:['<b>Isoler la poulie</b> : deux brins parallèles tendus à 1 000 N.',
+   '<b>Angle entre les brins</b> : θ = 0°, ils tirent dans le même sens.',
+   '<b>Appliquer</b> R = 2 T cos(θ / 2) = 2 × 1 000 × cos 0°.',
+   '<b>Résultat.</b> R = 2 000 N.',
+   '<b>Comparer</b> : c’est le maximum ; à 90°, l’axe ne porterait que 1 414 N.'],
+  anim:{h:280, titre:'Demi-tour : les deux brins s’additionnent', draw:function(c,t){
+   var O={x:250,y:150}, r=50;
+   SC.CERCLE(c,O.x,O.y,r,'#e2e8f0','#475569',2); SC.PT(c,O.x,O.y,4);
+   SC.SEG(c,O.x-r,O.y,O.x-r,270,'#334155',3); SC.SEG(c,O.x+r,O.y,O.x+r,270,'#334155',3);
+   var k=ph(t,0.5,1.3), k2=ph(t,1.5,2.3);
+   FLK(c,O.x-r,210,O.x-r,265,k,3,'#dc2626'); FLK(c,O.x+r,210,O.x+r,265,k,3,'#dc2626');
+   if(k>0.9){ SC.T(c,'1 000 N',O.x-r-8,250,13,'#dc2626','right'); SC.T(c,'1 000 N',O.x+r+8,250,13,'#dc2626','left'); }
+   FLK(c,O.x,O.y,O.x,O.y-95*k2,k2>0?1:0,3.5,'#2563eb'); if(k2>0.9) SC.T(c,'R = 2 000 N',O.x+12,O.y-70,14,'#2563eb','left');
+   LIGNES(c,[['R = 2 T cos(θ/2)',2.5,'#155e75'],['θ = 0°  →  R = 2 T',3.0,'#334155'],['R = 2 000 N',3.5,'#2563eb',16]],t,450,80,30);
+  }},
+  verif:'deux forces de même sens s’ajoutent directement : 1 000 + 1 000.', piege:'répondre 1 000 N en confondant tension du câble et action sur l’axe.', mc:'deuxforces'
+ }
+});
+
+})();
+</script>
+<!-- CORRIGES_DETAILLES fin -->
 </body>
 </html>
