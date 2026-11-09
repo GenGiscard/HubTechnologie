@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hub techno → cahier de textes École Directe
 // @namespace    estic-agostini
-// @version      1.0
+// @version      1.3
 // @description  Dans les hubs de séquence, un bouton par ressource remplit le contenu de la séance en cours dans le cahier de textes École Directe, avec le lien de la ressource.
 // @match        https://gengiscard.github.io/*
 // @match        https://www.ecoledirecte.com/*
@@ -17,11 +17,9 @@
   'use strict';
 
   /* ===== RÉGLAGES ===== */
-  // false : le texte est inséré, tu vérifies puis tu cliques « Enregistrer ».
   // true  : le script clique lui-même sur « Enregistrer ».
-  const ENREGISTRER_AUTO = false;
-  // Marge avant le début du cours (minutes) : un clic à 8 h 05 vise le cours de 8 h 10.
-  const MARGE_AVANT = 15;
+  // false : le texte est inséré, tu vérifies puis tu cliques « Enregistrer ».
+  const ENREGISTRER_AUTO = true;
   // Une demande plus vieille que cela (minutes) est abandonnée.
   const VALIDITE = 20;
 
@@ -63,6 +61,19 @@
       'background:#fff;color:#0e7490;border-radius:9px;padding:4px 9px;font:700 12px Segoe UI,sans-serif;cursor:pointer;opacity:.85}' +
       '.cdt-btn:hover{opacity:1;background:#ecfeff}';
     document.head.appendChild(css);
+    // Petite phrase explicative tirée de la description de la carte : phrases entières, 160 caractères au plus.
+    function resume(carte) {
+      const p = carte.querySelector('p');
+      if (!p) return '';
+      let txt = p.textContent.trim().replace(/\s+/g, ' ');
+      // phrases entières tant qu’on reste sous 160 caractères (au moins une)
+      const phrases = txt.match(/[^.!?]+[.!?]+(\s|$)|[^.!?]+$/g) || [txt];
+      let r = '';
+      for (const ph of phrases) { if (r && (r + ph).trim().length > 160) break; r += ph; }
+      txt = r.trim();
+      if (txt.length > 160) txt = txt.slice(0, txt.lastIndexOf(' ', 157)) + '…';
+      return txt;
+    }
     cartes.forEach(carte => {
       const b = document.createElement('button');
       b.type = 'button';
@@ -73,7 +84,7 @@
         e.preventDefault(); e.stopPropagation();
         const titre = ((carte.querySelector('h2') || {}).textContent || carte.textContent).trim().replace(/\s+/g, ' ');
         const url = new URL(carte.getAttribute('href'), location.href).href;
-        GM_setValue(CLE, JSON.stringify({ titre: titre, sequence: sequence.trim(), url: url, t: Date.now() }));
+        GM_setValue(CLE, JSON.stringify({ titre: titre, desc: resume(carte), sequence: sequence.trim(), url: url, t: Date.now() }));
         GM_openInTab('https://www.ecoledirecte.com/CahierDeTexte', { active: true, insert: true });
         bandeau('Envoyé vers École Directe : <b>' + echap(titre) + '</b>', '#0e7490', 3500);
       });
@@ -102,9 +113,10 @@
       .sort((a, b) => a.start_date - b.start_date);
   }
 
+  // La séance retenue est celle qui contient l’heure du clic : début inclus, fin exclue
+  // (un clic à 9 h 05 vise le cours qui commence à 9 h 05, pas celui qui finit).
   function choisir(seances, t) {
-    const marge = MARGE_AVANT * 60000;
-    return seances.find(e => t >= e.start_date.getTime() - marge && t <= e.end_date.getTime()) || null;
+    return seances.find(e => t >= e.start_date.getTime() && t < e.end_date.getTime()) || null;
   }
 
   function cliquer(el) {
@@ -139,13 +151,20 @@
     const ed = editable.ckeditorInstance;
     const avant = ed.getData();
     if (avant.indexOf(d.url) === -1) {
-      const ligne = '<p><strong>' + echap(d.titre) + '</strong> : <a href="' + echap(d.url) + '">' + echap(d.url) + '</a></p>';
+      const ligne = '<p><strong>' + echap(d.titre) + '</strong> : <a href="' + echap(d.url) + '">' + echap(d.url) + '</a></p>' +
+        (d.desc ? '<p><em>' + echap(d.desc) + '</em></p>' : '');
       ed.setData(avant + ligne);
     }
     const classe = seance.entityCode || seance.entityLibelle || '';
     if (ENREGISTRER_AUTO) {
+      await attendre(300);
       const enr = [...document.querySelectorAll('modal-container button')].find(b => b.textContent.trim() === 'Enregistrer');
-      if (enr) { enr.click(); bandeau('Enregistré dans le cahier de textes : <b>' + echap(classe) + '</b>, ' + hh(seance.start_date) + '.', '#16a34a', 6000); }
+      if (!enr) throw new Error('bouton Enregistrer introuvable');
+      enr.click();
+      // succès quand l’éditeur se referme
+      const ferme = await attendreQue(() => !document.querySelector('modal-container .ck-editor__editable'), 10000);
+      if (!ferme) throw new Error('l’enregistrement n’a pas abouti, vérifie la fenêtre');
+      bandeau('Enregistré dans le cahier de textes : <b>' + echap(classe) + '</b>, séance de ' + hh(seance.start_date) + '.', '#16a34a', 7000);
     } else {
       bandeau('Ajouté à la séance <b>' + echap(classe) + '</b> de ' + hh(seance.start_date) +
         ' : vérifie puis clique <b>Enregistrer</b>.', '#16a34a', 9000);
