@@ -1,8 +1,10 @@
 // ==UserScript==
 // @name         Hub techno → cahier de textes École Directe
 // @namespace    estic-agostini
-// @version      1.3
+// @version      1.5
 // @description  Dans les hubs de séquence, un bouton par ressource remplit le contenu de la séance en cours dans le cahier de textes École Directe, avec le lien de la ressource.
+// @updateURL    https://gengiscard.github.io/HubTechnologie/cahier_de_textes_ecoledirecte.user.js
+// @downloadURL  https://gengiscard.github.io/HubTechnologie/cahier_de_textes_ecoledirecte.user.js
 // @match        https://gengiscard.github.io/*
 // @match        https://www.ecoledirecte.com/*
 // @grant        GM_setValue
@@ -22,6 +24,19 @@
   const ENREGISTRER_AUTO = true;
   // Une demande plus vieille que cela (minutes) est abandonnée.
   const VALIDITE = 20;
+
+  // Textes types : un bouton flottant par modèle, en bas à droite des hubs.
+  const MODELES = [
+    {
+      bouton: 'Exposé',
+      html: '<p><strong>Exposé à faire :</strong></p><ul>' +
+        '<li>expliquez le fonctionnement d’un objet technologique de votre choix</li>' +
+        '<li>par groupe ou en solo</li>' +
+        '<li>objectif de temps de parole : 5 min</li>' +
+        '<li>difficulté : le PowerPoint ne doit comporter <strong>AUCUN</strong> texte</li></ul>',
+      repere: 'Exposé à faire'
+    }
+  ];
 
   const CLE = 'cdt_demande';
   const W = (typeof unsafeWindow !== 'undefined') ? unsafeWindow : window;
@@ -74,6 +89,23 @@
       if (txt.length > 160) txt = txt.slice(0, txt.lastIndexOf(' ', 157)) + '…';
       return txt;
     }
+    const pile = document.createElement('div');
+    pile.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:50;display:flex;flex-direction:column;gap:8px';
+    MODELES.forEach(m => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'cdt-btn';
+      b.style.cssText = 'position:static;padding:9px 14px;font-size:14px;box-shadow:0 6px 18px rgba(0,0,0,.15);opacity:1';
+      b.textContent = 'Cahier de textes : ' + m.bouton;
+      b.title = 'Ajouter ce texte à la séance en cours';
+      b.addEventListener('click', () => {
+        GM_setValue(CLE, JSON.stringify({ titre: m.bouton, html: m.html, repere: m.repere, t: Date.now() }));
+        GM_openInTab('https://www.ecoledirecte.com/CahierDeTexte', { active: true, insert: true });
+        bandeau('Envoyé vers École Directe : <b>' + echap(m.bouton) + '</b>', '#0e7490', 3500);
+      });
+      pile.appendChild(b);
+    });
+    document.body.appendChild(pile);
     cartes.forEach(carte => {
       const b = document.createElement('button');
       b.type = 'button';
@@ -150,7 +182,9 @@
     if (!editable) throw new Error('éditeur non disponible');
     const ed = editable.ckeditorInstance;
     const avant = ed.getData();
-    if (avant.indexOf(d.url) === -1) {
+    if (d.html) {                                   // texte type (exposé…)
+      if (avant.indexOf(d.repere || d.html) === -1) ed.setData(avant + d.html);
+    } else if (avant.indexOf(d.url) === -1) {       // ressource du hub
       const ligne = '<p><strong>' + echap(d.titre) + '</strong> : <a href="' + echap(d.url) + '">' + echap(d.url) + '</a></p>' +
         (d.desc ? '<p><em>' + echap(d.desc) + '</em></p>' : '');
       ed.setData(avant + ligne);
@@ -173,7 +207,7 @@
 
   function proposerChoix(seances, d) {
     if (!seances.length) {
-      bandeau('Aucune séance ce jour-là dans ton emploi du temps. Lien : ' + echap(d.url), '#dc2626');
+      bandeau('Aucune séance ce jour-là dans ton emploi du temps. Lien : ' + echap(d.url || d.titre), '#dc2626');
       return;
     }
     const b = bandeau('Pas de cours à l’heure du clic. Choisis la séance :<br>', '#b45309');
@@ -219,7 +253,7 @@
       const s = choisir(seances, d.t);
       if (s) await remplir(s, d); else proposerChoix(seances, d);
     } catch (err) {
-      bandeau('Le remplissage automatique a échoué (' + echap(err.message) + '). Lien à coller : ' + echap(d.url), '#dc2626');
+      bandeau('Le remplissage automatique a échoué (' + echap(err.message) + '). À saisir à la main : ' + echap(d.url || d.titre), '#dc2626');
     } finally {
       enCours = false;
     }
