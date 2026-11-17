@@ -153,6 +153,21 @@ footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
  Compact pour le calcul, lisible pour l’affichage, sûr pour la mesure.</div>
 </section>
 
+<section class="bloc" id="sTrace">
+ <h2>Trace écrite</h2>
+ <div class="chapo">À recopier sur le cahier, schéma compris.</div>
+ <canvas id="cvTrace" width="860" height="250"></canvas>
+ <ul style="margin:10px 0 0 22px;line-height:1.9;font-size:15.5px">
+  <li>Une machine ne connaît que <b>deux états</b> : <b>0</b>, le courant ne passe pas ; <b>1</b>, il passe.</li>
+  <li>Un <b>bit</b> vaut 0 ou 1. Un <b>octet</b> regroupe <b>8 bits</b> : 256 valeurs, de 0 à 255.</li>
+  <li>Chaque bit a un <b>poids</b> : 128, 64, 32, 16, 8, 4, 2, 1. On additionne les bits à 1.</li>
+  <li>L’<b>hexadécimal</b> écrit 4 bits avec un seul signe : 0 à 9, puis A à F.</li>
+  <li>Le code <b>ASCII</b> donne un numéro à chaque caractère : A = 65.</li>
+  <li>Une <b>couleur</b> = 3 octets : rouge, vert, bleu, chacun de 0 à 255.</li>
+  <li><b>DCB</b> pour les afficheurs, <b>code Gray</b> pour les capteurs : chaque code répond à un besoin.</li>
+ </ul>
+</section>
+
 <footer>Cours — Le binaire · Technologie 4ème · ESTIC Don Bosco</footer>
 
 <script>
@@ -317,6 +332,30 @@ const POIDS=[128,64,32,16,8,4,2,1];
   }
  });
  T(c,'utilisé dans les capteurs de position',645,206,13,'#5b544a');
+})();
+
+/* ═══ schéma de la trace écrite — un octet, trois lectures ═══ */
+(function(){
+ const cv=document.getElementById('cvTrace'); if(!cv) return;
+ const c=cv.getContext('2d');
+ c.fillStyle='#fff'; c.fillRect(0,0,860,250);
+ T(c,'UN OCTET = 8 BITS, PLUSIEURS LECTURES POSSIBLES',430,26,14.5,'#155e75');
+ const b=[0,1,0,0,0,0,0,1], L=62, esp=10, x0=430-(8*L+7*esp)/2;
+ b.forEach((v,i)=>{
+  const x=x0+i*(L+esp);
+  cadre(c,x,44,L,44,'#0e7490',v===1);
+  T(c,String(v),x+L/2,74,22,v? '#fff':'#64748b');
+  T(c,String(POIDS[i]),x+L/2,106,13,v? '#0e7490':'#94a3b8');
+ });
+ T(c,'poids',x0-14,106,12,'#94a3b8','right');
+ const lect=[['NOMBRE','64 + 1 = 65','#ea580c',150],['HEXADÉCIMAL','0100 0001 → 41','#7c3aed',430],['TEXTE (ASCII)','65 → « A »','#16a34a',710]];
+ lect.forEach(([t,v,coul,x])=>{
+  FLECHE(c,430+(x-430)*0.35,116,x,150,2.6,coul);
+  cadre(c,x-120,154,240,62,coul);
+  T(c,t,x,178,12.5,coul);
+  T(c,v,x,204,18,coul);
+ });
+ T(c,'Une couleur RVB = 3 octets · 0 à 255 pour chaque lumière',430,240,13,'#5b544a');
 })();
 </script>
 </body>

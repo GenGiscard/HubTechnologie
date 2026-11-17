@@ -40,6 +40,14 @@ section.niveau .bandeau .fil{flex:1;height:3px;border-radius:2px;opacity:.25}
 .ressources a:hover{background:var(--accent);color:#fff}
 .ressources a.hub{background:var(--accent);color:#fff}
 .ressources a.hub:hover{filter:brightness(1.12)}
+/* blocs au format « tete / p / liens » : même rendu que les autres */
+.seq .tete{display:flex;align-items:flex-start;gap:12px}
+.seq .tete .niv{display:none}
+.seq>p{font-size:13.5px;color:var(--gris);line-height:1.5;margin:3px 0 0 12px}
+.liens{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.liens a{font-size:12.5px;font-weight:700;text-decoration:none;color:var(--accent);border:1.5px solid var(--accent);border-radius:18px;padding:5px 12px;transition:.13s}
+.liens a:hover{background:var(--accent);color:#fff}
+.liens a[href^="00_hub"],.ressources a[href^="00_hub"]{background:var(--accent);color:#fff}
 .prof{max-width:1080px;margin:44px auto 60px;padding:0 24px}
 .prof .boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);border-left:6px solid var(--orange);padding:20px 24px}
 .prof h2{font-size:19px;color:var(--orange);margin-bottom:8px}
@@ -410,15 +418,14 @@ footer{padding:18px;text-align:center;font-size:12px;color:var(--gris)}
  </div>
  </div>
  <div class="seq" style="--accent:#0e7490">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="01_cours_binaire.html">Le binaire, le langage des machines</a></h3>
- <div class="desc">Bit, octet et poids des bits, puis tous les « dialectes » du binaire : hexadécimal, code ASCII, couleurs RVB, DCB et code Gray. Comprendre comment une machine représente un nombre, un texte, une couleur ou la position d'un capteur avec seulement des 0 et des 1.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="01_cours_binaire.html">Cours</a>
- <a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">TP Binaire · 13 exercices</a>
- <a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">Salle d'arcade · 7 jeux</a>
- <a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">Évaluation · 12 activités</a>
+ <div class="tete"><span class="ic"></span><div><h3>Le binaire, le langage des machines</h3><span class="niv">4ème</span></div></div>
+ <p>Bit, octet et poids des bits, puis tous les « dialectes » du binaire : hexadécimal, code ASCII, couleurs RVB, DCB et code Gray.</p>
+ <div class="liens">
+ <a href="00_hub_binaire_4e.html">Hub</a>
+ <a href="01_cours_binaire.html">Cours</a>
+ <a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">TP</a>
+ <a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">Salle d’arcade</a>
+ <a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">Évaluation</a>
  </div>
  </div>
  </div>
