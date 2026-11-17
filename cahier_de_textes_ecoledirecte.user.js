@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hub techno → cahier de textes École Directe
 // @namespace    estic-agostini
-// @version      1.5
+// @version      1.7
 // @description  Dans les hubs de séquence, un bouton par ressource remplit le contenu de la séance en cours dans le cahier de textes École Directe, avec le lien de la ressource.
 // @updateURL    https://gengiscard.github.io/HubTechnologie/cahier_de_textes_ecoledirecte.user.js
 // @downloadURL  https://gengiscard.github.io/HubTechnologie/cahier_de_textes_ecoledirecte.user.js
@@ -69,7 +69,9 @@
      ===================================================================== */
   if (location.hostname === 'gengiscard.github.io') {
     const cartes = document.querySelectorAll('a.card[href]');
-    if (!cartes.length) return;
+    // page d’accueil du portail : les blocs de séquences (.ressources), sans cartes
+    const accueil = !!document.querySelector('.ressources') || /\/(index\.html)?$/.test(location.pathname);
+    if (!cartes.length && !accueil) return;
     const sequence = (document.querySelector('header h1') || {}).textContent || document.title;
     const css = document.createElement('style');
     css.textContent = 'a.card{position:relative}.cdt-btn{position:absolute;top:10px;right:10px;z-index:5;border:2px solid #0e7490;' +
@@ -90,14 +92,16 @@
       return txt;
     }
     const pile = document.createElement('div');
-    pile.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:50;display:flex;flex-direction:column;gap:8px';
+    pile.style.cssText = 'position:fixed;left:12px;bottom:12px;z-index:50;display:flex;flex-direction:column;gap:6px';
+    // place réservée en bas de page : le bouton ne cache jamais la fin du contenu
+    document.body.style.paddingBottom = (parseInt(getComputedStyle(document.body).paddingBottom, 10) || 0) + 56 + 'px';
     MODELES.forEach(m => {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'cdt-btn';
-      b.style.cssText = 'position:static;padding:9px 14px;font-size:14px;box-shadow:0 6px 18px rgba(0,0,0,.15);opacity:1';
-      b.textContent = 'Cahier de textes : ' + m.bouton;
-      b.title = 'Ajouter ce texte à la séance en cours';
+      b.style.cssText = 'position:static;padding:6px 11px;font-size:12.5px;box-shadow:0 4px 12px rgba(0,0,0,.12);opacity:.9';
+      b.textContent = m.bouton;
+      b.title = 'Cahier de textes : ajouter « ' + m.bouton + ' » à la séance en cours';
       b.addEventListener('click', () => {
         GM_setValue(CLE, JSON.stringify({ titre: m.bouton, html: m.html, repere: m.repere, t: Date.now() }));
         GM_openInTab('https://www.ecoledirecte.com/CahierDeTexte', { active: true, insert: true });
