@@ -39,3 +39,5 @@ Ces codes sont distincts des codes de jeux délivrés en fin de TP (aucune colli
 | 3e | Éco-conception & cycle de vie | `BOUCL57` | `04_evaluation_cycle_vie.html` |
 | 5e | Évaluation des sorciers — Les ponts | `SORCIER7` | `04_evaluation_ponts_sorciers.html` |
 | 5e | Évaluation des sorciers — Les énergies | `SORCIER2` | `04_evaluation_energies_sorciers.html` |
+| 5e | La conception assistée par ordinateur | `ESQUI58` | `04_evaluation_cao.html` |
+| 5e | Évaluation des sorciers — La CAO et la 3D | `SORCIER5` | `04_evaluation_cao_sorciers.html` |

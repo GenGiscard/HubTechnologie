@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 5ème — La conception assistée par ordinateur (CAO) · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --niv:#d97706; --niv-fonce:#b45309; --orange:#ea580c;
+ --papier:#f8fafc; --gris:#64748b; --vert:#16a34a; --rouge:#dc2626; --bleu:#1d4ed8;
+ --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--niv);padding:8px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:38px}
+.estic-bar .id b{color:var(--niv-fonce);font-size:14px}
+.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+.layout{display:flex}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e2e8f0;padding:18px 10px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;border-radius:9px;text-decoration:none;color:var(--gris);font-size:13.5px;font-weight:600;transition:.15s}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex-shrink:0;transition:.15s}
+nav.side a:hover{background:#fffbeb;color:var(--niv-fonce)}
+nav.side a.actif{background:#fef3c7;color:var(--niv-fonce)}
+nav.side a.actif .dot{background:var(--orange);transform:scale(1.3)}
+nav.side .aide{margin-top:18px;padding:10px 12px;font-size:11.5px;color:var(--gris);background:#f1f5f9;border-radius:9px;line-height:1.5}
+main{margin-left:230px;flex:1}
+section.slide{min-height:calc(100vh - 64px);padding:52px 56px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px dashed #dbe3ee}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:8px}
+h1{font-size:52px;color:var(--niv-fonce)}
+h2{font-size:36px;color:var(--niv-fonce);margin-bottom:22px}
+.sous{font-size:19px;color:var(--gris);max-width:740px;line-height:1.5}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:26px}
+.carte{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:18px;border-top:4px solid var(--accent,var(--niv))}
+.carte .ic{font-size:32px}
+.carte h3{font-size:16px;margin:8px 0 6px;color:var(--accent,var(--niv))}
+.carte p{font-size:13.5px;color:var(--gris);line-height:1.5}
+.carte .ex{display:inline-block;margin-top:8px;font-size:12px;background:#f1f5f9;border-radius:14px;padding:3px 10px;color:var(--ink)}
+.animbox{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:18px;max-width:860px}
+.animbox canvas{width:100%;height:auto;display:block;border-radius:10px;background:#fdfdfd;border:1px solid #eef2f7}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}
+.legende .caption{flex:1;font-size:16.5px;font-weight:600;color:var(--niv-fonce);background:#fffbeb;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 10px 10px 0;min-height:46px;display:flex;align-items:center}
+.legende button{border:none;background:var(--niv);color:#fff;font-size:14px;font-weight:700;border-radius:9px;padding:10px 16px;cursor:pointer}
+.legende button:hover{background:var(--niv-fonce)}
+.phasepts{display:flex;gap:6px;margin-top:9px;justify-content:center}
+.phasepts span{width:26px;height:6px;border-radius:3px;background:#e2e8f0;transition:.2s}
+.phasepts span.on{background:var(--orange)}
+.anavig{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px;flex-wrap:wrap}
+.anavig .phasepts{margin-top:0}
+.navbtn{border:none;background:var(--niv);color:#fff;font-size:15px;font-weight:800;border-radius:10px;padding:11px 22px;cursor:pointer;transition:.15s}
+.navbtn:hover:not(:disabled){background:var(--niv-fonce)}
+.navbtn:disabled{background:#e2e8f0;color:#94a3b8;cursor:not-allowed}
+.rejbtn{border:2px solid var(--niv);background:#fff;color:var(--niv-fonce);font-size:13px;font-weight:700;border-radius:10px;padding:9px 15px;cursor:pointer;transition:.15s}
+.rejbtn:hover{background:#f1f5f9}
+table.mat{border-collapse:collapse;width:100%;max-width:860px;margin-top:24px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--ombre)}
+table.mat th{background:var(--niv-fonce);color:#fff;padding:12px 14px;font-size:15px;text-align:left}
+table.mat td{padding:11px 14px;font-size:14.5px;border-bottom:1px solid #eef2f7}
+table.mat tr:nth-child(even) td{background:#f8fafc}
+.retenir{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:26px;max-width:840px;border-left:6px solid var(--vert)}
+.retenir li{margin:10px 0 10px 22px;font-size:17px;line-height:1.5}
+.retenir b{color:var(--niv-fonce)}
+.kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco (officiel) -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<div class="layout">
+<nav class="side" id="menu">
+ <a href="#s1"><span class="dot"></span>Modéliser avant de fabriquer</a>
+ <a href="#s2"><span class="dot"></span>Réel ou numérique ?</a>
+ <a href="#s3"><span class="dot"></span>De l’esquisse au volume (animation)</a>
+ <a href="#s4"><span class="dot"></span>Enlever de la matière (animation)</a>
+ <a href="#s5"><span class="dot"></span>Les mots de la CAO</a>
+ <a href="#s6"><span class="dot"></span>Les trois plans (animation)</a>
+ <a href="#s7"><span class="dot"></span>Modifier une cote (animation)</a>
+ <a href="#s8"><span class="dot"></span>Connaître la masse avant de fabriquer</a>
+ <a href="#s9"><span class="dot"></span>À retenir</a>
+ <div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+</nav>
+
+<main>
+
+<section class="slide" id="s1">
+ <div class="eyebrow">Technologie · 5ème · Séquence CAO</div>
+ <h1>On le dessine en 3D…<br>avant de le fabriquer.</h1>
+ <p class="sous" style="margin-top:16px">Une coque de téléphone, une roue de robot, une pièce de vélo : tout commence sur un écran.
+ La <b>conception assistée par ordinateur</b> (CAO) crée l’objet <b>en virtuel</b>, sans gaspiller de matière.</p>
+
+ <div id="sObj" style="background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.10);border-left:5px solid #0e7490;border-radius:14px;padding:18px 22px;margin-top:26px;text-align:left;font-size:15px;line-height:1.7">
+  <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:6px">OBJECTIFS DE LA SÉQUENCE</div>
+  <ul style="margin:0 0 14px 20px;line-height:1.85"><li>Distinguer un objet réel de sa maquette numérique.</li><li>Construire une pièce simple : esquisse cotée, puis bossage ou enlèvement de matière.</li><li>Exploiter la maquette numérique : dimensions, volume et masse.</li></ul>
+  <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:5px">COMPÉTENCES TRAVAILLÉES — BO n° 9 du 29 février 2024</div>
+  <table style="width:100%;border-collapse:collapse;font-size:14px"><tr><td style="white-space:nowrap;font-weight:800;color:#0e7490;padding:5px 9px;border-bottom:1px solid #e2e8f0;vertical-align:top">T3 · C7</td><td style="padding:5px 9px;border-bottom:1px solid #e2e8f0">Imaginer, concevoir et réaliser une ou des solutions en réponse à un besoin, à des exigences ou à la nécessité d’améliorations dans une démarche de créativité</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#0e7490;padding:5px 9px;border-bottom:1px solid #e2e8f0;vertical-align:top">T3 · C8</td><td style="padding:5px 9px;border-bottom:1px solid #e2e8f0">Valider les solutions techniques par des simulations ou par des protocoles de tests</td></tr></table>
+ </div>
+</section>
+
+<section class="slide" id="s2">
+ <h2>Objet réel ou maquette numérique ?</h2>
+ <div class="cartes">
+ <div class="carte" style="--accent:#d97706"><h3>CONCEVOIR</h3><p>On construit l’objet en 3D sur l’ordinateur, cote par cote.</p><span class="ex">la maquette numérique</span></div>
+ <div class="carte" style="--accent:#0e7490"><h3>VÉRIFIER</h3><p>On contrôle dimensions, volume et masse avant toute fabrication.</p><span class="ex">zéro gaspillage</span></div>
+ <div class="carte" style="--accent:#16a34a"><h3>FABRIQUER</h3><p>Le fichier part vers l’imprimante 3D ou la machine-outil.</p><span class="ex">l’objet réel</span></div>
+ </div>
+ <p class="sous" style="margin-top:22px">Une erreur sur l’écran coûte <b>un clic</b>. Une erreur sur la pièce réelle coûte <b>de la matière, du temps et de l’argent</b>.</p>
+</section>
+
+<section class="slide" id="s3">
+ <h2>De l’esquisse au volume</h2>
+ <div class="animbox">
+ <canvas id="cvEsq" width="820" height="380"></canvas>
+ <div class="legende"><div class="caption" id="capEsq"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="esq">◀ Précédent</button>
+ <div class="phasepts" id="ptsEsq"></div>
+ <button class="navbtn" data-next="esq">Suivant ▶</button>
+ <button class="rejbtn" data-anim="esq">⟳ Rejouer l’étape</button>
+ </div>
+ </div>
+</section>
+
+<section class="slide" id="s4">
+ <h2>Enlever de la matière : le trou</h2>
+ <div class="animbox">
+ <canvas id="cvEnl" width="820" height="380"></canvas>
+ <div class="legende"><div class="caption" id="capEnl"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="enl">◀ Précédent</button>
+ <div class="phasepts" id="ptsEnl"></div>
+ <button class="navbtn" data-next="enl">Suivant ▶</button>
+ <button class="rejbtn" data-anim="enl">⟳ Rejouer l’étape</button>
+ </div>
+ </div>
+</section>
+
+<section class="slide" id="s5">
+ <h2>Les mots de la CAO</h2>
+ <table class="mat">
+ <tr><th>Mot</th><th>Ce que ça veut dire</th></tr>
+ <tr><td><b>Plan d’esquisse</b></td><td>la surface plane sur laquelle on dessine</td></tr>
+ <tr><td><b>Esquisse</b></td><td>un contour <b>fermé</b> dessiné en 2D</td></tr>
+ <tr><td><b>Cote</b></td><td>une dimension en mm qui fixe la taille exacte</td></tr>
+ <tr><td><b>Bossage</b></td><td>une fonction qui <b>ajoute</b> de la matière</td></tr>
+ <tr><td><b>Enlèvement de matière</b></td><td>une fonction qui <b>retire</b> de la matière : trou, poche</td></tr>
+ <tr><td><b>Arbre de construction</b></td><td>la liste des fonctions, dans l’ordre où on les a créées</td></tr>
+ </table>
+</section>
+
+<section class="slide" id="s6">
+ <h2>Sur quel plan dessiner ?</h2>
+ <div class="animbox">
+ <canvas id="cvPlans" width="820" height="380"></canvas>
+ <div class="legende"><div class="caption" id="capPlans"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="plans">◀ Précédent</button>
+ <div class="phasepts" id="ptsPlans"></div>
+ <button class="navbtn" data-next="plans">Suivant ▶</button>
+ <button class="rejbtn" data-anim="plans">⟳ Rejouer l’étape</button>
+ </div>
+ </div>
+</section>
+
+<section class="slide" id="s7">
+ <h2>Changer une cote : la pièce se reconstruit</h2>
+ <div class="animbox">
+ <canvas id="cvParam" width="820" height="380"></canvas>
+ <div class="legende"><div class="caption" id="capParam"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="param">◀ Précédent</button>
+ <div class="phasepts" id="ptsParam"></div>
+ <button class="navbtn" data-next="param">Suivant ▶</button>
+ <button class="rejbtn" data-anim="param">⟳ Rejouer l’étape</button>
+ </div>
+ </div>
+</section>
+
+<section class="slide" id="s8">
+ <h2>Connaître la masse avant de fabriquer</h2>
+ <p class="sous">La plaque de 60 × 40 × 10 mm a un volume de <b>24 cm³</b>. Choisis le matériau :</p>
+ <div class="animbox" style="margin-top:16px">
+  <div id="matBtns" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"></div>
+  <canvas id="cvMasse" width="820" height="230" style="margin-top:14px"></canvas>
+ </div>
+ <p class="sous" style="margin-top:16px"><b>masse = volume × masse volumique</b> — le logiciel la calcule pour nous.</p>
+</section>
+
+<section class="slide" id="s9">
+ <h2>À retenir</h2>
+ <div id="sTrace" style="text-align:left">
+  <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:8px">TRACE ÉCRITE — À RECOPIER SUR LE CAHIER</div>
+  <canvas id="cvTrace" width="860" height="200" style="width:100%;max-width:860px;height:auto;display:block;margin:0 auto 14px;background:#fff;border:1px solid #e2e8f0;border-radius:12px"></canvas>
+  <ul style="margin:0 0 0 20px;line-height:1.95;font-size:16px">
+   <li>La <b>CAO</b> crée une <b>maquette numérique</b> de l’objet avant de le fabriquer.</li>
+   <li>Une <b>esquisse</b> est un contour fermé, dessiné sur un plan et <b>coté</b> en mm.</li>
+   <li>Le <b>bossage</b> ajoute de la matière ; l’<b>enlèvement</b> en retire.</li>
+   <li>L’<b>arbre de construction</b> garde chaque étape : on change une cote, la pièce se met à jour.</li>
+   <li>La maquette donne le <b>volume</b> et la <b>masse</b> avant fabrication.</li>
+  </ul>
+ </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ====== Moteur d'animations pédagogiques en phases ====== */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+ const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+ const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+ phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+ const etat={i:0,t0:null,raf:null};
+ function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+ function majBtns(){
+ const bp=document.querySelector('button[data-prev="'+nom+'"]');
+ const bn=document.querySelector('button[data-next="'+nom+'"]');
+ if(bp) bp.disabled=(etat.i===0);
+ if(bn) bn.disabled=(etat.i===phases.length-1);
+ }
+ function jouer(){
+ cancelAnimationFrame(etat.raf); etat.t0=null;
+ cap.textContent=phases[etat.i].caption; majPts(); majBtns();
+ etat.raf=requestAnimationFrame(function frame(ts){
+ if(etat.t0===null)etat.t0=ts;
+ const p=Math.min(1,(ts-etat.t0)/phases[etat.i].dur);
+ ctx.clearRect(0,0,cv.width,cv.height);
+ phases[etat.i].draw(ctx,p,cv.width,cv.height);
+ if(p<1) etat.raf=requestAnimationFrame(frame);
+ });
+ }
+ ANIMS[nom]={
+ demarrer(){ etat.i=0; jouer(); },
+ rejouer(){ jouer(); },
+ suivant(){ if(etat.i<phases.length-1){ etat.i++; jouer(); } },
+ precedent(){ if(etat.i>0){ etat.i--; jouer(); } }
+ };
+ cap.textContent=phases[0].caption; majPts(); majBtns();
+ phases[0].draw(ctx,0,cv.width,cv.height);
+}
+const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function etiquette(ctx,txt,x,y,coul='#b45309',taille=15){
+ ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
+}
+
+/* ====== Outils de dessin : projection isométrique, flèches, cotes ====== */
+const ACC = '#b45309', BLEU = '#1d4ed8', TEAL = '#0e7490';
+function P(o, x, y, z) { return [o.x + (x - y) * 0.866 * o.k, o.y + (x + y) * 0.5 * o.k - z * o.k]; }
+function poly(ctx, pts, fill, stroke, lw) {
+  ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath();
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw || 2; ctx.lineJoin = 'round'; ctx.stroke(); }
+}
+/* pavé x 0..L, y 0..W, z 0..H : faces visibles dessus, droite (x=L), avant (y=W) */
+function pave(ctx, o, L, W, H, cols) {
+  cols = cols || {};
+  const t = cols.top || '#fde7c2', r = cols.right || '#f2c98d', f = cols.front || '#e9b46a', s = cols.stroke || '#7c4a12';
+  poly(ctx, [P(o, L, 0, 0), P(o, L, W, 0), P(o, L, W, H), P(o, L, 0, H)], r, s, 2);
+  poly(ctx, [P(o, 0, W, 0), P(o, L, W, 0), P(o, L, W, H), P(o, 0, W, H)], f, s, 2);
+  poly(ctx, [P(o, 0, 0, H), P(o, L, 0, H), P(o, L, W, H), P(o, 0, W, H)], t, s, 2);
+}
+/* ellipse isométrique d'un cercle horizontal (plan XY) */
+function ellIso(ctx, o, cx, cy, z, r) {
+  const c = P(o, cx, cy, z); ctx.beginPath(); ctx.ellipse(c[0], c[1], r * o.k * 1.2247, r * o.k * 0.7071, 0, 0, Math.PI * 2);
+}
+/* flèche : le trait s'arrête à la base de la pointe, la pointe dépasse */
+function fleche(ctx, x1, y1, x2, y2, col, lw, tete) {
+  const a = Math.atan2(y2 - y1, x2 - x1), h = tete || 12, bx = x2 - Math.cos(a) * h, by = y2 - Math.sin(a) * h;
+  ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw || 3; ctx.lineCap = 'butt';
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(bx, by); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(bx + Math.sin(a) * h * 0.45, by - Math.cos(a) * h * 0.45); ctx.lineTo(bx - Math.sin(a) * h * 0.45, by + Math.cos(a) * h * 0.45); ctx.closePath(); ctx.fill();
+}
+/* cote : deux flèches de ligne de cote, pointes sur les lignes d'attache */
+function cote(ctx, a, b, txt, col) {
+  col = col || '#b91c1c';
+  const m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  fleche(ctx, m[0], m[1], a[0], a[1], col, 1.6, 9); fleche(ctx, m[0], m[1], b[0], b[1], col, 1.6, 9);
+  ctx.font = 'bold 15px Segoe UI, sans-serif'; const w = ctx.measureText(txt).width + 10;
+  ctx.fillStyle = '#fff'; ctx.fillRect(m[0] - w / 2, m[1] - 11, w, 22);
+  ctx.fillStyle = col; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, m[0], m[1]); ctx.textBaseline = 'alphabetic';
+}
+function attache(ctx, a, b, col) { ctx.strokeStyle = col || '#b91c1c'; ctx.lineWidth = 1; ctx.globalAlpha = .6; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.globalAlpha = 1; }
+function grillePlan(ctx, o, x0, y0, x1, y1, pas, col) {
+  ctx.strokeStyle = col || 'rgba(14,116,144,.18)'; ctx.lineWidth = 1;
+  for (let x = x0; x <= x1; x += pas) { const a = P(o, x, y0, 0), b = P(o, x, y1, 0); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+  for (let y = y0; y <= y1; y += pas) { const a = P(o, x0, y, 0), b = P(o, x1, y, 0); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+}
+function txt(ctx, s, x, y, col, t, al) { ctx.font = 'bold ' + (t || 15) + 'px Segoe UI, sans-serif'; ctx.fillStyle = col || ACC; ctx.textAlign = al || 'center'; ctx.fillText(s, x, y); }
+
+/* ====== ANIM 1 : DE L'ESQUISSE AU VOLUME ====== */
+const O1 = { x: 420, y: 90, k: 4.6 };
+function planDessus(ctx, alpha) {
+  poly(ctx, [P(O1, -12, -12, 0), P(O1, 72, -12, 0), P(O1, 72, 52, 0), P(O1, -12, 52, 0)], 'rgba(14,116,144,' + (0.07 * alpha) + ')', 'rgba(14,116,144,' + (0.6 * alpha) + ')', 1.5);
+  grillePlan(ctx, O1, -12, -12, 72, 52, 6);
+  const p = P(O1, -12, 52, 0); txt(ctx, 'plan de Dessus', p[0] - 10, p[1] + 26, TEAL, 15);
+}
+function contour(ctx, frac) {
+  const pts = [[0, 0], [60, 0], [60, 40], [0, 40], [0, 0]], seg = [60, 40, 60, 40], tot = 200;
+  let rest = frac * tot; ctx.strokeStyle = BLEU; ctx.lineWidth = 3.2; ctx.beginPath();
+  let p0 = P(O1, 0, 0, 0); ctx.moveTo(p0[0], p0[1]); let last = p0;
+  for (let i = 0; i < 4 && rest > 0; i++) {
+    const t = Math.min(1, rest / seg[i]), a = pts[i], b = pts[i + 1];
+    last = P(O1, a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, 0); ctx.lineTo(last[0], last[1]); rest -= seg[i];
+  }
+  ctx.stroke();
+  if (frac < 1) { ctx.fillStyle = '#ea580c'; ctx.beginPath(); ctx.arc(last[0], last[1], 6, 0, 7); ctx.fill(); }
+}
+function cotesEsq(ctx) {
+  const a = P(O1, 0, 52, 0), b = P(O1, 60, 52, 0); attache(ctx, P(O1, 0, 40, 0), a); attache(ctx, P(O1, 60, 40, 0), b); cote(ctx, a, b, '60');
+  const c = P(O1, 72, 0, 0), d = P(O1, 72, 40, 0); attache(ctx, P(O1, 60, 0, 0), c); attache(ctx, P(O1, 60, 40, 0), d); cote(ctx, c, d, '40');
+}
+creerAnim('esq', 'cvEsq', 'capEsq', 'ptsEsq', [
+  { dur: 1800, caption: 'On choisit un plan d’esquisse : ici le plan de Dessus.', draw(ctx, p) { planDessus(ctx, lisse(p)); } },
+  { dur: 2600, caption: 'On dessine un contour fermé : un rectangle.', draw(ctx, p) { planDessus(ctx, 1); contour(ctx, lisse(p)); } },
+  { dur: 2000, caption: 'On cote l’esquisse : 60 mm × 40 mm. Les cotes fixent la taille.', draw(ctx, p) { planDessus(ctx, 1); contour(ctx, 1); ctx.globalAlpha = Math.min(1, p * 2); cotesEsq(ctx); ctx.globalAlpha = 1; } },
+  { dur: 2800, caption: 'Le bossage tire l’esquisse en épaisseur : 10 mm. Le volume est né.', draw(ctx, p) {
+    const h = 10 * lisse(p); planDessus(ctx, 1); cotesEsq(ctx);
+    pave(ctx, O1, 60, 40, h);
+    const b = P(O1, 60, 0, 0);
+    if (h > 1) { fleche(ctx, b[0] + 40, b[1] + 10, b[0] + 40, b[1] - 10 * O1.k - 40, '#16a34a', 4, 14); txt(ctx, 'bossage', b[0] + 40, b[1] - 10 * O1.k - 50, '#16a34a', 15); }
+    if (p > .95) { const c = P(O1, 0, 40, 0), d = P(O1, 0, 40, 10); attache(ctx, c, [c[0] - 30, c[1]]); attache(ctx, d, [d[0] - 30, d[1]]); cote(ctx, [c[0] - 26, c[1]], [d[0] - 26, d[1]], '10'); }
+  } }
+]);
+
+/* ====== ANIM 2 : ENLÈVEMENT DE MATIÈRE ====== */
+const O2 = { x: 420, y: 95, k: 4.6 };
+function plaque(ctx, hi) { pave(ctx, O2, 60, 40, 10, hi ? { top: '#bfe3ee' } : null); }
+function trou(ctx, r, frac) {
+  // trou débouchant : on voit le fond ouvert à travers
+  ctx.save(); ellIso(ctx, O2, 30, 20, 10, r); ctx.fillStyle = '#5b3a12'; ctx.fill(); ctx.clip();
+  const c = P(O2, 30, 20, 10 - 10 * frac); ctx.beginPath(); ctx.ellipse(c[0], c[1], r * O2.k * 1.2247, r * O2.k * 0.7071, 0, 0, Math.PI * 2); ctx.fillStyle = '#f8fafc'; ctx.fill(); ctx.restore();
+  ellIso(ctx, O2, 30, 20, 10, r); ctx.strokeStyle = '#7c4a12'; ctx.lineWidth = 2; ctx.stroke();
+}
+creerAnim('enl', 'cvEnl', 'capEnl', 'ptsEnl', [
+  { dur: 1600, caption: 'On part de la plaque. On choisit la face du dessus comme plan.', draw(ctx, p) { plaque(ctx, p > .3); } },
+  { dur: 2200, caption: 'On y dessine un cercle de diamètre 10 mm, au centre.', draw(ctx, p) {
+    plaque(ctx, true); ctx.setLineDash([6, 5]); ellIso(ctx, O2, 30, 20, 10, 5 * lisse(p)); ctx.strokeStyle = BLEU; ctx.lineWidth = 3; ctx.stroke(); ctx.setLineDash([]);
+    if (p > .8) { const a = P(O2, 30, 20, 10), e = [a[0] + 5 * O2.k * 1.2247 * .7, a[1] - 5 * O2.k * .7071 * .7]; fleche(ctx, e[0] + 70, e[1] - 50, e[0], e[1], '#b91c1c', 1.8, 10); txt(ctx, 'Ø10', e[0] + 88, e[1] - 54, '#b91c1c', 16); }
+  } },
+  { dur: 2600, caption: 'Enlèvement de matière « à travers tout » : le trou traverse la plaque.', draw(ctx, p) {
+    plaque(ctx, false); trou(ctx, 5, lisse(p));
+    const a = P(O2, 30, 20, 10); fleche(ctx, a[0], a[1] - 90, a[0], a[1] - 24, '#dc2626', 4, 14); txt(ctx, 'enlèvement', a[0] + 70, a[1] - 70, '#dc2626', 15);
+  } },
+  { dur: 2400, caption: 'Bossage : on ajoute de la matière. Enlèvement : on en retire.', draw(ctx, p) {
+    plaque(ctx, false); trou(ctx, 5, 1);
+    fleche(ctx, 150, 300, 150, 220, '#16a34a', 5, 16); txt(ctx, '+ matière', 150, 330, '#16a34a', 17); txt(ctx, 'bossage', 150, 352, '#16a34a', 14);
+    fleche(ctx, 680, 220, 680, 300, '#dc2626', 5, 16); txt(ctx, '− matière', 680, 330, '#dc2626', 17); txt(ctx, 'enlèvement', 680, 352, '#dc2626', 14);
+  } }
+]);
+
+/* ====== ANIM 3 : LES TROIS PLANS ====== */
+const O3 = { x: 410, y: 210, k: 3.4 };
+function plans(ctx, hi) {
+  const S = 44, col = n => hi === n ? 'rgba(29,78,216,.30)' : 'rgba(100,116,139,.10)', st = n => hi === n ? '#1d4ed8' : 'rgba(100,116,139,.55)';
+  poly(ctx, [P(O3, 0, 0, 0), P(O3, S, 0, 0), P(O3, S, 0, S), P(O3, 0, 0, S)], col('face'), st('face'), hi === 'face' ? 3 : 1.5);
+  poly(ctx, [P(O3, 0, 0, 0), P(O3, 0, S, 0), P(O3, 0, S, S), P(O3, 0, 0, S)], col('droite'), st('droite'), hi === 'droite' ? 3 : 1.5);
+  poly(ctx, [P(O3, 0, 0, 0), P(O3, S, 0, 0), P(O3, S, S, 0), P(O3, 0, S, 0)], col('dessus'), st('dessus'), hi === 'dessus' ? 3 : 1.5);
+  const o = P(O3, 0, 0, 0);
+  [[[60, 0, 0], 'X', '#dc2626'], [[0, 60, 0], 'Y', '#16a34a'], [[0, 0, 60], 'Z', '#1d4ed8']].forEach(([v, l, c]) => { const e = P(O3, ...v); fleche(ctx, o[0], o[1], e[0], e[1], c, 2.5, 11); txt(ctx, l, e[0] + (l === 'Y' ? -14 : 14), e[1] + (l === 'Z' ? -6 : 6), c, 15); });
+  const lab = { dessus: [[22, 22, 0], 'Dessus'], face: [[22, 0, 30], 'Face'], droite: [[0, 22, 30], 'Droite'] };
+  Object.keys(lab).forEach(k => { const p = P(O3, ...lab[k][0]); txt(ctx, lab[k][1], p[0], p[1] + 5, hi === k ? '#1d4ed8' : '#64748b', hi === k ? 17 : 14); });
+}
+creerAnim('plans', 'cvPlans', 'capPlans', 'ptsPlans', [
+  { dur: 1800, caption: 'Trois plans de base se croisent à l’origine : Dessus, Face et Droite.', draw(ctx) { plans(ctx, null); } },
+  { dur: 1800, caption: 'Dessus : pour une plaque, une roue, une boîte vue d’en haut.', draw(ctx) { plans(ctx, 'dessus'); } },
+  { dur: 1800, caption: 'Face : pour un profil vu de devant, comme une équerre en L.', draw(ctx) { plans(ctx, 'face'); } },
+  { dur: 1800, caption: 'Droite : pour un profil vu de côté.', draw(ctx) { plans(ctx, 'droite'); } },
+  { dur: 2200, caption: 'On peut aussi dessiner directement sur une face plane de la pièce.', draw(ctx, p) {
+    const o = { x: 400, y: 120, k: 4.4 }; pave(ctx, o, 60, 40, 14, { top: p > .3 ? '#bfdbfe' : '#fde7c2' });
+    const c = P(o, 30, 20, 14); fleche(ctx, c[0] + 140, c[1] - 70, c[0] + 16, c[1] - 6, '#1d4ed8', 2.5, 12); txt(ctx, 'face choisie', c[0] + 175, c[1] - 78, '#1d4ed8', 16);
+  } }
+]);
+
+/* ====== ANIM 4 : MODIFIER UNE COTE ====== */
+const O4 = { x: 500, y: 110, k: 4.2 };
+function arbre(ctx, sel, valeur, edit) {
+  ctx.fillStyle = '#fff'; ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(30, 40, 230, 220, 12); ctx.fill(); ctx.stroke();
+  txt(ctx, 'ARBRE DE CONSTRUCTION', 145, 66, '#64748b', 12);
+  [['Bossage 1', 'rectangle 60 × 40 · 10 mm', '#1d4ed8'], ['Enlèvement 1', 'cercle Ø' + valeur + ' · à travers tout', '#c2410c']].forEach((f, i) => {
+    const y = 90 + i * 70; if (sel === i) { ctx.fillStyle = '#fff7ed'; ctx.beginPath(); ctx.roundRect(42, y - 4, 206, 58, 8); ctx.fill(); ctx.strokeStyle = '#ea580c'; ctx.stroke(); }
+    txt(ctx, f[0], 58, y + 20, f[2], 15, 'left'); txt(ctx, f[1], 58, y + 42, '#475569', 12.5, 'left');
+  });
+  if (edit) { ctx.fillStyle = '#fff'; ctx.strokeStyle = '#ea580c'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect(70, 222, 150, 30, 8); ctx.fill(); ctx.stroke(); txt(ctx, edit, 145, 243, '#b91c1c', 16); }
+}
+function piece4(ctx, r) {
+  pave(ctx, O4, 60, 40, 10);
+  ctx.save(); ellIso(ctx, O4, 30, 20, 10, r); ctx.fillStyle = '#5b3a12'; ctx.fill(); ctx.clip();
+  const c = P(O4, 30, 20, 0); ctx.beginPath(); ctx.ellipse(c[0], c[1], r * O4.k * 1.2247, r * O4.k * 0.7071, 0, 0, 7); ctx.fillStyle = '#f8fafc'; ctx.fill(); ctx.restore();
+  ellIso(ctx, O4, 30, 20, 10, r); ctx.strokeStyle = '#7c4a12'; ctx.lineWidth = 2; ctx.stroke();
+}
+const vol = d => (24000 - Math.PI * (d / 2) ** 2 * 10) / 1000;
+creerAnim('param', 'cvParam', 'capParam', 'ptsParam', [
+  { dur: 1800, caption: 'Le logiciel garde chaque fonction en mémoire : c’est l’arbre de construction.', draw(ctx) { arbre(ctx, -1, 5); piece4(ctx, 2.5); } },
+  { dur: 2400, caption: 'On sélectionne l’enlèvement et on change la cote : Ø5 devient Ø10.', draw(ctx, p) { const t = p < .5 ? 'Ø5' : 'Ø1' + (p > .75 ? '0' : ''); arbre(ctx, 1, 5, t); piece4(ctx, 2.5); } },
+  { dur: 2400, caption: 'La pièce se reconstruit toute seule, sans rien redessiner.', draw(ctx, p) { const d = 5 + 5 * lisse(p); arbre(ctx, 1, Math.round(d)); piece4(ctx, d / 2); } },
+  { dur: 2400, caption: 'Le volume se met à jour aussi : on vérifie avant de fabriquer.', draw(ctx) {
+    arbre(ctx, -1, 10); piece4(ctx, 5);
+    txt(ctx, 'Volume', 145, 300, '#64748b', 14);
+    txt(ctx, vol(5).toFixed(2).replace('.', ',') + ' cm³', 82, 330, '#64748b', 16);
+    fleche(ctx, 132, 324, 166, 324, '#16a34a', 3, 11);
+    txt(ctx, vol(10).toFixed(2).replace('.', ',') + ' cm³', 215, 330, '#16a34a', 17);
+  } }
+]);
+
+/* ====== MASSE : choix du matériau ====== */
+(function () {
+  const M = [['PLA', 1.24, '#60a5fa'], ['Bois (pin)', 0.5, '#d6a46b'], ['Aluminium', 2.7, '#94a3b8'], ['Acier', 7.85, '#475569']];
+  const z = document.getElementById('matBtns'), cv = document.getElementById('cvMasse'), c = cv.getContext('2d');
+  let cur = 0;
+  function dessiner() {
+    c.clearRect(0, 0, 820, 230);
+    const m = M[cur], masse = 24 * m[1];
+    txt(c, '24 cm³', 150, 120, '#1e3a5f', 30); txt(c, 'volume', 150, 148, '#64748b', 14);
+    txt(c, '×', 280, 122, '#64748b', 30);
+    txt(c, String(m[1]).replace('.', ',') + ' g/cm³', 420, 120, m[2] === '#94a3b8' ? '#475569' : m[2], 30); txt(c, 'masse volumique — ' + m[0], 420, 148, '#64748b', 14);
+    txt(c, '=', 560, 122, '#64748b', 30);
+    txt(c, masse.toFixed(1).replace('.', ',') + ' g', 690, 120, '#b45309', 34); txt(c, 'masse de la plaque', 690, 148, '#64748b', 14);
+    const w = Math.min(560, masse / (24 * 7.85) * 560);
+    c.fillStyle = '#e2e8f0'; c.fillRect(130, 185, 560, 16); c.fillStyle = m[2]; c.fillRect(130, 185, w, 16);
+  }
+  M.forEach((m, i) => { const b = document.createElement('button'); b.className = 'navbtn'; b.textContent = m[0]; b.addEventListener('click', () => { cur = i; [...z.children].forEach((x, k) => x.style.background = k === i ? 'var(--niv-fonce)' : ''); dessiner(); }); z.appendChild(b); });
+  z.children[0].style.background = 'var(--niv-fonce)'; dessiner();
+})();
+
+/* ====== TRACE ÉCRITE ====== */
+(function () {
+  const cv = document.getElementById('cvTrace'), c = cv.getContext('2d');
+  const B = [['PLAN', 'où dessiner'], ['ESQUISSE COTÉE', 'contour fermé en mm'], ['BOSSAGE / ENLÈVEMENT', '+ ou − matière'], ['VÉRIFIER', 'dimensions, masse']], A = TEAL, F = '#155e75';
+  c.fillStyle = '#fff'; c.fillRect(0, 0, 860, 200);
+  txt(c, 'CONSTRUIRE UNE PIÈCE EN CAO', 430, 28, F, 14.5);
+  const n = B.length, m = 24, e = 26, w = Math.floor((860 - 2 * m - (n - 1) * e) / n);
+  B.forEach((b, i) => {
+    const x = m + i * (w + e);
+    c.fillStyle = '#fff'; c.strokeStyle = A; c.lineWidth = 2.4; c.beginPath(); c.roundRect(x, 58, w, 68, 12); c.fill(); c.stroke();
+    txt(c, b[0], x + w / 2, 88, F, 13); txt(c, b[1], x + w / 2, 108, '#5b544a', 11.5);
+    if (i < n - 1) fleche(c, x + w + 3, 92, x + w + e - 2, 92, A, 3, 9);
+  });
+  txt(c, 'une maquette numérique se vérifie avant de fabriquer l’objet réel', 430, 168, '#5b544a', 13.5);
+})();
+
+/* ---------- Boutons + auto + menu + clavier ---------- */
+document.querySelectorAll('button[data-prev]').forEach(b => b.addEventListener('click', () => ANIMS[b.dataset.prev].precedent()));
+document.querySelectorAll('button[data-next]').forEach(b => b.addEventListener('click', () => ANIMS[b.dataset.next].suivant()));
+document.querySelectorAll('button[data-anim]').forEach(b => b.addEventListener('click', () => ANIMS[b.dataset.anim].rejouer()));
+const slideAnim = { s3: 'esq', s4: 'enl', s6: 'plans', s7: 'param' };
+const obsAnim = new IntersectionObserver(es => { es.forEach(en => { if (en.isIntersecting && slideAnim[en.target.id]) ANIMS[slideAnim[en.target.id]].demarrer(); }); }, { threshold: 0.55 });
+Object.keys(slideAnim).forEach(id => obsAnim.observe(document.getElementById(id)));
+const liens = [...document.querySelectorAll('#menu a')];
+const obsMenu = new IntersectionObserver(es => { es.forEach(en => { if (en.isIntersecting) liens.forEach(a => a.classList.toggle('actif', a.getAttribute('href') === '#' + en.target.id)); }); }, { threshold: 0.55 });
+document.querySelectorAll('section.slide').forEach(s => obsMenu.observe(s));
+const slides = [...document.querySelectorAll('section.slide')];
+function slideCourante() { const y = window.scrollY + window.innerHeight / 2; let best = 0; slides.forEach((s, i) => { if (s.offsetTop < y) best = i; }); return best; }
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); slides[Math.min(slides.length - 1, slideCourante() + 1)].scrollIntoView({ behavior: 'smooth' }); }
+  if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); slides[Math.max(0, slideCourante() - 1)].scrollIntoView({ behavior: 'smooth' }); }
+});
+
+</script>
+</body>
+</html>

@@ -14,6 +14,28 @@
 
 
 
+## Séquence 5e « La conception assistée par ordinateur » (18/11/2026)
+
+Nouvelle séquence 5e, placée après « Design & ergonomie » dans `index.html` et dans le suivi.
+- Hub `00_hub_cao_5e.html` ; cours `01_cours_cao.html` (4 animations en phases : esquisse →
+  bossage, enlèvement, trois plans, cote modifiée + choix du matériau pour la masse, trace écrite).
+- Logiciel maison CAO Studio (esquisse cotée, double-clic sur une cote, bossage, enlèvement,
+  arbre de construction, volume/masse, vérification de forme indépendante de l'orientation) :
+  `02b_logiciel_cao.html` (libre), `02_tp_cao.html` (6 missions vérifiées automatiquement,
+  scores dans `score-tp`), `04_evaluation_cao.html` (code `ESQUI58`, Firebase
+  `evaluations/cao_5e`, champs du corpus ; espace professeur : mot de passe des tableaux de bord).
+- Vidéo : « C'est pas sorcier — Voyage en 3D sur les traces du Petit Prince »
+  (https://www.youtube.com/watch?v=Dzc6kseH3xE). **Aucun épisode n'est consacré à la CAO
+  industrielle** : c'est le plus proche (esquisses, vues de face/dos/profil, modèle 3D, rendu).
+- `04_evaluation_cao_sorciers.html` : 12 QCM, code `SORCIER5`, `evaluations/cao_sorciers`,
+  bonnes réponses réparties 4/4/4. **À RELIRE — vidéo non visionnée** : questions écrites
+  d'après le résumé officiel de l'épisode.
+- Tableau de bord : 2 entrées ajoutées. `codes_evaluations.md` mis à jour.
+- Sources du logiciel (moteur commun, TP SI, simulation et assemblage) : hors dépôt, régénérées
+  par le script de build ; les 3 fichiers CAO sont des sorties autonomes (≈ 185 Ko chacun,
+  WebGL2 requis).
+- Pas encore d'exercices compétitifs (jeux 03_*) pour cette séquence.
+
 ## Corrigés détaillés CAPET (18/10/2026)
 
 286 corrigés enrichis : 14 TP (6 missions + 3 exercices sur copie) et 14 sujets types (toutes

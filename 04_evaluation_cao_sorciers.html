@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Évaluation des sorciers — La CAO et la 3D · ESTIC</title>
+<style>
+:root{--ink:#1e3a5f;--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;
+      --rouge:#dc2626;--gris:#64748b;--fond:#fdf9f0;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.6}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}
+.estic-bar b{color:var(--accf);font-size:14px}
+.estic-bar span{display:block;font-size:11px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.ev{max-width:880px;margin:0 auto;padding:26px 20px 4px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:33px;color:var(--accf);margin:6px 0 8px}
+.sous{color:#5b544a;font-size:16px;max-width:700px;margin:0 auto}
+.video{max-width:880px;margin:18px auto;background:#fff;border:1px solid var(--bord);
+ border-left:6px solid var(--or);border-radius:16px;padding:16px 20px}
+.video .lab{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--or);font-weight:800}
+.video a{display:inline-block;margin-top:8px;background:var(--or);color:#fff;text-decoration:none;
+ font-weight:800;padding:11px 20px;border-radius:10px;font-size:16px}
+.video p{font-size:15px;color:#5b544a;margin-top:9px}
+main{max-width:880px;margin:0 auto;padding:0 20px 40px}
+.q{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:18px 22px;margin:14px 0}
+.q h2{font-size:17.5px;color:var(--accf);margin-bottom:11px}
+.q h2 .n{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;
+ padding:1px 9px;font-size:15px;margin-right:8px}
+.rep button{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid var(--bord);
+ border-radius:10px;padding:10px 14px;margin:6px 0;font-size:15.5px;font-family:inherit;cursor:pointer;color:#3f3a34}
+.rep button:hover{border-color:var(--acc)}
+.rep button.sel{border-color:var(--acc);background:#ecfeff;font-weight:700}
+.rep button:disabled{cursor:default;opacity:.85}
+.rep button.bon{border-color:var(--vert);background:#f0fdf4}
+.rep button.faux{border-color:var(--rouge);background:#fef2f2}
+.ident{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:18px 22px;margin:14px 0}
+.ident label{display:block;font-size:13px;font-weight:800;color:var(--gris);margin:9px 0 3px}
+.ident input,.ident select{width:100%;padding:10px 12px;font-size:16px;font-family:inherit;
+ border:2px solid var(--bord);border-radius:10px}
+.gros{display:block;width:100%;background:var(--acc);color:#fff;border:none;border-radius:12px;
+ padding:15px;font-size:18px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:16px}
+.gros:disabled{background:#94a3b8;cursor:default}
+#bilan{display:none;background:#fff;border:2px solid var(--vert);border-radius:16px;padding:22px;margin-top:16px;text-align:center}
+#bilan .note{font-size:44px;font-weight:900;color:var(--vert)}
+.verr{color:var(--rouge);font-weight:700;font-size:14px;min-height:20px}
+footer{text-align:center;padding:20px;font-size:12px;color:var(--gris)}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="ev">
+ <div class="eyebrow">Séquence 5ème · La CAO</div>
+ <h1>Évaluation des sorciers — La CAO et la 3D</h1>
+ <p class="sous">Douze questions sur l’épisode. Une seule réponse par question, et
+ <b>une seule tentative</b> : lis bien avant de cliquer.</p>
+</header>
+
+<div class="video">
+ <div class="lab">À regarder avant de commencer</div>
+ <a href="https://www.youtube.com/watch?v=Dzc6kseH3xE" target="_blank" rel="noopener">Voir l’épisode « C’est pas sorcier » : Voyage en 3D sur les traces du Petit Prince</a>
+ <p>Prends des notes pendant la vidéo : les <b>étapes</b> pour passer du dessin papier au modèle <b>3D</b>, les <b>vues</b> utilisées et le rôle des <b>ordinateurs</b>.</p>
+</div>
+
+<main>
+ <div class="ident">
+  <label for="inNom">Nom</label><input id="inNom" autocomplete="off">
+  <label for="inPrenom">Prénom</label><input id="inPrenom" autocomplete="off">
+  <label for="inClasse">Classe</label><select id="inClasse">
+ <option value="">— Choisis ta classe —</option>
+ <option>5A</option><option>5B</option><option>5C</option><option>5D</option><option>5E</option><option>4A</option><option>4B</option><option>4C</option><option>4D</option><option>4E</option><option>3A</option><option>3B</option><option>3C</option><option>3D</option><option>3E</option><option>3PM</option>
+ </select>
+ </div>
+ <div id="questions"></div>
+ <button class="gros" id="envoyer">Terminer et envoyer</button>
+ <div id="bilan"></div>
+</main>
+
+<footer>Évaluation · Séquence La CAO · Technologie 5ème · ESTIC Don Bosco</footer>
+
+<script>
+/* ===== VERROU — code redemandé à chaque ouverture, aucune persistance ===== */
+(function(){
+ const CODE='SORCIER5';
+ const d=document.createElement('div');
+ d.id='verrouEval';
+ d.innerHTML='<div class="vbox"><img alt="Logo ESTIC" src="logo_estic.png">'+
+  '<h2>Évaluation verrouillée</h2><p>Entre le code donné par ton professeur.</p>'+
+  '<input id="vc" maxlength="10" autocomplete="off" placeholder="CODE">'+
+  '<div class="verr" id="ve"></div><button type="button" id="vb">Commencer</button></div>';
+ const s=document.createElement('style');
+ s.textContent='#verrouEval{position:fixed;inset:0;z-index:99999;background:#0f172a;display:flex;'+
+  'align-items:center;justify-content:center;padding:24px}'+
+  '#verrouEval .vbox{background:#fff;border-radius:18px;padding:30px;max-width:420px;width:100%;text-align:center}'+
+  '#verrouEval img{height:50px;margin-bottom:12px}'+
+  '#verrouEval h2{font-size:22px;color:#1e3a5f;margin-bottom:6px}'+
+  '#verrouEval p{font-size:15px;color:#5b6472;margin-bottom:16px}'+
+  '#verrouEval input{width:100%;padding:13px;font-size:22px;letter-spacing:4px;text-align:center;'+
+  'border:2px solid #cbd5e1;border-radius:12px;text-transform:uppercase;box-sizing:border-box}'+
+  '#verrouEval button{width:100%;padding:13px;margin-top:10px;font-size:17px;font-weight:800;'+
+  'border:none;border-radius:12px;background:#0e7490;color:#fff;cursor:pointer;font-family:inherit}';
+ document.head.appendChild(s); document.body.appendChild(d);
+ document.documentElement.style.overflow='hidden';
+ const ch=document.getElementById('vc');
+ try{ ch.focus(); }catch(e){}
+ function ouvrir(){
+  if(ch.value.trim().toUpperCase()===CODE){
+   document.documentElement.style.overflow='';
+   d.parentNode.removeChild(d);
+  } else { document.getElementById('ve').textContent='Code incorrect.'; ch.value=''; }
+ }
+ document.getElementById('vb').addEventListener('click',ouvrir);
+ ch.addEventListener('keydown',e=>{ if(e.key==='Enter') ouvrir(); });
+})();
+
+/* ===== QUESTIONS ===== */
+const Q=[
+ {q:"Par quoi commence la création des personnages de la série ?",
+  r:["par des esquisses dessinées sur papier","directement par l’impression 3D","par le calcul des images finales"],b:0,
+  ex:"Tout part d’esquisses sur papier. Comme en CAO, on pose d’abord ses idées en 2D avant de construire le volume."},
+ {q:"Avant d’être construits en 3D, les personnages sont dessinés…",
+  r:["uniquement de face","en couleur sur un écran tactile","de face, de dos et de profil"],b:2,
+  ex:"Plusieurs vues d’un même personnage donnent toutes ses dimensions. C’est le même principe que les vues d’un dessin technique."},
+ {q:"Pourquoi dessiner un personnage sous plusieurs angles ?",
+  r:["pour gagner du temps de calcul","pour reconstruire sa forme exacte en volume","pour choisir sa couleur"],b:1,
+  ex:"Une seule vue ne montre que deux dimensions. En croisant face, profil et dos, on retrouve la forme complète en 3D."},
+ {q:"Le modèle 3D d’un personnage est un objet…",
+  r:["en pâte à modeler","virtuel, qu’on peut tourner dans tous les sens sur l’écran","imprimé en plastique"],b:1,
+  ex:"Comme la maquette numérique en CAO, le modèle 3D n’existe que dans l’ordinateur : on l’observe sous tous les angles avant qu’il serve."},
+ {q:"Qu’appelle-t-on le « rendu » d’une image ?",
+  r:["le calcul de l’image finale par l’ordinateur","le premier croquis","le doublage des voix"],b:0,
+  ex:"Le rendu, c’est le calcul de chaque image finale : formes, lumières, matières. C’est l’étape qui demande le plus de puissance."},
+ {q:"Combien de temps de calcul demande le rendu d’un épisode ?",
+  r:["quelques secondes","une heure environ","plusieurs semaines"],b:2,
+  ex:"Chaque épisode nécessite plusieurs semaines de calcul. Les images sont si détaillées que l’ordinateur doit tout calculer, image par image."},
+ {q:"Pour calculer les images, l’équipe utilise…",
+  r:["un seul ordinateur portable","une batterie de nombreux ordinateurs qui travaillent ensemble","une imprimante 3D"],b:1,
+  ex:"Une « batterie » d’ordinateurs se partage le travail. Sans elle, le calcul durerait beaucoup trop longtemps."},
+ {q:"Le document de référence partagé par toute l’équipe s’appelle…",
+  r:["la bible littéraire et graphique","le cahier de textes","le mode d’emploi"],b:0,
+  ex:"La bible fixe l’histoire, l’apparence des personnages et des décors. Des centaines de personnes travaillent ainsi sur un modèle commun."},
+ {q:"Combien d’épisodes compte la série du Petit Prince en 3D ?",
+  r:["3","12","26"],b:2,
+  ex:"La série compte 26 épisodes : un projet d’une ampleur exceptionnelle."},
+ {q:"Combien de temps a duré la fabrication de la série ?",
+  r:["trois ans","trois semaines","trois mois"],b:0,
+  ex:"Trois ans de travail et des équipes en France et à l’étranger : un objet virtuel aussi détaillé demande beaucoup de temps."},
+ {q:"Les images de la série peuvent aussi être vues…",
+  r:["uniquement en noir et blanc","en relief","seulement sur papier"],b:1,
+  ex:"La série existe aussi en relief : deux images légèrement décalées donnent l’impression de profondeur."},
+ {q:"Quel point commun entre ce studio d’animation et un bureau d’études en CAO ?",
+  r:["ils fabriquent les objets à la main","ils n’utilisent jamais de dessin","ils construisent d’abord un modèle 3D virtuel"],b:2,
+  ex:"Dans les deux cas, on construit un modèle numérique en 3D avant le résultat final : l’image du film ou l’objet réel."}
+];
+
+const FIREBASE='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/evaluations/cao_sorciers';
+
+/* ===== ORDRE DE PRÉSENTATION ALÉATOIRE (voir _outils/melanger_qcm.py) =====
+   Permutation d'affichage seulement : rep[] reste indexé par numéro de question,
+   pour que le tableau de bord compare la même question entre deux élèves. */
+const ORDRE=(function(){
+ const t=Q.map((_,i)=>i);
+ for(let i=t.length-1;i>0;i--){            /* Fisher-Yates : non biaisé */
+  const j=Math.floor(Math.random()*(i+1));
+  const x=t[i]; t[i]=t[j]; t[j]=x;
+ }
+ return t;
+})();
+const rep=new Array(Q.length).fill(-1);
+const debut=Date.now();
+let envoye=false;
+
+(function(){
+ const z=document.getElementById('questions');
+ ORDRE.forEach((i,rang)=>{
+  const o=Q[i];
+  const d=document.createElement('div'); d.className='q';
+  d.dataset.qi=i;                /* index D'ORIGINE, pour la correction */
+  const h=document.createElement('h2');
+  h.innerHTML='<span class="n">'+(rang+1)+'</span>'+o.q;
+  d.appendChild(h);
+  const r=document.createElement('div'); r.className='rep';
+  o.r.forEach((txt,j)=>{
+   const b=document.createElement('button'); b.type='button'; b.textContent=txt;
+   b.addEventListener('click',()=>{
+    if(envoye) return;
+    rep[i]=j;
+    [...r.children].forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');
+   });
+   r.appendChild(b);
+  });
+  d.appendChild(r); z.appendChild(d);
+ });
+})();
+
+/* ===== COPIE_ABANDON v2 — gabarit QCM (voir _outils/copie_abandon.py) =====
+   Même principe que le gabarit ACTIVITES : copie gardée dans le navigateur,
+   écrite sous un identifiant fixe, VÉRIFIÉE et renvoyée si besoin à la
+   réouverture. Particularité : le nom se saisit en bas de page — sans nom ni
+   classe, aucune copie exploitable n'existe, mais le verrou s'applique. */
+const CLE_TENTATIVE='tentative_'+FIREBASE.split('/').pop();
+function lireTentative(){ try{ return JSON.parse(localStorage.getItem(CLE_TENTATIVE)); }catch(e){ return null; } }
+function ecrireTentative(o){ try{ localStorage.setItem(CLE_TENTATIVE,JSON.stringify(o)); }catch(e){} }
+function sauverPartiel(){
+ const t=lireTentative(); if(!t || t.fini) return;
+ const nom=((document.getElementById('inNom')||{}).value||'').trim();
+ const classe=((document.getElementById('inClasse')||{}).value||'').trim();
+ if(!nom || !classe){ t.copie=null; ecrireTentative(t); return; }
+ let score=0; Q.forEach(function(q,i){ if(rep[i]===q.b) score++; });
+ t.copie={ nom:nom, prenom:((document.getElementById('inPrenom')||{}).value||'').trim(),
+  classe:classe, score:score, sur:Q.length, note20:Math.round(score/Q.length*20*10)/10,
+  duree_s:Math.round((Date.now()-debut)/1000), date:new Date().toISOString(),
+  reponses:rep, statut:'abandon' };
+ ecrireTentative(t);
+}
+document.addEventListener('click',function(e){
+ if(!e.target.closest || !e.target.closest('.rep button')) return;
+ if(!lireTentative()) ecrireTentative({debut:new Date().toISOString(),fini:false,confirme:false,
+  id:'ab'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),copie:null});
+ setTimeout(sauverPartiel,0);
+});
+document.addEventListener('input',function(e){
+ if(/^in(Nom|Prenom|Classe)$/.test(e.target.id||'')) sauverPartiel();
+});
+window.addEventListener('pagehide',function(){
+ const t=lireTentative(); if(!t || t.fini || t.confirme || envoye) return;
+ sauverPartiel();
+ const t2=lireTentative(); if(!t2 || !t2.copie) return;
+ try{ fetch(FIREBASE+'/'+t2.id+'.json',{method:'PUT',keepalive:true,body:JSON.stringify(t2.copie)}); }catch(e){}
+});
+window.addEventListener('pageshow',function(e){
+ if(!e.persisted) return;
+ const t=lireTentative(); if(t && !t.fini) location.reload();
+});
+(function(){
+ const t=lireTentative(); if(!t) return;
+ const cible=document.getElementById('questions'); if(!cible) return;
+ const d=new Date(t.debut);
+ const bloc=document.createElement('div');
+ bloc.style.cssText='background:#fef2f2;border:2px solid #fca5a5;border-radius:12px;'+
+  'padding:14px 16px;margin:0 0 16px;color:#7f1d1d;font-size:15px;line-height:1.55';
+ bloc.innerHTML='<b>Évaluation déjà commencée</b> sur ce poste le '+
+  d.toLocaleDateString('fr-FR')+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'.'+
+  '<div id="etatCopie" style="margin:8px 0;font-weight:700">'+
+  (t.fini?'La copie a été rendue.':'Vérification de la transmission de la copie…')+'</div>'+
+  'Pour la repasser, appelle ton professeur.'+
+  '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">'+
+  '<input id="mdpReprise" type="password" placeholder="mot de passe professeur" '+
+  'style="padding:8px 10px;border:2px solid #fca5a5;border-radius:8px;font:inherit">'+
+  '<button id="btnReprise" type="button" class="gros">Autoriser une nouvelle tentative</button></div>';
+ cible.parentNode.insertBefore(bloc,cible);
+ cible.style.display='none';
+ const env=document.getElementById('envoyer'); if(env) env.style.display='none';
+ document.getElementById('btnReprise').addEventListener('click',function(){
+  if(document.getElementById('mdpReprise').value!=='Agostini2025'){
+   document.getElementById('mdpReprise').style.borderColor='#dc2626'; return; }
+  try{ localStorage.removeItem(CLE_TENTATIVE); }catch(e){}
+  bloc.remove(); cible.style.display=''; if(env) env.style.display='';
+ });
+ if(t.fini) return;
+ const etat=document.getElementById('etatCopie');
+ function dire(ok,txt){ etat.style.color= ok?'#15803d':'#b91c1c'; etat.textContent=txt; }
+ if(t.confirme){ dire(true,'✓ La copie a bien été reçue par le professeur.'); return; }
+ if(!t.copie){ dire(false,'✗ Aucune copie envoyée : le nom et la classe n’avaient pas été remplis.'); return; }
+ /* Vérification. Deux précautions, suite au test de Mat en RECHARGEMENT :
+    - on laisse d'abord 1,5 s à l'envoi de sortie de la page précédente, qui peut
+      être encore en vol quand cette page démarre ;
+    - un refus à l'écriture ne prouve PAS l'échec : la règle interdit d'écraser une
+      copie existante, donc un refus peut signifier « elle vient d'arriver ». On
+      RELIT avant de conclure. Sans cela, une copie bien reçue était annoncée refusée. */
+ function lire(){
+  return fetch(FIREBASE+'/'+t.id+'.json').then(function(r){ return r.json(); })
+   .then(function(j){ return !!(j && typeof j==='object' && j.nom!==undefined); });
+ }
+ function confirmer(txt){ t.confirme=true; ecrireTentative(t); dire(true,txt); }
+ setTimeout(function(){
+  lire().then(function(existe){
+   if(existe){ confirmer('✓ La copie a bien été reçue par le professeur.'); return; }
+   return fetch(FIREBASE+'/'+t.id+'.json',{method:'PUT',body:JSON.stringify(t.copie)}).then(function(r){
+    if(r.ok){ confirmer('✓ La copie vient d’être transmise au professeur.'); return; }
+    return lire().then(function(existe2){
+     if(existe2){ confirmer('✓ La copie a bien été reçue par le professeur.'); return; }
+     return r.json().catch(function(){ return {}; }).then(function(e){
+      dire(false,'✗ Copie NON transmise : la base l’a refusée ('+(e.error||('HTTP '+r.status))+'). '+
+       'Préviens ton professeur : les règles Firebase sont à mettre à jour.');
+     });
+    });
+   });
+  }).catch(function(){
+   dire(false,'✗ Copie non transmise (pas de connexion). Elle sera renvoyée à la prochaine ouverture.');
+  });
+ },1500);
+})();
+
+/* ===== BONUS_KAHOOT_V2 — copies individuelles ET de groupe (voir _outils/bonus_kahoot_groupes.py) ===== */
+function normB(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+ .toLowerCase().replace(/[^a-z0-9]/g,''); }
+function motsB(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
+ .split(/[\s,;\/+&]+/).map(function(x){ return x.replace(/[^a-z0-9]/g,''); })
+ .filter(function(x){ return x && x!=='et'; }); }
+function ensembleB(m){ const s=new Set(m);
+ for(let i=0;i<m.length;i++){ if(i+1<m.length) s.add(m[i]+m[i+1]); if(i+2<m.length) s.add(m[i]+m[i+1]+m[i+2]); }
+ return s; }
+const URL_BONUS=FIREBASE.split('/evaluations/')[0]+'/bonus';
+async function lireBonus(classe,nom,prenom){
+ const vide={total:0,groupe:false,eleves:[],entrees:[],detail:''};
+ try{
+  const r=await fetch(URL_BONUS+'.json');
+  if(!r.ok){ vide.erreur='refus HTTP '+r.status; return vide; }
+  const j=await r.json();
+  if(j && j.error){ vide.erreur=String(j.error).slice(0,60); return vide; }
+  if(!j || typeof j!=='object') return vide;
+  const cl=normB(classe), eN=normB(nom), eP=normB(prenom);
+  const mN=motsB(nom), mP=motsB(prenom);
+  const paires = (mN.length>1 && mN.length===mP.length) ? new Set(mN.map(function(x,i){ return x+'_'+mP[i]; })) : null;
+  /* champs INVERSÉS : prénoms écrits dans « Nom », noms dans « Prénom » — fréquent */
+  const pairesInv = paires ? new Set(mP.map(function(x,i){ return x+'_'+mN[i]; })) : null;
+  const EN=ensembleB(mN), EP=ensembleB(mP);
+  const parEleve={}, entrees=[];
+  Object.keys(j).forEach(function(k){
+   const e=j[k]; if(!e || typeof e!=='object') return;
+   Object.keys(e).forEach(function(id){
+    const b=e[id];
+    if(!b || b.consomme || typeof b.points!=='number' || b.points<=0) return;
+    if(normB(b.classe)!==cl) return;
+    const bn=normB(b.nom), bp=normB(b.prenom);
+    const exact = (bn===eN && bp===eP) || (bn===eP && bp===eN);
+    /* PRÉSENCE du nom parmi les noms ET du prénom parmi les prénoms, dans les deux sens.
+       L'appariement par position (v2) ratait « Person Phillipe FOFO / Michel Hugo
+       François » : Hugo n'était pas en face de Person. Retiré sur retour de Mat. */
+    const ok = exact || (EN.has(bn) && (!bp || EP.has(bp))) || (EP.has(bn) && (!bp || EN.has(bp)));
+    if(!ok) return;
+    entrees.push({cle:k,id:id});
+    const ke=bn+'_'+bp;
+    if(!parEleve[ke]) parEleve[ke]={nom:b.nom,prenom:b.prenom||'',points:0,exact:exact};
+    parEleve[ke].points+=b.points;
+   });
+  });
+  const eleves=Object.keys(parEleve).map(function(k){ const x=parEleve[k]; x.points=Math.round(x.points*100)/100; return x; });
+  /* une correspondance EXACTE désigne forcément une copie individuelle, même avec
+     un nom composé (« Le Gall » / « Anne Marie ») qui ressemble à deux élèves */
+  const groupe = eleves.length>1 || (eleves.length===1 && !eleves[0].exact);
+  return {total: groupe? 0 : (eleves[0]? eleves[0].points : 0), groupe:groupe, eleves:eleves, entrees:entrees, detail:''};
+ }catch(e){ vide.erreur='connexion impossible'; return vide; }
+}
+function detailGroupeB(bn,noteBrute){
+ const f=function(x){ return String(x).replace('.',','); };
+ return bn.eleves.map(function(e){
+  return (e.prenom+' '+e.nom).trim()+' +'+f(e.points)+' = '+f(Math.min(20,Math.round((noteBrute+e.points)*100)/100));
+ }).join(' ; ').slice(0,300);
+}
+async function consommerBonus(entrees,evaluation){
+ for(const x of entrees){
+  try{
+   await fetch(URL_BONUS+'/'+x.cle+'/'+x.id+'.json',{method:'PATCH',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({consomme:true,evaluation:evaluation,date_conso:new Date().toISOString()})});
+  }catch(e){}
+ }
+}
+document.getElementById('envoyer').addEventListener('click',async()=>{
+ if(envoye) return;
+ const nom=document.getElementById('inNom').value.trim();
+ const prenom=document.getElementById('inPrenom').value.trim();
+ const classe=document.getElementById('inClasse').value.trim();
+ if(!nom || !classe){ alert('Indique au moins ton nom et ta classe.'); return; }
+ const sansRep=rep.filter(v=>v<0).length;
+ if(sansRep>0 && !window.confirm) { }
+ envoye=true;
+ document.getElementById('envoyer').disabled=true;
+ { const t=lireTentative()||{debut:new Date().toISOString()}; t.fini=true; ecrireTentative(t); }
+
+ let score=0;
+ document.querySelectorAll('.q').forEach((d)=>{
+  const i=+d.dataset.qi;   /* pas la position affichée */
+  const bts=[...d.querySelectorAll('.rep button')];
+  bts.forEach((b,j)=>{
+   b.disabled=true;
+   if(j===Q[i].b) b.classList.add('bon');
+   else if(rep[i]===j) b.classList.add('faux');
+  });
+  if(rep[i]===Q[i].b) score++;
+  const e=document.createElement('div');
+  e.style.cssText='margin-top:10px;font-size:14.5px;color:#5b544a;border-left:4px solid #0e7490;padding-left:12px';
+  e.textContent=Q[i].ex;
+  d.appendChild(e);
+ });
+
+ const note=Math.round(score/Q.length*20*10)/10;
+ const duree=Math.round((Date.now()-debut)/1000);
+ /* BONUS_KAHOOT — points non consommés ajoutés, plafonnés à 20 */
+ const bn=await lireBonus(classe,nom,prenom);
+ /* 20/20 AVANT bonus : les points ne rapporteraient rien — ils sont CONSERVÉS pour une
+    prochaine évaluation, ni ajoutés ni consommés (demande de Mat : sinon c'est injuste) */
+ if(note>=20 && bn.eleves.length){ bn.total=0; bn.groupe=false; bn.eleves=[]; bn.entrees=[]; bn.conserve=true; bn.detail='points conservés, note déjà à 20/20'; }
+ const noteFinale=Math.min(20,Math.round((note+bn.total)*100)/100);
+ if(bn.groupe) bn.detail=detailGroupeB(bn,note);
+ if(bn.erreur) bn.detail='lecture des points impossible ('+bn.erreur+')';
+ const b=document.getElementById('bilan');
+ b.style.display='block';
+ b.innerHTML='<div class="note">'+String(noteFinale).replace('.',',')+' / 20</div>'+
+  (bn.total>0? '<div style="font-weight:700;color:#7c3aed">dont '+String(bn.total).replace('.',',')+' point(s) Kahoot ajouté(s) à ta note de '+String(note).replace('.',',')+'</div>':'')+
+  (bn.groupe? '<div style="font-weight:700;color:#7c3aed">Points Kahoot, pour chacun : '+bn.detail+'</div>':'')+
+  (bn.conserve? '<div style="font-weight:700;color:#7c3aed">Points Kahoot conservés pour une prochaine évaluation : tu as déjà 20/20.</div>'
+   : bn.erreur? '<div style="font-weight:700;color:#c2410c">Points Kahoot : lecture des points impossible ('+bn.erreur+'). Préviens ton professeur.</div>'
+   : (!bn.eleves.length? '<div style="font-size:13px;color:#94a3b8">Points Kahoot : aucun point en attente pour ce nom.</div>':''))+
+  '<div style="font-size:16px;color:#5b544a">'+score+' bonnes réponses sur '+Q.length+'</div>'+
+  '<div id="etatEnvoi" style="margin-top:10px;font-size:14px;color:#64748b">Envoi en cours…</div>';
+ b.scrollIntoView({behavior:'smooth'});
+
+ try{
+  await fetch(FIREBASE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({nom:nom,prenom:prenom,classe:classe,score:score,sur:Q.length,
+    note20:noteFinale,note20_brute:note,bonus:bn.total,bonus_eleves:(bn.detail||'aucun'),duree_s:duree,date:new Date().toISOString(),reponses:rep,statut:'terminee'})});
+  document.getElementById('etatEnvoi').textContent='Résultat envoyé au professeur.';
+  if(bn.entrees.length) await consommerBonus(bn.entrees,FIREBASE.split('/').pop());
+ }catch(e){
+  document.getElementById('etatEnvoi').textContent=
+   'Envoi impossible (réseau). Montre ton écran au professeur.';
+ }
+});
+</script>
+</body>
+</html>
