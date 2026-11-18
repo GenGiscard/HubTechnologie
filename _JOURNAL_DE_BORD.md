@@ -27,6 +27,8 @@ Nouvelle séquence 5e, placée après « Design & ergonomie » dans `index.html`
 - Vidéo : « C'est pas sorcier — Voyage en 3D sur les traces du Petit Prince »
   (https://www.youtube.com/watch?v=Dzc6kseH3xE). **Aucun épisode n'est consacré à la CAO
   industrielle** : c'est le plus proche (esquisses, vues de face/dos/profil, modèle 3D, rendu).
+- Vidéo 2 ajoutée à la demande de Mat (hub + portail) : https://www.youtube.com/watch?v=4ED5Yoma1Cc&t=104s
+  (page non lisible au moment de l'ajout : titre non vérifié).
 - `04_evaluation_cao_sorciers.html` : 12 QCM, code `SORCIER5`, `evaluations/cao_sorciers`,
   bonnes réponses réparties 4/4/4. **À RELIRE — vidéo non visionnée** : questions écrites
   d'après le résumé officiel de l'épisode.
