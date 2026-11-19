@@ -209,6 +209,12 @@ const EVALS=[
   "niv": "4e"
  },
  {
+  "f": "https://gengiscard.github.io/Binaire/",
+  "fb": "binaire_4e",
+  "titre": "Le binaire et les codes",
+  "niv": "4e"
+ },
+ {
   "f": "04_evaluation_ascenseur.html",
   "fb": "ascenseur_4e",
   "titre": "L'ascenseur",
@@ -415,7 +421,7 @@ document.getElementById('csv').addEventListener('click',()=>{
  const URL_BONUS=BASE.replace(/evaluations\/?$/,'bonus');
  const CLASSES=['5A','5B','5C','5D','5E','4A','4B','4C','4D','4E','3A','3B','3C','3D','3E','3PM'];
  function cle(classe,nom,prenom){
-  const n=function(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+  const n=function(s){ return String(s||'').replace(/[œŒ]/g,'oe').replace(/[æÆ]/g,'ae').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
    .toLowerCase().replace(/[^a-z0-9]/g,''); };
   return n(classe)+'_'+n(nom)+'_'+n(prenom);
  }
