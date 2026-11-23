@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Conseils de classe - École Directe
-// @namespace    https://gengiscard.github.io/
+// @namespace    estic-conseils-de-classe
 // @version      1.0
 // @description  Remplit les appréciations depuis l'appli Conseils de classe et envoie les notes d'École Directe vers l'appli, via la synchronisation chiffrée.
 // @author       M. Agostini - ESTIC Don Bosco
