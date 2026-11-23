@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hub techno → cahier de textes École Directe
 // @namespace    estic-agostini
-// @version      1.7
+// @version      1.8
 // @description  Dans les hubs de séquence, un bouton par ressource remplit le contenu de la séance en cours dans le cahier de textes École Directe, avec le lien de la ressource.
 // @updateURL    https://gengiscard.github.io/HubTechnologie/cahier_de_textes_ecoledirecte.user.js
 // @downloadURL  https://gengiscard.github.io/HubTechnologie/cahier_de_textes_ecoledirecte.user.js
@@ -69,8 +69,11 @@
      ===================================================================== */
   if (location.hostname === 'gengiscard.github.io') {
     const cartes = document.querySelectorAll('a.card[href]');
-    // page d’accueil du portail : les blocs de séquences (.ressources), sans cartes
-    const accueil = !!document.querySelector('.ressources') || /\/(index\.html)?$/.test(location.pathname);
+    // Uniquement les hubs (cartes) et la page d’accueil du portail (blocs .ressources).
+    // Plus de détection par l’adresse : toute page finissant par « / » sur le site (autres dépôts,
+    // pages d’erreur, fichiers .user.js) affichait le bouton Exposé.
+    if (/\.user\.js$/i.test(location.pathname)) return;
+    const accueil = !!document.querySelector('.ressources');
     if (!cartes.length && !accueil) return;
     const sequence = (document.querySelector('header h1') || {}).textContent || document.title;
     const css = document.createElement('style');
@@ -102,7 +105,16 @@
       b.style.cssText = 'position:static;padding:6px 11px;font-size:12.5px;box-shadow:0 4px 12px rgba(0,0,0,.12);opacity:.9';
       b.textContent = m.bouton;
       b.title = 'Cahier de textes : ajouter « ' + m.bouton + ' » à la séance en cours';
+      // Deux clics : le premier demande confirmation (évite un ajout par erreur dans le cahier de textes).
+      let arme = null;
       b.addEventListener('click', () => {
+        if (!arme) {
+          b.textContent = 'Confirmer : ' + m.bouton + ' ?';
+          b.style.background = '#0e7490'; b.style.color = '#fff';
+          arme = setTimeout(() => { arme = null; b.textContent = m.bouton; b.style.background = '#fff'; b.style.color = '#0e7490'; }, 4000);
+          return;
+        }
+        clearTimeout(arme); arme = null; b.textContent = m.bouton; b.style.background = '#fff'; b.style.color = '#0e7490';
         GM_setValue(CLE, JSON.stringify({ titre: m.bouton, html: m.html, repere: m.repere, t: Date.now() }));
         GM_openInTab('https://www.ecoledirecte.com/CahierDeTexte', { active: true, insert: true });
         bandeau('Envoyé vers École Directe : <b>' + echap(m.bouton) + '</b>', '#0e7490', 3500);
