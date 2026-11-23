@@ -1,0 +1,2512 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP CAO 4e-4 — Concevoir selon un cahier des charges · ESTIC</title>
+<style>
+:root{--bg:#e9eef5;--pan:#fff;--ink:#1c2633;--mut:#5d6b7e;--line:#d5dde8;--acc:#1f4e8c;--acc2:#e07a10;--ok:#1a8a3a;--ko:#c0352b;--soft:#f3f6fa}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:'Segoe UI',system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:14px}
+button{font-family:inherit}
+.hidden{display:none!important}
+.muted{color:var(--mut);font-size:13px}
+/* bandeau */
+.estic-bar{height:46px;display:flex;align-items:center;gap:16px;padding:0 14px;background:#fff;border-bottom:3px solid var(--acc)}
+.eb-left{display:flex;align-items:center;gap:10px;min-width:220px}
+.eb-left b{display:block;font-size:13px}.eb-left span{font-size:11.5px;color:var(--mut)}
+.eb-logo{background:var(--acc);color:#fff;font-weight:700;font-size:12px;letter-spacing:.08em;padding:6px 8px;border-radius:5px}
+.eb-title{flex:1;text-align:center;font-weight:700;font-size:16px;color:var(--acc)}
+.eb-right{display:flex;align-items:center;gap:12px;min-width:220px;justify-content:flex-end}
+.eb-copy{font-size:11px;color:var(--mut)}
+/* mise en page */
+#app{display:flex;height:calc(100vh - 46px)}
+.panel{background:var(--pan);overflow:auto}
+#mission{width:370px;flex:none;border-right:1px solid var(--line);display:none}
+.mode-tp #mission,.mode-eval #mission{display:block}
+#side{width:230px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column}
+.side-h{font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);padding:12px 12px 6px}
+#treeList{flex:1;overflow:auto;padding:0 8px 8px}
+.tree-empty{color:var(--mut);font-size:13px;padding:10px;line-height:1.5}
+.feat{display:flex;gap:8px;align-items:center;padding:7px 8px;border-radius:8px;cursor:pointer;border:1px solid transparent;margin-bottom:3px}
+.feat:hover{background:var(--soft)}.feat.on{background:#eaf1fb;border-color:#b9cde8}
+.feat.hid{opacity:.45}
+.fic svg{width:26px;height:26px;display:block}
+.ftx b{display:block;font-size:13px}.ftx span{font-size:11.5px;color:var(--mut)}
+.feat-acts{display:flex;flex-wrap:wrap;gap:4px;padding:2px 6px 10px 42px}
+#props{border-top:1px solid var(--line);padding-bottom:10px}
+#propVals{padding:4px 12px;transition:opacity .2s}#propVals.busy{opacity:.4}
+.pv{display:flex;justify-content:space-between;padding:4px 0;font-size:13px;border-bottom:1px dashed var(--line)}
+.pv b{font-family:Consolas,'Courier New',monospace;font-weight:600;font-size:12px;white-space:nowrap}
+.fld{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:13px}
+.fld span{flex:1;color:var(--mut)}
+.fld input,.fld select{width:84px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;font:inherit;font-family:Consolas,'Courier New',monospace;background:#fff}
+.fld select{width:150px;font-family:inherit}
+.fld em{font-style:normal;color:var(--mut);width:22px;font-size:12px}
+.fld.mat{padding:0 12px}
+.fld-l{margin:8px 0;font-size:13px}.fld-l>span{display:block;color:var(--mut);margin-bottom:4px}
+.dis{opacity:.35;pointer-events:none}
+/* boutons */
+.btn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:6px 9px;border-radius:7px;cursor:pointer;font-size:12.5px;font-weight:500;white-space:nowrap}
+.btn svg{width:16px;height:16px}
+.btn:hover{border-color:#9fb3cf;background:#f7f9fc}
+.btn.on{background:#eaf1fb;border-color:var(--acc);color:var(--acc)}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}.btn.primary:hover{background:#173d70}
+.btn.danger{color:var(--ko);border-color:#efc4c0}.btn.danger:hover{background:#fdf1f0}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.sm{padding:4px 8px;font-size:12px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.seg{display:inline-flex}.seg .btn{border-radius:0;margin-left:-1px}.seg .btn:first-child{border-radius:7px 0 0 7px;margin-left:0}.seg .btn:last-child{border-radius:0 7px 7px 0}
+.seg.wide{display:flex}.seg.wide .btn{flex:1;justify-content:center}
+.row2{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+/* zone de travail */
+#work{flex:1;display:flex;flex-direction:column;min-width:0}
+.toolbar{display:flex;align-items:center;gap:6px;padding:7px 10px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.toolbar .sep{width:1px;height:24px;background:var(--line);margin:0 4px}
+.toolbar .grow{flex:1}
+.toolbar .lbl{font-size:12px;color:var(--mut);margin-left:6px}
+#stage{flex:1;position:relative;min-height:0}
+#view3d,#sketchView{position:absolute;inset:0}
+#view3d canvas{position:absolute;left:0;top:0}
+#ov{cursor:grab}#ov:active{cursor:grabbing}
+.nogl{padding:40px;color:var(--ko);font-weight:600}
+#banner{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#fff7e8;border:1px solid #f0c27a;padding:8px 14px;border-radius:8px;font-size:14px;display:flex;gap:10px;align-items:center;box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.floating{position:absolute;top:14px;right:14px;width:310px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:0 10px 30px rgba(20,40,70,.16)}
+#planeDlg{width:360px;left:50%;right:auto;transform:translateX(-50%)}
+.fl-title{font-weight:700;font-size:15px;margin-bottom:10px}
+.planes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.plane-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer}
+.plane-btn:hover{border-color:var(--acc);background:#f4f8fd}
+.plane-btn svg{width:60px;height:44px}.plane-btn b{font-size:13px}.plane-btn span{font-size:11px;color:var(--mut)}
+.chk{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:13px;cursor:pointer}
+/* esquisse */
+#sketchView{display:flex;flex-direction:column}
+.toolbar.sk{background:#fffaf3;border-bottom-color:#f0d8b6}
+.skplane{color:var(--acc2);margin-right:8px;font-size:13.5px}
+.skbody{flex:1;display:flex;min-height:0}
+#skwrap{flex:1;position:relative;min-width:0}
+#skc{position:absolute;left:0;top:0;touch-action:none}
+#skwarn{position:absolute;top:10px;left:10px;background:#fdecea;border:1px solid #f0b4ae;color:var(--ko);padding:7px 11px;border-radius:7px;font-size:13px}
+#skprops{width:250px;flex:none;border-left:1px solid var(--line);padding:6px 12px 14px}
+.pp-title{font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);margin:12px 0 6px}
+.entlist{display:flex;flex-wrap:wrap;gap:4px}
+.entbtn{border:1px solid var(--line);background:#fff;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer}
+.entbtn.on{border-color:var(--acc2);color:var(--acc2);background:#fff6ec}
+.ptrow{display:flex;align-items:center;gap:4px}.ptrow b{font-size:12px;width:24px;color:var(--mut)}
+.ptrow .fld{margin:3px 0}.ptrow .fld input{width:62px}.ptrow .fld em{display:none}.ptrow .fld span{flex:none}
+/* modal, toast */
+#modal{position:fixed;inset:0;background:rgba(18,30,48,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+#modalBox{background:#fff;border-radius:14px;padding:22px;max-width:620px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+#modalBox h3{margin:0 0 10px;color:var(--acc)}
+#toasts{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:6px;z-index:60;align-items:center}
+.toast{background:#1c2633;color:#fff;padding:9px 16px;border-radius:8px;font-size:13.5px;transition:opacity .4s}
+.toast.warn{background:#a8431c}.toast.ok{background:var(--ok)}.toast.out{opacity:0}
+.help-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin:10px 0}
+.help-grid div{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:4px 0;font-size:13px}
+.help-grid span{color:var(--mut)}
+.help-steps{padding-left:20px;line-height:1.7;font-size:13.5px}
+body.locked [data-act="new-sketch"],body.locked [data-act="new-file"],body.locked [data-act="open-file"]{opacity:.35;pointer-events:none}
+/* ===== missions ===== */
+.m-head{padding:12px 14px 10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:2}
+.m-team{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--mut)}
+.m-team b{color:var(--ink)}
+.prog{height:8px;background:#e5ebf3;border-radius:5px;overflow:hidden;margin:8px 0 6px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,#2f6db8,#1a8a3a);transition:width .5s}
+.m-tabs{display:flex;gap:5px;flex-wrap:wrap}
+.m-tab{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer;color:var(--mut);position:relative;font-size:13px}
+.m-tab.cur{border-color:var(--acc);color:var(--acc);background:#eaf1fb}
+.m-tab.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.m-tab.part{background:#fff3df;border-color:#f0c27a;color:#a8641c}
+.m-tab.q{width:auto;padding:0 10px}
+.m-body{padding:12px 14px 30px}
+.m-kicker{font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--acc2)}
+.m-title{font-size:19px;font-weight:700;margin:2px 0 6px}
+.m-pitch{font-size:13.5px;color:#3a4758;margin:0 0 10px;line-height:1.45}
+.tgt{position:relative;height:250px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#f4f7fb}
+.tgt canvas{position:absolute;left:0;top:0}
+.tgt-bar{display:flex;gap:4px;margin:6px 0 10px;align-items:center}
+.tgt-bar span{font-size:11.5px;color:var(--mut);margin-left:auto}
+.method{border:1px solid var(--line);border-radius:10px;margin:8px 0}
+.method summary{padding:8px 12px;cursor:pointer;font-weight:600;font-size:13px;color:var(--acc)}
+.method ol{margin:0;padding:2px 14px 10px 32px;font-size:13px;line-height:1.65}
+.verify{margin-top:10px}
+.res{margin-top:10px;border-radius:10px;padding:10px 12px;font-size:13px;border:1px solid var(--line);background:var(--soft)}
+.res.ok{background:#e9f6ed;border-color:#a8d8b6}.res.ko{background:#fdf1f0;border-color:#efc4c0}
+.res .ln{display:flex;gap:8px;align-items:flex-start;padding:2px 0}
+.res .ln i{font-style:normal;font-weight:700;width:16px}
+.res .ln.g i{color:var(--ok)}.res .ln.b i{color:var(--ko)}
+.qbox{margin-top:14px;border:1px solid #d9c9f0;background:#faf7ff;border-radius:10px;padding:10px 12px}
+.qbox .qt{font-weight:600;font-size:13.5px;margin-bottom:8px}
+.qbox .qrow{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.qbox input{width:110px;padding:7px 9px;border:1px solid var(--line);border-radius:6px;font:inherit;font-family:Consolas,'Courier New',monospace}
+.qbox .unit{color:var(--mut);font-size:13px}
+.qopts{display:flex;flex-direction:column;gap:5px}
+.qopt{text-align:left;border:1px solid var(--line);background:#fff;border-radius:7px;padding:7px 10px;cursor:pointer;font-size:13px}
+.qopt:hover{border-color:#a993d6}.qopt.on{border-color:#6c48b8;background:#efe8fb;color:#4a2b8c;font-weight:600}
+.qopt.good{border-color:var(--ok);background:#e9f6ed}.qopt.bad{border-color:var(--ko);background:#fdf1f0}
+.qfb{font-size:12.5px;margin-top:6px}.qfb.g{color:var(--ok)}.qfb.b{color:var(--ko)}
+.order{display:flex;flex-direction:column;gap:4px}
+.order .it{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 8px;font-size:13px}
+.order .it b{color:var(--mut);width:16px}.order .it span{flex:1}
+.order .it button{border:1px solid var(--line);background:#fff;border-radius:5px;width:26px;height:24px;cursor:pointer}
+.pts{float:right;font-size:12px;font-weight:700;color:var(--mut);background:var(--soft);border-radius:20px;padding:2px 9px}
+.start-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.start-grid label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mut)}
+.start-grid input,.start-grid select{padding:9px;border:1px solid var(--line);border-radius:7px;font:inherit;color:var(--ink)}
+.comp{font-size:12.5px;background:var(--soft);border-radius:9px;padding:9px 12px;margin:8px 0;line-height:1.55}
+.comp b{color:var(--acc)}
+.scoreBig{font-size:42px;font-weight:700;color:var(--acc);text-align:center;margin:6px 0}
+table.res-t{width:100%;border-collapse:collapse;font-size:12.5px}
+table.res-t th,table.res-t td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}
+table.res-t th{background:var(--soft);font-weight:600}
+.corr{margin-top:10px;border:1px solid #a8d8b6;background:#f2faf4;border-radius:10px;padding:10px 12px;font-size:13px}
+.corr h4{margin:0 0 6px;color:var(--ok);font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+.submit-zone{margin-top:18px;padding-top:12px;border-top:1px solid var(--line)}
+/* calculatrice */
+#calc{position:fixed;right:18px;bottom:18px;width:270px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 34px rgba(0,0,0,.18);padding:10px;z-index:40}
+#calc .cd{display:flex;gap:6px;margin-bottom:6px}
+#calc input{flex:1;font-family:Consolas,'Courier New',monospace;padding:8px;border:1px solid var(--line);border-radius:6px;font-size:14px}
+#calc .co{font-family:Consolas,'Courier New',monospace;text-align:right;font-size:17px;font-weight:600;padding:4px 6px;color:var(--acc);min-height:26px}
+#calc .ck{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+#calc .ck button{padding:7px 0;border:1px solid var(--line);background:#f7f9fc;border-radius:6px;cursor:pointer;font-family:Consolas,'Courier New',monospace;font-size:12.5px}
+#calc .ck button.eq{background:var(--acc);color:#fff;border-color:var(--acc)}
+@media (max-width:1560px){.mode-tp .tools .tl,.mode-eval .tools .tl{display:none}}
+@media (max-width:1250px){.tools .tl{display:none}}
+@media (max-width:1100px){#side{width:210px}#mission{width:320px}#skprops{width:210px}}
+@media (max-width:800px){#app{flex-direction:column;height:auto}#mission,#side{width:100%;max-height:none}#work{height:80vh}.eb-copy,.eb-left span{display:none}}
+
+.cote-edit{position:absolute;width:80px;height:30px;border:2px solid var(--acc2);border-radius:6px;text-align:center;font:600 14px Consolas,'Courier New',monospace;color:#b4261a;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18);z-index:5}
+
+#asmPanel{display:none;flex:1;overflow:auto}
+body.ws-asm #asmPanel{display:block}body.ws-asm #treeList,body.ws-asm #props,body.ws-asm .part-only{display:none!important}
+.pad{padding:2px 12px 8px}.alist{padding:0 8px}
+.apart{border:1px solid var(--line);border-radius:8px;margin-bottom:5px;background:#fff}
+.ah{display:flex;align-items:center;gap:7px;padding:7px 8px;cursor:pointer;font-size:13px}.ah i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.ah .grow{flex:1}.x{border:none;background:none;color:var(--mut);cursor:pointer;font-size:13px}.x:hover{color:var(--ko)}
+.aedit{padding:2px 10px 10px;border-top:1px dashed var(--line)}.aedit .fld input{width:72px}
+.badge{font-size:10.5px;background:#e8eef7;color:var(--acc);border-radius:10px;padding:1px 7px;font-weight:600;font-style:normal}.badge.m{background:#fde8e6;color:var(--ko)}
+.ajoint{display:flex;gap:6px;align-items:center;font-size:12.5px;padding:5px 6px;border-bottom:1px dashed var(--line)}.ajoint span{flex:1}
+#simDlg{width:330px;max-height:calc(100% - 28px);overflow:auto}
+.sim-sec{border-top:1px solid var(--line);padding:8px 0 4px;font-size:13px}.sim-sec>b{display:block;margin-bottom:5px}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}.chip{background:#eef3fa;border:1px solid #c9d7ea;border-radius:14px;padding:2px 4px 2px 9px;font-size:12px;display:inline-flex;align-items:center;gap:3px}
+.chip button{border:none;background:none;cursor:pointer;color:var(--mut)}.chip.load{background:#fdecea;border-color:#f0b4ae;padding-right:9px}
+.simres{margin-top:10px;border:1px solid #a8d8b6;background:#f2faf4;border-radius:10px;padding:8px 10px}.simres.bad{background:#fdf1f0;border-color:#efc4c0}
+.pv.big b{font-size:15px;color:var(--acc)}
+#kinPanel{position:absolute;left:12px;right:12px;bottom:12px;height:250px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(20,40,70,.16);display:flex;flex-direction:column;padding:8px 10px}
+.kin-h{display:flex;align-items:center;gap:8px;font-size:13px}.kin-h select{padding:4px 6px;border:1px solid var(--line);border-radius:6px;font:inherit;font-size:12.5px}.kin-h .grow{flex:1}
+.kin-c{flex:1;position:relative;min-height:0}.kin-c canvas{position:absolute;left:0;top:0}
+#kinRead{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;padding-top:4px}
+
+</style>
+</head>
+<body class="mode-tp">
+<header class="estic-bar">
+  <div class="eb-left"><img alt="Logo ESTIC" src="logo_estic.png" style="height:36px"><div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div></div>
+  <div class="eb-title">TP CAO 4e-4 — Concevoir selon un cahier des charges</div>
+  <div class="eb-right"><span id="ebExtra"></span><span class="eb-copy">&copy; ESTIC &mdash; Tous droits r&eacute;serv&eacute;s</span></div>
+</header>
+<div id="app">
+  <aside id="mission" class="panel"></aside>
+  <aside id="side" class="panel">
+    <div class="side-h">Arbre de construction</div>
+    <div id="treeList"></div>
+    <div id="asmPanel"></div>
+    <div id="props">
+      <div class="side-h">Propri&eacute;t&eacute;s</div>
+      <label class="fld mat"><span>Mat&eacute;riau</span><select id="matSel"></select></label>
+      <div id="propVals"></div>
+    </div>
+  </aside>
+  <main id="work">
+    <div id="tb3d" class="toolbar">
+      <div class="seg hidden" id="wsSeg"><button class="btn on" data-act="ws" data-v="part">Pi&egrave;ce</button><button class="btn" data-act="ws" data-v="asm">Assemblage</button></div>
+      <button class="btn primary part-only" data-act="new-sketch"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Nouvelle esquisse</button>
+      <button class="btn part-only hidden" data-act="sim-open"><svg viewBox="0 0 24 24"><path d="M3 18h18M6 18V9l6 3 6-6v12" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Simulation</button>
+      <span class="sep"></span>
+      <div class="seg">
+        <button class="btn" data-act="view" data-v="iso">Iso</button><button class="btn" data-act="view" data-v="face">Face</button><button class="btn" data-act="view" data-v="dessus">Dessus</button><button class="btn" data-act="view" data-v="droite">Droite</button>
+      </div>
+      <button class="btn" data-act="fit" title="Ajuster la vue"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+      <button class="btn" data-act="ortho">Perspective</button>
+      <span class="sep"></span>
+      <button class="btn" data-act="undo" title="Annuler (Ctrl+Z)"><svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5M4 12h11a5 5 0 010 10h-3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+      <button class="btn" data-act="redo" title="R&eacute;tablir (Ctrl+Y)"><svg viewBox="0 0 24 24"><path d="M15 7l5 5-5 5M20 12H9a5 5 0 000 10h3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+      <span class="grow"></span>
+      <button class="btn ico" data-act="new-file" title="Nouvelle pi&egrave;ce"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button>
+      <button class="btn ico" data-act="open-file" title="Ouvrir un fichier"><svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v10H3z" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button>
+      <button class="btn ico" data-act="save-file" title="Enregistrer la pi&egrave;ce"><svg viewBox="0 0 24 24"><path d="M4 4h13l3 3v13H4z M8 4v5h8V4 M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button>
+      <button class="btn calc-btn hidden" data-act="calc">Calculatrice</button>
+      <button class="btn" data-act="help" title="Aide">?</button>
+    </div>
+    <div id="stage">
+      <div id="view3d">
+        <canvas id="gl"></canvas><canvas id="ov"></canvas>
+        <div id="banner" class="hidden"></div>
+        <div id="planeDlg" class="floating hidden">
+          <div class="fl-title">Sur quoi dessiner l&rsquo;esquisse ?</div>
+          <div class="planes">
+            <button class="plane-btn" data-act="plane" data-p="top"><svg viewBox="0 0 60 44"><path d="M6 28l24 10 24-10-24-10z" fill="#cfe0f5" stroke="#1f4e8c" stroke-width="2"/></svg><b>Dessus</b><span>plan XY</span></button>
+            <button class="plane-btn" data-act="plane" data-p="front"><svg viewBox="0 0 60 44"><path d="M12 8h30v30H12z" fill="#cfe0f5" stroke="#1f4e8c" stroke-width="2"/></svg><b>Face</b><span>plan XZ</span></button>
+            <button class="plane-btn" data-act="plane" data-p="right"><svg viewBox="0 0 60 44"><path d="M20 4l20 8v28l-20-8z" fill="#cfe0f5" stroke="#1f4e8c" stroke-width="2"/></svg><b>Droite</b><span>plan YZ</span></button>
+            <button class="plane-btn" data-act="plane-face"><svg viewBox="0 0 60 44"><path d="M8 18l22 9 22-9-22-9z" fill="#f7dccb" stroke="#a5461b" stroke-width="2"/><path d="M8 18v14l22 9 22-9V18M30 27v14" fill="none" stroke="#a5461b" stroke-width="2"/></svg><b>Une face</b><span>du solide</span></button>
+          </div>
+          <label class="fld small"><span>D&eacute;calage du plan</span><input id="planeOff" value="0" inputmode="decimal"><em>mm</em></label>
+          <div class="row2"><button class="btn" data-act="plane-cancel">Annuler</button></div>
+        </div>
+        <div id="simDlg" class="floating hidden"></div>
+        <div id="kinPanel" class="hidden"><div class="kin-h"><b>Courbes du mouvement</b><span id="kinCtl"></span><span class="grow"></span><button class="btn sm" data-act="kin-close">Fermer</button></div><div class="kin-c"><canvas id="kinCv"></canvas></div><div id="kinRead"></div></div>
+        <div id="featDlg" class="floating hidden">
+          <div class="fl-title" id="fdTitle">Bossage</div>
+          <div class="seg wide"><button class="btn" data-act="fd-op" data-v="boss">Bossage</button><button class="btn" data-act="fd-op" data-v="cut">Enl&egrave;vement</button></div>
+          <label class="fld" id="fdDepthRow"><span>Profondeur</span><input id="fdDepth" inputmode="decimal"><em>mm</em></label>
+          <div class="fld-l" id="fdDirRow"><span>Sens</span><div class="seg"><button class="btn sm" data-act="fd-dir" data-v="1">Normal</button><button class="btn sm" data-act="fd-dir" data-v="-1">Invers&eacute;</button><button class="btn sm" data-act="fd-dir" data-v="0">Sym&eacute;trique</button></div></div>
+          <label class="chk" id="fdThruRow"><input type="checkbox" id="fdThru"> &Agrave; travers tout</label>
+          <div class="row2"><button class="btn" data-act="fd-cancel">Annuler</button><button class="btn primary" data-act="fd-ok">Valider</button></div>
+        </div>
+      </div>
+      <div id="sketchView" class="hidden">
+        <div class="toolbar sk">
+          <b id="skPlane" class="skplane">Esquisse</b>
+          <div class="seg tools">
+            <button class="btn" data-act="sk-tool" data-sktool="select" title="S&eacute;lection (V)"><svg viewBox="0 0 24 24"><path d="M6 3l12 9-5 1 3 6-2 1-3-6-4 4z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span class="tl">S&eacute;lection</span></button>
+            <button class="btn" data-act="sk-tool" data-sktool="rect" title="Rectangle (R)"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span class="tl">Rectangle</span></button>
+            <button class="btn" data-act="sk-tool" data-sktool="circle" title="Cercle (C)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span class="tl">Cercle</span></button>
+            <button class="btn" data-act="sk-tool" data-sktool="poly" title="Polyligne (L)"><svg viewBox="0 0 24 24"><path d="M4 19V5h7v7h9v7z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span class="tl">Polyligne</span></button>
+            <button class="btn" data-act="sk-tool" data-sktool="oblong" title="Oblong (O)"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="8" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span class="tl">Oblong</span></button>
+            <button class="btn" data-act="sk-tool" data-sktool="npoly" title="Polygone r&eacute;gulier (H)"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span class="tl">Polygone</span></button>
+          </div>
+          <span class="lbl">Grille</span>
+          <div class="seg"><button class="btn sm" data-act="sk-snap" data-v="0.5">0,5</button><button class="btn sm on" data-act="sk-snap" data-v="1">1</button><button class="btn sm" data-act="sk-snap" data-v="5">5</button></div>
+          <button class="btn sm" data-act="sk-fit" title="Ajuster la vue"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+          <span class="grow"></span>
+          <button class="btn" data-act="sk-cancel">Annuler</button>
+          <button class="btn primary" data-act="sk-ok">Valider l&rsquo;esquisse</button>
+        </div>
+        <div class="skbody">
+          <div id="skwrap"><canvas id="skc"></canvas><div id="skwarn" class="hidden">Des contours se croisent : le r&eacute;sultat sera faux. S&eacute;pare-les en deux esquisses.</div></div>
+          <div id="skprops" class="panel"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div id="calc" class="hidden"></div>
+<div id="modal" class="hidden"><div id="modalBox"></div></div>
+<div id="toasts"></div>
+<input type="file" id="fileIn" accept=".json,.cao.json" hidden>
+<script>
+const CFG = {"discipline": "Technologie · ESTIC", "calc": false, "mode": "tp", "id": "tp_cao4_4", "title": "TP CAO 4e-4 — Concevoir selon un cahier des charges", "classes": ["4A", "4B", "4C", "4D", "4E"], "fileName": "tp-cao-4e-4", "intro": "Pas de dessin complet : les dimensions sont données dans le cahier des charges. À toi de concevoir la pièce.", "missions": [{"titre": "Le support de piles", "pitch": "Cahier des charges : bloc de 60 × 25 × 40. Trois logements Ø15 profonds de 35, alignés au milieu de la largeur, espacés de 20 mm, le premier à 10 mm du bord.", "cible": [{"id": "f163", "op": "boss", "sketch": {"plane": {"n": [0, 0, 1], "off": 0}, "ents": [{"t": "rect", "x": 0, "y": 0, "w": 60, "h": 25}]}, "depth": 40, "dir": 1, "thru": false}, {"id": "f164", "op": "cut", "sketch": {"plane": {"n": [0, 0, 1], "off": 40}, "ents": [{"t": "circle", "cx": 10, "cy": 12.5, "d": 15}, {"t": "circle", "cx": 30, "cy": 12.5, "d": 15}, {"t": "circle", "cx": 50, "cy": 12.5, "d": 15}]}, "depth": 35, "dir": -1, "thru": false}], "cotes": [{"a": [0, 0, 0], "b": [60, 0, 0], "o": [0, -10, 0], "t": "60"}, {"a": [60, 0, 0], "b": [60, 25, 0], "o": [10, 0, 0], "t": "25"}, {"a": [0, 0, 0], "b": [0, 0, 40], "o": [-7, -7, 0], "t": "40"}, {"at": [30, 12.5, 52], "txt": "3 logements Ø15"}], "methode": ["Centres des logements : x = 10, 30, 50 ; y = 12,5.", "Enlèvement de 35 depuis le dessus."], "question": {"type": "num", "texte": "Quelle épaisseur de fond reste sous les piles ?", "unite": "mm", "answer": 5, "tolAbs": 0.01, "dec": 0, "expl": "40 − 35 = 5 mm."}}, {"titre": "Le porte-crayons empilable", "pitch": "Cahier des charges : cylindre Ø60, hauteur 50, parois de 3 mm, fond de 4 mm.", "cible": [{"id": "f165", "op": "boss", "sketch": {"plane": {"n": [0, 0, 1], "off": 0}, "ents": [{"t": "circle", "cx": 30, "cy": 30, "d": 60}]}, "depth": 50, "dir": 1, "thru": false}, {"id": "f166", "op": "cut", "sketch": {"plane": {"n": [0, 0, 1], "off": 50}, "ents": [{"t": "circle", "cx": 30, "cy": 30, "d": 54}]}, "depth": 46, "dir": -1, "thru": false}], "cotes": [{"c": [30, 30, 50], "n": [0, 0, 1], "d": 60, "t": "Ø60", "ang": 30, "lead": 18}, {"a": [60, 30, 0], "b": [60, 30, 50], "o": [10, 0, 0], "t": "50"}, {"at": [30, 30, 62], "txt": "parois 3 mm, fond 4 mm"}], "methode": ["Diamètre intérieur = 60 − 2 × 3.", "Profondeur = 50 − 4."], "question": {"type": "num", "texte": "Quel diamètre intérieur as-tu calculé ?", "unite": "mm", "answer": 54, "tolAbs": 0.01, "dec": 0, "expl": "60 − 2 × 3 = 54 mm."}}, {"titre": "La boîte de rangement", "pitch": "Cahier des charges : boîte de 80 × 50 × 30, parois de 2,5 mm, fond de 3 mm, et deux compartiments séparés par une cloison de 2 mm au milieu de la longueur.", "cible": [{"id": "f167", "op": "boss", "sketch": {"plane": {"n": [0, 0, 1], "off": 0}, "ents": [{"t": "rect", "x": 0, "y": 0, "w": 80, "h": 50}]}, "depth": 30, "dir": 1, "thru": false}, {"id": "f168", "op": "cut", "sketch": {"plane": {"n": [0, 0, 1], "off": 30}, "ents": [{"t": "rect", "x": 2.5, "y": 2.5, "w": 36.5, "h": 45}, {"t": "rect", "x": 41, "y": 2.5, "w": 36.5, "h": 45}]}, "depth": 27, "dir": -1, "thru": false}], "cotes": [{"a": [0, 0, 0], "b": [80, 0, 0], "o": [0, -10, 0], "t": "80"}, {"a": [80, 0, 0], "b": [80, 50, 0], "o": [10, 0, 0], "t": "50"}, {"a": [0, 0, 0], "b": [0, 0, 30], "o": [-7, -7, 0], "t": "30"}, {"at": [40, 25, 40], "txt": "parois 2,5 · fond 3"}], "methode": ["Longueur d’un compartiment : (80 − 2,5 − 2,5 − 2) ÷ 2.", "Deux rectangles dans la même esquisse, enlèvement de 27."], "question": {"type": "num", "texte": "Quelle est la longueur intérieure d’un compartiment ?", "unite": "mm", "answer": 36.5, "tolAbs": 0.01, "dec": 1, "expl": "(80 − 5 − 2) ÷ 2 = 36,5 mm."}}, {"titre": "Défi : le crochet mural", "pitch": "Cahier des charges : profil vu de face, épaisseur 15. Plaque murale 8 × 50 ; bras horizontal de 40 sur 8 en bas ; ergot vertical de 8 × 15 au bout du bras. Deux trous de Ø5 dans la plaque, à 30 et 42 mm du bas.", "cible": [{"id": "f169", "op": "boss", "sketch": {"plane": {"n": [0, -1, 0], "off": 0}, "ents": [{"t": "poly", "pts": [[0, 0], [48, 0], [48, 23], [40, 23], [40, 8], [8, 8], [8, 50], [0, 50]]}]}, "depth": 15, "dir": -1, "thru": false}, {"id": "f170", "op": "cut", "sketch": {"plane": {"n": [1, 0, 0], "off": 8}, "ents": [{"t": "circle", "cx": 7.5, "cy": 30, "d": 5}, {"t": "circle", "cx": 7.5, "cy": 42, "d": 5}]}, "depth": 8, "dir": -1, "thru": true}], "cotes": [{"a": [0, 0, 0], "b": [48, 0, 0], "o": [0, 0, -10], "t": "48"}, {"a": [0, 0, 0], "b": [0, 0, 50], "o": [-10, 0, 0], "t": "50"}, {"a": [48, 0, 0], "b": [48, 15, 0], "o": [10, 0, 0], "t": "15"}, {"a": [48, 0, 8], "b": [48, 0, 23], "o": [8, 0, 0], "t": "15"}, {"at": [8, 7.5, 58], "txt": "trous Ø5 à 30 et 42 du bas"}], "methode": ["Profil en J sur le plan Face (8 + 40 = 48 de long).", "Les trous sont sur la face intérieure de la plaque (plan x = 8)."], "question": {"type": "num", "texte": "Quelle est la masse de la pièce en ABS ?", "unite": "g", "auto": "mass", "mat": "ABS", "dec": 1, "hint": "Choisis le matériau ABS dans les Propriétés."}}]};
+/* ===== GEOM : modèle, compilation, échantillonnage, comparaison ===== */
+const G = (() => {
+  const PLANE_NAMES = { '0,0,1': 'Dessus', '0,0,-1': 'Dessous', '0,-1,0': 'Face', '0,1,0': 'Arrière', '1,0,0': 'Droite', '-1,0,0': 'Gauche' };
+  function frame(n) {
+    const [x, y, z] = n;
+    if (z > .5) return { u: [1, 0, 0], v: [0, 1, 0] };
+    if (z < -.5) return { u: [1, 0, 0], v: [0, -1, 0] };
+    if (y < -.5) return { u: [1, 0, 0], v: [0, 0, 1] };
+    if (y > .5) return { u: [-1, 0, 0], v: [0, 0, 1] };
+    if (x > .5) return { u: [0, 1, 0], v: [0, 0, 1] };
+    return { u: [0, -1, 0], v: [0, 0, 1] };
+  }
+  function planeName(p) {
+    const k = p.n.map(v => Math.round(v)).join(',');
+    let nm = PLANE_NAMES[k] || 'Plan';
+    if (Math.abs(p.off) > 1e-9) nm += ' (' + fmt(p.off) + ' mm)';
+    return nm;
+  }
+  function fmt(v, d = 2) {
+    let s = (Math.round(v * Math.pow(10, d)) / Math.pow(10, d)).toString();
+    return s.replace('.', ',');
+  }
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+
+  /* ---- entités 2D compilées ---- */
+  function npolyPts(e) {
+    const pts = [], r = e.d / 2, a0 = (e.a || 0) * Math.PI / 180;
+    for (let i = 0; i < e.n; i++) { const a = a0 + i * 2 * Math.PI / e.n; pts.push([e.cx + r * Math.cos(a), e.cy + r * Math.sin(a)]); }
+    return pts;
+  }
+  function compileEnt(e) {
+    switch (e.t) {
+      case 'rect': return { k: 'r', cx: e.x + e.w / 2, cy: e.y + e.h / 2, hx: Math.abs(e.w) / 2, hy: Math.abs(e.h) / 2 };
+      case 'circle': return { k: 'c', cx: e.cx, cy: e.cy, r: e.d / 2 };
+      case 'oblong': { const a = (e.a || 0) * Math.PI / 180, dx = Math.cos(a) * e.L / 2, dy = Math.sin(a) * e.L / 2;
+        return { k: 's', ax: e.cx - dx, ay: e.cy - dy, bx: e.cx + dx, by: e.cy + dy, r: e.d / 2 }; }
+      case 'poly': return { k: 'p', pts: e.pts.map(p => [p[0], p[1]]) };
+      case 'npoly': return { k: 'p', pts: npolyPts(e) };
+    }
+    return null;
+  }
+  function entBounds(e) {
+    const c = compileEnt(e);
+    if (c.k === 'r') return [c.cx - c.hx, c.cy - c.hy, c.cx + c.hx, c.cy + c.hy];
+    if (c.k === 'c') return [c.cx - c.r, c.cy - c.r, c.cx + c.r, c.cy + c.r];
+    if (c.k === 's') return [Math.min(c.ax, c.bx) - c.r, Math.min(c.ay, c.by) - c.r, Math.max(c.ax, c.bx) + c.r, Math.max(c.ay, c.by) + c.r];
+    let a = [1e9, 1e9, -1e9, -1e9];
+    c.pts.forEach(p => { a[0] = Math.min(a[0], p[0]); a[1] = Math.min(a[1], p[1]); a[2] = Math.max(a[2], p[0]); a[3] = Math.max(a[3], p[1]); });
+    return a;
+  }
+  function in2(c, s, t) {
+    switch (c.k) {
+      case 'r': return Math.abs(s - c.cx) <= c.hx && Math.abs(t - c.cy) <= c.hy;
+      case 'c': { const dx = s - c.cx, dy = t - c.cy; return dx * dx + dy * dy <= c.r * c.r; }
+      case 's': return segDist(s, t, c.ax, c.ay, c.bx, c.by) <= c.r;
+      case 'p': { let ins = false; const P = c.pts, n = P.length;
+        for (let i = 0, j = n - 1; i < n; j = i++) {
+          const xi = P[i][0], yi = P[i][1], xj = P[j][0], yj = P[j][1];
+          if (((yi > t) !== (yj > t)) && (s < (xj - xi) * (t - yi) / (yj - yi) + xi)) ins = !ins;
+        } return ins; }
+    }
+    return false;
+  }
+  function segDist(px, py, ax, ay, bx, by) {
+    const pax = px - ax, pay = py - ay, bax = bx - ax, bay = by - ay;
+    const l = bax * bax + bay * bay; let h = l > 0 ? (pax * bax + pay * bay) / l : 0;
+    h = Math.max(0, Math.min(1, h));
+    const dx = pax - bax * h, dy = pay - bay * h; return Math.sqrt(dx * dx + dy * dy);
+  }
+  function sd2(c, s, t) {
+    switch (c.k) {
+      case 'r': { const dx = Math.abs(s - c.cx) - c.hx, dy = Math.abs(t - c.cy) - c.hy;
+        const ox = Math.max(dx, 0), oy = Math.max(dy, 0); return Math.sqrt(ox * ox + oy * oy) + Math.min(Math.max(dx, dy), 0); }
+      case 'c': return Math.hypot(s - c.cx, t - c.cy) - c.r;
+      case 's': return segDist(s, t, c.ax, c.ay, c.bx, c.by) - c.r;
+      case 'p': { const P = c.pts, n = P.length; let d = 1e18;
+        for (let i = 0, j = n - 1; i < n; j = i++) d = Math.min(d, segDist(s, t, P[i][0], P[i][1], P[j][0], P[j][1]));
+        return in2(c, s, t) ? -d : d; }
+    }
+    return 1e9;
+  }
+  /* ---- fonctions (features) ---- */
+  function wRange(f) {
+    const off = f.sketch.plane.off, d = Math.max(0.01, +f.depth || 0);
+    if (f.op === 'cut' && f.thru) return [-1e4, 1e4];
+    if (f.dir === 0) return [off - d / 2, off + d / 2];
+    if (f.dir === -1) return [off - d, off];
+    return [off, off + d];
+  }
+  function compileFeature(f) {
+    const n = f.sketch.plane.n, fr = frame(n);
+    const ents = f.sketch.ents.map(compileEnt).filter(Boolean);
+    const [w0, w1] = wRange(f);
+    return { op: f.op, U: fr.u, V: fr.v, N: n, w0, w1, ents };
+  }
+  function compile(model) {
+    return (model.features || []).filter(f => !f.hidden && f.sketch.ents.length).map(compileFeature);
+  }
+  function inFeat(cf, x, y, z) {
+    const w = cf.N[0] * x + cf.N[1] * y + cf.N[2] * z;
+    if (w < cf.w0 || w > cf.w1) return false;
+    const s = cf.U[0] * x + cf.U[1] * y + cf.U[2] * z, t = cf.V[0] * x + cf.V[1] * y + cf.V[2] * z;
+    let par = false; const E = cf.ents;
+    for (let i = 0; i < E.length; i++) if (in2(E[i], s, t)) par = !par;
+    return par;
+  }
+  function inside(C, x, y, z) {
+    let ins = false;
+    for (let i = 0; i < C.length; i++) {
+      const f = C[i];
+      if (f.op === 'boss') { if (!ins && inFeat(f, x, y, z)) ins = true; }
+      else if (ins && inFeat(f, x, y, z)) ins = false;
+    }
+    return ins;
+  }
+  function sdFeat(cf, p) {
+    const s = dot(p, cf.U), t = dot(p, cf.V), w = dot(p, cf.N);
+    let m = 1e18, par = false;
+    for (const e of cf.ents) { const d = sd2(e, s, t); m = Math.min(m, Math.abs(d)); if (d < 0) par = !par; }
+    const d2 = par ? -m : m;
+    const c = (cf.w0 + cf.w1) / 2, h = (cf.w1 - cf.w0) / 2;
+    const qx = d2, qy = Math.abs(w - c) - h;
+    return Math.min(Math.max(qx, qy), 0) + Math.hypot(Math.max(qx, 0), Math.max(qy, 0));
+  }
+  function sdf(C, p) {
+    let d = 1e9;
+    for (const f of C) { const e = sdFeat(f, p); d = f.op === 'boss' ? Math.min(d, e) : Math.max(d, -e); }
+    return d;
+  }
+  /* boîte englobante approchée (bossages) + coordonnées candidates */
+  function roughBox(C) {
+    const b = [1e9, 1e9, 1e9, -1e9, -1e9, -1e9]; let any = false;
+    const cand = [[], [], []];
+    for (const f of C) {
+      for (const e of f.ents) {
+        const bb = e.k === 'r' ? [e.cx - e.hx, e.cy - e.hy, e.cx + e.hx, e.cy + e.hy] : e.k === 'c' ? [e.cx - e.r, e.cy - e.r, e.cx + e.r, e.cy + e.r] :
+          e.k === 's' ? [Math.min(e.ax, e.bx) - e.r, Math.min(e.ay, e.by) - e.r, Math.max(e.ax, e.bx) + e.r, Math.max(e.ay, e.by) + e.r] :
+            e.pts.reduce((a, p) => [Math.min(a[0], p[0]), Math.min(a[1], p[1]), Math.max(a[2], p[0]), Math.max(a[3], p[1])], [1e9, 1e9, -1e9, -1e9]);
+        const ws = [f.w0, f.w1];
+        if (e.k === 'p') e.pts.forEach(p => addCand(cand, f, p[0], p[1], null));
+        for (const s of [bb[0], bb[2]]) for (const t of [bb[1], bb[3]]) {
+          addCand(cand, f, s, t, null);
+          if (f.op === 'boss') for (const w of ws) {
+            const P = [0, 1, 2].map(i => f.U[i] * s + f.V[i] * t + f.N[i] * w);
+            for (let i = 0; i < 3; i++) { b[i] = Math.min(b[i], P[i]); b[i + 3] = Math.max(b[i + 3], P[i]); }
+            any = true;
+          }
+        }
+        if (f.w0 > -1e3) { addCand(cand, f, null, null, f.w0); addCand(cand, f, null, null, f.w1); }
+      }
+    }
+    return any ? { box: b, cand } : null;
+  }
+  function addCand(cand, f, s, t, w) {
+    for (let i = 0; i < 3; i++) {
+      let v = 0, used = false;
+      if (s !== null && f.U[i]) { v += f.U[i] * s; used = true; }
+      if (t !== null && f.V[i]) { v += f.V[i] * t; used = true; }
+      if (w !== null && f.N[i]) { v += f.N[i] * w; used = true; }
+      if (used) cand[i].push(v);
+    }
+  }
+  /* échantillonnage voxel */
+  function gridN(dims, N, minN) {
+    const V = Math.max(1e-6, dims[0] * dims[1] * dims[2]), h0 = Math.cbrt(V / N);
+    return dims.map(d => Math.max(minN, Math.ceil(d / h0)));
+  }
+  function sample(C, box, n) {
+    const [nx, ny, nz] = n, hx = (box[3] - box[0]) / nx, hy = (box[4] - box[1]) / ny, hz = (box[5] - box[2]) / nz;
+    const occ = new Uint8Array(nx * ny * nz); let cnt = 0;
+    for (let k = 0; k < nz; k++) { const z = box[2] + (k + .5) * hz;
+      for (let j = 0; j < ny; j++) { const y = box[1] + (j + .5) * hy;
+        for (let i = 0; i < nx; i++) { const x = box[0] + (i + .5) * hx;
+          if (inside(C, x, y, z)) { occ[i + nx * (j + ny * k)] = 1; cnt++; } } } }
+    return { occ, nx, ny, nz, h: [hx, hy, hz], box, cnt };
+  }
+  function analyze(model, targetN = 250000) {
+    const C = Array.isArray(model) ? model : compile(model);
+    const rb = roughBox(C);
+    if (!rb) return { empty: true, C };
+    const b = rb.box.slice();
+    const dims0 = [b[3] - b[0], b[4] - b[1], b[5] - b[2]];
+    const nT = gridN(dims0, targetN, 64);
+    // grille non uniforme calée sur les coordonnées remarquables (faces planes exactes)
+    const ax = [0, 1, 2].map(a => {
+      const h = dims0[a] / nT[a];
+      const br = [...new Set(rb.cand[a].filter(v => v > b[a] + 1e-6 && v < b[a + 3] - 1e-6).map(v => Math.round(v * 1e6) / 1e6).concat([b[a], b[a + 3]]))].sort((x, y) => x - y);
+      const c = [], w = [], lo = [];
+      for (let i = 0; i < br.length - 1; i++) {
+        const L = br[i + 1] - br[i]; if (L < 1e-7) continue; const k = Math.max(1, Math.round(L / h)), dw = L / k;
+        for (let j = 0; j < k; j++) { lo.push(br[i] + j * dw); c.push(br[i] + (j + .5) * dw); w.push(dw); }
+      }
+      return { c, w, lo };
+    });
+    const [X, Y, Z] = ax; let vol = 0; const mn = [1e9, 1e9, 1e9], mx = [-1e9, -1e9, -1e9];
+    for (let k = 0; k < Z.c.length; k++) for (let j = 0; j < Y.c.length; j++) for (let i = 0; i < X.c.length; i++) {
+      if (!inside(C, X.c[i], Y.c[j], Z.c[k])) continue;
+      vol += X.w[i] * Y.w[j] * Z.w[k];
+      const lo = [X.lo[i], Y.lo[j], Z.lo[k]], hi = [X.lo[i] + X.w[i], Y.lo[j] + Y.w[j], Z.lo[k] + Z.w[k]];
+      for (let a = 0; a < 3; a++) { if (lo[a] < mn[a]) mn[a] = lo[a]; if (hi[a] > mx[a]) mx[a] = hi[a]; }
+    }
+    if (!vol) return { empty: true, C };
+    const bb = [0, 0, 0, 0, 0, 0];
+    for (let a = 0; a < 3; a++) { const h = dims0[a] / nT[a]; bb[a] = snapC(mn[a], rb.cand[a].concat([b[a]]), 1.6 * h); bb[a + 3] = snapC(mx[a], rb.cand[a].concat([b[a + 3]]), 1.6 * h); }
+    return { empty: false, C, vol, bbox: bb, dims: [bb[3] - bb[0], bb[4] - bb[1], bb[5] - bb[2]] };
+  }
+  function snapC(v, list, tol) {
+    let best = v, bd = tol;
+    for (const c of list) { const d = Math.abs(c - v); if (d < bd) { bd = d; best = c; } }
+    return best;
+  }
+  /* 24 rotations */
+  const ROTS = (() => {
+    const out = [], perms = [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]];
+    for (const p of perms) for (let sx = -1; sx <= 1; sx += 2) for (let sy = -1; sy <= 1; sy += 2) for (let sz = -1; sz <= 1; sz += 2) {
+      const M = [[0, 0, 0], [0, 0, 0], [0, 0, 0]], sg = [sx, sy, sz];
+      for (let r = 0; r < 3; r++) M[r][p[r]] = sg[r];
+      const det = M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) - M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0]) + M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0]);
+      if (det > 0) out.push(M);
+    }
+    return out;
+  })();
+  const mulM = (M, v) => [M[0][0] * v[0] + M[0][1] * v[1] + M[0][2] * v[2], M[1][0] * v[0] + M[1][1] * v[1] + M[1][2] * v[2], M[2][0] * v[0] + M[2][1] * v[1] + M[2][2] * v[2]];
+  const mulMT = (M, v) => [M[0][0] * v[0] + M[1][0] * v[1] + M[2][0] * v[2], M[0][1] * v[0] + M[1][1] * v[1] + M[2][1] * v[2], M[0][2] * v[0] + M[1][2] * v[1] + M[2][2] * v[2]];
+
+  /* comparaison élève / cible, indépendante de la position et de l'orientation */
+  function compare(studentModel, targetModel, tA) {
+    const A = analyze(studentModel);
+    const T = tA || analyze(targetModel);
+    const res = { ok: false, empty: A.empty, bboxOk: false, volOk: false, volS: A.vol || 0, volT: T.vol, dimsS: A.dims, dimsT: T.dims, markers: [] };
+    if (A.empty) return res;
+    res.volOk = Math.abs(A.vol - T.vol) / T.vol < 0.03;
+    const cS = [(A.bbox[0] + A.bbox[3]) / 2, (A.bbox[1] + A.bbox[4]) / 2, (A.bbox[2] + A.bbox[5]) / 2];
+    const tMin = [T.bbox[0], T.bbox[1], T.bbox[2]];
+    const cands = [];
+    for (const R of ROTS) {
+      const d = mulM(R, A.dims).map(Math.abs);
+      if (Math.abs(d[0] - T.dims[0]) < 0.6 && Math.abs(d[1] - T.dims[1]) < 0.6 && Math.abs(d[2] - T.dims[2]) < 0.6) cands.push(R);
+    }
+    if (!cands.length) return res;
+    res.bboxOk = true;
+    // translation : centre élève -> centre cible
+    const cT = [(T.bbox[0] + T.bbox[3]) / 2, (T.bbox[1] + T.bbox[4]) / 2, (T.bbox[2] + T.bbox[5]) / 2];
+    function run(R, N, minN) {
+      const b = T.bbox;
+      const [nx, ny, nz] = gridN(T.dims, N, minN);
+      const hx = T.dims[0] / nx, hy = T.dims[1] / ny, hz = T.dims[2] / nz;
+      const bmm = Math.max(3, Math.max(...T.dims) / 16);
+      const BX = Math.max(1, Math.round(bmm / hx)), BY = Math.max(1, Math.round(bmm / hy)), BZ = Math.max(1, Math.round(bmm / hz));
+      const bx = Math.ceil(nx / BX), by = Math.ceil(ny / BY), bz = Math.ceil(nz / BZ);
+      const blk = new Uint16Array(bx * by * bz), blkT = new Uint16Array(bx * by * bz);
+      let mis = 0, tc = 0;
+      for (let k = 0; k < nz; k++) { const z = b[2] + (k + .5) * hz;
+        for (let j = 0; j < ny; j++) { const y = b[1] + (j + .5) * hy;
+          for (let i = 0; i < nx; i++) { const x = b[0] + (i + .5) * hx;
+            const it = inside(T.C, x, y, z);
+            const q = mulMT(R, [x - cT[0], y - cT[1], z - cT[2]]);
+            const is = inside(A.C, q[0] + cS[0], q[1] + cS[1], q[2] + cS[2]);
+            const bi = ((i / BX) | 0) + bx * (((j / BY) | 0) + by * ((k / BZ) | 0));
+            blkT[bi]++;
+            if (it) tc++;
+            if (it !== is) { mis++; blk[bi]++; }
+          } } }
+      let maxL = 0; const marks = [];
+      for (let k = 0; k < bz; k++) for (let j = 0; j < by; j++) for (let i = 0; i < bx; i++) {
+        const bi = i + bx * (j + by * k); if (!blkT[bi]) continue;
+        const fr = blk[bi] / blkT[bi]; if (fr > maxL) maxL = fr;
+        if (fr > 0.5 / bmm) {
+          const p = [b[0] + Math.min(nx, (i + .5) * BX) * hx - cT[0], b[1] + Math.min(ny, (j + .5) * BY) * hy - cT[1], b[2] + Math.min(nz, (k + .5) * BZ) * hz - cT[2]];
+          const q = mulMT(R, p); marks.push([q[0] + cS[0], q[1] + cS[1], q[2] + cS[2]]);
+        }
+      }
+      return { ratio: mis / Math.max(1, tc), maxL, marks, lim: 0.5 / bmm };
+    }
+    let best = null, bestR = null;
+    for (const R of cands) { const r = run(R, 30000, 12); if (!best || r.ratio < best.ratio) { best = r; bestR = R; } }
+    const fine = run(bestR, 500000, 36);
+    res.ratio = fine.ratio; res.maxL = fine.maxL;
+    res.ok = fine.ratio < 0.015 && fine.maxL < fine.lim;
+    if (!res.ok) { // regroupement des zones d'erreur
+      const cell = Math.max(4, Math.max(...T.dims) / 8), cl = {};
+      for (const m of fine.marks) { const k = m.map(v => Math.floor(v / cell)).join(','); (cl[k] = cl[k] || []).push(m); }
+      res.markers = Object.values(cl).sort((a, b) => b.length - a.length).slice(0, 10).map(g => [0, 1, 2].map(i => g.reduce((a, m) => a + m[i], 0) / g.length));
+    }
+    return res;
+  }
+  /* ---- génération GLSL ---- */
+  const F = v => { const s = (+v).toFixed(4); return s; };
+  const V3 = a => 'vec3(' + a.map(F).join(',') + ')';
+  let PC = 0;
+  function glslPart(C, nm) {
+    let fns = '', body = 'float d=1e9;\n'; const pc0 = PC;
+    C.forEach((f, idx) => {
+      let code = `float ${nm}_f${idx}(vec3 p){ float s=dot(p,${V3(f.U)}), t=dot(p,${V3(f.V)}), w=dot(p,${V3(f.N)}); float m=1e9, e; int c=0;\n`;
+      for (const e of f.ents) {
+        let ex;
+        if (e.k === 'r') ex = `sdBox2(vec2(s,t)-vec2(${F(e.cx)},${F(e.cy)}),vec2(${F(e.hx)},${F(e.hy)}))`;
+        else if (e.k === 'c') ex = `(length(vec2(s,t)-vec2(${F(e.cx)},${F(e.cy)}))-${F(e.r)})`;
+        else if (e.k === 's') ex = `(sdSeg2(vec2(s,t),vec2(${F(e.ax)},${F(e.ay)}),vec2(${F(e.bx)},${F(e.by)}))-${F(e.r)})`;
+        else {
+          const pn = 'poly' + (PC++), N = e.pts.length;
+          fns += `float ${pn}(vec2 p){ vec2 v[${N}]=vec2[${N}](${e.pts.map(q => `vec2(${F(q[0])},${F(q[1])})`).join(',')}); float d=dot(p-v[0],p-v[0]); float sg=1.0;
+ for(int i=0,j=${N - 1};i<${N};j=i,i++){ vec2 E=v[j]-v[i]; vec2 W=p-v[i]; vec2 B=W-E*clamp(dot(W,E)/dot(E,E),0.0,1.0); d=min(d,dot(B,B));
+ bvec3 cc=bvec3(p.y>=v[i].y,p.y<v[j].y,E.x*W.y>E.y*W.x); if(all(cc)||all(not(cc))) sg*=-1.0; } return sg*sqrt(d); }\n`;
+          ex = `${pn}(vec2(s,t))`;
+        }
+        code += ` e=${ex}; m=min(m,abs(e)); if(e<0.0) c++;\n`;
+      }
+      code += ` float d2=(c%2==1)?-m:m; return ext(d2,w,${F(f.w0)},${F(f.w1)}); }\n`;
+      fns += code;
+      body += f.op === 'boss' ? `d=min(d,${nm}_f${idx}(p));\n` : `d=max(d,-${nm}_f${idx}(p));\n`;
+    });
+    return fns + `float ${nm}(vec3 p){\n` + body + 'return d;}\n';
+  }
+  function glsl(C) { PC = 0; return glslPart(C, 'part0') + 'vec2 mapId(vec3 p){ return vec2(part0(p),0.); }\nfloat map(vec3 p){ return part0(p); }\n'; }
+  function glslAsm(list) {
+    PC = 0; let code = '', body = 'vec2 r=vec2(1e9,0.); float d;\n';
+    list.forEach((C, k) => { code += glslPart(C, 'part' + k); body += `d=part${k}((uM[${k}]*vec4(p,1.)).xyz); if(d<r.x) r=vec2(d,${k}.);\n`; });
+    return code + 'vec2 mapId(vec3 p){\n' + body + 'return r;}\nfloat map(vec3 p){ return mapId(p).x; }\n';
+  }
+  /* ---- aides de construction (données des TP) ---- */
+  const P = {
+    top: (o = 0) => ({ n: [0, 0, 1], off: o }), bottom: (o = 0) => ({ n: [0, 0, -1], off: o }),
+    front: (o = 0) => ({ n: [0, -1, 0], off: o }), back: (o = 0) => ({ n: [0, 1, 0], off: o }),
+    right: (o = 0) => ({ n: [1, 0, 0], off: o }), left: (o = 0) => ({ n: [-1, 0, 0], off: o })
+  };
+  const E = {
+    R: (x, y, w, h) => ({ t: 'rect', x, y, w, h }), C: (cx, cy, d) => ({ t: 'circle', cx, cy, d }),
+    O: (cx, cy, L, d, a = 0) => ({ t: 'oblong', cx, cy, L, d, a }), PL: (...pts) => ({ t: 'poly', pts }),
+    NP: (cx, cy, n, d, a = 0) => ({ t: 'npoly', cx, cy, n, d, a })
+  };
+  let fid = 1;
+  const boss = (plane, ents, depth, dir = 1) => ({ id: 'f' + (fid++), op: 'boss', sketch: { plane, ents }, depth, dir, thru: false });
+  const cut = (plane, ents, depth, dir = -1) => ({ id: 'f' + (fid++), op: 'cut', sketch: { plane, ents }, depth: depth === 'thru' ? 10 : depth, dir, thru: depth === 'thru' });
+  return { glslAsm, frame, planeName, fmt, compile, compileFeature, compileEnt, entBounds, npolyPts, inside, sdf, analyze, compare, glsl, wRange, roughBox, P, E, boss, cut, dot, in2, sd2 };
+})();
+if (typeof module !== 'undefined') module.exports = G;
+
+/* ===== RENDU 3D : lancer de rayons sur champ de distance (WebGL2) ===== */
+const VS = `#version 300 es
+in vec2 a; void main(){ gl_Position=vec4(a,0.,1.); }`;
+const FS_HEAD = `#version 300 es
+precision highp float;
+out vec4 o;
+uniform vec2 uRes; uniform vec3 uPos,uF,uR,uU; uniform float uFocal,uOrtho,uOS,uFar,uGrid,uGridStep;
+uniform mat4 uM[12]; uniform vec3 uPal[12]; uniform highp sampler3D uFld; uniform float uFOn,uFH; uniform vec3 uFO,uFS,uFN;
+vec3 cmap(float t){ return clamp(vec3(1.5-abs(4.*t-3.),1.5-abs(4.*t-2.),1.5-abs(4.*t-1.)),0.,1.); }
+float sdBox2(vec2 p, vec2 b){ vec2 d=abs(p)-b; return length(max(d,0.))+min(max(d.x,d.y),0.); }
+float sdSeg2(vec2 p, vec2 a, vec2 b){ vec2 pa=p-a, ba=b-a; float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.); return length(pa-ba*h); }
+float ext(float d2, float w, float w0, float w1){ float c=(w0+w1)*.5, h=(w1-w0)*.5; vec2 q=vec2(d2, abs(w-c)-h); return min(max(q.x,q.y),0.)+length(max(q,0.)); }
+`;
+const FS_MAIN = `
+vec3 nrm(vec3 p, float e){ vec2 k=vec2(1.,-1.); return normalize(k.xyy*map(p+k.xyy*e)+k.yyx*map(p+k.yyx*e)+k.yxy*map(p+k.yxy*e)+k.xxx*map(p+k.xxx*e)); }
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*uRes)/uRes.y;
+  vec3 ro, rd; float pxk;
+  if(uOrtho>.5){ ro=uPos+uR*uv.x*uOS+uU*uv.y*uOS; rd=uF; pxk=uOS/uRes.y; }
+  else { ro=uPos; rd=normalize(uF*uFocal+uR*uv.x+uU*uv.y); pxk=1./(uRes.y*uFocal); }
+  float t=0.; bool hit=false; float mr=1e9;
+  for(int i=0;i<220;i++){
+    vec3 p=ro+rd*t; float d=map(p);
+    float pw = uOrtho>.5 ? pxk : pxk*max(t,1.);
+    if(d<pw*.35){ if(map(p+rd*pw*2.)<pw*.35){ hit=true; break; } t+=pw*2.; continue; }
+    mr=min(mr,d/pw);
+    t+=d*.92; if(t>uFar) break;
+  }
+  vec3 bg=mix(vec3(.93,.95,.98),vec3(.80,.86,.93),clamp(uv.y+.5,0.,1.));
+  vec3 col=bg;
+  if(hit){
+    vec3 p=ro+rd*t;
+    float pw = uOrtho>.5 ? pxk : pxk*max(t,1.);
+    vec3 n=nrm(p,max(pw*.3,.002));
+    vec3 n2=nrm(p,pw*2.2);
+    vec3 L=normalize(-uF*.55+uU*.6+uR*.35);
+    float dif=max(dot(n,L),0.);
+    float hemi=.5+.5*n.z;
+    int id=int(mapId(p).y+.5);
+    vec3 c=uPal[id]*(.58+.32*dif+.14*hemi);
+    float spec=pow(max(dot(reflect(-L,n),-rd),0.),24.)*.18;
+    c+=spec;
+    if(uFOn>.5){ vec3 q=(p-n*uFH*.35-uFO)/uFS; vec3 tc=(clamp(q,0.,1.)*(uFN-1.)+.5)/uFN; float v=texture(uFld,tc).r; c=cmap(v)*(.62+.3*dif+.1*hemi); }
+    float edge=smoothstep(.04,.22,1.-dot(n,n2));
+    c=mix(c,vec3(.16,.22,.3),edge*.9);
+    col=c;
+  } else if(mr<1.6){
+    col=mix(vec3(.16,.22,.3),bg,smoothstep(.5,1.6,mr));
+  }
+  if(uGrid>.5 && abs(rd.z)>1e-4){
+    float tp=-ro.z/rd.z;
+    if(tp>0. && (!hit || tp<t)){
+      vec2 g=(ro+rd*tp).xy;
+      float pwg = uOrtho>.5 ? pxk : pxk*tp;
+      float fade=uOrtho>.5 ? 1. : clamp(1.-tp/(uFar*.8),0.,1.);
+      vec2 gm=abs(fract(g/uGridStep+.5)-.5)*uGridStep;
+      float line=1.-smoothstep(0.,pwg*1.2,min(gm.x,gm.y));
+      vec2 gM=abs(fract(g/(uGridStep*10.)+.5)-.5)*uGridStep*10.;
+      float lineM=1.-smoothstep(0.,pwg*1.6,min(gM.x,gM.y));
+      float ax=1.-smoothstep(0.,pwg*1.8,abs(g.y)), ay=1.-smoothstep(0.,pwg*1.8,abs(g.x));
+      float a=(line*.10+lineM*.18)*fade*(hit?.5:1.);
+      col=mix(col,vec3(.35,.45,.6),a);
+      col=mix(col,vec3(.85,.25,.25),ax*.6*fade*(g.x>0.?1.:.35));
+      col=mix(col,vec3(.2,.65,.3),ay*.6*fade*(g.y>0.?1.:.35));
+    }
+  }
+  o=vec4(col,1.);
+}`;
+
+class Viewer {
+  constructor(canvas, overlay, opts = {}) {
+    this.cv = canvas; this.ov = overlay; this.octx = overlay.getContext('2d');
+    this.opts = opts;
+    this.gl = canvas.getContext('webgl2', { antialias: false, preserveDrawingBuffer: true });
+    this.ok = !!this.gl;
+    this.cam = { target: [30, 20, 5], dist: 180, yaw: -0.8, pitch: 0.55, ortho: false };
+    this.C = []; this.col = opts.col || [0.56, 0.69, 0.84];
+    this.pal = [this.col, [0.85, 0.55, 0.30], [0.45, 0.72, 0.48], [0.80, 0.42, 0.55], [0.62, 0.55, 0.85], [0.90, 0.78, 0.35], [0.40, 0.70, 0.80], [0.70, 0.70, 0.70], [0.85, 0.45, 0.40], [0.50, 0.60, 0.40], [0.75, 0.60, 0.45], [0.55, 0.55, 0.75]];
+    this.mats = new Float32Array(16 * 12); for (let i = 0; i < 12; i++) { this.mats[i * 16] = this.mats[i * 16 + 5] = this.mats[i * 16 + 10] = this.mats[i * 16 + 15] = 1; }
+    this.field = null;
+    this.grid = opts.grid !== false; this.scale = 1; this.lowres = false;
+    this.overlayHooks = [];
+    if (!this.ok) return;
+    const gl = this.gl;
+    this.buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, this.buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    this.dummy = this.tex3d(new Uint8Array([0]), [1, 1, 1]);
+    this.setModel([]);
+    this.bindInput();
+    new ResizeObserver(() => this.resize()).observe(canvas.parentElement);
+    this.resize();
+  }
+  tex3d(data, dims) {
+    const gl = this.gl, t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_3D, t);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    gl.texImage3D(gl.TEXTURE_3D, 0, gl.R8, dims[0], dims[1], dims[2], 0, gl.RED, gl.UNSIGNED_BYTE, data);
+    for (const k of [gl.TEXTURE_MIN_FILTER, gl.TEXTURE_MAG_FILTER]) gl.texParameteri(gl.TEXTURE_3D, k, gl.LINEAR);
+    for (const k of [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T, gl.TEXTURE_WRAP_R]) gl.texParameteri(gl.TEXTURE_3D, k, gl.CLAMP_TO_EDGE);
+    return t;
+  }
+  setField(f) {
+    if (!this.ok) return;
+    if (this.fieldTex) { this.gl.deleteTexture(this.fieldTex); this.fieldTex = null; }
+    this.field = f; if (f) this.fieldTex = this.tex3d(f.grid, f.dimsN); this.req();
+  }
+  setModel(C) { this.C = C; this.asm = false; this.build(G.glsl(C)); }
+  setAssembly(list) { this.C = []; this.asm = true; this.build(G.glslAsm(list)); }
+  setPoses(mats) { this.mats.set(mats); this.req(); }
+  build(code) {
+    if (!this.ok) return;
+    const gl = this.gl;
+    const src = FS_HEAD + code + FS_MAIN;
+    const vs = this.sh(gl.VERTEX_SHADER, VS), fs = this.sh(gl.FRAGMENT_SHADER, src);
+    const pr = gl.createProgram(); gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { console.error(gl.getProgramInfoLog(pr)); return; }
+    if (this.pr) gl.deleteProgram(this.pr);
+    this.pr = pr; this.U = {};
+    ['uRes', 'uPos', 'uF', 'uR', 'uU', 'uFocal', 'uOrtho', 'uOS', 'uFar', 'uGrid', 'uGridStep', 'uM', 'uPal', 'uFld', 'uFOn', 'uFH', 'uFO', 'uFS', 'uFN'].forEach(n => this.U[n] = gl.getUniformLocation(pr, n));
+    this.req();
+  }
+  sh(type, src) {
+    const gl = this.gl, s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(s), src);
+    return s;
+  }
+  resize() {
+    const r = this.cv.parentElement.getBoundingClientRect();
+    this.w = Math.max(10, r.width); this.h = Math.max(10, r.height);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    this.dpr = dpr;
+    this.ov.width = this.w * dpr; this.ov.height = this.h * dpr;
+    this.ov.style.width = this.w + 'px'; this.ov.style.height = this.h + 'px';
+    this.cv.style.width = this.w + 'px'; this.cv.style.height = this.h + 'px';
+    this.req();
+  }
+  basis() {
+    const c = this.cam, cp = Math.cos(c.pitch), sp = Math.sin(c.pitch);
+    const dir = [cp * Math.cos(c.yaw), cp * Math.sin(c.yaw), sp];
+    const pos = [c.target[0] + dir[0] * c.dist, c.target[1] + dir[1] * c.dist, c.target[2] + dir[2] * c.dist];
+    const F = [-dir[0], -dir[1], -dir[2]];
+    let R = [F[1] * 1 - F[2] * 0, F[2] * 0 - F[0] * 1, 0]; // F x Z
+    const rl = Math.hypot(R[0], R[1], R[2]) || 1; R = R.map(v => v / rl);
+    const Up = [R[1] * F[2] - R[2] * F[1], R[2] * F[0] - R[0] * F[2], R[0] * F[1] - R[1] * F[0]];
+    return { pos, F, R, U: Up, focal: 0.5 / Math.tan(0.30), os: c.dist * 0.62 };
+  }
+  project(P) {
+    const b = this.basis(), rel = [P[0] - b.pos[0], P[1] - b.pos[1], P[2] - b.pos[2]];
+    const x = G.dot(rel, b.R), y = G.dot(rel, b.U), z = G.dot(rel, b.F);
+    let u, v;
+    if (this.cam.ortho) { u = x / b.os; v = y / b.os; } else { if (z < 0.1) return null; u = b.focal * x / z; v = b.focal * y / z; }
+    return [this.w / 2 + u * this.h, this.h / 2 - v * this.h];
+  }
+  ray(sx, sy) {
+    const b = this.basis(), u = (sx - this.w / 2) / this.h, v = (this.h / 2 - sy) / this.h;
+    if (this.cam.ortho) return { o: [0, 1, 2].map(i => b.pos[i] + b.R[i] * u * b.os + b.U[i] * v * b.os), d: b.F };
+    const d = [0, 1, 2].map(i => b.F[i] * b.focal + b.R[i] * u + b.U[i] * v), l = Math.hypot(...d);
+    return { o: b.pos, d: d.map(x => x / l) };
+  }
+  pick(sx, sy) {
+    if (!this.C.length) return null;
+    const r = this.ray(sx, sy); let t = 0;
+    for (let i = 0; i < 300; i++) {
+      const p = [0, 1, 2].map(k => r.o[k] + r.d[k] * t), d = G.sdf(this.C, p);
+      if (d < 0.01 && G.sdf(this.C, [0, 1, 2].map(k => p[k] + r.d[k] * 0.05)) > 0.01) { t += 0.05; continue; }
+      if (d < 0.01) {
+        const e = 0.01, n = [0, 1, 2].map(k => { const a = p.slice(), b2 = p.slice(); a[k] += e; b2[k] -= e; return G.sdf(this.C, a) - G.sdf(this.C, b2); });
+        const l = Math.hypot(...n); return { p, n: n.map(v => v / l) };
+      }
+      t += d * 0.95; if (t > this.cam.dist * 6) break;
+    }
+    return null;
+  }
+  req() { if (this.raf) return; this.raf = requestAnimationFrame(() => { this.raf = 0; this.draw(); }); }
+  draw() {
+    if (!this.ok || !this.pr) return;
+    const gl = this.gl, sc = this.lowres ? 0.5 : this.dpr;
+    const W = Math.round(this.w * sc), H = Math.round(this.h * sc);
+    if (this.cv.width !== W || this.cv.height !== H) { this.cv.width = W; this.cv.height = H; }
+    gl.viewport(0, 0, W, H);
+    gl.useProgram(this.pr);
+    const b = this.basis(), U = this.U;
+    gl.uniform2f(U.uRes, W, H); gl.uniform3fv(U.uPos, b.pos); gl.uniform3fv(U.uF, b.F); gl.uniform3fv(U.uR, b.R); gl.uniform3fv(U.uU, b.U);
+    gl.uniform3fv(U.uPal, new Float32Array(this.pal.flat())); gl.uniformMatrix4fv(U.uM, false, this.mats);
+    const fl = this.field; gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_3D, fl ? this.fieldTex : this.dummy); gl.uniform1i(U.uFld, 0);
+    gl.uniform1f(U.uFOn, fl ? 1 : 0);
+    if (fl) { gl.uniform1f(U.uFH, fl.h); gl.uniform3fv(U.uFO, fl.origin); gl.uniform3fv(U.uFS, fl.size); gl.uniform3fv(U.uFN, fl.dimsN); }
+    gl.uniform1f(U.uFocal, b.focal); gl.uniform1f(U.uOrtho, this.cam.ortho ? 1 : 0);
+    gl.uniform1f(U.uOS, b.os); gl.uniform1f(U.uFar, this.cam.dist * 6); gl.uniform1f(U.uGrid, this.grid ? 1 : 0);
+    const gs = this.cam.dist > 600 ? 10 : this.cam.dist > 60 ? 5 : 1;
+    gl.uniform1f(U.uGridStep, gs);
+    const loc = gl.getAttribLocation(this.pr, 'a');
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.buf); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    this.drawOverlay();
+  }
+  drawOverlay() {
+    const c = this.octx; c.setTransform(this.dpr, 0, 0, this.dpr, 0, 0); c.clearRect(0, 0, this.w, this.h);
+    if (this.opts.triad !== false) this.drawTriad(c);
+    this.overlayHooks.forEach(f => f(c, this));
+  }
+  drawTriad(c) {
+    const b = this.basis(), O = [46, this.h - 46];
+    const ax = [[[1, 0, 0], '#d33', 'X'], [[0, 1, 0], '#2a9a48', 'Y'], [[0, 0, 1], '#2563c9', 'Z']];
+    ax.sort((a, b2) => G.dot(b2[0], b.F) - G.dot(a[0], b.F));
+    c.lineWidth = 2.5; c.font = '600 12px Segoe UI, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    for (const [v, col, l] of ax) {
+      const x = O[0] + G.dot(v, b.R) * 28, y = O[1] - G.dot(v, b.U) * 28;
+      c.strokeStyle = col; c.beginPath(); c.moveTo(O[0], O[1]); c.lineTo(x, y); c.stroke();
+      c.fillStyle = col; c.fillText(l, O[0] + G.dot(v, b.R) * 38, O[1] - G.dot(v, b.U) * 38);
+    }
+  }
+  setView(name) {
+    const c = this.cam;
+    const V = { iso: [-0.785, 0.6], face: [-Math.PI / 2, 0], dessus: [-Math.PI / 2, Math.PI / 2 - 1e-4], droite: [0, 0], arriere: [Math.PI / 2, 0], gauche: [Math.PI, 0], dessous: [-Math.PI / 2, -Math.PI / 2 + 1e-4] };
+    const v = V[name]; if (!v) return;
+    this.animTo(v[0], v[1]);
+  }
+  animTo(yaw, pitch) {
+    const c = this.cam, y0 = c.yaw, p0 = c.pitch;
+    let dy = yaw - y0; while (dy > Math.PI) dy -= 2 * Math.PI; while (dy < -Math.PI) dy += 2 * Math.PI;
+    const t0 = performance.now();
+    const step = () => {
+      const k = Math.min(1, (performance.now() - t0) / 350), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      c.yaw = y0 + dy * e; c.pitch = p0 + (pitch - p0) * e; this.draw();
+      if (k < 1) requestAnimationFrame(step);
+    };
+    step();
+  }
+  fit(box) {
+    if (!box) { this.cam.target = [0, 0, 0]; this.cam.dist = 160; this.req(); return; }
+    const c = [(box[0] + box[3]) / 2, (box[1] + box[4]) / 2, (box[2] + box[5]) / 2];
+    const r = Math.max(5, Math.hypot(box[3] - box[0], box[4] - box[1], box[5] - box[2]) / 2);
+    this.cam.target = c; this.cam.dist = r * 3.3 * Math.max(1, this.h / this.w * 1.15); this.req();
+  }
+  bindInput() {
+    const cv = this.ov; let drag = null;
+    cv.addEventListener('contextmenu', e => e.preventDefault());
+    cv.addEventListener('pointerdown', e => {
+      if (this.onPick && e.button === 0 && this.pickMode) { const r = cv.getBoundingClientRect(); this.onPick(e.clientX - r.left, e.clientY - r.top); return; }
+      drag = { x: e.clientX, y: e.clientY, b: e.button, shift: e.shiftKey, moved: false }; cv.setPointerCapture(e.pointerId);
+    });
+    cv.addEventListener('pointermove', e => {
+      if (!drag) { if (this.onHover) { const r = cv.getBoundingClientRect(); this.onHover(e.clientX - r.left, e.clientY - r.top); } return; }
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY;
+      if (Math.abs(dx) + Math.abs(dy) > 0) drag.moved = true;
+      this.lowres = true;
+      if (drag.b === 2 || drag.b === 1 || drag.shift) {
+        const b = this.basis(), k = (this.cam.ortho ? b.os : this.cam.dist / b.focal) / this.h;
+        for (let i = 0; i < 3; i++) this.cam.target[i] += (-dx * b.R[i] + dy * b.U[i]) * k;
+      } else {
+        this.cam.yaw -= dx * 0.008; this.cam.pitch = Math.max(-1.55, Math.min(1.55, this.cam.pitch + dy * 0.008));
+      }
+      this.req();
+    });
+    const end = () => { if (drag) { drag = null; this.lowres = false; this.req(); } };
+    cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+    cv.addEventListener('wheel', e => {
+      e.preventDefault(); this.cam.dist *= Math.exp(e.deltaY * 0.0012); this.cam.dist = Math.max(5, Math.min(3000, this.cam.dist));
+      this.lowres = true; this.req(); clearTimeout(this.wt); this.wt = setTimeout(() => { this.lowres = false; this.req(); }, 160);
+    }, { passive: false });
+  }
+}
+
+/* cotation 3D projetée (aperçu des pièces cibles) */
+function drawCotes(c, vw, cotes) {
+  if (!cotes) return;
+  c.save(); c.lineWidth = 1.2; c.font = '600 12.5px Segoe UI, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+  const col = '#b4261a';
+  const arrow = (x, y, ang) => { c.beginPath(); c.moveTo(x, y); c.lineTo(x - 8 * Math.cos(ang - 0.3), y - 8 * Math.sin(ang - 0.3)); c.lineTo(x - 8 * Math.cos(ang + 0.3), y - 8 * Math.sin(ang + 0.3)); c.closePath(); c.fill(); };
+  const label = (x, y, txt) => {
+    const w = c.measureText(txt).width + 8; x = Math.max(w / 2 + 2, Math.min(vw.w - w / 2 - 2, x)); y = Math.max(11, Math.min(vw.h - 11, y)); c.fillStyle = 'rgba(255,255,255,.92)'; c.fillRect(x - w / 2, y - 9, w, 18);
+    c.fillStyle = col; c.fillText(txt, x, y);
+  };
+  for (const k of cotes) {
+    c.strokeStyle = col; c.fillStyle = col;
+    if (k.d) { // diamètre : centre, normale, rayon
+      const n = k.n, fr = G.frame(n), r = k.d / 2, ang = (k.ang ?? 45) * Math.PI / 180;
+      const P = [0, 1, 2].map(i => k.c[i] + (fr.u[i] * Math.cos(ang) + fr.v[i] * Math.sin(ang)) * r);
+      const Q = [0, 1, 2].map(i => k.c[i] + (fr.u[i] * Math.cos(ang) + fr.v[i] * Math.sin(ang)) * (r + (k.lead || 12)));
+      const p = vw.project(P), q = vw.project(Q); if (!p || !q) continue;
+      c.beginPath(); c.moveTo(q[0], q[1]); c.lineTo(p[0], p[1]); c.stroke();
+      arrow(p[0], p[1], Math.atan2(p[1] - q[1], p[0] - q[0]));
+      label(q[0] + (q[0] > p[0] ? 14 : -14), q[1], k.t);
+      continue;
+    }
+    if (k.txt) { const p = vw.project(k.at); if (p) label(p[0], p[1], k.txt); continue; }
+    const A = k.a, B = k.b, O = k.o;
+    const A2 = A.map((v, i) => v + O[i]), B2 = B.map((v, i) => v + O[i]);
+    const ext = O.map(v => v * 1.15);
+    const pa = vw.project(A), pb = vw.project(B), pa2 = vw.project(A2), pb2 = vw.project(B2), pae = vw.project(A.map((v, i) => v + ext[i])), pbe = vw.project(B.map((v, i) => v + ext[i]));
+    if (!pa || !pb || !pa2 || !pb2) continue;
+    c.globalAlpha = .7; c.beginPath(); c.moveTo(pa[0], pa[1]); c.lineTo(pae[0], pae[1]); c.moveTo(pb[0], pb[1]); c.lineTo(pbe[0], pbe[1]); c.stroke(); c.globalAlpha = 1;
+    c.beginPath(); c.moveTo(pa2[0], pa2[1]); c.lineTo(pb2[0], pb2[1]); c.stroke();
+    const ang = Math.atan2(pb2[1] - pa2[1], pb2[0] - pa2[0]);
+    if (Math.hypot(pb2[0] - pa2[0], pb2[1] - pa2[1]) > 18) { arrow(pb2[0], pb2[1], ang); arrow(pa2[0], pa2[1], ang + Math.PI); }
+    label((pa2[0] + pb2[0]) / 2, (pa2[1] + pb2[1]) / 2, k.t);
+  }
+  c.restore();
+}
+
+/* ===== SIMULATION RDM : éléments finis hexaédriques sur grille (élasticité linéaire) ===== */
+const FEM = (() => {
+  const GP = 1 / Math.sqrt(3);
+  const CORN = []; for (let c = 0; c < 8; c++) CORN.push([c & 1, (c >> 1) & 1, (c >> 2) & 1]);
+  function Dmat(E, nu) {
+    const k = E / ((1 + nu) * (1 - 2 * nu)), a = k * (1 - nu), b = k * nu, g = E / (2 * (1 + nu));
+    return [[a, b, b, 0, 0, 0], [b, a, b, 0, 0, 0], [b, b, a, 0, 0, 0], [0, 0, 0, g, 0, 0], [0, 0, 0, 0, g, 0], [0, 0, 0, 0, 0, g]];
+  }
+  function Bmat(xi, et, ze, hx, hy, hz) {
+    const B = Array.from({ length: 6 }, () => new Float64Array(24));
+    for (let c = 0; c < 8; c++) {
+      const sx = 2 * CORN[c][0] - 1, sy = 2 * CORN[c][1] - 1, sz = 2 * CORN[c][2] - 1;
+      const dx = sx * (1 + sy * et) * (1 + sz * ze) / 8 * 2 / hx;
+      const dy = sy * (1 + sx * xi) * (1 + sz * ze) / 8 * 2 / hy;
+      const dz = sz * (1 + sx * xi) * (1 + sy * et) / 8 * 2 / hz;
+      const o = 3 * c;
+      B[0][o] = dx; B[1][o + 1] = dy; B[2][o + 2] = dz;
+      B[3][o] = dy; B[3][o + 1] = dx;
+      B[4][o + 1] = dz; B[4][o + 2] = dy;
+      B[5][o] = dz; B[5][o + 2] = dx;
+    }
+    return B;
+  }
+  function stiffness(hx, hy, hz, E, nu) {
+    const D = Dmat(E, nu), K = new Float64Array(576), w = hx * hy * hz / 8;
+    for (const gx of [-GP, GP]) for (const gy of [-GP, GP]) for (const gz of [-GP, GP]) {
+      const B = Bmat(gx, gy, gz, hx, hy, hz);
+      const DB = D.map(row => { const r = new Float64Array(24); for (let j = 0; j < 24; j++) { let s = 0; for (let k = 0; k < 6; k++) s += row[k] * B[k][j]; r[j] = s; } return r; });
+      for (let i = 0; i < 24; i++) for (let j = 0; j < 24; j++) { let s = 0; for (let k = 0; k < 6; k++) s += B[k][i] * DB[k][j]; K[i * 24 + j] += s * w; }
+    }
+    return K;
+  }
+  /* maillage */
+  function mesh(C, targetEl) {
+    const A = G.analyze(C, 60000); if (A.empty) return null;
+    const b = A.bbox, dims = A.dims, boxV = dims[0] * dims[1] * dims[2], fill = Math.min(1, A.vol / boxV);
+    const h0 = Math.cbrt(boxV * fill / targetEl);
+    const n = dims.map(d => Math.max(2, Math.round(d / h0)));
+    const h = dims.map((d, i) => d / n[i]);
+    const [nx, ny, nz] = n, NX = nx + 1, NY = ny + 1, NZ = nz + 1;
+    const solid = new Uint8Array(nx * ny * nz); let nel = 0;
+    for (let k = 0; k < nz; k++) for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++)
+      if (G.inside(C, b[0] + (i + .5) * h[0], b[1] + (j + .5) * h[1], b[2] + (k + .5) * h[2])) { solid[i + nx * (j + ny * k)] = 1; nel++; }
+    const nodeId = new Int32Array(NX * NY * NZ).fill(-1); let nn = 0;
+    const els = new Int32Array(nel * 8), elIjk = new Int32Array(nel * 3); let e = 0;
+    for (let k = 0; k < nz; k++) for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      if (!solid[i + nx * (j + ny * k)]) continue;
+      for (let c = 0; c < 8; c++) { const g = (i + CORN[c][0]) + NX * ((j + CORN[c][1]) + NY * (k + CORN[c][2])); if (nodeId[g] < 0) nodeId[g] = nn++; els[e * 8 + c] = nodeId[g]; }
+      elIjk[e * 3] = i; elIjk[e * 3 + 1] = j; elIjk[e * 3 + 2] = k; e++;
+    }
+    return { C, b, n, h, solid, nodeId, nn, nel, els, elIjk };
+  }
+  /* faces d'éléments situées dans un plan (n, off) et sur la frontière */
+  function faceSet(M, plane) {
+    const ax = plane.n.findIndex(v => Math.abs(v) > .5), sg = Math.sign(plane.n[ax]), c = plane.off * sg;
+    const { n, h, b, solid, els, elIjk, nel } = M, out = [];
+    // nœuds locaux de la face +/- selon l'axe
+    const loc = []; for (let k = 0; k < 8; k++) if (CORN[k][ax] === (sg > 0 ? 1 : 0)) loc.push(k);
+    for (let e = 0; e < nel; e++) {
+      const ijk = [elIjk[e * 3], elIjk[e * 3 + 1], elIjk[e * 3 + 2]];
+      const fc = b[ax] + (ijk[ax] + (sg > 0 ? 1 : 0)) * h[ax];
+      if (Math.abs(fc - c) > h[ax] * 0.51) continue;
+      const nb = ijk.slice(); nb[ax] += sg;
+      if (nb[ax] >= 0 && nb[ax] < n[ax] && solid[nb[0] + n[0] * (nb[1] + n[1] * nb[2])]) continue;
+      const P = [0, 1, 2].map(i => b[i] + (ijk[i] + .5) * h[i]); P[ax] = c - sg * 0.05;
+      if (!G.inside(M.C, P[0], P[1], P[2])) continue;
+      out.push(loc.map(k => els[e * 8 + k]));
+    }
+    const ia = [0, 1, 2].filter(i => i !== ax), area = h[ia[0]] * h[ia[1]];
+    return { faces: out, area };
+  }
+  /* préparation du calcul */
+  function setup(C, sim, mat, targetEl) {
+    const M = mesh(C, targetEl); if (!M) return { err: 'Aucun solide à calculer.' };
+    if (!sim.fixed || !sim.fixed.length) return { err: 'Choisis au moins une face encastrée.' };
+    if (!sim.load) return { err: 'Choisis la face sur laquelle s’applique l’effort.' };
+    const ndof = M.nn * 3, fixed = new Uint8Array(ndof), f = new Float64Array(ndof);
+    let nf = 0;
+    for (const pl of sim.fixed) { const fs = faceSet(M, pl); fs.faces.forEach(q => q.forEach(nd => { fixed[3 * nd] = fixed[3 * nd + 1] = fixed[3 * nd + 2] = 1; nf++; })); }
+    if (!nf) return { err: 'La face encastrée n’a pas été trouvée sur la pièce.' };
+    const ld = faceSet(M, sim.load);
+    if (!ld.faces.length) return { err: 'La face chargée n’a pas été trouvée sur la pièce.' };
+    const dir = sim.load.dir, tot = ld.faces.length * ld.area;
+    for (const q of ld.faces) for (const nd of q) for (let a = 0; a < 3; a++) f[3 * nd + a] += sim.load.F * dir[a] * (ld.area / tot) / 4;
+    const K = stiffness(M.h[0], M.h[1], M.h[2], mat.E, mat.nu);
+    const dofs = new Int32Array(M.nel * 24);
+    for (let e = 0; e < M.nel; e++) for (let c = 0; c < 8; c++) for (let a = 0; a < 3; a++) dofs[e * 24 + 3 * c + a] = 3 * M.els[e * 8 + c] + a;
+    const diag = new Float64Array(ndof);
+    for (let e = 0; e < M.nel; e++) for (let i = 0; i < 24; i++) diag[dofs[e * 24 + i]] += K[i * 25];
+    for (let i = 0; i < ndof; i++) if (fixed[i]) f[i] = 0;
+    return { M, K, dofs, fixed, f, diag, ndof, mat, sim };
+  }
+  function matvec(S, x, y) {
+    const { K, dofs, fixed } = S, nel = S.M.nel, ue = new Float64Array(24);
+    y.fill(0);
+    for (let e = 0; e < nel; e++) {
+      const o = e * 24;
+      for (let i = 0; i < 24; i++) ue[i] = x[dofs[o + i]];
+      for (let i = 0; i < 24; i++) { let s = 0; const r = i * 24; for (let j = 0; j < 24; j++) s += K[r + j] * ue[j]; y[dofs[o + i]] += s; }
+    }
+    for (let i = 0; i < y.length; i++) if (fixed[i]) y[i] = 0;
+  }
+  /* gradient conjugué préconditionné, découpé en tranches pour ne pas bloquer la page */
+  function solve(S, onProgress, done, sync) {
+    const n = S.ndof, u = new Float64Array(n), r = Float64Array.from(S.f), z = new Float64Array(n), p = new Float64Array(n), q = new Float64Array(n);
+    const Minv = S.diag.map((d, i) => S.fixed[i] || d === 0 ? 0 : 1 / d);
+    for (let i = 0; i < n; i++) { z[i] = r[i] * Minv[i]; p[i] = z[i]; }
+    let rz = 0, f2 = 0; for (let i = 0; i < n; i++) { rz += r[i] * z[i]; f2 += r[i] * r[i]; }
+    const tol = 1e-7 * Math.sqrt(f2), maxIt = Math.max(800, 6 * Math.cbrt(n) * 40);
+    let it = 0;
+    const step = () => {
+      const t0 = Date.now();
+      while (sync || Date.now() - t0 < 35) {
+        matvec(S, p, q);
+        let pq = 0; for (let i = 0; i < n; i++) pq += p[i] * q[i];
+        const al = rz / pq; let rr = 0;
+        for (let i = 0; i < n; i++) { u[i] += al * p[i]; r[i] -= al * q[i]; rr += r[i] * r[i]; }
+        it++;
+        if (Math.sqrt(rr) < tol || it >= maxIt) { done(u, it); return; }
+        let rz2 = 0; for (let i = 0; i < n; i++) { z[i] = r[i] * Minv[i]; rz2 += r[i] * z[i]; }
+        const be = rz2 / rz; rz = rz2;
+        for (let i = 0; i < n; i++) p[i] = z[i] + be * p[i];
+      }
+      onProgress && onProgress(Math.min(0.99, Math.log(1 + it) / Math.log(1 + maxIt * 0.5)));
+      setTimeout(step, 0);
+    };
+    step();
+  }
+  function solveSync(S) { let res, its; solve(S, null, (u, it) => { res = u; its = it; }, true); res.its = its; return res; }
+  /* post-traitement : contraintes aux nœuds, Von Mises, déplacements */
+  function post(S, u) {
+    const { M, mat } = S, { h, n } = M, D = Dmat(mat.E, mat.nu);
+    const NX = n[0] + 1, NY = n[1] + 1, NZ = n[2] + 1, NN = NX * NY * NZ;
+    const sig = new Float64Array(M.nn * 6), cnt = new Float64Array(M.nn);
+    const Bs = []; for (const c of CORN) Bs.push(Bmat((2 * c[0] - 1) * GP, (2 * c[1] - 1) * GP, (2 * c[2] - 1) * GP, h[0], h[1], h[2]));
+    const s3 = Math.sqrt(3), ue = new Float64Array(24), sg = Array.from({ length: 8 }, () => new Float64Array(6));
+    // extrapolation des points de Gauss vers les sommets
+    const EX = CORN.map(cn => CORN.map(g => { const x = (2 * cn[0] - 1) * s3, y = (2 * cn[1] - 1) * s3, z = (2 * cn[2] - 1) * s3; return (1 + (2 * g[0] - 1) * x) * (1 + (2 * g[1] - 1) * y) * (1 + (2 * g[2] - 1) * z) / 8; }));
+    for (let e = 0; e < M.nel; e++) {
+      for (let i = 0; i < 24; i++) ue[i] = u[S.dofs[e * 24 + i]];
+      for (let g = 0; g < 8; g++) { const B = Bs[g], eps = [0, 0, 0, 0, 0, 0];
+        for (let k = 0; k < 6; k++) { let s = 0; for (let j = 0; j < 24; j++) s += B[k][j] * ue[j]; eps[k] = s; }
+        for (let k = 0; k < 6; k++) { let s = 0; for (let j = 0; j < 6; j++) s += D[k][j] * eps[j]; sg[g][k] = s; } }
+      for (let c = 0; c < 8; c++) { const nd = M.els[e * 8 + c]; cnt[nd]++;
+        for (let k = 0; k < 6; k++) { let s = 0; for (let g = 0; g < 8; g++) s += EX[c][g] * sg[g][k]; sig[nd * 6 + k] += s; } }
+    }
+    const vmN = new Float64Array(M.nn), umN = new Float64Array(M.nn);
+    for (let i = 0; i < M.nn; i++) {
+      const s = sig.subarray(i * 6, i * 6 + 6).map(v => v / cnt[i]);
+      vmN[i] = Math.sqrt(0.5 * ((s[0] - s[1]) ** 2 + (s[1] - s[2]) ** 2 + (s[2] - s[0]) ** 2) + 3 * (s[3] ** 2 + s[4] ** 2 + s[5] ** 2));
+      umN[i] = Math.hypot(u[3 * i], u[3 * i + 1], u[3 * i + 2]);
+    }
+    // valeur max hors nœuds encastrés (singularité d'appui)
+    let vmax = 0, umax = 0, imax = -1;
+    for (let i = 0; i < M.nn; i++) { if (!S.fixed[3 * i] && vmN[i] > vmax) { vmax = vmN[i]; imax = i; } if (umN[i] > umax) umax = umN[i]; }
+    // champs sur grille de nœuds (dilatés vers l'extérieur pour l'affichage)
+    const grid = (vals, mx) => {
+      const g = new Float32Array(NN).fill(-1);
+      for (let gi = 0; gi < NN; gi++) { const id = M.nodeId[gi]; if (id >= 0) g[gi] = Math.min(1, vals[id] / (mx || 1)); }
+      for (let pass = 0; pass < 2; pass++) { const g2 = g.slice();
+        for (let k = 0; k < NZ; k++) for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) { const gi = i + NX * (j + NY * k); if (g[gi] >= 0) continue;
+          let s = 0, c = 0; for (const [di, dj, dk] of [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]]) { const a = i + di, bq = j + dj, cq = k + dk;
+            if (a < 0 || bq < 0 || cq < 0 || a >= NX || bq >= NY || cq >= NZ) continue; const v = g[a + NX * (bq + NY * cq)]; if (v >= 0) { s += v; c++; } }
+          if (c) g2[gi] = s / c; }
+        g.set(g2); }
+      const out = new Uint8Array(NN); for (let i = 0; i < NN; i++) out[i] = Math.round(Math.max(0, g[i]) * 255); return out;
+    };
+    let pmax = null;
+    if (imax >= 0) { const gi = M.nodeId.indexOf(imax); const i = gi % NX, j = ((gi / NX) | 0) % NY, k = (gi / (NX * NY)) | 0; pmax = [M.b[0] + i * h[0], M.b[1] + j * h[1], M.b[2] + k * h[2]]; }
+    return { vmax, umax, pmax, dimsN: [NX, NY, NZ], origin: [M.b[0], M.b[1], M.b[2]], size: [n[0] * h[0], n[1] * h[1], n[2] * h[2]],
+      vmGrid: grid(vmN, vmax), umGrid: grid(umN, umax), nel: M.nel, h: Math.min(...h), s: mat.Re / vmax };
+  }
+  return { setup, solve, solveSync, post, stiffness, mesh, faceSet };
+})();
+if (typeof module !== 'undefined') module.exports = FEM;
+
+/* ===== ÉDITEUR D'ESQUISSE 2D ===== */
+class SketchEditor {
+  constructor(root, opts) {
+    this.root = root; this.opts = opts;
+    this.cv = root.querySelector('#skc'); this.ctx = this.cv.getContext('2d');
+    this.props = root.querySelector('#skprops');
+    this.tool = 'select'; this.snap = 1; this.ents = []; this.sel = -1;
+    this.view = { s: 6, ox: 300, oy: 300 }; this.tmp = null; this.poly = null; this.mouse = null;
+    this.bind();
+    new ResizeObserver(() => this.resize()).observe(this.cv.parentElement);
+  }
+  open(plane, ents, C) {
+    this.plane = plane; this.ents = JSON.parse(JSON.stringify(ents || [])); this.sel = -1; this.poly = null; this.tmp = null;
+    this.C = C; this.secKey = '';
+    this.fr = G.frame(plane.n);
+    this.setTool(this.ents.length ? 'select' : 'rect');
+    this.resize(); this.fitView(); this.renderProps(); this.draw();
+  }
+  resize() {
+    const r = this.cv.parentElement.getBoundingClientRect(); const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.W = r.width; this.H = r.height; this.dpr = dpr;
+    this.cv.width = r.width * dpr; this.cv.height = r.height * dpr; this.cv.style.width = r.width + 'px'; this.cv.style.height = r.height + 'px';
+    this.secKey = ''; this.draw();
+  }
+  fitView() {
+    let b = null;
+    const add = (bb) => { if (!b) b = bb.slice(); else { b[0] = Math.min(b[0], bb[0]); b[1] = Math.min(b[1], bb[1]); b[2] = Math.max(b[2], bb[2]); b[3] = Math.max(b[3], bb[3]); } };
+    this.ents.forEach(e => add(G.entBounds(e)));
+    const rb = this.C && this.C.length ? G.roughBox(this.C) : null;
+    if (rb) {
+      const B = rb.box, u = this.fr.u, v = this.fr.v;
+      const ss = [], ts = [];
+      for (const x of [B[0], B[3]]) for (const y of [B[1], B[4]]) for (const z of [B[2], B[5]]) { ss.push(u[0] * x + u[1] * y + u[2] * z); ts.push(v[0] * x + v[1] * y + v[2] * z); }
+      add([Math.min(...ss), Math.min(...ts), Math.max(...ss), Math.max(...ts)]);
+    }
+    if (!b) b = [-10, -10, 70, 50];
+    add([0, 0, 0, 0]);
+    const w = Math.max(20, b[2] - b[0]), h = Math.max(20, b[3] - b[1]);
+    const s = Math.min((this.W - 120) / w, (this.H - 120) / h);
+    this.view.s = Math.max(0.5, Math.min(40, s));
+    this.view.ox = this.W / 2 - (b[0] + b[2]) / 2 * this.view.s;
+    this.view.oy = this.H / 2 + (b[1] + b[3]) / 2 * this.view.s;
+    this.draw();
+  }
+  toS(x, y) { return [x * this.view.s + this.view.ox, -y * this.view.s + this.view.oy]; }
+  toW(px, py) { return [(px - this.view.ox) / this.view.s, -(py - this.view.oy) / this.view.s]; }
+  snapP(p) { const g = this.snap; return [Math.round(p[0] / g) * g, Math.round(p[1] / g) * g]; }
+  setTool(t) {
+    this.tool = t; this.poly = null; this.tmp = null;
+    this.root.querySelectorAll('[data-sktool]').forEach(b => b.classList.toggle('on', b.dataset.sktool === t));
+    this.cv.style.cursor = t === 'select' ? 'default' : 'crosshair';
+    this.draw();
+  }
+  /* ---- interaction ---- */
+  bind() {
+    const cv = this.cv; let pan = null, drag = null;
+    cv.addEventListener('contextmenu', e => e.preventDefault());
+    const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    cv.addEventListener('wheel', e => {
+      e.preventDefault(); const [px, py] = pos(e), w = this.toW(px, py);
+      const k = Math.exp(-e.deltaY * 0.0015); this.view.s = Math.max(0.3, Math.min(80, this.view.s * k));
+      this.view.ox = px - w[0] * this.view.s; this.view.oy = py + w[1] * this.view.s; this.draw();
+    }, { passive: false });
+    cv.addEventListener('pointerdown', e => {
+      cv.setPointerCapture(e.pointerId);
+      const [px, py] = pos(e);
+      if (e.button === 1 || e.button === 2) { pan = { x: px, y: py }; return; }
+      const w = this.toW(px, py), sp = this.snapP(w);
+      if (this.tool === 'select') {
+        // sommet de polyligne sélectionnée ?
+        const se = this.ents[this.sel];
+        if (se && se.t === 'poly') {
+          const vi = se.pts.findIndex(p => { const q = this.toS(p[0], p[1]); return Math.hypot(q[0] - px, q[1] - py) < 9; });
+          if (vi >= 0) { drag = { kind: 'vtx', vi, start: sp }; return; }
+        }
+        const hi = this.hit(px, py);
+        this.sel = hi; this.renderProps();
+        if (hi >= 0) drag = { kind: 'move', start: sp, orig: JSON.parse(JSON.stringify(this.ents[hi])) };
+        else pan = { x: px, y: py };
+        this.draw(); return;
+      }
+      if (this.tool === 'poly') {
+        if (!this.poly) this.poly = [sp];
+        else {
+          const f = this.toS(...this.poly[0]);
+          if (this.poly.length >= 3 && Math.hypot(f[0] - px, f[1] - py) < 10) { this.closePoly(); return; }
+          const l = this.poly[this.poly.length - 1];
+          if (l[0] !== sp[0] || l[1] !== sp[1]) this.poly.push(sp);
+        }
+        this.draw(); return;
+      }
+      this.tmp = { a: sp, b: sp };
+    });
+    cv.addEventListener('pointermove', e => {
+      const [px, py] = pos(e); this.mouse = this.snapP(this.toW(px, py));
+      if (!pan && !drag && !this.tmp) cv.style.cursor = this.labelAt(px, py) ? 'text' : (this.tool === 'select' ? 'default' : 'crosshair');
+      if (pan) { this.view.ox += px - pan.x; this.view.oy += py - pan.y; pan.x = px; pan.y = py; this.draw(); return; }
+      if (drag) {
+        const sp = this.mouse, dx = sp[0] - drag.start[0], dy = sp[1] - drag.start[1];
+        const en = this.ents[this.sel];
+        if (drag.kind === 'vtx') { en.pts[drag.vi] = sp.slice(); }
+        else { const o = drag.orig;
+          if (o.t === 'rect') { en.x = r3(o.x + dx); en.y = r3(o.y + dy); }
+          else if (o.t === 'poly') { en.pts = o.pts.map(p => [r3(p[0] + dx), r3(p[1] + dy)]); }
+          else { en.cx = r3(o.cx + dx); en.cy = r3(o.cy + dy); } }
+        this.renderProps(true); this.draw(); return;
+      }
+      if (this.tmp) this.tmp.b = this.mouse;
+      this.draw();
+    });
+    const up = e => {
+      if (pan) { pan = null; return; }
+      if (drag) { drag = null; this.renderProps(); this.changed(); return; }
+      if (!this.tmp) return;
+      const { a, b } = this.tmp; this.tmp = null;
+      const ent = this.makeEnt(a, b);
+      if (ent) { this.ents.push(ent); this.sel = this.ents.length - 1; this.renderProps(); this.changed(); }
+      this.draw();
+    };
+    cv.addEventListener('pointerup', up);
+    cv.addEventListener('dblclick', e => {
+      const [px, py] = pos(e), lab = this.labelAt(px, py);
+      if (lab && !this.poly) { this.editLabel(lab); return; }
+      if (this.tool === 'poly' && this.poly && this.poly.length >= 3) this.closePoly();
+    });
+  }
+  key(e) {
+    if (e.key === 'Escape') { if (this.poly) this.poly = null; else if (this.tmp) this.tmp = null; else { this.sel = -1; this.renderProps(); } this.draw(); return true; }
+    if (e.key === 'Enter' && this.poly && this.poly.length >= 3) { this.closePoly(); return true; }
+    if ((e.key === 'Delete' || e.key === 'Backspace') && this.sel >= 0) { this.del(this.sel); return true; }
+    const m = { v: 'select', r: 'rect', c: 'circle', o: 'oblong', h: 'npoly', l: 'poly' }[e.key.toLowerCase()];
+    if (m && !e.ctrlKey && !e.metaKey) { this.setTool(m); return true; }
+    return false;
+  }
+  closePoly() {
+    const pts = this.poly; this.poly = null;
+    this.ents.push({ t: 'poly', pts }); this.sel = this.ents.length - 1; this.renderProps(); this.changed(); this.draw();
+  }
+  makeEnt(a, b) {
+    const g = this.snap, dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy);
+    switch (this.tool) {
+      case 'rect': if (Math.abs(dx) < g * .5 || Math.abs(dy) < g * .5) return null;
+        return { t: 'rect', x: Math.min(a[0], b[0]), y: Math.min(a[1], b[1]), w: Math.abs(dx), h: Math.abs(dy) };
+      case 'circle': { const d = Math.round(2 * L / g) * g; if (d < g) return null; return { t: 'circle', cx: a[0], cy: a[1], d }; }
+      case 'oblong': { if (L < g) return null; let ang = Math.round(Math.atan2(dy, dx) * 180 / Math.PI / 15) * 15;
+        return { t: 'oblong', cx: r3((a[0] + b[0]) / 2), cy: r3((a[1] + b[1]) / 2), L: r3(L), d: Math.max(g, 8), a: ang }; }
+      case 'npoly': { const d = Math.round(2 * L / g) * g; if (d < g) return null; const ang = Math.round(Math.atan2(dy, dx) * 180 / Math.PI / 15) * 15;
+        return { t: 'npoly', cx: a[0], cy: a[1], n: 6, d, a: ang }; }
+    }
+    return null;
+  }
+  hit(px, py) {
+    const w = this.toW(px, py), tol = 8 / this.view.s;
+    for (let i = this.ents.length - 1; i >= 0; i--) {
+      const c = G.compileEnt(this.ents[i]); const d = G.sd2(c, w[0], w[1]);
+      if (Math.abs(d) < tol) return i;
+    }
+    for (let i = this.ents.length - 1; i >= 0; i--) { const c = G.compileEnt(this.ents[i]); if (G.sd2(c, w[0], w[1]) < 0) return i; }
+    return -1;
+  }
+  del(i) { this.ents.splice(i, 1); this.sel = -1; this.renderProps(); this.changed(); this.draw(); }
+  changed() { this.opts.onChange && this.opts.onChange(); }
+  crossing() {
+    // contours qui se chevauchent partiellement (approx. par boîtes)
+    const B = this.ents.map(G.entBounds);
+    for (let i = 0; i < B.length; i++) for (let j = i + 1; j < B.length; j++) {
+      const a = B[i], b = B[j];
+      const inter = a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
+      if (!inter) continue;
+      const aInB = a[0] >= b[0] && a[2] <= b[2] && a[1] >= b[1] && a[3] <= b[3];
+      const bInA = b[0] >= a[0] && b[2] <= a[2] && b[1] >= a[1] && b[3] <= a[3];
+      if (!aInB && !bInA) return true;
+    }
+    return false;
+  }
+  /* ---- dessin ---- */
+  draw() {
+    if (!this.plane) return;
+    const c = this.ctx; c.setTransform(this.dpr, 0, 0, this.dpr, 0, 0); this.labels = [];
+    c.fillStyle = '#fbfcfe'; c.fillRect(0, 0, this.W, this.H);
+    this.drawSection(c);
+    this.drawGrid(c);
+    // région (pair-impair)
+    if (this.ents.length) {
+      c.beginPath(); this.ents.forEach(e => this.pathEnt(c, e));
+      c.fillStyle = 'rgba(74,132,204,.16)'; c.fill('evenodd');
+    }
+    this.ents.forEach((e, i) => {
+      c.beginPath(); this.pathEnt(c, e); c.lineWidth = i === this.sel ? 2.6 : 1.8; c.strokeStyle = i === this.sel ? '#e07a10' : '#1f4e8c'; c.stroke();
+      this.drawDims(c, e, i === this.sel, i);
+    });
+    const se = this.ents[this.sel];
+    if (se && se.t === 'poly') se.pts.forEach(p => { const q = this.toS(p[0], p[1]); c.fillStyle = '#e07a10'; c.fillRect(q[0] - 4, q[1] - 4, 8, 8); });
+    // aperçu outil
+    if (this.tmp) { const e = this.makeEnt(this.tmp.a, this.tmp.b); if (e) { c.beginPath(); this.pathEnt(c, e); c.setLineDash([5, 4]); c.strokeStyle = '#e07a10'; c.lineWidth = 1.8; c.stroke(); c.setLineDash([]); this.drawDims(c, e, true); } }
+    if (this.poly) {
+      c.beginPath(); const p0 = this.toS(...this.poly[0]); c.moveTo(p0[0], p0[1]);
+      this.poly.forEach(p => { const q = this.toS(p[0], p[1]); c.lineTo(q[0], q[1]); });
+      if (this.mouse) { const q = this.toS(...this.mouse); c.lineTo(q[0], q[1]); }
+      c.strokeStyle = '#e07a10'; c.lineWidth = 1.8; c.stroke();
+      this.poly.forEach((p, i) => { const q = this.toS(p[0], p[1]); c.fillStyle = i === 0 ? '#1a8a3a' : '#e07a10'; c.beginPath(); c.arc(q[0], q[1], i === 0 ? 6 : 3.5, 0, 7); c.fill(); });
+      if (this.mouse) { const l = this.poly[this.poly.length - 1]; const L = Math.hypot(this.mouse[0] - l[0], this.mouse[1] - l[1]);
+        const q = this.toS(...this.mouse); this.tag(c, q[0] + 14, q[1] - 14, G.fmt(L), '#e07a10'); }
+    }
+    // curseur
+    if (this.mouse && this.tool !== 'select') {
+      const q = this.toS(...this.mouse); c.strokeStyle = '#e07a10'; c.lineWidth = 1;
+      c.beginPath(); c.moveTo(q[0] - 7, q[1]); c.lineTo(q[0] + 7, q[1]); c.moveTo(q[0], q[1] - 7); c.lineTo(q[0], q[1] + 7); c.stroke();
+    }
+    if (this.mouse) {
+      c.font = '12px Consolas, monospace'; c.fillStyle = '#4a5a70'; c.textAlign = 'right'; c.textBaseline = 'bottom';
+      c.fillText('x ' + G.fmt(this.mouse[0]) + '   y ' + G.fmt(this.mouse[1]) + ' mm', this.W - 12, this.H - 10);
+    }
+    const warn = this.root.querySelector('#skwarn');
+    if (warn) warn.classList.toggle('hidden', !this.crossing());
+  }
+  drawSection(c) {
+    if (!this.C || !this.C.length) return;
+    const key = [this.view.s, this.view.ox, this.view.oy, this.W, this.H].join('|');
+    if (key !== this.secKey) {
+      this.secKey = key;
+      const st = 3, nx = Math.ceil(this.W / st), ny = Math.ceil(this.H / st);
+      const img = new ImageData(nx, ny), u = this.fr.u, v = this.fr.v, n = this.plane.n, off = this.plane.off;
+      for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+        const w = this.toW(i * st + st / 2, j * st + st / 2);
+        const base = [0, 1, 2].map(k => u[k] * w[0] + v[k] * w[1]);
+        const below = G.inside(this.C, ...base.map((b, k) => b + n[k] * (off - 0.05)));
+        const above = G.inside(this.C, ...base.map((b, k) => b + n[k] * (off + 0.05)));
+        if (below || above) { const o = 4 * (i + nx * j); img.data[o] = 150; img.data[o + 1] = 160; img.data[o + 2] = 175; img.data[o + 3] = below && above ? 70 : 110; }
+      }
+      const oc = this.secCv || (this.secCv = document.createElement('canvas')); oc.width = nx; oc.height = ny; oc.getContext('2d').putImageData(img, 0, 0);
+      this.secSt = st;
+    }
+    if (this.secCv) { c.imageSmoothingEnabled = true; c.drawImage(this.secCv, 0, 0, this.secCv.width * this.secSt, this.secCv.height * this.secSt); }
+  }
+  drawGrid(c) {
+    const s = this.view.s; let g = this.snap; while (g * s < 7) g *= 5;
+    const w0 = this.toW(0, this.H), w1 = this.toW(this.W, 0);
+    c.lineWidth = 1;
+    for (const [step, col] of [[g, 'rgba(60,90,130,.08)'], [Math.max(10, g * 5), 'rgba(60,90,130,.2)']]) {
+      c.strokeStyle = col; c.beginPath();
+      for (let x = Math.floor(w0[0] / step) * step; x <= w1[0]; x += step) { const q = this.toS(x, 0)[0]; c.moveTo(q, 0); c.lineTo(q, this.H); }
+      for (let y = Math.floor(w0[1] / step) * step; y <= w1[1]; y += step) { const q = this.toS(0, y)[1]; c.moveTo(0, q); c.lineTo(this.W, q); }
+      c.stroke();
+    }
+    const o = this.toS(0, 0), axes = this.axisCols();
+    c.lineWidth = 1.5;
+    c.strokeStyle = axes[0]; c.beginPath(); c.moveTo(0, o[1]); c.lineTo(this.W, o[1]); c.stroke();
+    c.strokeStyle = axes[1]; c.beginPath(); c.moveTo(o[0], 0); c.lineTo(o[0], this.H); c.stroke();
+    c.fillStyle = '#1f2a37'; c.beginPath(); c.arc(o[0], o[1], 3.5, 0, 7); c.fill();
+    c.font = '600 12px Segoe UI, sans-serif'; c.textBaseline = 'top'; c.textAlign = 'left';
+    c.fillStyle = axes[0]; c.fillText(axes[2], this.W - 70, o[1] + 4);
+    c.fillStyle = axes[1]; c.fillText(axes[3], o[0] + 6, 8);
+  }
+  axisCols() {
+    const nm = v => { const i = v.findIndex(x => Math.abs(x) > .5); return [(v[i] < 0 ? '−' : '') + 'XYZ'[i], ['#d33', '#2a9a48', '#2563c9'][i]]; };
+    const a = nm(this.fr.u), b = nm(this.fr.v); return [a[1], b[1], a[0] + ' →', b[0] + ' ↑'];
+  }
+  pathEnt(c, e) {
+    const S = (x, y) => this.toS(x, y), s = this.view.s;
+    if (e.t === 'rect') { const p = S(e.x, e.y + e.h); c.rect(p[0], p[1], e.w * s, e.h * s); }
+    else if (e.t === 'circle') { const p = S(e.cx, e.cy); c.moveTo(p[0] + e.d / 2 * s, p[1]); c.arc(p[0], p[1], e.d / 2 * s, 0, Math.PI * 2); }
+    else if (e.t === 'oblong') { const k = G.compileEnt(e), A = S(k.ax, k.ay), B = S(k.bx, k.by), r = k.r * s, as = Math.atan2(B[1] - A[1], B[0] - A[0]), H = Math.PI / 2;
+      c.moveTo(B[0] + r * Math.cos(as - H), B[1] + r * Math.sin(as - H));
+      c.arc(B[0], B[1], r, as - H, as + H, false); c.arc(A[0], A[1], r, as + H, as + 3 * H, false); c.closePath(); }
+    else { const pts = e.t === 'poly' ? e.pts : G.npolyPts(e); pts.forEach((p, i) => { const q = S(p[0], p[1]); i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1]); }); c.closePath(); }
+  }
+  tag(c, x, y, txt, col, meta) {
+    c.font = '600 12px Segoe UI, sans-serif'; const w = c.measureText(txt).width + 8;
+    if (meta && meta.ei !== undefined) this.labels.push({ x, y, w: w + 6, h: 22, ...meta });
+    c.fillStyle = 'rgba(255,255,255,.95)'; c.fillRect(x - w / 2, y - 9, w, 18); c.fillStyle = col; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, x, y);
+  }
+  dim(c, a, b, off, txt, col = '#b4261a', meta) {
+    // cote entre a et b (coords esquisse), décalée de off pixels côté gauche du vecteur
+    const A = this.toS(...a), B = this.toS(...b), dx = B[0] - A[0], dy = B[1] - A[1], L = Math.hypot(dx, dy); if (L < 4) return;
+    const nx = -dy / L * off, ny = dx / L * off;
+    c.strokeStyle = col; c.fillStyle = col; c.lineWidth = 1; c.globalAlpha = .55;
+    c.beginPath(); c.moveTo(A[0], A[1]); c.lineTo(A[0] + nx * 1.15, A[1] + ny * 1.15); c.moveTo(B[0], B[1]); c.lineTo(B[0] + nx * 1.15, B[1] + ny * 1.15); c.stroke(); c.globalAlpha = 1;
+    const a2 = [A[0] + nx, A[1] + ny], b2 = [B[0] + nx, B[1] + ny];
+    c.beginPath(); c.moveTo(a2[0], a2[1]); c.lineTo(b2[0], b2[1]); c.stroke();
+    const ang = Math.atan2(dy, dx);
+    if (L > 22) for (const [p, an] of [[b2, ang], [a2, ang + Math.PI]]) { c.beginPath(); c.moveTo(p[0], p[1]); c.lineTo(p[0] - 7 * Math.cos(an - .35), p[1] - 7 * Math.sin(an - .35)); c.lineTo(p[0] - 7 * Math.cos(an + .35), p[1] - 7 * Math.sin(an + .35)); c.fill(); }
+    this.tag(c, (a2[0] + b2[0]) / 2, (a2[1] + b2[1]) / 2, txt, col, meta);
+  }
+  drawDims(c, e, sel, ei) {
+    const f = G.fmt, M = k => ({ ei, key: k }), gr = '#6b7a90';
+    if (e.t === 'rect') {
+      this.dim(c, [e.x, e.y], [e.x + e.w, e.y], -22, f(e.w), undefined, M('w')); this.dim(c, [e.x, e.y], [e.x, e.y + e.h], 22, f(e.h), undefined, M('h'));
+      if (sel) { this.dim(c, [0, e.y], [e.x, e.y], 0, 'x ' + f(e.x), gr, M('x')); this.dim(c, [e.x, 0], [e.x, e.y], 0, 'y ' + f(e.y), gr, M('y')); }
+    } else if (e.t === 'circle') {
+      const p = this.toS(e.cx, e.cy), r = e.d / 2 * this.view.s, a = -Math.PI / 4;
+      const q = [p[0] + r * Math.cos(a), p[1] + r * Math.sin(a)], q2 = [p[0] + (r + 22) * Math.cos(a), p[1] + (r + 22) * Math.sin(a)];
+      c.strokeStyle = '#b4261a'; c.lineWidth = 1; c.beginPath(); c.moveTo(q2[0], q2[1]); c.lineTo(q[0], q[1]); c.stroke();
+      this.tag(c, q2[0] + 18, q2[1], '\u00d8' + f(e.d), '#b4261a', M('d'));
+      c.fillStyle = '#1f4e8c'; c.fillRect(p[0] - 2, p[1] - 2, 4, 4);
+      if (sel) { this.dim(c, [0, e.cy], [e.cx, e.cy], 0, 'x ' + f(e.cx), gr, M('cx')); this.dim(c, [e.cx, 0], [e.cx, e.cy], 0, 'y ' + f(e.cy), gr, M('cy')); }
+    } else if (e.t === 'oblong') {
+      const k = G.compileEnt(e); this.dim(c, [k.ax, k.ay], [k.bx, k.by], -(k.r * this.view.s + 18), f(e.L), undefined, M('L'));
+      const p = this.toS(k.bx, k.by); this.tag(c, p[0] + k.r * this.view.s + 26, p[1], 'l ' + f(e.d), '#b4261a', M('d'));
+      if (sel) { this.dim(c, [0, e.cy], [e.cx, e.cy], 0, 'x ' + f(e.cx), gr, M('cx')); this.dim(c, [e.cx, 0], [e.cx, e.cy], 0, 'y ' + f(e.cy), gr, M('cy')); }
+    } else if (e.t === 'npoly') {
+      const p = this.toS(e.cx, e.cy); c.setLineDash([3, 3]); c.strokeStyle = 'rgba(31,78,140,.4)'; c.beginPath(); c.arc(p[0], p[1], e.d / 2 * this.view.s, 0, 7); c.stroke(); c.setLineDash([]);
+      this.tag(c, p[0], p[1] - e.d / 2 * this.view.s - 14, '\u00d8' + f(e.d), '#b4261a', M('d'));
+    } else if (e.t === 'poly') {
+      const P = e.pts, n = P.length; let area = 0; for (let i = 0; i < n; i++) { const a = P[i], b = P[(i + 1) % n]; area += a[0] * b[1] - b[0] * a[1]; }
+      const sg = area > 0 ? -1 : 1;
+      for (let i = 0; i < n; i++) { const a = P[i], b = P[(i + 1) % n]; this.dim(c, a, b, sg * 18, f(Math.hypot(b[0] - a[0], b[1] - a[1])), undefined, M('seg' + i)); }
+    }
+  }
+  labelAt(px, py) {
+    if (!this.labels) return null;
+    for (let i = this.labels.length - 1; i >= 0; i--) { const l = this.labels[i]; if (Math.abs(px - l.x) <= l.w / 2 && Math.abs(py - l.y) <= l.h / 2) return l; }
+    return null;
+  }
+  editLabel(l) {
+    const e = this.ents[l.ei]; if (!e) return;
+    let cur;
+    if (l.key.startsWith('seg')) { const i = +l.key.slice(3), a = e.pts[i], b = e.pts[(i + 1) % e.pts.length]; cur = Math.hypot(b[0] - a[0], b[1] - a[1]); }
+    else cur = e[l.key];
+    const old = this.root.querySelector('.cote-edit'); if (old) old.remove();
+    const inp = document.createElement('input'); inp.className = 'cote-edit'; inp.inputMode = 'decimal';
+    inp.value = String(r3(cur)).replace('.', ','); inp.style.left = (l.x - 40) + 'px'; inp.style.top = (l.y - 15) + 'px';
+    this.cv.parentElement.appendChild(inp); inp.focus(); inp.select();
+    let done = false;
+    const fin = ok => {
+      if (done) return; done = true; inp.remove();
+      if (!ok) return;
+      const v = parseFloat(inp.value.replace(',', '.')); if (!isFinite(v)) return;
+      if (l.key.startsWith('seg')) {
+        if (v <= 0) return;
+        const i = +l.key.slice(3), n = e.pts.length, a = e.pts[i], b = e.pts[(i + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]); if (L < 1e-9) return;
+        e.pts[(i + 1) % n] = [r3(a[0] + (b[0] - a[0]) * v / L), r3(a[1] + (b[1] - a[1]) * v / L)];
+      } else this.setVal(e, l.key, v);
+      this.sel = l.ei; this.renderProps(); this.draw(); this.changed();
+    };
+    inp.addEventListener('keydown', ev => { ev.stopPropagation(); if (ev.key === 'Enter') fin(true); if (ev.key === 'Escape') fin(false); });
+    inp.addEventListener('blur', () => fin(true));
+  }
+  /* ---- panneau propriétés ---- */
+  renderProps(soft) {
+    const e = this.ents[this.sel], P = this.props;
+    if (soft && e) { P.querySelectorAll('input[data-k]').forEach(inp => { if (document.activeElement === inp) return; const v = this.getVal(e, inp.dataset.k); inp.value = String(v).replace('.', ','); }); return; }
+    const list = this.ents.map((en, i) => `<button class="entbtn ${i === this.sel ? 'on' : ''}" data-act="sk-sel" data-i="${i}">${ENT_NAMES[en.t]} ${i + 1}</button>`).join('');
+    let h = `<div class="pp-title">Contours de l’esquisse</div><div class="entlist">${list || '<div class="muted">Aucun contour. Choisis un outil puis dessine dans la grille.</div>'}</div>`;
+    if (e) {
+      const F = (k, lab, unit = 'mm') => `<label class="fld"><span>${lab}</span><input data-k="${k}" inputmode="decimal" value="${String(this.getVal(e, k)).replace('.', ',')}"><em>${unit}</em></label>`;
+      h += `<div class="pp-title">${ENT_NAMES[e.t]} ${this.sel + 1}</div>`;
+      if (e.t === 'rect') h += F('w', 'Longueur') + F('h', 'Largeur') + F('x', 'Coin bas-gauche x') + F('y', 'Coin bas-gauche y');
+      if (e.t === 'circle') h += F('d', 'Diamètre Ø') + F('cx', 'Centre x') + F('cy', 'Centre y');
+      if (e.t === 'oblong') h += F('L', 'Entraxe') + F('d', 'Largeur') + F('cx', 'Centre x') + F('cy', 'Centre y') + F('a', 'Angle', '°');
+      if (e.t === 'npoly') h += F('n', 'Nombre de côtés', '') + F('d', 'Ø cercle extérieur') + F('cx', 'Centre x') + F('cy', 'Centre y') + F('a', 'Rotation', '°');
+      if (e.t === 'poly') e.pts.forEach((p, i) => { h += `<div class="ptrow"><b>P${i + 1}</b>${F('p' + i + 'x', 'x')}${F('p' + i + 'y', 'y')}</div>`; });
+      h += `<div class="row2">${e.t !== 'poly' ? '<button class="btn sm" data-act="sk-center">Centrer sur l’origine</button>' : ''}<button class="btn sm danger" data-act="sk-del">Supprimer</button></div>`;
+    }
+    P.innerHTML = h;
+    P.querySelectorAll('input[data-k]').forEach(inp => inp.addEventListener('input', () => {
+      const v = parseFloat(inp.value.replace(',', '.')); if (!isFinite(v)) return;
+      this.setVal(e, inp.dataset.k, v); this.draw(); this.changed();
+    }));
+  }
+  getVal(e, k) { if (k[0] === 'p' && e.t === 'poly') { const m = k.match(/^p(\d+)([xy])$/); return r3(e.pts[+m[1]][m[2] === 'x' ? 0 : 1]); } return r3(e[k]); }
+  setVal(e, k, v) {
+    if (k[0] === 'p' && e.t === 'poly') { const m = k.match(/^p(\d+)([xy])$/); e.pts[+m[1]][m[2] === 'x' ? 0 : 1] = v; return; }
+    if (['w', 'h', 'd', 'L'].includes(k) && v <= 0) return;
+    if (k === 'n') v = Math.max(3, Math.min(12, Math.round(v)));
+    e[k] = v;
+  }
+  center() {
+    const e = this.ents[this.sel]; if (!e) return;
+    if (e.t === 'rect') { e.x = -e.w / 2; e.y = -e.h / 2; } else { e.cx = 0; e.cy = 0; }
+    this.renderProps(); this.draw(); this.changed();
+  }
+}
+const ENT_NAMES = { rect: 'Rectangle', circle: 'Cercle', oblong: 'Oblong', npoly: 'Polygone', poly: 'Polyligne' };
+const r3 = v => Math.round(v * 1000) / 1000;
+
+/* ===== APPLICATION CAO ===== */
+// [nom, masse volumique g/cm3, E MPa, nu, Re MPa]
+const MATS = [['PLA', 1.24, 3500, 0.36, 50], ['ABS', 1.04, 2200, 0.35, 40], ['Bois (pin)', 0.50, 11000, 0.30, 40], ['Aluminium', 2.70, 70000, 0.33, 200], ['Acier', 7.85, 210000, 0.30, 235], ['Fonte', 7.20, 100000, 0.26, 200], ['Laiton', 8.50, 100000, 0.34, 200]];
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+function toast(msg, kind = '') {
+  const t = document.createElement('div'); t.className = 'toast ' + kind; t.textContent = msg; $('#toasts').appendChild(t);
+  setTimeout(() => t.classList.add('out'), 2600); setTimeout(() => t.remove(), 3100);
+}
+function fmtN(v, d = 1) { return (Math.round(v * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d).replace('.', ','); }
+
+const CAD = {
+  model: { features: [] }, hist: [], fut: [], sel: -1, mode: '3d', pending: null, editIdx: -1, editSketchOnly: false,
+  locked: false, hooks: [], markers: [], mat: 0, firstFit: true, ws: 'part', pickFor: 'sketch', simShow: 'vm', simField: null,
+  init() {
+    this.vw = new Viewer($('#gl'), $('#ov'));
+    if (!this.vw.ok) { $('#view3d').innerHTML = '<div class="nogl">Ce navigateur ne permet pas l’affichage 3D (WebGL2). Utilise Chrome, Edge ou Firefox à jour.</div>'; }
+    this.vw.overlayHooks.push((c, vw) => this.drawMarkers(c, vw));
+    this.vw.overlayHooks.push((c, vw) => { if (this.ws === 'asm') ASM.overlay(c, vw); else this.drawSim(c, vw); });
+    if (CFG.asm || CFG.mode === 'libre') $('#wsSeg').classList.remove('hidden');
+    if (CFG.sim || CFG.mode === 'libre') $('[data-act="sim-open"]').classList.remove('hidden');
+    this.sk = new SketchEditor($('#sketchView'), { onChange: () => {} });
+    this.vw.onPick = (x, y) => this.onPick(x, y);
+    document.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && !b.disabled) { if (b.dataset.act.startsWith('asm-') || b.dataset.act === 'kin-close') ASM.act(b.dataset.act, b); else this.act(b.dataset.act, b, e); } });
+    document.addEventListener('keydown', e => this.key(e));
+    $('#featDlg').addEventListener('input', () => this.readDlg());
+    $('#matSel').innerHTML = MATS.map((m, i) => `<option value="${i}">${m[0]} (${String(m[1]).replace('.', ',')} g/cm³)</option>`).join('');
+    $('#matSel').addEventListener('change', e => { this.mat = +e.target.value; this.model.mat = this.mat; this.clearSim(); this.showProps(); this.renderSim(); });
+    $('#fileIn').addEventListener('change', e => this.loadFile(e));
+    this.vw.setView('iso'); this.vw.fit([0, 0, 0, 60, 40, 20]);
+    this.rebuild(true);
+  },
+  /* ---------- modèle ---------- */
+  setModel(m, keepView) {
+    this.model = JSON.parse(JSON.stringify(m || { features: [] })); this.hist = []; this.fut = []; this.sel = -1; this.markers = [];
+    if (!this.model.features) this.model.features = [];
+    this.mat = this.model.mat ?? (CFG.defaultMat ?? 0); $('#matSel').value = this.mat;
+    this.simField = null; this.vw.setField(null); ASM.invalidate();
+    this.firstFit = !keepView;
+    if (this.ws === 'asm' && !this.model.asm) this.setWs('part');
+    this.rebuild(true);
+    if (this.ws === 'asm') { ASM.enter(); ASM.fit(); } else if (!keepView) this.fitAll();
+    this.renderSim();
+  },
+  partFeatures() { return this.model.features; },
+  setWs(w) {
+    if (this.mode !== '3d' || this.pending) { toast('Termine d\u2019abord ton esquisse.', 'warn'); return; }
+    this.ws = w; document.body.classList.toggle('ws-asm', w === 'asm');
+    $$('[data-act="ws"]').forEach(b => b.classList.toggle('on', b.dataset.v === w));
+    $('#simDlg').classList.add('hidden'); $('#kinPanel').classList.add('hidden'); this.markers = [];
+    if (w === 'asm') { this.vw.setField(null); ASM.enter(); ASM.fit(); }
+    else { ASM.stop(); this.vw.setModel(G.compile(this.model)); if (this.simField) this.showField(); this.fitAll(); }
+  },
+  getModel() { return JSON.parse(JSON.stringify(this.model)); },
+  commit() { this.hist.push(JSON.stringify(this.model)); if (this.hist.length > 80) this.hist.shift(); this.fut = []; },
+  undo() { if (!this.hist.length || this.locked) return; this.fut.push(JSON.stringify(this.model)); this.model = JSON.parse(this.hist.pop()); this.sel = -1; this.rebuild(); },
+  redo() { if (!this.fut.length || this.locked) return; this.hist.push(JSON.stringify(this.model)); this.model = JSON.parse(this.fut.pop()); this.sel = -1; this.rebuild(); },
+  rebuild(silent) {
+    const feats = this.model.features.slice();
+    if (this.pending) { if (this.editIdx >= 0) feats[this.editIdx] = this.pending; else feats.push(this.pending); }
+    const C = G.compile({ features: feats });
+    this.C = G.compile(this.model);
+    clearTimeout(this.rt); this.rt = setTimeout(() => { if (this.ws === 'part') this.vw.setModel(C); }, 10);
+    this.renderTree();
+    if (!this.pending) {
+      this.markers = silent ? this.markers : [];
+      clearTimeout(this.at); $('#propVals').classList.add('busy');
+      this.at = setTimeout(() => { this.A = G.analyze(this.C); this.showProps(); $('#propVals').classList.remove('busy');
+        if (this.firstFit && !this.A.empty) { this.firstFit = false; this.fitAll(); } }, 140);
+      if (!silent) { this.clearSim(); this.hooks.forEach(h => h('change')); }
+    }
+    $('[data-act="undo"]').disabled = !this.hist.length || this.locked; $('[data-act="redo"]').disabled = !this.fut.length || this.locked;
+  },
+  showProps() {
+    const A = this.A, el = $('#propVals');
+    if (!A || A.empty) { el.innerHTML = '<div class="muted">Pas encore de solide.</div>'; return; }
+    const m = A.vol / 1000 * MATS[this.mat][1];
+    el.innerHTML = `<div class="pv"><span>Volume</span><b>${fmtN(A.vol / 1000, 2)} cm³</b></div>
+      <div class="pv"><span>Dimensions</span><b>${A.dims.map(d => G.fmt(d, 1)).join(' × ')} mm</b></div>
+      <div class="pv"><span>Masse</span><b>${fmtN(m, 1)} g</b></div>`;
+  },
+  fitAll() { const A = G.analyze(this.C, 20000); this.vw.fit(A.empty ? [0, 0, 0, 60, 40, 20] : A.bbox); },
+  /* ---------- arbre ---------- */
+  featName(f, i) {
+    const n = this.model.features.slice(0, i + 1).filter(g => g.op === f.op).length;
+    return (f.op === 'boss' ? 'Bossage ' : 'Enlèvement ') + n;
+  },
+  renderTree() {
+    const L = $('#treeList'), F = this.model.features;
+    if (!F.length) { L.innerHTML = '<div class="tree-empty">L’arbre est vide.<br>Commence par <b>Nouvelle esquisse</b>.</div>'; return; }
+    L.innerHTML = F.map((f, i) => {
+      const depth = f.op === 'cut' && f.thru ? 'à travers tout' : G.fmt(f.depth) + ' mm' + (f.dir === 0 ? ' sym.' : f.dir === -1 ? ' inv.' : '');
+      const on = i === this.sel;
+      return `<div class="feat ${f.op} ${on ? 'on' : ''} ${f.hidden ? 'hid' : ''}" data-act="sel-feat" data-i="${i}">
+        <div class="fic">${f.op === 'boss' ? ICON_BOSS : ICON_CUT}</div>
+        <div class="ftx"><b>${this.featName(f, i)}</b><span>Esquisse sur ${G.planeName(f.sketch.plane)} · ${depth}</span></div></div>
+        ${on && !this.locked ? `<div class="feat-acts"><button class="btn sm" data-act="edit-sketch" data-i="${i}">Esquisse</button><button class="btn sm" data-act="edit-feat" data-i="${i}">Profondeur</button><button class="btn sm" data-act="hide-feat" data-i="${i}">${f.hidden ? 'Afficher' : 'Masquer'}</button><button class="btn sm danger" data-act="del-feat" data-i="${i}">Supprimer</button></div>` : ''}`;
+    }).join('');
+  },
+  /* ---------- actions ---------- */
+  act(a, b, e) {
+    const i = +b.dataset.i;
+    const editing = ['new-sketch', 'edit-sketch', 'edit-feat', 'del-feat', 'hide-feat', 'new-file', 'open-file', 'sim-run', 'sim-pick'];
+    if (this.locked && editing.includes(a)) { toast('Copie rendue : modification impossible.'); return; }
+    switch (a) {
+      case 'view': this.vw.setView(b.dataset.v); break;
+      case 'fit': this.fitAll(); break;
+      case 'ortho': this.vw.cam.ortho = !this.vw.cam.ortho; b.classList.toggle('on', this.vw.cam.ortho); b.textContent = this.vw.cam.ortho ? 'Orthogonale' : 'Perspective'; this.vw.req(); break;
+      case 'undo': this.undo(); break;
+      case 'redo': this.redo(); break;
+      case 'new-sketch': if (this.mode !== '3d' || this.pending) return; this.editIdx = -1; this.openPlaneDlg(); break;
+      case 'plane': this.choosePlane(b.dataset.p); break;
+      case 'plane-face': this.startPick(); break;
+      case 'plane-cancel': this.closePlaneDlg(); break;
+      case 'sel-feat': this.sel = this.sel === i ? -1 : i; this.renderTree(); break;
+      case 'edit-sketch': { const f = this.model.features[i]; this.editIdx = i; this.editSketchOnly = true; this.openSketch(f.sketch.plane, f.sketch.ents, i); break; }
+      case 'edit-feat': { const f = this.model.features[i]; this.editIdx = i; this.pending = JSON.parse(JSON.stringify(f)); this.openFeatDlg(); this.rebuild(); break; }
+      case 'hide-feat': this.commit(); this.model.features[i].hidden = !this.model.features[i].hidden; this.rebuild(); break;
+      case 'del-feat': this.commit(); this.model.features.splice(i, 1); this.sel = -1; this.rebuild(); toast('Fonction supprimée (Ctrl+Z pour annuler)'); break;
+      case 'sk-tool': this.sk.setTool(b.dataset.sktool); break;
+      case 'sk-snap': this.sk.snap = +b.dataset.v; $$('[data-act="sk-snap"]').forEach(x => x.classList.toggle('on', x === b)); this.sk.draw(); break;
+      case 'sk-fit': this.sk.fitView(); break;
+      case 'sk-sel': this.sk.sel = i; this.sk.setTool('select'); this.sk.renderProps(); this.sk.draw(); break;
+      case 'sk-del': this.sk.del(this.sk.sel); break;
+      case 'sk-center': this.sk.center(); break;
+      case 'sk-ok': this.sketchDone(); break;
+      case 'sk-cancel': this.closeSketch(); break;
+      case 'fd-op': this.pending.op = b.dataset.v; if (this.editIdx < 0) this.pending.dir = this.defaultDir(this.pending); this.syncDlg(); this.rebuild(); break;
+      case 'fd-dir': this.pending.dir = +b.dataset.v; this.syncDlg(); this.rebuild(); break;
+      case 'fd-ok': this.featDone(); break;
+      case 'fd-cancel': this.pending = null; $('#featDlg').classList.add('hidden'); this.editIdx = -1; this.rebuild(true); break;
+      case 'save-file': this.saveFile(); break;
+      case 'open-file': $('#fileIn').click(); break;
+      case 'new-file': this.askNew(); break;
+      case 'new-yes': this.closeModal(); this.commit(); this.setModel({ features: [] }); this.setWs('part'); break;
+      case 'modal-close': this.closeModal(); break;
+      case 'help': this.openHelp(); break;
+      case 'ws': this.setWs(b.dataset.v); break;
+      case 'sim-open': if (this.locked) { toast('Copie rendue : modification impossible.'); return; } $('#simDlg').classList.toggle('hidden'); this.renderSim(); this.vw.req(); break;
+      case 'sim-close': $('#simDlg').classList.add('hidden'); this.vw.req(); break;
+      case 'sim-pick': this.startPick(b.dataset.k); break;
+      case 'sim-unfix': this.simObj().fixed.splice(i, 1); this.clearSim(); this.renderSim(); break;
+      case 'sim-mesh': this.simObj().mesh = +b.dataset.v; this.renderSim(); break;
+      case 'sim-run': this.runSim(); break;
+      case 'sim-show': this.simShow = b.dataset.v; this.showField(); this.renderSim(); break;
+    }
+  },
+  key(e) {
+    const tg = e.target; if (tg && (tg.tagName === 'INPUT' || tg.tagName === 'SELECT' || tg.tagName === 'TEXTAREA')) { if (e.key === 'Enter' && this.mode === 'sketch') tg.blur(); return; }
+    if (this.mode === 'sketch') { if (this.sk.key(e)) e.preventDefault(); return; }
+    if (this.mode === 'pick' && e.key === 'Escape') { this.stopPick(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); this.undo(); }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') { e.preventDefault(); this.redo(); }
+    if (e.key === 'Delete' && this.sel >= 0 && !this.locked && !this.pending) this.act('del-feat', { dataset: { i: this.sel } });
+  },
+  /* ---------- plan d'esquisse ---------- */
+  openPlaneDlg() { $('#planeDlg').classList.remove('hidden'); $('#planeOff').value = '0'; },
+  closePlaneDlg() { $('#planeDlg').classList.add('hidden'); },
+  choosePlane(p) {
+    const off = parseFloat(($('#planeOff').value || '0').replace(',', '.')) || 0;
+    const n = { top: [0, 0, 1], front: [0, -1, 0], right: [1, 0, 0] }[p];
+    this.closePlaneDlg(); this.openSketch({ n, off }, [], -1);
+  },
+  startPick(kind = 'sketch') {
+    if (!this.C.length) { toast('Il n\u2019y a pas encore de solide : choisis un plan de base.'); return; }
+    this.pickFor = kind;
+    this.closePlaneDlg(); this.mode = 'pick'; this.vw.pickMode = true;
+    const what = kind === 'fix' ? 'la face <b>encastr\u00e9e</b>' : kind === 'load' ? 'la face qui re\u00e7oit <b>l\u2019effort</b>' : 'une <b>face plane</b> du solide';
+    $('#banner').innerHTML = 'Clique sur ' + what + ' <button class="btn sm" data-act="plane-cancel-pick">Annuler</button>'; $('#banner').classList.remove('hidden');
+    $('#banner [data-act]').addEventListener('click', () => this.stopPick());
+  },
+  stopPick() { this.mode = '3d'; this.vw.pickMode = false; $('#banner').classList.add('hidden'); },
+  onPick(x, y) {
+    const h = this.vw.pick(x, y);
+    if (!h) { toast('Aucune face ici.'); return; }
+    const k = h.n.map(Math.abs), ax = k.indexOf(Math.max(...k));
+    if (k[ax] < 0.995) { toast('Face courbe : choisis une face plane.', 'warn'); return; }
+    const n = [0, 0, 0]; n[ax] = Math.sign(h.n[ax]);
+    let off = G.dot(h.p, n); const rb = G.roughBox(this.C);
+    if (rb) { let best = null; for (const c of rb.cand[ax]) { const o = c * n[ax]; if (Math.abs(o - off) < 0.08 && (best === null || Math.abs(o - off) < Math.abs(best - off))) best = o; } if (best !== null) off = best; }
+    off = Math.round(off * 1000) / 1000;
+    this.stopPick();
+    if (this.pickFor === 'sketch') { this.openSketch({ n, off }, [], -1); return; }
+    const S = this.simObj(), pl = { n, off, p: h.p.map(v => Math.round(v * 100) / 100) };
+    if (this.pickFor === 'fix') { if (!S.fixed.some(f => f.n.join() === n.join() && Math.abs(f.off - off) < 1e-3)) S.fixed.push(pl); }
+    else S.load = { ...pl, F: S.load ? S.load.F : 100, dir: S.load ? S.load.dir : [0, 0, -1] };
+    this.clearSim(); this.renderSim(); this.vw.req();
+  },
+  /* ---------- esquisse ---------- */
+  openSketch(plane, ents, idx) {
+    this.mode = 'sketch';
+    const C = G.compile({ features: this.model.features.filter((f, j) => idx < 0 || j < idx) });
+    $('#view3d').classList.add('hidden'); $('#sketchView').classList.remove('hidden'); $('#tb3d').classList.add('hidden');
+    $('#skPlane').textContent = 'Esquisse sur ' + G.planeName(plane);
+    this.sk.open(plane, ents, C);
+  },
+  closeSketch() {
+    this.mode = '3d'; this.editIdx = -1; this.editSketchOnly = false;
+    $('#view3d').classList.remove('hidden'); $('#sketchView').classList.add('hidden'); $('#tb3d').classList.remove('hidden');
+    this.vw.resize();
+  },
+  sketchDone() {
+    const ents = this.sk.ents;
+    if (!ents.length) { toast('Dessine au moins un contour.', 'warn'); return; }
+    const plane = this.sk.plane;
+    if (this.editSketchOnly && this.editIdx >= 0) {
+      this.commit(); this.model.features[this.editIdx].sketch.ents = JSON.parse(JSON.stringify(ents));
+      this.closeSketch(); this.rebuild(); toast('Esquisse modifiée'); return;
+    }
+    const idx = this.editIdx; this.closeSketch(); this.editIdx = idx;
+    const hasBoss = this.model.features.some(f => f.op === 'boss' && !f.hidden);
+    this.pending = { id: 'f' + Date.now(), op: 'boss', sketch: { plane, ents: JSON.parse(JSON.stringify(ents)) }, depth: 10, dir: 1, thru: false };
+    if (hasBoss && this.materialBelow(this.pending) === 'below' && this.coverage(this.pending) > 0.9) this.pending.op = 'cut';
+    this.pending.dir = this.defaultDir(this.pending);
+    if (this.pending.op === 'cut') this.pending.thru = true;
+    this.openFeatDlg(); this.rebuild();
+  },
+  materialBelow(f) {
+    const pl = f.sketch.plane, fr = G.frame(pl.n), b = G.entBounds(f.sketch.ents[0]);
+    const s = (b[0] + b[2]) / 2, t = (b[1] + b[3]) / 2;
+    const P = w => [0, 1, 2].map(i => fr.u[i] * s + fr.v[i] * t + pl.n[i] * w);
+    if (G.inside(this.C, ...P(pl.off - 0.05))) return 'below';
+    if (G.inside(this.C, ...P(pl.off + 0.05))) return 'above';
+    return 'none';
+  },
+  coverage(f) {
+    // part des contours entièrement posés sur de la matière (pour proposer un enlèvement)
+    const pl = f.sketch.plane, fr = G.frame(pl.n); let tot = 0, ins = 0;
+    for (const e of f.sketch.ents) { const b = G.entBounds(e), c = G.compileEnt(e);
+      for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) { const s = b[0] + (i + .5) / 6 * (b[2] - b[0]), t = b[1] + (j + .5) / 6 * (b[3] - b[1]);
+        if (!G.in2(c, s, t)) continue; tot++;
+        if (G.inside(this.C, ...[0, 1, 2].map(k => fr.u[k] * s + fr.v[k] * t + pl.n[k] * (pl.off - 0.05)))) ins++; } }
+    return tot ? ins / tot : 0;
+  },
+  defaultDir(f) {
+    const m = this.materialBelow(f);
+    if (f.op === 'cut') return m === 'above' ? 1 : -1;
+    return m === 'above' ? -1 : 1;
+  },
+  /* ---------- dialogue fonction ---------- */
+  openFeatDlg() {
+    const d = $('#featDlg'); d.classList.remove('hidden');
+    $('#fdDepth').value = String(this.pending.depth).replace('.', ','); $('#fdThru').checked = !!this.pending.thru;
+    const hasBoss = this.model.features.some((f, j) => f.op === 'boss' && j !== this.editIdx);
+    $('[data-act="fd-op"][data-v="cut"]').disabled = !hasBoss;
+    if (!hasBoss) this.pending.op = 'boss';
+    this.syncDlg();
+  },
+  syncDlg() {
+    const p = this.pending;
+    $$('[data-act="fd-op"]').forEach(b => b.classList.toggle('on', b.dataset.v === p.op));
+    $$('[data-act="fd-dir"]').forEach(b => b.classList.toggle('on', +b.dataset.v === p.dir));
+    $('#fdThruRow').classList.toggle('hidden', p.op !== 'cut');
+    const th = p.op === 'cut' && p.thru; $('#fdDepthRow').classList.toggle('dis', th); $('#fdDirRow').classList.toggle('dis', th);
+    $('#fdTitle').textContent = p.op === 'boss' ? 'Bossage (ajout de matière)' : 'Enlèvement de matière';
+  },
+  readDlg() {
+    if (!this.pending) return;
+    const v = parseFloat($('#fdDepth').value.replace(',', '.'));
+    if (isFinite(v) && v > 0) this.pending.depth = v;
+    this.pending.thru = $('#fdThru').checked; this.syncDlg(); this.rebuild();
+  },
+  featDone() {
+    const p = this.pending; if (!p) return;
+    this.commit();
+    if (this.editIdx >= 0) this.model.features[this.editIdx] = p; else this.model.features.push(p);
+    this.pending = null; this.editIdx = -1; $('#featDlg').classList.add('hidden');
+    this.sel = -1; this.rebuild();
+  },
+  /* ---------- marqueurs d'erreur ---------- */
+  setMarkers(m) { this.markers = m || []; this.vw.req(); },
+  drawMarkers(c, vw) {
+    if (!this.markers.length) return;
+    c.save();
+    for (const P of this.markers) { const p = vw.project(P); if (!p) continue;
+      c.fillStyle = 'rgba(220,40,40,.22)'; c.strokeStyle = 'rgba(200,30,30,.85)'; c.lineWidth = 2;
+      c.beginPath(); c.arc(p[0], p[1], 13, 0, 7); c.fill(); c.stroke(); }
+    c.restore();
+  },
+  /* ---------- simulation ---------- */
+  simObj() { if (!this.model.sim) this.model.sim = { fixed: [], load: null, mesh: 4000, res: null }; return this.model.sim; },
+  clearSim() { if (this.model.sim && this.model.sim.res) { this.model.sim.res = null; } if (this.simField) { this.simField = null; this.vw.setField(null); } this.renderSim(); },
+  hash() { return JSON.stringify(this.model.features.filter(f => !f.hidden)); },
+  renderSim() {
+    const d = $('#simDlg'); if (!d || d.classList.contains('hidden')) return;
+    const S = this.simObj(), M = MATS[this.mat], pn = p => G.planeName(p);
+    const dirs = [['0,0,-1', '−Z (vers le bas)'], ['0,0,1', '+Z (vers le haut)'], ['-1,0,0', '−X'], ['1,0,0', '+X'], ['0,-1,0', '−Y'], ['0,1,0', '+Y']];
+    let h = `<div class="fl-title">Simulation : résistance de la pièce</div>
+      <div class="comp" style="margin:0 0 8px">${M[0]} · E = ${M[2].toLocaleString('fr-FR')} MPa · Re = ${M[4]} MPa<br><span class="muted">Change le matériau dans Propriétés.</span></div>
+      <div class="sim-sec"><b>1. Encastrement</b><div class="chips">${S.fixed.map((f, i) => `<span class="chip">${pn(f)}<button data-act="sim-unfix" data-i="${i}">✕</button></span>`).join('') || '<span class="muted">aucune face</span>'}</div>
+        <button class="btn sm" data-act="sim-pick" data-k="fix">+ Face encastrée</button></div>
+      <div class="sim-sec"><b>2. Effort</b><div class="chips">${S.load ? `<span class="chip load">${pn(S.load)}</span>` : '<span class="muted">aucune face</span>'}</div>
+        <button class="btn sm" data-act="sim-pick" data-k="load">${S.load ? 'Changer la face chargée' : 'Choisir la face chargée'}</button>
+        ${S.load ? `<label class="fld"><span>Intensité F</span><input id="simF" value="${String(S.load.F).replace('.', ',')}"><em>N</em></label>
+        <label class="fld"><span>Direction</span><select id="simDir" style="width:150px">${dirs.map(o => `<option value="${o[0]}" ${o[0] === S.load.dir.join(',') ? 'selected' : ''}>${o[1]}</option>`).join('')}</select></label>` : ''}</div>
+      <div class="sim-sec"><b>3. Maillage</b> <div class="seg"><button class="btn sm ${S.mesh !== 12000 ? 'on' : ''}" data-act="sim-mesh" data-v="4000">Rapide</button><button class="btn sm ${S.mesh === 12000 ? 'on' : ''}" data-act="sim-mesh" data-v="12000">Précis</button></div></div>
+      <div class="row2"><button class="btn" data-act="sim-close">Fermer</button><button class="btn primary" data-act="sim-run" ${this.simBusy ? 'disabled' : ''}>Lancer le calcul</button></div>
+      <div id="simProg" class="prog ${this.simBusy ? '' : 'hidden'}"><i style="width:0"></i></div>`;
+    if (S.res) {
+      const fresh = S.res.hash === this.hash();
+      h += `<div class="simres ${S.res.s >= 1 ? '' : 'bad'}">
+        <div class="pv"><span>Von Mises max</span><b>${fmtN(S.res.vmax, 1)} MPa</b></div>
+        <div class="pv"><span>Déplacement max</span><b>${fmtN(S.res.umax, 3)} mm</b></div>
+        <div class="pv"><span>Limite élastique Re</span><b>${S.res.Re} MPa</b></div>
+        <div class="pv big"><span>Coef. de sécurité s</span><b>${fmtN(S.res.s, 2)}</b></div>
+        ${fresh && this.simField ? `<div class="seg wide" style="margin-top:8px"><button class="btn sm ${this.simShow === 'vm' ? 'on' : ''}" data-act="sim-show" data-v="vm">Contrainte</button><button class="btn sm ${this.simShow === 'um' ? 'on' : ''}" data-act="sim-show" data-v="um">Déplacement</button><button class="btn sm ${this.simShow === 'none' ? 'on' : ''}" data-act="sim-show" data-v="none">Pièce</button></div>` : '<div class="muted">Relance le calcul pour afficher la carte des contraintes.</div>'}
+        <div class="muted" style="margin-top:6px">s = Re / σmax · ${S.res.nel} éléments · zone encastrée exclue du maximum</div></div>`;
+    }
+    d.innerHTML = h;
+    const fi = $('#simF'), di = $('#simDir');
+    if (fi) fi.addEventListener('change', () => { const v = parseFloat(fi.value.replace(',', '.')); if (isFinite(v) && v > 0) { S.load.F = v; this.clearSim(); this.vw.req(); } });
+    if (di) di.addEventListener('change', () => { S.load.dir = di.value.split(',').map(Number); this.clearSim(); this.vw.req(); });
+  },
+  runSim() {
+    if (this.simBusy || this.mode !== '3d' || this.pending) return;
+    const S = this.simObj(), M = MATS[this.mat];
+    const st = FEM.setup(this.C, S, { E: M[2], nu: M[3], Re: M[4] }, S.mesh || 4000);
+    if (st.err) { toast(st.err, 'warn'); return; }
+    this.simBusy = true; this.renderSim(); const hash = this.hash();
+    FEM.solve(st, p => { const b = $('#simProg i'); if (b) b.style.width = Math.round(p * 100) + '%'; }, u => {
+      const R = FEM.post(st, u); this.simBusy = false;
+      S.res = { vmax: R.vmax, umax: R.umax, s: R.s, Re: M[4], E: M[2], mat: M[0], F: S.load.F, nel: R.nel, hash };
+      this.simField = R; this.simShow = 'vm'; this.showField(); this.renderSim(); this.hooks.forEach(h => h('sim'));
+    });
+  },
+  showField() {
+    const R = this.simField; if (!R || this.simShow === 'none') { this.vw.setField(null); return; }
+    this.vw.setField({ grid: this.simShow === 'vm' ? R.vmGrid : R.umGrid, dimsN: R.dimsN, origin: R.origin, size: R.size, h: R.h });
+  },
+  drawSim(c, vw) {
+    const S = this.model.sim; if (!S || this.mode === 'sketch') return;
+    const dlgOpen = !$('#simDlg').classList.contains('hidden');
+    if (!dlgOpen && !this.simField) return;
+    const A = this.A && !this.A.empty ? this.A : null, sz = A ? Math.max(...A.dims) : 50;
+    c.save();
+    for (const f of S.fixed) { const p = vw.project(f.p); if (!p) continue;
+      c.strokeStyle = '#1c2633'; c.lineWidth = 2; c.beginPath(); c.moveTo(p[0] - 14, p[1]); c.lineTo(p[0] + 14, p[1]); c.stroke();
+      c.lineWidth = 1.2; for (let k = -12; k <= 12; k += 6) { c.beginPath(); c.moveTo(p[0] + k, p[1]); c.lineTo(p[0] + k - 6, p[1] + 7); c.stroke(); } }
+    if (S.load) { const d = S.load.dir, L = sz * 0.35, a0 = S.load.p.map((v, i) => v - d[i] * L), p = vw.project(S.load.p), q = vw.project(a0);
+      if (p && q) { c.strokeStyle = c.fillStyle = '#c0352b'; c.lineWidth = 3; c.beginPath(); c.moveTo(q[0], q[1]); c.lineTo(p[0], p[1]); c.stroke();
+        const an = Math.atan2(p[1] - q[1], p[0] - q[0]); c.beginPath(); c.moveTo(p[0], p[1]); c.lineTo(p[0] - 13 * Math.cos(an - .4), p[1] - 13 * Math.sin(an - .4)); c.lineTo(p[0] - 13 * Math.cos(an + .4), p[1] - 13 * Math.sin(an + .4)); c.fill();
+        c.font = '700 13px Segoe UI, sans-serif'; c.fillText('F = ' + G.fmt(S.load.F, 0) + ' N', q[0] + 6, q[1] - 8); } }
+    if (this.simField && this.simShow !== 'none') {
+      const W = vw.w, H = vw.h, x = W - 40, y0 = 40, y1 = Math.min(H - 60, 300);
+      const g = c.createLinearGradient(0, y1, 0, y0); [[0, '#0000ff'], [.25, '#00ffff'], [.5, '#00ff00'], [.75, '#ffff00'], [1, '#ff0000']].forEach(s => g.addColorStop(s[0], s[1]));
+      c.fillStyle = 'rgba(255,255,255,.85)'; c.fillRect(x - 96, y0 - 26, 128, y1 - y0 + 46); c.fillStyle = g; c.fillRect(x, y0, 18, y1 - y0); c.strokeStyle = '#1c2633'; c.lineWidth = 1; c.strokeRect(x, y0, 18, y1 - y0);
+      const mx = this.simShow === 'vm' ? this.simField.vmax : this.simField.umax, u = this.simShow === 'vm' ? ' MPa' : ' mm', dg = this.simShow === 'vm' ? 1 : 3;
+      c.fillStyle = '#1c2633'; c.font = '600 11.5px Segoe UI, sans-serif'; c.textAlign = 'right';
+      for (let k = 0; k <= 4; k++) { const v = mx * k / 4, yy = y1 - (y1 - y0) * k / 4; c.fillText(G.fmt(v, dg) + u, x - 5, yy + 4); }
+      c.textAlign = 'center'; c.fillText(this.simShow === 'vm' ? 'Von Mises' : 'Déplacement', x - 30, y0 - 12);
+      if (this.simShow === 'vm' && this.simField.pmax) { const p = vw.project(this.simField.pmax); if (p) { c.strokeStyle = '#000'; c.lineWidth = 2; c.beginPath(); c.arc(p[0], p[1], 7, 0, 7); c.stroke(); c.textAlign = 'left'; c.fillText('max', p[0] + 9, p[1] - 8); } }
+    }
+    c.restore();
+  },
+  /* ---------- fichiers ---------- */
+  saveFile() {
+    const blob = new Blob([JSON.stringify({ app: 'cao-estic', v: 2, model: this.model }, null, 1)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = (CFG.fileName || 'piece') + '.cao.json'; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  },
+  loadFile(e) {
+    const f = e.target.files[0]; if (!f) return;
+    const tgt = this.fileTarget; this.fileTarget = null;
+    f.text().then(t => { try { const d = JSON.parse(t); if (!d.model || !Array.isArray(d.model.features)) throw 0;
+        if (tgt === 'asm') { ASM.addPart(f.name.replace(/\.cao\.json$|\.json$/, ''), d.model.features); return; }
+        this.commit(); this.setModel(d.model); toast('Fichier ouvert'); }
+      catch (_) { toast('Fichier non reconnu.', 'warn'); } });
+    e.target.value = '';
+  },
+  askNew() { this.modal(`<h3>Nouvelle pièce</h3><p>L’arbre actuel sera vidé (Ctrl+Z permet de revenir en arrière).</p><div class="row2"><button class="btn" data-act="modal-close">Annuler</button><button class="btn danger" data-act="new-yes">Vider l’arbre</button></div>`); },
+  modal(h) { $('#modalBox').innerHTML = h; $('#modal').classList.remove('hidden'); },
+  closeModal() { $('#modal').classList.add('hidden'); },
+  openHelp() {
+    this.modal(`<h3>Aide rapide</h3>
+    <div class="help-grid">
+      <div><b>Tourner</b><span>clic gauche + glisser</span></div><div><b>Déplacer</b><span>clic droit + glisser</span></div>
+      <div><b>Zoomer</b><span>molette</span></div><div><b>Annuler</b><span>Ctrl + Z</span></div>
+    </div>
+    <ol class="help-steps"><li>Nouvelle esquisse : choisir un plan ou une face</li><li>Dessiner un contour fermé</li><li>Taper les cotes dans le panneau de droite</li><li>Valider, puis Bossage ou Enlèvement</li></ol>
+    <div class="help-grid"><div><b>R</b><span>Rectangle</span></div><div><b>C</b><span>Cercle</span></div><div><b>L</b><span>Polyligne (Entrée pour fermer)</span></div><div><b>O / H</b><span>Oblong / Polygone</span></div></div>
+    <p class="muted">Double-clique sur une cote de l\u2019esquisse pour changer sa valeur.</p>
+    <p class="muted">Deux contours l’un dans l’autre forment un trou. Deux contours qui se croisent donnent un résultat faux : fais deux fonctions.</p>
+    <div class="row2"><button class="btn primary" data-act="modal-close">Compris</button></div>`);
+  },
+  lock(v) { this.locked = v; document.body.classList.toggle('locked', v); this.renderTree(); if (this.ws === 'asm') ASM.render(); else this.rebuild(true); }
+};
+const ICON_BOSS = '<svg viewBox="0 0 24 24"><path d="M4 16l8 4 8-4V8l-8-4-8 4z" fill="#cfe0f5" stroke="#1f4e8c" stroke-width="1.6"/><path d="M4 8l8 4 8-4M12 12v8" fill="none" stroke="#1f4e8c" stroke-width="1.6"/></svg>';
+const ICON_CUT = '<svg viewBox="0 0 24 24"><path d="M4 16l8 4 8-4V8l-8-4-8 4z" fill="#f7dccb" stroke="#a5461b" stroke-width="1.6"/><ellipse cx="12" cy="8" rx="4" ry="2" fill="#fff" stroke="#a5461b" stroke-width="1.6"/><path d="M8 8v5M16 8v5" stroke="#a5461b" stroke-width="1.4" stroke-dasharray="2 2"/></svg>';
+
+/* ===== ASSEMBLAGE ET CINÉMATIQUE (mécanismes plans, rotations autour de Z) ===== */
+const ASM = {
+  open: {}, anim: null, sweepData: null, theta: 0, trace: null, inter: null,
+  get A() { const m = CAD.model; if (!m.asm) m.asm = { parts: [], joints: [], motor: -1, N: 1500, track: null, curve: { part: -1, axis: 0 } }; return m.asm; },
+  /* ---------- poses ---------- */
+  mat(p) {
+    const a = p.a * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+    return [c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, -(c * p.x + s * p.y), s * p.x - c * p.y, -(p.z || 0), 1];
+  },
+  W(p, l) { const a = p.a * Math.PI / 180, c = Math.cos(a), s = Math.sin(a); return [c * l[0] - s * l[1] + p.x, s * l[0] + c * l[1] + p.y]; },
+  inv(p, P) { const a = p.a * Math.PI / 180, c = Math.cos(a), s = Math.sin(a), dx = P[0] - p.x, dy = P[1] - p.y; return [c * dx + s * dy, -s * dx + c * dy]; },
+  compiled() { return this.A.parts.map(pt => { if (!pt._C) Object.defineProperty(pt, '_C', { value: G.compile({ features: pt.features }), enumerable: false, writable: true }); return pt._C; }); },
+  partBox(k) {
+    const pt = this.A.parts[k]; if (!pt._bb) { const an = G.analyze(this.compiled()[k], 30000); Object.defineProperty(pt, '_bb', { value: an.empty ? null : an.bbox, enumerable: false, writable: true }); }
+    return pt._bb;
+  },
+  /* ---------- affichage ---------- */
+  enter() { this.rebuildScene(); this.render(); },
+  rebuildScene() {
+    const list = this.compiled();
+    CAD.vw.setAssembly(list.length ? list : [[]]);
+    this.pushPoses();
+  },
+  pushPoses(poses) {
+    const P = poses || this.A.parts.map(p => p.pose), m = new Float32Array(16 * 12);
+    for (let i = 0; i < 12; i++) { const M = i < P.length ? this.mat(P[i]) : [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]; m.set(M, i * 16); }
+    CAD.vw.setPoses(m);
+  },
+  fit() {
+    const A = this.A; let b = null;
+    A.parts.forEach((pt, k) => { const bb = this.partBox(k); if (!bb) return;
+      for (const x of [bb[0], bb[3]]) for (const y of [bb[1], bb[4]]) { const w = this.W(pt.pose, [x, y]); const z0 = bb[2] + (pt.pose.z || 0), z1 = bb[5] + (pt.pose.z || 0);
+        if (!b) b = [w[0], w[1], z0, w[0], w[1], z1]; b = [Math.min(b[0], w[0]), Math.min(b[1], w[1]), Math.min(b[2], z0), Math.max(b[3], w[0]), Math.max(b[4], w[1]), Math.max(b[5], z1)]; } });
+    CAD.vw.fit(b || [0, 0, 0, 60, 40, 20]);
+  },
+  /* ---------- panneau ---------- */
+  render() {
+    const A = this.A, el = $('#asmPanel'), f = v => G.fmt(v, 2);
+    const parts = A.parts.map((pt, k) => {
+      const col = CAD.vw.pal[k % 12].map(v => Math.round(v * 255)).join(',');
+      const op = this.open['p' + k];
+      return `<div class="apart"><div class="ah" data-act="asm-toggle" data-k="p${k}"><i style="background:rgb(${col})"></i><b>${esc(pt.name)}</b>${pt.ground ? '<span class="badge">bâti</span>' : ''}<span class="grow"></span>${CAD.locked ? '' : `<button class="x" data-act="asm-delpart" data-i="${k}" title="Retirer">✕</button>`}</div>
+        ${op ? `<div class="aedit">
+          <label class="fld"><span>Nom</span><input data-asm="name" data-i="${k}" value="${esc(pt.name)}" style="width:110px;font-family:inherit"></label>
+          <label class="fld"><span>Position x</span><input data-asm="x" data-i="${k}" value="${f(pt.pose.x)}"><em>mm</em></label>
+          <label class="fld"><span>Position y</span><input data-asm="y" data-i="${k}" value="${f(pt.pose.y)}"><em>mm</em></label>
+          <label class="fld"><span>Hauteur z</span><input data-asm="z" data-i="${k}" value="${f(pt.pose.z || 0)}"><em>mm</em></label>
+          <label class="fld"><span>Rotation (Z)</span><input data-asm="a" data-i="${k}" value="${f(pt.pose.a)}"><em>°</em></label>
+          <label class="chk"><input type="checkbox" data-asm="ground" data-i="${k}" ${pt.ground ? 'checked' : ''}> Pièce fixe (bâti)</label>
+          <button class="btn sm" data-act="asm-replace" data-i="${k}">Remplacer par la pièce de l’onglet Pièce</button></div>` : ''}</div>`;
+    }).join('') || '<div class="tree-empty">Aucune pièce. Clique sur <b>Insérer une pièce</b>.</div>';
+    const pn = k => k < 0 ? 'Sol' : (A.parts[k] ? esc(A.parts[k].name) : '?');
+    const joints = A.joints.map((j, i) => `<div class="ajoint"><b>L${i + 1}</b><span>${j.type === 'pivot' ? 'Pivot' : 'Glissière'} ${pn(j.A)} / ${pn(j.B)}${A.motor === i ? ' <em class="badge m">moteur</em>' : ''}</span>${CAD.locked ? '' : `<button class="x" data-act="asm-deljoint" data-i="${i}">✕</button>`}</div>`).join('') || '<div class="muted" style="padding:2px 4px 6px">Aucune liaison.</div>';
+    el.innerHTML = `<div class="side-h">Pièces de l’assemblage</div><div class="alist">${parts}</div>
+      <div class="pad"><button class="btn sm" data-act="asm-insert">+ Insérer une pièce</button></div>
+      <div class="side-h">Liaisons</div><div class="alist">${joints}</div>
+      <div class="pad"><button class="btn sm" data-act="asm-joint">+ Ajouter une liaison</button></div>
+      <div class="side-h">Mouvement</div>
+      <div class="pad">
+        <label class="fld"><span>Vitesse moteur</span><input id="asmN" value="${A.N}" data-asm="N"><em style="width:44px">tr/min</em></label>
+        <div class="row2" style="justify-content:flex-start;margin-top:4px"><button class="btn sm primary" data-act="asm-sweep">Calculer un tour</button><button class="btn sm" data-act="asm-play" ${this.sweepData ? '' : 'disabled'}>${this.anim ? 'Pause' : 'Animer'}</button></div>
+        <input type="range" id="asmTh" min="0" max="360" step="1" value="${Math.round(this.theta)}" ${this.sweepData ? '' : 'disabled'} style="width:100%;margin-top:8px">
+        <div class="muted" id="asmThL">θ moteur = ${Math.round(this.theta)}°</div>
+        <div class="row2" style="justify-content:flex-start"><button class="btn sm" data-act="asm-curves" ${this.sweepData ? '' : 'disabled'}>Courbes</button><button class="btn sm" data-act="asm-trace">Tracer un point</button><button class="btn sm" data-act="asm-inter">Interférences</button></div>
+        <div id="asmMsg"></div>
+      </div>`;
+    el.querySelectorAll('input[data-asm]').forEach(inp => inp.addEventListener('change', () => this.edit(inp)));
+    const th = el.querySelector('#asmTh'); if (th) th.addEventListener('input', () => { this.stop(); this.show(+th.value); });
+  },
+  edit(inp) {
+    const A = this.A, k = +inp.dataset.i, key = inp.dataset.asm;
+    if (key === 'N') { const v = parseNum(inp.value); if (v > 0) A.N = v; this.drawCurves(); return; }
+    const pt = A.parts[k]; if (!pt) return;
+    if (key === 'name') { pt.name = inp.value.trim() || pt.name; this.render(); return; }
+    if (key === 'ground') { pt.ground = inp.checked; }
+    else { const v = parseNum(inp.value); if (!isFinite(v)) return; pt.pose[key] = v; }
+    this.invalidate(); this.pushPoses(); this.render();
+  },
+  invalidate() { this.stop(); this.sweepData = null; this.theta = 0; this.trace = null; this.inter = null; CAD.setMarkers([]); $('#kinPanel').classList.add('hidden'); },
+  act(a, b) {
+    const A = this.A, i = +b.dataset.i;
+    const editing = ['asm-insert', 'asm-delpart', 'asm-joint', 'asm-deljoint', 'asm-replace', 'asm-ins', 'asm-joint-ok'];
+    if (CAD.locked && editing.includes(a)) return;
+    switch (a) {
+      case 'asm-toggle': this.open[b.dataset.k] = !this.open[b.dataset.k]; this.render(); break;
+      case 'asm-delpart': A.parts.splice(i, 1); A.joints = A.joints.filter(j => j.A !== i && j.B !== i).map(j => ({ ...j, A: j.A > i ? j.A - 1 : j.A, B: j.B > i ? j.B - 1 : j.B })); A.motor = -1; this.invalidate(); this.rebuildScene(); this.render(); break;
+      case 'asm-deljoint': A.joints.splice(i, 1); if (A.motor === i) A.motor = -1; else if (A.motor > i) A.motor--; this.invalidate(); this.render(); break;
+      case 'asm-insert': this.insertDlg(); break;
+      case 'asm-ins': this.insert(b.dataset.src); break;
+      case 'asm-replace': { const f = CAD.partFeatures(); if (!f.length) { toast('L’onglet Pièce est vide.', 'warn'); return; } A.parts[i].features = JSON.parse(JSON.stringify(f)); A.parts[i]._C = null; A.parts[i]._bb = null; this.invalidate(); this.rebuildScene(); toast('Pièce remplacée'); break; }
+      case 'asm-joint': this.jointDlg(); break;
+      case 'asm-jtype': $$('[data-act="asm-jtype"]').forEach(x => x.classList.toggle('on', x === b)); $('#jDirRow').classList.toggle('hidden', b.dataset.v !== 'gliss'); $('#jMotRow').classList.toggle('hidden', b.dataset.v !== 'pivot'); break;
+      case 'asm-joint-ok': this.addJoint(); break;
+      case 'asm-sweep': this.sweep(); break;
+      case 'asm-play': this.anim ? this.stop() : this.play(); this.render(); break;
+      case 'asm-curves': $('#kinPanel').classList.toggle('hidden'); this.drawCurves(); break;
+      case 'asm-trace': this.traceDlg(); break;
+      case 'asm-trace-ok': this.doTrace(); break;
+      case 'asm-inter': this.interference(); break;
+      case 'kin-close': $('#kinPanel').classList.add('hidden'); break;
+    }
+  },
+  /* ---------- insertion ---------- */
+  insertDlg() {
+    const lib = (CFG.library || []).map((l, k) => `<button class="plane-btn" data-act="asm-ins" data-src="lib${k}"><b>${esc(l.name)}</b><span>bibliothèque</span></button>`).join('');
+    CAD.modal(`<h3>Insérer une pièce</h3><div class="planes" style="grid-template-columns:1fr 1fr 1fr">
+      <button class="plane-btn" data-act="asm-ins" data-src="cur"><b>Pièce en cours</b><span>onglet Pièce</span></button>${lib}
+      <button class="plane-btn" data-act="asm-ins" data-src="file"><b>Fichier…</b><span>.cao.json</span></button></div>
+      <div class="row2"><button class="btn" data-act="modal-close">Annuler</button></div>`);
+  },
+  insert(src) {
+    const A = this.A; let name, feats;
+    if (src === 'cur') { feats = CAD.partFeatures(); name = 'Pièce ' + (A.parts.length + 1); if (!feats.length) { toast('L’onglet Pièce est vide.', 'warn'); return; } }
+    else if (src === 'file') { CAD.closeModal(); CAD.fileTarget = 'asm'; $('#fileIn').click(); return; }
+    else { const l = CFG.library[+src.slice(3)]; feats = l.features; name = l.name; }
+    this.addPart(name, feats);
+  },
+  addPart(name, feats) {
+    if (this.A.parts.length >= 12) { toast('12 pièces au maximum.', 'warn'); return; }
+    this.A.parts.push({ name, features: JSON.parse(JSON.stringify(feats)), pose: { x: 0, y: 0, z: 0, a: 0 }, ground: this.A.parts.length === 0 });
+    CAD.closeModal(); this.open['p' + (this.A.parts.length - 1)] = true; this.invalidate(); this.rebuildScene(); this.render(); if (this.A.parts.length === 1) this.fit();
+  },
+  /* ---------- liaisons ---------- */
+  jointDlg() {
+    const A = this.A; if (A.parts.length < 2) { toast('Insère au moins deux pièces.', 'warn'); return; }
+    const opts = A.parts.map((p, k) => `<option value="${k}">${esc(p.name)}</option>`).join('');
+    CAD.modal(`<h3>Ajouter une liaison</h3>
+      <div class="seg wide" style="margin-bottom:8px"><button class="btn on" data-act="asm-jtype" data-v="pivot">Pivot (axe vertical Z)</button><button class="btn" data-act="asm-jtype" data-v="gliss">Glissière</button></div>
+      <div class="start-grid"><label>Pièce 1<select id="jA">${opts}</select></label><label>Pièce 2<select id="jB">${opts}</select></label></div>
+      <p class="muted" style="margin:4px 0">Coordonnées du point de la liaison dans la position actuelle de l’assemblage (repère global).</p>
+      <div class="start-grid"><label>Point x (mm)<input id="jX" value="0"></label><label>Point y (mm)<input id="jY" value="0"></label></div>
+      <div id="jDirRow" class="hidden"><label class="fld"><span>Direction de la glissière (angle avec X)</span><input id="jD" value="0"><em>°</em></label></div>
+      <label class="chk" id="jMotRow"><input type="checkbox" id="jMot"> Liaison motorisée (le moteur fait tourner la pièce 2 par rapport à la pièce 1)</label>
+      <div class="row2"><button class="btn" data-act="modal-close">Annuler</button><button class="btn primary" data-act="asm-joint-ok">Ajouter</button></div>`);
+    $('#jB').value = '1';
+  },
+  addJoint() {
+    const A = this.A, type = $('[data-act="asm-jtype"].on').dataset.v, a = +$('#jA').value, b = +$('#jB').value;
+    if (a === b) { toast('Choisis deux pièces différentes.', 'warn'); return; }
+    const P = [parseNum($('#jX').value), parseNum($('#jY').value)]; if (!P.every(isFinite)) { toast('Point incorrect.', 'warn'); return; }
+    const pa = A.parts[a].pose, pb = A.parts[b].pose;
+    const j = { type, A: a, B: b, pa: this.inv(pa, P), pb: this.inv(pb, P), a0: pb.a - pa.a };
+    if (type === 'gliss') { const d = parseNum($('#jD').value) || 0; j.dA = d - pa.a; }
+    A.joints.push(j);
+    if (type === 'pivot' && $('#jMot').checked) A.motor = A.joints.length - 1;
+    CAD.closeModal(); this.invalidate(); this.render();
+    const r = this.residual(this.qFrom(), 0); if (r > 0.05) toast('Attention : les pièces ne sont pas en place pour cette liaison (écart ' + G.fmt(r, 1) + ').', 'warn');
+  },
+  /* ---------- solveur ---------- */
+  free() { return this.A.parts.map((p, k) => p.ground ? -1 : k).filter(k => k >= 0); },
+  qFrom() { const q = []; this.free().forEach(k => { const p = this.A.parts[k].pose; q.push(p.x, p.y, p.a * Math.PI / 180); }); return q; },
+  posesFrom(q) {
+    const P = this.A.parts.map(p => ({ ...p.pose })); this.free().forEach((k, i) => { P[k].x = q[3 * i]; P[k].y = q[3 * i + 1]; P[k].a = q[3 * i + 2] * 180 / Math.PI; }); return P;
+  },
+  eqs(q, th) {
+    const A = this.A, P = this.posesFrom(q), r = [], rad = Math.PI / 180;
+    A.joints.forEach((j, i) => {
+      const a = P[j.A], b = P[j.B], wa = this.W(a, j.pa), wb = this.W(b, j.pb);
+      if (j.type === 'pivot') { r.push(wa[0] - wb[0], wa[1] - wb[1]); if (A.motor === i) r.push(((b.a - a.a - j.a0) * rad) - th); }
+      else { const ang = (a.a + j.dA) * rad, n = [-Math.sin(ang), Math.cos(ang)]; r.push(n[0] * (wb[0] - wa[0]) + n[1] * (wb[1] - wa[1]), (b.a - a.a - j.a0) * rad); }
+    });
+    return r;
+  },
+  residual(q, th) { return Math.sqrt(this.eqs(q, th).reduce((s, v) => s + v * v, 0)); },
+  solveAt(th, q0) {
+    let q = q0.slice(); const n = q.length; if (!n) return { q, ok: true };
+    for (let it = 0; it < 50; it++) {
+      const F = this.eqs(q, th), m = F.length, nr = Math.sqrt(F.reduce((s, v) => s + v * v, 0));
+      if (nr < 1e-9) break;
+      const J = []; for (let c = 0; c < n; c++) { const q2 = q.slice(); q2[c] += 1e-6; const F2 = this.eqs(q2, th); J.push(F2.map((v, r) => (v - F[r]) / 1e-6)); }
+      const M = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, k) => { let s = 0; for (let r = 0; r < m; r++) s += J[i][r] * J[k][r]; return s + (i === k ? 1e-9 : 0); }));
+      const g = Array.from({ length: n }, (_, i) => { let s = 0; for (let r = 0; r < m; r++) s -= J[i][r] * F[r]; return s; });
+      const d = gauss(M, g); if (!d) break;
+      let st = 1, q3; for (let ls = 0; ls < 12; ls++) { q3 = q.map((v, i) => v + st * d[i]); if (this.residual(q3, th) < nr) break; st /= 2; }
+      q = q3;
+    }
+    return { q, ok: this.residual(q, th) < 1e-4 };
+  },
+  compute() {
+    const A = this.A;
+    if (!A.parts.some(p => p.ground)) return { err: 'Il faut au moins une pièce fixe (bâti).' };
+    if (A.motor < 0) return { err: 'Choisis une liaison pivot motorisée.' };
+    const q0 = this.qFrom(); if (this.residual(q0, 0) > 0.05) return { err: 'Les liaisons ne correspondent pas à la position des pièces : vérifie les points et les positions.' };
+    const data = []; let q = q0;
+    for (let d = 0; d <= 360; d += 2) { const r = this.solveAt(d * Math.PI / 180, q); if (!r.ok) return { err: `Le mécanisme se bloque vers θ = ${d}° : liaison mal placée ou mécanisme impossible.` }; q = r.q; data.push(this.posesFrom(q)); }
+    return { data, under: q0.length - this.eqs(q0, 0).length };
+  },
+  withAsm(asm, fn) { const sv = CAD.model; CAD.model = { features: [], asm: JSON.parse(JSON.stringify(asm)) }; try { return fn(); } finally { CAD.model = sv; } },
+  course(data, name, axis = 0) {
+    const k = this.A.parts.findIndex(p => p.name.toLowerCase().includes(name.toLowerCase())); if (k < 0 || !data) return null;
+    const v = data.map(P => axis === 0 ? P[k].x : P[k].y); return Math.max(...v) - Math.min(...v);
+  },
+  sweep() {
+    const r = this.compute();
+    if (r.err) { this.sweepData = null; this.msg(r.err, 'b'); this.render(); return null; }
+    this.sweepData = r.data; this.theta = 0; this.show(0); this.render();
+    this.msg(r.under > 0 ? `Tour calculé, mais ${r.under} mobilité(s) non pilotée(s) : certaines pièces ne sont pas assez liées.` : 'Tour calculé : utilise le curseur, Animer ou Courbes.', r.under > 0 ? 'b' : 'g');
+    this.drawCurves(); CAD.hooks.forEach(h => h('asm')); return r.data;
+  },
+  show(th) {
+    if (!this.sweepData) return; this.theta = th; const i = Math.round(th / 2) % this.sweepData.length;
+    this.pushPoses(this.sweepData[i]); const l = $('#asmThL'); if (l) l.textContent = 'θ moteur = ' + Math.round(th) + '°'; const s = $('#asmTh'); if (s && document.activeElement !== s) s.value = Math.round(th);
+    this.drawCurves(true);
+  },
+  play() { if (!this.sweepData) return; let last = performance.now(); const loop = t => { this.show((this.theta + (t - last) * 0.09) % 360); last = t; this.anim = requestAnimationFrame(loop); }; this.anim = requestAnimationFrame(loop); },
+  stop() { if (this.anim) cancelAnimationFrame(this.anim); this.anim = null; },
+  msg(t, k) { const m = $('#asmMsg'); if (m) m.innerHTML = `<div class="qfb ${k}">${t}</div>`; },
+  /* ---------- courbes ---------- */
+  series(k, axis) {
+    const D = this.sweepData; if (!D) return null; const A = this.A, w = 2 * Math.PI * A.N / 60;
+    const pos = D.map(P => axis === 2 ? P[k].a : (axis === 0 ? P[k].x : P[k].y)), n = pos.length;
+    const vel = pos.map((_, i) => { const a = pos[Math.max(0, i - 1)], b = pos[Math.min(n - 1, i + 1)], dth = (Math.min(n - 1, i + 1) - Math.max(0, i - 1)) * 2 * Math.PI / 180; return (b - a) / dth * w / 1000; });
+    return { pos, vel };
+  },
+  drawCurves(light) {
+    const kp = $('#kinPanel'); if (!kp || kp.classList.contains('hidden') || !this.sweepData) return;
+    const A = this.A; if (A.curve.part < 0 || A.curve.part >= A.parts.length) { let best = -1, bv = -1; A.parts.forEach((p, k) => { if (p.ground) return; const v = this.sweepData.map(P => P[k].x); const r = Math.max(...v) - Math.min(...v); if (r > bv) { bv = r; best = k; } }); A.curve.part = best; }
+    if (!light) {
+      $('#kinCtl').innerHTML = `<select id="kinPart">${A.parts.map((p, k) => `<option value="${k}" ${k === A.curve.part ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</select>
+        <select id="kinAx"><option value="0" ${A.curve.axis === 0 ? 'selected' : ''}>position x</option><option value="1" ${A.curve.axis === 1 ? 'selected' : ''}>position y</option></select>`;
+      $('#kinPart').onchange = e => { A.curve.part = +e.target.value; this.drawCurves(); };
+      $('#kinAx').onchange = e => { A.curve.axis = +e.target.value; this.drawCurves(); };
+    }
+    const S = this.series(A.curve.part, A.curve.axis); if (!S) return;
+    const cv = $('#kinCv'), r = cv.parentElement.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+    cv.width = r.width * dpr; cv.height = r.height * dpr; cv.style.width = r.width + 'px'; cv.style.height = r.height + 'px';
+    const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); const W = r.width, H = r.height, L = 46, Rr = 50, T = 12, B = 24;
+    c.clearRect(0, 0, W, H);
+    const pmin = Math.min(...S.pos), pmax = Math.max(...S.pos), vmax = Math.max(...S.vel.map(Math.abs)) || 1;
+    const p0 = pmin - (pmax - pmin) * .08 - 1e-6, p1 = pmax + (pmax - pmin) * .08 + 1e-6;
+    const X = i => L + i / (S.pos.length - 1) * (W - L - Rr), Yp = v => T + (1 - (v - p0) / (p1 - p0)) * (H - T - B), Yv = v => T + (1 - (v + vmax * 1.1) / (2.2 * vmax)) * (H - T - B);
+    c.strokeStyle = '#e1e7ef'; c.lineWidth = 1; c.font = '11px Segoe UI, sans-serif'; c.fillStyle = '#5d6b7e';
+    for (let d = 0; d <= 360; d += 90) { const x = L + d / 360 * (W - L - Rr); c.beginPath(); c.moveTo(x, T); c.lineTo(x, H - B); c.stroke(); c.textAlign = 'center'; c.fillText(d + '°', x, H - 8); }
+    c.beginPath(); c.moveTo(L, Yv(0)); c.lineTo(W - Rr, Yv(0)); c.stroke();
+    c.textAlign = 'right'; c.fillStyle = '#1f4e8c'; [p0, (p0 + p1) / 2, p1].forEach(v => c.fillText(G.fmt(v, 1), L - 4, Yp(v) + 4));
+    c.textAlign = 'left'; c.fillStyle = '#c26a12'; [-vmax, 0, vmax].forEach(v => c.fillText(G.fmt(v, 2), W - Rr + 4, Yv(v) + 4));
+    const line = (arr, Y, col) => { c.strokeStyle = col; c.lineWidth = 2; c.beginPath(); arr.forEach((v, i) => i ? c.lineTo(X(i), Y(v)) : c.moveTo(X(i), Y(v))); c.stroke(); };
+    line(S.pos, Yp, '#1f4e8c'); line(S.vel, Yv, '#e07a10');
+    const ci = Math.round(this.theta / 2) % S.pos.length; c.strokeStyle = 'rgba(0,0,0,.35)'; c.setLineDash([4, 3]); c.beginPath(); c.moveTo(X(ci), T); c.lineTo(X(ci), H - B); c.stroke(); c.setLineDash([]);
+    $('#kinRead').innerHTML = `<span style="color:#1f4e8c">position (mm) : min ${G.fmt(pmin, 2)} · max ${G.fmt(pmax, 2)} · course <b>${G.fmt(pmax - pmin, 2)}</b></span>
+      <span style="color:#c26a12">vitesse (m/s) : actuelle ${G.fmt(S.vel[ci], 3)} · max <b>${G.fmt(vmax, 3)}</b></span>`;
+  },
+  /* ---------- trajectoire ---------- */
+  traceDlg() {
+    const A = this.A; if (!this.sweepData) { toast('Calcule d’abord un tour.', 'warn'); return; }
+    CAD.modal(`<h3>Tracer la trajectoire d’un point</h3><div class="start-grid"><label>Pièce<select id="tP">${A.parts.map((p, k) => `<option value="${k}">${esc(p.name)}</option>`).join('')}</select></label><span></span>
+      <label>Point x (mm)<input id="tX" value="0"></label><label>Point y (mm)<input id="tY" value="0"></label></div><p class="muted">Coordonnées du point à θ = 0°, dans le repère global.</p>
+      <div class="row2"><button class="btn" data-act="modal-close">Annuler</button><button class="btn primary" data-act="asm-trace-ok">Tracer</button></div>`);
+  },
+  doTrace() {
+    const k = +$('#tP').value, P = [parseNum($('#tX').value), parseNum($('#tY').value)];
+    const l = this.inv(this.sweepData[0][k], P), bb = this.partBox(k) || [0, 0, 0, 0, 0, 0];
+    const z = (this.sweepData[0][k].z || 0) + bb[5] + 0.2;
+    this.trace = this.sweepData.map(Ps => { const w = this.W(Ps[k], l); return [w[0], w[1], z]; });
+    CAD.closeModal(); CAD.vw.req();
+  },
+  /* ---------- interférences ---------- */
+  interference() {
+    const A = this.A, C = this.compiled(), P = this.sweepData ? this.sweepData[Math.round(this.theta / 2) % this.sweepData.length] : A.parts.map(p => p.pose);
+    const res = this.interAt(P, C, 0.6);
+    CAD.setMarkers(res.marks);
+    this.msg(res.list.length ? 'Interférence : ' + res.list.map(x => `${esc(A.parts[x[0]].name)} / ${esc(A.parts[x[1]].name)} (${G.fmt(x[2], 0)} mm³)`).join(', ') : 'Aucune interférence dans cette position.', res.list.length ? 'b' : 'g');
+  },
+  wbox(k, pose) {
+    const bb = this.partBox(k); if (!bb) return null; let b = null;
+    for (const x of [bb[0], bb[3]]) for (const y of [bb[1], bb[4]]) { const w = this.W(pose, [x, y]); if (!b) b = [w[0], w[1], w[0], w[1]]; b = [Math.min(b[0], w[0]), Math.min(b[1], w[1]), Math.max(b[2], w[0]), Math.max(b[3], w[1])]; }
+    return [b[0], b[1], bb[2] + (pose.z || 0), b[2], b[3], bb[5] + (pose.z || 0)];
+  },
+  interAt(P, C, h) {
+    const list = [], marks = [], n = P.length;
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+      const a = this.wbox(i, P[i]), b = this.wbox(j, P[j]); if (!a || !b) continue;
+      const o = [Math.max(a[0], b[0]), Math.max(a[1], b[1]), Math.max(a[2], b[2]), Math.min(a[3], b[3]), Math.min(a[4], b[4]), Math.min(a[5], b[5])];
+      if (o[0] >= o[3] || o[1] >= o[4] || o[2] >= o[5]) continue;
+      let hh = h; while ((o[3] - o[0]) * (o[4] - o[1]) * (o[5] - o[2]) / hh ** 3 > 250000) hh *= 1.25;
+      let cnt = 0, sx = 0, sy = 0, sz = 0;
+      for (let z = o[2] + hh / 2; z < o[5]; z += hh) for (let y = o[1] + hh / 2; y < o[4]; y += hh) for (let x = o[0] + hh / 2; x < o[3]; x += hh) {
+        const la = this.inv(P[i], [x, y]), lb = this.inv(P[j], [x, y]);
+        if (G.inside(C[i], la[0], la[1], z - (P[i].z || 0)) && G.inside(C[j], lb[0], lb[1], z - (P[j].z || 0))) { cnt++; sx += x; sy += y; sz += z; }
+      }
+      if (cnt * hh ** 3 > 0.5) { list.push([i, j, cnt * hh ** 3]); marks.push([sx / cnt, sy / cnt, sz / cnt]); }
+    }
+    return { list, marks };
+  },
+  /* ---------- superpositions 3D ---------- */
+  overlay(c, vw) {
+    const A = this.A;
+    if (this.trace) { c.strokeStyle = '#d0217a'; c.lineWidth = 2.2; c.beginPath(); let st = false; for (const P of this.trace) { const p = vw.project(P); if (!p) continue; st ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); st = true; } c.stroke(); }
+    const P = this.sweepData ? this.sweepData[Math.round(this.theta / 2) % this.sweepData.length] : A.parts.map(p => p.pose);
+    c.font = '600 11px Segoe UI, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    A.joints.forEach((j, i) => {
+      if (!P[j.A] || !P[j.B]) return;
+      const w = this.W(P[j.A], j.pa), ba = this.partBox(j.A) || [0, 0, 0, 0, 0, 0], bb = this.partBox(j.B) || [0, 0, 0, 0, 0, 0];
+      const z = Math.max(ba[5] + (P[j.A].z || 0), bb[5] + (P[j.B].z || 0)) + 0.5, p = vw.project([w[0], w[1], z]); if (!p) return;
+      c.fillStyle = 'rgba(255,255,255,.9)'; c.strokeStyle = A.motor === i ? '#c0352b' : '#1c2633'; c.lineWidth = 2;
+      if (j.type === 'pivot') { c.beginPath(); c.arc(p[0], p[1], 8, 0, 7); c.fill(); c.stroke(); c.fillStyle = c.strokeStyle; c.beginPath(); c.arc(p[0], p[1], 2.5, 0, 7); c.fill(); }
+      else { c.save(); c.translate(p[0], p[1]); c.fillRect(-11, -6, 22, 12); c.strokeRect(-11, -6, 22, 12); c.restore(); }
+      c.fillStyle = '#1c2633'; c.fillText('L' + (i + 1), p[0] + 16, p[1] - 12);
+    });
+  }
+};
+function gauss(M, b) {
+  const n = b.length, A = M.map((r, i) => [...r, b[i]]);
+  for (let i = 0; i < n; i++) {
+    let p = i; for (let k = i + 1; k < n; k++) if (Math.abs(A[k][i]) > Math.abs(A[p][i])) p = k;
+    if (Math.abs(A[p][i]) < 1e-14) return null; [A[i], A[p]] = [A[p], A[i]];
+    for (let k = i + 1; k < n; k++) { const f = A[k][i] / A[i][i]; for (let j = i; j <= n; j++) A[k][j] -= f * A[i][j]; }
+  }
+  const x = new Array(n).fill(0); for (let i = n - 1; i >= 0; i--) { let s = A[i][n]; for (let j = i + 1; j < n; j++) s -= A[i][j] * x[j]; x[i] = s / A[i][i]; } return x;
+}
+
+/* ===== TP ET ÉVALUATIONS ===== */
+const FB_TP = 'https://score-tp-default-rtdb.europe-west1.firebasedatabase.app/scores_tp/';
+const FB_EVAL = 'https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/';
+const TEACHER_CODE = (CFG.profCode || 'ESTIC52').toUpperCase();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const parseNum = s => parseFloat(String(s).replace(/\s/g, '').replace(',', '.'));
+
+const MS = {
+  cur: 0, mi: 0, team: null, items: [], models: [], st: [], tA: {}, corr: false, submitted: false, result: null, key: '',
+  init() {
+    if (CFG.calc) { $('.calc-btn').classList.remove('hidden'); document.addEventListener('click', e => { if (e.target.closest('[data-act="calc"]')) Calc.toggle(); }); }
+    if (CFG.mode === 'libre') return;
+    this.items = CFG.mode === 'tp' ? CFG.missions : CFG.tasks;
+    this.models = this.items.map(m => { const o = { features: m.start ? JSON.parse(JSON.stringify(m.start)) : [], mat: m.mat ?? CFG.defaultMat ?? 0 };
+      if (m.startAsm) o.asm = JSON.parse(JSON.stringify(m.startAsm)); return o; });
+    this.st = this.items.map(() => ({ piece: false, qOk: false, qPts: 0, tries: 0, cool: 0, ans: {} }));
+    $('#mission').innerHTML = `<div class="m-head" id="mHead"></div><div class="m-body"><div id="mTop"></div>
+      <div id="tgtWrap"><div class="tgt" id="tgtBox"><canvas id="tgl"></canvas><canvas id="tov"></canvas></div>
+      <div class="tgt-bar"><button class="btn sm" data-act="tv" data-v="iso">Iso</button><button class="btn sm" data-act="tv" data-v="face">Face</button><button class="btn sm" data-act="tv" data-v="dessus">Dessus</button><button class="btn sm" data-act="tv" data-v="droite">Droite</button><span>Pièce à obtenir · cotes en mm</span></div></div>
+      <div id="mRest"></div></div>`;
+    this.tv = new Viewer($('#tgl'), $('#tov'), { col: [0.86, 0.72, 0.52], grid: false });
+    this.tv.overlayHooks.push((c, vw) => { const it = this.items[this.cur]; if (it && it.cotes) drawCotes(c, vw, it.cotes); });
+    document.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (!b || b.disabled) return; this.act(b.dataset.act, b); });
+    CAD.hooks.push(() => { const s = this.st[this.cur]; if (s && CFG.mode === 'tp') { /* modèle modifié */ } });
+    if (CFG.mode === 'eval') $('#ebExtra').innerHTML = '<button class="btn sm" data-act="prof">Espace professeur</button>';
+    if (CFG.lockCode) this.lockModal(); else this.startModal();
+  },
+  lockModal() {
+    CAD.modal(`<h3>Évaluation verrouillée</h3><p class="m-pitch">Entre le code donné par ton professeur.</p>
+      <input id="lockIn" maxlength="10" autocomplete="off" style="width:100%;padding:12px;font-size:22px;letter-spacing:4px;text-align:center;text-transform:uppercase;border:2px solid #cbd5e1;border-radius:12px">
+      <div class="qfb b" id="lockErr"></div><div class="row2"><button class="btn primary" data-act="ms-unlock">Commencer</button></div>`);
+    const i = $('#lockIn'); setTimeout(() => i && i.focus(), 50);
+    i.addEventListener('keydown', e => { if (e.key === 'Enter') this.unlock(); });
+  },
+  unlock() { const i = $('#lockIn'); if (i.value.trim().toUpperCase() === CFG.lockCode) this.startModal(); else { $('#lockErr').textContent = 'Code incorrect.'; i.value = ''; } },
+  startModal() {
+    const cls = CFG.classes.map(c => `<option>${c}</option>`).join('');
+    const ev = CFG.mode === 'eval';
+    CAD.modal(`<h3>${esc(CFG.title)}</h3>
+      <p class="m-pitch">${CFG.intro}</p>
+      ${ev ? `<div class="comp">${CFG.competences}</div>` : ''}
+      <div class="start-grid">${ev && CFG.fbEvalPath ? '<label>Nom<input id="stNames" autocomplete="off"></label><label>Prénom<input id="stFirst" autocomplete="off"></label>' : `<label>${ev ? 'Nom et prénom' : 'Nom(s) de l’équipe'}<input id="stNames" autocomplete="off"></label>`}<label>Classe<select id="stClass">${cls}</select></label></div>
+      <div class="row2"><button class="btn primary" data-act="ms-start">Commencer</button></div>`);
+  },
+  start() {
+    const n = $('#stNames').value.trim(); if (n.length < 2) { toast('Écris ton nom.', 'warn'); return; }
+    this.team = { noms: n, prenom: $('#stFirst') ? $('#stFirst').value.trim() : '', classe: $('#stClass').value }; this.t0 = Date.now();
+    this.key = (this.team.classe + '_' + n).replace(/[^A-Za-z0-9]/g, '_').slice(0, 40) + '_' + Date.now().toString(36);
+    CAD.closeModal(); this.go(0);
+  },
+  act(a, b) {
+    switch (a) {
+      case 'ms-start': this.start(); break;
+      case 'ms-unlock': this.unlock(); break;
+      case 'ms-go': this.go(+b.dataset.i); break;
+      case 'tv': this.tv.setView(b.dataset.v); break;
+      case 'ms-verify': this.verify(); break;
+      case 'q-check': this.checkQ(+b.dataset.i, b.dataset.q); break;
+      case 'q-opt': this.pickOpt(b); break;
+      case 'q-up': case 'q-down': this.moveOrder(b, a === 'q-up' ? -1 : 1); break;
+      case 'ms-next': this.go(Math.min(this.items.length - 1, this.cur + 1)); break;
+      case 'ev-submit': CAD.modal(`<h3>Rendre ma copie ?</h3><p>Tu ne pourras plus modifier tes pièces ni tes réponses.</p><div class="row2"><button class="btn" data-act="modal-close">Continuer à travailler</button><button class="btn primary" data-act="ev-submit-yes">Rendre ma copie</button></div>`); break;
+      case 'ev-submit-yes': this.submit(); break;
+      case 'prof': this.profModal(); break;
+      case 'prof-in': this.profIn(); break;
+      case 'prof-res': this.profResults(); break;
+      case 'prof-corr': this.corr = true; CAD.closeModal(); this.render(); toast('Correction affichée', 'ok'); break;
+    }
+  },
+  go(i) {
+    if (this.team === null) return;
+    if (CAD.mode !== '3d' || CAD.pending) { toast('Termine d’abord ton esquisse ou ta fonction.', 'warn'); return; }
+    this.models[this.mi] = CAD.getModel();
+    this.cur = i; const it = this.items[i];
+    if (it.kind !== 'questions') { const slot = it.useModelOf ?? i; this.mi = slot; $('#simDlg').classList.add('hidden'); $('#kinPanel').classList.add('hidden'); ASM.stop(); CAD.ws = it.ws || 'part'; document.body.classList.toggle('ws-asm', CAD.ws === 'asm'); $$('[data-act="ws"]').forEach(b => b.classList.toggle('on', b.dataset.v === CAD.ws)); CAD.setModel(this.models[slot]); }
+    CAD.setMarkers([]);
+    $('#tgtWrap').classList.toggle('hidden', !it.cible);
+    if (it.cible) { const C = G.compile({ features: it.cible }); this.tv.setModel(C); const A = this.targetA(i); this.tv.cam.yaw = -0.85; this.tv.cam.pitch = 0.55; this.tv.cam.ortho = false; this.tv.resize(); this.tv.fit(A.bbox); this.tv.cam.dist *= 1.12; }
+    this.render();
+  },
+  targetA(i) { if (!this.tA[i]) this.tA[i] = G.analyze({ features: this.items[i].cible }, 700000); return this.tA[i]; },
+  /* ---------- rendu du panneau ---------- */
+  render() {
+    const it = this.items[this.cur], s = this.st[this.cur], tp = CFG.mode === 'tp';
+    const max = this.maxPts(), got = this.score();
+    $('#mHead').innerHTML = `<div class="m-team"><span>${esc(this.team.noms + (this.team.prenom ? ' ' + this.team.prenom : ''))} · <b>${esc(this.team.classe)}</b></span>${tp ? `<b>${fmtN(got, 1)} / ${max} pts</b>` : (this.submitted ? `<b>${fmtN(this.result.total, 2)} / 20</b>` : '<span>Évaluation</span>')}</div>
+      ${tp ? `<div class="prog"><i style="width:${Math.round(got / max * 100)}%"></i></div>` : '<div style="height:8px"></div>'}
+      <div class="m-tabs">${this.items.map((m, j) => { const sj = this.st[j]; const done = tp ? (sj.piece && (!m.question || sj.qOk)) : false;
+        const part = tp && !done && (sj.piece || sj.qOk);
+        return `<button class="m-tab ${m.kind === 'questions' ? 'q' : ''} ${j === this.cur ? 'cur' : ''} ${done ? 'done' : ''} ${part ? 'part' : ''}" data-act="ms-go" data-i="${j}">${m.kind === 'questions' ? 'Questions' : j + 1}</button>`; }).join('')}</div>`;
+    $('#mTop').innerHTML = `<div class="m-kicker">${tp ? 'Mission ' + (this.cur + 1) + ' / ' + this.items.length : (it.kind === 'questions' ? 'Partie ' + (this.cur + 1) : 'Partie ' + (this.cur + 1) + ' · ' + (it.kind === 'fix' ? 'Reprendre un modèle' : it.kind === 'asm' ? 'Assembler' : 'Modéliser'))}${!tp ? `<span class="pts">${it.pts} pts</span>` : ''}</div>
+      <div class="m-title">${esc(it.titre)}</div><p class="m-pitch">${it.pitch}</p>`;
+    let h = '';
+    if (tp) {
+      h += `<details class="method"><summary>Méthode pas à pas</summary><ol>${it.methode.map(x => `<li>${x}</li>`).join('')}</ol></details>`;
+      h += `<div class="verify"><button class="btn ${s.piece ? 'ok' : 'primary'}" data-act="ms-verify">${s.piece ? 'Validé ✓' : (it.asmCheck ? 'Vérifier mon assemblage' : 'Vérifier ma pièce')}</button></div><div id="resBox">${s.resHtml || ''}</div>`;
+      if (it.question) h += this.qHtml(it.question, this.cur, 'q', s);
+      const done = s.piece && (!it.question || s.qOk);
+      if (done && this.cur < this.items.length - 1) h += `<div class="row2"><button class="btn primary" data-act="ms-next">Mission suivante</button></div>`;
+      if (done && this.cur === this.items.length - 1 && got >= max - 0.01) h += `<div class="res ok" style="margin-top:12px"><b>Toutes les missions sont réussies.</b> Bravo !</div>`;
+    } else {
+      if (it.kind === 'questions') it.questions.forEach((q, k) => { h += this.qHtml(q, this.cur, String(k), s); });
+      else if (it.consigne) h += `<div class="comp">${it.consigne}</div>`;
+      if (this.corr && it.kind !== 'questions') h += this.corrHtml(it, this.cur);
+      if (!this.submitted) h += `<div class="submit-zone"><div class="row2" style="justify-content:space-between"><span class="muted">Ne ferme pas la page avant d’avoir rendu ta copie.</span><button class="btn primary" data-act="ev-submit">Rendre ma copie</button></div></div>`;
+      else h += `<div class="res ${this.result.total >= 10 ? 'ok' : 'ko'}" style="margin-top:14px">Copie rendue · note : <b>${fmtN(this.result.total, 2)} / 20</b>${this.corr ? '' : '<br><span class="muted">La correction sera affichée par le professeur.</span>'}</div>`;
+    }
+    $('#mRest').innerHTML = h;
+    $$('#mRest input[data-q]').forEach(inp => inp.addEventListener('input', () => { const s2 = this.st[this.cur]; s2.ans[inp.dataset.q] = inp.value; }));
+  },
+  qHtml(q, i, qk, s) {
+    const tp = CFG.mode === 'tp', ans = s.ans[qk];
+    const lockQ = tp ? s.qOk : this.submitted;
+    let h = `<div class="qbox"><div class="qt">${q.pts && !tp ? `<span class="pts">${q.pts} pt${q.pts > 1 ? 's' : ''}</span>` : ''}${q.texte}</div>`;
+    if (q.type === 'num') {
+      h += `<div class="qrow"><input data-q="${qk}" inputmode="decimal" value="${esc(ans ?? '')}" ${lockQ ? 'disabled' : ''}><span class="unit">${q.unite || ''}</span>${tp && !lockQ ? `<button class="btn sm primary" data-act="q-check" data-i="${i}" data-q="${qk}">Valider</button>` : ''}</div>`;
+    } else if (q.type === 'choice') {
+      h += `<div class="qopts">${q.options.map((o, k) => { let cl = ans === k ? 'on' : '';
+        if (this.corr || (tp && s.qOk)) { if (k === q.answer) cl = 'good'; else if (ans === k) cl = 'bad'; }
+        return `<button class="qopt ${cl}" data-act="q-opt" data-i="${i}" data-q="${qk}" data-k="${k}" ${lockQ ? 'disabled' : ''}>${o}</button>`; }).join('')}</div>
+        ${tp && !lockQ ? `<div class="row2"><button class="btn sm primary" data-act="q-check" data-i="${i}" data-q="${qk}">Valider</button></div>` : ''}`;
+    } else if (q.type === 'order') {
+      if (!s.ans[qk]) { const idx = q.items.map((_, k) => k); do { idx.sort(() => Math.random() - .5); } while (idx.every((v, k) => v === k)); s.ans[qk] = idx; }
+      const ord = s.ans[qk];
+      h += `<div class="order">${ord.map((k, p) => `<div class="it"><b>${p + 1}</b><span>${q.items[k]}</span>${lockQ ? '' : `<button data-act="q-up" data-q="${qk}" data-p="${p}">↑</button><button data-act="q-down" data-q="${qk}" data-p="${p}">↓</button>`}</div>`).join('')}</div>`;
+    }
+    if (tp && s.qFb) h += `<div class="qfb ${s.qOk ? 'g' : 'b'}">${s.qFb}</div>`;
+    if (this.corr) h += `<div class="corr"><h4>Correction</h4>${this.qAnswerText(q, i)}${q.expl ? '<br>' + q.expl : ''}</div>`;
+    return h + '</div>';
+  },
+  qAnswer(q, i) {
+    if (q.type !== 'num') return null;
+    if (q.auto) { const A = this.targetA(q.from ?? i); const v = A.vol / 1000; return q.auto === 'vol' ? v : v * MATS.find(m => m[0] === q.mat)[1]; }
+    return q.answer;
+  },
+  qAnswerText(q, i) {
+    if (q.type === 'num') { const v = this.qAnswer(q, i); return `Réponse : <b>${fmtN(v, q.dec ?? 1)} ${q.unite || ''}</b>`; }
+    if (q.type === 'choice') return `Réponse : <b>${q.options[q.answer]}</b>`;
+    return 'Ordre attendu : <b>' + q.items.map((x, k) => (k + 1) + '. ' + x).join(' → ') + '</b>';
+  },
+  qCorrect(q, i, ans) {
+    if (q.type === 'num') { const v = parseNum(ans), a = this.qAnswer(q, i); if (!isFinite(v)) return 0;
+      const tol = q.tolAbs != null ? q.tolAbs : Math.abs(a) * (q.tol ?? 0.03); return Math.abs(v - a) <= tol + 1e-9 ? 1 : 0; }
+    if (q.type === 'choice') return ans === q.answer ? 1 : 0;
+    if (q.type === 'order') { if (!ans) return 0; const good = ans.filter((v, k) => v === k).length; return good === ans.length ? 1 : good / ans.length * 0.5; }
+    return 0;
+  },
+  pickOpt(b) { const s = this.st[this.cur]; s.ans[b.dataset.q] = +b.dataset.k; $$(`.qopt[data-q="${b.dataset.q}"]`, b.parentElement.parentElement).forEach(x => x.classList.toggle('on', x === b)); },
+  moveOrder(b, d) { const s = this.st[this.cur], o = s.ans[b.dataset.q], p = +b.dataset.p, q = p + d; if (q < 0 || q >= o.length) return; [o[p], o[q]] = [o[q], o[p]]; this.render(); },
+  /* ---------- TP : vérifications ---------- */
+  /* contrôles automatiques d'une mission ou d'une partie */
+  evaluate(it, model, tA) {
+    const out = { lines: [], ok: true, shape: null, markers: [] };
+    const L = (ok, t) => { out.lines.push([ok, t]); if (!ok) out.ok = false; };
+    if (it.cible && !it.asmCheck) {
+      const r = G.compare(model, null, tA); out.shape = r;
+      if (r.empty) { L(false, 'Aucun solide : fais au moins un bossage.'); return out; }
+      const dS = r.dimsS.map(d => G.fmt(d, 1)).join(' \u00d7 '), dT = r.dimsT.map(d => G.fmt(d, 1)).join(' \u00d7 ');
+      L(r.bboxOk, r.bboxOk ? 'Encombrement correct' : `Encombrement : ta pi\u00e8ce mesure ${dS} mm, il faut ${dT} mm (dans un ordre quelconque)`);
+      L(r.volOk, r.volOk ? 'Volume correct' : `Volume : ${fmtN(r.volS / 1000, 2)} cm\u00b3 au lieu de ${fmtN(r.volT / 1000, 2)} cm\u00b3`);
+      if (r.bboxOk) L(r.ok, r.ok ? 'Forme identique au mod\u00e8le' : 'Forme diff\u00e9rente : regarde les cercles rouges sur ta pi\u00e8ce');
+      out.markers = r.markers;
+    }
+    if (it.sim) {
+      const res = model.sim && model.sim.res, fresh = res && res.hash === JSON.stringify(model.features.filter(f => !f.hidden));
+      out.simOk = false;
+      if (!fresh) L(false, 'Simulation : lance le calcul sur ta pi\u00e8ce finale.');
+      else {
+        const sm = it.sim; let ok = true; const why = [];
+        if (sm.mat && res.mat !== sm.mat) { ok = false; why.push('mat\u00e9riau attendu : ' + sm.mat); }
+        if (sm.F && Math.abs(res.F - sm.F) > 1e-6) { ok = false; why.push('effort attendu : ' + sm.F + ' N'); }
+        if (sm.vmax && Math.abs(res.vmax - sm.vmax) / sm.vmax > (sm.tol || 0.15)) { ok = false; why.push('\u03c3max obtenue ' + fmtN(res.vmax, 1) + ' MPa : v\u00e9rifie l\u2019encastrement, la face charg\u00e9e et la direction'); }
+        if (sm.minS && res.s < sm.minS) { ok = false; why.push('coefficient de s\u00e9curit\u00e9 ' + fmtN(res.s, 2) + ' insuffisant'); }
+        out.simOk = ok;
+        L(ok, ok ? `Simulation correcte (\u03c3max = ${fmtN(res.vmax, 1)} MPa, s = ${fmtN(res.s, 2)})` : 'Simulation : ' + why.join(' ; '));
+      }
+    }
+    if (it.asmCheck) {
+      const ac = it.asmCheck; out.asmOk = false;
+      if (!model.asm || !model.asm.parts.length) { L(false, 'Assemblage vide.'); return out; }
+      if (ac.part) { const has = model.asm.parts.some(p => G.compare({ features: p.features }, null, tA).ok); L(has, has ? 'La pi\u00e8ce mod\u00e9lis\u00e9e est dans l\u2019assemblage' : 'Ins\u00e8re dans l\u2019assemblage une pi\u00e8ce conforme au dessin'); }
+      const r = ASM.withAsm(model.asm, () => { const c = ASM.compute(); return c.err ? c : { ...c, course: ASM.course(c.data, ac.course.name, ac.course.axis || 0) }; });
+      if (r.err) L(false, r.err);
+      else if (r.under > 0) L(false, 'Des pi\u00e8ces ne sont pas compl\u00e8tement li\u00e9es.');
+      else { const ok = r.course != null && Math.abs(r.course - ac.course.value) <= (ac.course.tol || 0.5);
+        out.asmOk = ok; L(ok, ok ? 'Mouvement correct : course de ' + G.fmt(r.course, 2) + ' mm' : (r.course == null ? 'Pi\u00e8ce \u00ab ' + ac.course.name + ' \u00bb introuvable' : 'Le mouvement ne donne pas la bonne course (' + G.fmt(r.course, 2) + ' mm)')); }
+      if (ac.N && model.asm.N !== ac.N) L(false, 'R\u00e8gle la vitesse moteur sur ' + ac.N + ' tr/min.');
+    }
+    return out;
+  },
+  verify() {
+    const it = this.items[this.cur], s = this.st[this.cur];
+    if (CAD.pending || CAD.mode !== '3d') { toast('Termine d\u2019abord ton esquisse ou ta fonction.', 'warn'); return; }
+    if (CAD.simBusy) { toast('Attends la fin du calcul.', 'warn'); return; }
+    const btn = $('[data-act="ms-verify"]'); btn.disabled = true; btn.textContent = 'V\u00e9rification\u2026';
+    setTimeout(() => {
+      const r = this.evaluate(it, CAD.getModel(), it.cible ? this.targetA(this.cur) : null);
+      s.tries++;
+      const h = `<div class="res ${r.ok ? 'ok' : 'ko'}">` + r.lines.map(([ok, t]) => `<div class="ln ${ok ? 'g' : 'b'}"><i>${ok ? '\u2713' : '\u2717'}</i><span>${t}</span></div>`).join('') + '</div>';
+      CAD.setMarkers(r.markers);
+      if (r.ok && !s.piece) { s.piece = true; toast('Mission valid\u00e9e !', 'ok'); this.send(); }
+      s.resHtml = h; this.render();
+    }, 30);
+  },
+  checkQ(i, qk) {
+    const it = this.items[i], q = it.question, s = this.st[i];
+    if (s.cool > Date.now()) { toast('Attends ' + Math.ceil((s.cool - Date.now()) / 1000) + ' s avant de réessayer.', 'warn'); return; }
+    const ans = s.ans[qk]; if (ans === undefined || ans === '') { toast('Réponds d’abord.', 'warn'); return; }
+    s.qTries = (s.qTries || 0) + 1;
+    if (this.qCorrect(q, i, ans) === 1) {
+      s.qOk = true; s.qPts = s.qTries === 1 ? 1 : s.qTries === 2 ? 0.5 : 0.25; s.qFb = 'Bonne réponse.' + (q.expl ? ' ' + q.expl : '');
+      this.send();
+    } else { s.cool = Date.now() + Math.min(30, 8 * s.qTries) * 1000; s.qFb = q.hint ? 'Pas encore. ' + q.hint : 'Pas encore : vérifie et réessaie.'; }
+    this.render();
+  },
+  maxPts() { if (CFG.mode !== 'tp') return 20; return this.items.reduce((a, m) => a + 2 + (m.question ? 1 : 0), 0); },
+  score() { if (CFG.mode !== 'tp') return 0; return this.st.reduce((a, s, j) => a + (s.piece ? 2 : 0) + (this.items[j].question && s.qOk ? s.qPts : 0), 0); },
+  send() {
+    const body = { noms: this.team.noms, classe: this.team.classe, score: Math.round(this.score() * 100) / 100, max: this.maxPts(),
+      missions: this.st.map((s, j) => ({ piece: s.piece, question: !!s.qOk, essais: s.tries })), date: new Date().toISOString() };
+    fetch(FB_TP + CFG.id + '/' + this.key + '.json', { method: 'PUT', body: JSON.stringify(body) }).catch(() => {});
+  },
+  /* ---------- Évaluation ---------- */
+  submit() {
+    CAD.closeModal();
+    this.models[this.mi] = CAD.getModel();
+    const det = {}; let total = 0;
+    this.items.forEach((it, j) => {
+      if (it.kind === 'questions') {
+        it.questions.forEach((q, k) => { const sc = this.qCorrect(q, j, this.st[j].ans[String(k)]) * q.pts; det['Q' + (k + 1)] = Math.round(sc * 100) / 100; total += sc; });
+      } else {
+        const ev = this.evaluate(it, this.models[j], it.cible ? this.targetA(j) : null), r = ev.shape;
+        let sc;
+        if (it.asmCheck) sc = ev.asmOk ? it.pts : 0;
+        else {
+          const shapePts = it.sim ? it.pts - it.simPts : it.pts;
+          sc = r.ok ? shapePts : shapePts * (0.4 * r.bboxOk + 0.3 * r.volOk);
+          if (it.sim && ev.simOk) sc += it.simPts;
+        }
+        sc = Math.round(sc * 4) / 4;
+        det['P' + (j + 1)] = sc; total += sc; this.st[j].res = r; this.st[j].ev = ev;
+      }
+    });
+    total = Math.round(total * 4) / 4;
+    this.result = { total, det }; this.submitted = true; CAD.lock(true);
+    const copie = CFG.fbEvalPath
+      ? { nom: this.team.noms, prenom: this.team.prenom || '', classe: this.team.classe, score: total, sur: 20, note20: total, duree_s: Math.round((Date.now() - this.t0) / 1000), date: new Date().toISOString(), reponses: Object.values(det) }
+      : { nom: this.team.noms, classe: this.team.classe, note: total, details: det, date: new Date().toISOString() };
+    fetch(FB_EVAL + (CFG.fbEvalPath || CFG.fbNode) + '.json', { method: 'POST', body: JSON.stringify(copie) })
+      .then(r => toast(r.ok ? 'Copie envoyée au professeur' : 'Envoi impossible : montre ta note au professeur', r.ok ? 'ok' : 'warn'))
+      .catch(() => toast('Envoi impossible : montre ta note au professeur', 'warn'));
+    this.render();
+    CAD.modal(`<h3>Copie rendue</h3><div class="scoreBig">${fmtN(total, 2)} / 20</div>
+      <table class="res-t"><tr>${Object.keys(det).map(k => `<th>${k}</th>`).join('')}</tr><tr>${Object.values(det).map(v => `<td>${fmtN(v, 2)}</td>`).join('')}</tr></table>
+      <p class="muted">P = pièce à modéliser, Q = question.</p><div class="row2"><button class="btn primary" data-act="modal-close">Fermer</button></div>`);
+  },
+  detKeys() { const k = []; this.items.forEach((it, j) => { if (it.kind === 'questions') it.questions.forEach((q, n) => k.push('Q' + (n + 1))); else k.push('P' + (j + 1)); }); return k; },
+  corrHtml(it, j) {
+    const r = this.st[j].res;
+    let h = `<div class="corr"><h4>Correction</h4><ol style="margin:0;padding-left:18px;line-height:1.6">${it.methode.map(x => `<li>${x}</li>`).join('')}</ol>`;
+    const ev = this.st[j].ev; if (ev) h += '<div style="margin-top:6px">' + ev.lines.map(([ok, t]) => (ok ? '✓ ' : '✗ ') + t).join('<br>') + '</div>';
+    return h + '</div>';
+  },
+  profModal() { CAD.modal(`<h3>Espace professeur</h3><label class="fld"><span>Code</span><input id="profCode" type="password" style="width:160px"></label><div class="row2"><button class="btn" data-act="modal-close">Fermer</button><button class="btn primary" data-act="prof-in">Entrer</button></div>`); setTimeout(() => { const i = $('#profCode'); if (i) i.focus(); }, 50); },
+  profIn() {
+    if ($('#profCode').value.trim().toUpperCase() !== TEACHER_CODE) { toast('Code incorrect', 'warn'); return; }
+    this.profOk = true;
+    CAD.modal(`<h3>Espace professeur</h3><div class="row2" style="justify-content:flex-start"><button class="btn primary" data-act="prof-res">Résultats de la classe</button>
+      <button class="btn" data-act="prof-corr" ${this.submitted ? '' : 'disabled'}>Afficher la correction sur ce poste</button></div>
+      ${this.submitted ? '' : '<p class="muted">La correction n’est disponible qu’après la remise de la copie.</p>'}<div id="profRes"></div><div class="row2"><button class="btn" data-act="modal-close">Fermer</button></div>`);
+  },
+  profResults() {
+    if (!this.profOk) return;
+    $('#profRes').innerHTML = '<p class="muted">Chargement…</p>';
+    fetch(FB_EVAL + (CFG.fbEvalPath || CFG.fbNode) + '.json').then(r => r.json()).then(d => {
+      const keysOrd = this.detKeys();
+      const rows = Object.values(d || {}).filter(r => r && r.nom).map(r => ({ nom: r.nom + (r.prenom ? ' ' + r.prenom : ''), classe: r.classe, note: r.note20 ?? r.note,
+        details: r.details || (r.reponses ? Object.fromEntries(Object.values(r.reponses).map((v, i) => [keysOrd[i] || 'R' + (i + 1), v])) : {}) }))
+        .sort((a, b) => (a.classe + a.nom).localeCompare(b.classe + b.nom));
+      if (!rows.length) { $('#profRes').innerHTML = '<p class="muted">Aucune copie reçue.</p>'; return; }
+      const keys = [...new Set(rows.flatMap(r => Object.keys(r.details || {})))];
+      $('#profRes').innerHTML = `<p class="muted">${rows.length} copie(s) · moyenne ${fmtN(rows.reduce((a, r) => a + r.note, 0) / rows.length, 2)} / 20</p>
+        <div style="overflow:auto"><table class="res-t"><tr><th>Classe</th><th>Élève</th><th>Note</th>${keys.map(k => `<th>${k}</th>`).join('')}</tr>
+        ${rows.map(r => `<tr><td>${esc(r.classe)}</td><td>${esc(r.nom)}</td><td><b>${fmtN(r.note, 2)}</b></td>${keys.map(k => `<td>${r.details && r.details[k] != null ? fmtN(r.details[k], 2) : ''}</td>`).join('')}</tr>`).join('')}</table></div>`;
+    }).catch(() => { $('#profRes').innerHTML = '<p class="muted">Connexion à la base impossible.</p>'; });
+  }
+};
+
+/* ===== calculatrice scientifique ===== */
+const Calc = {
+  deg: true,
+  toggle() {
+    const el = $('#calc'); if (!el.classList.contains('hidden')) { el.classList.add('hidden'); return; }
+    if (!el.innerHTML) {
+      const K = ['sin(', 'cos(', 'tan(', '√(', '^', 'asin(', 'acos(', 'atan(', '(', ')', '7', '8', '9', '/', 'π', '4', '5', '6', '*', 'C', '1', '2', '3', '-', '⌫', '0', ',', 'DEG', '+', '='];
+      el.innerHTML = `<div class="cd"><input id="cIn" placeholder="ex : 26*cos(45)"><button class="btn sm" data-act="calc">Fermer</button></div><div class="co" id="cOut"></div>
+        <div class="ck">${K.map(k => `<button data-ck="${k}" class="${k === '=' ? 'eq' : ''}">${k}</button>`).join('')}</div>`;
+      el.addEventListener('click', e => { const b = e.target.closest('[data-ck]'); if (!b) return; this.key(b.dataset.ck, b); });
+      $('#cIn').addEventListener('keydown', e => { if (e.key === 'Enter') this.eval(); });
+    }
+    el.classList.remove('hidden');
+  },
+  key(k, b) {
+    const i = $('#cIn');
+    if (k === '=') return this.eval();
+    if (k === 'C') { i.value = ''; $('#cOut').textContent = ''; return; }
+    if (k === '⌫') { i.value = i.value.slice(0, -1); return; }
+    if (k === 'DEG' || k === 'RAD') { this.deg = !this.deg; b.textContent = this.deg ? 'DEG' : 'RAD'; b.dataset.ck = b.textContent; return; }
+    i.value += k; i.focus();
+  },
+  eval() {
+    let s = $('#cIn').value.replace(/,/g, '.').replace(/π/g, '(PI)').replace(/√/g, 'sqrt').replace(/\^/g, '**').replace(/×/g, '*');
+    if (/[^0-9+\-*/().\sA-Za-z]/.test(s) || /[A-Za-z]+/g.test(s.replace(/\b(sin|cos|tan|asin|acos|atan|sqrt|ln|log|PI)\b/g, ''))) { $('#cOut').textContent = 'Erreur'; return; }
+    const k = this.deg ? Math.PI / 180 : 1;
+    const env = { sin: x => Math.sin(x * k), cos: x => Math.cos(x * k), tan: x => Math.tan(x * k), asin: x => Math.asin(x) / k, acos: x => Math.acos(x) / k, atan: x => Math.atan(x) / k, sqrt: Math.sqrt, ln: Math.log, log: Math.log10, PI: Math.PI };
+    try { const v = Function(...Object.keys(env), 'return (' + s + ');')(...Object.values(env)); $('#cOut').textContent = isFinite(v) ? String(Math.round(v * 1e6) / 1e6).replace('.', ',') : 'Erreur'; }
+    catch (_) { $('#cOut').textContent = 'Erreur'; }
+  }
+};
+window.addEventListener('DOMContentLoaded', () => { CAD.init(); MS.init(); });
+
+</script>
+</body>
+</html>

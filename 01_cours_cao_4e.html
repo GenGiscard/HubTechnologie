@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours — La CAO : lire, modéliser, calculer · ESTIC</title>
+<style>
+:root{--ink:#1e3a5f;--acc:#0e7490;--accf:#155e75;--or:#ea580c;--vert:#16a34a;--gris:#64748b;--fond:#F8F4EC;--carte:#fff;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.65}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}
+.estic-bar img{height:36px}.estic-bar b{color:var(--accf);font-size:14px}.estic-bar span{display:block;font-size:11px;color:var(--gris)}.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.cours{max-width:920px;margin:0 auto;padding:30px 22px 6px;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:38px;color:var(--accf);margin:6px 0 10px;line-height:1.2}.sous{font-size:16.5px;color:#5b544a;max-width:760px;margin:0 auto}
+section.bloc{max-width:920px;margin:26px auto;background:var(--carte);border:1px solid var(--bord);border-radius:18px;padding:22px 26px}
+h2{font-size:23px;color:var(--accf);margin-bottom:4px}h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;padding:1px 10px;font-size:17px;margin-right:9px}
+h3{font-size:14px;letter-spacing:1px;text-transform:uppercase;color:var(--or);margin:6px 0}
+.chapo{color:var(--gris);font-size:14.5px;margin-bottom:10px}p{margin:9px 0;font-size:16px}
+.obj .cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}.obj ul{padding-left:20px;font-size:15.5px}@media(max-width:700px){.obj .cols{grid-template-columns:1fr}}
+.retenir{background:#f5f3ff;border-left:5px solid var(--acc);border-radius:10px;padding:11px 16px;margin:12px 0;font-size:15.5px}
+.blk{text-align:center;margin:14px 0}.blk img{width:100%;height:auto;border:1px solid var(--bord);border-radius:12px;background:#fff}
+.demo{display:flex;flex-direction:column;align-items:center;gap:6px;margin:12px 0;background:#2b2f3e;border-radius:16px;padding:14px}
+.dscr{width:320px;height:240px;image-rendering:pixelated;border-radius:8px;outline:none;background:#1e1e2a}.dscr:focus{box-shadow:0 0 0 3px var(--or)}
+.dcap{color:#e2e8f0;font-size:14px}.dbtn,.wbtns button{border:1px solid var(--bord);background:#fff;color:var(--accf);border-radius:9px;padding:7px 14px;font:600 14px 'Segoe UI',sans-serif;cursor:pointer}
+.wid{display:flex;flex-direction:column;align-items:center;gap:8px;margin:14px 0}.wid canvas{width:100%;height:auto;border:1px solid var(--bord);border-radius:12px}
+.wlab{font-size:15px;color:var(--ink)}.wbtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.vbox{border:3px solid var(--acc);border-radius:14px;padding:10px 26px;text-align:center;background:#faf5ff}.vname{font-size:13px;font-weight:700;color:var(--accf);text-transform:uppercase;letter-spacing:1px}.vval{font-size:40px;font-weight:900;color:var(--ink)}
+.vval.pop{animation:pop .4s}@keyframes pop{0%{transform:scale(1.5);color:var(--or)}100%{transform:scale(1)}}
+.sorties{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:520px}.sortie{background:#f8fafc;border:1px solid var(--bord);border-radius:10px;padding:9px;text-align:center}
+.sortie .lab{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--gris);font-weight:800}.sortie .val{font-size:22px;font-weight:900}
+.lst{display:flex;gap:6px}.lst .cell{border:2px solid var(--bord);border-radius:10px;padding:6px 12px;text-align:center;min-width:64px;background:#fff;transition:.2s}.lst .cell span{display:block;font-size:11px;color:var(--gris)}.lst .cell b{font-size:22px;color:var(--ink)}.lst .cell.on{border-color:var(--or);background:#fff7ed;transform:translateY(-4px)}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}th,td{border:1px solid var(--bord);padding:6px 9px;text-align:left}th{background:#f8fafc;color:var(--accf)}
+.trace{padding-left:22px;font-size:16px}.trace li{margin:6px 0}
+footer{text-align:center;padding:22px;font-size:12px;color:var(--gris)}
+</style>
+<script>/* ===== Palette et images (style MakeCode Arcade) ===== */
+const PAL = {'.':null,'1':'#ffffff','2':'#ff2121','3':'#ff93c4','4':'#ff8135','5':'#fff609','6':'#249ca3','7':'#78dc52','8':'#003fad','9':'#87f2ff','a':'#8e2ec4','b':'#a4839f','c':'#5c406c','d':'#e5cdc4','e':'#91463d','f':'#000000'};
+const IMGS = {
+heros:{nom:'Héros',px:[
+'....ffffff......',
+'...f444444f.....',
+'..f44444444f....',
+'..fddddddddf....',
+'..fdfddddfdf....',
+'..fddddddddf....',
+'...fdd22ddf.....',
+'....ffddff......',
+'...f888888f.....',
+'..fd888888df....',
+'..fd888888df....',
+'...f888888f.....',
+'....f8ff8f......',
+'....f8ff8f......',
+'...ffe.fef......',
+'...fff.fff......']},
+vaisseau:{nom:'Vaisseau',px:[
+'.......ff.......',
+'......f99f......',
+'......f99f......',
+'.....f1991f.....',
+'.....f1111f.....',
+'....f111111f....',
+'....f118811f....',
+'...f11188111f...',
+'..f1111111111f..',
+'.f222111111222f.',
+'f22222111122222f',
+'f2222f1111f2222f',
+'.fff.f4554f.fff.',
+'......f45f......',
+'.......44.......',
+'................']},
+asteroide:{nom:'Astéroïde',px:[
+'.....ffffff.....',
+'...ffbbbbbbff...',
+'..fbbbbbbbbbbf..',
+'.fbbccbbbbbbbbf.',
+'.fbbccbbbbbccbf.',
+'fbbbbbbbbbbccbbf',
+'fbbbbbbccbbbbbbf',
+'fbbbbbbccbbbbbbf',
+'fbbccbbbbbbbbbbf',
+'fbbccbbbbbbbccbf',
+'.fbbbbbbbbbbccf.',
+'.fbbbbbccbbbbbf.',
+'..fbbbbccbbbbf..',
+'...ffbbbbbbff...',
+'.....ffffff.....',
+'................']},
+piece:{nom:'Pièce',px:[
+'................',
+'.....ffffff.....',
+'....f555555f....',
+'...f55444455f...',
+'..f5541111455f..',
+'..f5541555455f..',
+'..f5541555455f..',
+'..f5541555455f..',
+'..f5541555455f..',
+'..f5544444455f..',
+'...f55444455f...',
+'....f555555f....',
+'.....ffffff.....',
+'................',
+'................',
+'................']},
+pomme:{nom:'Pomme',px:[
+'.........f......',
+'........fe.77...',
+'.......fe.777...',
+'....ffffeff.....',
+'...f22222222f...',
+'..f2122222222f..',
+'..f2122222222f..',
+'.f222222222222f.',
+'.f222222222222f.',
+'.f222222222222f.',
+'.f222222222222f.',
+'..f2222222222f..',
+'..f2222222222f..',
+'...f22222222f...',
+'....ff2ff2ff....',
+'................']},
+etoile:{nom:'Étoile',px:[
+'.......ff.......',
+'......f55f......',
+'......f55f......',
+'.....f5555f.....',
+'ffffff5555ffffff',
+'f55555555555555f',
+'.f555551155555f.',
+'..f5555115555f..',
+'...f55555555f...',
+'...f55555555f...',
+'..f5555ff5555f..',
+'..f555f..f555f..',
+'.f555f....f555f.',
+'.f55f......f55f.',
+'.fff........fff.',
+'................']},
+fantome:{nom:'Fantôme',px:[
+'.....ffffff.....',
+'...ff111111ff...',
+'..f1111111111f..',
+'.f111111111111f.',
+'.f11ff1111ff11f.',
+'.f11ff1111ff11f.',
+'f11111111111111f',
+'f11111111111111f',
+'f1111111ff11111f',
+'f111111f..f1111f',
+'f11111111111111f',
+'f11111111111111f',
+'f11111111111111f',
+'f111f1111f11111f',
+'f1ff.f11f.ff111f',
+'ff....ff.....fff']},
+slime:{nom:'Slime',px:[
+'................',
+'................',
+'................',
+'................',
+'......ffff......',
+'....ff7777ff....',
+'...f77777777f...',
+'..f7717777177f..',
+'..f77f7777f77f..',
+'.f777f7777f777f.',
+'.f777777777777f.',
+'.f777772277777f.',
+'f77777777777777f',
+'f66666666666666f',
+'.ffffffffffffff.',
+'................']},
+coeur:{nom:'Cœur',px:[
+'................',
+'..fff.....fff...',
+'.f222f...f222f..',
+'f21222f.f22222f.',
+'f2122222222222f.',
+'f2222222222222f.',
+'f2222222222222f.',
+'.f22222222222f..',
+'..f222222222f...',
+'...f2222222f....',
+'....f22222f.....',
+'.....f222f......',
+'......f2f.......',
+'.......f........',
+'................',
+'................']},
+tir:{nom:'Tir',px:[
+'.55.',
+'5555',
+'5995',
+'5995',
+'5995',
+'5995',
+'.55.',
+'.44.']},
+balle:{nom:'Balle',px:[
+'.ffff.',
+'f1111f',
+'f1199f',
+'f1199f',
+'f1111f',
+'.ffff.']},
+brique:{nom:'Brique',px:[
+'ffffffffffffffff',
+'f44444444444444f',
+'f42222222222224f',
+'f42222222222224f',
+'f42222222222224f',
+'f42222222222224f',
+'f44444444444444f',
+'ffffffffffffffff']},
+raquette:{nom:'Raquette',px:[
+'.ffffffffffffffffffffff.',
+'f99999999999999999999999',
+'f88888888888888888888888',
+'.ffffffffffffffffffffff.']},
+mur:{nom:'Mur',px:[
+'ffffffffffffffff',
+'fbbbbbbfbbbbbbbf',
+'fbbbbbbfbbbbbbbf',
+'fcccccccfcccccccf'.slice(0,16),
+'ffffffffffffffff',
+'fbbbfbbbbbbbfbbf',
+'fbbbfbbbbbbbfbbf',
+'fcccfcccccccfccf',
+'ffffffffffffffff',
+'fbbbbbbfbbbbbbbf',
+'fbbbbbbfbbbbbbbf',
+'fcccccccfcccccccf'.slice(0,16),
+'ffffffffffffffff',
+'fbbbfbbbbbbbfbbf',
+'fbbbfbbbbbbbfbbf',
+'ffffffffffffffff']},
+drapeau:{nom:'Drapeau',px:[
+'..ff............',
+'..fe2222222.....',
+'..fe22222222f...',
+'..fe222222222f..',
+'..fe22222222f...',
+'..fe2222222f....',
+'..fe2fffff......',
+'..fe............',
+'..fe............',
+'..fe............',
+'..fe............',
+'..fe............',
+'..fe............',
+'.feef...........',
+'ffffff..........',
+'................']},
+bombe:{nom:'Bombe',px:[
+'..........4.5...',
+'.........5.4....',
+'........fe......',
+'.......fe.......',
+'.....ffffff.....',
+'...ffcccccfff...',
+'..fcc11ccccccf..',
+'..fc1ccccccccf..',
+'.fcccccccccccff.',
+'.fcccccccccccff.',
+'.fcccccccccccff.',
+'.fcccccccccccff.',
+'..fcccccccccff..',
+'..ffccccccccf...',
+'....ffffffff....',
+'................']},
+poisson:{nom:'Poisson',px:[
+'................',
+'................',
+'.........ff.....',
+'.......ff44f....',
+'.....ff44444ff..',
+'ff..f444444441f.',
+'f4ff4444444f4f4f',
+'f44444444444444f',
+'f44444444444444f',
+'f4ff44444444444f',
+'ff..f444444444f.',
+'.....ff4444ff...',
+'.......ff44f....',
+'.........ff.....',
+'................',
+'................']}
+};
+/* rendu d'une image en canvas */
+function imgCanvas(key){
+  const d=IMGS[key]; if(d._cv) return d._cv;
+  const h=d.px.length, w=d.px[0].length, c=document.createElement('canvas'); c.width=w; c.height=h;
+  const g=c.getContext('2d');
+  d.px.forEach((row,y)=>{ for(let x=0;x<w;x++){ const col=PAL[row[x]]; if(col){ g.fillStyle=col; g.fillRect(x,y,1,1); } } });
+  d.w=w; d.h=h; d._cv=c; return c;
+}
+function imgURL(key,scale){
+  const c=imgCanvas(key), s=scale||2, b=document.createElement('canvas'); b.width=c.width*s; b.height=c.height*s;
+  const g=b.getContext('2d'); g.imageSmoothingEnabled=false; g.drawImage(c,0,0,b.width,b.height); return b.toDataURL();
+}
+</script>
+<script>/* ===== Moteur de jeu (160 x 120, logique à 30 images/s) ===== */
+const SCR_W=160, SCR_H=120, FPS=30, DT=1/FPS;
+const KINDS=['Joueur','Ennemi','Nourriture','Projectile','Obstacle','Bonus'];
+const BTNS=['A','B','haut','bas','gauche','droite'];
+const SONS={piece:[[988,.06],[1319,.12]],saut:[[440,.05],[660,.05],[880,.08]],explosion:[[110,.25]],victoire:[[523,.1],[659,.1],[784,.1],[1047,.25]],degat:[[220,.08],[160,.15]]};
+
+function mulberry(seed){ let a=seed>>>0; return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+
+class Runtime {
+  constructor(opts){
+    opts=opts||{};
+    this.headless=!!opts.headless; this.rnd=mulberry(opts.seed||Date.now());
+    this.sprites=[]; this.nextId=1; this.frame=0; this.t=0;
+    this.h={start:[],update:[],interval:[],overlap:[],btn:[],lifeZero:[],countEnd:[]};
+    this.score=0; this.life=null; this.countdown=null; this.scoreShown=false;
+    this.bg='#003fad'; this.state='run'; this.endMsg=''; this.splash=null; this.splashT=0;
+    this.keys={}; this.prevKeys={}; this.moveCtl=[]; this.sounds=[]; this.err=null;
+    this.trap=0; this.overlapsNow=new Set(); this.logSay=[]; this.calls={};
+  }
+  /* ---------- API appelée par le code des blocs ---------- */
+  onStart(f){ this.h.start.push(f); }
+  onUpdate(f){ this.h.update.push(f); }
+  onInterval(ms,f){ this.h.interval.push({ms:Math.max(30,+ms||500),f,next:Math.max(30,+ms||500)/1000}); }
+  onOverlap(k1,k2,f){ this.h.overlap.push({k1,k2,f}); }
+  onButton(b,ev,f){ this.h.btn.push({b,ev,f}); }
+  onLifeZero(f){ this.h.lifeZero.push(f); }
+  onCountEnd(f){ this.h.countEnd.push(f); }
+  count(n){ this.calls[n]=(this.calls[n]||0)+1; }
+  create(img,kind){
+    if(!IMGS[img]) img='heros';
+    const c=imgCanvas(img);
+    const s={id:this.nextId++,img,kind,x:SCR_W/2,y:SCR_H/2,vx:0,vy:0,ax:0,ay:0,w:c.width,h:c.height,alive:true,
+      stay:false,bounce:false,autoDestroy:false,say:'',sayT:0,follow:null,followV:0,born:this.t};
+    this.sprites.push(s); this.count('create'); return s;
+  }
+  projectile(img,from,vx,vy){
+    const s=this.create(img,'Projectile');
+    if(from&&from.alive!==undefined){ s.x=from.x; s.y=from.y; }
+    s.vx=+vx||0; s.vy=+vy||0; s.autoDestroy=true; this.count('projectile'); return s;
+  }
+  ok(s){ return s&&typeof s==='object'&&s.id; }
+  setPos(s,x,y){ if(!this.ok(s)) return; s.x=+x||0; s.y=+y||0; }
+  setProp(s,p,v){ if(!this.ok(s)) return; s[p]=+v||0; }
+  changeProp(s,p,v){ if(!this.ok(s)) return; s[p]=(+s[p]||0)+(+v||0); }
+  getProp(s,p){ if(!this.ok(s)) return 0; return p==='gauche'?s.x-s.w/2:p==='droite'?s.x+s.w/2:p==='haut'?s.y-s.h/2:p==='bas'?s.y+s.h/2:(+s[p]||0); }
+  randomPos(s){ if(!this.ok(s)) return; s.x=Math.round(8+this.rnd()*(SCR_W-16)); s.y=Math.round(8+this.rnd()*(SCR_H-16)); }
+  flag(s,f,on){ if(!this.ok(s)) return; s[f]=!!on; }
+  say(s,txt){ if(!this.ok(s)) return; s.say=String(txt); s.sayT=2; this.logSay.push(String(txt)); this.count('say'); }
+  destroy(s){ if(!this.ok(s)) return; s.alive=false; this.count('destroy'); }
+  follow(s,target,v){ if(!this.ok(s)) return; s.follow=this.ok(target)?target:null; s.followV=+v||50; }
+  setImg(s,img){ if(!this.ok(s)||!IMGS[img]) return; const c=imgCanvas(img); s.img=img; s.w=c.width; s.h=c.height; }
+  kindCount(k){ return this.sprites.filter(s=>s.alive&&s.kind===k).length; }
+  overlaps(a,b){ return this.ok(a)&&this.ok(b)&&a.alive&&b.alive&&a!==b&&Math.abs(a.x-b.x)<(a.w+b.w)/2-1&&Math.abs(a.y-b.y)<(a.h+b.h)/2-1; }
+  move(s,vx,vy){ if(!this.ok(s)) return; this.moveCtl=this.moveCtl.filter(m=>m.s!==s); this.moveCtl.push({s,vx:+vx||0,vy:+vy||0}); this.count('move'); }
+  pressed(b){ return !!this.keys[b]; }
+  setScore(v){ this.score=Math.round(+v||0); this.scoreShown=true; }
+  addScore(v){ this.score+=Math.round(+v||0); this.scoreShown=true; }
+  setLife(v){ this.life=Math.round(+v||0); this.checkLife(); }
+  addLife(v){ if(this.life===null) this.life=3; this.life+=Math.round(+v||0); this.checkLife(); }
+  getLife(){ return this.life===null?0:this.life; }
+  checkLife(){ if(this.life!==null&&this.life<=0&&this.state==='run'){ this.life=0; if(this.h.lifeZero.length) this.h.lifeZero.forEach(f=>this.call(f)); else this.over(false); } }
+  startCountdown(s){ this.countdown=Math.max(0,+s||0); this.count('countdown'); }
+  over(win){ if(this.state!=='run') return; this.state=win?'won':'lost'; this.count(win?'win':'lose'); if(!this.headless) playSound(win?'victoire':'explosion'); }
+  bgColor(c){ this.bg=c; }
+  splashMsg(t){ this.splash=String(t); this.splashT=2; this.logSay.push(String(t)); this.count('splash'); }
+  sound(n){ this.sounds.push(n); if(!this.headless) playSound(n); }
+  randInt(a,b){ a=Math.round(+a||0); b=Math.round(+b||0); if(a>b){ const t=a; a=b; b=t; } return a+Math.floor(this.rnd()*(b-a+1)); }
+  /* ---------- exécution ---------- */
+  call(f,...args){
+    if(this.err||this.state==='error') return;
+    this.trap=20000;
+    try{ f(...args); }catch(e){ this.err=(e&&e.message)||String(e); this.state='error'; }
+  }
+  load(code){
+    try{ new Function('G',code)(this); }catch(e){ this.err=(e&&e.message)||String(e); this.state='error'; return; }
+    this.h.start.forEach(f=>this.call(f));
+  }
+  step(){
+    if(this.state!=='run') { this.frame++; return; }
+    this.t+=DT; this.frame++;
+    for(const b of BTNS){
+      const now=!!this.keys[b], was=!!this.prevKeys[b];
+      if(now!==was) this.h.btn.forEach(h=>{ if(h.b===b&&((h.ev==='presse'&&now)||(h.ev==='relache'&&!now))) this.call(h.f); });
+    }
+    this.prevKeys={...this.keys};
+    for(const m of this.moveCtl){ if(!m.s.alive) continue;
+      if(m.vx){ m.s.vx=(this.keys.droite?m.vx:0)-(this.keys.gauche?m.vx:0); }
+      if(m.vy){ m.s.vy=(this.keys.bas?m.vy:0)-(this.keys.haut?m.vy:0); } }
+    for(const s of this.sprites){ if(!s.alive) continue;
+      if(s.follow){ if(!s.follow.alive) s.follow=null; else { const dx=s.follow.x-s.x, dy=s.follow.y-s.y, d=Math.hypot(dx,dy)||1; if(d>1){ s.vx=dx/d*s.followV; s.vy=dy/d*s.followV; } else { s.vx=0; s.vy=0; } } }
+      s.vx+=s.ax*DT; s.vy+=s.ay*DT; s.x+=s.vx*DT; s.y+=s.vy*DT;
+      const hw=s.w/2, hh=s.h/2;
+      if(s.bounce){ if(s.x<hw){ s.x=hw; s.vx=Math.abs(s.vx);} if(s.x>SCR_W-hw){ s.x=SCR_W-hw; s.vx=-Math.abs(s.vx);} if(s.y<hh){ s.y=hh; s.vy=Math.abs(s.vy);} if(s.y>SCR_H-hh){ s.y=SCR_H-hh; s.vy=-Math.abs(s.vy);} }
+      else if(s.stay){ s.x=Math.min(Math.max(s.x,hw),SCR_W-hw); s.y=Math.min(Math.max(s.y,hh),SCR_H-hh); }
+      if(s.autoDestroy&&(s.x<-hw-2||s.x>SCR_W+hw+2||s.y<-hh-2||s.y>SCR_H+hh+2)) s.alive=false;
+      if(s.sayT>0){ s.sayT-=DT; if(s.sayT<=0) s.say=''; }
+    }
+    this.h.update.forEach(f=>this.call(f));
+    for(const it of this.h.interval){ if(this.t>=it.next-1e-9){ it.next+=it.ms/1000; this.call(it.f); } }
+    const now=new Set();
+    for(const h of this.h.overlap){
+      const A=this.sprites.filter(s=>s.alive&&s.kind===h.k1), B=this.sprites.filter(s=>s.alive&&s.kind===h.k2);
+      for(const a of A) for(const b of B){ if(a===b||!a.alive||!b.alive) continue;
+        if(this.overlaps(a,b)){ const key=h.k1+'|'+h.k2+'|'+a.id+'|'+b.id; now.add(key);
+          if(!this.overlapsNow.has(key)){ this.count('overlap'); this.call(h.f,a,b); } } }
+    }
+    this.overlapsNow=now;
+    if(this.countdown!==null&&this.state==='run'){ this.countdown-=DT; if(this.countdown<=0){ this.countdown=null; if(this.h.countEnd.length) this.h.countEnd.forEach(f=>this.call(f)); else { this.endMsg='Temps écoulé'; this.over(false); } } }
+    if(this.splashT>0){ this.splashT-=DT; if(this.splashT<=0) this.splash=null; }
+    if(this.frame%60===0) this.sprites=this.sprites.filter(s=>s.alive);
+  }
+  /* ---------- dessin ---------- */
+  draw(g){
+    g.fillStyle=this.bg; g.fillRect(0,0,SCR_W,SCR_H);
+    for(const s of this.sprites){ if(!s.alive) continue; g.drawImage(imgCanvas(s.img),Math.round(s.x-s.w/2),Math.round(s.y-s.h/2)); }
+    g.font='bold 7px Lexend, sans-serif'; g.textBaseline='top';
+    for(const s of this.sprites){ if(!s.alive||!s.say) continue;
+      const tw=Math.ceil(g.measureText(s.say).width)+6, x=Math.round(Math.min(Math.max(s.x-tw/2,1),SCR_W-tw-1)), y=Math.round(Math.max(s.y-s.h/2-13,1));
+      g.fillStyle='#fff'; g.fillRect(x,y,tw,11); g.strokeStyle='#000'; g.strokeRect(x+.5,y+.5,tw-1,10); g.fillStyle='#000'; g.fillText(s.say,x+3,y+2); }
+    if(this.scoreShown){ const t='SCORE '+this.score; const w=Math.ceil(g.measureText(t).width)+6; g.fillStyle='#4b7bec'; g.fillRect(SCR_W-w-2,2,w,11); g.fillStyle='#fff'; g.fillText(t,SCR_W-w+1,4); }
+    if(this.life!==null){ const c=imgCanvas('coeur'); for(let i=0;i<Math.min(this.life,8);i++) g.drawImage(c,2+i*9,2,9,9); }
+    if(this.countdown!==null){ const t=String(Math.ceil(this.countdown)); g.fillStyle='#000a'; g.fillRect(SCR_W/2-10,2,20,11); g.fillStyle='#fff'; g.textAlign='center'; g.fillText(t,SCR_W/2,4); g.textAlign='left'; }
+    if(this.splash){ g.fillStyle='#000c'; g.fillRect(8,SCR_H/2-12,SCR_W-16,24); g.fillStyle='#fff'; g.textAlign='center'; g.fillText(this.splash.slice(0,30),SCR_W/2,SCR_H/2-4); g.textAlign='left'; }
+    if(this.state!=='run'){
+      const won=this.state==='won', err=this.state==='error';
+      g.fillStyle=err?'#5c406ccc':won?'#1a7a3acc':'#a01a1acc'; g.fillRect(0,SCR_H/2-22,SCR_W,44);
+      g.fillStyle='#fff'; g.textAlign='center'; g.font='bold 10px Lexend, sans-serif';
+      g.fillText(err?'ERREUR DANS LE PROGRAMME':won?'GAGNÉ !':(this.endMsg||'PERDU'),SCR_W/2,SCR_H/2-14);
+      g.font='7px Lexend, sans-serif'; g.fillText(err?String(this.err).slice(0,34):'Score : '+this.score,SCR_W/2,SCR_H/2+2); g.textAlign='left';
+    }
+  }
+}
+let AC=null;
+function playSound(n){
+  try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); const seq=SONS[n]; if(!seq) return; let t=AC.currentTime;
+    for(const [f,d] of seq){ const o=AC.createOscillator(), v=AC.createGain(); o.type='square'; o.frequency.value=f; v.gain.setValueAtTime(.06,t); v.gain.exponentialRampToValueAtTime(.001,t+d); o.connect(v); v.connect(AC.destination); o.start(t); o.stop(t+d); t+=d; } }catch(e){}
+}
+</script>
+</head>
+<body>
+<div class="estic-bar"><img alt="Logo ESTIC" src="logo_estic.png"><div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div><div class="copy">© ESTIC — Tous droits réservés</div></div>
+<header class="cours"><div class="eyebrow">Séquence 4ème · Programmation</div><h1>La CAO : lire, modéliser, calculer</h1><p class="sous">Un logiciel de CAO transforme un dessin coté en pièce 3D, puis calcule son volume et sa masse avant de la fabriquer.</p></header>
+<section class="bloc obj"><h2>Ce que tu vas apprendre</h2><div class="cols"><div><h3>Objectifs</h3><ul><li>Lire un dessin coté et calculer une cote manquante</li><li>Choisir le plan d’esquisse et la fonction (bossage, enlèvement)</li><li>Calculer une masse à partir du volume et du matériau</li></ul></div><div><h3>Compétences</h3><ul><li>Lire, utiliser et produire des représentations numériques d’objets</li><li>Modéliser une pièce avec un logiciel de CAO</li><li>Exploiter un modèle pour obtenir une grandeur</li></ul></div></div></section>
+<section class="bloc"><h2><span class="num">1</span>Le dessin coté</h2><p class="chapo">Les dimensions de la pièce, en millimètres.</p><p>Une <b>cote</b> donne une distance. Si une cote manque, on la calcule : la cote totale est la <b>somme</b> des cotes partielles.</p><table><tr><th>Exemple</th><th>Calcul</th></tr><tr><td>Plaque de 80 avec trous à 8 du bord</td><td>entraxe = 80 − 8 − 8 = 64</td></tr><tr><td>T de 60, âme de 20 centrée</td><td>début de l’âme = (60 − 20) ÷ 2 = 20</td></tr><tr><td>Cylindre Ø60, paroi 3</td><td>Ø intérieur = 60 − 2 × 3 = 54</td></tr></table><div class="retenir">Toujours chercher la <b>cote totale</b> d’abord, puis les cotes partielles.</div></section>
+<section class="bloc"><h2><span class="num">2</span>Modéliser une pièce</h2><p class="chapo">Esquisse, puis fonction 3D.</p><table><tr><th>Étape</th><th>Rôle</th></tr><tr><td>Choisir un plan</td><td>Dessus, Face, Droite ou une face de la pièce</td></tr><tr><td>Esquisse</td><td>contour fermé et coté (rectangle, cercle, polyligne…)</td></tr><tr><td>Bossage</td><td>ajoute de la matière</td></tr><tr><td>Enlèvement</td><td>retire de la matière (trou, poche)</td></tr></table><p>Le profil d’une pièce en L ou en U se dessine sur le plan <b>Face</b>, puis on le « tire » en épaisseur.</p><div class="retenir">L’<b>arbre de construction</b> garde toutes les fonctions : on peut corriger une cote sans tout refaire.</div></section>
+<section class="bloc"><h2><span class="num">3</span>Volume et masse</h2><p class="chapo">m = ρ × V</p><p>Le logiciel donne le <b>volume</b>. La <b>masse volumique</b> ρ dépend du matériau (g/cm³).</p><div class="wid"><div class="wbtns" style="align-items:center"><label style="font-size:15px">Volume <input id="wmV" type="number" value="20" style="width:90px;padding:6px;border:1px solid #ccc;border-radius:8px"> cm³</label>
+<select id="wmM" style="padding:7px;border-radius:8px;border:1px solid #ccc"><option value="1.24">PLA (1,24 g/cm³)</option><option value="1.04">ABS (1,04)</option><option value="0.5">Bois de pin (0,50)</option><option value="2.7">Aluminium (2,70)</option><option value="7.85">Acier (7,85)</option></select></div>
+<div class="sorties" style="grid-template-columns:1fr"><div class="sortie"><div class="lab" style="text-transform:none">masse = volume × masse volumique</div><div class="val" id="wmR">24,8 g</div></div></div></div>
+<script>(function(){const f=()=>{const v=parseFloat(document.getElementById('wmV').value)||0,r=parseFloat(document.getElementById('wmM').value);document.getElementById('wmR').textContent=(v*r).toFixed(1).replace('.',',')+' g';};document.getElementById('wmV').oninput=f;document.getElementById('wmM').onchange=f;f();})();</script><div class="retenir">1 cm³ = 1 000 mm³. Une pièce de 60 × 25 × 10 mm fait 15 000 mm³ = 15 cm³.</div></section>
+<section class="bloc" id="sTrace"><h2>Trace écrite</h2><ul class="trace"><li>Un <b>dessin coté</b> donne les dimensions en mm ; une cote manquante se calcule à partir des autres.</li><li>On modélise par étapes : plan, esquisse cotée, fonction (<b>bossage</b> ou <b>enlèvement</b>).</li><li>L’<b>arbre de construction</b> permet de modifier et corriger un modèle.</li><li>Masse = volume × masse volumique (m = ρ × V) ; 1 cm³ = 1 000 mm³.</li></ul></section>
+<footer>Cours « La CAO : lire, modéliser, calculer » · Technologie 4ème · ESTIC Don Bosco</footer>
+<script>
+const DEMOS={};
+const KM={ArrowUp:'haut',ArrowDown:'bas',ArrowLeft:'gauche',ArrowRight:'droite',' ':'A',Enter:'B'};
+document.querySelectorAll('.dscr').forEach(cv=>{
+  let rt=null, raf=0; const g=cv.getContext('2d');
+  const run=()=>{ cancelAnimationFrame(raf); rt=new Runtime({seed:7}); rt.load(DEMOS[cv.dataset.code]); let acc=0,last=performance.now();
+    const loop=t=>{ acc+=Math.min(.25,(t-last)/1000); last=t; while(acc>=DT){ rt.step(); acc-=DT; } g.setTransform(2,0,0,2,0,0); g.imageSmoothingEnabled=false; rt.draw(g); raf=requestAnimationFrame(loop); }; raf=requestAnimationFrame(loop); };
+  const io=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ if(!rt) run(); } else { cancelAnimationFrame(raf); rt=null; } }); },{threshold:.3}); io.observe(cv);
+  cv.addEventListener('keydown',e=>{ const b=KM[e.key]; if(b&&rt){ rt.keys[b]=true; e.preventDefault(); } });
+  cv.addEventListener('keyup',e=>{ const b=KM[e.key]; if(b&&rt){ rt.keys[b]=false; e.preventDefault(); } });
+  cv.addEventListener('click',()=>cv.focus());
+  cv.parentNode.querySelector('.dbtn').addEventListener('click',()=>{ run(); cv.focus(); });
+});
+</script>
+</body>
+</html>

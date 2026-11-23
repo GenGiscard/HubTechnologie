@@ -41,3 +41,8 @@ Ces codes sont distincts des codes de jeux délivrés en fin de TP (aucune colli
 | 5e | Évaluation des sorciers — Les énergies | `SORCIER2` | `04_evaluation_energies_sorciers.html` |
 | 5e | La conception assistée par ordinateur | `ESQUI58` | `04_evaluation_cao.html` |
 | 5e | Évaluation des sorciers — La CAO et la 3D | `SORCIER5` | `04_evaluation_cao_sorciers.html` |
+| 5e | Programmer un jeu vidéo | `ARCADE5` | `04_evaluation_arcade_5e.html` |
+| 4e | Variables, conditions et boucles | `PIXEL48` | `04_evaluation_arcade_4e.html` |
+| 4e | La CAO : lire, modéliser, calculer | `PROFIL4` | `04_evaluation_cao_4e.html` |
+| 3e | Fonctions, listes et algorithmes | `BOSS319` | `04_evaluation_arcade_3e.html` |
+| 3e | La CAO : simuler et assembler | `LIAIS33` | `04_evaluation_cao_3e.html` |

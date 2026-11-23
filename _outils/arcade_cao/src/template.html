@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio Arcade · ESTIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1f2a5a;--or:#f9b13c;--bg:#f4f6fb;--line:#d9dfea;--ok:#1a8a4a;--ko:#c0392b;--txt:#1d2433;--mut:#5e6880}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Lexend,"Segoe UI",sans-serif;color:var(--txt);background:var(--bg)}
+header{height:54px;display:flex;align-items:center;gap:14px;padding:0 14px;background:var(--navy);color:#fff}
+header .logo{font-weight:700;font-size:15px;letter-spacing:.02em;white-space:nowrap}header .logo small{display:block;font-weight:400;font-size:11px;color:#c9d2f0}
+#tabs{display:flex;gap:6px;overflow-x:auto;flex:1}
+.tab{border:0;border-radius:8px;padding:7px 11px;font:600 13px Lexend,sans-serif;background:#ffffff1f;color:#fff;cursor:pointer;white-space:nowrap}
+.tab.on{background:#fff;color:var(--navy)}.tab.ok{box-shadow:inset 0 -3px 0 #4cd07d}.tab.lock{opacity:.45}
+#prog{font-size:12px;color:#c9d2f0;white-space:nowrap}#who{font-size:12px;color:#fff;white-space:nowrap}
+.hbtn{border:1px solid #ffffff55;background:transparent;color:#fff;border-radius:8px;padding:6px 10px;font:600 12px Lexend,sans-serif;cursor:pointer}
+#rendre{background:var(--or);border-color:var(--or);color:#1d2433}
+main{display:grid;grid-template-columns:372px 1fr 330px;height:calc(100vh - 54px)}
+#sim{background:#2b2f3e;padding:14px;display:flex;flex-direction:column;align-items:center;gap:10px;outline:none}
+.console{background:#4b4f63;border-radius:18px 18px 40px 40px;padding:12px 12px 16px;box-shadow:0 6px 0 #1b1d27}
+#scr{width:320px;height:240px;image-rendering:pixelated;display:block;border-radius:6px;background:#1e1e2a;outline:none}
+.pad{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:0 6px}
+.cross{display:grid;grid-template-columns:30px 30px 30px;grid-template-rows:30px 30px 30px}
+.cross button,.ab button{border:0;background:#22242f;color:#cfd5e6;font:700 12px Lexend,sans-serif;cursor:pointer;touch-action:none;user-select:none}
+.cross button{border-radius:5px}.cross button:active,.ab button:active{background:#000}
+.ab{display:flex;gap:10px}.ab button{width:40px;height:40px;border-radius:50%;background:#c0392b;color:#fff}.ab button+button{background:#d68910}
+.simbtns{display:flex;gap:8px}.simbtns .btn{min-width:110px}
+#simMsg{color:#ffb4a8;font-size:12px;min-height:16px;text-align:center;max-width:260px}
+.keys{color:#a7b0c6;font-size:11px;text-align:center;line-height:1.5}
+#blk{position:relative;min-width:0}
+#mis{background:#fff;border-left:1px solid var(--line);padding:16px 16px 20px;overflow-y:auto}
+#mis .mh{display:flex;justify-content:space-between;align-items:center}
+#mis .num{font-size:12px;font-weight:700;color:#fff;background:var(--navy);border-radius:999px;padding:3px 10px}
+#mis .pts{font-size:12px;font-weight:700;color:var(--navy)}
+#mis h2{font-size:19px;margin:10px 0 6px;color:var(--navy)}#mis .pitch{margin:0 0 10px;line-height:1.45;font-size:14px}
+#mis h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin:14px 0 6px}
+.tests{list-style:none;padding:0;margin:0}.tests li{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;line-height:1.4;padding:6px 0;border-bottom:1px dashed #e4e8f0}
+.ck{flex:none;width:18px;height:18px;border:2px solid #b9c2d3;border-radius:5px;margin-top:1px;position:relative}
+.tests li.good .ck{background:var(--ok);border-color:var(--ok)}.tests li.good .ck::after{content:"";position:absolute;left:4px;top:0;width:5px;height:10px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.tests li.bad .ck{border-color:var(--ko);background:#fdecea}.tests li.bad{color:var(--ko)}
+.aide{margin-top:12px;font-size:13.5px;background:#fff8e6;border:1px solid #f3d899;border-radius:9px;padding:8px 10px}.aide summary{cursor:pointer;font-weight:600;color:#8a5a00}.aide div{margin-top:6px;line-height:1.45}
+.cahier{margin-top:12px;font-size:13px;background:#eef3ff;border-left:4px solid var(--navy);padding:8px 10px;border-radius:6px}
+.mimg{margin:6px 0}
+.mbtns{margin-top:14px}
+.btn{border:1px solid var(--line);background:#fff;color:var(--txt);border-radius:9px;padding:9px 14px;font:600 13.5px Lexend,sans-serif;cursor:pointer}
+.btn.prim{background:var(--navy);border-color:var(--navy);color:#fff}.btn.go{background:#20bf6b;border-color:#20bf6b;color:#fff}
+.win{margin-top:12px;background:#e7f7ee;border:1px solid #9ed9b6;color:#135c32;border-radius:9px;padding:10px 12px;font-size:14px;line-height:1.5}.win .btn{margin-top:8px}
+.lose{margin-top:12px;background:#fdecea;border:1px solid #f2b5ad;color:#8e2418;border-radius:9px;padding:10px 12px;font-size:13.5px}
+#modal{position:fixed;inset:0;background:#0b1230aa;display:none;align-items:center;justify-content:center;z-index:100}#modal.on{display:flex}
+#modal .box{background:#fff;border-radius:14px;padding:22px 24px;width:min(420px,92vw);box-shadow:0 20px 50px #0005}
+#modal h3{margin:0 0 8px;color:var(--navy)}#modal p{line-height:1.45;font-size:14px}
+#modal label{display:block;font-size:13px;font-weight:600;margin:8px 0}#modal input,#modal select{display:block;width:100%;margin-top:4px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font:14px Lexend,sans-serif}
+#modal .err{color:var(--ko);font-size:13px;min-height:18px}#modal .row{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+#modal .big{font-size:34px;font-weight:700;color:var(--navy);margin:6px 0}#modal .det{font-size:14px;line-height:1.7;padding-left:18px}.muted{color:var(--mut);font-size:12.5px}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(30px);opacity:0;background:var(--navy);color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;transition:.3s;z-index:120}#toast.on{opacity:1;transform:translateX(-50%)}
+.blocklyToolboxDiv{font-family:Lexend,sans-serif}.blocklyTreeRow{height:34px;line-height:34px;margin-bottom:2px;border-radius:0 8px 8px 0}
+.blocklyTreeLabel{font-size:13px;font-weight:600}
+@media (max-width:1250px){main{grid-template-columns:300px 1fr 290px}#scr{width:256px;height:192px}}
+.zb{position:absolute;right:18px;bottom:18px;display:flex;flex-direction:column;gap:6px;z-index:20}.zb button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:#fff;font:700 18px Lexend,sans-serif;color:var(--navy);cursor:pointer;box-shadow:0 2px 6px #0002}.zb button.w{width:auto;border-radius:18px;font-size:12px;padding:0 10px}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">Studio Arcade<small id="ttl"></small></div>
+ <nav id="tabs"></nav>
+ <span id="prog"></span><span id="who"></span>
+ <button class="hbtn" id="prof" title="Espace professeur">Prof</button>
+ <button class="hbtn" id="rendre">Rendre mon TP</button>
+</header>
+<main>
+ <section id="sim" tabindex="0">
+  <div class="console"><canvas id="scr" width="320" height="240" tabindex="0"></canvas>
+   <div class="pad"><div class="cross"><span></span><button data-b="haut">&#9650;</button><span></span><button data-b="gauche">&#9664;</button><span></span><button data-b="droite">&#9654;</button><span></span><button data-b="bas">&#9660;</button><span></span></div>
+   <div class="ab"><button data-b="B">B</button><button data-b="A">A</button></div></div></div>
+  <div class="simbtns"><button class="btn go" id="play">Lancer le jeu</button><button class="btn" id="stop">Arrêter</button></div>
+  <div id="simMsg"></div>
+  <div class="keys">Clavier : flèches pour bouger<br>Espace = bouton A · Entrée = bouton B</div>
+ </section>
+ <section id="blk"><div class="zb"><button id="zin" title="Zoom avant">+</button><button id="zout" title="Zoom arrière">&minus;</button><button id="zclean" class="w" title="Ranger les blocs">Ranger</button></div></section>
+ <aside id="mis"></aside>
+</main>
+<div id="modal"></div><div id="toast"></div>
+<script>/*BLOCKLY*/</script>
+<script>/*IMAGES*/</script>
+<script>/*RUNTIME*/</script>
+<script>/*BLOCKS*/</script>
+<script>/*CFG*/</script>
+<script>/*UI*/</script>
+</body>
+</html>

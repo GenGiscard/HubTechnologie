@@ -2445,3 +2445,12 @@ Aucun fichier ne peut le remplacer : au moins un projet fabriqué par an.
 
 BO n° 9 du 29 février 2024 — 3 thèmes, 9 compétences.
 Tableau d'ancrage complet : `00_programme_technologie.html`.
+
+## 2026-11-23 — Séquences Programmation (Studio Arcade) et CAO pour 5e, 4e, 3e
+- Studio Arcade : éditeur de blocs façon MakeCode Arcade (Blockly intégré, moteur de jeu 160 × 120), missions vérifiées par tests automatiques, copies de TP vers scores_tp, évaluations vers le tableau de bord (prog_5e, prog_4e, prog_3e).
+- 5e « Programmer un jeu vidéo » : cours, 4 TP (24 missions), projet MakeCode, évaluation (ARCADE5).
+- 4e « Variables, conditions et boucles » : cours, 4 TP (23 missions), projet MakeCode, évaluation (PIXEL48).
+- 3e « Fonctions, listes et algorithmes » : cours, 4 TP (23 missions), projet MakeCode, évaluation (BOSS319).
+- Projets MakeCode : lien de partage rendu par l'élève, notation par grille dans l'espace professeur, note envoyée au tableau de bord (projet_arcade_5e/4e/3e).
+- CAO 5e : TP 2 à 4 ajoutés au hub. CAO 4e (cours, 4 TP, évaluation PROFIL4) et CAO 3e (cours, 4 TP dont simulation, assemblage bielle-manivelle et projet, évaluation LIAIS33).
+- Simulations étalonnées (maillage rapide et précis), assemblage vérifié par le solveur. Générateurs dans `_outils/arcade_cao/`.

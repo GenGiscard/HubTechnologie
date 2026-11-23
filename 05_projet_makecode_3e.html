@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projet — Un jeu complet en équipe · ESTIC</title>
+<style>
+:root{--ink:#1e3a5f;--acc:#be123c;--accf:#9f1239;--or:#ea580c;--gris:#64748b;--fond:#F8F4EC;--bord:#e9e2d4}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--fond);color:#3f3a34;line-height:1.6}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--acc);padding:8px 20px}.estic-bar img{height:36px}.estic-bar b{color:var(--accf);font-size:14px}.estic-bar span{display:block;font-size:11px;color:var(--gris)}.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header{max-width:920px;margin:0 auto;padding:28px 22px 4px;text-align:center}.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800}
+h1{font-size:36px;color:var(--accf);margin:6px 0 8px}.sous{font-size:16.5px;color:#5b544a}
+section{max-width:920px;margin:22px auto;background:#fff;border:1px solid var(--bord);border-radius:18px;padding:20px 24px}
+h2{font-size:21px;color:var(--accf);margin-bottom:8px}h2 .num{display:inline-block;background:var(--acc);color:#fff;border-radius:8px;padding:0 9px;margin-right:8px;font-size:16px}
+.go{display:inline-block;background:var(--acc);color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:12px 22px;font-size:17px;margin:6px 0}
+.tip{background:#fff7ed;border-left:5px solid var(--or);border-radius:10px;padding:10px 14px;margin-top:10px;font-size:15px}
+.ck{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--bord);font-size:16px;cursor:pointer}.ck input{width:20px;height:20px;margin-top:3px;accent-color:var(--acc)}
+table{width:100%;border-collapse:collapse;font-size:15px}th,td{border:1px solid var(--bord);padding:7px 10px;text-align:left}th{background:#f8fafc;color:var(--accf)}td.n{text-align:center;font-weight:700;width:80px}
+.etapes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.etapes div{background:#f8fafc;border:1px solid var(--bord);border-radius:12px;padding:10px;font-size:14.5px}.etapes b{display:block;color:var(--acc)}
+@media(max-width:700px){.etapes{grid-template-columns:1fr 1fr}}
+form label{display:block;font-weight:600;font-size:14px;margin:8px 0}form input,form select{display:block;width:100%;margin-top:4px;padding:9px 11px;border:1px solid var(--bord);border-radius:9px;font:15px 'Segoe UI',sans-serif}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.btn{border:0;background:var(--acc);color:#fff;font:700 15px 'Segoe UI',sans-serif;border-radius:10px;padding:10px 18px;cursor:pointer;margin-top:10px}
+.btn.sec{background:#fff;color:var(--accf);border:1px solid var(--bord)}#msg{margin-top:8px;font-weight:600}
+#prof{display:none}.pj{border:1px solid var(--bord);border-radius:12px;padding:12px;margin:10px 0}.pj h3{font-size:16px;color:var(--ink)}.pj .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}.pj .grid label{font-size:13px;font-weight:400}.pj .grid input{width:70px;display:inline-block;margin-left:6px;padding:4px 6px}
+.pj .tot{font-weight:700;color:var(--accf)}footer{text-align:center;padding:20px;font-size:12px;color:var(--gris)}.lk{word-break:break-all}
+</style></head><body>
+<div class="estic-bar"><img alt="Logo ESTIC" src="logo_estic.png"><div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div><div class="copy">© ESTIC — Tous droits réservés</div></div>
+<header><div class="eyebrow">Séquence 3ème · Programmation</div><h1>Projet — Un jeu complet en équipe</h1><p class="sous">En binôme, concevez et programmez un jeu complet sur MakeCode Arcade : menu, niveaux, fonctions et listes.</p></header>
+<section><h2><span class="num">1</span>Ouvrir MakeCode Arcade</h2>
+<a class="go" href="https://arcade.makecode.com/" target="_blank" rel="noopener">arcade.makecode.com</a>
+<div class="tip">Pour passer en français : roue dentée en haut à droite, puis <b>Langue</b>, puis <b>Français</b>. Clique sur <b>Nouveau projet</b> et donne-lui ton nom.</div></section>
+<section><h2><span class="num">2</span>Le cahier des charges</h2><p style="font-size:14px;color:var(--gris);margin-bottom:6px">Coche au fur et à mesure (enregistré sur ce poste).</p><label class="ck"><input type="checkbox" data-k="0"><span>Un <b>cahier des charges</b> écrit avant de programmer (thème, règles, commandes)</span></label><label class="ck"><input type="checkbox" data-k="1"><span>Des <b>états</b> : menu, jeu, fin</span></label><label class="ck"><input type="checkbox" data-k="2"><span>Au moins 2 <b>fonctions</b>, dont une avec paramètre</span></label><label class="ck"><input type="checkbox" data-k="3"><span>Une <b>liste</b> (niveaux, messages, positions…)</span></label><label class="ck"><input type="checkbox" data-k="4"><span>Un <b>algorithme</b> de jeu : gravité, poursuite ou recherche</span></label><label class="ck"><input type="checkbox" data-k="5"><span>Au moins 2 niveaux de difficulté</span></label><label class="ck"><input type="checkbox" data-k="6"><span>Une courte présentation orale (2 min) du programme</span></label></section>
+<section><h2><span class="num">3</span>Du Studio Arcade à MakeCode</h2><p style="font-size:15px;margin-bottom:8px">Les blocs sont presque les mêmes. Quelques noms changent :</p>
+<table><tr><th>Studio Arcade (TP)</th><th>MakeCode Arcade</th></tr><tr><td>au démarrage</td><td>au démarrage</td></tr><tr><td>définir … à sprite … de type</td><td>définir mySprite à sprite … de type</td></tr><tr><td>déplacer … avec les flèches</td><td>déplacer … avec les boutons</td></tr><tr><td>régler … reste dans l’écran</td><td>définir … reste dans l’écran ACTIVÉ</td></tr><tr><td>quand sprite … chevauche autreSprite</td><td>quand sprite de type … chevauche otherSprite</td></tr><tr><td>toutes les … ms</td><td>à chaque intervalle de … ms</td></tr><tr><td>modifier le score de …</td><td>modifier le score de …</td></tr><tr><td>lancer le compte à rebours</td><td>démarrer le compte à rebours</td></tr><tr><td>projectile … depuis …</td><td>projectile … depuis …</td></tr><tr><td>fin de partie gagnée</td><td>fin de partie (gagné)</td></tr></table></section>
+<section><h2><span class="num">4</span>Les étapes</h2><div class="etapes"><div><b>Séance 1</b>Écrire le cahier des charges et dessiner les sprites</div><div><b>Séance 2</b>Programmer les règles principales</div><div><b>Séance 3</b>Ajouter niveaux, sons, finitions</div><div><b>Séance 4</b>Tester, corriger, partager</div></div></section>
+<section><h2><span class="num">5</span>Grille d’évaluation</h2><table><tr><th>Critère</th><th>Points</th></tr><tr><td>Cahier des charges et jeu conforme</td><td class="n">3</td></tr><tr><td>États du jeu</td><td class="n">3</td></tr><tr><td>Fonctions</td><td class="n">4</td></tr><tr><td>Liste</td><td class="n">3</td></tr><tr><td>Algorithme de jeu</td><td class="n">3</td></tr><tr><td>Présentation orale</td><td class="n">4</td></tr></table></section>
+<section><h2><span class="num">6</span>Rendre mon projet</h2>
+<p style="font-size:15px">Dans MakeCode, clique sur <b>Partager</b> (en haut), puis <b>Publier</b> et copie le lien.</p>
+<form id="f" onsubmit="return false"><div class="row"><label>Nom<input id="n" required></label><label>Prénom<input id="p" required></label><label>Classe<select id="c"><option>3A</option><option>3B</option><option>3C</option><option>3D</option><option>3E</option><option>3PM</option></select></label></div>
+<label>Lien de partage MakeCode<input id="l" placeholder="https://makecode.com/_..." required></label><label>Nom du jeu<input id="t"></label>
+<button class="btn" id="send">Rendre mon projet</button><div id="msg"></div></form></section>
+<section><button class="btn sec" id="pbtn">Espace professeur</button><div id="prof"></div></section>
+<footer>Projet — Un jeu complet en équipe · Technologie 3ème · ESTIC Don Bosco</footer>
+<script>
+const FB='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/', NODE='scores_tp/projet_arcade_3e', EVAL='evaluations/projet_arcade_3e', CRIT=[["Cahier des charges et jeu conforme", 3], ["États du jeu", 3], ["Fonctions", 4], ["Liste", 3], ["Algorithme de jeu", 3], ["Présentation orale", 4]], LS='cdc_projet_arcade_3e';
+const $=s=>document.querySelector(s);
+let st={}; try{ st=JSON.parse(localStorage.getItem(LS))||{}; }catch(e){}
+document.querySelectorAll('.ck input').forEach(i=>{ i.checked=!!st[i.dataset.k]; i.onchange=()=>{ st[i.dataset.k]=i.checked; try{ localStorage.setItem(LS,JSON.stringify(st)); }catch(e){} }; });
+$('#send').onclick=()=>{ const n=$('#n').value.trim(), p=$('#p').value.trim(), l=$('#l').value.trim();
+  if(!n||!p){ $('#msg').textContent='Écris ton nom et ton prénom.'; return; }
+  if(!/^https:\/\/(arcade\.)?makecode\.com\//.test(l)){ $('#msg').textContent='Colle le lien de partage MakeCode (il commence par https://makecode.com/ ou https://arcade.makecode.com/).'; return; }
+  const d={nom:n,prenom:p,classe:$('#c').value,lien:l,titre:$('#t').value.trim(),date:new Date().toISOString()};
+  fetch(FB+NODE+'.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(r=>{ $('#msg').textContent=r.ok?'Projet rendu. Merci !':'Envoi impossible : montre ton lien au professeur.'; }).catch(()=>{ $('#msg').textContent='Envoi impossible : montre ton lien au professeur.'; }); };
+function djb(s){ let h=5381; for(const c of s) h=((h*33)^c.charCodeAt(0))>>>0; return h; }
+$('#pbtn').onclick=()=>{ const pw=prompt('Mot de passe professeur'); if(pw===null) return; if(djb(pw)!==1538494112){ alert('Mot de passe incorrect.'); return; } $('#prof').style.display='block'; $('#pbtn').style.display='none'; load(); };
+function esc(s){ return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+let GR={}; try{ GR=JSON.parse(localStorage.getItem(LS+'_notes'))||{}; }catch(e){}
+function load(){ $('#prof').innerHTML='Chargement…'; fetch(FB+NODE+'.json').then(r=>r.json()).then(d=>{ const L=Object.entries(d||{}).sort((a,b)=>(a[1].classe+a[1].nom).localeCompare(b[1].classe+b[1].nom));
+  if(!L.length){ $('#prof').innerHTML='<p>Aucun projet rendu pour l\u2019instant.</p>'; return; }
+  $('#prof').innerHTML='<h2>Projets rendus ('+L.length+')</h2>'+L.map(([k,v])=>'<div class="pj" data-k="'+k+'"><h3>'+esc(v.classe)+' · '+esc(v.prenom)+' '+esc(v.nom)+(v.titre?' — '+esc(v.titre):'')+'</h3><a class="lk" href="'+esc(v.lien)+'" target="_blank" rel="noopener">'+esc(v.lien)+'</a>'+
+   '<div class="grid">'+CRIT.map((c,i)=>'<label>'+esc(c[0])+'<input type="number" min="0" max="'+c[1]+'" step="0.5" data-i="'+i+'" value="'+(GR[k]?GR[k].notes[i]:'')+'"> / '+c[1]+'</label>').join('')+'</div>'+
+   '<span class="tot">'+(GR[k]?'Note déjà envoyée : '+GR[k].note20+' / 20 (renvoyer crée une 2e ligne)':'')+'</span> <button class="btn" data-send="'+k+'">Envoyer la note au tableau de bord</button></div>').join('');
+  document.querySelectorAll('[data-send]').forEach(b=>b.onclick=()=>{ const k=b.dataset.send, box=b.closest('.pj'), v=d[k]; const notes=[...box.querySelectorAll('input')].map(i=>Math.min(+i.max,Math.max(0,+i.value||0)));
+    const tot=Math.round(notes.reduce((a,x)=>a+x,0)*4)/4;
+    const copie={nom:v.nom,prenom:v.prenom||'',classe:v.classe,score:tot,sur:20,note20:tot,duree_s:0,date:new Date().toISOString(),reponses:notes,statut:'terminee',note20_brute:tot,bonus:0,bonus_eleves:'aucun'};
+    fetch(FB+EVAL+'.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(copie)})
+     .then(r=>{ if(r.ok){ GR[k]={notes,note20:tot}; try{ localStorage.setItem(LS+'_notes',JSON.stringify(GR)); }catch(e){} } alert(r.ok?'Note envoyée au tableau de bord : '+tot+' / 20':'Envoi impossible.'); load(); }).catch(()=>alert('Envoi impossible.')); }); }).catch(()=>{ $('#prof').innerHTML='<p>Lecture impossible.</p>'; }); }
+</script></body></html>
