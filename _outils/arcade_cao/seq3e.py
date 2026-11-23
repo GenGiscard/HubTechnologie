@@ -105,7 +105,7 @@ go = button('B', iff(cmp(getv('etat'), '==', txt('menu')), [setv('etat', 'jeu'),
 tick = every(1000, iff(cmp(getv('etat'), '==', txt('jeu')), [addscore(1)]))
 GND = P + "T.run(1.5);"
 TP3 = dict(id='tp_arcade3_3', mode='tp', title='TP 3 — Algorithmes de jeu', classes=CL3,
-  intro='Les jeux sont pleins d’algorithmes : poursuite, gravité, recherche par dichotomie, états du jeu.', toolbox=TB3, hide=H3 + ['sp_follow'], start=EMPTY, missions=[
+  intro='Les jeux sont pleins d’algorithmes : poursuite, gravité, saut et états du jeu.', toolbox=TB3, hide=H3 + ['sp_follow'], start=EMPTY, missions=[
   M('La poursuite', 'Le héros part en (20 ; 60). Un slime (Ennemi) part en (150 ; 20). À chaque mise à jour, le slime va vers le héros : vx = 30 si le héros est à droite, −30 sinon. Pareil pour vy.',
     [('Le slime se rapproche du héros', P + "const e=T.one('Ennemi'); const d=Math.hypot(e.x-p.x,e.y-p.y); T.run(2); return Math.hypot(e.x-p.x,e.y-p.y)<d-40;"),
      ('Si le héros passe de l’autre côté, le slime fait demi-tour', P + "const e=T.one('Ennemi'); p.ay=0; p.x=150; p.y=100; e.x=60; e.y=100; T.run(.2); const v1=e.vx; p.x=10; T.run(.2); return v1>0&&e.vx<0;")],
@@ -116,18 +116,13 @@ TP3 = dict(id='tp_arcade3_3', mode='tp', title='TP 3 — Algorithmes de jeu', cl
   M('Le saut', 'Le bouton A fait sauter (vy = −150), mais seulement si le héros est au sol (y ≥ 99) : pas de saut en l’air.',
     [('Au sol, A fait sauter', GND + "T.tap('A'); T.run(.2); return p.y<90;"), ('En l’air, A ne fait rien', GND + "T.tap('A'); T.run(.2); const v=p.vy; T.tap('A'); return p.vy>v-5;"), ('Il retombe ensuite au sol', GND + "T.tap('A'); T.run(2); return Math.abs(p.y-100)<1.5;")],
     prog(start(*(pl + slime)), update(*(chase + [ground])), jump)),
-  M('La dichotomie', 'Un trésor (Bonus) est caché en y = 112 à un x au hasard. Un robot le cherche par <b>dichotomie</b> : il connaît seulement « le trésor est plus à droite que tel x ? ». Il commence avec mini = 0 et maxi = 160, coupe l’intervalle en deux tant que maxi − mini > 1, compte ses essais, puis se place en x = maxi et dit « Trouvé en … essais ».',
-    [('Le robot (drapeau) est placé au bon x', "const t=T.one('Bonus'), r=T.all().find(s=>s.img==='drapeau'); return !!t&&!!r&&Math.abs(r.x-t.x)<1;"), ('Il annonce au plus 8 essais', "const m=T.said().match(/(\\d+)\\s*essai/); return !!m&&+m[1]>=4&&+m[1]<=8;"),
-     ('Une boucle « tant que » est utilisée', "return T.blocks('controls_whileUntil')>=1;"), ('Ça marche pour un autre trésor', "T.fresh(777); const t=T.one('Bonus'), r=T.all().find(s=>s.img==='drapeau'); return !!t&&!!r&&Math.abs(r.x-t.x)<1;")],
-    prog(start(*(pl + slime + dicho)), update(*(chase + [ground])), jump),
-    aide='milieu = arrondi inférieur de (mini + maxi) ÷ 2. Si x du trésor > milieu alors mini = milieu, sinon maxi = milieu.', cahier='déroule l’algorithme à la main pour un trésor en x = 100.'),
   M('Les états du jeu', 'Une variable <b>etat</b> vaut « menu » au départ et un message dit d’appuyer sur B. Un appui sur B, si etat = « menu », passe etat à « jeu » et crée 3 fantômes qui rebondissent. Un 2e appui ne fait rien.',
     [('Avant B, aucun fantôme', "return T.all('Ennemi').filter(e=>e.img==='fantome').length===0;"), ('Après B, 3 fantômes', "T.tap('B'); return T.all('Ennemi').filter(e=>e.img==='fantome').length===3;"),
      ('Un 2e appui ne recrée rien', "T.tap('B'); T.tap('B'); return T.all('Ennemi').filter(e=>e.img==='fantome').length===3;")],
-    prog(start(*(pl + slime + dicho + etat)), update(*(chase + [ground])), jump, go), aide='Compare la variable etat au texte « menu » avec un bloc « = » (Logique).'),
+    prog(start(*(pl + slime + etat)), update(*(chase + [ground])), jump, go), aide='Compare la variable etat au texte « menu » avec un bloc « = » (Logique).'),
   M('Défi : chrono de survie', 'Toutes les secondes, si etat = « jeu », le score augmente de 1. Dans le menu, le score ne bouge pas.',
     [('Dans le menu, le score reste à 0', "T.run(2.1); return T.rt.score===0;"), ('En jeu, +1 point par seconde', "T.tap('B'); T.run(2.1); return T.rt.score>=2;")],
-    prog(start(*(pl + slime + dicho + etat)), update(*(chase + [ground])), jump, go, tick)),
+    prog(start(*(pl + slime + etat)), update(*(chase + [ground])), jump, go, tick)),
 ])
 
 # ---------------- TP 4 : projet plateforme ----------------

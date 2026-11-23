@@ -2454,3 +2454,4 @@ Tableau d'ancrage complet : `00_programme_technologie.html`.
 - Projets MakeCode : lien de partage rendu par l'élève, notation par grille dans l'espace professeur, note envoyée au tableau de bord (projet_arcade_5e/4e/3e).
 - CAO 5e : TP 2 à 4 ajoutés au hub. CAO 4e (cours, 4 TP, évaluation PROFIL4) et CAO 3e (cours, 4 TP dont simulation, assemblage bielle-manivelle et projet, évaluation LIAIS33).
 - Simulations étalonnées (maillage rapide et précis), assemblage vérifié par le solveur. Générateurs dans `_outils/arcade_cao/`.
+- 2026-11-23 : mission « La dichotomie » retirée du TP 3 de programmation 3e (le TP passe à 5 missions).

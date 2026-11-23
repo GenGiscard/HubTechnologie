@@ -50,7 +50,7 @@ def all_hubs(d):
       ('1', '01_cours_arcade_3e.html', '#be123c', 'Cours projeté', 'Fonctions, listes, maximum, dichotomie, gravité et états du jeu, avec animations et trace écrite.', 'Classe entière'),
       ('2', '02_tp_arcade_3e_1.html', '#4f46e5', 'TP 1 — Fonctions', 'La fabrique d’ennemis : définir, appeler, paramètre et valeur renvoyée.', 'Individuel'),
       ('3', '02_tp_arcade_3e_2.html', '#4f46e5', 'TP 2 — Listes', 'Messages au hasard, niveaux, positions, record, moyenne et historique.', 'Individuel'),
-      ('4', '02_tp_arcade_3e_3.html', '#4f46e5', 'TP 3 — Algorithmes de jeu', 'Poursuite, gravité, saut, dichotomie et états du jeu.', 'Individuel'),
+      ('4', '02_tp_arcade_3e_3.html', '#4f46e5', 'TP 3 — Algorithmes de jeu', 'Poursuite, gravité, saut et états du jeu.', 'Individuel'),
       ('5', '02_tp_arcade_3e_4.html', '#4f46e5', 'TP 4 — Jeu de plateforme', 'Plateformes en liste, atterrissage, variable au_sol, pièces et drapeau d’arrivée.', 'Individuel'),
       ('6', '05_projet_makecode_3e.html', '#ea580c', 'Projet — MakeCode Arcade', 'Un jeu complet en binôme sur le vrai MakeCode Arcade : états, fonctions, liste, algorithme. Lien à rendre.', 'Projet · binômes'),
       ('7', '04_evaluation_arcade_3e.html', '#16a34a', 'Évaluation', 'Le défi du programmeur : fonction, liste, algorithme et gravité, notés automatiquement.', 'Individuel · noté')],
