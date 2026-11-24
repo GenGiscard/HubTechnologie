@@ -52,19 +52,20 @@ const MS=CFG.missions;
 /* ---------- simulateur ---------- */
 function simStart(){
   cancelAnimationFrame(RAF); const code=genCode(WS);
-  RT=new Runtime({seed:Date.now()&0xffff}); RT.load(code);
+  stopMusic(); RT=new Runtime({seed:Date.now()&0xffff}); try{ RT.best=+localStorage.getItem('best_'+CFG.id)||0; }catch(e){} RT.load(code); let saved=false;
   const cv=$('#scr'), g=cv.getContext('2d'); g.setTransform(SC,0,0,SC,0,0); g.imageSmoothingEnabled=false;
   let acc=0, last=performance.now();
-  const loop=now=>{ acc+=Math.min(.25,(now-last)/1000); last=now; while(acc>=DT){ RT.step(); acc-=DT; } RT.draw(g); RAF=requestAnimationFrame(loop); };
+  const loop=now=>{ acc+=Math.min(.25,(now-last)/1000); last=now; while(acc>=DT){ RT.step(); acc-=DT; } RT.draw(g); if(!saved&&(RT.state==='won'||RT.state==='lost')){ saved=true; try{ if(RT.score>RT.best) localStorage.setItem('best_'+CFG.id,RT.score); }catch(e){} } RAF=requestAnimationFrame(loop); };
   RAF=requestAnimationFrame(loop);
   $('#simMsg').textContent=RT.err?'Erreur : '+RT.err:'';
   $('#scr').focus();
 }
-function simStop(){ cancelAnimationFrame(RAF); RT=null; const g=$('#scr').getContext('2d'); g.setTransform(SC,0,0,SC,0,0); g.fillStyle='#1e1e2a'; g.fillRect(0,0,SCR_W,SCR_H); g.fillStyle='#8890a8'; g.font='9px monospace'; g.textAlign='center'; g.fillText('Clique sur Lancer le jeu',SCR_W/2,SCR_H/2); g.textAlign='left'; }
+function simStop(){ cancelAnimationFrame(RAF); RT=null; stopMusic(); const g=$('#scr').getContext('2d'); g.setTransform(SC,0,0,SC,0,0); g.fillStyle='#1e1e2a'; g.fillRect(0,0,SCR_W,SCR_H); g.fillStyle='#8890a8'; g.font='9px monospace'; g.textAlign='center'; g.fillText('Clique sur Lancer le jeu',SCR_W/2,SCR_H/2); g.textAlign='left'; }
 const KEYMAP={ArrowUp:'haut',ArrowDown:'bas',ArrowLeft:'gauche',ArrowRight:'droite',' ':'A',Enter:'B',z:'haut',s:'bas',q:'gauche',d:'droite',x:'B'};
 function keyEv(e,down){ const b=KEYMAP[e.key]; if(!b||!RT) return; const act=document.activeElement;
   if(act&&(act.tagName==='INPUT'||act.tagName==='TEXTAREA')) return;
   if(!$('#sim').matches(':hover')&&!$('#sim').contains(act)&&act!==document.body) return;
+  if(b==='A'&&down&&(RT.state==='won'||RT.state==='lost')){ e.preventDefault(); simStart(); return; }
   RT.keys[b]=down; e.preventDefault(); }
 document.addEventListener('keydown',e=>keyEv(e,true)); document.addEventListener('keyup',e=>keyEv(e,false));
 
@@ -90,11 +91,33 @@ function renderTabs(){
   const n=MS.filter((m,i)=>ST.done[i]).length;
   $('#prog').textContent=isEval?'':n+' / '+MS.length+' missions réussies';
 }
+const CATCOL={Jeu:COL.jeu,Sprites:COL.sprites,'Contrôleur':COL.controleur,Info:COL.info,Musique:COL.musique,Effets:COL.effets,Boucles:COL.boucles,Logique:COL.logique,Variables:COL.variables,Maths:COL.maths,Texte:COL.texte,Fonctions:COL.fonctions,Listes:COL.listes};
+function hlCat(cat){
+  document.querySelectorAll('.cathl').forEach(e=>e.classList.remove('cathl'));
+  if(!cat) return;
+  const rows=[...document.querySelectorAll('.blocklyToolboxCategory, .blocklyTreeRow')];
+  const r=rows.find(e=>(e.textContent||'').trim()===cat); if(r) r.classList.add('cathl');
+}
+function renderStep(){
+  const m=MS[CUR]; if(!m.steps||!m.steps.length) return;
+  ST.stp=ST.stp||{}; let k=Math.min(ST.stp[CUR]||0,m.steps.length-1); const S=m.steps[k], n=m.steps.length;
+  const box=$('#tuto'); if(!box) return;
+  box.innerHTML=`<div class="th"><span>Étape <b>${k+1}</b> sur ${n}</span><span class="chip" style="background:${CATCOL[S.cat]||'#555'}">${S.cat}</span></div>
+   <p class="tt">${S.t}</p>${S.img?`<img class="ti" src="${S.img}" alt="Blocs à poser" title="Clique pour agrandir">`:''}
+   <div class="tdots">${m.steps.map((_,i)=>`<i class="${i<k?'d':i===k?'c':''}"></i>`).join('')}</div>
+   <div class="tn"><button class="btn" id="stPrev" ${k===0?'disabled':''}>Précédente</button>${k<n-1?'<button class="btn prim" id="stNext">Étape suivante</button>':'<button class="btn go" id="stTest">Lancer le jeu pour tester</button>'}</div>`;
+  hlCat(S.cat);
+  const go=d=>{ ST.stp[CUR]=Math.max(0,Math.min(n-1,k+d)); stSave(); renderStep(); };
+  $('#stPrev').onclick=()=>go(-1); const nx=$('#stNext'); if(nx) nx.onclick=()=>go(1);
+  const tb=$('#stTest'); if(tb) tb.onclick=()=>{ simStart(); };
+  const im=box.querySelector('.ti'); if(im) im.onclick=()=>{ $('#modal').innerHTML=`<div class="box big"><img src="${S.img}" style="max-width:100%"><div class="row"><button class="btn prim" id="zc">Fermer</button></div></div>`; $('#modal').classList.add('on'); $('#zc').onclick=()=>$('#modal').classList.remove('on'); };
+}
 function renderMission(){
   const m=MS[CUR];
   const tests=m.tests.map((t,k)=>`<li data-k="${k}"><span class="ck"></span>${t.txt}</li>`).join('');
   $('#mis').innerHTML=`<div class="mh"><span class="num">${isEval?'Partie':'Mission'} ${CUR+1}</span>${isEval?`<span class="pts">${m.pts} pts</span>`:''}</div>
    <h2>${m.titre}</h2><p class="pitch">${m.pitch}</p>
+   ${m.steps&&m.steps.length&&!isEval?'<div id="tuto" class="tuto"></div>':''}
    ${m.img?`<div class="mimg">${m.img}</div>`:''}
    <h3>${isEval?'Ce que ton programme doit faire':'Objectifs'}</h3><ul class="tests">${tests}</ul>
    ${m.aide&&!isEval?`<details class="aide"><summary>Indice</summary><div>${m.aide}</div></details>`:''}
@@ -103,6 +126,7 @@ function renderMission(){
    <div id="res"></div>`;
   if(ST.done[CUR]&&!isEval) markTests(m.tests.map(()=>true),true);
   const vb=$('#verif'); if(vb) vb.onclick=verify;
+  renderStep(); if(!m.steps||isEval) hlCat(null);
 }
 function markTests(r,silent){
   document.querySelectorAll('#mis .tests li').forEach((li,k)=>{ li.classList.toggle('good',!!r[k]); li.classList.toggle('bad',!r[k]&&!silent); });
@@ -205,12 +229,29 @@ function init(){
   $('#zin').onclick=()=>WS.zoomCenter(1); $('#zout').onclick=()=>WS.zoomCenter(-1); $('#zclean').onclick=()=>{ WS.cleanUp(); WS.scrollCenter(); };
   $('#play').onclick=simStart; $('#stop').onclick=simStop; $('#rendre').onclick=submit; $('#prof').onclick=profSolution;
   document.querySelectorAll('.pad [data-b]').forEach(b=>{ const k=b.dataset.b;
-    const dn=e=>{ e.preventDefault(); if(RT) RT.keys[k]=true; }, up=e=>{ e.preventDefault(); if(RT) RT.keys[k]=false; };
+    const dn=e=>{ e.preventDefault(); if(RT&&k==='A'&&(RT.state==='won'||RT.state==='lost')){ simStart(); return; } if(RT) RT.keys[k]=true; }, up=e=>{ e.preventDefault(); if(RT) RT.keys[k]=false; };
     b.addEventListener('pointerdown',dn); b.addEventListener('pointerup',up); b.addEventListener('pointerleave',up); });
   $('#rendre').textContent=isEval?'Rendre ma copie':'Rendre mon TP';
-  const go=()=>{ idLine(); if(isEval&&ST.rendu){ openMission(0); WS.options.readOnly=true; showEnd(); return; } openMission(Math.min(ST.cur||0,MS.length-1)); };
+  $('#aide').onclick=()=>tour(0);
+  const go=()=>{ idLine(); setTimeout(()=>{ let seen=false; try{ seen=!!localStorage.getItem('arcade_tour'); }catch(e){} if(!seen&&!isEval) tour(0); },600); if(isEval&&ST.rendu){ openMission(0); WS.options.readOnly=true; showEnd(); return; } openMission(Math.min(ST.cur||0,MS.length-1)); };
   if(!ST.id||(isEval&&!ST.rendu)) { askId(go); if(ST.id){ $('#idN').value=ST.id.nom; $('#idP').value=ST.id.prenom; $('#idC').value=ST.id.classe; } } else go();
   window.addEventListener('beforeunload',()=>{ ST.cur=CUR; if(WS) ST.xml[CUR]=wsXml(WS); stSave(); });
   simStop();
+}
+/* ---------- visite guidée de l'interface ---------- */
+const TOUR=[['.blocklyToolboxDiv','Les catégories de blocs. Clique sur une catégorie : ses blocs apparaissent, il suffit de les glisser.'],
+ ['#blk','L\u2019espace de travail. Glisse les blocs ici et emboîte-les sous l\u2019événement, comme des pièces de puzzle.'],
+ ['#tuto','Le tutoriel. Chaque étape te montre en image le bloc à poser (surligné en jaune) et la catégorie où le trouver.'],
+ ['#play','Lance ton jeu pour le tester. Clique sur l\u2019écran du jeu, puis joue avec les flèches et la barre Espace.'],
+ ['#verif','Quand ton jeu fonctionne, vérifie ta mission : les objectifs réussis se cochent en vert.']];
+function tour(k){ k=k||0; const old=document.getElementById('tourBox'); if(old) old.remove(); document.querySelectorAll('.tourOn').forEach(e=>e.classList.remove('tourOn'));
+  while(k<TOUR.length&&!document.querySelector(TOUR[k][0])) k++;
+  if(k>=TOUR.length){ try{ localStorage.setItem('arcade_tour','1'); }catch(e){} return; }
+  const el=document.querySelector(TOUR[k][0]), r=el.getBoundingClientRect(); el.classList.add('tourOn');
+  const b=document.createElement('div'); b.id='tourBox'; b.innerHTML=`<div class="tb"><b>${k+1} / ${TOUR.length}</b><p>${TOUR[k][1]}</p><div class="row"><button class="btn" id="tSkip">Passer</button><button class="btn prim" id="tNext">${k<TOUR.length-1?'Suivant':'C\u2019est parti !'}</button></div></div>`;
+  document.body.appendChild(b); const box=b.firstChild; const W=330;
+  let x=r.right+14, y=r.top+10; if(x+W>innerWidth-10){ x=Math.max(10,r.left-W-14); } if(x<10) x=10; if(r.width>innerWidth*.4){ x=r.left+r.width/2-W/2; y=r.top+40; }
+  box.style.left=Math.round(x)+'px'; box.style.top=Math.round(Math.min(y,innerHeight-190))+'px';
+  document.getElementById('tNext').onclick=()=>tour(k+1); document.getElementById('tSkip').onclick=()=>tour(99);
 }
 window.addEventListener('load',init);

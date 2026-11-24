@@ -30,19 +30,19 @@ def all_hubs(d):
     J = lambda f: os.path.join(d, f)
     hub(J('00_hub_arcade_5e.html'), '5e', 'Programmer un jeu vidéo', 'Sprites, événements, score et vies : avec des blocs comme sur MakeCode Arcade, crée tes premiers jeux, puis ton propre jeu sur le vrai MakeCode.', [
       ('1', '01_cours_arcade_5e.html', '#7c3aed', 'Cours projeté', 'Sprites, coordonnées de l’écran, événements, score et vies, avec des mini-jeux en direct et la trace écrite.', 'Classe entière'),
-      ('2', '02_tp_arcade_5e_1.html', '#0e7490', 'TP 1 — Mon premier sprite', 'Faire apparaître un héros, le faire parler et bouger avec les flèches. 6 missions vérifiées automatiquement.', 'Individuel'),
-      ('3', '02_tp_arcade_5e_2.html', '#0e7490', 'TP 2 — Attrape la pomme', 'Chevauchement, score, son et compte à rebours : ton premier vrai jeu.', 'Individuel'),
-      ('4', '02_tp_arcade_5e_3.html', '#0e7490', 'TP 3 — Évite les fantômes', 'Vies, ennemis qui rebondissent, apparitions toutes les 5 s et ennemi chasseur.', 'Individuel'),
-      ('5', '02_tp_arcade_5e_4.html', '#0e7490', 'TP 4 — Bataille spatiale', 'Bouton A, projectiles, pluie d’astéroïdes et victoire à 20 points.', 'Individuel'),
+      ('2', '02_tp_arcade_5e_1.html', '#0e7490', 'TP 1 — Mon premier sprite', 'Un héros dans la forêt, qui parle et bouge avec les flèches. Tutoriel pas à pas illustré.', 'Individuel'),
+      ('3', '02_tp_arcade_5e_2.html', '#0e7490', 'TP 2 — Le verger magique', 'Fruits qui tombent, fruit pourri, étincelles et compte à rebours : ton premier vrai jeu.', 'Individuel'),
+      ('4', '02_tp_arcade_5e_3.html', '#0e7490', 'TP 3 — Le manoir hanté', 'Nuit, musique, fantômes chasseurs, chauves-souris, vies et écran qui tremble.', 'Individuel'),
+      ('5', '02_tp_arcade_5e_4.html', '#0e7490', 'TP 4 — Bataille spatiale', 'Tirs, explosions, pluie d’astéroïdes et un boss à 15 points de vie.', 'Individuel'),
       ('6', '05_projet_makecode_5e.html', '#ea580c', 'Projet — MakeCode Arcade', 'Ton propre jeu d’attrape sur le vrai MakeCode Arcade, avec cahier des charges et grille. Lien à rendre.', 'Projet · 4 séances'),
       ('7', '04_evaluation_arcade_5e.html', '#16a34a', 'Évaluation', 'Le verger enchanté : 4 parties notées par des tests automatiques. Code à demander au professeur.', 'Individuel · noté')],
       ['Cours', 'TP 1 à 4', 'Projet MakeCode', 'Évaluation'], [('Évaluation', 'ARCADE5')], 'Programmer un jeu vidéo')
     hub(J('00_hub_arcade_4e.html'), '4e', 'Variables, conditions et boucles', 'Un jeu qui s’adapte : il mémorise, il décide, il répète. Programme un casse-briques complet, puis un jeu à niveaux sur MakeCode Arcade.', [
       ('1', '01_cours_arcade_4e.html', '#0e7490', 'Cours projeté', 'Variable, condition, ET / OU, boucles et organigramme, avec des animations et la trace écrite.', 'Classe entière'),
       ('2', '02_tp_arcade_4e_1.html', '#7c3aed', 'TP 1 — Coordonnées et variables', 'Le repère de l’écran, une variable vitesse, le turbo, un compteur et le tunnel.', 'Individuel'),
-      ('3', '02_tp_arcade_4e_2.html', '#7c3aed', 'TP 2 — Conditions', 'La mine d’or : niveaux, bombe, zone secrète avec ET, victoire.', 'Individuel'),
+      ('3', '02_tp_arcade_4e_2.html', '#7c3aed', 'TP 2 — Conditions', 'La mine de cristaux : niveaux, bombe, zone secrète avec ET, victoire.', 'Individuel'),
       ('4', '02_tp_arcade_4e_3.html', '#7c3aed', 'TP 3 — Boucles', 'Répéter, aligner, construire un mur de briques avec deux boucles, raquette et balle.', 'Individuel'),
-      ('5', '02_tp_arcade_4e_4.html', '#7c3aed', 'TP 4 — Le casse-briques complet', 'Rebonds, vies, victoire, bonus au hasard et balle qui accélère.', 'Individuel'),
+      ('5', '02_tp_arcade_4e_4.html', '#7c3aed', 'TP 4 — Le casse-briques complet', 'Briques de couleur, rebonds, vies, bonus au hasard, effets et balle qui accélère.', 'Individuel'),
       ('6', '05_projet_makecode_4e.html', '#ea580c', 'Projet — MakeCode Arcade', 'Un jeu à niveaux sur le vrai MakeCode Arcade : variables, conditions, boucle. Lien à rendre.', 'Projet · 4 séances'),
       ('7', '04_evaluation_arcade_4e.html', '#16a34a', 'Évaluation', 'Les étoiles filantes : 4 parties notées par des tests automatiques. Code à demander au professeur.', 'Individuel · noté')],
       ['Cours', 'TP 1 à 4', 'Projet MakeCode', 'Évaluation'], [('Évaluation', 'PIXEL48')], 'Variables, conditions et boucles')
@@ -51,7 +51,7 @@ def all_hubs(d):
       ('2', '02_tp_arcade_3e_1.html', '#4f46e5', 'TP 1 — Fonctions', 'La fabrique d’ennemis : définir, appeler, paramètre et valeur renvoyée.', 'Individuel'),
       ('3', '02_tp_arcade_3e_2.html', '#4f46e5', 'TP 2 — Listes', 'Messages au hasard, niveaux, positions, record, moyenne et historique.', 'Individuel'),
       ('4', '02_tp_arcade_3e_3.html', '#4f46e5', 'TP 3 — Algorithmes de jeu', 'Poursuite, gravité, saut et états du jeu.', 'Individuel'),
-      ('5', '02_tp_arcade_3e_4.html', '#4f46e5', 'TP 4 — Jeu de plateforme', 'Plateformes en liste, atterrissage, variable au_sol, pièces et drapeau d’arrivée.', 'Individuel'),
+      ('5', '02_tp_arcade_3e_4.html', '#4f46e5', 'TP 4 — Jeu de plateforme', 'Un grand monde avec caméra qui suit, plateformes en liste, pièces et drapeau d’arrivée.', 'Individuel'),
       ('6', '05_projet_makecode_3e.html', '#ea580c', 'Projet — MakeCode Arcade', 'Un jeu complet en binôme sur le vrai MakeCode Arcade : états, fonctions, liste, algorithme. Lien à rendre.', 'Projet · binômes'),
       ('7', '04_evaluation_arcade_3e.html', '#16a34a', 'Évaluation', 'Le défi du programmeur : fonction, liste, algorithme et gravité, notés automatiquement.', 'Individuel · noté')],
       ['Cours', 'TP 1 à 4', 'Projet MakeCode', 'Évaluation'], [('Évaluation', 'BOSS319')], 'Fonctions, listes et algorithmes')
@@ -61,6 +61,7 @@ def all_hubs(d):
       ('3', '02_tp_cao_4e_2.html', '#7c3aed', 'TP 2 — Matériaux et masse', 'Lingot, roue, poche d’allègement et contrepoids : la masse selon le matériau.', 'Binômes'),
       ('4', '02_tp_cao_4e_3.html', '#7c3aed', 'TP 3 — Corriger un modèle', 'Quatre pièces fausses à comparer au dessin et à corriger dans l’arbre.', 'Binômes'),
       ('5', '02_tp_cao_4e_4.html', '#7c3aed', 'TP 4 — Cahier des charges', 'Concevoir à partir d’un texte : support de piles, pot, boîte, crochet.', 'Binômes'),
+      ('', '08_atelier_3d_4e.html', '#db2777', 'Atelier 3D — Rigger un personnage', 'Placer les articulations, construire la hiérarchie, lier la peau, puis animer un saut et un salto.', 'Individuel · bonus'),
       ('', '02b_logiciel_cao.html', '#1d4ed8', 'Logiciel CAO Studio', 'Le logiciel en mode libre pour créer tes propres pièces.', 'Libre · création'),
       ('6', '04_evaluation_cao_4e.html', '#16a34a', 'Évaluation', 'L’atelier du FabLab : deux pièces, un modèle à corriger et des questions.', 'Individuel · noté')],
       ['Cours', 'TP 1 à 4', 'Évaluation'], [('Évaluation', 'PROFIL4')], 'La CAO : lire, modéliser, calculer')
@@ -70,6 +71,7 @@ def all_hubs(d):
       ('3', '02_tp_cao_3e_2.html', '#4f46e5', 'TP 2 — Simulation', 'La console tient-elle ? Choisir le matériau, renforcer, vérifier un crochet.', 'Binômes'),
       ('4', '02_tp_cao_3e_3.html', '#4f46e5', 'TP 3 — Bielle-manivelle', 'Modéliser la manivelle, assembler le mécanisme, mesurer la course et régler le moteur.', 'Binômes'),
       ('5', '02_tp_cao_3e_4.html', '#4f46e5', 'TP 4 — Projet support de vélo', 'Modéliser, simuler sous 300 N, alléger en gardant s ≥ 2, faire le bilan matière.', 'Binômes · projet'),
+      ('', '08_atelier_3d_3e.html', '#db2777', 'Atelier 3D — Le cycle de marche', 'Rigger le personnage puis l’animer en boucle : contacts, passages, courbes lisses.', 'Individuel · bonus'),
       ('', '02b_logiciel_cao.html', '#1d4ed8', 'Logiciel CAO Studio', 'Le logiciel en mode libre pour créer tes propres pièces.', 'Libre · création'),
       ('6', '04_evaluation_cao_3e.html', '#16a34a', 'Évaluation', 'La console du bureau d’études : chape, console simulée et interprétation.', 'Individuel · noté')],
       ['Cours', 'TP 1 à 4', 'Évaluation'], [('Évaluation', 'LIAIS33')], 'La CAO : simuler et assembler')
@@ -87,4 +89,12 @@ def update_cao5(path):
     s = s.replace('<h2>TP — Mes premières pièces en 3D</h2>', '<h2>TP 1 — Mes premières pièces en 3D</h2>', 1)
     s = s.replace('<a class="card" href="04_evaluation_cao.html" style="--accent:#16a34a">\n <div class="num">3</div>', '<a class="card" href="04_evaluation_cao.html" style="--accent:#16a34a">\n <div class="num">6</div>', 1)
     s = s.replace('<span class="e">TP CAO (2 à 3 séances)</span>', '<span class="e">TP 1 à 4 (5 à 6 séances)</span>', 1)
+    open(path, 'w', encoding='utf-8').write(s)
+
+def add_3d5(path):
+    s = open(path, encoding='utf-8').read()
+    if '08_atelier_3d_5e.html' in s: return
+    anchor = '<a class="card" href="02b_logiciel_cao.html"'
+    i = s.index(anchor)
+    s = s[:i] + card('', '08_atelier_3d_5e.html', '#db2777', 'Atelier 3D — Anime ton héros', 'Un personnage 3D déjà riggé : prendre la pose, coucou, grand saut, danse en boucle.', 'Individuel · bonus').lstrip() + '\n ' + s[i:]
     open(path, 'w', encoding='utf-8').write(s)

@@ -1,0 +1,62 @@
+const CFG={id:'anim3d_5e',title:'Atelier 3D : anime ton héros',intro:'Ton personnage a déjà un squelette. Tu vas le faire bouger, puis créer de vraies animations.',
+classes:['5A','5B','5C','5D','5E'],profHash:0,rigged:true,
+missions:[
+{titre:'Prends la pose',slot:0,dur:2,view:'face',pitch:'Un squelette d’animation, ce sont des <b>os</b> reliés par des <b>articulations</b>. Faisons lever les bras du héros.',
+ steps:[
+  {t:'Clique sur le <b>haut du bras gauche</b> du héros (il est à droite de ton écran : le héros te regarde). L’os devient orange.',do:A=>A.select('epaule_g')},
+  {t:'À droite, fais glisser le curseur bleu <b>Rotation Z</b> jusqu’à <b>60°</b>. Le bras se lève.',do:A=>A.rot('epaule_g','z',60)},
+  {t:'Clique sur l’autre bras (<b>Épaule droite</b>) et mets <b>Rotation Z</b> à <b>-60°</b>.',do:A=>{A.select('epaule_d');A.rot('epaule_d','z',-60);}},
+  {t:'Clique sur la <b>tête</b>. Mets <b>Rotation Y</b> (vert) à <b>-30°</b> : il regarde sur le côté.',do:A=>{A.select('tete');A.rot('tete','y',-30);}},
+  {t:'Tourne autour du héros (clic gauche maintenu dans le vide) pour admirer la pose, puis clique sur <b>Vérifier ma mission</b>.'}],
+ tests:[{txt:'La main gauche est au-dessus de la tête',ok:A=>H.hy(A,'g')>2.05},{txt:'La main droite est au-dessus de la tête',ok:A=>H.hy(A,'d')>2.05},{txt:'La tête regarde sur le côté (au moins 20°)',ok:A=>Math.abs(A.S.rot.tete.y)>=20}],
+ aide:'Gauche et droite sont ceux du héros, pas les tiens. Si le bras descend, essaie le signe opposé.',
+ sol:A=>{A.rot('epaule_g','z',60);A.rot('epaule_d','z',-60);A.rot('tete','y',-30);}},
+
+{titre:'Coucou !',slot:1,dur:2,view:'trois',pitch:'Une animation, ce sont des <b>poses clés</b> placées dans le temps. Le logiciel invente les images entre elles.',
+ steps:[
+  {t:'Sélectionne l’<b>Épaule gauche</b> et mets <b>Rotation Z</b> à <b>30°</b> : le bras se lève un peu.',do:A=>{A.select('epaule_g');A.rot('epaule_g','z',30);}},
+  {t:'Sélectionne le <b>Coude gauche</b> (l’avant-bras). Le curseur rouge de la frise est sur <b>0 s</b>.',do:A=>{A.select('coude_g');A.time(0);}},
+  {t:'Mets <b>Rotation Z</b> à <b>40°</b>, puis appuie sur <kbd>I</kbd> : un losange bleu apparaît, c’est une <b>image clé</b>.',do:A=>{A.rot('coude_g','z',40);A.key('coude_g');}},
+  {t:'Clique sur la frise à <b>0,5 s</b>. Mets Rotation Z à <b>90°</b> et appuie sur <kbd>I</kbd>.',do:A=>{A.time(.5);A.rot('coude_g','z',90);A.key('coude_g');}},
+  {t:'Recommence : <b>1 s</b> → 40°, <b>1,5 s</b> → 90°, <b>2 s</b> → 40°. Une clé à chaque fois.',do:A=>{[[1,40],[1.5,90],[2,40]].forEach(([t,v])=>{A.time(t);A.rot('coude_g','z',v);A.key('coude_g');});}},
+  {t:'Clique sur <b>Lire</b> (ou <kbd>Espace</kbd>) : le héros te fait coucou en boucle.',do:A=>A.time(.75)}],
+ tests:[{txt:'Le Coude gauche a au moins 5 images clés',ok:A=>A.keysOf('coude_g').length>=5},{txt:'La main reste en l’air pendant tout le coucou',ok:A=>H.min(A,A=>H.hy(A,'g'))>1.8},
+  {txt:'La main se balance de gauche à droite',ok:A=>H.max(A,A=>A.hand('g').x)-H.min(A,A=>A.hand('g').x)>.2},{txt:'La fin est identique au début (boucle parfaite)',ok:A=>H.loops(A)}],
+ aide:'Si la main descend : le Coude doit garder une Rotation Z positive. La première et la dernière clé doivent avoir la même valeur.',
+ sol:A=>{A.rot('epaule_g','z',30);[[0,40],[.5,90],[1,40],[1.5,90],[2,40]].forEach(([t,v])=>{A.time(t);A.rot('coude_g','z',v);A.key('coude_g');});}},
+
+{titre:'Le grand saut',slot:2,dur:1.5,view:'cote',pitch:'Pour sauter haut, il faut d’abord <b>s’accroupir</b> : c’est l’<b>anticipation</b>, une règle des studios d’animation.',
+ steps:[
+  {t:'Choisis la durée <b>1,5 s</b> en bas à droite. À <b>0 s</b>, clique sur <b>Clé tout le corps</b> : c’est la pose de départ.',do:A=>{A.dur(1.5);A.time(0);['bassin','cuisse_g','cuisse_d','genou_g','genou_d'].forEach(n=>A.key(n));}},
+  {t:'Va à <b>0,4 s</b>. Clique sur le <b>bassin</b> (la ceinture) et mets <b>Hauteur</b> à <b>-20 cm</b>.',do:A=>{A.time(.4);A.select('bassin');A.pos('py',-.2);}},
+  {t:'Plie les jambes : <b>Hanche</b> gauche et droite Rotation X <b>-45°</b>, <b>Genou</b> gauche et droit Rotation X <b>80°</b>. Puis <b>Clé tout le corps</b>.',do:A=>{['g','d'].forEach(s=>{A.rot('cuisse_'+s,'x',-45);A.rot('genou_'+s,'x',80);});['bassin','cuisse_g','cuisse_d','genou_g','genou_d'].forEach(n=>A.key(n));}},
+  {t:'Va à <b>0,8 s</b> : remets les 4 os des jambes à 0°, et le bassin à <b>+60 cm</b>. <b>Clé tout le corps</b>. Il est en l’air !',do:A=>{A.time(.8);['g','d'].forEach(s=>{A.rot('cuisse_'+s,'x',0);A.rot('genou_'+s,'x',0);});A.pos('py',.6);['bassin','cuisse_g','cuisse_d','genou_g','genou_d'].forEach(n=>A.key(n));}},
+  {t:'À <b>1,2 s</b>, refais la pose accroupie (atterrissage). À <b>1,5 s</b>, tout à 0. Une <b>Clé tout le corps</b> à chaque fois.',do:A=>{A.time(1.2);A.pos('py',-.15);['g','d'].forEach(s=>{A.rot('cuisse_'+s,'x',-40);A.rot('genou_'+s,'x',70);});['bassin','cuisse_g','cuisse_d','genou_g','genou_d'].forEach(n=>A.key(n));A.time(1.5);A.pos('py',0);['g','d'].forEach(s=>{A.rot('cuisse_'+s,'x',0);A.rot('genou_'+s,'x',0);});['bassin','cuisse_g','cuisse_d','genou_g','genou_d'].forEach(n=>A.key(n));A.time(.4);}},
+  {t:'Lis l’animation. Bonus : lève les bras pendant le saut pour plus d’énergie !'}],
+ tests:[{txt:'Le héros monte au moins 40 cm plus haut',ok:A=>H.max(A,H.by)>=1.39},{txt:'Il s’accroupit avant de sauter',ok:A=>{const tm=H.argmax(A,H.by); return H.over(A,H.by).some(([t,v])=>t<tm&&v<=.88);}},
+  {txt:'Ses genoux sont pliés quand il est accroupi',ok:A=>{const t=H.argmin(A,H.by); return H.rotAt(A,t,'genou_g','x')>=40&&H.rotAt(A,t,'genou_d','x')>=40;}},{txt:'Il retombe au sol à la fin',ok:A=>Math.abs(H.at(A,A.S.anim.dur,H.by)-1)<.05}],
+ aide:'Hauteur du bassin : négatif = il descend, positif = il monte. Genou : Rotation X positive = il se plie.',
+ sol:A=>{A.dur(1.5);const P=[[0,0,0,0],[.4,-.2,-45,80],[.8,.6,0,0],[1.2,-.15,-40,70],[1.5,0,0,0]];P.forEach(([t,py,c,g])=>{A.time(t);A.pos('py',py);['g','d'].forEach(s=>{A.rot('cuisse_'+s,'x',c);A.rot('genou_'+s,'x',g);});['bassin','cuisse_g','cuisse_d','genou_g','genou_d'].forEach(n=>A.key(n));});A.time(.8);}},
+
+{titre:'La danse de la victoire',slot:3,dur:3,view:'trois',pitch:'À toi de créer une petite danse de <b>3 secondes</b>, qui tourne en boucle.',
+ steps:[
+  {t:'Choisis la durée <b>3 s</b>. Idée : le héros balance le torse et les bras en rythme, toutes les <b>0,75 s</b>.',do:A=>A.dur(3)},
+  {t:'À <b>0 s</b> : Torse Rotation Z <b>15°</b>, Épaules gauche <b>40°</b> et droite <b>-10°</b>. <b>Clé tout le corps</b>.',do:A=>{A.time(0);A.rot('torse','z',15);A.rot('epaule_g','z',40);A.rot('epaule_d','z',-10);['torse','epaule_g','epaule_d','bassin','tete'].forEach(n=>A.key(n));}},
+  {t:'À <b>0,75 s</b> : la pose miroir (Torse <b>-15°</b>, Épaule gauche <b>10°</b>, droite <b>-40°</b>), bassin <b>-8 cm</b>. Clé tout le corps.',do:A=>{A.time(.75);A.rot('torse','z',-15);A.rot('epaule_g','z',10);A.rot('epaule_d','z',-40);A.pos('py',-.08);['torse','epaule_g','epaule_d','bassin','tete'].forEach(n=>A.key(n));}},
+  {t:'Alterne jusqu’à <b>3 s</b> (1,5 s, 2,25 s, 3 s). La clé à 3 s doit être <b>la même qu’à 0 s</b>. Ajoute un mouvement de tête !',do:A=>{[[1.5,15,40,-10,0,12],[2.25,-15,10,-40,-.08,-12],[3,15,40,-10,0,0]].forEach(([t,tz,g,d,py,tt])=>{A.time(t);A.rot('torse','z',tz);A.rot('epaule_g','z',g);A.rot('epaule_d','z',d);A.pos('py',py);A.rot('tete','z',tt);['torse','epaule_g','epaule_d','bassin','tete'].forEach(n=>A.key(n));});A.time(1.1);}},
+  {t:'Vérifie que <b>Entre les clés</b> est sur <b>Lisse</b>, puis lis ta danse.'}],
+ tests:[{txt:'Au moins 4 os différents bougent',ok:A=>A.keyed().filter(n=>H.moving(A,n)).length>=4},{txt:'La danse dure 3 secondes',ok:A=>A.S.anim.dur===3},{txt:'Au moins 5 moments clés différents',ok:A=>H.keyTimes(A)>=5},
+  {txt:'Mouvement lisse',ok:A=>A.S.anim.interp==='lisse'},{txt:'La fin est identique au début (boucle)',ok:A=>H.loops(A)}],
+ aide:'Pour une boucle parfaite : à 3 s, reprends exactement les valeurs de 0 s et pose une Clé tout le corps.',
+ sol:A=>{A.dur(3);[[0,15,40,-10,0,0],[.75,-15,10,-40,-.08,0],[1.5,15,40,-10,0,12],[2.25,-15,10,-40,-.08,-12],[3,15,40,-10,0,0]].forEach(([t,tz,g,d,py,tt])=>{A.time(t);A.rot('torse','z',tz);A.rot('epaule_g','z',g);A.rot('epaule_d','z',d);A.pos('py',py);A.rot('tete','z',tt);['torse','epaule_g','epaule_d','bassin','tete'].forEach(n=>A.key(n));});A.time(1.1);}},
+
+{titre:'Défi : la révérence',slot:4,dur:2,view:'cote',pitch:'Le héros salue le public : il se penche en avant, la main sur le ventre, puis se relève.',
+ steps:[
+  {t:'Durée <b>2 s</b>. À <b>0 s</b> : bras gauche le long du corps (Épaule gauche Z <b>-75°</b>), Épaule droite Z <b>75°</b>. Clé tout le corps.',do:A=>{A.dur(2);A.time(0);A.rot('epaule_g','z',-75);A.rot('epaule_d','z',75);['torse','tete','epaule_d','coude_d','epaule_g'].forEach(n=>A.key(n));}},
+  {t:'À <b>1 s</b> : Torse Rotation X <b>55°</b>, Coude droit Rotation Y <b>90°</b> (main sur le ventre). Clé tout le corps.',do:A=>{A.time(1);A.rot('torse','x',55);A.rot('epaule_d','x',-40);A.rot('coude_d','y',90);['torse','tete','epaule_d','coude_d','epaule_g'].forEach(n=>A.key(n));}},
+  {t:'À <b>2 s</b> : refais exactement la pose de départ. Clé tout le corps, puis lis.',do:A=>{A.time(2);A.rot('torse','x',0);A.rot('epaule_d','x',0);A.rot('coude_d','y',0);['torse','tete','epaule_d','coude_d','epaule_g'].forEach(n=>A.key(n));A.time(1);}}],
+ tests:[{txt:'La tête avance d’au moins 22 cm',ok:A=>H.max(A,A=>A.joint('tete').z)>=.22},{txt:'La main droite passe devant le ventre',ok:A=>{const t=H.argmax(A,A=>A.joint('tete').z);return H.at(A,t,A=>A.hand('d').z>.2&&Math.abs(A.hand('d').x)<.45);}},
+  {txt:'Il est bien droit à la fin',ok:A=>H.at(A,A.S.anim.dur,A=>A.joint('tete').z)<.08}],
+ aide:'Torse : Rotation X positive = il se penche en avant. Pour plier le coude vers le ventre, essaie Rotation Y, et lève un peu l’épaule avec Rotation X.',
+ sol:A=>{A.dur(2);A.time(0);A.rot('epaule_g','z',-75);A.rot('epaule_d','z',75);['torse','tete','epaule_d','coude_d','epaule_g'].forEach(n=>A.key(n));A.time(1);A.rot('torse','x',55);A.rot('epaule_d','x',-40);A.rot('coude_d','y',90);['torse','tete','epaule_d','coude_d','epaule_g'].forEach(n=>A.key(n));A.time(2);A.rot('torse','x',0);A.rot('epaule_d','x',0);A.rot('coude_d','y',0);['torse','tete','epaule_d','coude_d','epaule_g'].forEach(n=>A.key(n));A.time(1);}}
+]};

@@ -3,7 +3,7 @@ const {chromium}=require('playwright'); const fs=require('fs');
 (async()=>{
 const [page_file, in_json, out_json]=process.argv.slice(2);
 const items=JSON.parse(fs.readFileSync(in_json,'utf8'));
-const b=await chromium.launch(); const p=await b.newPage({viewport:{width:1600,height:1400},deviceScaleFactor:2});
+const b=await chromium.launch(); const p=await b.newPage({viewport:{width:1600,height:1400},deviceScaleFactor:+(process.env.DSF||2)});
 await p.route(/fonts\.(googleapis|gstatic)/,r=>r.abort()); await p.route(/firebasedatabase/,r=>r.abort());
 await p.goto('file://'+page_file); await p.waitForTimeout(600);
 await p.evaluate(()=>{ document.body.innerHTML='<div id="rb" style="position:absolute;left:0;top:0;width:1500px;height:1300px;background:#fff"></div>';
@@ -11,7 +11,7 @@ await p.evaluate(()=>{ document.body.innerHTML='<div id="rb" style="position:abs
   window.RW=Blockly.inject('rb',{renderer:'zelos',theme,readOnly:false,trashcan:false,scrollbars:false,zoom:{startScale:1},sounds:false}); });
 const out={};
 for(const it of items){
-  const r=await p.evaluate(x=>{ RW.clear(); Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(x),RW); RW.cleanUp(); RW.scroll(0,0);
+  const r=await p.evaluate(x=>{ RW.clear(); Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(x),RW); RW.cleanUp(); RW.scroll(0,0); const nb=RW.getBlockById('NEW'); try{ Blockly.common.setSelected(nb||null); }catch(e){}
     const bb=RW.getBlocksBoundingBox(); const m=RW.getMetrics(); RW.scroll(-bb.left+10, -bb.top+10);
     let code=''; try{ code=genCode(RW);}catch(e){code='';}
     const svg=document.querySelector('#rb .blocklyBlockCanvas').getBoundingClientRect();

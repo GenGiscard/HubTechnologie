@@ -129,6 +129,11 @@ body.locked [data-act="new-sketch"],body.locked [data-act="new-file"],body.locke
 .method{border:1px solid var(--line);border-radius:10px;margin:8px 0}
 .method summary{padding:8px 12px;cursor:pointer;font-weight:600;font-size:13px;color:var(--acc)}
 .method ol{margin:0;padding:2px 14px 10px 32px;font-size:13px;line-height:1.65}
+.gd{border:2px solid #f9b13c;border-radius:12px;padding:10px 12px;margin:8px 0;background:#fffaf0}
+.gd .gh{display:flex;justify-content:space-between;font-size:12px;color:#92400e}.gd .gt{font-size:13.5px;line-height:1.5;margin:6px 0 8px}
+.gd .gt b{color:#1e3a5f}.gd img{width:100%;border-radius:8px;border:1px solid var(--line);background:#fff;display:block;margin-bottom:6px}
+.gd .gdots{display:flex;gap:3px;margin:4px 0 8px}.gd .gdots i{flex:1;height:5px;border-radius:3px;background:#e2e8f0}.gd .gdots i.d{background:#16a34a}.gd .gdots i.c{background:#f9b13c}
+.gd .gn{display:flex;justify-content:space-between;gap:8px}
 .verify{margin-top:10px}
 .res{margin-top:10px;border-radius:10px;padding:10px 12px;font-size:13px;border:1px solid var(--line);background:var(--soft)}
 .res.ok{background:#e9f6ed;border-color:#a8d8b6}.res.ko{background:#fdf1f0;border-color:#efc4c0}
@@ -2247,6 +2252,7 @@ const MS = {
       case 'q-opt': this.pickOpt(b); break;
       case 'q-up': case 'q-down': this.moveOrder(b, a === 'q-up' ? -1 : 1); break;
       case 'ms-next': this.go(Math.min(this.items.length - 1, this.cur + 1)); break;
+      case 'gd-step': { const s3 = this.st[this.cur]; s3.gs = Math.max(0, (s3.gs || 0) + +b.dataset.d); this.render(); break; }
       case 'ev-submit': CAD.modal(`<h3>Rendre ma copie ?</h3><p>Tu ne pourras plus modifier tes pièces ni tes réponses.</p><div class="row2"><button class="btn" data-act="modal-close">Continuer à travailler</button><button class="btn primary" data-act="ev-submit-yes">Rendre ma copie</button></div>`); break;
       case 'ev-submit-yes': this.submit(); break;
       case 'prof': this.profModal(); break;
@@ -2280,7 +2286,10 @@ const MS = {
       <div class="m-title">${esc(it.titre)}</div><p class="m-pitch">${it.pitch}</p>`;
     let h = '';
     if (tp) {
-      h += `<details class="method"><summary>Méthode pas à pas</summary><ol>${it.methode.map(x => `<li>${x}</li>`).join('')}</ol></details>`;
+      if (it.guide && it.guide.length) { const G2 = it.guide, k = Math.min(s.gs || 0, G2.length - 1), g = G2[k];
+        h += `<div class="gd"><div class="gh"><span>Tutoriel · étape <b>${k + 1}</b> sur ${G2.length}</span></div><div class="gt">${g.t}</div>${g.img ? `<img src="${g.img}" alt="Résultat attendu après cette étape">` : ''}<div class="gdots">${G2.map((_, j) => `<i class="${j < k ? 'd' : j === k ? 'c' : ''}"></i>`).join('')}</div><div class="gn"><button class="btn" data-act="gd-step" data-d="-1" ${k === 0 ? 'disabled' : ''}>Précédente</button>${k < G2.length - 1 ? '<button class="btn primary" data-act="gd-step" data-d="1">Étape suivante</button>' : ''}</div></div>`;
+        h += `<details class="method"><summary>Méthode résumée</summary><ol>${it.methode.map(x => `<li>${x}</li>`).join('')}</ol></details>`; }
+      else h += `<details class="method"><summary>Méthode pas à pas</summary><ol>${it.methode.map(x => `<li>${x}</li>`).join('')}</ol></details>`;
       h += `<div class="verify"><button class="btn ${s.piece ? 'ok' : 'primary'}" data-act="ms-verify">${s.piece ? 'Validé ✓' : (it.asmCheck ? 'Vérifier mon assemblage' : 'Vérifier ma pièce')}</button></div><div id="resBox">${s.resHtml || ''}</div>`;
       if (it.question) h += this.qHtml(it.question, this.cur, 'q', s);
       const done = s.piece && (!it.question || s.qOk);

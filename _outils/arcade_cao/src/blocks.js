@@ -1,13 +1,14 @@
 /* ===== Blocs façon MakeCode Arcade (en français) ===== */
-const COL={sprites:'#4b7bec',controleur:'#d54322',jeu:'#8854d0',info:'#cf6a87',musique:'#e63022',boucles:'#20bf6b',logique:'#45aaf2',variables:'#ee5253',maths:'#9c6ade',texte:'#e0a400',fonctions:'#1b6fb3',listes:'#c74fb0'};
+const COL={effets:'#e4572e',sprites:'#4b7bec',controleur:'#d54322',jeu:'#8854d0',info:'#cf6a87',musique:'#e63022',boucles:'#20bf6b',logique:'#45aaf2',variables:'#ee5253',maths:'#9c6ade',texte:'#e0a400',fonctions:'#1b6fb3',listes:'#c74fb0'};
 const IMG_OPTS=()=>Object.keys(IMGS).map(k=>[{src:imgURL(k,2),width:24,height:24,alt:IMGS[k].nom},k]);
 const KIND_OPTS=KINDS.map(k=>[k,k]);
 const BTN_OPTS=[['A','A'],['B','B'],['haut','haut'],['bas','bas'],['gauche','gauche'],['droite','droite']];
-const PROP_SET=[['x','x'],['y','y'],['vitesse x (vx)','vx'],['vitesse y (vy)','vy'],['accélération x (ax)','ax'],['accélération y (ay)','ay']];
-const PROP_GET=[['x','x'],['y','y'],['vitesse x (vx)','vx'],['vitesse y (vy)','vy'],['bord gauche','gauche'],['bord droit','droite'],['bord haut','haut'],['bord bas','bas']];
+const PROP_SET=[['x','x'],['y','y'],['vitesse x (vx)','vx'],['vitesse y (vy)','vy'],['accélération x (ax)','ax'],['accélération y (ay)','ay'],['points de vie (pv)','pv']];
+const PROP_GET=[['x','x'],['y','y'],['vitesse x (vx)','vx'],['vitesse y (vy)','vy'],['bord gauche','gauche'],['bord droit','droite'],['bord haut','haut'],['bord bas','bas'],['points de vie (pv)','pv']];
 const BG_OPTS=[['bleu nuit','#003fad'],['noir','#000000'],['bleu ciel','#87f2ff'],['vert','#78dc52'],['sarcelle','#249ca3'],['violet','#8e2ec4'],['rose','#ff93c4'],['rouge','#ff2121'],['orange','#ff8135'],['jaune','#fff609'],['blanc','#ffffff'],['marron','#91463d']];
 const FLAG_OPTS=[['reste dans l’écran','stay'],['rebondit sur les bords','bounce'],['disparaît hors de l’écran','autoDestroy']];
-const SON_OPTS=[['pièce','piece'],['saut','saut'],['explosion','explosion'],['victoire','victoire'],['dégât','degat']];
+const SON_OPTS=[['pièce','piece'],['saut','saut'],['tir','tir'],['bonus','bonus'],['explosion','explosion'],['victoire','victoire'],['dégât','degat']];
+const FX_OPTS=[['explosion','explosion'],['étincelles','etincelles'],['confettis','confettis'],['fumée','fumee'],['cœurs','coeurs']];
 const V=(name,def)=>({type:'field_variable',name,variable:def||'monSprite'});
 const N=(name)=>({type:'input_value',name,check:'Number'});
 
@@ -51,6 +52,13 @@ function defineArcadeBlocks(){
   {type:'i_addlife',message0:'modifier les vies de %1',args0:[N('V')],previousStatement:null,nextStatement:null,colour:COL.info},
   {type:'i_life',message0:'vies',output:'Number',colour:COL.info},
   {type:'i_countdown',message0:'lancer le compte à rebours %1 s',args0:[N('V')],previousStatement:null,nextStatement:null,colour:COL.info},
+  /* Effets */
+  {type:'fx_scene',message0:'décor %1',args0:[{type:'field_dropdown',name:'S',options:SCENE_NAMES}],previousStatement:null,nextStatement:null,colour:COL.effets,tooltip:'Un décor animé derrière le jeu.'},
+  {type:'fx_effect',message0:'effet %1 sur %2',args0:[{type:'field_dropdown',name:'E',options:FX_OPTS},V('VAR')],previousStatement:null,nextStatement:null,colour:COL.effets},
+  {type:'fx_shake',message0:'secouer l\u2019écran %1',args0:[{type:'field_dropdown',name:'F',options:[['faiblement','faible'],['fort','fort']]}],previousStatement:null,nextStatement:null,colour:COL.effets},
+  {type:'fx_music',message0:'jouer la musique %1',args0:[{type:'field_dropdown',name:'M',options:[['aventure','aventure'],['action','action'],['mystère','mystere']]}],previousStatement:null,nextStatement:null,colour:COL.effets},
+  {type:'cam_follow',message0:'la caméra suit %1',args0:[V('VAR')],previousStatement:null,nextStatement:null,colour:COL.effets},
+  {type:'world_size',message0:'taille du monde : largeur %1 hauteur %2',args0:[N('W'),N('H')],inputsInline:true,previousStatement:null,nextStatement:null,colour:COL.effets},
   /* Musique */
   {type:'m_play',message0:'jouer le son %1',args0:[{type:'field_dropdown',name:'S',options:SON_OPTS}],previousStatement:null,nextStatement:null,colour:COL.musique}
   ]);
@@ -96,6 +104,12 @@ function defineArcadeBlocks(){
   F.i_life=()=>['G.getLife()',ORD.MEMBER];
   F.i_countdown=b=>'G.startCountdown('+val(b,'V','0')+');\n';
   F.m_play=b=>'G.sound("'+b.getFieldValue('S')+'");\n';
+  F.fx_scene=b=>'G.setScene("'+b.getFieldValue('S')+'");\n';
+  F.fx_effect=b=>'G.effect('+v(b)+',"'+b.getFieldValue('E')+'");\n';
+  F.fx_shake=b=>'G.shake("'+b.getFieldValue('F')+'");\n';
+  F.fx_music=b=>'G.playMusic("'+b.getFieldValue('M')+'");\n';
+  F.cam_follow=b=>'G.camFollow('+v(b)+');\n';
+  F.world_size=b=>'G.worldSize('+val(b,'W','160')+','+val(b,'H','120')+');\n';
   F.math_random_int=b=>['G.randInt('+val(b,'FROM','0')+','+val(b,'TO','0')+')',ORD.MEMBER];
 }
 /* Événements : seuls les blocs « chapeau » sont exécutés */
@@ -115,6 +129,7 @@ const TOOL={
    {type:'sp_overlaps'},{type:'sp_count'},{type:'sp_create'}]},
  controleur:{name:'Contrôleur',colour:COL.controleur,blocks:[{type:'ct_move',inputs:{VX:SH(100),VY:SH(100)}},{type:'ct_button_ev'},{type:'ct_pressed'}]},
  info:{name:'Info',colour:COL.info,blocks:[{type:'i_setscore',inputs:{V:SH(0)}},{type:'i_addscore',inputs:{V:SH(1)}},{type:'i_score'},{type:'i_setlife',inputs:{V:SH(3)}},{type:'i_addlife',inputs:{V:SH(-1)}},{type:'i_life'},{type:'i_countdown',inputs:{V:SH(20)}},{type:'g_countend'},{type:'g_lifezero'}]},
+ effets:{name:'Effets',colour:COL.effets,blocks:[{type:'fx_scene'},{type:'fx_effect',fields:{VAR:{name:'autreSprite'}}},{type:'fx_shake'},{type:'fx_music'},{type:'cam_follow'},{type:'world_size',inputs:{W:SH(480),H:SH(120)}}]},
  musique:{name:'Musique',colour:COL.musique,blocks:[{type:'m_play'}]},
  boucles:{name:'Boucles',colour:COL.boucles,blocks:[{type:'controls_repeat_ext',inputs:{TIMES:SH(5)}},{type:'controls_for',fields:{VAR:{name:'i'}},inputs:{FROM:SH(0),TO:SH(9),BY:SH(1)}},{type:'controls_whileUntil'},{type:'controls_forEach'}]},
  logique:{name:'Logique',colour:COL.logique,blocks:[{type:'controls_if'},{type:'controls_if',extraState:{hasElse:true}},{type:'logic_compare'},{type:'logic_operation'},{type:'logic_negate'},{type:'logic_boolean'}]},

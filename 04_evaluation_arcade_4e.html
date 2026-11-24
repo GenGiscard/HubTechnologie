@@ -58,6 +58,20 @@ main{display:grid;grid-template-columns:372px 1fr 330px;height:calc(100vh - 54px
 .blocklyTreeLabel{font-size:13px;font-weight:600}
 @media (max-width:1250px){main{grid-template-columns:300px 1fr 290px}#scr{width:256px;height:192px}}
 .zb{position:absolute;right:18px;bottom:18px;display:flex;flex-direction:column;gap:6px;z-index:20}.zb button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:#fff;font:700 18px Lexend,sans-serif;color:var(--navy);cursor:pointer;box-shadow:0 2px 6px #0002}.zb button.w{width:auto;border-radius:18px;font-size:12px;padding:0 10px}
+
+.tuto{margin:12px 0 4px;border:2px solid #f9b13c;border-radius:12px;background:#fffbf2;padding:10px 12px}
+.tuto .th{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#8a5a00}
+.tuto .chip{color:#fff;font-weight:700;font-size:12px;border-radius:999px;padding:2px 10px}
+.tuto .tt{font-size:14px;line-height:1.45;margin:8px 0}
+.tuto .ti{display:block;max-width:100%;border:1px solid #e6dcc6;border-radius:8px;background:#fff;cursor:zoom-in;margin:4px 0}
+.tuto .tn{display:flex;justify-content:space-between;gap:8px;margin-top:8px}.tuto .tn .btn{padding:7px 10px;font-size:13px}.tuto .tn .btn[disabled]{opacity:.4;cursor:default}
+.tdots{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}.tdots i{width:14px;height:5px;border-radius:3px;background:#e8dcc0}.tdots i.d{background:#20bf6b}.tdots i.c{background:#f9b13c}
+.cathl{outline:3px solid #f9b13c!important;outline-offset:-2px;animation:pulse 1.1s infinite;border-radius:6px}
+@keyframes pulse{50%{background:#fff3d6}}
+#modal .box.big{width:min(900px,94vw)}
+.tourOn{position:relative;z-index:150!important;box-shadow:0 0 0 4px #f9b13c,0 0 0 9999px rgba(11,18,48,.55)!important;border-radius:8px}
+#tourBox .tb{position:fixed;z-index:160;width:330px;background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 14px 40px #0006;font-size:14px;line-height:1.45}
+#tourBox .tb b{color:#f9b13c}#tourBox .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
 </style>
 </head>
 <body>
@@ -65,6 +79,7 @@ main{display:grid;grid-template-columns:372px 1fr 330px;height:calc(100vh - 54px
  <div class="logo">Studio Arcade<small id="ttl"></small></div>
  <nav id="tabs"></nav>
  <span id="prog"></span><span id="who"></span>
+ <button class="hbtn" id="aide" title="Visite guidée de l'interface">Comment ça marche ?</button>
  <button class="hbtn" id="prof" title="Espace professeur">Prof</button>
  <button class="hbtn" id="rendre">Rendre mon TP</button>
 </header>
@@ -2945,9 +2960,72 @@ poisson:{nom:'Poisson',px:[
 '................',
 '................']}
 };
+/* images supplémentaires */
+IMGS.heros.flip=true; IMGS.poisson.flip=true; IMGS.slime.flip=true; IMGS.fantome.flip=true;
+IMGS.brique_bleue={nom:'Brique bleue',from:'brique',map:{'2':'8','4':'9'}};
+IMGS.brique_verte={nom:'Brique verte',from:'brique',map:{'2':'6','4':'7'}};
+IMGS.brique_or={nom:'Brique dorée',from:'brique',map:{'2':'4','4':'5'}};
+IMGS.chauve_souris={nom:'Chauve-souris',flip:true,px:[
+'................',
+'................',
+'.f............f.',
+'.ff..f....f..ff.',
+'.fcf.fffff.fcf..',
+'.fccfcccccfccf..'.slice(0,16),
+'.fcccc2cc2cccf..',
+'.fccccccccccccf.',
+'..fccc1cc1cccf..',
+'...ffcccccccf...',
+'.....fcfcfff....',
+'......f.f.......',
+'................',
+'................',
+'................',
+'................']};
+IMGS.cristal={nom:'Cristal',px:[
+'.......ff.......',
+'......f99f......',
+'.....f9119f.....',
+'....f991199f....',
+'...f99911999f...',
+'..f9999119999f..',
+'..f6699999666f..',
+'...f66699666f...',
+'....f666666f....',
+'.....f6666f.....',
+'......f66f......',
+'.......ff.......',
+'................',
+'................',
+'................',
+'................']};
+IMGS.boss={nom:'Boss',size:[32,32],draw:(g)=>{ const P=(c,x,y,w,h)=>{ g.fillStyle=c; g.fillRect(x,y,w,h); };
+  for(let y=0;y<32;y++) for(let x=0;x<32;x++){ const dx=(x-15.5)/15, dy=(y-14)/12; const d=dx*dx+dy*dy; if(d<1&&y<26) P(d>.82?'#000000':(y<10?'#c25bff':'#8e2ec4'),x,y,1,1); }
+  P('#000',4,24,4,6); P('#000',12,24,3,7); P('#000',17,24,3,7); P('#000',24,24,4,6); P('#5c406c',5,24,2,5); P('#5c406c',13,24,1,6); P('#5c406c',18,24,1,6); P('#5c406c',25,24,2,5);
+  P('#ffffff',8,10,6,6); P('#ffffff',18,10,6,6); P('#ff2121',10,12,3,3); P('#ff2121',20,12,3,3); P('#000',8,8,6,2); P('#000',18,8,6,2);
+  P('#000',10,19,12,3); P('#ffffff',11,19,2,2); P('#ffffff',15,19,2,2); P('#ffffff',19,19,2,2); P('#fff609',14,1,4,3); P('#fff609',6,4,3,3); P('#fff609',23,4,3,3); }};
+IMGS.panier={nom:'Panier',px:[
+'................',
+'................',
+'................',
+'.....ffffff.....',
+'....f......f....',
+'...f........f...',
+'ffffffffffffffff',
+'fe4e4e4e4e4e4e4f',
+'f4e4e4e4e4e4e4ef',
+'fe4e4e4e4e4e4e4f',
+'.f4e4e4e4e4e4ef.',
+'.fe4e4e4e4e4e4f.',
+'..ffffffffffff..',
+'................',
+'................',
+'................']};
 /* rendu d'une image en canvas */
 function imgCanvas(key){
   const d=IMGS[key]; if(d._cv) return d._cv;
+  if(d.from){ const b=IMGS[d.from]; d.px=b.px.map(r=>r.split('').map(ch=>d.map[ch]||ch).join('')); }
+  if(d.draw){ const c=document.createElement('canvas'); c.width=d.size[0]; c.height=d.size[1]; d.draw(c.getContext('2d')); d.w=c.width; d.h=c.height; d._cv=c; return c; }
   const h=d.px.length, w=d.px[0].length, c=document.createElement('canvas'); c.width=w; c.height=h;
   const g=c.getContext('2d');
   d.px.forEach((row,y)=>{ for(let x=0;x<w;x++){ const col=PAL[row[x]]; if(col){ g.fillStyle=col; g.fillRect(x,y,1,1); } } });
@@ -2958,13 +3036,15 @@ function imgURL(key,scale){
   const g=b.getContext('2d'); g.imageSmoothingEnabled=false; g.drawImage(c,0,0,b.width,b.height); return b.toDataURL();
 }
 </script>
-<script>/* ===== Moteur de jeu (160 x 120, logique à 30 images/s) ===== */
+<script>/* ===== Moteur de jeu (écran 160 x 120, logique à 30 images/s) ===== */
 const SCR_W=160, SCR_H=120, FPS=30, DT=1/FPS;
 const KINDS=['Joueur','Ennemi','Nourriture','Projectile','Obstacle','Bonus'];
 const BTNS=['A','B','haut','bas','gauche','droite'];
-const SONS={piece:[[988,.06],[1319,.12]],saut:[[440,.05],[660,.05],[880,.08]],explosion:[[110,.25]],victoire:[[523,.1],[659,.1],[784,.1],[1047,.25]],degat:[[220,.08],[160,.15]]};
+const SONS={piece:[[988,.06],[1319,.12]],saut:[[440,.05],[660,.05],[880,.08]],explosion:[[110,.25]],victoire:[[523,.1],[659,.1],[784,.1],[1047,.25]],degat:[[220,.08],[160,.15]],tir:[[1200,.03],[800,.05]],bonus:[[660,.06],[880,.06],[1320,.1]]};
+const FX_COLS={explosion:['#fff609','#ff8135','#ff2121','#ffffff'],etincelles:['#fff609','#ffffff','#87f2ff'],confettis:['#ff2121','#fff609','#78dc52','#87f2ff','#ff93c4','#8e2ec4'],fumee:['#a4839f','#c8c8d0','#e5cdc4'],coeurs:['#ff93c4','#ff2121']};
 
 function mulberry(seed){ let a=seed>>>0; return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const VR=Math.random; /* hasard purement visuel : ne change pas le déroulement du jeu */
 
 class Runtime {
   constructor(opts){
@@ -2973,9 +3053,11 @@ class Runtime {
     this.sprites=[]; this.nextId=1; this.frame=0; this.t=0;
     this.h={start:[],update:[],interval:[],overlap:[],btn:[],lifeZero:[],countEnd:[]};
     this.score=0; this.life=null; this.countdown=null; this.scoreShown=false;
-    this.bg='#003fad'; this.state='run'; this.endMsg=''; this.splash=null; this.splashT=0;
+    this.bg='#003fad'; this.scene=null; this.state='run'; this.endMsg=''; this.splash=null; this.splashT=0;
     this.keys={}; this.prevKeys={}; this.moveCtl=[]; this.sounds=[]; this.err=null;
     this.trap=0; this.overlapsNow=new Set(); this.logSay=[]; this.calls={};
+    this.W=SCR_W; this.H=SCR_H; this.cam={x:0,y:0}; this.camT=null;
+    this.parts=[]; this.pops=[]; this.shakeA=0; this.flashA=0; this.flashC='#ff2121'; this.music=null; this.evSprite=null; this.hurtT=0; this.best=0;
   }
   /* ---------- API appelée par le code des blocs ---------- */
   onStart(f){ this.h.start.push(f); }
@@ -2989,8 +3071,8 @@ class Runtime {
   create(img,kind){
     if(!IMGS[img]) img='heros';
     const c=imgCanvas(img);
-    const s={id:this.nextId++,img,kind,x:SCR_W/2,y:SCR_H/2,vx:0,vy:0,ax:0,ay:0,w:c.width,h:c.height,alive:true,
-      stay:false,bounce:false,autoDestroy:false,say:'',sayT:0,follow:null,followV:0,born:this.t};
+    const s={id:this.nextId++,img,kind,x:this.W/2,y:this.H/2,vx:0,vy:0,ax:0,ay:0,w:c.width,h:c.height,alive:true,
+      stay:false,bounce:false,autoDestroy:false,say:'',sayT:0,follow:null,followV:0,born:this.t,pv:0,pvMax:0,face:1,hitT:0};
     this.sprites.push(s); this.count('create'); return s;
   }
   projectile(img,from,vx,vy){
@@ -3000,10 +3082,10 @@ class Runtime {
   }
   ok(s){ return s&&typeof s==='object'&&s.id; }
   setPos(s,x,y){ if(!this.ok(s)) return; s.x=+x||0; s.y=+y||0; }
-  setProp(s,p,v){ if(!this.ok(s)) return; s[p]=+v||0; }
-  changeProp(s,p,v){ if(!this.ok(s)) return; s[p]=(+s[p]||0)+(+v||0); }
+  setProp(s,p,v){ if(!this.ok(s)) return; s[p]=+v||0; if(p==='pv'){ s.pvMax=Math.max(s.pvMax,s.pv); this.count('pv'); } }
+  changeProp(s,p,v){ if(!this.ok(s)) return; s[p]=(+s[p]||0)+(+v||0); if(p==='pv'){ if(+v<0) s.hitT=.15; s.pvMax=Math.max(s.pvMax,s.pv); this.count('pv'); } }
   getProp(s,p){ if(!this.ok(s)) return 0; return p==='gauche'?s.x-s.w/2:p==='droite'?s.x+s.w/2:p==='haut'?s.y-s.h/2:p==='bas'?s.y+s.h/2:(+s[p]||0); }
-  randomPos(s){ if(!this.ok(s)) return; s.x=Math.round(8+this.rnd()*(SCR_W-16)); s.y=Math.round(8+this.rnd()*(SCR_H-16)); }
+  randomPos(s){ if(!this.ok(s)) return; s.x=Math.round(8+this.rnd()*(this.W-16)); s.y=Math.round(8+this.rnd()*(this.H-16)); }
   flag(s,f,on){ if(!this.ok(s)) return; s[f]=!!on; }
   say(s,txt){ if(!this.ok(s)) return; s.say=String(txt); s.sayT=2; this.logSay.push(String(txt)); this.count('say'); }
   destroy(s){ if(!this.ok(s)) return; s.alive=false; this.count('destroy'); }
@@ -3013,18 +3095,34 @@ class Runtime {
   overlaps(a,b){ return this.ok(a)&&this.ok(b)&&a.alive&&b.alive&&a!==b&&Math.abs(a.x-b.x)<(a.w+b.w)/2-1&&Math.abs(a.y-b.y)<(a.h+b.h)/2-1; }
   move(s,vx,vy){ if(!this.ok(s)) return; this.moveCtl=this.moveCtl.filter(m=>m.s!==s); this.moveCtl.push({s,vx:+vx||0,vy:+vy||0}); this.count('move'); }
   pressed(b){ return !!this.keys[b]; }
+  popAt(txt,col){ const s=this.evSprite; if(this.headless||!s) return; this.pops.push({x:s.x,y:s.y-s.h/2,txt,t:0,col}); }
   setScore(v){ this.score=Math.round(+v||0); this.scoreShown=true; }
-  addScore(v){ this.score+=Math.round(+v||0); this.scoreShown=true; }
+  addScore(v){ v=Math.round(+v||0); this.score+=v; this.scoreShown=true; if(v) this.popAt((v>0?'+':'')+v,v>0?'#fff609':'#ff93c4'); }
   setLife(v){ this.life=Math.round(+v||0); this.checkLife(); }
-  addLife(v){ if(this.life===null) this.life=3; this.life+=Math.round(+v||0); this.checkLife(); }
+  addLife(v){ v=Math.round(+v||0); if(this.life===null) this.life=3; this.life+=v;
+    if(v<0&&!this.headless){ this.flashA=.45; this.flashC='#ff2121'; this.shakeA=Math.max(this.shakeA,3); this.hurtT=1; }
+    if(v>0) this.popAt('+'+v+' vie','#ff93c4'); this.checkLife(); }
   getLife(){ return this.life===null?0:this.life; }
   checkLife(){ if(this.life!==null&&this.life<=0&&this.state==='run'){ this.life=0; if(this.h.lifeZero.length) this.h.lifeZero.forEach(f=>this.call(f)); else this.over(false); } }
   startCountdown(s){ this.countdown=Math.max(0,+s||0); this.count('countdown'); }
-  over(win){ if(this.state!=='run') return; this.state=win?'won':'lost'; this.count(win?'win':'lose'); if(!this.headless) playSound(win?'victoire':'explosion'); }
-  bgColor(c){ this.bg=c; }
-  splashMsg(t){ this.splash=String(t); this.splashT=2; this.logSay.push(String(t)); this.count('splash'); }
+  over(win){ if(this.state!=='run') return; this.state=win?'won':'lost'; this.count(win?'win':'lose');
+    if(!this.headless){ stopMusic(); playSound(win?'victoire':'explosion'); if(win) for(let i=0;i<4;i++) this.burst(this.cam.x+20+VR()*120,this.cam.y+20+VR()*60,'confettis',30); } }
+  bgColor(c){ this.bg=c; this.scene=null; }
+  setScene(n){ this.scene=n; this.count('scene'); }
+  splashMsg(t){ this.splash=String(t); this.splashT=2.2; this.logSay.push(String(t)); this.count('splash'); }
   sound(n){ this.sounds.push(n); if(!this.headless) playSound(n); }
+  playMusic(n){ this.music=n; this.count('music'); if(!this.headless) startMusic(n); }
+  effect(s,type){ this.count('effect'); this.calls['fx_'+type]=(this.calls['fx_'+type]||0)+1; if(this.headless||!this.ok(s)) return;
+    this.burst(s.x,s.y,type,type==='explosion'?28:type==='fumee'?10:type==='coeurs'?7:18); if(type==='explosion'){ this.shakeA=Math.max(this.shakeA,2); } }
+  shake(force){ this.count('shake'); if(this.headless) return; this.shakeA=Math.max(this.shakeA,force==='fort'?6:3); if(force==='fort'){ this.flashA=.35; this.flashC='#ffffff'; } }
+  camFollow(s){ this.count('camera'); this.camT=this.ok(s)?s:null; }
+  worldSize(w,h){ this.W=Math.max(SCR_W,Math.round(+w||SCR_W)); this.H=Math.max(SCR_H,Math.round(+h||SCR_H)); this.count('world'); }
   randInt(a,b){ a=Math.round(+a||0); b=Math.round(+b||0); if(a>b){ const t=a; a=b; b=t; } return a+Math.floor(this.rnd()*(b-a+1)); }
+  burst(x,y,type,n){ const C=FX_COLS[type]||FX_COLS.etincelles;
+    for(let i=0;i<n;i++){ const a=VR()*Math.PI*2, sp=type==='explosion'?20+VR()*70:type==='fumee'?6+VR()*12:type==='confettis'?30+VR()*50:15+VR()*40;
+      this.parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-(type==='fumee'||type==='coeurs'||type==='etincelles'?18:0),g:type==='confettis'?80:type==='explosion'?20:0,
+        life:0,max:(type==='fumee'?.9:.45)+VR()*.5,col:C[Math.floor(VR()*C.length)],sz:type==='fumee'?2+VR()*2:type==='explosion'?1+Math.round(VR()*2):1,heart:type==='coeurs'}); }
+    if(type==='explosion') this.parts.push({x,y,vx:0,vy:0,g:0,life:0,max:.3,col:'#ffffff',ring:true,sz:1}); }
   /* ---------- exécution ---------- */
   call(f,...args){
     if(this.err||this.state==='error') return;
@@ -3036,6 +3134,7 @@ class Runtime {
     this.h.start.forEach(f=>this.call(f));
   }
   step(){
+    this.fxStep();
     if(this.state!=='run') { this.frame++; return; }
     this.t+=DT; this.frame++;
     for(const b of BTNS){
@@ -3046,14 +3145,17 @@ class Runtime {
     for(const m of this.moveCtl){ if(!m.s.alive) continue;
       if(m.vx){ m.s.vx=(this.keys.droite?m.vx:0)-(this.keys.gauche?m.vx:0); }
       if(m.vy){ m.s.vy=(this.keys.bas?m.vy:0)-(this.keys.haut?m.vy:0); } }
+    const W=this.W, H=this.H;
     for(const s of this.sprites){ if(!s.alive) continue;
       if(s.follow){ if(!s.follow.alive) s.follow=null; else { const dx=s.follow.x-s.x, dy=s.follow.y-s.y, d=Math.hypot(dx,dy)||1; if(d>1){ s.vx=dx/d*s.followV; s.vy=dy/d*s.followV; } else { s.vx=0; s.vy=0; } } }
       s.vx+=s.ax*DT; s.vy+=s.ay*DT; s.x+=s.vx*DT; s.y+=s.vy*DT;
+      if(s.vx<-1) s.face=-1; else if(s.vx>1) s.face=1;
       const hw=s.w/2, hh=s.h/2;
-      if(s.bounce){ if(s.x<hw){ s.x=hw; s.vx=Math.abs(s.vx);} if(s.x>SCR_W-hw){ s.x=SCR_W-hw; s.vx=-Math.abs(s.vx);} if(s.y<hh){ s.y=hh; s.vy=Math.abs(s.vy);} if(s.y>SCR_H-hh){ s.y=SCR_H-hh; s.vy=-Math.abs(s.vy);} }
-      else if(s.stay){ s.x=Math.min(Math.max(s.x,hw),SCR_W-hw); s.y=Math.min(Math.max(s.y,hh),SCR_H-hh); }
-      if(s.autoDestroy&&(s.x<-hw-2||s.x>SCR_W+hw+2||s.y<-hh-2||s.y>SCR_H+hh+2)) s.alive=false;
+      if(s.bounce){ if(s.x<hw){ s.x=hw; s.vx=Math.abs(s.vx);} if(s.x>W-hw){ s.x=W-hw; s.vx=-Math.abs(s.vx);} if(s.y<hh){ s.y=hh; s.vy=Math.abs(s.vy);} if(s.y>H-hh){ s.y=H-hh; s.vy=-Math.abs(s.vy);} }
+      else if(s.stay){ s.x=Math.min(Math.max(s.x,hw),W-hw); s.y=Math.min(Math.max(s.y,hh),H-hh); }
+      if(s.autoDestroy&&(s.x<-hw-2||s.x>W+hw+2||s.y<-hh-2||s.y>H+hh+2)) s.alive=false;
       if(s.sayT>0){ s.sayT-=DT; if(s.sayT<=0) s.say=''; }
+      if(s.hitT>0) s.hitT-=DT;
     }
     this.h.update.forEach(f=>this.call(f));
     for(const it of this.h.interval){ if(this.t>=it.next-1e-9){ it.next+=it.ms/1000; this.call(it.f); } }
@@ -3062,50 +3164,135 @@ class Runtime {
       const A=this.sprites.filter(s=>s.alive&&s.kind===h.k1), B=this.sprites.filter(s=>s.alive&&s.kind===h.k2);
       for(const a of A) for(const b of B){ if(a===b||!a.alive||!b.alive) continue;
         if(this.overlaps(a,b)){ const key=h.k1+'|'+h.k2+'|'+a.id+'|'+b.id; now.add(key);
-          if(!this.overlapsNow.has(key)){ this.count('overlap'); this.call(h.f,a,b); } } }
+          if(!this.overlapsNow.has(key)){ this.count('overlap'); this.evSprite={x:b.x,y:b.y,h:b.h}; this.call(h.f,a,b); this.evSprite=null; } } }
     }
     this.overlapsNow=now;
-    if(this.countdown!==null&&this.state==='run'){ this.countdown-=DT; if(this.countdown<=0){ this.countdown=null; if(this.h.countEnd.length) this.h.countEnd.forEach(f=>this.call(f)); else { this.endMsg='Temps écoulé'; this.over(false); } } }
+    if(this.countdown!==null&&this.state==='run'){ this.countdown-=DT; if(this.countdown<=0){ this.countdown=null; if(this.h.countEnd.length) this.h.countEnd.forEach(f=>this.call(f)); else { this.endMsg='TEMPS ÉCOULÉ'; this.over(false); } } }
     if(this.splashT>0){ this.splashT-=DT; if(this.splashT<=0) this.splash=null; }
     if(this.frame%60===0) this.sprites=this.sprites.filter(s=>s.alive);
   }
+  fxStep(){
+    if(this.headless) return;
+    for(const p of this.parts){ p.life+=DT; p.vy+=p.g*DT; p.vx*=.97; p.vy*=.97; p.x+=p.vx*DT; p.y+=p.vy*DT; }
+    this.parts=this.parts.filter(p=>p.life<p.max);
+    for(const p of this.pops) p.t+=DT; this.pops=this.pops.filter(p=>p.t<.9);
+    this.shakeA*=.85; if(this.shakeA<.2) this.shakeA=0; this.flashA*=.85; if(this.flashA<.02) this.flashA=0; if(this.hurtT>0) this.hurtT-=DT;
+    const T=this.camT; if(T&&T.alive){ const tx=Math.min(Math.max(T.x-SCR_W/2,0),this.W-SCR_W), ty=Math.min(Math.max(T.y-SCR_H/2,0),this.H-SCR_H); this.cam.x+=(tx-this.cam.x)*.18; this.cam.y+=(ty-this.cam.y)*.18; }
+  }
   /* ---------- dessin ---------- */
   draw(g){
-    g.fillStyle=this.bg; g.fillRect(0,0,SCR_W,SCR_H);
-    for(const s of this.sprites){ if(!s.alive) continue; g.drawImage(imgCanvas(s.img),Math.round(s.x-s.w/2),Math.round(s.y-s.h/2)); }
+    const sx=this.shakeA?(VR()-.5)*this.shakeA*2:0, sy=this.shakeA?(VR()-.5)*this.shakeA*2:0;
+    const cx=Math.round(this.cam.x-sx), cy=Math.round(this.cam.y-sy);
+    if(this.scene&&SCENES[this.scene]) SCENES[this.scene](g,this.t,cx,cy,this); else { g.fillStyle=this.bg; g.fillRect(0,0,SCR_W,SCR_H); }
+    g.save(); g.translate(-cx,-cy);
+    for(const s of this.sprites){ if(!s.alive) continue;
+      if(s.kind==='Joueur'&&this.hurtT>0&&Math.floor(this.hurtT*14)%2) continue;
+      const moving=Math.abs(s.vx)+Math.abs(s.vy)>5&&!s.autoDestroy, bob=moving&&(s.kind==='Joueur'||s.kind==='Ennemi')?Math.round(Math.sin(this.t*18+s.id)):0;
+      const im=imgCanvas(s.img), X=Math.round(s.x-s.w/2), Y=Math.round(s.y-s.h/2)+bob;
+      if(s.kind==='Joueur'||s.kind==='Ennemi'){ g.fillStyle='rgba(0,0,0,.22)'; g.fillRect(X+2,Math.round(s.y+s.h/2)-1,Math.max(2,s.w-4),2); }
+      if(IMGS[s.img].flip&&s.face<0){ g.save(); g.translate(X+s.w,Y); g.scale(-1,1); g.drawImage(im,0,0); g.restore(); } else g.drawImage(im,X,Y);
+      if(s.hitT>0){ g.fillStyle='rgba(255,255,255,.55)'; g.fillRect(X,Y,s.w,s.h); }
+      if(s.pvMax>0&&s.pv>0){ const bw=Math.max(16,s.w); g.fillStyle='#000'; g.fillRect(Math.round(s.x-bw/2)-1,Y-6,bw+2,4); g.fillStyle='#5a1a1a'; g.fillRect(Math.round(s.x-bw/2),Y-5,bw,2); g.fillStyle=s.pv/s.pvMax>.35?'#78dc52':'#ff2121'; g.fillRect(Math.round(s.x-bw/2),Y-5,Math.round(bw*Math.max(0,s.pv)/s.pvMax),2); }
+    }
+    for(const p of this.parts){ const a=1-p.life/p.max; g.globalAlpha=Math.max(0,a);
+      if(p.ring){ g.strokeStyle=p.col; g.lineWidth=1; g.beginPath(); g.arc(p.x,p.y,2+p.life*60,0,7); g.stroke(); }
+      else if(p.heart){ g.fillStyle=p.col; const x=Math.round(p.x), y=Math.round(p.y); g.fillRect(x-1,y,1,1); g.fillRect(x+1,y,1,1); g.fillRect(x-1,y+1,3,1); g.fillRect(x,y+2,1,1); }
+      else { const z=p.sz*(p.g===0&&p.sz>1?1+p.life:1); g.fillStyle=p.col; g.fillRect(Math.round(p.x-z/2),Math.round(p.y-z/2),Math.ceil(z),Math.ceil(z)); } }
+    g.globalAlpha=1;
     g.font='bold 7px Lexend, sans-serif'; g.textBaseline='top';
+    for(const p of this.pops){ g.globalAlpha=Math.max(0,1-p.t/.9); g.textAlign='center'; g.fillStyle='#000'; g.fillText(p.txt,p.x+1,p.y-p.t*22+1); g.fillStyle=p.col; g.fillText(p.txt,p.x,p.y-p.t*22); } g.globalAlpha=1; g.textAlign='left';
     for(const s of this.sprites){ if(!s.alive||!s.say) continue;
-      const tw=Math.ceil(g.measureText(s.say).width)+6, x=Math.round(Math.min(Math.max(s.x-tw/2,1),SCR_W-tw-1)), y=Math.round(Math.max(s.y-s.h/2-13,1));
+      const tw=Math.ceil(g.measureText(s.say).width)+6, x=Math.round(Math.min(Math.max(s.x-tw/2,cx+1),cx+SCR_W-tw-1)), y=Math.round(Math.max(s.y-s.h/2-13,cy+1));
       g.fillStyle='#fff'; g.fillRect(x,y,tw,11); g.strokeStyle='#000'; g.strokeRect(x+.5,y+.5,tw-1,10); g.fillStyle='#000'; g.fillText(s.say,x+3,y+2); }
-    if(this.scoreShown){ const t='SCORE '+this.score; const w=Math.ceil(g.measureText(t).width)+6; g.fillStyle='#4b7bec'; g.fillRect(SCR_W-w-2,2,w,11); g.fillStyle='#fff'; g.fillText(t,SCR_W-w+1,4); }
+    g.restore();
+    if(this.flashA){ g.globalAlpha=this.flashA; g.fillStyle=this.flashC; g.fillRect(0,0,SCR_W,SCR_H); g.globalAlpha=1; }
+    /* interface */
+    g.font='bold 7px Lexend, sans-serif'; g.textBaseline='top'; g.textAlign='left';
+    if(this.scoreShown){ const t='SCORE '+this.score; const w=Math.ceil(g.measureText(t).width)+8; g.fillStyle='#000000aa'; g.fillRect(SCR_W-w-2,2,w,11); g.fillStyle='#fff609'; g.fillText(t,SCR_W-w+2,4); }
     if(this.life!==null){ const c=imgCanvas('coeur'); for(let i=0;i<Math.min(this.life,8);i++) g.drawImage(c,2+i*9,2,9,9); }
-    if(this.countdown!==null){ const t=String(Math.ceil(this.countdown)); g.fillStyle='#000a'; g.fillRect(SCR_W/2-10,2,20,11); g.fillStyle='#fff'; g.textAlign='center'; g.fillText(t,SCR_W/2,4); g.textAlign='left'; }
-    if(this.splash){ g.fillStyle='#000c'; g.fillRect(8,SCR_H/2-12,SCR_W-16,24); g.fillStyle='#fff'; g.textAlign='center'; g.fillText(this.splash.slice(0,30),SCR_W/2,SCR_H/2-4); g.textAlign='left'; }
+    if(this.countdown!==null){ const t=String(Math.ceil(this.countdown)), urg=this.countdown<5; g.fillStyle=urg?'#ff2121cc':'#000a'; g.fillRect(SCR_W/2-11,2,22,11); g.fillStyle='#fff'; g.textAlign='center'; g.fillText(t,SCR_W/2,4); g.textAlign='left'; }
+    if(this.splash){ const k=Math.min(1,(2.2-this.splashT)*5); g.fillStyle='#000000cc'; g.fillRect(8,SCR_H/2-14,(SCR_W-16)*k,28); if(k>=1){ g.strokeStyle='#fff609'; g.strokeRect(8.5,SCR_H/2-13.5,SCR_W-17,27); g.fillStyle='#fff'; g.textAlign='center'; g.font='bold 8px Lexend, sans-serif'; g.fillText(this.splash.slice(0,30),SCR_W/2,SCR_H/2-4); g.font='bold 7px Lexend, sans-serif'; g.textAlign='left'; } }
     if(this.state!=='run'){
       const won=this.state==='won', err=this.state==='error';
-      g.fillStyle=err?'#5c406ccc':won?'#1a7a3acc':'#a01a1acc'; g.fillRect(0,SCR_H/2-22,SCR_W,44);
-      g.fillStyle='#fff'; g.textAlign='center'; g.font='bold 10px Lexend, sans-serif';
-      g.fillText(err?'ERREUR DANS LE PROGRAMME':won?'GAGNÉ !':(this.endMsg||'PERDU'),SCR_W/2,SCR_H/2-14);
-      g.font='7px Lexend, sans-serif'; g.fillText(err?String(this.err).slice(0,34):'Score : '+this.score,SCR_W/2,SCR_H/2+2); g.textAlign='left';
+      g.fillStyle='#000000aa'; g.fillRect(0,0,SCR_W,SCR_H);
+      g.fillStyle=err?'#5c406c':won?'#1a7a3a':'#a01a1a'; g.fillRect(0,SCR_H/2-30,SCR_W,58);
+      g.fillStyle=won?'#fff609':'#fff'; g.textAlign='center'; g.font='bold 14px Lexend, sans-serif';
+      g.fillText(err?'ERREUR':won?'GAGNÉ !':(this.endMsg||'PERDU'),SCR_W/2,SCR_H/2-25);
+      g.font='bold 8px Lexend, sans-serif'; g.fillStyle='#fff';
+      if(err) g.fillText(String(this.err).slice(0,36),SCR_W/2,SCR_H/2-4);
+      else { g.fillText('Score : '+this.score+(this.best?'   ·   Record : '+Math.max(this.best,this.score):''),SCR_W/2,SCR_H/2-5); g.fillStyle='#fff609'; g.font='7px Lexend, sans-serif'; g.fillText('Appuie sur A pour rejouer',SCR_W/2,SCR_H/2+12); }
+      g.textAlign='left'; g.font='bold 7px Lexend, sans-serif';
     }
   }
 }
-let AC=null;
+/* ---------- décors animés ---------- */
+const STARS=[...Array(90)].map((_,i)=>({x:(i*97.3)%160,y:(i*53.7)%120,l:i%3}));
+function px(g,c,x,y,w,h){ g.fillStyle=c; g.fillRect(Math.round(x),Math.round(y),w,h); }
+function hills(g,c,base,amp,per,off){ g.fillStyle=c; for(let x=0;x<160;x++){ const h=base+Math.sin((x+off)/per)*amp+Math.sin((x+off)/(per*.37))*amp*.4; g.fillRect(x,Math.round(h),1,120); } }
+function grad(g,a,b){ const G=g.createLinearGradient(0,0,0,120); G.addColorStop(0,a); G.addColorStop(1,b); g.fillStyle=G; g.fillRect(0,0,160,120); }
+const wrap=(v,m)=>((v%m)+m)%m;
+const SCENES={
+ espace:(g,t,cx,cy)=>{ grad(g,'#05051a','#1a0b3a'); g.fillStyle='#2a1060'; g.globalAlpha=.6; g.beginPath(); g.arc(120-cx*.05,40,26,0,7); g.fill(); g.fillStyle='#3b1880'; g.beginPath(); g.arc(114-cx*.05,34,10,0,7); g.fill(); g.globalAlpha=1;
+   for(const s of STARS){ const sp=[8,18,40][s.l], y=wrap(s.y+t*sp-cy*(.2+s.l*.2),120), x=wrap(s.x-cx*(.2+s.l*.2),160); px(g,s.l===2?'#ffffff':s.l?'#87f2ff':'#5c6c9c',x,y,1,s.l===2?2:1); } },
+ foret:(g,t,cx,cy)=>{ grad(g,'#6cc6ff','#c9f1ff'); px(g,'#fff6a0',128-cx*.02,10,10,10);
+   for(let i=0;i<4;i++){ const x=wrap(i*55-t*4-cx*.1,220)-30; px(g,'#ffffff',x,14+(i*7)%20,22,5); px(g,'#ffffff',x+5,10+(i*7)%20,12,5); }
+   hills(g,'#5fae6e',70,6,22,cx*.25); hills(g,'#3f8a4f',84,5,15,cx*.5);
+   for(let i=0;i<9;i++){ const x=wrap(i*23-cx*.8,207)-20; px(g,'#6b3f22',x+5,88,3,14); g.fillStyle='#2e6b35'; g.beginPath(); g.moveTo(x,92); g.lineTo(x+6.5,70); g.lineTo(x+13,92); g.fill(); }
+   px(g,'#4caf50',0,100,160,20); for(let x=0;x<160;x+=4) px(g,'#3c8f40',wrap(x-cx,160),100,2,2); },
+ nuit:(g,t,cx,cy)=>{ grad(g,'#140a2a','#3b1f5c'); g.fillStyle='#fdf5c9'; g.beginPath(); g.arc(30-cx*.03,22,10,0,7); g.fill(); g.fillStyle='#1d0f36'; g.beginPath(); g.arc(35-cx*.03,19,9,0,7); g.fill();
+   for(const s of STARS.slice(0,30)) px(g,Math.sin(t*3+s.x)>0?'#ffffff':'#8b7bb0',wrap(s.x-cx*.1,160),s.y*.5,1,1);
+   hills(g,'#24123d',78,8,25,cx*.3); const hx=wrap(100-cx*.4,200)-20; px(g,'#1a0d2c',hx,52,30,40); px(g,'#1a0d2c',hx+6,40,6,14); px(g,'#1a0d2c',hx+22,44,6,10);
+   for(let i=0;i<3;i++) px(g,Math.sin(t*2+i)>-.3?'#fff609':'#3a2a10',hx+4+i*8,60,3,4);
+   g.globalAlpha=.25; for(let i=0;i<5;i++) px(g,'#c8b8e8',wrap(i*40+t*6,200)-20,92+Math.sin(t+i)*3,40,6); g.globalAlpha=1; px(g,'#120a20',0,104,160,16); },
+ ocean:(g,t,cx,cy)=>{ grad(g,'#1aa3c8','#062a5a'); g.globalAlpha=.12; for(let i=0;i<6;i++) px(g,'#ffffff',wrap(i*31+t*10,180)-10,0,6,120); g.globalAlpha=1;
+   for(let i=0;i<14;i++){ const y=120-wrap(t*(12+i%4*5)+i*37,130); px(g,'#bff3ff',wrap(i*41+Math.sin(t*2+i)*3,160),y,i%3?1:2,i%3?1:2); }
+   for(let i=0;i<8;i++){ const x=wrap(i*21-cx*.6,170)-5; for(let k=0;k<14;k++) px(g,'#2f9e57',x+Math.round(Math.sin(t*2+k*.5+i)*2),112-k*2.4,2,3); }
+   px(g,'#d9c27a',0,112,160,8); },
+ ciel:(g,t,cx,cy)=>{ grad(g,'#ff9a76','#ffe29a'); px(g,'#fff4c2',70-cx*.02,70,22,22);
+   for(let i=0;i<7;i++){ const x=wrap(i*37-t*(6+i%3*4)-cx*.2,220)-30, y=10+(i*17)%60; px(g,'#ffffffcc',x,y,26,6); px(g,'#ffffffcc',x+6,y-4,14,5); }
+   hills(g,'#e07a5f',92,6,30,cx*.3); hills(g,'#9b4a5c',104,4,18,cx*.6); },
+ neon:(g,t,cx,cy)=>{ grad(g,'#0b0420','#2c0a40'); g.fillStyle='#ff2e88'; g.globalAlpha=.35; g.beginPath(); g.arc(80,58,22,0,7); g.fill(); g.globalAlpha=1;
+   for(let i=0;i<12;i++){ const w=10+(i*7)%9, h=20+(i*13)%40, x=wrap(i*15-cx*.4,180)-10; px(g,'#120826',x,100-h,w,h+20);
+     for(let k=0;k<h/6;k++) for(let j=0;j<w/4;j++) if(((i+k+j+Math.floor(t*1.5))%5)===0) px(g,['#00f0ff','#ff2e88','#fff609'][(i+j)%3],x+1+j*4,100-h+2+k*6,2,2); }
+   g.strokeStyle='#00f0ff'; g.globalAlpha=.6; for(let k=0;k<6;k++){ const y=100+k*k*.8+wrap(t*20,8)*(k/6); g.beginPath(); g.moveTo(0,y); g.lineTo(160,y); g.stroke(); } g.globalAlpha=1; },
+ grotte:(g,t,cx,cy)=>{ grad(g,'#1b1410','#3a2a20'); for(let i=0;i<12;i++){ const x=wrap(i*15-cx*.5,170)-5; g.fillStyle='#4a3626'; g.beginPath(); g.moveTo(x,0); g.lineTo(x+5,8+(i*7)%14); g.lineTo(x+10,0); g.fill(); }
+   for(let i=0;i<7;i++){ const x=wrap(i*27-cx*.5,180)-10, c=['#87f2ff','#ff93c4','#a0ffb0'][i%3]; g.globalAlpha=.25+.2*Math.sin(t*3+i); g.fillStyle=c; g.beginPath(); g.arc(x+1,41+(i*13)%40,5,0,7); g.fill(); g.globalAlpha=1; px(g,c,x,40+(i*13)%40,2,2); }
+   hills(g,'#2a1e16',104,4,12,cx*.8); }
+};
+const SCENE_NAMES=[['forêt','foret'],['espace étoilé','espace'],['nuit hantée','nuit'],['océan','ocean'],['coucher de soleil','ciel'],['ville néon','neon'],['grotte','grotte']];
+/* ---------- sons et musique ---------- */
+let AC=null, MUS=null;
+function ac(){ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); return AC; }
 function playSound(n){
-  try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); const seq=SONS[n]; if(!seq) return; let t=AC.currentTime;
-    for(const [f,d] of seq){ const o=AC.createOscillator(), v=AC.createGain(); o.type='square'; o.frequency.value=f; v.gain.setValueAtTime(.06,t); v.gain.exponentialRampToValueAtTime(.001,t+d); o.connect(v); v.connect(AC.destination); o.start(t); o.stop(t+d); t+=d; } }catch(e){}
+  try{ const A=ac(), seq=SONS[n]; if(!seq) return; let t=A.currentTime;
+    for(const [f,d] of seq){ const o=A.createOscillator(), v=A.createGain(); o.type=n==='explosion'?'sawtooth':'square'; o.frequency.value=f; if(n==='explosion') o.frequency.exponentialRampToValueAtTime(40,t+d); v.gain.setValueAtTime(.07,t); v.gain.exponentialRampToValueAtTime(.001,t+d); o.connect(v); v.connect(A.destination); o.start(t); o.stop(t+d); t+=d; } }catch(e){}
 }
+const MUSIQUES={
+ aventure:{bpm:132,lead:[72,0,76,0,79,0,76,0,74,0,77,0,81,0,77,0,72,0,76,0,79,0,84,0,83,0,79,0,74,0,0,0],bass:[48,48,55,55,53,53,50,50]},
+ action:{bpm:156,lead:[69,72,76,72,69,72,76,79,74,77,81,77,74,77,81,84,72,76,79,76,72,76,79,83,71,74,77,74,71,0,71,0],bass:[45,45,50,50,48,48,47,47]},
+ mystere:{bpm:96,lead:[69,0,0,72,0,0,71,0,68,0,0,0,69,0,0,76,0,0,74,0,72,0,71,0,69,0,0,0,0,0,0,0],bass:[45,45,41,41,43,43,40,40]}
+};
+function midi(n){ return 440*Math.pow(2,(n-69)/12); }
+function startMusic(name){ stopMusic(); const M=MUSIQUES[name]; if(!M) return; try{ const A=ac(), st=A.currentTime+.05, step=60/M.bpm/2; let k=0;
+  const master=A.createGain(); master.gain.value=.05; master.connect(A.destination);
+  const tick=()=>{ while(st+k*step<A.currentTime+.3){ const t=st+k*step, n=M.lead[k%M.lead.length];
+      if(n){ const o=A.createOscillator(), v=A.createGain(); o.type='square'; o.frequency.value=midi(n); v.gain.setValueAtTime(.5,t); v.gain.exponentialRampToValueAtTime(.01,t+step*.9); o.connect(v); v.connect(master); o.start(t); o.stop(t+step); }
+      if(k%4===0){ const b=M.bass[(k/4)%M.bass.length], o=A.createOscillator(), v=A.createGain(); o.type='triangle'; o.frequency.value=midi(b); v.gain.setValueAtTime(1,t); v.gain.exponentialRampToValueAtTime(.01,t+step*3.8); o.connect(v); v.connect(master); o.start(t); o.stop(t+step*4); }
+      k++; } };
+  tick(); MUS={id:setInterval(tick,100),master}; }catch(e){} }
+function stopMusic(){ if(MUS){ clearInterval(MUS.id); try{ MUS.master.gain.setValueAtTime(0,AC.currentTime); MUS.master.disconnect(); }catch(e){} MUS=null; } }
 </script>
 <script>/* ===== Blocs façon MakeCode Arcade (en français) ===== */
-const COL={sprites:'#4b7bec',controleur:'#d54322',jeu:'#8854d0',info:'#cf6a87',musique:'#e63022',boucles:'#20bf6b',logique:'#45aaf2',variables:'#ee5253',maths:'#9c6ade',texte:'#e0a400',fonctions:'#1b6fb3',listes:'#c74fb0'};
+const COL={effets:'#e4572e',sprites:'#4b7bec',controleur:'#d54322',jeu:'#8854d0',info:'#cf6a87',musique:'#e63022',boucles:'#20bf6b',logique:'#45aaf2',variables:'#ee5253',maths:'#9c6ade',texte:'#e0a400',fonctions:'#1b6fb3',listes:'#c74fb0'};
 const IMG_OPTS=()=>Object.keys(IMGS).map(k=>[{src:imgURL(k,2),width:24,height:24,alt:IMGS[k].nom},k]);
 const KIND_OPTS=KINDS.map(k=>[k,k]);
 const BTN_OPTS=[['A','A'],['B','B'],['haut','haut'],['bas','bas'],['gauche','gauche'],['droite','droite']];
-const PROP_SET=[['x','x'],['y','y'],['vitesse x (vx)','vx'],['vitesse y (vy)','vy'],['accélération x (ax)','ax'],['accélération y (ay)','ay']];
-const PROP_GET=[['x','x'],['y','y'],['vitesse x (vx)','vx'],['vitesse y (vy)','vy'],['bord gauche','gauche'],['bord droit','droite'],['bord haut','haut'],['bord bas','bas']];
+const PROP_SET=[['x','x'],['y','y'],['vitesse x (vx)','vx'],['vitesse y (vy)','vy'],['accélération x (ax)','ax'],['accélération y (ay)','ay'],['points de vie (pv)','pv']];
+const PROP_GET=[['x','x'],['y','y'],['vitesse x (vx)','vx'],['vitesse y (vy)','vy'],['bord gauche','gauche'],['bord droit','droite'],['bord haut','haut'],['bord bas','bas'],['points de vie (pv)','pv']];
 const BG_OPTS=[['bleu nuit','#003fad'],['noir','#000000'],['bleu ciel','#87f2ff'],['vert','#78dc52'],['sarcelle','#249ca3'],['violet','#8e2ec4'],['rose','#ff93c4'],['rouge','#ff2121'],['orange','#ff8135'],['jaune','#fff609'],['blanc','#ffffff'],['marron','#91463d']];
 const FLAG_OPTS=[['reste dans l’écran','stay'],['rebondit sur les bords','bounce'],['disparaît hors de l’écran','autoDestroy']];
-const SON_OPTS=[['pièce','piece'],['saut','saut'],['explosion','explosion'],['victoire','victoire'],['dégât','degat']];
+const SON_OPTS=[['pièce','piece'],['saut','saut'],['tir','tir'],['bonus','bonus'],['explosion','explosion'],['victoire','victoire'],['dégât','degat']];
+const FX_OPTS=[['explosion','explosion'],['étincelles','etincelles'],['confettis','confettis'],['fumée','fumee'],['cœurs','coeurs']];
 const V=(name,def)=>({type:'field_variable',name,variable:def||'monSprite'});
 const N=(name)=>({type:'input_value',name,check:'Number'});
 
@@ -3149,6 +3336,13 @@ function defineArcadeBlocks(){
   {type:'i_addlife',message0:'modifier les vies de %1',args0:[N('V')],previousStatement:null,nextStatement:null,colour:COL.info},
   {type:'i_life',message0:'vies',output:'Number',colour:COL.info},
   {type:'i_countdown',message0:'lancer le compte à rebours %1 s',args0:[N('V')],previousStatement:null,nextStatement:null,colour:COL.info},
+  /* Effets */
+  {type:'fx_scene',message0:'décor %1',args0:[{type:'field_dropdown',name:'S',options:SCENE_NAMES}],previousStatement:null,nextStatement:null,colour:COL.effets,tooltip:'Un décor animé derrière le jeu.'},
+  {type:'fx_effect',message0:'effet %1 sur %2',args0:[{type:'field_dropdown',name:'E',options:FX_OPTS},V('VAR')],previousStatement:null,nextStatement:null,colour:COL.effets},
+  {type:'fx_shake',message0:'secouer l\u2019écran %1',args0:[{type:'field_dropdown',name:'F',options:[['faiblement','faible'],['fort','fort']]}],previousStatement:null,nextStatement:null,colour:COL.effets},
+  {type:'fx_music',message0:'jouer la musique %1',args0:[{type:'field_dropdown',name:'M',options:[['aventure','aventure'],['action','action'],['mystère','mystere']]}],previousStatement:null,nextStatement:null,colour:COL.effets},
+  {type:'cam_follow',message0:'la caméra suit %1',args0:[V('VAR')],previousStatement:null,nextStatement:null,colour:COL.effets},
+  {type:'world_size',message0:'taille du monde : largeur %1 hauteur %2',args0:[N('W'),N('H')],inputsInline:true,previousStatement:null,nextStatement:null,colour:COL.effets},
   /* Musique */
   {type:'m_play',message0:'jouer le son %1',args0:[{type:'field_dropdown',name:'S',options:SON_OPTS}],previousStatement:null,nextStatement:null,colour:COL.musique}
   ]);
@@ -3194,6 +3388,12 @@ function defineArcadeBlocks(){
   F.i_life=()=>['G.getLife()',ORD.MEMBER];
   F.i_countdown=b=>'G.startCountdown('+val(b,'V','0')+');\n';
   F.m_play=b=>'G.sound("'+b.getFieldValue('S')+'");\n';
+  F.fx_scene=b=>'G.setScene("'+b.getFieldValue('S')+'");\n';
+  F.fx_effect=b=>'G.effect('+v(b)+',"'+b.getFieldValue('E')+'");\n';
+  F.fx_shake=b=>'G.shake("'+b.getFieldValue('F')+'");\n';
+  F.fx_music=b=>'G.playMusic("'+b.getFieldValue('M')+'");\n';
+  F.cam_follow=b=>'G.camFollow('+v(b)+');\n';
+  F.world_size=b=>'G.worldSize('+val(b,'W','160')+','+val(b,'H','120')+');\n';
   F.math_random_int=b=>['G.randInt('+val(b,'FROM','0')+','+val(b,'TO','0')+')',ORD.MEMBER];
 }
 /* Événements : seuls les blocs « chapeau » sont exécutés */
@@ -3213,6 +3413,7 @@ const TOOL={
    {type:'sp_overlaps'},{type:'sp_count'},{type:'sp_create'}]},
  controleur:{name:'Contrôleur',colour:COL.controleur,blocks:[{type:'ct_move',inputs:{VX:SH(100),VY:SH(100)}},{type:'ct_button_ev'},{type:'ct_pressed'}]},
  info:{name:'Info',colour:COL.info,blocks:[{type:'i_setscore',inputs:{V:SH(0)}},{type:'i_addscore',inputs:{V:SH(1)}},{type:'i_score'},{type:'i_setlife',inputs:{V:SH(3)}},{type:'i_addlife',inputs:{V:SH(-1)}},{type:'i_life'},{type:'i_countdown',inputs:{V:SH(20)}},{type:'g_countend'},{type:'g_lifezero'}]},
+ effets:{name:'Effets',colour:COL.effets,blocks:[{type:'fx_scene'},{type:'fx_effect',fields:{VAR:{name:'autreSprite'}}},{type:'fx_shake'},{type:'fx_music'},{type:'cam_follow'},{type:'world_size',inputs:{W:SH(480),H:SH(120)}}]},
  musique:{name:'Musique',colour:COL.musique,blocks:[{type:'m_play'}]},
  boucles:{name:'Boucles',colour:COL.boucles,blocks:[{type:'controls_repeat_ext',inputs:{TIMES:SH(5)}},{type:'controls_for',fields:{VAR:{name:'i'}},inputs:{FROM:SH(0),TO:SH(9),BY:SH(1)}},{type:'controls_whileUntil'},{type:'controls_forEach'}]},
  logique:{name:'Logique',colour:COL.logique,blocks:[{type:'controls_if'},{type:'controls_if',extraState:{hasElse:true}},{type:'logic_compare'},{type:'logic_operation'},{type:'logic_negate'},{type:'logic_boolean'}]},
@@ -3229,7 +3430,7 @@ function buildToolbox(cats,hide){
     return {kind:'category',name:T.name,colour:T.colour,contents:T.blocks.filter(b=>!hide.has(b.id||b.type)).map(b=>{ const o=Object.assign({kind:'block'},b); delete o.id; return o; })}; })};
 }
 </script>
-<script>const CFG = {"id": "eval_arcade4", "mode": "eval", "code": "PIXEL48", "fbEval": "evaluations/prog_4e", "title": "Évaluation — Les étoiles filantes", "classes": ["4A", "4B", "4C", "4D", "4E"], "intro": "Programme le jeu des étoiles filantes. Chaque partie est notée par des tests automatiques quand tu rends ta copie.", "toolbox": ["jeu", "sprites", "controleur", "info", "musique", "boucles", "logique", "variables", "maths", "texte"], "hide": ["controls_forEach", "sp_follow"], "start": "<xml><block type=\"g_start\"></block></xml>", "missions": [{"titre": "Variable et coordonnées", "pitch": "Crée le vaisseau (Joueur) en x = 80, y = 100. Crée une variable <b>vitesse</b> = 90, utilisée pour le déplacer seulement à gauche et à droite.", "tests": [{"txt": "Le vaisseau part en (80 ; 100)", "ok": (T=>{const p=T.one('Joueur');return !!p&&Math.abs(p.x-80)<1&&Math.abs(p.y-100)<1;})}, {"txt": "Une variable vitesse existe", "ok": (T=>{return T.vars().includes('vitesse');})}, {"txt": "Il avance de 90 pixels en 1 s", "ok": (T=>{const p=T.one('Joueur');const x=p.x; T.hold('droite',1); const d=p.x-x; return Math.abs(d-90)<6;})}, {"txt": "Il ne monte pas", "ok": (T=>{const p=T.one('Joueur');const y=p.y; T.hold('haut',.5); return Math.abs(p.y-y)<1;})}], "solution": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></statement></block></xml>", "aide": "", "pts": 5, "start": "<xml><block type=\"g_start\"></block></xml>"}, {"titre": "Une boucle d’étoiles", "pitch": "Avec une boucle, crée 6 étoiles (Bonus) en y = 20, avec x = 15 + 26 × i pour i de 0 à 5.", "tests": [{"txt": "6 étoiles aux bonnes positions", "ok": (T=>{const s=T.all('Bonus'); const want=[0,1,2,3,4,5].map(i=>[15+26*i,20]); return s.length===want.length&&want.every(([x,y])=>s.some(o=>Math.abs(o.x-x)<1&&Math.abs(o.y-y)<1));})}, {"txt": "Une boucle est utilisée", "ok": (T=>{return T.blocks('controls_for')+T.blocks('controls_repeat_ext')>=1;})}], "solution": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"controls_for\"><field name=\"VAR\">i</field><value name=\"FROM\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value><value name=\"TO\"><shadow type=\"math_number\"><field name=\"NUM\">5</field></shadow></value><value name=\"BY\"><shadow type=\"math_number\"><field name=\"NUM\">1</field></shadow></value><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">etoile</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">etoile</field><field name=\"KIND\">Bonus</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">etoile</field><value name=\"X\"><block type=\"math_arithmetic\"><field name=\"OP\">ADD</field><value name=\"A\"><shadow type=\"math_number\"><field name=\"NUM\">15</field></shadow></value><value name=\"B\"><block type=\"math_arithmetic\"><field name=\"OP\">MULTIPLY</field><value name=\"A\"><shadow type=\"math_number\"><field name=\"NUM\">26</field></shadow></value><value name=\"B\"><block type=\"variables_get\"><field name=\"VAR\">i</field></block></value></block></value></block></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">20</field></shadow></value></block></next></block></statement></block></next></block></next></block></next></block></next></block></statement></block></xml>", "aide": "", "pts": 5, "start": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></statement></block></xml>"}, {"titre": "Le tunnel", "pitch": "Le vaisseau traverse les bords : au-delà de x = 155 il réapparaît en x = 5, et sous x = 5 il réapparaît en x = 155.", "tests": [{"txt": "Vers la droite, il reste dans l’écran", "ok": (T=>{const p=T.one('Joueur');for(let i=0;i<4;i++){ T.hold('droite',1); if(p.x<0||p.x>160) return false; } return true;})}, {"txt": "Vers la gauche, il reste dans l’écran", "ok": (T=>{const p=T.one('Joueur');for(let i=0;i<4;i++){ T.hold('gauche',1); if(p.x<0||p.x>160) return false; } return true;})}, {"txt": "Il passe d’un bord à l’autre", "ok": (T=>{const p=T.one('Joueur');let seen=false; T.rt.keys.droite=true; for(let i=0;i<120;i++){ T.rt.step(); if(p.x<20) seen=true; } return seen;})}], "solution": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></statement></block><block type=\"g_update\"><statement name=\"DO\"><block type=\"controls_if\"><value name=\"IF0\"><block type=\"logic_compare\"><field name=\"OP\">GT</field><value name=\"A\"><block type=\"sp_get\"><field name=\"VAR\">vaisseau</field><field name=\"P\">x</field></block></value><value name=\"B\"><shadow type=\"math_number\"><field name=\"NUM\">155</field></shadow></value></block></value><statement name=\"DO0\"><block type=\"sp_set\"><field name=\"VAR\">vaisseau</field><field name=\"P\">x</field><value name=\"V\"><shadow type=\"math_number\"><field name=\"NUM\">5</field></shadow></value></block></statement><next><block type=\"controls_if\"><value name=\"IF0\"><block type=\"logic_compare\"><field name=\"OP\">LT</field><value name=\"A\"><block type=\"sp_get\"><field name=\"VAR\">vaisseau</field><field name=\"P\">x</field></block></value><value name=\"B\"><shadow type=\"math_number\"><field name=\"NUM\">5</field></shadow></value></block></value><statement name=\"DO0\"><block type=\"sp_set\"><field name=\"VAR\">vaisseau</field><field name=\"P\">x</field><value name=\"V\"><shadow type=\"math_number\"><field name=\"NUM\">155</field></shadow></value></block></statement></block></next></block></statement></block></xml>", "aide": "", "pts": 5, "start": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></statement></block></xml>"}, {"titre": "Conditions de fin", "pitch": "Le joueur a 3 vies. Si un Ennemi le touche : s’il a plus d’une vie, il en perd une et l’ennemi est détruit ; sinon la partie est perdue. À 15 points, la partie est gagnée.", "tests": [{"txt": "Le joueur a 3 vies", "ok": (T=>{return T.rt.life===3;})}, {"txt": "Avec 3 vies, une collision en retire 1 et détruit l’ennemi", "ok": (T=>{const p=T.one('Joueur');const e=T.rt.create('asteroide','Ennemi'); e.x=p.x; e.y=p.y; T.run(.1); return T.rt.life===2&&!e.alive;})}, {"txt": "Avec 1 vie, une collision fait perdre la partie", "ok": (T=>{const p=T.one('Joueur');T.rt.life=1; const e=T.rt.create('asteroide','Ennemi'); e.x=p.x; e.y=p.y; T.run(.1); return T.rt.state==='lost';})}, {"txt": "À 15 points, la partie est gagnée", "ok": (T=>{T.rt.score=15; T.run(.2); return T.rt.state==='won';})}], "solution": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"i_setlife\"><value name=\"V\"><shadow type=\"math_number\"><field name=\"NUM\">3</field></shadow></value></block></next></block></next></block></next></block></next></block></statement></block><block type=\"sp_overlap_ev\"><field name=\"K1\">Joueur</field><field name=\"K2\">Ennemi</field><statement name=\"DO\"><block type=\"controls_if\"><mutation else=\"1\"></mutation><value name=\"IF0\"><block type=\"logic_compare\"><field name=\"OP\">GT</field><value name=\"A\"><block type=\"i_life\"></block></value><value name=\"B\"><shadow type=\"math_number\"><field name=\"NUM\">1</field></shadow></value></block></value><statement name=\"DO0\"><block type=\"i_addlife\"><value name=\"V\"><shadow type=\"math_number\"><field name=\"NUM\">-1</field></shadow></value><next><block type=\"sp_destroy\"><field name=\"VAR\">autreSprite</field></block></next></block></statement><statement name=\"ELSE\"><block type=\"g_over\"><field name=\"WIN\">0</field></block></statement></block></statement></block><block type=\"g_update\"><statement name=\"DO\"><block type=\"controls_if\"><value name=\"IF0\"><block type=\"logic_compare\"><field name=\"OP\">GTE</field><value name=\"A\"><block type=\"i_score\"></block></value><value name=\"B\"><shadow type=\"math_number\"><field name=\"NUM\">15</field></shadow></value></block></value><statement name=\"DO0\"><block type=\"g_over\"><field name=\"WIN\">1</field></block></statement></block></statement></block></xml>", "aide": "", "pts": 5, "start": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></statement></block></xml>"}], "profHash": 1538494112};</script>
+<script>const CFG = {"id": "eval_arcade4", "mode": "eval", "code": "PIXEL48", "fbEval": "evaluations/prog_4e", "title": "Évaluation — Les étoiles filantes", "classes": ["4A", "4B", "4C", "4D", "4E"], "intro": "Programme le jeu des étoiles filantes. Chaque partie est notée par des tests automatiques quand tu rends ta copie.", "toolbox": ["jeu", "sprites", "controleur", "info", "musique", "effets", "boucles", "logique", "variables", "maths", "texte"], "hide": ["controls_forEach", "sp_follow", "cam_follow", "world_size"], "start": "<xml><block type=\"g_start\"></block></xml>", "missions": [{"titre": "Variable et coordonnées", "pitch": "Crée le vaisseau (Joueur) en x = 80, y = 100. Crée une variable <b>vitesse</b> = 90, utilisée pour le déplacer seulement à gauche et à droite.", "tests": [{"txt": "Le vaisseau part en (80 ; 100)", "ok": (T=>{const p=T.one('Joueur');return !!p&&Math.abs(p.x-80)<1&&Math.abs(p.y-100)<1;})}, {"txt": "Une variable vitesse existe", "ok": (T=>{return T.vars().includes('vitesse');})}, {"txt": "Il avance de 90 pixels en 1 s", "ok": (T=>{const p=T.one('Joueur');const x=p.x; T.hold('droite',1); const d=p.x-x; return Math.abs(d-90)<6;})}, {"txt": "Il ne monte pas", "ok": (T=>{const p=T.one('Joueur');const y=p.y; T.hold('haut',.5); return Math.abs(p.y-y)<1;})}], "solution": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></statement></block></xml>", "aide": "", "pts": 5, "start": "<xml><block type=\"g_start\"></block></xml>"}, {"titre": "Une boucle d’étoiles", "pitch": "Avec une boucle, crée 6 étoiles (Bonus) en y = 20, avec x = 15 + 26 × i pour i de 0 à 5.", "tests": [{"txt": "6 étoiles aux bonnes positions", "ok": (T=>{const s=T.all('Bonus'); const want=[0,1,2,3,4,5].map(i=>[15+26*i,20]); return s.length===want.length&&want.every(([x,y])=>s.some(o=>Math.abs(o.x-x)<1&&Math.abs(o.y-y)<1));})}, {"txt": "Une boucle est utilisée", "ok": (T=>{return T.blocks('controls_for')+T.blocks('controls_repeat_ext')>=1;})}], "solution": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"controls_for\"><field name=\"VAR\">i</field><value name=\"FROM\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value><value name=\"TO\"><shadow type=\"math_number\"><field name=\"NUM\">5</field></shadow></value><value name=\"BY\"><shadow type=\"math_number\"><field name=\"NUM\">1</field></shadow></value><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">etoile</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">etoile</field><field name=\"KIND\">Bonus</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">etoile</field><value name=\"X\"><block type=\"math_arithmetic\"><field name=\"OP\">ADD</field><value name=\"A\"><shadow type=\"math_number\"><field name=\"NUM\">15</field></shadow></value><value name=\"B\"><block type=\"math_arithmetic\"><field name=\"OP\">MULTIPLY</field><value name=\"A\"><shadow type=\"math_number\"><field name=\"NUM\">26</field></shadow></value><value name=\"B\"><block type=\"variables_get\"><field name=\"VAR\">i</field></block></value></block></value></block></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">20</field></shadow></value></block></next></block></statement></block></next></block></next></block></next></block></next></block></statement></block></xml>", "aide": "", "pts": 5, "start": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></statement></block></xml>"}, {"titre": "Le tunnel", "pitch": "Le vaisseau traverse les bords : au-delà de x = 155 il réapparaît en x = 5, et sous x = 5 il réapparaît en x = 155.", "tests": [{"txt": "Vers la droite, il reste dans l’écran", "ok": (T=>{const p=T.one('Joueur');for(let i=0;i<4;i++){ T.hold('droite',1); if(p.x<0||p.x>160) return false; } return true;})}, {"txt": "Vers la gauche, il reste dans l’écran", "ok": (T=>{const p=T.one('Joueur');for(let i=0;i<4;i++){ T.hold('gauche',1); if(p.x<0||p.x>160) return false; } return true;})}, {"txt": "Il passe d’un bord à l’autre", "ok": (T=>{const p=T.one('Joueur');let seen=false; T.rt.keys.droite=true; for(let i=0;i<120;i++){ T.rt.step(); if(p.x<20) seen=true; } return seen;})}], "solution": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></statement></block><block type=\"g_update\"><statement name=\"DO\"><block type=\"controls_if\"><value name=\"IF0\"><block type=\"logic_compare\"><field name=\"OP\">GT</field><value name=\"A\"><block type=\"sp_get\"><field name=\"VAR\">vaisseau</field><field name=\"P\">x</field></block></value><value name=\"B\"><shadow type=\"math_number\"><field name=\"NUM\">155</field></shadow></value></block></value><statement name=\"DO0\"><block type=\"sp_set\"><field name=\"VAR\">vaisseau</field><field name=\"P\">x</field><value name=\"V\"><shadow type=\"math_number\"><field name=\"NUM\">5</field></shadow></value></block></statement><next><block type=\"controls_if\"><value name=\"IF0\"><block type=\"logic_compare\"><field name=\"OP\">LT</field><value name=\"A\"><block type=\"sp_get\"><field name=\"VAR\">vaisseau</field><field name=\"P\">x</field></block></value><value name=\"B\"><shadow type=\"math_number\"><field name=\"NUM\">5</field></shadow></value></block></value><statement name=\"DO0\"><block type=\"sp_set\"><field name=\"VAR\">vaisseau</field><field name=\"P\">x</field><value name=\"V\"><shadow type=\"math_number\"><field name=\"NUM\">155</field></shadow></value></block></statement></block></next></block></statement></block></xml>", "aide": "", "pts": 5, "start": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></statement></block></xml>"}, {"titre": "Conditions de fin", "pitch": "Le joueur a 3 vies. Si un Ennemi le touche : s’il a plus d’une vie, il en perd une et l’ennemi est détruit ; sinon la partie est perdue. À 15 points, la partie est gagnée.", "tests": [{"txt": "Le joueur a 3 vies", "ok": (T=>{return T.rt.life===3;})}, {"txt": "Avec 3 vies, une collision en retire 1 et détruit l’ennemi", "ok": (T=>{const p=T.one('Joueur');const e=T.rt.create('asteroide','Ennemi'); e.x=p.x; e.y=p.y; T.run(.1); return T.rt.life===2&&!e.alive;})}, {"txt": "Avec 1 vie, une collision fait perdre la partie", "ok": (T=>{const p=T.one('Joueur');T.rt.life=1; const e=T.rt.create('asteroide','Ennemi'); e.x=p.x; e.y=p.y; T.run(.1); return T.rt.state==='lost';})}, {"txt": "À 15 points, la partie est gagnée", "ok": (T=>{T.rt.score=15; T.run(.2); return T.rt.state==='won';})}], "solution": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"i_setlife\"><value name=\"V\"><shadow type=\"math_number\"><field name=\"NUM\">3</field></shadow></value></block></next></block></next></block></next></block></next></block></statement></block><block type=\"sp_overlap_ev\"><field name=\"K1\">Joueur</field><field name=\"K2\">Ennemi</field><statement name=\"DO\"><block type=\"controls_if\"><mutation else=\"1\"></mutation><value name=\"IF0\"><block type=\"logic_compare\"><field name=\"OP\">GT</field><value name=\"A\"><block type=\"i_life\"></block></value><value name=\"B\"><shadow type=\"math_number\"><field name=\"NUM\">1</field></shadow></value></block></value><statement name=\"DO0\"><block type=\"i_addlife\"><value name=\"V\"><shadow type=\"math_number\"><field name=\"NUM\">-1</field></shadow></value><next><block type=\"sp_destroy\"><field name=\"VAR\">autreSprite</field></block></next></block></statement><statement name=\"ELSE\"><block type=\"g_over\"><field name=\"WIN\">0</field></block></statement></block></statement></block><block type=\"g_update\"><statement name=\"DO\"><block type=\"controls_if\"><value name=\"IF0\"><block type=\"logic_compare\"><field name=\"OP\">GTE</field><value name=\"A\"><block type=\"i_score\"></block></value><value name=\"B\"><shadow type=\"math_number\"><field name=\"NUM\">15</field></shadow></value></block></value><statement name=\"DO0\"><block type=\"g_over\"><field name=\"WIN\">1</field></block></statement></block></statement></block></xml>", "aide": "", "pts": 5, "start": "<xml><block type=\"g_start\"><statement name=\"DO\"><block type=\"variables_set\"><field name=\"VAR\">vaisseau</field><value name=\"VALUE\"><block type=\"sp_create\"><field name=\"IMG\">vaisseau</field><field name=\"KIND\">Joueur</field></block></value><next><block type=\"sp_setpos\"><field name=\"VAR\">vaisseau</field><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">80</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"variables_set\"><field name=\"VAR\">vitesse</field><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value><next><block type=\"ct_move\"><field name=\"VAR\">vaisseau</field><value name=\"VX\"><block type=\"variables_get\"><field name=\"VAR\">vitesse</field></block></value><value name=\"VY\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></statement></block></xml>"}], "profHash": 1538494112};</script>
 <script>/* ===== Interface : studio, missions, vérification, copie ===== */
 const $=s=>document.querySelector(s);
 const FB='https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app/';
@@ -3284,19 +3485,20 @@ const MS=CFG.missions;
 /* ---------- simulateur ---------- */
 function simStart(){
   cancelAnimationFrame(RAF); const code=genCode(WS);
-  RT=new Runtime({seed:Date.now()&0xffff}); RT.load(code);
+  stopMusic(); RT=new Runtime({seed:Date.now()&0xffff}); try{ RT.best=+localStorage.getItem('best_'+CFG.id)||0; }catch(e){} RT.load(code); let saved=false;
   const cv=$('#scr'), g=cv.getContext('2d'); g.setTransform(SC,0,0,SC,0,0); g.imageSmoothingEnabled=false;
   let acc=0, last=performance.now();
-  const loop=now=>{ acc+=Math.min(.25,(now-last)/1000); last=now; while(acc>=DT){ RT.step(); acc-=DT; } RT.draw(g); RAF=requestAnimationFrame(loop); };
+  const loop=now=>{ acc+=Math.min(.25,(now-last)/1000); last=now; while(acc>=DT){ RT.step(); acc-=DT; } RT.draw(g); if(!saved&&(RT.state==='won'||RT.state==='lost')){ saved=true; try{ if(RT.score>RT.best) localStorage.setItem('best_'+CFG.id,RT.score); }catch(e){} } RAF=requestAnimationFrame(loop); };
   RAF=requestAnimationFrame(loop);
   $('#simMsg').textContent=RT.err?'Erreur : '+RT.err:'';
   $('#scr').focus();
 }
-function simStop(){ cancelAnimationFrame(RAF); RT=null; const g=$('#scr').getContext('2d'); g.setTransform(SC,0,0,SC,0,0); g.fillStyle='#1e1e2a'; g.fillRect(0,0,SCR_W,SCR_H); g.fillStyle='#8890a8'; g.font='9px monospace'; g.textAlign='center'; g.fillText('Clique sur Lancer le jeu',SCR_W/2,SCR_H/2); g.textAlign='left'; }
+function simStop(){ cancelAnimationFrame(RAF); RT=null; stopMusic(); const g=$('#scr').getContext('2d'); g.setTransform(SC,0,0,SC,0,0); g.fillStyle='#1e1e2a'; g.fillRect(0,0,SCR_W,SCR_H); g.fillStyle='#8890a8'; g.font='9px monospace'; g.textAlign='center'; g.fillText('Clique sur Lancer le jeu',SCR_W/2,SCR_H/2); g.textAlign='left'; }
 const KEYMAP={ArrowUp:'haut',ArrowDown:'bas',ArrowLeft:'gauche',ArrowRight:'droite',' ':'A',Enter:'B',z:'haut',s:'bas',q:'gauche',d:'droite',x:'B'};
 function keyEv(e,down){ const b=KEYMAP[e.key]; if(!b||!RT) return; const act=document.activeElement;
   if(act&&(act.tagName==='INPUT'||act.tagName==='TEXTAREA')) return;
   if(!$('#sim').matches(':hover')&&!$('#sim').contains(act)&&act!==document.body) return;
+  if(b==='A'&&down&&(RT.state==='won'||RT.state==='lost')){ e.preventDefault(); simStart(); return; }
   RT.keys[b]=down; e.preventDefault(); }
 document.addEventListener('keydown',e=>keyEv(e,true)); document.addEventListener('keyup',e=>keyEv(e,false));
 
@@ -3322,11 +3524,33 @@ function renderTabs(){
   const n=MS.filter((m,i)=>ST.done[i]).length;
   $('#prog').textContent=isEval?'':n+' / '+MS.length+' missions réussies';
 }
+const CATCOL={Jeu:COL.jeu,Sprites:COL.sprites,'Contrôleur':COL.controleur,Info:COL.info,Musique:COL.musique,Effets:COL.effets,Boucles:COL.boucles,Logique:COL.logique,Variables:COL.variables,Maths:COL.maths,Texte:COL.texte,Fonctions:COL.fonctions,Listes:COL.listes};
+function hlCat(cat){
+  document.querySelectorAll('.cathl').forEach(e=>e.classList.remove('cathl'));
+  if(!cat) return;
+  const rows=[...document.querySelectorAll('.blocklyToolboxCategory, .blocklyTreeRow')];
+  const r=rows.find(e=>(e.textContent||'').trim()===cat); if(r) r.classList.add('cathl');
+}
+function renderStep(){
+  const m=MS[CUR]; if(!m.steps||!m.steps.length) return;
+  ST.stp=ST.stp||{}; let k=Math.min(ST.stp[CUR]||0,m.steps.length-1); const S=m.steps[k], n=m.steps.length;
+  const box=$('#tuto'); if(!box) return;
+  box.innerHTML=`<div class="th"><span>Étape <b>${k+1}</b> sur ${n}</span><span class="chip" style="background:${CATCOL[S.cat]||'#555'}">${S.cat}</span></div>
+   <p class="tt">${S.t}</p>${S.img?`<img class="ti" src="${S.img}" alt="Blocs à poser" title="Clique pour agrandir">`:''}
+   <div class="tdots">${m.steps.map((_,i)=>`<i class="${i<k?'d':i===k?'c':''}"></i>`).join('')}</div>
+   <div class="tn"><button class="btn" id="stPrev" ${k===0?'disabled':''}>Précédente</button>${k<n-1?'<button class="btn prim" id="stNext">Étape suivante</button>':'<button class="btn go" id="stTest">Lancer le jeu pour tester</button>'}</div>`;
+  hlCat(S.cat);
+  const go=d=>{ ST.stp[CUR]=Math.max(0,Math.min(n-1,k+d)); stSave(); renderStep(); };
+  $('#stPrev').onclick=()=>go(-1); const nx=$('#stNext'); if(nx) nx.onclick=()=>go(1);
+  const tb=$('#stTest'); if(tb) tb.onclick=()=>{ simStart(); };
+  const im=box.querySelector('.ti'); if(im) im.onclick=()=>{ $('#modal').innerHTML=`<div class="box big"><img src="${S.img}" style="max-width:100%"><div class="row"><button class="btn prim" id="zc">Fermer</button></div></div>`; $('#modal').classList.add('on'); $('#zc').onclick=()=>$('#modal').classList.remove('on'); };
+}
 function renderMission(){
   const m=MS[CUR];
   const tests=m.tests.map((t,k)=>`<li data-k="${k}"><span class="ck"></span>${t.txt}</li>`).join('');
   $('#mis').innerHTML=`<div class="mh"><span class="num">${isEval?'Partie':'Mission'} ${CUR+1}</span>${isEval?`<span class="pts">${m.pts} pts</span>`:''}</div>
    <h2>${m.titre}</h2><p class="pitch">${m.pitch}</p>
+   ${m.steps&&m.steps.length&&!isEval?'<div id="tuto" class="tuto"></div>':''}
    ${m.img?`<div class="mimg">${m.img}</div>`:''}
    <h3>${isEval?'Ce que ton programme doit faire':'Objectifs'}</h3><ul class="tests">${tests}</ul>
    ${m.aide&&!isEval?`<details class="aide"><summary>Indice</summary><div>${m.aide}</div></details>`:''}
@@ -3335,6 +3559,7 @@ function renderMission(){
    <div id="res"></div>`;
   if(ST.done[CUR]&&!isEval) markTests(m.tests.map(()=>true),true);
   const vb=$('#verif'); if(vb) vb.onclick=verify;
+  renderStep(); if(!m.steps||isEval) hlCat(null);
 }
 function markTests(r,silent){
   document.querySelectorAll('#mis .tests li').forEach((li,k)=>{ li.classList.toggle('good',!!r[k]); li.classList.toggle('bad',!r[k]&&!silent); });
@@ -3437,13 +3662,30 @@ function init(){
   $('#zin').onclick=()=>WS.zoomCenter(1); $('#zout').onclick=()=>WS.zoomCenter(-1); $('#zclean').onclick=()=>{ WS.cleanUp(); WS.scrollCenter(); };
   $('#play').onclick=simStart; $('#stop').onclick=simStop; $('#rendre').onclick=submit; $('#prof').onclick=profSolution;
   document.querySelectorAll('.pad [data-b]').forEach(b=>{ const k=b.dataset.b;
-    const dn=e=>{ e.preventDefault(); if(RT) RT.keys[k]=true; }, up=e=>{ e.preventDefault(); if(RT) RT.keys[k]=false; };
+    const dn=e=>{ e.preventDefault(); if(RT&&k==='A'&&(RT.state==='won'||RT.state==='lost')){ simStart(); return; } if(RT) RT.keys[k]=true; }, up=e=>{ e.preventDefault(); if(RT) RT.keys[k]=false; };
     b.addEventListener('pointerdown',dn); b.addEventListener('pointerup',up); b.addEventListener('pointerleave',up); });
   $('#rendre').textContent=isEval?'Rendre ma copie':'Rendre mon TP';
-  const go=()=>{ idLine(); if(isEval&&ST.rendu){ openMission(0); WS.options.readOnly=true; showEnd(); return; } openMission(Math.min(ST.cur||0,MS.length-1)); };
+  $('#aide').onclick=()=>tour(0);
+  const go=()=>{ idLine(); setTimeout(()=>{ let seen=false; try{ seen=!!localStorage.getItem('arcade_tour'); }catch(e){} if(!seen&&!isEval) tour(0); },600); if(isEval&&ST.rendu){ openMission(0); WS.options.readOnly=true; showEnd(); return; } openMission(Math.min(ST.cur||0,MS.length-1)); };
   if(!ST.id||(isEval&&!ST.rendu)) { askId(go); if(ST.id){ $('#idN').value=ST.id.nom; $('#idP').value=ST.id.prenom; $('#idC').value=ST.id.classe; } } else go();
   window.addEventListener('beforeunload',()=>{ ST.cur=CUR; if(WS) ST.xml[CUR]=wsXml(WS); stSave(); });
   simStop();
+}
+/* ---------- visite guidée de l'interface ---------- */
+const TOUR=[['.blocklyToolboxDiv','Les catégories de blocs. Clique sur une catégorie : ses blocs apparaissent, il suffit de les glisser.'],
+ ['#blk','L\u2019espace de travail. Glisse les blocs ici et emboîte-les sous l\u2019événement, comme des pièces de puzzle.'],
+ ['#tuto','Le tutoriel. Chaque étape te montre en image le bloc à poser (surligné en jaune) et la catégorie où le trouver.'],
+ ['#play','Lance ton jeu pour le tester. Clique sur l\u2019écran du jeu, puis joue avec les flèches et la barre Espace.'],
+ ['#verif','Quand ton jeu fonctionne, vérifie ta mission : les objectifs réussis se cochent en vert.']];
+function tour(k){ k=k||0; const old=document.getElementById('tourBox'); if(old) old.remove(); document.querySelectorAll('.tourOn').forEach(e=>e.classList.remove('tourOn'));
+  while(k<TOUR.length&&!document.querySelector(TOUR[k][0])) k++;
+  if(k>=TOUR.length){ try{ localStorage.setItem('arcade_tour','1'); }catch(e){} return; }
+  const el=document.querySelector(TOUR[k][0]), r=el.getBoundingClientRect(); el.classList.add('tourOn');
+  const b=document.createElement('div'); b.id='tourBox'; b.innerHTML=`<div class="tb"><b>${k+1} / ${TOUR.length}</b><p>${TOUR[k][1]}</p><div class="row"><button class="btn" id="tSkip">Passer</button><button class="btn prim" id="tNext">${k<TOUR.length-1?'Suivant':'C\u2019est parti !'}</button></div></div>`;
+  document.body.appendChild(b); const box=b.firstChild; const W=330;
+  let x=r.right+14, y=r.top+10; if(x+W>innerWidth-10){ x=Math.max(10,r.left-W-14); } if(x<10) x=10; if(r.width>innerWidth*.4){ x=r.left+r.width/2-W/2; y=r.top+40; }
+  box.style.left=Math.round(x)+'px'; box.style.top=Math.round(Math.min(y,innerHeight-190))+'px';
+  document.getElementById('tNext').onclick=()=>tour(k+1); document.getElementById('tSkip').onclick=()=>tour(99);
 }
 window.addEventListener('load',init);
 </script>

@@ -2,15 +2,15 @@ from dsl import *
 from seq5e import M, OV, MOVE_R, P, INV
 CL4 = ['4A', '4B', '4C', '4D', '4E']
 EMPTY = prog(start())
-TB4 = ['jeu', 'sprites', 'controleur', 'info', 'musique', 'boucles', 'logique', 'variables', 'maths', 'texte']
-H4 = ['controls_forEach', 'sp_follow']
+TB4 = ['jeu', 'sprites', 'controleur', 'info', 'musique', 'effets', 'boucles', 'logique', 'variables', 'maths', 'texte']
+H4 = ['controls_forEach', 'sp_follow', 'cam_follow', 'world_size']
 POS = lambda kind, pts: "const s=T.all('%s'); const want=%s; return s.length===want.length&&want.every(([x,y])=>s.some(o=>Math.abs(o.x-x)<1&&Math.abs(o.y-y)<1));" % (kind, pts)
 DX = lambda v, tol: P + "const x=p.x; T.hold('droite',1); const d=p.x-x; return Math.abs(d-%s)<%s;" % (v, tol)
 
 # ---------------- TP 1 : coordonnées et variables ----------------
 corners = [newsprite('etoile', 'etoile', 'Bonus'), setpos('etoile', 10, 10), newsprite('etoile', 'etoile', 'Bonus'), setpos('etoile', 150, 10),
            newsprite('etoile', 'etoile', 'Bonus'), setpos('etoile', 10, 110), newsprite('etoile', 'etoile', 'Bonus'), setpos('etoile', 150, 110)]
-hero = [newsprite('monSprite', 'heros', 'Joueur'), setv('vitesse', 80), move('monSprite', getv('vitesse'), getv('vitesse'))]
+hero = [scene('ciel'), music('aventure'), newsprite('monSprite', 'heros', 'Joueur'), setv('vitesse', 80), move('monSprite', getv('vitesse'), getv('vitesse'))]
 turbo = button('A', changev('vitesse', 20), move('monSprite', getv('vitesse'), getv('vitesse')), sound('saut'))
 cpt = button('B', changev('sauts', 1), say('monSprite', join('Sauts : ', getv('sauts'))))
 tun1 = iff(cmp(sget('monSprite', 'x'), '>', 155), [sset('monSprite', 'x', 5)])
@@ -40,16 +40,16 @@ TP1 = dict(id='tp_arcade4_1', mode='tp', title='TP 1 — Coordonnées et variabl
 ])
 
 # ---------------- TP 2 : conditions ----------------
-base = [newsprite('monSprite', 'heros', 'Joueur'), move('monSprite'), flag('monSprite', 'stay'), newsprite('piece', 'piece', 'Nourriture'), rndpos('piece')]
-eat = overlap('Joueur', 'Nourriture', addscore(1), rndpos('autreSprite'), sound('piece'))
+base = [scene('grotte'), music('mystere'), newsprite('monSprite', 'heros', 'Joueur'), move('monSprite'), flag('monSprite', 'stay'), newsprite('piece', 'cristal', 'Nourriture'), rndpos('piece')]
+eat = overlap('Joueur', 'Nourriture', addscore(1), effect('autreSprite', 'etincelles'), rndpos('autreSprite'), sound('piece'))
 bomb = [newsprite('bombe', 'bombe', 'Ennemi'), rndpos('bombe')]
-boom = overlap('Joueur', 'Ennemi', iff(cmp(score(), '>', 0), [addscore(-1)], [gameover(False)]), rndpos('autreSprite'))
+boom = overlap('Joueur', 'Ennemi', effect('autreSprite', 'explosion'), shake('fort'), iff(cmp(score(), '>', 0), [addscore(-1)], [gameover(False)]), rndpos('autreSprite'))
 u2 = iff(cmp(score(), '>=', 5), [bg('#78dc52')])
 u4 = iff(land(cmp(sget('monSprite', 'x'), '<', 20), cmp(sget('monSprite', 'y'), '<', 20)), [say('monSprite', 'Zone secrète !')])
 u5 = iff(cmp(score(), '>=', 10), [gameover(True)])
 u6 = iff(cmp(score(), '>=', 5), [move('monSprite', 150, 150)], [move('monSprite', 100, 100)])
 SAFE = "const p=T.one('Joueur'); p.x=80; p.y=60; T.all('Nourriture').concat(T.all('Ennemi')).forEach(s=>{s.x=150;s.y=110;});"
-TP2 = dict(id='tp_arcade4_2', mode='tp', title='TP 2 — Conditions : la mine d’or', classes=CL4,
+TP2 = dict(id='tp_arcade4_2', mode='tp', title='TP 2 — Conditions : la mine de cristaux', classes=CL4,
   intro='Le jeu réagit selon la situation : si… alors… sinon.', toolbox=TB4, hide=H4, start=EMPTY, missions=[
   M('La mine d’or', 'Le héros ramasse des pièces (Nourriture) : +1 point, son, et la pièce réapparaît ailleurs.',
     [('Le héros bouge avec les flèches', MOVE_R), ('Une pièce rapporte 1 point', OV('Joueur', 'Nourriture') + "return T.rt.score===1;"),
@@ -78,10 +78,10 @@ TP2 = dict(id='tp_arcade4_2', mode='tp', title='TP 2 — Conditions : la mine d�
 # ---------------- TP 3 : boucles ----------------
 row_rand = [repeat(8, newsprite('brique', 'brique', 'Obstacle'), rndpos('brique'))]
 row = [forr('i', 0, 7, newsprite('brique', 'brique', 'Obstacle'), setpos('brique', ar(10, '+', ar(20, '*', getv('i'))), 10))]
-wall = [forr('j', 0, 2, forr('i', 0, 7, newsprite('brique', 'brique', 'Obstacle'), setpos('brique', ar(10, '+', ar(20, '*', getv('i'))), ar(10, '+', ar(10, '*', getv('j'))))))]
-pad = [newsprite('raquette', 'raquette', 'Joueur'), setpos('raquette', 80, 112), move('raquette', 120, 0), flag('raquette', 'stay')]
+wall = [forr('j', 0, 2, forr('i', 0, 7, newsprite('brique', 'brique', 'Obstacle'), setpos('brique', ar(10, '+', ar(20, '*', getv('i'))), ar(10, '+', ar(10, '*', getv('j')))), iff(cmp(getv('j'), '==', 1), [setimg('brique', 'brique_bleue')]), iff(cmp(getv('j'), '==', 2), [setimg('brique', 'brique_verte')])))]
+pad = [scene('neon'), music('action'), newsprite('raquette', 'raquette', 'Joueur'), setpos('raquette', 80, 112), move('raquette', 120, 0), flag('raquette', 'stay')]
 ball = [newsprite('balle', 'balle', 'Projectile'), setpos('balle', 80, 90), sset('balle', 'vx', 60), sset('balle', 'vy', -60), flag('balle', 'bounce')]
-hitb = overlap('Projectile', 'Obstacle', destroy('autreSprite'), addscore(1), sset('sprite', 'vy', ar(0, '-', sget('sprite', 'vy'))), sound('piece'))
+hitb = overlap('Projectile', 'Obstacle', effect('autreSprite', 'etincelles'), destroy('autreSprite'), addscore(1), sset('sprite', 'vy', ar(0, '-', sget('sprite', 'vy'))), sound('piece'))
 WALL = POS('Obstacle', '[...Array(24)].map((_,k)=>[10+20*(k%8),10+10*Math.floor(k/8)])')
 TP3 = dict(id='tp_arcade4_3', mode='tp', title='TP 3 — Boucles : le casse-briques', classes=CL4,
   intro='Les boucles répètent des instructions : idéal pour construire un mur de briques.', toolbox=TB4, hide=H4, start=EMPTY, missions=[
@@ -91,7 +91,7 @@ TP3 = dict(id='tp_arcade4_3', mode='tp', title='TP 3 — Boucles : le casse-briq
   M('Bien alignées', 'Les 8 briques forment une ligne en haut : y = 10, et x = 10 + 20 × i, pour i de 0 à 7.',
     [('8 briques alignées en y = 10, tous les 20 pixels', POS('Obstacle', '[0,1,2,3,4,5,6,7].map(i=>[10+20*i,10])')), ('Tu as utilisé une boucle « pour »', "return T.blocks('controls_for')>=1;")],
     prog(start(*row)), aide='« pour i de 0 à 7 ». Dans x, construis le calcul <b>10 + 20 × i</b> avec deux blocs de Maths.', cahier='calcule x pour i = 0, 1, 2 et 7.'),
-  M('Le mur', 'Trois rangées de 8 briques : la rangée j (de 0 à 2) est en y = 10 + 10 × j.',
+  M('Le mur', 'Trois rangées de 8 briques : la rangée j (de 0 à 2) est en y = 10 + 10 × j. La 2e rangée (j = 1) est bleue, la 3e (j = 2) est verte.',
     [('24 briques bien rangées', WALL), ('Deux boucles l’une dans l’autre', "return T.blocks('controls_for')+T.blocks('controls_repeat_ext')>=2;")],
     prog(start(*wall)), aide='Une boucle « pour j » qui contient la boucle « pour i ».'),
   M('La raquette', 'Ajoute la raquette (Joueur) en x = 80, y = 112. Elle se déplace seulement à gauche et à droite (vitesse 120) et reste dans l’écran.',
@@ -111,9 +111,9 @@ B4 = prog(start(*(wall + pad + ball)), hitb)
 bounce_pad = overlap('Projectile', 'Joueur', sset('sprite', 'vy', ar(0, '-', absn(sget('sprite', 'vy')))), sound('saut'))
 lives = iff(cmp(sget('balle', 'y'), '>', 115), [addlife(-1), setpos('balle', 80, 60), sset('balle', 'vy', -60)])
 win = iff(cmp(kcount('Obstacle'), '==', 0), [gameover(True)])
-hitb2 = overlap('Projectile', 'Obstacle', destroy('autreSprite'), addscore(1), sset('sprite', 'vy', ar(0, '-', sget('sprite', 'vy'))), sound('piece'),
+hitb2 = overlap('Projectile', 'Obstacle', effect('autreSprite', 'etincelles'), destroy('autreSprite'), addscore(1), sset('sprite', 'vy', ar(0, '-', sget('sprite', 'vy'))), sound('piece'),
                 iff(cmp(rnd(1, 4), '==', 1), [newsprite('coeur', 'coeur', 'Bonus'), setpos('coeur', sget('autreSprite', 'x'), sget('autreSprite', 'y')), sset('coeur', 'vy', 30), flag('coeur', 'autoDestroy')]))
-catch = overlap('Joueur', 'Bonus', addlife(1), destroy('autreSprite'), sound('victoire'))
+catch = overlap('Joueur', 'Bonus', addlife(1), effect('autreSprite', 'coeurs'), destroy('autreSprite'), sound('bonus'))
 accel = every(10000, sset('balle', 'vx', ar(sget('balle', 'vx'), '*', 1.2)), sset('balle', 'vy', ar(sget('balle', 'vy'), '*', 1.2)))
 st4 = wall + pad + ball + [setlife(3)]
 BL = "const b=T.one('Projectile');"

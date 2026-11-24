@@ -14,6 +14,26 @@
 
 
 
+
+## Jeux plus spectaculaires, TP guidés et Atelier 3D (24/11/2026)
+
+- **Studio Arcade** : décors animés (forêt, nuit, espace, océan, ciel, néon, grotte), musiques, effets
+  (explosion, étincelles, confettis, fumée), écran qui tremble, barre de vie, boss 32×32, caméra qui
+  suit et grand monde (3e TP 4), meilleur score, écran de fin « A pour rejouer ». TP renommés :
+  5e « Le verger magique », « Le manoir hanté » ; 4e « la mine de cristaux ».
+- **TP de programmation guidés** : chaque mission a un tutoriel pas à pas (306 étapes) avec l'image
+  du bloc à ajouter, la catégorie surlignée dans la boîte à outils, et une visite guidée de l'interface.
+- **TP CAO guidés** (5e TP 1 à 4, 4e, 3e) : tutoriel généré depuis la pièce cible (plan, outil, valeurs,
+  bossage / enlèvement) avec la vue 3D attendue après chaque fonction (92 vues). Les valeurs qui sont
+  la réponse à la question (ou à calculer en 4e TP 1) sont masquées par « ? ». Missions « corriger un
+  modèle », assemblage et suite de modèle : méthode résumée seule.
+- **Atelier 3D** (nouveau, bonus dans les hubs CAO et l'index, colonne « Atelier 3D » dans le suivi) :
+  `08_atelier_3d_5e.html` (anime un héros riggé : pose, coucou, saut, danse, révérence),
+  `08_atelier_3d_4e.html` (placer 15 articulations, hiérarchie, lier la peau, saut, salto arrière),
+  `08_atelier_3d_3e.html` (rig + cycle de marche : contacts, passages, courbes lisses, balancier du torse).
+  Missions vérifiées automatiquement, captures à chaque étape, copies dans `scores_tp/anim3d_*`.
+  WebGL requis, ≈ 1,5 Mo par fichier. Sources : `_outils/atelier_3d`.
+
 ## Séquence 5e « La conception assistée par ordinateur » (18/11/2026)
 
 Nouvelle séquence 5e, placée après « Design & ergonomie » dans `index.html` et dans le suivi.

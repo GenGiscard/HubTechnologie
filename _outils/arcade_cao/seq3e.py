@@ -2,16 +2,16 @@ from dsl import *
 from seq5e import M, OV, MOVE_R, P, INV
 CL3 = ['3A', '3B', '3C', '3D', '3E', '3PM']
 EMPTY = prog(start())
-TB3 = ['jeu', 'sprites', 'controleur', 'info', 'musique', 'boucles', 'logique', 'variables', 'maths', 'texte', 'listes', 'fonctions']
+TB3 = ['jeu', 'sprites', 'controleur', 'info', 'musique', 'effets', 'boucles', 'logique', 'variables', 'maths', 'texte', 'listes', 'fonctions']
 H3 = ['sp_follow']
-hero = [newsprite('monSprite', 'heros', 'Joueur'), move('monSprite'), flag('monSprite', 'stay'), setlife(3)]
+hero = [scene('nuit'), music('action'), newsprite('monSprite', 'heros', 'Joueur'), move('monSprite'), flag('monSprite', 'stay'), setlife(3)]
 
 # ---------------- TP 1 : fonctions ----------------
-f_app = fn('apparaitre', newsprite('ennemi', 'fantome', 'Ennemi'), setpos('ennemi', rnd(10, 150), 0), sset('ennemi', 'vy', 40), flag('ennemi', 'autoDestroy'))
-f_app3 = fn('apparaitre', newsprite('ennemi', 'fantome', 'Ennemi'), setpos('ennemi', rnd(10, 150), 0), sset('ennemi', 'vy', getv('vitesse')), flag('ennemi', 'autoDestroy'), args=['vitesse'])
-f_app5 = fn('apparaitre', newsprite('ennemi', 'fantome', 'Ennemi'), setpos('ennemi', call('x_au_hasard', ret=True), 0), sset('ennemi', 'vy', getv('vitesse')), flag('ennemi', 'autoDestroy'), args=['vitesse'])
+f_app = fn('apparaitre', newsprite('ennemi', 'chauve_souris', 'Ennemi'), setpos('ennemi', rnd(10, 150), 0), sset('ennemi', 'vy', 40), flag('ennemi', 'autoDestroy'))
+f_app3 = fn('apparaitre', newsprite('ennemi', 'chauve_souris', 'Ennemi'), setpos('ennemi', rnd(10, 150), 0), sset('ennemi', 'vy', getv('vitesse')), flag('ennemi', 'autoDestroy'), args=['vitesse'])
+f_app5 = fn('apparaitre', newsprite('ennemi', 'chauve_souris', 'Ennemi'), setpos('ennemi', call('x_au_hasard', ret=True), 0), sset('ennemi', 'vy', getv('vitesse')), flag('ennemi', 'autoDestroy'), args=['vitesse'])
 f_x = fn('x_au_hasard', ret=rnd(10, 150))
-f_pv = fn('perdre_vie', addlife(-1), sound('degat'), say('monSprite', 'Aïe !'))
+f_pv = fn('perdre_vie', addlife(-1), shake('fort'), sound('degat'), say('monSprite', 'Aïe !'))
 f_win = fn('victoire', splash('Tu as survécu !'), gameover(True))
 bombs = [repeat(2, newsprite('bombe', 'bombe', 'Obstacle'), rndpos('bombe'))]
 SAFE = "const p=T.one('Joueur'); p.x=80; p.y=110; T.all('Obstacle').forEach(s=>{s.x=150;s.y=60;});"
@@ -47,7 +47,7 @@ TP1 = dict(id='tp_arcade3_1', mode='tp', title='TP 1 — Fonctions : la fabrique
 ])
 
 # ---------------- TP 2 : listes ----------------
-b2 = [newsprite('monSprite', 'heros', 'Joueur'), move('monSprite'), flag('monSprite', 'stay'), newsprite('piece', 'piece', 'Nourriture'), rndpos('piece')]
+b2 = [scene('ocean'), music('aventure'), newsprite('monSprite', 'poisson', 'Joueur'), move('monSprite'), flag('monSprite', 'stay'), newsprite('piece', 'piece', 'Nourriture'), rndpos('piece')]
 msgs = [setv('messages', lst('Bravo !', 'Super !', 'Miam !'))]
 eat1 = overlap('Joueur', 'Nourriture', addscore(1), rndpos('autreSprite'), say('monSprite', lrand(getv('messages'))))
 lvl = [setv('vitesses', lst(40, 60, 90, 130)), setv('niveau', 1), newsprite('fantome', 'fantome', 'Ennemi'), setpos('fantome', 20, 20), sset('fantome', 'vx', lget(getv('vitesses'), getv('niveau'))), flag('fantome', 'bounce'), newsprite('etoile', 'etoile', 'Bonus'), rndpos('etoile')]
@@ -91,7 +91,7 @@ TP2 = dict(id='tp_arcade3_2', mode='tp', title='TP 2 — Listes : messages, nive
 
 # ---------------- TP 3 : algorithmes ----------------
 pl = [newsprite('monSprite', 'heros', 'Joueur'), setpos('monSprite', 20, 60), move('monSprite', 100, 0), flag('monSprite', 'stay'), sset('monSprite', 'ay', 300)]
-slime = [newsprite('slime', 'slime', 'Ennemi'), setpos('slime', 150, 20)]
+slime = [scene('ciel'), newsprite('slime', 'slime', 'Ennemi'), setpos('slime', 150, 20)]
 chase = [iff(cmp(sget('monSprite', 'x'), '>', sget('slime', 'x')), [sset('slime', 'vx', 30)], [sset('slime', 'vx', -30)]),
          iff(cmp(sget('monSprite', 'y'), '>', sget('slime', 'y')), [sset('slime', 'vy', 30)], [sset('slime', 'vy', -30)])]
 ground = iff(cmp(sget('monSprite', 'y'), '>', 100), [sset('monSprite', 'y', 100), sset('monSprite', 'vy', 0)])
@@ -126,39 +126,43 @@ TP3 = dict(id='tp_arcade3_3', mode='tp', title='TP 3 — Algorithmes de jeu', cl
 ])
 
 # ---------------- TP 4 : projet plateforme ----------------
-pl4 = [newsprite('monSprite', 'heros', 'Joueur'), setpos('monSprite', 20, 60), move('monSprite', 80, 0), flag('monSprite', 'stay'), sset('monSprite', 'ay', 300), bg('#87f2ff')]
+pl4 = [newsprite('monSprite', 'heros', 'Joueur'), setpos('monSprite', 20, 60), move('monSprite', 80, 0), flag('monSprite', 'stay'), sset('monSprite', 'ay', 300), scene('foret')]
+pl4w = pl4 + [world(400, 120), camf('monSprite'), music('aventure')]
 G4 = prog(start(*pl4), update(iff(cmp(sget('monSprite', 'y'), '>', 100), [sset('monSprite', 'y', 100), sset('monSprite', 'vy', 0)])), button('A', iff(cmp(sget('monSprite', 'y'), '>=', 99), [sset('monSprite', 'vy', -150)])))
-plats = [setv('px', lst(40, 85, 130)), setv('py', lst(85, 65, 45)), forr('i', 1, 3, newsprite('plateforme', 'mur', 'Obstacle'), setpos('plateforme', lget(getv('px'), getv('i')), lget(getv('py'), getv('i'))))]
+plats = [setv('px', lst(40, 85, 130, 190, 250, 310)), setv('py', lst(85, 65, 45, 70, 50, 75)), forr('i', 1, llen(getv('px')), newsprite('plateforme', 'mur', 'Obstacle'), setpos('plateforme', lget(getv('px'), getv('i')), lget(getv('py'), getv('i'))))]
 ground2 = iff(cmp(sget('monSprite', 'y'), '>', 100), [sset('monSprite', 'y', 100), sset('monSprite', 'vy', 0), setv('au_sol', True)])
 land = overlap('Joueur', 'Obstacle', iff(cmp(sget('sprite', 'vy'), '>', 0), [sset('sprite', 'y', ar(sget('autreSprite', 'haut'), '-', 8)), sset('sprite', 'vy', 0), setv('au_sol', True)]))
 land0 = overlap('Joueur', 'Obstacle', iff(cmp(sget('sprite', 'vy'), '>', 0), [sset('sprite', 'y', ar(sget('autreSprite', 'haut'), '-', 8)), sset('sprite', 'vy', 0)]))
 jump2 = button('A', iff(getv('au_sol'), [sset('monSprite', 'vy', -170), setv('au_sol', False), sound('saut')]))
-coins = [forr('i', 1, 3, newsprite('piece', 'piece', 'Nourriture'), setpos('piece', lget(getv('px'), getv('i')), ar(lget(getv('py'), getv('i')), '-', 18)))]
-eatc = overlap('Joueur', 'Nourriture', addscore(1), destroy('autreSprite'), sound('piece'))
-flagp = [newsprite('drapeau', 'drapeau', 'Bonus'), setpos('drapeau', 150, 92)]
-fin = overlap('Joueur', 'Bonus', iff(cmp(kcount('Nourriture'), '==', 0), [gameover(True)], [say('monSprite', 'Il manque des pièces !')]))
-PLAT = "const s=T.all('Obstacle'); return [[40,85],[85,65],[130,45]].every(([x,y])=>s.some(o=>Math.abs(o.x-x)<1&&Math.abs(o.y-y)<1));"
+coins = [forr('i', 1, llen(getv('px')), newsprite('piece', 'piece', 'Nourriture'), setpos('piece', lget(getv('px'), getv('i')), ar(lget(getv('py'), getv('i')), '-', 18)))]
+eatc = overlap('Joueur', 'Nourriture', addscore(1), effect('autreSprite', 'etincelles'), destroy('autreSprite'), sound('piece'))
+flagp = [newsprite('drapeau', 'drapeau', 'Bonus'), setpos('drapeau', 385, 92)]
+fin = overlap('Joueur', 'Bonus', iff(cmp(kcount('Nourriture'), '==', 0), [effect('autreSprite', 'confettis'), gameover(True)], [say('monSprite', 'Il manque des pièces !')]))
+PLAT = "const s=T.all('Obstacle'); return s.length===6&&[[40,85],[85,65],[130,45],[190,70],[250,50],[310,75]].every(([x,y])=>s.some(o=>Math.abs(o.x-x)<1&&Math.abs(o.y-y)<1));"
 DROP = P + "p.x=85; p.y=20; p.vy=0; T.run(1.5);"
 TP4 = dict(id='tp_arcade3_4', mode='tp', title='TP 4 — Projet : jeu de plateforme', classes=CL3,
   intro='La gravité, le sol et le saut sont prêts. Construis un vrai niveau : plateformes, pièces et drapeau d’arrivée.', toolbox=TB3, hide=H3, start=G4, missions=[
-  M('Les plateformes', 'Deux listes : <b>px</b> = [40, 85, 130] et <b>py</b> = [85, 65, 45]. Avec une boucle « pour i de 1 à 3 », crée 3 plateformes (Obstacle, image mur) en (élément i de px ; élément i de py).',
-    [('3 plateformes aux bonnes positions', PLAT), ('Une boucle et des listes sont utilisées', "return T.blocks('controls_for')>=1&&T.blocks('lists_getIndex')>=2;")],
-    prog(start(*(pl4 + plats)), update(iff(cmp(sget('monSprite', 'y'), '>', 100), [sset('monSprite', 'y', 100), sset('monSprite', 'vy', 0)])), button('A', iff(cmp(sget('monSprite', 'y'), '>=', 99), [sset('monSprite', 'vy', -150)])))),
+  M('Un grand monde', 'Le niveau fait 400 pixels de large : la caméra suit le héros, dans une forêt animée, avec une musique d\u2019aventure.',
+    [('Le monde fait 400 de large', "return T.rt.W===400;"), ('La caméra suit le héros', P + "return T.rt.camT===p;"), ('Le héros peut aller au bout du monde', P + "T.hold('droite',5); return p.x>380;"), ('Une musique joue', "return !!T.rt.music;")],
+    prog(start(*pl4w), update(iff(cmp(sget('monSprite', 'y'), '>', 100), [sset('monSprite', 'y', 100), sset('monSprite', 'vy', 0)])), button('A', iff(cmp(sget('monSprite', 'y'), '>=', 99), [sset('monSprite', 'vy', -150)]))), aide='<b>Effets</b> : « taille du monde : largeur 400 hauteur 120 » et « la caméra suit monSprite ».'),
+  M('Les plateformes', 'Deux listes : <b>px</b> = [40, 85, 130, 190, 250, 310] et <b>py</b> = [85, 65, 45, 70, 50, 75]. Avec une boucle « pour i de 1 à longueur de px », crée une plateforme (Obstacle, image mur) en (élément i de px ; élément i de py).',
+    [('6 plateformes aux bonnes positions', PLAT), ('Une boucle et des listes sont utilisées', "return T.blocks('controls_for')>=1&&T.blocks('lists_getIndex')>=2;")],
+    prog(start(*(pl4w + plats)), update(iff(cmp(sget('monSprite', 'y'), '>', 100), [sset('monSprite', 'y', 100), sset('monSprite', 'vy', 0)])), button('A', iff(cmp(sget('monSprite', 'y'), '>=', 99), [sset('monSprite', 'vy', -150)])))),
   M('Atterrir', 'Quand le héros touche une plateforme en tombant (vy > 0), il se pose dessus : son y devient « bord haut de la plateforme − 8 », et vy = 0.',
     [('Lâché au-dessus d’une plateforme, il reste dessus', DROP + "return Math.abs(p.y-(65-8-8))<3;"), ('Il ne traverse pas la plateforme', DROP + "return p.y<60;"), ('Le sol marche toujours', P + "p.x=10; p.y=20; T.run(1.5); return Math.abs(p.y-100)<1.5;")],
-    prog(start(*(pl4 + plats)), update(iff(cmp(sget('monSprite', 'y'), '>', 100), [sset('monSprite', 'y', 100), sset('monSprite', 'vy', 0)])), button('A', iff(cmp(sget('monSprite', 'y'), '>=', 99), [sset('monSprite', 'vy', -150)])), land0),
+    prog(start(*(pl4w + plats)), update(iff(cmp(sget('monSprite', 'y'), '>', 100), [sset('monSprite', 'y', 100), sset('monSprite', 'vy', 0)])), button('A', iff(cmp(sget('monSprite', 'y'), '>=', 99), [sset('monSprite', 'vy', -150)])), land0),
     aide='Événement « chevauche » Joueur / Obstacle. Le bord haut est dans le bloc « monSprite x » (menu déroulant).'),
   M('Sauter depuis une plateforme', 'Le test y ≥ 99 ne marche qu’au sol. Crée une variable <b>au_sol</b> : vrai quand il touche le sol ou atterrit, faux quand il saute. A fait sauter (vy = −170) seulement si au_sol est vrai.',
     [('Sur une plateforme, A fait sauter', DROP + "const y=p.y; T.tap('A'); T.run(.2); return p.y<y-12;"), ('Au sol, A fait sauter', P + "T.run(1.5); T.tap('A'); T.run(.2); return p.y<90;"), ('Pas de double saut', P + "T.run(1.5); T.tap('A'); T.run(.15); const v=p.vy; T.tap('A'); return p.vy>v-5;")],
-    prog(start(*(pl4 + plats)), update(ground2), jump2, land), aide='Le bloc « vrai / faux » est dans Logique. Dans « si », tu peux mettre directement la variable au_sol.'),
+    prog(start(*(pl4w + plats)), update(ground2), jump2, land), aide='Le bloc « vrai / faux » est dans Logique. Dans « si », tu peux mettre directement la variable au_sol.'),
   M('Les pièces', 'Une pièce (Nourriture) flotte 18 pixels au-dessus de chaque plateforme (utilise les mêmes listes). La toucher : +1 point, elle disparaît.',
-    [('3 pièces au-dessus des plateformes', "const s=T.all('Nourriture'); return s.length===3&&[[40,67],[85,47],[130,27]].every(([x,y])=>s.some(o=>Math.abs(o.x-x)<1&&Math.abs(o.y-y)<1));"),
+    [('6 pièces au-dessus des plateformes', "const s=T.all('Nourriture'); return s.length===6&&[[40,67],[85,47],[130,27],[190,52],[250,32],[310,57]].every(([x,y])=>s.some(o=>Math.abs(o.x-x)<1&&Math.abs(o.y-y)<1));"),
      ('Une pièce touchée rapporte 1 point et disparaît', P + "const f=T.all('Nourriture')[0]; f.x=p.x; f.y=p.y; T.run(.05); return T.rt.score===1&&!f.alive;")],
-    prog(start(*(pl4 + plats + coins)), update(ground2), jump2, land, eatc)),
-  M('Défi : le drapeau d’arrivée', 'Un drapeau (Bonus) en (150 ; 92). Le toucher fait gagner si toutes les pièces sont ramassées ; sinon le héros dit « Il manque des pièces ! ».',
+    prog(start(*(pl4w + plats + coins)), update(ground2), jump2, land, eatc)),
+  M('Défi : le drapeau d’arrivée', 'Un drapeau (Bonus) au bout du monde, en (385 ; 92). Le toucher fait gagner si toutes les pièces sont ramassées ; sinon le héros dit « Il manque des pièces ! ».',
     [('Toutes les pièces ramassées : gagné', P + "T.all('Nourriture').forEach(s=>s.alive=false); const d=T.one('Bonus'); if(!d) return false; d.x=p.x; d.y=p.y; T.run(.1); return T.rt.state==='won';"),
      ('Il reste des pièces : message, pas de victoire', P + "const d=T.one('Bonus'); if(!d) return false; d.x=p.x; d.y=p.y; T.run(.1); return T.rt.state==='run'&&p.say.length>0;")],
-    prog(start(*(pl4 + plats + coins + flagp)), update(ground2), jump2, land, eatc, fin)),
+    prog(start(*(pl4w + plats + coins + flagp)), update(ground2), jump2, land, eatc, fin)),
 ])
 
 # ---------------- Évaluation 3e ----------------

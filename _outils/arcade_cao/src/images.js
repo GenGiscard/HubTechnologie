@@ -253,9 +253,72 @@ poisson:{nom:'Poisson',px:[
 '................',
 '................']}
 };
+/* images supplémentaires */
+IMGS.heros.flip=true; IMGS.poisson.flip=true; IMGS.slime.flip=true; IMGS.fantome.flip=true;
+IMGS.brique_bleue={nom:'Brique bleue',from:'brique',map:{'2':'8','4':'9'}};
+IMGS.brique_verte={nom:'Brique verte',from:'brique',map:{'2':'6','4':'7'}};
+IMGS.brique_or={nom:'Brique dorée',from:'brique',map:{'2':'4','4':'5'}};
+IMGS.chauve_souris={nom:'Chauve-souris',flip:true,px:[
+'................',
+'................',
+'.f............f.',
+'.ff..f....f..ff.',
+'.fcf.fffff.fcf..',
+'.fccfcccccfccf..'.slice(0,16),
+'.fcccc2cc2cccf..',
+'.fccccccccccccf.',
+'..fccc1cc1cccf..',
+'...ffcccccccf...',
+'.....fcfcfff....',
+'......f.f.......',
+'................',
+'................',
+'................',
+'................']};
+IMGS.cristal={nom:'Cristal',px:[
+'.......ff.......',
+'......f99f......',
+'.....f9119f.....',
+'....f991199f....',
+'...f99911999f...',
+'..f9999119999f..',
+'..f6699999666f..',
+'...f66699666f...',
+'....f666666f....',
+'.....f6666f.....',
+'......f66f......',
+'.......ff.......',
+'................',
+'................',
+'................',
+'................']};
+IMGS.boss={nom:'Boss',size:[32,32],draw:(g)=>{ const P=(c,x,y,w,h)=>{ g.fillStyle=c; g.fillRect(x,y,w,h); };
+  for(let y=0;y<32;y++) for(let x=0;x<32;x++){ const dx=(x-15.5)/15, dy=(y-14)/12; const d=dx*dx+dy*dy; if(d<1&&y<26) P(d>.82?'#000000':(y<10?'#c25bff':'#8e2ec4'),x,y,1,1); }
+  P('#000',4,24,4,6); P('#000',12,24,3,7); P('#000',17,24,3,7); P('#000',24,24,4,6); P('#5c406c',5,24,2,5); P('#5c406c',13,24,1,6); P('#5c406c',18,24,1,6); P('#5c406c',25,24,2,5);
+  P('#ffffff',8,10,6,6); P('#ffffff',18,10,6,6); P('#ff2121',10,12,3,3); P('#ff2121',20,12,3,3); P('#000',8,8,6,2); P('#000',18,8,6,2);
+  P('#000',10,19,12,3); P('#ffffff',11,19,2,2); P('#ffffff',15,19,2,2); P('#ffffff',19,19,2,2); P('#fff609',14,1,4,3); P('#fff609',6,4,3,3); P('#fff609',23,4,3,3); }};
+IMGS.panier={nom:'Panier',px:[
+'................',
+'................',
+'................',
+'.....ffffff.....',
+'....f......f....',
+'...f........f...',
+'ffffffffffffffff',
+'fe4e4e4e4e4e4e4f',
+'f4e4e4e4e4e4e4ef',
+'fe4e4e4e4e4e4e4f',
+'.f4e4e4e4e4e4ef.',
+'.fe4e4e4e4e4e4f.',
+'..ffffffffffff..',
+'................',
+'................',
+'................']};
 /* rendu d'une image en canvas */
 function imgCanvas(key){
   const d=IMGS[key]; if(d._cv) return d._cv;
+  if(d.from){ const b=IMGS[d.from]; d.px=b.px.map(r=>r.split('').map(ch=>d.map[ch]||ch).join('')); }
+  if(d.draw){ const c=document.createElement('canvas'); c.width=d.size[0]; c.height=d.size[1]; d.draw(c.getContext('2d')); d.w=c.width; d.h=c.height; d._cv=c; return c; }
   const h=d.px.length, w=d.px[0].length, c=document.createElement('canvas'); c.width=w; c.height=h;
   const g=c.getContext('2d');
   d.px.forEach((row,y)=>{ for(let x=0;x<w;x++){ const col=PAL[row[x]]; if(col){ g.fillStyle=col; g.fillRect(x,y,1,1); } } });

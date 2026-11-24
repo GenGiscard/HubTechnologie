@@ -128,3 +128,10 @@ def js(o):
 
 def floor(x): return Blk('math_round', {'OP': 'ROUNDDOWN'}, {'NUM': x})
 def boolv(b): return Blk('logic_boolean', {'BOOL': 'TRUE' if b else 'FALSE'})
+# ---------- effets ----------
+def scene(n): return Blk('fx_scene', {'S': n})
+def effect(var, e): return Blk('fx_effect', {'E': e, 'VAR': var})
+def shake(f='faible'): return Blk('fx_shake', {'F': f})
+def music(m): return Blk('fx_music', {'M': m})
+def camf(var): return Blk('cam_follow', {'VAR': var})
+def world(w, h): return Blk('world_size', v={'W': w, 'H': h})
