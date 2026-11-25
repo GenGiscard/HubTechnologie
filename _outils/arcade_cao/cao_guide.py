@@ -72,6 +72,7 @@ def steps_for(m, hide=False):
         sens = {1: 'Normal', -1: 'Inversé', 0: 'Symétrique'}.get(f.get('dir', 1), 'Normal')
         st.append({'t': 'Clique sur <b>Valider l’esquisse</b>. Choisis <b>%s</b>, %s, sens <b>%s</b>, puis <b>Valider</b>. Ta pièce doit ressembler à l’image.' % (op, dep, sens), 'img': (k + 1),
                    'x': ('Le bossage pousse l’esquisse en 3D : il ajoute de la matière.' if f['op'] == 'boss' else 'L’enlèvement de matière creuse ou perce la pièce avec la forme de l’esquisse.') + (' « À travers tout » traverse toute la pièce.' if f.get('thru') else '')})
+    for g in m.get('guideExtra', []): st.append({'t': g['t'], 'x': g.get('x', '')})
     if used: st[0]['t'] += ' Les valeurs <b>?</b> ne sont pas données : lis le dessin et calcule-les.'
     st.append({'t': 'Compare avec la pièce cible (tourne-la), puis clique sur <b>Vérifier ma pièce</b>.' + (' Ensuite, suis la méthode résumée pour la suite.' if m.get('sim') or m.get('question') else '')})
     return st
@@ -94,6 +95,21 @@ def attach(cfgs, page, hide_ids=()):
             for s in st:
                 if 'img' in s: rid = '%s_%d_%d' % (cfg['id'], i, s['img']); req.append({'id': rid, 'feats': m['cible'][:s['img']], 'all': m['cible']}); s['img'] = rid
             plan.append((m, st))
+    dreq = []
+    for cfg in cfgs:
+        for i, m in enumerate(cfg['missions']):
+            if eligible(m) or not m.get('guide'): continue
+            for k, g in enumerate(m['guide']):
+                if 'state' in g:
+                    rid = '%s_d%d_%d' % (cfg['id'], i, k); dreq.append({'id': rid, 'features': m['start'], 'mat': m.get('mat', 0), 'state': g.pop('state')}); g['img'] = rid
+    if dreq:
+        json.dump(dreq, open('/tmp/drw_req.json', 'w'))
+        subprocess.run('NODE_PATH=$(npm root -g) node drw_shots.js %s /tmp/drw_req.json /tmp/drw_out.json' % page, shell=True, check=True, cwd=HERE)
+        dout = json.load(open('/tmp/drw_out.json'))
+        for cfg in cfgs:
+            for m in cfg['missions']:
+                for g in m.get('guide', []):
+                    if isinstance(g.get('img'), str) and g['img'] in dout: g['img'] = shrink(dout[g['img']], 560)
     json.dump(req, open('/tmp/cao_req.json', 'w'))
     subprocess.run('NODE_PATH=$(npm root -g) node cao_shots.js %s /tmp/cao_req.json /tmp/cao_out.json' % page, shell=True, check=True, cwd=HERE)
     out = json.load(open('/tmp/cao_out.json'))

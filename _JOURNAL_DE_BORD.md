@@ -15,6 +15,26 @@
 
 
 
+
+## CAO : coupes, mise en plan, concentrations de contraintes, TP SI (25/11/2026)
+
+- **Moteur CAO Studio** (tous les TP, évaluations et logiciel libre `02b_logiciel_cao.html`, désormais régénéré) :
+  bouton **Coupe** (plan ⊥ X/Y/Z, curseur, face coupée hachurée, compatible avec l’affichage Von Mises)
+  et bouton **Mise en plan** (feuille A4, vues en projection européenne avec arêtes vues / cachées et
+  axes, coupe A-A hachurée avec plan placé sur la vue de dessus ou de gauche, échelles normalisées,
+  cotation à la souris avec aimantation, diamètres, cartouche, symbole de projection). Vérification
+  automatique (vues, échelle la plus grande qui tient, position du plan de coupe, cotes requises, cotes
+  en trop, titre).
+- Correctif : la pièce de départ de la mission 1 était écrasée par une pièce vide (TP « corriger un modèle »).
+- **4e TP 5** `02_tp_cao_4e_5.html` — Mise en plan et vues en coupe (5 missions, tutoriel illustré par les
+  feuilles attendues). **3e TP 5** `02_tp_cao_3e_5.html` — Concentrations de contraintes (barre trouée,
+  angle vif, chanfrein, choix du matériau ; valeurs étalonnées Rapide et Précis). **SI**
+  `02_tp_cao_si_1.html` — Dimensionner une potence (RdM vs Von Mises, hauteur minimale, indice ρ/√Re,
+  raccordement chanfreiné, dessin de définition). Ajoutés aux hubs, à l’index (TP 5 et carte SI) et au suivi.
+- Tutoriels : fenêtre « Ce que tu viens de faire » après chaque étape (programmation, CAO, atelier 3D).
+  5e TP 2 : trois slimes créés avec une boucle « répéter ».
+- Studio Arcade : 25 sprites HD animés et 7 fonds peints (planches Gemini, `_outils/arcade_cao/assets`).
+
 ## Jeux plus spectaculaires, TP guidés et Atelier 3D (24/11/2026)
 
 - **Studio Arcade** : décors animés (forêt, nuit, espace, océan, ciel, néon, grotte), musiques, effets

@@ -129,6 +129,13 @@ body.locked [data-act="new-sketch"],body.locked [data-act="new-file"],body.locke
 .method{border:1px solid var(--line);border-radius:10px;margin:8px 0}
 .method summary{padding:8px 12px;cursor:pointer;font-weight:600;font-size:13px;color:var(--acc)}
 .method ol{margin:0;padding:2px 14px 10px 32px;font-size:13px;line-height:1.65}
+.gpop{position:absolute;inset:0;background:#fffaf0f0;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:10px}
+.gpop>div{background:#fff;border:2px solid #16a34a;border-radius:12px;padding:10px 12px;box-shadow:0 6px 20px #0002}.gpop b{color:#15803d;font-size:13.5px}.gpop p{margin:5px 0 9px;font-size:13.5px;line-height:1.4}.gpop .btn{width:100%}
+.gd{position:relative;border:2px solid #f9b13c;border-radius:12px;padding:10px 12px;margin:8px 0;background:#fffaf0}
+.gd .gh{display:flex;justify-content:space-between;font-size:12px;color:#92400e}.gd .gt{font-size:13.5px;line-height:1.5;margin:6px 0 8px}
+.gd .gt b{color:#1e3a5f}.gd img{width:100%;border-radius:8px;border:1px solid var(--line);background:#fff;display:block;margin-bottom:6px}
+.gd .gdots{display:flex;gap:3px;margin:4px 0 8px}.gd .gdots i{flex:1;height:5px;border-radius:3px;background:#e2e8f0}.gd .gdots i.d{background:#16a34a}.gd .gdots i.c{background:#f9b13c}
+.gd .gn{display:flex;justify-content:space-between;gap:8px}
 .verify{margin-top:10px}
 .res{margin-top:10px;border-radius:10px;padding:10px 12px;font-size:13px;border:1px solid var(--line);background:var(--soft)}
 .res.ok{background:#e9f6ed;border-color:#a8d8b6}.res.ko{background:#fdf1f0;border-color:#efc4c0}
@@ -186,6 +193,8 @@ body.ws-asm #asmPanel{display:block}body.ws-asm #treeList,body.ws-asm #props,bod
 .aedit{padding:2px 10px 10px;border-top:1px dashed var(--line)}.aedit .fld input{width:72px}
 .badge{font-size:10.5px;background:#e8eef7;color:var(--acc);border-radius:10px;padding:1px 7px;font-weight:600;font-style:normal}.badge.m{background:#fde8e6;color:var(--ko)}
 .ajoint{display:flex;gap:6px;align-items:center;font-size:12.5px;padding:5px 6px;border-bottom:1px dashed var(--line)}.ajoint span{flex:1}
+#drawView{position:absolute;inset:0;z-index:30;display:flex;background:#e9eef5}#drwPanel{width:270px;flex:none;background:#fff;border-right:1px solid var(--line);padding:12px;overflow:auto}#drwSheet{flex:1;display:flex;align-items:center;justify-content:center;min-width:0}#drwCv{position:static!important;inset:auto!important;width:auto;height:auto;box-shadow:0 6px 24px #0003;background:#fff;cursor:crosshair}.dsec{border-bottom:1px solid var(--line);padding:8px 0;display:flex;flex-direction:column;gap:6px}.dsec>b{color:#1e3a5f;font-size:13.5px}
+#cutDlg{width:270px;right:14px;top:14px;left:auto}#cutDlg input[type=range]{width:100%}
 #simDlg{width:330px;max-height:calc(100% - 28px);overflow:auto}
 .sim-sec{border-top:1px solid var(--line);padding:8px 0 4px;font-size:13px}.sim-sec>b{display:block;margin-bottom:5px}
 .chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}.chip{background:#eef3fa;border:1px solid #c9d7ea;border-radius:14px;padding:2px 4px 2px 9px;font-size:12px;display:inline-flex;align-items:center;gap:3px}
@@ -199,7 +208,7 @@ body.ws-asm #asmPanel{display:block}body.ws-asm #treeList,body.ws-asm #props,bod
 
 </style>
 </head>
-<body class="mode-libre">
+<body class="mode-tp">
 <header class="estic-bar">
   <div class="eb-left"><img alt="Logo ESTIC" src="logo_estic.png" style="height:36px"><div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div></div>
   <div class="eb-title">CAO Studio — logiciel de modélisation 3D</div>
@@ -228,6 +237,8 @@ body.ws-asm #asmPanel{display:block}body.ws-asm #treeList,body.ws-asm #props,bod
       </div>
       <button class="btn" data-act="fit" title="Ajuster la vue"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
       <button class="btn" data-act="ortho">Perspective</button>
+      <button class="btn part-only" data-act="drw-open" title="Mise en plan"><svg viewBox="0 0 24 24"><path d="M3 4h18v16H3z M13 15h8 M13 20v-5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 7h5v5H6z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>Mise en plan</button>
+      <button class="btn part-only" data-act="cut-open" title="Vue en coupe"><svg viewBox="0 0 24 24"><path d="M4 7l8-4 8 4v10l-8 4-8-4z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 12l8 4 8-4" fill="none" stroke="#c0352b" stroke-width="2"/></svg>Coupe</button>
       <span class="sep"></span>
       <button class="btn" data-act="undo" title="Annuler (Ctrl+Z)"><svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5M4 12h11a5 5 0 010 10h-3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
       <button class="btn" data-act="redo" title="R&eacute;tablir (Ctrl+Y)"><svg viewBox="0 0 24 24"><path d="M15 7l5 5-5 5M20 12H9a5 5 0 000 10h3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
@@ -254,6 +265,8 @@ body.ws-asm #asmPanel{display:block}body.ws-asm #treeList,body.ws-asm #props,bod
           <div class="row2"><button class="btn" data-act="plane-cancel">Annuler</button></div>
         </div>
         <div id="simDlg" class="floating hidden"></div>
+        <div id="cutDlg" class="floating hidden"></div>
+        <div id="drawView" class="hidden"><div id="drwPanel"></div><div id="drwSheet"><canvas id="drwCv"></canvas></div></div>
         <div id="kinPanel" class="hidden"><div class="kin-h"><b>Courbes du mouvement</b><span id="kinCtl"></span><span class="grow"></span><button class="btn sm" data-act="kin-close">Fermer</button></div><div class="kin-c"><canvas id="kinCv"></canvas></div><div id="kinRead"></div></div>
         <div id="featDlg" class="floating hidden">
           <div class="fl-title" id="fdTitle">Bossage</div>
@@ -295,7 +308,7 @@ body.ws-asm #asmPanel{display:block}body.ws-asm #treeList,body.ws-asm #props,bod
 <div id="toasts"></div>
 <input type="file" id="fileIn" accept=".json,.cao.json" hidden>
 <script>
-const CFG = {"mode": "libre", "title": "CAO Studio — logiciel de modélisation 3D", "discipline": "Technologie · ESTIC", "fileName": "piece", "calc": false};
+const CFG = {"discipline": "Technologie · ESTIC", "calc": false, "mode": "libre", "title": "CAO Studio — logiciel de modélisation 3D", "fileName": "piece"};
 /* ===== GEOM : modèle, compilation, échantillonnage, comparaison ===== */
 const G = (() => {
   const PLANE_NAMES = { '0,0,1': 'Dessus', '0,0,-1': 'Dessous', '0,-1,0': 'Face', '0,1,0': 'Arrière', '1,0,0': 'Droite', '-1,0,0': 'Gauche' };
@@ -641,14 +654,15 @@ const FS_HEAD = `#version 300 es
 precision highp float;
 out vec4 o;
 uniform vec2 uRes; uniform vec3 uPos,uF,uR,uU; uniform float uFocal,uOrtho,uOS,uFar,uGrid,uGridStep;
-uniform mat4 uM[12]; uniform vec3 uPal[12]; uniform highp sampler3D uFld; uniform float uFOn,uFH; uniform vec3 uFO,uFS,uFN;
+uniform mat4 uM[12]; uniform vec3 uPal[12]; uniform highp sampler3D uFld; uniform float uFOn,uFH; uniform vec3 uFO,uFS,uFN; uniform float uCutOn,uCutC; uniform vec3 uCutN;
 vec3 cmap(float t){ return clamp(vec3(1.5-abs(4.*t-3.),1.5-abs(4.*t-2.),1.5-abs(4.*t-1.)),0.,1.); }
 float sdBox2(vec2 p, vec2 b){ vec2 d=abs(p)-b; return length(max(d,0.))+min(max(d.x,d.y),0.); }
 float sdSeg2(vec2 p, vec2 a, vec2 b){ vec2 pa=p-a, ba=b-a; float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.); return length(pa-ba*h); }
 float ext(float d2, float w, float w0, float w1){ float c=(w0+w1)*.5, h=(w1-w0)*.5; vec2 q=vec2(d2, abs(w-c)-h); return min(max(q.x,q.y),0.)+length(max(q,0.)); }
 `;
 const FS_MAIN = `
-vec3 nrm(vec3 p, float e){ vec2 k=vec2(1.,-1.); return normalize(k.xyy*map(p+k.xyy*e)+k.yyx*map(p+k.yyx*e)+k.yxy*map(p+k.yxy*e)+k.xxx*map(p+k.xxx*e)); }
+float mapC(vec3 p){ float d=map(p); if(uCutOn>.5) d=max(d,dot(p,uCutN)-uCutC); return d; }
+vec3 nrm(vec3 p, float e){ vec2 k=vec2(1.,-1.); return normalize(k.xyy*mapC(p+k.xyy*e)+k.yyx*mapC(p+k.yyx*e)+k.yxy*mapC(p+k.yxy*e)+k.xxx*mapC(p+k.xxx*e)); }
 void main(){
   vec2 uv=(gl_FragCoord.xy-.5*uRes)/uRes.y;
   vec3 ro, rd; float pxk;
@@ -656,9 +670,9 @@ void main(){
   else { ro=uPos; rd=normalize(uF*uFocal+uR*uv.x+uU*uv.y); pxk=1./(uRes.y*uFocal); }
   float t=0.; bool hit=false; float mr=1e9;
   for(int i=0;i<220;i++){
-    vec3 p=ro+rd*t; float d=map(p);
+    vec3 p=ro+rd*t; float d=mapC(p);
     float pw = uOrtho>.5 ? pxk : pxk*max(t,1.);
-    if(d<pw*.35){ if(map(p+rd*pw*2.)<pw*.35){ hit=true; break; } t+=pw*2.; continue; }
+    if(d<pw*.35){ if(mapC(p+rd*pw*2.)<pw*.35){ hit=true; break; } t+=pw*2.; continue; }
     mr=min(mr,d/pw);
     t+=d*.92; if(t>uFar) break;
   }
@@ -678,6 +692,12 @@ void main(){
     c+=spec;
     if(uFOn>.5){ vec3 q=(p-n*uFH*.35-uFO)/uFS; vec3 tc=(clamp(q,0.,1.)*(uFN-1.)+.5)/uFN; float v=texture(uFld,tc).r; c=cmap(v)*(.62+.3*dif+.1*hemi); }
     float edge=smoothstep(.04,.22,1.-dot(n,n2));
+    if(uCutOn>.5 && abs(dot(p,uCutN)-uCutC)<pw*1.5 && map(p-uCutN*pw)<0.){
+      vec3 a1=abs(uCutN.z)>.5?vec3(1.,0.,0.):vec3(0.,0.,1.); vec3 a2=cross(uCutN,a1);
+      float hs=fract((dot(p,a1)+dot(p,a2))/2.2); float ln=1.-smoothstep(.14,.22,hs);
+      vec3 base=uFOn>.5?c:vec3(.96,.80,.74);
+      c=mix(base,vec3(.55,.12,.10),ln*(uFOn>.5?.35:.85)); edge=0.;
+    }
     c=mix(c,vec3(.16,.22,.3),edge*.9);
     col=c;
   } else if(mr<1.6){
@@ -751,7 +771,7 @@ class Viewer {
     if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { console.error(gl.getProgramInfoLog(pr)); return; }
     if (this.pr) gl.deleteProgram(this.pr);
     this.pr = pr; this.U = {};
-    ['uRes', 'uPos', 'uF', 'uR', 'uU', 'uFocal', 'uOrtho', 'uOS', 'uFar', 'uGrid', 'uGridStep', 'uM', 'uPal', 'uFld', 'uFOn', 'uFH', 'uFO', 'uFS', 'uFN'].forEach(n => this.U[n] = gl.getUniformLocation(pr, n));
+    ['uRes', 'uPos', 'uF', 'uR', 'uU', 'uFocal', 'uOrtho', 'uOS', 'uFar', 'uGrid', 'uGridStep', 'uM', 'uPal', 'uFld', 'uFOn', 'uFH', 'uFO', 'uFS', 'uFN', 'uCutOn', 'uCutC', 'uCutN'].forEach(n => this.U[n] = gl.getUniformLocation(pr, n));
     this.req();
   }
   sh(type, src) {
@@ -820,6 +840,8 @@ class Viewer {
     const fl = this.field; gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_3D, fl ? this.fieldTex : this.dummy); gl.uniform1i(U.uFld, 0);
     gl.uniform1f(U.uFOn, fl ? 1 : 0);
     if (fl) { gl.uniform1f(U.uFH, fl.h); gl.uniform3fv(U.uFO, fl.origin); gl.uniform3fv(U.uFS, fl.size); gl.uniform3fv(U.uFN, fl.dimsN); }
+    const ct = this.cut; gl.uniform1f(U.uCutOn, ct ? 1 : 0);
+    if (ct) { const n = [0, 0, 0]; n[ct.ax] = ct.flip ? -1 : 1; gl.uniform3fv(U.uCutN, n); gl.uniform1f(U.uCutC, ct.flip ? -ct.pos : ct.pos); }
     gl.uniform1f(U.uFocal, b.focal); gl.uniform1f(U.uOrtho, this.cam.ortho ? 1 : 0);
     gl.uniform1f(U.uOS, b.os); gl.uniform1f(U.uFar, this.cam.dist * 6); gl.uniform1f(U.uGrid, this.grid ? 1 : 0);
     const gs = this.cam.dist > 600 ? 10 : this.cam.dist > 60 ? 5 : 1;
@@ -1515,6 +1537,7 @@ const CAD = {
     $('#matSel').innerHTML = MATS.map((m, i) => `<option value="${i}">${m[0]} (${String(m[1]).replace('.', ',')} g/cm³)</option>`).join('');
     $('#matSel').addEventListener('change', e => { this.mat = +e.target.value; this.model.mat = this.mat; this.clearSim(); this.showProps(); this.renderSim(); });
     $('#fileIn').addEventListener('change', e => this.loadFile(e));
+    DRW.bind();
     this.vw.setView('iso'); this.vw.fit([0, 0, 0, 60, 40, 20]);
     this.rebuild(true);
   },
@@ -1626,6 +1649,12 @@ const CAD = {
       case 'ws': this.setWs(b.dataset.v); break;
       case 'sim-open': if (this.locked) { toast('Copie rendue : modification impossible.'); return; } $('#simDlg').classList.toggle('hidden'); this.renderSim(); this.vw.req(); break;
       case 'sim-close': $('#simDlg').classList.add('hidden'); this.vw.req(); break;
+      case 'cut-open': { const d = $('#cutDlg'); if (d.classList.contains('hidden')) { d.classList.remove('hidden'); if (!this.vw.cut) this.setCut(1, null); this.renderCut(); } else this.setCut(null); break; }
+      case 'cut-ax': this.setCut(+b.dataset.v, null); this.renderCut(); break;
+      case 'cut-flip': if (this.vw.cut) { this.vw.cut.flip = !this.vw.cut.flip; this.vw.req(); } break;
+      case 'cut-close': this.setCut(null); break;
+      case 'drw-open': DRW.open(); break;
+      case 'd-close': case 'd-main': case 'd-tool': DRW.act(a, b); break;
       case 'sim-pick': this.startPick(b.dataset.k); break;
       case 'sim-unfix': this.simObj().fixed.splice(i, 1); this.clearSim(); this.renderSim(); break;
       case 'sim-mesh': this.simObj().mesh = +b.dataset.v; this.renderSim(); break;
@@ -1769,6 +1798,22 @@ const CAD = {
   simObj() { if (!this.model.sim) this.model.sim = { fixed: [], load: null, mesh: 4000, res: null }; return this.model.sim; },
   clearSim() { if (this.model.sim && this.model.sim.res) { this.model.sim.res = null; } if (this.simField) { this.simField = null; this.vw.setField(null); } this.renderSim(); },
   hash() { return JSON.stringify(this.model.features.filter(f => !f.hidden)); },
+  cutRange(ax) { const A = this.A && !this.A.empty ? this.A : null; return A ? [A.bbox[ax], A.bbox[ax + 3]] : [0, 50]; },
+  setCut(ax, pos) {
+    if (ax === null) { this.vw.cut = null; $('#cutDlg').classList.add('hidden'); $('[data-act="cut-open"]').classList.remove('on'); this.vw.req(); return; }
+    const r = this.cutRange(ax), P = pos === null ? (r[0] + r[1]) / 2 : pos; this.vw.cut = { ax, pos: P, flip: this.vw.basis().pos[ax] < P };
+    this.cutSeen = (this.cutSeen || 0) + 1; $('[data-act="cut-open"]').classList.add('on'); this.vw.req(); this.hooks.forEach(h => h('cut'));
+  },
+  renderCut() {
+    const c = this.vw.cut; if (!c) return; const r = this.cutRange(c.ax), nm = ['X', 'Y', 'Z'][c.ax];
+    $('#cutDlg').innerHTML = `<div class="fl-title">Vue en coupe</div>
+      <div class="muted" style="margin-bottom:6px">Le plan de coupe enlève la moitié de la pièce. La matière coupée est hachurée.</div>
+      <div class="seg wide">${['X', 'Y', 'Z'].map((l, i) => `<button class="btn sm ${i === c.ax ? 'on' : ''}" data-act="cut-ax" data-v="${i}">Plan ⊥ ${l}</button>`).join('')}</div>
+      <label class="fld" style="margin-top:8px"><span>Position ${nm}</span><b id="cutV">${G.fmt(c.pos, 1)} mm</b></label>
+      <input type="range" id="cutPos" min="${r[0]}" max="${r[1]}" step="0.5" value="${c.pos}">
+      <div class="row2"><button class="btn" data-act="cut-flip">Inverser le côté</button><button class="btn" data-act="cut-close">Fermer</button></div>`;
+    $('#cutPos').addEventListener('input', e => { this.vw.cut.pos = +e.target.value; $('#cutV').textContent = G.fmt(this.vw.cut.pos, 1) + ' mm'; this.vw.req(); });
+  },
   renderSim() {
     const d = $('#simDlg'); if (!d || d.classList.contains('hidden')) return;
     const S = this.simObj(), M = MATS[this.mat], pn = p => G.planeName(p);
@@ -2193,6 +2238,345 @@ const TEACHER_CODE = (CFG.profCode || 'ESTIC52').toUpperCase();
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const parseNum = s => parseFloat(String(s).replace(/\s/g, '').replace(',', '.'));
 
+/* ===================== Mise en plan (dessin technique) ===================== */
+const DRW = {
+  VIEWS: {
+    face: { a: 1, s: 1, u: [1, 0, 0], v: [0, 0, 1], nm: 'Vue de face' },
+    dessus: { a: 2, s: -1, u: [1, 0, 0], v: [0, 1, 0], nm: 'Vue de dessus' },
+    gauche: { a: 0, s: 1, u: [0, -1, 0], v: [0, 0, 1], nm: 'Vue de gauche' },
+    droite: { a: 0, s: -1, u: [0, 1, 0], v: [0, 0, 1], nm: 'Vue de droite' },
+    dessous: { a: 2, s: 1, u: [1, 0, 0], v: [0, -1, 0], nm: 'Vue de dessous' }
+  },
+  SCALES: [['5:1', 5], ['2:1', 2], ['1:1', 1], ['1:2', .5], ['1:5', .2]],
+  RES: 6, /* pixels de calcul par mm de feuille */
+  SHEET: [297, 210],
+  st() { const m = CAD.model; if (!m.drawing) m.drawing = { right: '', below: '', main: 'face', cutY: null, scale: '1:1', dims: [], title: '' }; return m.drawing; },
+  /* ---------- géométrie : intervalles de matière le long d'un rayon parallèle à un axe ---------- */
+  axisOf(v) { return Math.abs(v[0]) > .5 ? 0 : Math.abs(v[1]) > .5 ? 1 : 2; },
+  entCross(e, vary, r, ei) { /* croisements d'une entité 2D avec la droite (coordonnée variable vary=0:s 1:t, l'autre fixée à r) */
+    const out = [], P = (q) => vary === 0 ? [q, r] : [r, q];
+    if (e.k === 'r') { const c = vary === 0 ? [e.cx, e.cy, e.hx, e.hy] : [e.cy, e.cx, e.hy, e.hx];
+      if (Math.abs(r - c[1]) <= c[3]) { const nA = vary === 0 ? [-1, 0] : [0, -1], nB = vary === 0 ? [1, 0] : [0, 1]; out.push([c[0] - c[2], ei * 8 + (vary ? 2 : 0), nA], [c[0] + c[2], ei * 8 + (vary ? 3 : 1), nB]); } }
+    else if (e.k === 'c') { const cv = vary === 0 ? e.cx : e.cy, co = vary === 0 ? e.cy : e.cx, d = r - co;
+      if (Math.abs(d) < e.r) { const h = Math.sqrt(e.r * e.r - d * d); for (const q of [cv - h, cv + h]) { const p = P(q); out.push([q, ei * 8 + 7, [(p[0] - e.cx) / e.r, (p[1] - e.cy) / e.r], 1]); } } }
+    else if (e.k === 's') { const bb = G.entBounds ? null : null; const f = q => { const p = P(q); return G.sd2(e, p[0], p[1]); };
+      const lo = Math.min(vary === 0 ? e.ax : e.ay, vary === 0 ? e.bx : e.by) - e.r - 1, hi = Math.max(vary === 0 ? e.ax : e.ay, vary === 0 ? e.bx : e.by) + e.r + 1;
+      let a = lo, b = hi; for (let i = 0; i < 60; i++) { const m1 = a + (b - a) / 3, m2 = b - (b - a) / 3; if (f(m1) < f(m2)) b = m2; else a = m1; }
+      const qm = (a + b) / 2; if (f(qm) < 0) { const root = (x0, x1) => { for (let i = 0; i < 50; i++) { const m = (x0 + x1) / 2; if ((f(m) < 0) === (f(x1) < 0)) x1 = m; else x0 = m; } return (x0 + x1) / 2; };
+        for (const q of [root(lo, qm), root(hi, qm)]) { const p = P(q), dx = e.bx - e.ax, dy = e.by - e.ay, L = dx * dx + dy * dy; let h = L > 0 ? ((p[0] - e.ax) * dx + (p[1] - e.ay) * dy) / L : 0; h = Math.max(0, Math.min(1, h));
+          const nx = p[0] - (e.ax + dx * h), ny = p[1] - (e.ay + dy * h), nl = Math.hypot(nx, ny) || 1; out.push([q, ei * 8 + 6, [nx / nl, ny / nl], 1]); } } }
+    else if (e.k === 'p') { const Q = e.pts, n = Q.length;
+      for (let i = 0, j = n - 1; i < n; j = i++) { const a = Q[j], b = Q[i]; const ao = vary === 0 ? a[1] : a[0], bo = vary === 0 ? b[1] : b[0];
+        if ((ao > r) !== (bo > r)) { const av = vary === 0 ? a[0] : a[1], bv = vary === 0 ? b[0] : b[1]; const q = av + (r - ao) * (bv - av) / (bo - ao);
+          const ex = b[0] - a[0], ey = b[1] - a[1], l = Math.hypot(ex, ey) || 1; out.push([q, 1000 + ei * 64 + i, [ey / l, -ex / l]]); } } }
+    return out;
+  },
+  featIv(cf, fi, P, a) { /* intervalles [t0,t1,b0,b1] de la fonction le long de l'axe a passant par P */
+    const na = this.axisOf(cf.N), res = [];
+    const s = cf.U[0] * P[0] + cf.U[1] * P[1] + cf.U[2] * P[2], t = cf.V[0] * P[0] + cf.V[1] * P[1] + cf.V[2] * P[2];
+    if (na === a) {
+      let par = false; for (const e of cf.ents) if (G.in2(e, s, t)) par = !par;
+      if (!par) return res; const sg = cf.N[a], w0 = Math.max(cf.w0, -5e3), w1 = Math.min(cf.w1, 5e3);
+      const nn = cf.N.slice(), b0 = { id: fi * 100000 + 1, n: nn }, b1 = { id: fi * 100000 + 2, n: nn };
+      res.push(sg > 0 ? [w0, w1, b0, b1] : [-w1, -w0, b1, b0]); return res;
+    }
+    const w = cf.N[0] * P[0] + cf.N[1] * P[1] + cf.N[2] * P[2]; if (w < cf.w0 || w > cf.w1) return res;
+    const vary = Math.abs(cf.U[a]) > .5 ? 0 : 1, k = vary === 0 ? cf.U[a] : cf.V[a], r = vary === 0 ? t : s;
+    let X = []; cf.ents.forEach((e, ei) => { X = X.concat(this.entCross(e, vary, r, ei)); });
+    X = X.map(x => { const n3 = [0, 1, 2].map(i => x[2][0] * cf.U[i] + x[2][1] * cf.V[i]); return [x[0] * k, { id: fi * 100000 + 10 + x[1], n: n3, smooth: !!x[3] }]; }).sort((p, q) => p[0] - q[0]);
+    for (let i = 0; i + 1 < X.length; i += 2) if (X[i + 1][0] - X[i][0] > 1e-7) res.push([X[i][0], X[i + 1][0], X[i][1], X[i + 1][1]]);
+    return res;
+  },
+  bool(S, T, op) {
+    if (!T.length) return op === 'u' ? S : S;
+    if (!S.length) return op === 'u' ? T : S;
+    const ev = []; S.forEach(iv => { ev.push([iv[0], 0, iv[2]], [iv[1], 0, iv[3]]); }); T.forEach(iv => { ev.push([iv[0], 1, iv[2]], [iv[1], 1, iv[3]]); });
+    ev.sort((p, q) => p[0] - q[0]);
+    let inS = false, inT = false, cur = false, start = null, sb = null; const out = [];
+    for (let i = 0; i < ev.length;) {
+      let j = i; const x = ev[i][0]; let lastB = ev[i][2];
+      while (j < ev.length && ev[j][0] - x < 1e-7) { if (ev[j][1] === 0) inS = !inS; else inT = !inT; lastB = ev[j][2]; j++; }
+      const now = op === 'u' ? (inS || inT) : (inS && !inT);
+      if (now !== cur) { if (now) { start = x; sb = lastB; } else if (x - start > 1e-7) out.push([start, x, sb, lastB]); cur = now; }
+      i = j;
+    }
+    return out;
+  },
+  rayIv(C, P, a) {
+    let S = [];
+    C.forEach((cf, fi) => { const T = this.featIv(cf, fi, P, a); if (cf.op === 'boss') S = this.bool(S, T, 'u'); else S = this.bool(S, T, 'c'); });
+    return S;
+  },
+  /* ---------- calcul d'une vue (raster) ---------- */
+  renderView(C, key, box, k, cutY) {
+    const V = this.VIEWS[key], R = this.RES * k, a = V.a, sgn = V.s;
+    const proj = P => [G.dot(P, V.u), G.dot(P, V.v)];
+    let u0 = 1e9, u1 = -1e9, v0 = 1e9, v1 = -1e9;
+    for (const x of [box[0], box[3]]) for (const y of [box[1], box[4]]) for (const z of [box[2], box[5]]) { const p = proj([x, y, z]); u0 = Math.min(u0, p[0]); u1 = Math.max(u1, p[0]); v0 = Math.min(v0, p[1]); v1 = Math.max(v1, p[1]); }
+    const pad = 2 / R; u0 -= pad; v0 -= pad; u1 += pad; v1 += pad;
+    const W = Math.max(2, Math.ceil((u1 - u0) * R)), H = Math.max(2, Math.ceil((v1 - v0) * R)), MX = 6;
+    const cnt = new Uint8Array(W * H), dep = new Float32Array(W * H * MX), nrm = new Float32Array(W * H * MX * 3), ids = new Int32Array(W * H * MX), sm = new Uint8Array(W * H * MX), cut = new Uint8Array(W * H);
+    for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+      const u = u0 + (i + .5) / R, v = v1 - (j + .5) / R, P = [0, 0, 0];
+      for (let c = 0; c < 3; c++) P[c] = V.u[c] * u + V.v[c] * v;
+      let S = this.rayIv(C, P, a), list = [];
+      if (cutY !== null && cutY !== undefined) { S = S.filter(iv => iv[1] > cutY + 1e-7).map(iv => { if (iv[0] < cutY) { cut[j * W + i] = 1; return [cutY, iv[1], { id: -5, n: [0, 1, 0] }, iv[3]]; } return iv; }); }
+      S.forEach(iv => { list.push([iv[0], iv[2]], [iv[1], iv[3]]); });
+      list = list.map(x => [x[0] * sgn, x[1]]).sort((p, q) => p[0] - q[0]);
+      const n = Math.min(MX, list.length); cnt[j * W + i] = n;
+      for (let q = 0; q < n; q++) { const o = (j * W + i) * MX + q; dep[o] = list[q][0]; ids[o] = list[q][1].id; sm[o] = list[q][1].smooth ? 1 : 0; const nn = list[q][1].n; nrm[o * 3] = nn[0]; nrm[o * 3 + 1] = nn[1]; nrm[o * 3 + 2] = nn[2]; }
+    }
+    const tolD = Math.max(.25, 2.5 / R);
+    const diff = (o1, o2) => { if (ids[o1] === ids[o2]) return false; const nd = Math.abs(nrm[o1 * 3] * nrm[o2 * 3] + nrm[o1 * 3 + 1] * nrm[o2 * 3 + 1] + nrm[o1 * 3 + 2] * nrm[o2 * 3 + 2]);
+      if (Math.abs(dep[o1] - dep[o2]) > tolD) return true; if (sm[o1] && sm[o2]) return false; return nd < 0.94; };
+    const vis = new Uint8Array(W * H), hid = new Uint8Array(W * H); /* 1 = trait vertical, 2 = horizontal */
+    for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+      const p = j * W + i;
+      for (const [q, dir] of [[i + 1 < W ? p + 1 : -1, 1], [j + 1 < H ? p + W : -1, 2]]) {
+        if (q < 0) continue; const cp = cnt[p], cq = cnt[q];
+        let ve = false;
+        if ((cp > 0) !== (cq > 0)) ve = true; else if (cp > 0 && diff(p * MX, q * MX)) ve = true;
+        if (cutY !== null && cutY !== undefined && cut[p] !== cut[q]) ve = true;
+        if (ve) { vis[p] |= dir; continue; }
+        if (cutY !== null && cutY !== undefined) continue;
+        let he = cp !== cq; if (!he) for (let z = 1; z < cp; z++) if (diff(p * MX + z, q * MX + z)) { he = true; break; }
+        if (he) hid[p] |= dir;
+      }
+    }
+    return { key, W, H, u0, v1, R, vis, hid, cut, cnt, proj, sgn };
+  },
+  bestScale(box) { for (const [nm, k] of this.SCALES) { const L = this.layout(box, k, this.st()); if (L.fits) return nm; } return '1:5'; },
+  layout(box, k, d) {
+    const ext = key => { const V = this.VIEWS[key]; let u0 = 1e9, u1 = -1e9, v0 = 1e9, v1 = -1e9;
+      for (const x of [box[0], box[3]]) for (const y of [box[1], box[4]]) for (const z of [box[2], box[5]]) { const P = [x, y, z], u = G.dot(P, V.u), v = G.dot(P, V.v); u0 = Math.min(u0, u); u1 = Math.max(u1, u); v0 = Math.min(v0, v); v1 = Math.max(v1, v); }
+      return [(u1 - u0) * k, (v1 - v0) * k]; };
+    const g = 22, F = ext('face'), Rr = d.right ? ext(d.right) : [0, 0], Bb = d.below ? ext(d.below) : [0, 0];
+    const totW = F[0] + (d.right ? g + Rr[0] : 0), totH = F[1] + (d.below ? g + Bb[1] : 0);
+    const areaW = this.SHEET[0] - 30, areaH = this.SHEET[1] - 30 - 30;
+    const x0 = 15 + Math.max(4, (areaW - totW) / 2), y0 = 18 + Math.max(4, (areaH - totH) / 2);
+    return { fits: totW <= areaW && totH <= areaH, face: [x0, y0, F[0], F[1]], right: d.right ? [x0 + F[0] + g, y0, Rr[0], Rr[1]] : null, below: d.below ? [x0, y0 + F[1] + g, Bb[0], Bb[1]] : null };
+  },
+  /* ---------- interface ---------- */
+  open() {
+    if (CAD.mode !== '3d' || CAD.pending) { toast('Termine d’abord ton esquisse ou ta fonction.', 'warn'); return; }
+    if (!CAD.A || CAD.A.hashK !== CAD.hash()) { CAD.A = G.analyze(CAD.C); CAD.A.hashK = CAD.hash(); }
+    const C = CAD.C; if (!C || !C.length || !CAD.A || CAD.A.empty) { toast('Il faut d’abord une pièce en 3D.', 'warn'); return; }
+    this.isOpen = true; this.tool = 'sel'; this.pend = null; this.cache = {};
+    const dv = $('#drawView'), sr = $('#side').getBoundingClientRect(), wr = $('#work').getBoundingClientRect(); Object.assign(dv.style, { position: 'fixed', left: Math.round(sr.left) + 'px', top: Math.round(wr.top) + 'px', right: '0', bottom: '0' });
+    dv.classList.remove('hidden'); this.renderPanel(); this.compute(); this.resize(); setTimeout(() => this.resize(), 30); CAD.hooks.forEach(h => h('drawing'));
+  },
+  close() { this.isOpen = false; $('#drawView').classList.add('hidden'); CAD.vw.req(); },
+  renderPanel() {
+    const d = this.st(), opt = (sel, list) => list.map(([v, l]) => `<option value="${v}" ${sel === v ? 'selected' : ''}>${l}</option>`).join('');
+    const VL = [['', 'aucune vue'], ['gauche', 'Vue de gauche'], ['droite', 'Vue de droite'], ['dessus', 'Vue de dessus'], ['dessous', 'Vue de dessous']];
+    $('#drwPanel').innerHTML = `<div class="fl-title">Mise en plan</div>
+      <div class="dsec"><b>1. Les vues</b><span class="muted">La vue de face est en haut à gauche.</span>
+        <label class="fld"><span>À droite de la face</span><select id="dRight">${opt(d.right, VL)}</select></label>
+        <label class="fld"><span>Sous la face</span><select id="dBelow">${opt(d.below, VL)}</select></label></div>
+      <div class="dsec"><b>2. Vue principale</b><div class="seg wide"><button class="btn sm ${d.main === 'face' ? 'on' : ''}" data-act="d-main" data-v="face">Vue de face</button><button class="btn sm ${d.main === 'coupe' ? 'on' : ''}" data-act="d-main" data-v="coupe">Coupe A-A</button></div>
+        ${d.main === 'coupe' ? `<span class="muted">${d.cutY === null ? 'Clique sur la vue de dessus (ou de gauche) pour placer le plan de coupe.' : 'Plan de coupe à y = <b>' + G.fmt(d.cutY, 1) + ' mm</b>. Clique ailleurs pour le déplacer.'}</span>` : ''}</div>
+      <div class="dsec"><b>3. Échelle</b><label class="fld"><span>Échelle</span><select id="dScale">${opt(d.scale, this.SCALES.map(s => [s[0], s[0]]))}</select></label><span class="muted" id="dFit"></span></div>
+      <div class="dsec"><b>4. Cotation</b><div class="seg wide"><button class="btn sm ${this.tool === 'lin' ? 'on' : ''}" data-act="d-tool" data-v="lin">Cote</button><button class="btn sm ${this.tool === 'dia' ? 'on' : ''}" data-act="d-tool" data-v="dia">Diamètre</button><button class="btn sm ${this.tool === 'del' ? 'on' : ''}" data-act="d-tool" data-v="del">Effacer</button></div>
+        <span class="muted">${this.tool === 'lin' ? 'Clique 2 points (ils s’aimantent), puis place la cote.' : this.tool === 'dia' ? 'Clique sur un cercle vu de face.' : this.tool === 'del' ? 'Clique sur une cote pour l’effacer.' : 'Choisis un outil.'}</span>
+        <div class="muted">${d.dims.length} cote(s) posée(s)</div></div>
+      <div class="dsec"><b>5. Cartouche</b><label class="fld"><span>Titre</span><input id="dTitle" value="${esc(d.title || '')}" maxlength="30"></label></div>
+      <div class="row2"><button class="btn primary" data-act="d-close">Revenir à la 3D</button></div>`;
+    $('#dRight').onchange = e => { d.right = e.target.value; this.compute(); };
+    $('#dBelow').onchange = e => { d.below = e.target.value; this.compute(); };
+    $('#dScale').onchange = e => { d.scale = e.target.value; this.compute(); };
+    $('#dTitle').oninput = e => { d.title = e.target.value; this.draw(); };
+  },
+  act(a, b) {
+    const d = this.st();
+    if (a === 'd-close') this.close();
+    else if (a === 'd-main') { d.main = b.dataset.v; if (d.main === 'face') d.cutY = null; this.compute(); this.renderPanel(); }
+    else if (a === 'd-tool') { this.tool = this.tool === b.dataset.v ? 'sel' : b.dataset.v; this.pend = null; this.renderPanel(); this.draw(); }
+  },
+  scaleK() { return (this.SCALES.find(s => s[0] === this.st().scale) || this.SCALES[2])[1]; },
+  compute() {
+    const d = this.st(), C = CAD.C, box = CAD.A.bbox, k = this.scaleK();
+    this.L = this.layout(box, k, d); this.views = {};
+    const ck = (key, cy) => key + '|' + k + '|' + cy + '|' + CAD.hash();
+    const get = (key, cy) => { const id = ck(key, cy); if (!this.cache[id]) this.cache[id] = this.renderView(C, key, box, k, cy); return this.cache[id]; };
+    this.views.face = get('face', d.main === 'coupe' && d.cutY !== null ? d.cutY : null);
+    if (d.right) this.views.right = get(d.right, null);
+    if (d.below) this.views.below = get(d.below, null);
+    this.snaps = this.makeSnaps(); this.draw();
+    const f = $('#dFit'); if (f) f.textContent = this.L.fits ? 'Les vues tiennent sur la feuille.' : 'Les vues dépassent de la feuille : change l’échelle.';
+  },
+  slotRect(slot) { return slot === 'face' ? this.L.face : slot === 'right' ? this.L.right : this.L.below; },
+  slotKey(slot) { const d = this.st(); return slot === 'face' ? 'face' : slot === 'right' ? d.right : d.below; },
+  /* coordonnées : modèle (u,v de la vue) <-> feuille (mm) */
+  toSheet(slot, u, v) { const r = this.slotRect(slot), V = this.views[slot], k = this.scaleK(); return [r[0] + (u - V.u0) * k, r[1] + (V.v1 - v) * k]; },
+  toModel(slot, x, y) { const r = this.slotRect(slot), V = this.views[slot], k = this.scaleK(); return [V.u0 + (x - r[0]) / k, V.v1 - (y - r[1]) / k]; },
+  slotAt(x, y) { for (const sl of ['face', 'right', 'below']) { const r = this.slotRect(sl); if (r && this.views[sl] && x >= r[0] - 3 && x <= r[0] + r[2] + 3 && y >= r[1] - 3 && y <= r[1] + r[3] + 3) return sl; } return null; },
+  makeSnaps() {
+    const C = CAD.C, box = CAD.A.bbox, out = { face: [], right: [], below: [] }, circ = { face: [], right: [], below: [] };
+    const pts3 = [];
+    C.forEach(cf => {
+      const na = this.axisOf(cf.N), lo = cf.N[na] > 0 ? box[na] : -box[na + 3], hi = cf.N[na] > 0 ? box[na + 3] : -box[na], ws = [Math.max(cf.w0, lo), Math.min(cf.w1, hi)];
+      cf.ents.forEach(e => {
+        let p2 = [];
+        if (e.k === 'r') p2 = [[e.cx - e.hx, e.cy - e.hy], [e.cx + e.hx, e.cy - e.hy], [e.cx - e.hx, e.cy + e.hy], [e.cx + e.hx, e.cy + e.hy]];
+        else if (e.k === 'c') p2 = [[e.cx, e.cy, 'c'], [e.cx - e.r, e.cy], [e.cx + e.r, e.cy], [e.cx, e.cy - e.r], [e.cx, e.cy + e.r]];
+        else if (e.k === 's') p2 = [[e.ax, e.ay, 'c'], [e.bx, e.by, 'c'], [e.ax - e.r, e.ay], [e.bx + e.r, e.by], [e.ax, e.ay - e.r], [e.ax, e.ay + e.r], [e.bx, e.by - e.r], [e.bx, e.by + e.r]];
+        else p2 = e.pts.map(p => [p[0], p[1]]);
+        p2.forEach(p => ws.forEach(w => pts3.push({ P: [0, 1, 2].map(i => cf.U[i] * p[0] + cf.V[i] * p[1] + cf.N[i] * w), c: p[2] === 'c' })));
+        if (e.k === 'c') pts3.push({ circle: true, cf, e, w: ws });
+      });
+    });
+    for (const sl of ['face', 'right', 'below']) {
+      const V = this.views[sl]; if (!V) continue; const key = this.slotKey(sl), VV = this.VIEWS[key], seen = new Set();
+      for (const q of pts3) {
+        if (q.circle) { if (this.axisOf(q.cf.N) === VV.a) { const P = [0, 1, 2].map(i => q.cf.U[i] * q.e.cx + q.cf.V[i] * q.e.cy); circ[sl].push({ u: G.dot(P, VV.u), v: G.dot(P, VV.v), r: q.e.r }); } continue; }
+        const u = G.dot(q.P, VV.u), v = G.dot(q.P, VV.v), id = Math.round(u * 100) + ',' + Math.round(v * 100); if (seen.has(id)) continue;
+        const i = Math.round((u - V.u0) * V.R - .5), j = Math.round((V.v1 - v) * V.R - .5); let near = q.c;
+        for (let dj = -3; dj <= 3 && !near; dj++) for (let di = -3; di <= 3 && !near; di++) { const ii = i + di, jj = j + dj; if (ii >= 0 && jj >= 0 && ii < V.W && jj < V.H && (V.vis[jj * V.W + ii] || V.hid[jj * V.W + ii])) near = true; }
+        if (near) { seen.add(id); out[sl].push({ u, v, c: q.c }); }
+      }
+    }
+    this.circles = circ; return out;
+  },
+  resize() { if (!this.isOpen) return; const cv = $('#drwCv'), box = cv.parentElement.getBoundingClientRect(); const dpr = Math.min(2, devicePixelRatio || 1);
+    const sc = Math.min((box.width - 20) / this.SHEET[0], (box.height - 20) / this.SHEET[1]); this.px = sc;
+    cv.width = Math.round(this.SHEET[0] * sc * dpr); cv.height = Math.round(this.SHEET[1] * sc * dpr); cv.style.width = this.SHEET[0] * sc + 'px'; cv.style.height = this.SHEET[1] * sc + 'px'; this.dpr = dpr; this.draw(); },
+  viewImage(V) {
+    if (V.img) return V.img; const c = document.createElement('canvas'); c.width = V.W; c.height = V.H; const g = c.getContext('2d'), im = g.createImageData(V.W, V.H), D = im.data;
+    const dash = Math.round(V.R / this.scaleK() * 3), gap = Math.round(V.R / this.scaleK() * 1.2);
+    const put = (p, a) => { D[p * 4 + 3] = Math.max(D[p * 4 + 3], a); };
+    for (let j = 0; j < V.H; j++) for (let i = 0; i < V.W; i++) { const p = j * V.W + i;
+      if (V.cut[p] && ((i + j) % Math.round(V.R / this.scaleK() * 2.5) < 1.6)) put(p, 200);
+      if (V.vis[p]) { put(p, 255); if (i + 1 < V.W) put(p + 1, 255); if (j + 1 < V.H) put(p + V.W, 255); }
+      else if (V.hid[p]) { const L = V.hid[p] & 1 ? j : i; if (L % (dash + gap) < dash) put(p, 230); } }
+    g.putImageData(im, 0, 0); V.img = c; return c;
+  },
+  draw() {
+    if (!this.isOpen) return; const cv = $('#drwCv'), g = cv.getContext('2d'), s = this.px * this.dpr, d = this.st();
+    g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height); g.setTransform(s, 0, 0, s, 0, 0);
+    g.strokeStyle = '#111'; g.lineWidth = .7; g.strokeRect(10, 10, this.SHEET[0] - 20, this.SHEET[1] - 20);
+    /* cartouche */
+    const cx = this.SHEET[0] - 10 - 120, cy = this.SHEET[1] - 10 - 28; g.lineWidth = .5; g.strokeRect(cx, cy, 120, 28); g.beginPath(); g.moveTo(cx, cy + 14); g.lineTo(cx + 120, cy + 14); g.moveTo(cx + 70, cy); g.lineTo(cx + 70, cy + 28); g.stroke();
+    g.fillStyle = '#111'; g.font = '3px Segoe UI, sans-serif'; g.fillText('Titre', cx + 2, cy + 4); g.fillText('Échelle', cx + 72, cy + 4); g.fillText('Matière', cx + 2, cy + 18); g.fillText('Nom', cx + 72, cy + 18);
+    g.font = '600 5px Segoe UI, sans-serif'; g.fillText(d.title || '', cx + 2, cy + 11); g.fillText(d.scale, cx + 72, cy + 11); g.font = '4px Segoe UI, sans-serif';
+    g.fillText(MATS[CAD.mat][0], cx + 2, cy + 25); g.fillText(MS.team ? (MS.team.noms + ' ' + (MS.team.prenom || '')).slice(0, 22) : '', cx + 72, cy + 25);
+    g.font = '3px Segoe UI, sans-serif'; g.fillText('ESTIC · projection européenne', 12, this.SHEET[1] - 12.5);
+    /* symbole de projection européenne */
+    { const x = cx - 22, y = cy + 14; g.lineWidth = .35; g.beginPath(); g.moveTo(x, y - 3); g.lineTo(x + 6, y - 5); g.lineTo(x + 6, y + 5); g.lineTo(x, y + 3); g.closePath(); g.stroke(); g.beginPath(); g.arc(x + 13, y, 5, 0, 7); g.stroke(); g.beginPath(); g.arc(x + 13, y, 2.5, 0, 7); g.stroke(); }
+    /* vues */
+    for (const sl of ['face', 'right', 'below']) { const V = this.views[sl]; if (!V) continue; const r = this.slotRect(sl), img = this.viewImage(V);
+      g.imageSmoothingEnabled = true; g.drawImage(img, r[0] + (-2 / V.R) * this.scaleK() * 0, r[1], V.W / V.R * this.scaleK(), V.H / V.R * this.scaleK());
+      this.drawAxes(g, sl);
+      const nm = sl === 'face' && d.main === 'coupe' ? (d.cutY === null ? 'COUPE A-A (plan à placer)' : 'COUPE A-A') : this.VIEWS[this.slotKey(sl)].nm;
+      g.fillStyle = '#334155'; g.font = '3.2px Segoe UI, sans-serif'; g.textAlign = 'center'; g.fillText(nm, r[0] + r[2] / 2, r[1] + r[3] + 4.5); g.textAlign = 'left'; }
+    if (d.main === 'coupe' && d.cutY !== null) this.drawCutLine(g);
+    d.dims.forEach((m, i) => this.drawDim(g, m, i === this.hoverDim));
+    if (this.tool === 'lin' && this.pend) { g.fillStyle = '#c0352b'; const p = this.toSheet(this.pend.slot, this.pend.p[0], this.pend.p[1]); g.beginPath(); g.arc(p[0], p[1], 1.2, 0, 7); g.fill(); if (this.pend.p2 && this.mouse) this.drawDim(g, this.previewDim(), true); }
+    if (this.hover) { g.strokeStyle = '#c0352b'; g.lineWidth = .4; const p = this.hover.xy; g.beginPath(); g.arc(p[0], p[1], 1.6, 0, 7); g.stroke(); }
+    if (!this.L.fits) { g.fillStyle = 'rgba(192,53,43,.9)'; g.font = '600 5px Segoe UI, sans-serif'; g.fillText('Les vues dépassent de la feuille', 16, 18); }
+  },
+  drawAxes(g, sl) { /* traits d'axe des cercles */
+    const V = this.views[sl], key = this.slotKey(sl), VV = this.VIEWS[key], k = this.scaleK(), box = CAD.A.bbox;
+    g.save(); g.strokeStyle = '#111'; g.lineWidth = .18; g.setLineDash([6, 1.2, 1, 1.2]);
+    CAD.C.forEach(cf => { if (cf.op !== 'cut' && cf.op !== 'boss') return; cf.ents.forEach(e => { if (e.k !== 'c') return;
+      const na = this.axisOf(cf.N), P = [0, 1, 2].map(i => cf.U[i] * e.cx + cf.V[i] * e.cy), u = G.dot(P, VV.u), v = G.dot(P, VV.v);
+      if (na === VV.a) { const c = this.toSheet(sl, u, v), L = e.r * k + 2.5; g.beginPath(); g.moveTo(c[0] - L, c[1]); g.lineTo(c[0] + L, c[1]); g.moveTo(c[0], c[1] - L); g.lineTo(c[0], c[1] + L); g.stroke(); }
+      else { const w0 = Math.max(cf.w0, cf.N[na] > 0 ? box[na] : -box[na + 3]), w1 = Math.min(cf.w1, cf.N[na] > 0 ? box[na + 3] : -box[na]);
+        const A = P.map((x, i) => x + cf.N[i] * w0), B = P.map((x, i) => x + cf.N[i] * w1), a = this.toSheet(sl, G.dot(A, VV.u), G.dot(A, VV.v)), b = this.toSheet(sl, G.dot(B, VV.u), G.dot(B, VV.v));
+        const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1, ex = dx / l * 2.5, ey = dy / l * 2.5; g.beginPath(); g.moveTo(a[0] - ex, a[1] - ey); g.lineTo(b[0] + ex, b[1] + ey); g.stroke(); } }); });
+    g.restore();
+  },
+  cutSlot() { const d = this.st(); return d.below === 'dessus' ? 'below' : d.right === 'gauche' ? 'right' : d.below === 'dessous' ? 'below' : d.right === 'droite' ? 'right' : null; },
+  drawCutLine(g) {
+    const d = this.st(), sl = this.cutSlot(); if (!sl) return; const key = this.slotKey(sl), VV = this.VIEWS[key], r = this.slotRect(sl);
+    const P = [0, d.cutY, 0], uu = G.dot(P, VV.u), vv = G.dot(P, VV.v), horiz = Math.abs(VV.v[1]) > .5;
+    const c = this.toSheet(sl, uu, vv);
+    g.save(); g.strokeStyle = '#111';
+    let A, B, arr; /* arr : sens d'observation (+y) sur la feuille */
+    const vy = this.toSheet(sl, G.dot([0, d.cutY + 1, 0], VV.u), G.dot([0, d.cutY + 1, 0], VV.v)), ax = vy[0] - c[0], ay = vy[1] - c[1], al = Math.hypot(ax, ay) || 1, dx = ax / al, dy = ay / al;
+    if (horiz) { A = [r[0] - 5, c[1]]; B = [r[0] + r[2] + 5, c[1]]; } else { A = [c[0], r[1] - 5]; B = [c[0], r[1] + r[3] + 5]; }
+    g.lineWidth = .2; g.setLineDash([7, 1.3, 1.2, 1.3]); g.beginPath(); g.moveTo(A[0], A[1]); g.lineTo(B[0], B[1]); g.stroke(); g.setLineDash([]);
+    g.lineWidth = .7; for (const [p, q] of [[A, B], [B, A]]) { const tx = (q[0] - p[0]), ty = (q[1] - p[1]), tl = Math.hypot(tx, ty); g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(p[0] + tx / tl * 4, p[1] + ty / tl * 4); g.stroke(); }
+    /* flèches : trait puis triangle dont la base est au bout du trait, pointe au-delà */
+    for (const p of [A, B]) { const sx = p[0], sy = p[1], L = 5, ex = sx + dx * L, ey = sy + dy * L; g.lineWidth = .35; g.beginPath(); g.moveTo(sx, sy); g.lineTo(ex, ey); g.stroke();
+      const nx = -dy, ny = dx, hw = 1.1, hl = 2.6; g.fillStyle = '#111'; g.beginPath(); g.moveTo(ex + nx * hw, ey + ny * hw); g.lineTo(ex - nx * hw, ey - ny * hw); g.lineTo(ex + dx * hl, ey + dy * hl); g.closePath(); g.fill();
+      g.font = '600 4.5px Segoe UI, sans-serif'; g.textAlign = 'center'; g.fillText('A', ex + dx * (hl + 3.2) + (horiz ? 0 : 0), ey + dy * (hl + 3.2) + 1.5); }
+    g.restore(); g.textAlign = 'left';
+  },
+  /* ---------- cotes ---------- */
+  dimGeom(m) { /* renvoie les éléments de dessin d'une cote en coordonnées feuille */
+    const k = this.scaleK();
+    if (m.t === 'd') { const c = this.toSheet(m.slot, m.c[0], m.c[1]), R = m.r * k, an = -Math.PI / 4; const p = [c[0] + Math.cos(an) * R, c[1] + Math.sin(an) * R], q = [c[0] - Math.cos(an) * R, c[1] - Math.sin(an) * R], e = [p[0] + 8, p[1] - 8];
+      return { kind: 'd', p, q, e, txt: 'Ø' + G.fmt(2 * m.r, 2), val: 2 * m.r }; }
+    const a = this.toSheet(m.slot, m.p1[0], m.p1[1]), b = this.toSheet(m.slot, m.p2[0], m.p2[1]);
+    if (m.o === 'h') { const y = a[1] + m.off * k; return { kind: 'h', a, b, A: [a[0], y], B: [b[0], y], txt: G.fmt(Math.abs(m.p2[0] - m.p1[0]), 2), val: Math.abs(m.p2[0] - m.p1[0]) }; }
+    const x = a[0] + m.off * k; return { kind: 'v', a, b, A: [x, a[1]], B: [x, b[1]], txt: G.fmt(Math.abs(m.p2[1] - m.p1[1]), 2), val: Math.abs(m.p2[1] - m.p1[1]) };
+  },
+  arrow(g, tip, dx, dy) { /* pointe en tip, triangle dirigé selon (dx,dy) */ const hl = 2.4, hw = .75, bx = tip[0] - dx * hl, by = tip[1] - dy * hl; g.beginPath(); g.moveTo(tip[0], tip[1]); g.lineTo(bx - dy * hw, by + dx * hw); g.lineTo(bx + dy * hw, by - dx * hw); g.closePath(); g.fill(); },
+  drawDim(g, m, hl) {
+    const D = this.dimGeom(m); g.save(); g.strokeStyle = g.fillStyle = hl ? '#c0352b' : '#1d4ed8'; g.lineWidth = .2; g.font = '3.5px Segoe UI, sans-serif'; g.textAlign = 'center';
+    if (D.kind === 'd') { g.beginPath(); g.moveTo(D.q[0], D.q[1]); g.lineTo(D.e[0], D.e[1]); g.lineTo(D.e[0] + 9, D.e[1]); g.stroke();
+      const dx = (D.p[0] - D.q[0]), dy = (D.p[1] - D.q[1]), l = Math.hypot(dx, dy) || 1; this.arrow(g, D.p, dx / l, dy / l); this.arrow(g, D.q, -dx / l, -dy / l);
+      g.textAlign = 'left'; g.fillText(D.txt, D.e[0] + 1, D.e[1] - 1); g.restore(); return; }
+    const ext = (p, P) => { const dx = P[0] - p[0], dy = P[1] - p[1], l = Math.hypot(dx, dy); if (l < .1) return; g.beginPath(); g.moveTo(p[0] + dx / l * 1, p[1] + dy / l * 1); g.lineTo(P[0] + dx / l * 1.8, P[1] + dy / l * 1.8); g.stroke(); };
+    ext(D.a, D.A); ext(D.b, D.B);
+    g.beginPath(); g.moveTo(D.A[0], D.A[1]); g.lineTo(D.B[0], D.B[1]); g.stroke();
+    const dx = D.B[0] - D.A[0], dy = D.B[1] - D.A[1], l = Math.hypot(dx, dy) || 1, ux = dx / l, uy = dy / l;
+    if (l > 7) { this.arrow(g, D.A, -ux, -uy); this.arrow(g, D.B, ux, uy); } else { this.arrow(g, D.A, ux, uy); this.arrow(g, D.B, -ux, -uy); }
+    const mx = (D.A[0] + D.B[0]) / 2, my = (D.A[1] + D.B[1]) / 2;
+    if (D.kind === 'h') g.fillText(D.txt, mx, my - 1); else { g.translate(mx - 1, my); g.rotate(-Math.PI / 2); g.fillText(D.txt, 0, 0); }
+    g.restore();
+  },
+  previewDim() { const P = this.pend, m = this.toModel(P.slot, this.mouse[0], this.mouse[1]);
+    const a = P.p, b = P.p2, inX = m[0] > Math.min(a[0], b[0]) && m[0] < Math.max(a[0], b[0]), inY = m[1] > Math.min(a[1], b[1]) && m[1] < Math.max(a[1], b[1]);
+    let o = Math.abs(b[0] - a[0]) < 1e-6 ? 'v' : Math.abs(b[1] - a[1]) < 1e-6 ? 'h' : (inX && !inY ? 'h' : !inX && inY ? 'v' : (Math.abs(m[1] - a[1]) > Math.abs(m[0] - a[0]) ? 'h' : 'v'));
+    const off = o === 'h' ? (a[1] - m[1]) : (m[0] - a[0]); return { t: 'l', slot: P.slot, p1: a, p2: b, o, off }; },
+  snapAt(x, y) { let best = null, bd = 2.6; for (const sl of ['face', 'right', 'below']) { if (!this.views[sl]) continue; for (const s of this.snaps[sl]) { const p = this.toSheet(sl, s.u, s.v), dd = Math.hypot(p[0] - x, p[1] - y); if (dd < bd) { bd = dd; best = { slot: sl, p: [s.u, s.v], xy: p }; } } } return best; },
+  evXY(e) { const r = $('#drwCv').getBoundingClientRect(); return [(e.clientX - r.left) / this.px, (e.clientY - r.top) / this.px]; },
+  bind() {
+    const cv = $('#drwCv');
+    cv.addEventListener('mousemove', e => { const [x, y] = this.evXY(e); this.mouse = [x, y]; this.hover = this.tool === 'lin' ? this.snapAt(x, y) : null;
+      this.hoverDim = this.tool === 'del' ? this.dimAt(x, y) : -1; this.draw(); });
+    cv.addEventListener('click', e => { const [x, y] = this.evXY(e); this.click(x, y); });
+    addEventListener('resize', () => this.resize());
+  },
+  dimAt(x, y) { const d = this.st(); let best = -1, bd = 3; d.dims.forEach((m, i) => { const D = this.dimGeom(m); const pts = D.kind === 'd' ? [D.e, D.p] : [[(D.A[0] + D.B[0]) / 2, (D.A[1] + D.B[1]) / 2], D.A, D.B]; pts.forEach(p => { const dd = Math.hypot(p[0] - x, p[1] - y); if (dd < bd) { bd = dd; best = i; } }); }); return best; },
+  click(x, y) {
+    const d = this.st();
+    if (d.main === 'coupe' && this.tool === 'sel') { const sl = this.slotAt(x, y), cs = this.cutSlot(); if (sl && sl === cs) { const key = this.slotKey(sl), VV = this.VIEWS[key], m = this.toModel(sl, x, y);
+        let yv = Math.abs(VV.v[1]) > .5 ? m[1] * VV.v[1] : m[0] * VV.u[1]; /* coordonnée y du modèle */
+        let bestY = null, bd = 2.5 / this.scaleK(); this.circles[sl].forEach(c => { const cy = Math.abs(VV.v[1]) > .5 ? c.v * VV.v[1] : c.u * VV.u[1]; if (Math.abs(cy - yv) < bd) { bd = Math.abs(cy - yv); bestY = cy; } });
+        d.cutY = bestY !== null ? bestY : Math.round(yv * 2) / 2; this.compute(); this.renderPanel(); toast('Plan de coupe placé à y = ' + G.fmt(d.cutY, 1) + ' mm'); return; }
+      if (d.cutY === null) { toast(cs ? 'Clique dans la vue où le plan de coupe se voit par la tranche.' : 'Ajoute d’abord une vue de dessus ou de gauche.', 'warn'); return; } }
+    if (this.tool === 'lin') { const s = this.snapAt(x, y);
+      if (!this.pend) { if (s) { this.pend = { slot: s.slot, p: s.p }; this.draw(); } return; }
+      if (!this.pend.p2) { if (s && s.slot === this.pend.slot && Math.hypot(s.p[0] - this.pend.p[0], s.p[1] - this.pend.p[1]) > 1e-6) { this.pend.p2 = s.p; this.draw(); } else if (s && s.slot !== this.pend.slot) toast('Les deux points doivent être dans la même vue.', 'warn'); return; }
+      const m = this.previewDim(); d.dims.push(m); this.pend = null; this.renderPanel(); this.draw(); CAD.hooks.forEach(h => h('drawing')); return; }
+    if (this.tool === 'dia') { const sl = this.slotAt(x, y); if (!sl) return; const mm = this.toModel(sl, x, y); let best = null, bd = 2 / this.scaleK();
+      this.circles[sl].forEach(c => { const dd = Math.abs(Math.hypot(mm[0] - c.u, mm[1] - c.v) - c.r); if (dd < bd) { bd = dd; best = c; } });
+      if (!best) { toast('Clique sur le bord d’un cercle.', 'warn'); return; }
+      d.dims.push({ t: 'd', slot: sl, c: [best.u, best.v], r: best.r }); this.renderPanel(); this.draw(); return; }
+    if (this.tool === 'del') { const i = this.dimAt(x, y); if (i >= 0) { d.dims.splice(i, 1); this.renderPanel(); this.draw(); } }
+  },
+  /* ---------- vérification ---------- */
+  check(model, spec, L) {
+    const d = model.drawing; if (!d) { L(false, 'Mise en plan : ouvre « Mise en plan » et réalise le dessin.'); return; }
+    const VN = { gauche: 'vue de gauche', droite: 'vue de droite', dessus: 'vue de dessus', dessous: 'vue de dessous', '': 'aucune vue' };
+    if (spec.views) { for (const [slot, want, lab] of [['right', spec.views.right, 'à droite de la face'], ['below', spec.views.below, 'sous la face']]) { if (want === undefined) continue;
+      const ok = d[slot] === want; L(ok, ok ? `Vue ${lab} correcte (${VN[want]})` : `Vue ${lab} : ${d[slot] ? 'ce n’est pas la bonne vue en projection européenne' : 'il manque une vue'}`); } }
+    const A = G.analyze(model);
+    if (spec.scale) { const save = CAD.model; const best = (() => { for (const [nm, k] of this.SCALES) if (this.layout(A.bbox, k, d).fits) return nm; return '1:5'; })();
+      const want = spec.scale === 'best' ? best : spec.scale; const ok = d.scale === want; L(ok, ok ? `Échelle ${d.scale} : la plus grande qui tient sur la feuille` : (this.layout(A.bbox, (this.SCALES.find(s => s[0] === d.scale) || [0, 1])[1], d).fits ? 'Échelle : une échelle plus grande tient encore sur la feuille' : 'Échelle : les vues dépassent de la feuille')); }
+    if (spec.section) { const ok = d.main === 'coupe' && d.cutY !== null && d.cutY >= spec.section[0] - 1e-6 && d.cutY <= spec.section[1] + 1e-6;
+      L(ok, ok ? 'Coupe A-A : le plan passe au bon endroit' : (d.main !== 'coupe' ? 'Coupe : remplace la vue de face par la coupe A-A' : d.cutY === null ? 'Coupe : place le plan de coupe' : 'Coupe : le plan ne passe pas par ' + (spec.sectionLabel || 'les détails cachés'))); }
+    if (spec.dims) { const have = d.dims.map(m => ({ t: m.t, val: m.t === 'd' ? 2 * m.r : m.o === 'h' ? Math.abs(m.p2[0] - m.p1[0]) : Math.abs(m.p2[1] - m.p1[1]) }));
+      const used = new Set(), miss = [];
+      spec.dims.forEach(r => { const j = have.findIndex((h, i) => !used.has(i) && (r.d ? h.t === 'd' : h.t !== 'd') && Math.abs(h.val - (r.d || r.v)) < .05); if (j >= 0) used.add(j); else miss.push(r.label || (r.d ? 'Ø' + G.fmt(r.d) : G.fmt(r.v))); });
+      L(!miss.length, !miss.length ? `Cotation complète (${spec.dims.length} cotes)` : `Cotation : il manque ${miss.join(', ')}`);
+      const extra = have.length - used.size; if (spec.noExtra) L(extra === 0, extra === 0 ? 'Aucune cote en trop' : `${extra} cote(s) en trop ou en double : une cote n’apparaît qu’une fois`); }
+    if (spec.title) { const ok = (d.title || '').trim().length >= 3; L(ok, ok ? 'Cartouche rempli' : 'Cartouche : écris le titre de la pièce'); }
+  }
+};
+
 const MS = {
   cur: 0, mi: 0, team: null, items: [], models: [], st: [], tA: {}, corr: false, submitted: false, result: null, key: '',
   init() {
@@ -2247,6 +2631,10 @@ const MS = {
       case 'q-opt': this.pickOpt(b); break;
       case 'q-up': case 'q-down': this.moveOrder(b, a === 'q-up' ? -1 : 1); break;
       case 'ms-next': this.go(Math.min(this.items.length - 1, this.cur + 1)); break;
+      case 'gd-step': { const s3 = this.st[this.cur], d3 = +b.dataset.d, adv = () => { s3.gs = Math.max(0, (s3.gs || 0) + d3); this.render(); };
+        const g3 = (this.items[this.cur].guide || [])[Math.min(s3.gs || 0, (this.items[this.cur].guide || []).length - 1)];
+        if (d3 > 0 && g3 && g3.x) { const box = b.closest('.gd'), pp = document.createElement('div'); pp.className = 'gpop'; pp.innerHTML = `<div><b>Ce que tu viens de faire</b><p>${g3.x}</p><button class="btn primary">Compris</button></div>`; box.appendChild(pp); const ok = pp.querySelector('button'); ok.focus(); ok.onclick = () => adv(); }
+        else adv(); break; }
       case 'ev-submit': CAD.modal(`<h3>Rendre ma copie ?</h3><p>Tu ne pourras plus modifier tes pièces ni tes réponses.</p><div class="row2"><button class="btn" data-act="modal-close">Continuer à travailler</button><button class="btn primary" data-act="ev-submit-yes">Rendre ma copie</button></div>`); break;
       case 'ev-submit-yes': this.submit(); break;
       case 'prof': this.profModal(); break;
@@ -2258,7 +2646,7 @@ const MS = {
   go(i) {
     if (this.team === null) return;
     if (CAD.mode !== '3d' || CAD.pending) { toast('Termine d’abord ton esquisse ou ta fonction.', 'warn'); return; }
-    this.models[this.mi] = CAD.getModel();
+    if (this.wentOnce) this.models[this.mi] = CAD.getModel(); this.wentOnce = true;
     this.cur = i; const it = this.items[i];
     if (it.kind !== 'questions') { const slot = it.useModelOf ?? i; this.mi = slot; $('#simDlg').classList.add('hidden'); $('#kinPanel').classList.add('hidden'); ASM.stop(); CAD.ws = it.ws || 'part'; document.body.classList.toggle('ws-asm', CAD.ws === 'asm'); $$('[data-act="ws"]').forEach(b => b.classList.toggle('on', b.dataset.v === CAD.ws)); CAD.setModel(this.models[slot]); }
     CAD.setMarkers([]);
@@ -2280,8 +2668,11 @@ const MS = {
       <div class="m-title">${esc(it.titre)}</div><p class="m-pitch">${it.pitch}</p>`;
     let h = '';
     if (tp) {
-      h += `<details class="method"><summary>Méthode pas à pas</summary><ol>${it.methode.map(x => `<li>${x}</li>`).join('')}</ol></details>`;
-      h += `<div class="verify"><button class="btn ${s.piece ? 'ok' : 'primary'}" data-act="ms-verify">${s.piece ? 'Validé ✓' : (it.asmCheck ? 'Vérifier mon assemblage' : 'Vérifier ma pièce')}</button></div><div id="resBox">${s.resHtml || ''}</div>`;
+      if (it.guide && it.guide.length) { const G2 = it.guide, k = Math.min(s.gs || 0, G2.length - 1), g = G2[k];
+        h += `<div class="gd"><div class="gh"><span>Tutoriel · étape <b>${k + 1}</b> sur ${G2.length}</span></div><div class="gt">${g.t}</div>${g.img ? `<img src="${g.img}" alt="Résultat attendu après cette étape">` : ''}<div class="gdots">${G2.map((_, j) => `<i class="${j < k ? 'd' : j === k ? 'c' : ''}"></i>`).join('')}</div><div class="gn"><button class="btn" data-act="gd-step" data-d="-1" ${k === 0 ? 'disabled' : ''}>Précédente</button>${k < G2.length - 1 ? '<button class="btn primary" data-act="gd-step" data-d="1">Étape suivante</button>' : ''}</div></div>`;
+        h += `<details class="method"><summary>Méthode résumée</summary><ol>${it.methode.map(x => `<li>${x}</li>`).join('')}</ol></details>`; }
+      else h += `<details class="method"><summary>Méthode pas à pas</summary><ol>${it.methode.map(x => `<li>${x}</li>`).join('')}</ol></details>`;
+      h += `<div class="verify"><button class="btn ${s.piece ? 'ok' : 'primary'}" data-act="ms-verify">${s.piece ? 'Validé ✓' : (it.asmCheck ? 'Vérifier mon assemblage' : it.drawing ? 'Vérifier ma mise en plan' : 'Vérifier ma pièce')}</button></div><div id="resBox">${s.resHtml || ''}</div>`;
       if (it.question) h += this.qHtml(it.question, this.cur, 'q', s);
       const done = s.piece && (!it.question || s.qOk);
       if (done && this.cur < this.items.length - 1) h += `<div class="row2"><button class="btn primary" data-act="ms-next">Mission suivante</button></div>`;
@@ -2363,6 +2754,7 @@ const MS = {
         L(ok, ok ? `Simulation correcte (\u03c3max = ${fmtN(res.vmax, 1)} MPa, s = ${fmtN(res.s, 2)})` : 'Simulation : ' + why.join(' ; '));
       }
     }
+    if (it.drawing) DRW.check(model, it.drawing, L);
     if (it.asmCheck) {
       const ac = it.asmCheck; out.asmOk = false;
       if (!model.asm || !model.asm.parts.length) { L(false, 'Assemblage vide.'); return out; }
