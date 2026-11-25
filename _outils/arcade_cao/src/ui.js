@@ -108,8 +108,9 @@ function renderStep(){
    <div class="tn"><button class="btn" id="stPrev" ${k===0?'disabled':''}>Précédente</button>${k<n-1?'<button class="btn prim" id="stNext">Étape suivante</button>':'<button class="btn go" id="stTest">Lancer le jeu pour tester</button>'}</div>`;
   hlCat(S.cat);
   const go=d=>{ ST.stp[CUR]=Math.max(0,Math.min(n-1,k+d)); stSave(); renderStep(); };
-  $('#stPrev').onclick=()=>go(-1); const nx=$('#stNext'); if(nx) nx.onclick=()=>go(1);
-  const tb=$('#stTest'); if(tb) tb.onclick=()=>{ simStart(); };
+  const pop=(cb)=>{ if(!S.x){ cb(); return; } const d=document.createElement('div'); d.className='tpop'; d.innerHTML=`<div><b>Ce que tu viens de faire</b><p>${S.x}</p><button class="btn prim" id="tpOk">Compris</button></div>`; box.appendChild(d); const ok=d.querySelector('#tpOk'); ok.focus(); ok.onclick=()=>{ d.remove(); cb(); }; };
+  $('#stPrev').onclick=()=>go(-1); const nx=$('#stNext'); if(nx) nx.onclick=()=>pop(()=>go(1));
+  const tb=$('#stTest'); if(tb) tb.onclick=()=>pop(()=>simStart());
   const im=box.querySelector('.ti'); if(im) im.onclick=()=>{ $('#modal').innerHTML=`<div class="box big"><img src="${S.img}" style="max-width:100%"><div class="row"><button class="btn prim" id="zc">Fermer</button></div></div>`; $('#modal').classList.add('on'); $('#zc').onclick=()=>$('#modal').classList.remove('on'); };
 }
 function renderMission(){

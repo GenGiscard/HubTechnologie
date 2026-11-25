@@ -129,7 +129,9 @@ body.locked [data-act="new-sketch"],body.locked [data-act="new-file"],body.locke
 .method{border:1px solid var(--line);border-radius:10px;margin:8px 0}
 .method summary{padding:8px 12px;cursor:pointer;font-weight:600;font-size:13px;color:var(--acc)}
 .method ol{margin:0;padding:2px 14px 10px 32px;font-size:13px;line-height:1.65}
-.gd{border:2px solid #f9b13c;border-radius:12px;padding:10px 12px;margin:8px 0;background:#fffaf0}
+.gpop{position:absolute;inset:0;background:#fffaf0f0;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:10px}
+.gpop>div{background:#fff;border:2px solid #16a34a;border-radius:12px;padding:10px 12px;box-shadow:0 6px 20px #0002}.gpop b{color:#15803d;font-size:13.5px}.gpop p{margin:5px 0 9px;font-size:13.5px;line-height:1.4}.gpop .btn{width:100%}
+.gd{position:relative;border:2px solid #f9b13c;border-radius:12px;padding:10px 12px;margin:8px 0;background:#fffaf0}
 .gd .gh{display:flex;justify-content:space-between;font-size:12px;color:#92400e}.gd .gt{font-size:13.5px;line-height:1.5;margin:6px 0 8px}
 .gd .gt b{color:#1e3a5f}.gd img{width:100%;border-radius:8px;border:1px solid var(--line);background:#fff;display:block;margin-bottom:6px}
 .gd .gdots{display:flex;gap:3px;margin:4px 0 8px}.gd .gdots i{flex:1;height:5px;border-radius:3px;background:#e2e8f0}.gd .gdots i.d{background:#16a34a}.gd .gdots i.c{background:#f9b13c}
@@ -2252,7 +2254,10 @@ const MS = {
       case 'q-opt': this.pickOpt(b); break;
       case 'q-up': case 'q-down': this.moveOrder(b, a === 'q-up' ? -1 : 1); break;
       case 'ms-next': this.go(Math.min(this.items.length - 1, this.cur + 1)); break;
-      case 'gd-step': { const s3 = this.st[this.cur]; s3.gs = Math.max(0, (s3.gs || 0) + +b.dataset.d); this.render(); break; }
+      case 'gd-step': { const s3 = this.st[this.cur], d3 = +b.dataset.d, adv = () => { s3.gs = Math.max(0, (s3.gs || 0) + d3); this.render(); };
+        const g3 = (this.items[this.cur].guide || [])[Math.min(s3.gs || 0, (this.items[this.cur].guide || []).length - 1)];
+        if (d3 > 0 && g3 && g3.x) { const box = b.closest('.gd'), pp = document.createElement('div'); pp.className = 'gpop'; pp.innerHTML = `<div><b>Ce que tu viens de faire</b><p>${g3.x}</p><button class="btn primary">Compris</button></div>`; box.appendChild(pp); const ok = pp.querySelector('button'); ok.focus(); ok.onclick = () => adv(); }
+        else adv(); break; }
       case 'ev-submit': CAD.modal(`<h3>Rendre ma copie ?</h3><p>Tu ne pourras plus modifier tes pièces ni tes réponses.</p><div class="row2"><button class="btn" data-act="modal-close">Continuer à travailler</button><button class="btn primary" data-act="ev-submit-yes">Rendre ma copie</button></div>`); break;
       case 'ev-submit-yes': this.submit(); break;
       case 'prof': this.profModal(); break;

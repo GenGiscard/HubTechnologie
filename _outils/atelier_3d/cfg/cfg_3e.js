@@ -75,3 +75,28 @@ missions:[
   {txt:'La tête compense : elle reste face à l’avant',ok:A=>H.max(A,A=>Math.abs(A.S.rot.torse.y+A.S.rot.tete.y))<=3},{txt:'Le cycle boucle',ok:A=>H.loops(A)}],
  sol:A=>twist(A)}
 ]};
+[[
+ 'Chaque articulation sera le point de rotation d’un os.',
+ 'L’axe du corps porte tout le reste : bassin, torse, tête.',
+ 'Épaule, coude et poignet forment une chaîne : chacun entraîne le suivant.',
+ 'Hanche, genou et cheville : la chaîne de la jambe part du bassin.',''],
+['Le skinning attache la peau aux os : elle suivra le squelette.',
+ 'Genou X positif : la jambe se plie vers l’arrière, comme un vrai genou.',
+ 'Hanche X négatif : la cuisse avance. Ces règles serviront pour la marche.',''],
+['Un cycle de marche commence souvent par baisser les bras du T-pose.',
+ 'Le contact : le talon avant touche le sol, la jambe arrière pousse.',
+ 'Le bras opposé à la jambe avant se balance : c’est ce qui équilibre la marche.',
+ 'Même pose à 0 s et à 1 s : le cycle peut se répéter à l’infini.'],
+['Au milieu du cycle, l’autre pied passe devant : c’est la pose miroir.',
+ 'Bras et jambes s’inversent aussi : la marche reste équilibrée.',''],
+['Au passage, la jambe d’appui est tendue sous le corps.',
+ 'La jambe qui passe se plie pour que le pied ne frotte pas le sol.',
+ 'Le corps monte au passage et descend au contact : c’est le rebond de la marche.',
+ 'Le deuxième pas est le miroir du premier.',''],
+['La courbe montre comment un angle évolue dans le temps.',
+ 'Une pointe sur la courbe donne un à-coup : le mouvement change brusquement.',
+ 'L’interpolation lisse ralentit avant chaque clé et accélère après : c’est plus naturel.',
+ 'Le bassin monte et descend à chaque pas : deux bosses par cycle.',''],
+['Le torse tourne à l’opposé des hanches : c’est le balancier naturel de la marche.',
+ 'La tête tourne dans l’autre sens : le regard reste droit devant.','']
+].forEach((L,i)=>L.forEach((x,k)=>{ if(CFG.missions[i].steps[k]) CFG.missions[i].steps[k].x=x; }));

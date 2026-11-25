@@ -35,6 +35,11 @@ def ent_txt(group, H):
         return 'Outil <b>Polyligne</b> : clique les points dans l’ordre, puis reclique sur le premier pour fermer. Corrige ensuite les coordonnées à droite : %s.' % pts
     return 'Trace le contour comme sur le dessin.'
 
+EX = {'rect': 'Les cotes fixent la taille et la position exactes du rectangle : c’est un dessin précis, pas à main levée.',
+      'circle': 'Un cercle dans l’esquisse devient un cylindre avec un bossage, ou un trou avec un enlèvement.',
+      'oblong': 'L’oblong, deux demi-cercles reliés, donne une fente arrondie ou une forme de bielle.',
+      'npoly': 'Le polygone régulier a tous ses côtés égaux, comme la tête d’une vis ou un écrou.',
+      'poly': 'Une polyligne fermée permet de dessiner n’importe quel contour, point par point.'}
 def groups(ents):
     out = []
     for e in ents:
@@ -58,13 +63,15 @@ def steps_for(m, hide=False):
     for k, f in enumerate(feats):
         p, note = plane_txt(f['sketch']['plane'])
         head = ('Fonction %d sur %d. ' % (k + 1, nf)) if nf > 1 else ''
-        st.append({'t': head + p + note})
+        face = f['sketch']['plane']['off'] != 0
+        st.append({'t': head + p + note, 'x': 'Tu dessines sur une face de la pièce : le nouveau volume partira de cette face.' if face else 'Le plan d’esquisse est la feuille sur laquelle tu dessines la forme en 2D.'})
         for g in groups(f['sketch']['ents']):
-            st.append({'t': ent_txt(g, H)})
+            st.append({'t': ent_txt(g, H), 'x': EX.get(g[0]['t'], 'Ce contour 2D donnera sa forme au volume.')})
         op = 'Bossage' if f['op'] == 'boss' else 'Enlèvement'
         dep = 'coche <b>À travers tout</b>' if f.get('thru') else 'profondeur <b>%s mm</b>' % H(f['depth'])
         sens = {1: 'Normal', -1: 'Inversé', 0: 'Symétrique'}.get(f.get('dir', 1), 'Normal')
-        st.append({'t': 'Clique sur <b>Valider l’esquisse</b>. Choisis <b>%s</b>, %s, sens <b>%s</b>, puis <b>Valider</b>. Ta pièce doit ressembler à l’image.' % (op, dep, sens), 'img': (k + 1)})
+        st.append({'t': 'Clique sur <b>Valider l’esquisse</b>. Choisis <b>%s</b>, %s, sens <b>%s</b>, puis <b>Valider</b>. Ta pièce doit ressembler à l’image.' % (op, dep, sens), 'img': (k + 1),
+                   'x': ('Le bossage pousse l’esquisse en 3D : il ajoute de la matière.' if f['op'] == 'boss' else 'L’enlèvement de matière creuse ou perce la pièce avec la forme de l’esquisse.') + (' « À travers tout » traverse toute la pièce.' if f.get('thru') else '')})
     if used: st[0]['t'] += ' Les valeurs <b>?</b> ne sont pas données : lis le dessin et calcule-les.'
     st.append({'t': 'Compare avec la pièce cible (tourne-la), puis clique sur <b>Vérifier ma pièce</b>.' + (' Ensuite, suis la méthode résumée pour la suite.' if m.get('sim') or m.get('question') else '')})
     return st

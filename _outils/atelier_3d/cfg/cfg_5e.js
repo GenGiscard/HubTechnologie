@@ -60,3 +60,26 @@ missions:[
  aide:'Torse : Rotation X positive = il se penche en avant. Pour plier le coude vers le ventre, essaie Rotation Y, et lève un peu l’épaule avec Rotation X.',
  sol:A=>{A.dur(2);A.time(0);A.rot('epaule_g','z',-75);A.rot('epaule_d','z',75);['torse','tete','epaule_d','coude_d','epaule_g'].forEach(n=>A.key(n));A.time(1);A.rot('torse','x',55);A.rot('epaule_d','x',-40);A.rot('coude_d','y',90);['torse','tete','epaule_d','coude_d','epaule_g'].forEach(n=>A.key(n));A.time(2);A.rot('torse','x',0);A.rot('epaule_d','x',0);A.rot('coude_d','y',0);['torse','tete','epaule_d','coude_d','epaule_g'].forEach(n=>A.key(n));A.time(1);}}
 ]};
+[[
+ 'Un os est une partie rigide du squelette. Le sélectionner permet de le faire tourner.',
+ 'L’os tourne autour de son articulation, l’épaule : tout le bras suit, comme un vrai bras.',
+ 'Le signe donne le sens de rotation : le bras droit est à l’opposé, donc l’angle est négatif.',
+ 'Chaque os tourne autour de 3 axes : X (rouge), Y (vert) et Z (bleu).',''],
+['Une rotation sans image clé reste fixe pendant toute l’animation.',
+ 'Le curseur rouge indique le temps. On pose les clés à des moments précis.',
+ 'Une image clé enregistre la pose de l’os à ce moment-là.',
+ 'Entre deux clés, le logiciel calcule tout seul les images intermédiaires : l’interpolation.',
+ 'Même valeur au début et à la fin : l’animation peut tourner en boucle sans à-coup.',''],
+['Clé tout le corps enregistre tous les os d’un coup : pratique pour une pose de départ.',
+ 'Le bassin est la racine du squelette : le déplacer déplace tout le corps.',
+ 'S’accroupir avant de sauter, c’est l’anticipation : le spectateur comprend ce qui va arriver.',
+ 'En l’air, les jambes se tendent : la pose clé du sommet du saut.',
+ 'Plier les jambes à l’atterrissage, c’est l’amorti : le personnage paraît lourd et réel.',''],
+['Une durée plus longue laisse de la place pour plusieurs mouvements.',
+ 'Cette première pose est le point de départ de la boucle.',
+ 'Alterner deux poses miroir donne un rythme, comme une danse.',
+ 'La dernière clé reprend la première : la danse peut boucler à l’infini.',''],
+['Une pose de départ neutre rend le mouvement plus lisible.',
+ 'Le torse entraîne la tête et les bras : ce sont ses enfants dans le squelette.',
+ 'Revenir à la pose de départ termine le mouvement proprement.']
+].forEach((L,i)=>L.forEach((x,k)=>{ if(CFG.missions[i].steps[k]) CFG.missions[i].steps[k].x=x; }));

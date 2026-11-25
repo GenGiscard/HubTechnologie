@@ -262,7 +262,7 @@ function renderSide(){
    <div class="mbtns"><button class="btn prim" id="verif">Vérifier ma mission</button></div><div id="res"></div>`;
   if(S.done[S.cur]) document.querySelectorAll('#mis .tests li').forEach(li=>li.classList.add('good'));
   const go=d=>{ S.stp[S.cur]=Math.max(0,Math.min(m.steps.length-1,k+d)); save(); renderSide(); };
-  $('#stPrev').onclick=()=>go(-1); const nx=$('#stNext'); if(nx) nx.onclick=()=>go(1);
+  $('#stPrev').onclick=()=>go(-1); const nx=$('#stNext'); if(nx) nx.onclick=()=>{ const x=m.steps[k].x; if(!x){ go(1); return; } const d=document.createElement('div'); d.className='tpop'; d.innerHTML=`<div><b>Ce que tu viens de faire</b><p>${x}</p><button class="btn prim" id="tpOk">Compris</button></div>`; document.querySelector('#mis .tuto').appendChild(d); const ok=d.querySelector('#tpOk'); ok.focus(); ok.onclick=()=>{ d.remove(); go(1); }; };
   $('#verif').onclick=verify;
   const im=document.querySelector('#mis .ti'); if(im) im.onclick=()=>{ $('#modal').innerHTML=`<div class="box big"><img src="${st.img}" style="max-width:100%"><div class="row"><button class="btn prim" id="zc">Fermer</button></div></div>`; $('#modal').classList.add('on'); $('#zc').onclick=()=>$('#modal').classList.remove('on'); };
 }

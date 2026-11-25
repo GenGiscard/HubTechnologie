@@ -54,12 +54,12 @@ base2 = [scene('foret'), music('aventure'), newsprite('monSprite', 'heros', 'Jou
 eat2 = [addscore(1)]; eat3 = eat2 + [rndpos('autreSprite')]; eat4 = [addscore(1), sound('piece'), effect('autreSprite', 'etincelles'), rndpos('autreSprite')]
 b5 = base2 + [countdown(20)]
 b6 = b5 + [newsprite('etoile', 'etoile', 'Bonus'), rndpos('etoile')]
-b7 = b6 + [newsprite('pourrie', 'slime', 'Ennemi'), setpos('pourrie', 20, 20), sset('pourrie', 'vx', 40), sset('pourrie', 'vy', 30), flag('pourrie', 'bounce')]
+b7 = b6 + [repeat(3, newsprite('pourrie', 'slime', 'Ennemi'), rndpos('pourrie'), sset('pourrie', 'vx', 40), sset('pourrie', 'vy', 30), flag('pourrie', 'bounce'))]
 star2 = overlap('Joueur', 'Bonus', addscore(5), effect('autreSprite', 'confettis'), sound('bonus'), rndpos('autreSprite'))
 rot = overlap('Joueur', 'Ennemi', addscore(-3), effect('autreSprite', 'fumee'), sound('degat'), rndpos('autreSprite'))
 TP2 = dict(id='tp_arcade5_2', mode='tp', title='TP 2 — Le verger magique', classes=CL5,
   intro='Un vrai petit jeu : attraper des pommes et des étoiles, éviter le slime, avant la fin du temps.',
-  toolbox=['jeu', 'sprites', 'controleur', 'info', 'musique', 'effets'], hide=ADV + ['g_update', 'g_interval', 'g_over', 'i_setlife', 'i_addlife', 'i_life', 'g_lifezero', 'cam_follow', 'world_size'],
+  toolbox=['jeu', 'sprites', 'controleur', 'info', 'musique', 'effets', 'boucles'], hide=[h for h in ADV if h != 'sp_set'] + ['g_update', 'g_interval', 'g_over', 'i_setlife', 'i_addlife', 'i_life', 'g_lifezero', 'cam_follow', 'world_size', 'controls_for', 'controls_whileUntil', 'controls_forEach'],
   start=EMPTY, missions=[
   M('Le joueur et la pomme', 'Décor forêt et musique d’aventure. Crée le héros (il bouge et reste dans l’écran) et une pomme de type <b>Nourriture</b> en x = 120, y = 40.',
     [('Un décor est affiché', "return !!T.rt.scene;"), ('Le héros (Joueur) bouge avec les flèches', MOVE_R), ('Une pomme de type Nourriture est en x = 120, y = 40', "const f=T.one('Nourriture'); return !!f&&Math.abs(f.x-120)<1&&Math.abs(f.y-40)<1;")],
@@ -86,11 +86,11 @@ TP2 = dict(id='tp_arcade5_2', mode='tp', title='TP 2 — Le verger magique', cla
      ('Des confettis apparaissent', OV('Joueur', 'Bonus') + "return (T.rt.calls.fx_confettis||0)>=1;"),
      ('Ensuite, l’étoile est ailleurs', OV('Joueur', 'Bonus') + "const g=T.one('Bonus'); return !!g&&Math.hypot(g.x-p.x,g.y-p.y)>8;")],
     prog(start(*b6), overlap('Joueur', 'Nourriture', *eat4), star2), aide='Il faut un deuxième événement « chevauche », avec le type <b>Bonus</b>.'),
-  M('Défi : le slime pourri', 'Un slime (Ennemi) rebondit dans le verger. Le toucher fait perdre 3 points, dans un nuage de fumée, et il repart ailleurs.',
-    [('Un slime (Ennemi) se déplace', "const e=T.one('Ennemi'); if(!e) return false; const x=e.x,y=e.y; T.run(1); return Math.hypot(e.x-x,e.y-y)>20;"),
-     ('Il rebondit et reste dans l’écran', "const e=T.one('Ennemi'); if(!e) return false; for(let i=0;i<8;i++){ T.run(1); if(e.x<0||e.x>160||e.y<0||e.y>120) return false; } return true;"),
-     ('Le toucher fait perdre 3 points', OV('Joueur', 'Ennemi') + "return T.rt.score===-3;"), ('Un nuage de fumée apparaît', OV('Joueur', 'Ennemi') + "return (T.rt.calls.fx_fumee||0)>=1;")],
-    prog(start(*b7), overlap('Joueur', 'Nourriture', *eat4), star2, rot), aide='<b>Sprites</b> : « fixer pourrie vx à 40 », puis vy, et « régler pourrie rebondit sur les bords ».'),
+  M('Défi : les slimes pourris', '<b>Trois</b> slimes (Ennemi) rebondissent dans le verger. En toucher un fait perdre 3 points, dans un nuage de fumée, et il repart ailleurs.',
+    [('Il y a 3 slimes (Ennemi)', "return T.n('Ennemi')>=3;"), ('Les slimes se déplacent', "const e=T.one('Ennemi'); if(!e) return false; const x=e.x,y=e.y; T.run(1); return Math.hypot(e.x-x,e.y-y)>20;"),
+     ('Ils rebondissent et restent dans l’écran', "const e=T.one('Ennemi'); if(!e) return false; for(let i=0;i<8;i++){ T.run(1); if(e.x<0||e.x>160||e.y<0||e.y>120) return false; } return true;"),
+     ('En toucher un fait perdre 3 points', OV('Joueur', 'Ennemi') + "return T.rt.score===-3;"), ('Un nuage de fumée apparaît', OV('Joueur', 'Ennemi') + "return (T.rt.calls.fx_fumee||0)>=1;")],
+    prog(start(*b7), overlap('Joueur', 'Nourriture', *eat4), star2, rot), aide='<b>Boucles</b> : « répéter 3 fois », et dedans : créer le slime, position aléatoire, « fixer pourrie vx à 40 », vy, et « rebondit sur les bords ».'),
 ])
 
 # ---------------- TP 3 : le manoir hanté ----------------

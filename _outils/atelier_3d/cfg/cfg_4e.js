@@ -66,3 +66,33 @@ missions:[
  aide:'-360° et 0° donnent la même pose : garde -360° jusqu’à la fin, sinon il refait un tour à l’envers.',
  sol:A=>jump(A,true)}
 ]};
+[[
+ 'Chaque articulation sera le point de rotation d’un os.',
+ 'Le bassin est la racine : c’est lui qui porte tout le squelette.',
+ 'Le torse permet au haut du corps de se pencher et de tourner.',
+ 'La tête tourne autour de la base du cou, pas du centre de la tête.',
+ 'L’épaule est le point de rotation de tout le bras.',
+ 'Le coude plie l’avant-bras : il doit être pile au pli du bras.',
+ 'Le poignet fait tourner la main.',
+ 'Le bras droit est le symétrique du gauche.',
+ 'La hanche est le point de rotation de toute la jambe.',
+ 'Le genou plie la jambe : bien placé, la jambe se plie sans se tordre.',
+ 'La cheville fait tourner le pied.',
+ 'La jambe droite est le symétrique de la gauche.',''],
+['La hiérarchie dit quel os entraîne quel autre.',
+ 'Quand le torse tourne, la tête suit : le torse est son parent.',
+ 'Une chaîne d’os : l’épaule entraîne le coude, qui entraîne la main.',
+ 'L’épaule est rattachée au torse : quand il se penche, le bras suit.',
+ 'Les jambes partent du bassin : quand il monte, elles montent aussi.',''],
+['Le skinning attache chaque point de la peau aux os les plus proches.',
+ 'La peau suit l’os du genou : le rig fonctionne.',
+ 'Près des articulations, la peau dépend de deux os : elle se plie en douceur.',''],
+['La pose de repos est le point de départ et d’arrivée du saut.',
+ 'S’accroupir avant de sauter, c’est l’anticipation : on comprend ce qui va arriver.',
+ 'Les bras levés au sommet donnent de l’élan et de l’énergie au saut.',
+ 'Plier les jambes à l’arrivée, c’est l’amorti : le personnage paraît lourd.',''],
+['Un salto commence comme un saut : on prend de l’élan.',
+ 'Tourner le bassin fait tourner tout le corps, car c’est la racine du squelette.',
+ 'En boule, le corps est plus compact : il tourne plus vite, comme un vrai gymnaste.',
+ 'De 0 à -360°, le logiciel calcule toute la rotation entre les clés.','']
+].forEach((L,i)=>L.forEach((x,k)=>{ if(CFG.missions[i].steps[k]) CFG.missions[i].steps[k].x=x; }));

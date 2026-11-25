@@ -164,12 +164,12 @@ def steps_for(prev_xml, sol_xml):
                 mut = h.find('mutation'); args = [a.get('name') for a in mut.findall('arg')] if mut is not None else []
                 if args: extra = ' Clique sur sa roue dentée et ajoute l’entrée <b>%s</b>.' % ', '.join(args); seen_vars |= set(args)
                 if h.get('type') == 'procedures_defreturn': extra += ' Branche dans « retourner » le bloc de l’image.'
-            steps.append(dict(cat=c, t=t + extra + ' Pose-le dans l’espace de travail.', xml=build_hat(h, [] if h.get('type') != 'procedures_defreturn' else [], None) if h.get('type') != 'procedures_defreturn' else '<xml>' + ET.tostring(h, encoding='unicode') + '</xml>', where=''))
+            steps.append(dict(x=hat_expl(h), cat=c, t=t + extra + ' Pose-le dans l’espace de travail.', xml=build_hat(h, [] if h.get('type') != 'procedures_defreturn' else [], None) if h.get('type') != 'procedures_defreturn' else '<xml>' + ET.tostring(h, encoding='unicode') + '</xml>', where=''))
             if h.get('type') == 'procedures_defreturn': continue
             for i, b in enumerate(sl):
                 bb = nonext(b); vs = {F(x, 'VAR') for x in bb.iter('block') if F(x, 'VAR')} - seen_vars - {'sprite', 'autreSprite', 'monSprite'} - loopvars(bb)
                 c, t = stmt_desc(b, vs); seen_vars |= vs
-                steps.append(dict(cat=c, t=t + ' Place-le dans ' + q(hat_label(h)) + '.', xml=build_hat(h, sl[:i + 1], i)))
+                steps.append(dict(x=stmt_expl(b), cat=c, t=t + ' Place-le dans ' + q(hat_label(h)) + '.', xml=build_hat(h, sl[:i + 1], i)))
         else:
             if h.get('type', '').startswith('procedures_def'):
                 na = [x.get('name') for x in (h.find('mutation').findall('arg') if h.find('mutation') is not None else [])]
@@ -177,7 +177,7 @@ def steps_for(prev_xml, sol_xml):
                 add = [a for a in na if a not in oa]
                 if add:
                     seen_vars |= set(add)
-                    steps.append(dict(param=True, cat='Fonctions', t='Clique sur la petite roue dentée de la fonction <b>%s</b> et glisse « nom de l\u2019entrée » dans « entrées » : appelle-la <b>%s</b>. Le bloc <b>%s</b> apparaît alors dans Variables.' % (F(h, 'NAME'), ', '.join(add), add[0]), xml=build_hat(h, [], None)))
+                    steps.append(dict(param=True, x='Une entrée (paramètre) permet de donner une valeur différente à la fonction à chaque appel.', cat='Fonctions', t='Clique sur la petite roue dentée de la fonction <b>%s</b> et glisse « nom de l\u2019entrée » dans « entrées » : appelle-la <b>%s</b>. Le bloc <b>%s</b> apparaît alors dans Variables.' % (F(h, 'NAME'), ', '.join(add), add[0]), xml=build_hat(h, [], None)))
             ol = stmts(old); okeys = [key_stmt(b) for b in ol]
             used = set(); news = []
             for i, b in enumerate(sl):
@@ -192,7 +192,76 @@ def steps_for(prev_xml, sol_xml):
                 c, t = stmt_desc(b, vs); seen_vars |= vs
                 verb = ' Remplace l’ancien bloc par celui-ci, dans ' if (removed > 0 and n == 0) else ' Place-le dans '
                 ns = set(news); keep = [j for j in range(len(sl)) if j <= i or j not in ns]
-                steps.append(dict(cat=c, t=t + verb + q(hat_label(h)) + ', à l’endroit surligné.', xml=build_hat(h, [sl[j] for j in keep], keep.index(i))))
+                steps.append(dict(x=stmt_expl(b), cat=c, t=t + verb + q(hat_label(h)) + ', à l’endroit surligné.', xml=build_hat(h, [sl[j] for j in keep], keep.index(i))))
             if removed > 0 and not news:
-                steps.append(dict(cat='Jeu', t='Modifie ' + q(hat_label(h)) + ' pour qu’il ressemble à l’image.', xml=build_hat(h, sl, None)))
+                steps.append(dict(x='Le programme est modifié : le jeu se comporte maintenant comme demandé.', cat='Jeu', t='Modifie ' + q(hat_label(h)) + ' pour qu’il ressemble à l’image.', xml=build_hat(h, sl, None)))
     return [x for x in steps if x.get('param')] + [x for x in steps if not x.get('param')]
+
+# ---------- explication courte « ce que tu viens de faire » ----------
+KINDN = {'Joueur': 'le joueur', 'Ennemi': 'un ennemi', 'Nourriture': 'de la nourriture', 'Bonus': 'un bonus', 'Obstacle': 'un obstacle', 'Projectile': 'un projectile'}
+def hat_expl(h):
+    t = h.get('type')
+    return {
+     'g_start': 'Tout ce qui est dans « au démarrage » s’exécute une seule fois, au lancement du jeu.',
+     'g_update': 'Ce qui est dedans s’exécute en boucle, environ 30 fois par seconde.',
+     'g_interval': 'Ce qui est dedans se répète tout seul, toutes les %s ms (1000 ms = 1 seconde).' % F(h, 'MS'),
+     'g_countend': 'C’est un événement : il se déclenche quand le compte à rebours arrive à zéro.',
+     'g_lifezero': 'C’est un événement : il se déclenche quand le joueur n’a plus de vies.',
+     'sp_overlap_ev': 'C’est un événement : il se déclenche dès qu’un sprite %s touche un sprite %s.' % (F(h, 'K1'), F(h, 'K2')),
+     'ct_button_ev': 'C’est un événement : il se déclenche à chaque appui sur le bouton %s.' % F(h, 'B'),
+     'procedures_defnoreturn': 'Une fonction regroupe des blocs sous un nom, pour les réutiliser sans les recopier.',
+     'procedures_defreturn': 'Cette fonction calcule une valeur et la renvoie à celui qui l’appelle.',
+    }.get(t, 'Ce bloc déclenche une partie du programme.')
+def stmt_expl(b):
+    t = b.get('type'); v = F(b, 'VAR') or 'le sprite'
+    if t == 'variables_set':
+        val = V(b, 'VALUE'); vt = val.get('type') if val is not None else ''
+        if vt == 'sp_create': return 'Tu crées un sprite (un personnage du jeu), rangé dans la variable %s. Son type sert à repérer les collisions.' % v
+        if vt == 'sp_projectile': return 'Un projectile part de %s avec sa vitesse, puis disparaît hors de l’écran.' % F(val, 'VAR')
+        if vt == 'lists_create_with': return 'Une liste range plusieurs valeurs dans une seule variable, %s.' % v
+        return 'La variable %s garde une valeur en mémoire pour la suite du jeu.' % v
+    p = F(b, 'P')
+    if t in ('sp_set', 'sp_change'):
+        what = {'vx': 'la vitesse horizontale', 'vy': 'la vitesse verticale', 'x': 'la position x', 'y': 'la position y', 'ay': 'l’accélération verticale (comme la gravité)', 'ax': 'l’accélération horizontale', 'pv': 'les points de vie'}.get(p, p)
+        if t == 'sp_set':
+            if p in ('vx', 'vy'): return 'Avec une vitesse, %s avance tout seul, de ce nombre de pixels par seconde.' % v
+            if p == 'pv': return '%s a maintenant des points de vie : il faudra plusieurs coups pour le détruire.' % v
+            if p in ('ay', 'ax'): return 'L’accélération change la vitesse petit à petit : c’est ce qui fait tomber, comme la gravité.'
+            return '%s de %s prend cette valeur.' % (what[0].upper() + what[1:], v)
+        return '%s de %s augmente ou diminue de ce nombre à chaque fois.' % (what[0].upper() + what[1:], v)
+    fl = F(b, 'F')
+    D = {
+     'sp_setpos': '%s est placé à ce point : x va de gauche à droite (0 à 160), y de haut en bas (0 à 120).' % v,
+     'sp_random': '%s saute à un endroit choisi au hasard dans l’écran.' % v,
+     'sp_flag': {'bounce': '%s rebondit sur les bords au lieu de sortir de l’écran.' % v, 'stay': '%s ne peut plus sortir de l’écran.' % v,
+                 'autoDestroy': '%s est supprimé dès qu’il sort de l’écran, pour ne pas encombrer le jeu.' % v}.get(fl, 'Le comportement de %s change.' % v),
+     'sp_say': '%s affiche une bulle de texte, comme une bande dessinée.' % v,
+     'sp_destroy': '%s disparaît du jeu.' % v,
+     'sp_follow': '%s se dirige tout seul vers %s : c’est un poursuivant.' % (v, F(b, 'TGT')),
+     'sp_image': 'L’apparence de %s change, mais c’est toujours le même sprite.' % v,
+     'ct_move': 'Les flèches du clavier font maintenant bouger %s.' % v,
+     'g_bg': 'La couleur du fond change.',
+     'g_splash': 'Un message s’affiche à l’écran pour le joueur.',
+     'g_over': 'La partie s’arrête et affiche %s.' % ('GAGNÉ' if F(b, 'WIN') == '1' else 'PERDU'),
+     'i_setscore': 'Le score part de cette valeur.',
+     'i_addscore': 'Le score change : un nombre positif fait gagner des points, un négatif en fait perdre.',
+     'i_setlife': 'Le joueur reçoit ce nombre de vies : ce sont les cœurs en haut de l’écran.',
+     'i_addlife': 'Le nombre de vies change : par exemple -1 quand le joueur est touché.',
+     'i_countdown': 'Un chrono démarre. À zéro, l’événement « compte à rebours fini » se déclenche.',
+     'm_play': 'Un son accompagne l’action : le joueur entend ce qui se passe.',
+     'fx_scene': 'Le décor change l’image de fond. Il ne change rien aux règles du jeu.',
+     'fx_music': 'Une musique tourne en boucle pendant toute la partie.',
+     'fx_effect': 'Un effet visuel apparaît sur %s. Il sert au spectacle, pas aux règles.' % v,
+     'fx_shake': 'L’écran tremble : le joueur ressent le choc.',
+     'cam_follow': 'La caméra se déplace pour garder %s au centre de l’écran.' % v,
+     'world_size': 'Le monde devient plus grand que l’écran : on le découvre en avançant.',
+     'controls_if': 'C’est une condition : les blocs dedans ne s’exécutent que si elle est vraie.',
+     'controls_repeat_ext': 'C’est une boucle : les blocs dedans sont répétés plusieurs fois, sans les recopier.',
+     'controls_for': 'Boucle avec compteur : %s prend une nouvelle valeur à chaque tour.' % v,
+     'controls_forEach': 'Cette boucle traite les éléments de la liste un par un.',
+     'controls_whileUntil': 'Cette boucle recommence tant que la condition reste vraie.',
+     'math_change': 'La variable %s augmente ou diminue de ce nombre.' % v,
+     'procedures_callnoreturn': 'Tu appelles la fonction : tous ses blocs s’exécutent à cet endroit.',
+     'lists_setIndex': 'Un nouvel élément est ajouté à la fin de la liste.',
+    }
+    return D.get(t, 'Ce bloc ajoute une instruction au programme.')

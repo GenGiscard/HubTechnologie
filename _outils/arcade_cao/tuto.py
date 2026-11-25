@@ -22,5 +22,5 @@ def attach_steps(cfgs, render_page):
     subprocess.run('DSF=1.5 NODE_PATH=$(npm root -g) node render_blocks.js %s /tmp/steps_in.json /tmp/steps_out.json' % render_page, shell=True, check=True, cwd=HERE)
     out = json.load(open('/tmp/steps_out.json'))
     for m, st in plan:
-        m['steps'] = [{'t': x['t'], 'cat': x['cat'], 'img': shrink(out[x['id']]['png'])} for x in st]
+        m['steps'] = [{'t': x['t'], 'cat': x['cat'], 'x': x.get('x', ''), 'img': shrink(out[x['id']]['png'])} for x in st]
     return len(items)
