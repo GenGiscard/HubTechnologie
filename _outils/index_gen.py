@@ -84,30 +84,53 @@ def svg_icon(k, size=26, sw=1.8):
     return f'<svg viewBox="0 0 24 24" width="{size}" height="{size}" fill="none" stroke="currentColor" stroke-width="{sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{IC[k]}"/></svg>'
 
 # ---------------- catégories de liens ----------------
-def cat(href):
-    if href.startswith('http'): return 'plus'
+def cat(href, text=''):
+    t = text.lower()
+    if href.startswith('http'):
+        if 'kahoot' in href or 'kahoot' in t: return 'kahoot'
+        if t.startswith('vidéo'): return 'video'
+        return 'plus'
     p = href.split('_')[0]
-    return {'00': 'hub', '01': 'cours', '01b': 'cours', '02': 'tp', '02b': 'tp', '03': 'jeux', '03b': 'jeux', '03c': 'jeux', '04': 'eval', '05': 'sujet'}.get(p, 'plus')
-CATS = [('cours', 'Cours'), ('tp', 'TP'), ('jeux', 'Jeux'), ('eval', 'Évaluer'), ('sujet', 'Sujets'), ('plus', 'Plus')]
+    k = {'00': 'hub', '01': 'cours', '01b': 'cours', '02': 'tp', '02b': 'tp', '03': 'jeux', '03b': 'jeux', '03c': 'jeux', '04': 'eval', '05': 'sujet'}.get(p, 'plus')
+    if href.lower().endswith('.pdf') and k in ('eval', 'plus'): return 'ecrite'
+    if k == 'tp' and 'manuel' in t: return 'tpman'
+    if k == 'eval' and 'sorcier' in t: return 'evsorc'
+    if k == 'eval' and 'écrite' in t: return 'ecrite'
+    return k
+CATS = [('video', 'Vidéo'), ('evsorc', 'Évaluation des sorciers'), ('cours', 'Cours'), ('tp', 'TP'), ('jeux', 'Jeux'), ('kahoot', 'Kahoot'), ('eval', 'Évaluation sur PC'), ('tpman', 'TP manuel'), ('ecrite', 'Évaluation écrite'), ('sujet', 'Sujets'), ('plus', 'Autres ressources')]
+TI = {'video': 'M8 5v14l11-7z', 'evsorc': 'M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z', 'cours': 'M4 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4zM20 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6z',
+      'tp': 'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.6-.6-.6-2.6z', 'jeux': 'M6 9h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.4 1.8L15 14H9l-1.6 1.8A3 3 0 0 1 2 14v-1a4 4 0 0 1 4-4zM7 11.5v3M5.5 13h3',
+      'kahoot': 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z', 'eval': 'M3 4h18v12H3zM8 20h8M12 16v4M8 10l2.5 2.5L16 8', 'tpman': 'M8 13V5.5a1.5 1.5 0 0 1 3 0V12M11 11.5v-2a1.5 1.5 0 0 1 3 0V12M14 10.5a1.5 1.5 0 0 1 3 0V16a5 5 0 0 1-5 5h-1a5 5 0 0 1-4.2-2.3L4.5 15a1.5 1.5 0 0 1 2.5-1.7L8 15',
+      'ecrite': 'M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h5', 'sujet': 'M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 15h7M9 18h4', 'plus': 'M5 12h.01M12 12h.01M19 12h.01'}
+def ti(k): return f'<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{TI[k]}"/></svg>'
+def short(t, k):
+    if k == 'video': t = re.sub(r'^Vidéo\s*—\s*', '', t)
+    return t
 
 def card(c):
     groups = {k: [] for k, _ in CATS}; hub = None
     seen = set()
     for t, h, ext in c['links']:
-        k = cat(h)
+        k = cat(h, t)
         if k == 'hub' and hub is None: hub = h; continue
         if k == 'hub': k = 'plus'
-        key = (t, h)
-        if key in seen: continue
-        seen.add(key); groups[k].append((t, h, ext))
+        if (t, h) in seen: continue
+        seen.add((t, h)); groups[k].append((t, h, ext))
     main = hub or c['href']
-    if not hub:  # pas de hub : le premier lien sert d'entrée, on évite le doublon
+    if not hub:
         for k in groups: groups[k] = [x for x in groups[k] if x[1] != main or x[0] not in ('Ouvrir', 'Lancer la mission')]
+    A = lambda h, ext: f'href="{E(h)}"' + (' target="_blank" rel="noopener"' if ext else '')
     rows = ''
     for k, lab in CATS:
-        if not groups[k]: continue
-        chips = ''.join(f'<a href="{E(h)}"{" target=\"_blank\" rel=\"noopener\"" if ext else ""}>{E(t)}</a>' for t, h, ext in groups[k])
-        rows += f'<div class="row"><span class="lab">{lab}</span><div class="chips">{chips}</div></div>'
+        g = groups[k]
+        if not g: continue
+        if len(g) == 1:
+            t, h, ext = g[0]; t = short(t, k)
+            extra = '' if t.lower() in (lab.lower(), 'évaluation', 'kahoot') else f'<span class="tx">{E(t)}</span>'
+            rows += f'<li class="k-{k}"><a class="nd" {A(h, ext)}><span class="ti">{ti(k)}</span><span class="tl">{lab}</span>{extra}</a></li>'
+        else:
+            kids = ''.join(f'<li><a {A(h, ext)}>{E(short(t, k))}</a></li>' for t, h, ext in g)
+            rows += f'<li class="k-{k} br"><details><summary class="nd"><span class="ti">{ti(k)}</span><span class="tl">{lab}</span><span class="n">{len(g)}</span></summary><ol>{kids}</ol></details></li>'
     search = E((c['title'] + ' ' + c['desc']).lower())
     import unicodedata
     base = unicodedata.normalize('NFD', c['title'].split('—')[-1] if c['title'].startswith('CAPET') else c['title'].split('—')[0]).encode('ascii', 'ignore').decode().lower()
@@ -120,7 +143,7 @@ def card(c):
     return f'''<article class="card{' img' if img else ''}" style="--a:{c['accent']}" data-q="{search}">
   <a class="cover" href="{E(main)}" tabindex="-1" aria-hidden="true">{cover}</a>
   <div class="body"><h3><a href="{E(main)}">{E(c['title'])}</a></h3>{f'<p>{E(c["desc"])}</p>' if c['desc'] else ''}
-  {f'<div class="res">{rows}</div>' if rows else ''}
+  {f'<ol class="tree">{rows}</ol>' if rows else ''}
   <a class="go" href="{E(main)}">{'Ouvrir la séquence' if hub else 'Ouvrir'}{arrow}</a></div>
 </article>'''
 
@@ -136,7 +159,8 @@ for i, s in enumerate(sections):
 
 nseq = sum(len(s['cards']) for s in sections[:3])
 alla = [h for s in sections for c in s['cards'] for _, h, _ in c['links']]
-njeux = len(set(h for h in alla if cat(h) == 'jeux')); neval = len(set(h for h in alla if cat(h) == 'eval')); ntp = len(set(h for h in alla if cat(h) == 'tp'))
+LK = [(t, h) for s in sections for c in s['cards'] for t, h, _ in c['links']]
+njeux = len(set(h for t, h in LK if cat(h, t) == 'jeux')); neval = len(set(h for t, h in LK if cat(h, t) in ('eval', 'evsorc', 'ecrite'))); ntp = len(set(h for t, h in LK if cat(h, t) in ('tp', 'tpman')))
 
 # ---------------- illustration de l'en-tête ----------------
 def gear(cx, cy, r, n, col, rot=0):
@@ -227,14 +251,30 @@ main{{max-width:1240px;margin:0 auto;padding:6px max(4vw,16px) 40px}}
 .card .body{{display:flex;flex-direction:column;gap:8px;padding:16px 18px 18px;flex:1}}
 .card h3{{font-size:19px;font-weight:900;line-height:1.2}}.card h3 a{{text-decoration:none;color:var(--ink)}}.card h3 a:hover{{color:var(--a)}}
 .card .body>p{{font-size:14px;color:var(--gris);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}}
-.card .res{{display:flex;flex-direction:column;gap:6px;padding-top:4px;border-top:1px dashed color-mix(in srgb,var(--a) 25%,transparent);margin-top:2px;padding-top:10px}}
-.card .row{{display:grid;grid-template-columns:62px minmax(0,1fr);gap:8px;align-items:start}}
-.card .lab{{font-size:11.5px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:color-mix(in srgb,var(--a) 70%,#64748b);padding-top:5px}}
-.card .chips{{display:flex;flex-wrap:wrap;gap:5px}}
-.card .chips a{{font-size:13px;font-weight:800;text-decoration:none;color:color-mix(in srgb,var(--a) 75%,#0f172a);background:color-mix(in srgb,var(--a) 10%,#fff);border:1px solid color-mix(in srgb,var(--a) 18%,transparent);border-radius:999px;padding:3px 10px;line-height:1.4;transition:background .15s,color .15s}}
-.card .chips a:hover{{background:var(--a);color:#fff;border-color:var(--a)}}
+.tree{{list-style:none;margin:4px 0 0;padding:10px 0 0;border-top:1px dashed color-mix(in srgb,var(--a) 25%,transparent)}}
+.tree li{{position:relative;list-style:none}}
+.tree>li{{padding-left:22px}}
+.tree>li::before{{content:"";position:absolute;left:8px;top:0;bottom:0;border-left:2px solid color-mix(in srgb,var(--a) 22%,transparent)}}
+.tree>li:first-child::before{{top:50%}}.tree>li:last-child::before{{bottom:50%}}.tree>li:only-child::before,.tree>li:only-child::after{{display:none}}.tree>li:only-child{{padding-left:0}}
+.tree>li.br:first-child::before{{top:19px}}.tree>li.br:last-child::before{{bottom:auto;height:19px}}
+.tree>li::after{{content:"";position:absolute;left:8px;top:50%;width:12px;border-top:2px solid color-mix(in srgb,var(--a) 22%,transparent)}}.tree>li.br::after{{top:19px}}
+.tree .nd{{display:flex;align-items:center;gap:8px;min-height:38px;padding:4px 10px 4px 6px;border-radius:12px;text-decoration:none;color:var(--ink);cursor:pointer;list-style:none;transition:background .15s}}
+.tree summary.nd::-webkit-details-marker{{display:none}}
+.tree .nd:hover{{background:color-mix(in srgb,var(--a) 10%,transparent)}}
+.tree .ti{{flex:none;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--a);background:color-mix(in srgb,var(--a) 13%,#fff)}}
+.tree .tl{{font-weight:900;font-size:14.5px;white-space:nowrap}}
+.tree .tx{{font-size:13.5px;color:var(--gris);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+.tree .n{{margin-left:auto;font-size:12px;font-weight:900;color:var(--a);background:color-mix(in srgb,var(--a) 12%,#fff);border-radius:999px;padding:1px 8px}}
+.tree summary.nd::after{{content:"";width:7px;height:7px;border-right:2px solid var(--gris);border-bottom:2px solid var(--gris);transform:rotate(-45deg);margin-left:6px;transition:transform .2s}}
+.tree details[open]>summary.nd::after{{transform:rotate(45deg)}}
+.tree ol{{margin:0 0 4px 19px;padding:0}}
+.tree ol li{{padding-left:20px}}
+.tree ol li::before{{content:"";position:absolute;left:0;top:0;bottom:0;border-left:2px solid color-mix(in srgb,var(--a) 22%,transparent)}}.tree ol li:last-child::before{{bottom:50%}}
+.tree ol li::after{{content:"";position:absolute;left:0;top:50%;width:12px;border-top:2px solid color-mix(in srgb,var(--a) 22%,transparent)}}
+.tree ol a{{display:block;padding:5px 10px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;color:color-mix(in srgb,var(--a) 70%,#0f172a)}}
+.tree ol a:hover{{background:color-mix(in srgb,var(--a) 10%,transparent)}}
 .card .go{{margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:900;font-size:14.5px;color:#fff;background:linear-gradient(135deg,var(--a),color-mix(in srgb,var(--a) 70%,#0b1b30));padding:10px 18px;border-radius:999px;min-height:44px;box-shadow:0 8px 18px -8px var(--a)}}
-.card .res+.go{{margin-top:10px}}
+.card .tree+.go{{margin-top:12px}}
 .card .go svg{{transition:transform .2s}}.card .go:hover svg{{transform:translateX(3px)}}
 .card[hidden],.niveau[hidden]{{display:none}}
 .vide{{display:none;text-align:center;color:var(--gris);font-weight:700;padding:30px}}
