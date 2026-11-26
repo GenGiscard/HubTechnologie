@@ -115,7 +115,7 @@ def card(c):
 </article>'''
 
 SID = lambda i, s: 'niv-' + re.sub(r'[^a-z0-9]+', '-', s['badge'].lower()).strip('-') + ('' if s['badge'] not in ('M', '+') else str(i))
-nav = ''.join(f'<a href="#{SID(i, s)}" style="--a:{s["color"]}"><b>{E(s["badge"])}</b>{E(s["name"].split("—")[0].strip())}</a>' for i, s in enumerate(sections))
+nav = ''.join(f'<a href="#{SID(i, s)}" role="tab" data-tab="{SID(i, s)}" style="--a:{s["color"]}"><b>{E(s["badge"])}</b>{E(s["name"].split("—")[0].strip())}<i>{len(s["cards"])}</i></a>' for i, s in enumerate(sections))
 body = ''
 for i, s in enumerate(sections):
     n = len(s['cards'])
@@ -189,15 +189,20 @@ a{{color:inherit}}
 .stats{{max-width:1240px;margin:-34px auto 0;padding:0 max(4vw,16px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;position:relative;z-index:2}}
 .stats div{{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:14px 16px;font-weight:800;color:var(--gris);font-size:14px}}.stats b{{display:block;font-size:28px;color:var(--ink);line-height:1.1}}
 nav.niv{{position:sticky;top:0;z-index:20;background:#f6f8fcee;backdrop-filter:blur(8px);border-bottom:1px solid var(--ligne);margin-top:24px}}
-nav.niv .in{{max-width:1240px;margin:0 auto;padding:10px max(4vw,16px);display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}}
+nav.niv .in{{max-width:1240px;margin:0 auto;padding:10px max(4vw,16px);display:flex;flex-wrap:wrap;gap:8px;overflow-x:auto;scrollbar-width:none}}
+@media(max-width:700px){{nav.niv .in{{flex-wrap:nowrap}}}}
 nav.niv a{{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;font-weight:800;font-size:14px;background:#fff;border:1.5px solid var(--ligne);border-radius:999px;padding:5px 13px 5px 5px;min-height:40px}}
 nav.niv a b{{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border-radius:999px;background:var(--a);color:#fff;font-size:13px}}
 nav.niv a:hover{{border-color:var(--a)}}
+nav.niv a i{{font-style:normal;font-size:12px;color:var(--gris);background:#f1f5f9;border-radius:999px;padding:1px 7px}}
+nav.niv a.on{{background:var(--a);border-color:var(--a);color:#fff}}nav.niv a.on b{{background:#fff;color:var(--a)}}nav.niv a.on i{{background:#ffffff33;color:#fff}}
+.niveau.off{{display:none}}body.rech .niveau.off:not([hidden]){{display:block}}
 main{{max-width:1240px;margin:0 auto;padding:6px max(4vw,16px) 40px}}
 .niveau{{margin-top:34px}}
 .niveau .head{{display:flex;align-items:center;gap:14px;margin-bottom:16px}}
 .niveau .badge{{display:flex;align-items:center;justify-content:center;min-width:58px;height:58px;padding:0 10px;border-radius:18px;background:var(--a);color:#fff;font-weight:900;font-size:24px;box-shadow:0 8px 18px color-mix(in srgb,var(--a) 35%,transparent)}}
 .niveau h2{{font-size:clamp(24px,2.6vw,32px);font-weight:900;color:var(--a);line-height:1.1}}.niveau .cnt{{color:var(--gris);font-weight:700;font-size:14px}}
+.niveau{{margin-top:26px}}
 .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px}}
 .card{{background:#fff;border-radius:18px;box-shadow:var(--ombre);display:flex;flex-direction:column;overflow:hidden;border:1px solid #edf1f7;transition:transform .15s,box-shadow .15s}}
 .card:hover{{transform:translateY(-3px);box-shadow:0 12px 30px rgba(30,58,95,.14)}}
@@ -251,6 +256,14 @@ a:focus-visible,input:focus-visible{{outline:3px solid #f59e0b;outline-offset:2p
  q.addEventListener('input',()=>{{ const t=norm(q.value.trim()); let n=0;
   cards.forEach(c=>{{ const ok=!t||c.dataset.n.includes(t); c.hidden=!ok; if(ok) n++; }});
   secs.forEach(s=>s.hidden=![...s.querySelectorAll('.card')].some(c=>!c.hidden)); vide.style.display=n?'none':'block'; }});
+ const tabs=[...document.querySelectorAll('nav.niv a')];
+ function show(id,scroll){{ if(!secs.some(s=>s.id===id)) id=secs[0].id;
+  secs.forEach(s=>s.classList.toggle('off',s.id!==id)); tabs.forEach(a=>{{const on=a.dataset.tab===id;a.classList.toggle('on',on);a.setAttribute('aria-selected',on);if(on)a.scrollIntoView({{block:'nearest',inline:'nearest'}});}});
+  try{{localStorage.setItem('portail_onglet',id)}}catch(e){{}}
+  if(scroll){{const n=document.querySelector('nav.niv');const y=n.getBoundingClientRect().top+scrollY;if(scrollY>y)scrollTo({{top:y}});}} }}
+ tabs.forEach(a=>a.addEventListener('click',e=>{{e.preventDefault();if(q.value){{q.value='';q.dispatchEvent(new Event('input'));}}history.replaceState(null,'','#'+a.dataset.tab);show(a.dataset.tab,true);}}));
+ let init=location.hash.slice(1); if(!init){{try{{init=localStorage.getItem('portail_onglet')}}catch(e){{}}}} show(init||secs[0].id,false);
+ q.addEventListener('input',()=>document.body.classList.toggle('rech',!!q.value.trim()));
  addEventListener('keydown',e=>{{ if(e.key==='/'&&document.activeElement!==q){{ e.preventDefault(); q.focus(); }} }});
 }}
 </script>
