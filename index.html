@@ -1,1078 +1,438 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Technologie Collège — Portail des séquences · ESTIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{ --ink:#1e3a5f; --gris:#64748b; --papier:#f8fafc;
- --c5:#16a34a; --c5f:#15803d; --c4:#7c3aed; --c4f:#6d28d9; --cl:#0e7490;--clf:#155e75;--c3:#1d4ed8; --c3f:#1e40af;
- --orange:#ea580c; --ombre:0 4px 14px rgba(30,58,95,.10);}
+:root{--ink:#1e3a5f;--gris:#5b6b80;--fond:#f6f8fc;--ligne:#e2e8f0;--ombre:0 6px 22px rgba(30,58,95,.09)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);min-height:100vh}
-.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--ink);padding:10px 22px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.estic-bar img{height:44px}
-.estic-bar .id b{color:var(--ink);font-size:15px}
-.estic-bar .id span{display:block;font-size:12px;color:var(--gris)}
-.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
-header.portail{max-width:1080px;margin:38px auto 6px;padding:0 24px;text-align:center}
-header.portail .eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:700}
-header.portail h1{font-size:44px;margin:8px 0 8px}
-header.portail p{color:var(--gris);font-size:17px;max-width:720px;margin:0 auto}
-.stats{display:flex;justify-content:center;gap:14px;margin:22px 0 8px;flex-wrap:wrap}
-.stats .s{background:#fff;border-radius:12px;box-shadow:var(--ombre);padding:10px 20px;font-size:14px;font-weight:700;color:var(--gris)}
-.stats .s b{display:block;font-size:24px;color:var(--ink)}
-section.niveau{max-width:1080px;margin:34px auto 0;padding:0 24px}
-section.niveau .bandeau{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-section.niveau .bandeau .pastille{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:900;color:#fff}
-section.niveau .bandeau h2{font-size:26px}
-section.niveau .bandeau .fil{flex:1;height:3px;border-radius:2px;opacity:.25}
-.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:20px}
-.seq{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:22px;border-top:5px solid var(--accent)}
-.seq .haut{display:flex;align-items:flex-start;gap:12px}
-.seq .ic{font-size:38px}
-.seq h3{font-size:20px;color:var(--accent)}
-.seq h3 a{color:inherit;text-decoration:none}
-.seq h3 a:hover{text-decoration:underline}
-.seq .desc{font-size:13.5px;color:var(--gris);line-height:1.5;margin-top:3px}
-.ressources{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
-.ressources a{font-size:12.5px;font-weight:700;text-decoration:none;color:var(--accent);border:1.5px solid var(--accent);border-radius:18px;padding:5px 12px;transition:.13s}
-.ressources a:hover{background:var(--accent);color:#fff}
-.ressources a.hub{background:var(--accent);color:#fff}
-.ressources a.hub:hover{filter:brightness(1.12)}
-/* blocs au format « tete / p / liens » : même rendu que les autres */
-.seq .tete{display:flex;align-items:flex-start;gap:12px}
-.seq .tete .niv{display:none}
-.seq>p{font-size:13.5px;color:var(--gris);line-height:1.5;margin:3px 0 0 12px}
-.liens{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
-.liens a{font-size:12.5px;font-weight:700;text-decoration:none;color:var(--accent);border:1.5px solid var(--accent);border-radius:18px;padding:5px 12px;transition:.13s}
-.liens a:hover{background:var(--accent);color:#fff}
-.liens a[href^="00_hub"],.ressources a[href^="00_hub"]{background:var(--accent);color:#fff}
-.prof{max-width:1080px;margin:44px auto 60px;padding:0 24px}
-.prof .boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);border-left:6px solid var(--orange);padding:20px 24px}
-.prof h2{font-size:19px;color:var(--orange);margin-bottom:8px}
-.prof p{font-size:14px;color:var(--gris);line-height:1.65}
-.prof b{color:var(--ink)}
-footer{padding:18px;text-align:center;font-size:12px;color:var(--gris)}
-@media (max-width:880px){.duo{grid-template-columns:1fr}header.portail h1{font-size:32px}}
-</style>
-</head>
-<body>
-<!-- Logo ESTIC Don Bosco (officiel) -->
-<div class="estic-bar">
- <img alt="Logo ESTIC" src="logo_estic.png">
- <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC — Saint-Dizier</span></div>
- <div class="copy">© ESTIC — Tous droits réservés</div>
-</div>
-
-<header class="portail">
- <div class="eyebrow">Technologie · Cycle 4 · Collège</div>
- <h1>Le portail des séquences</h1>
- <p>Six séquences complètes, du cours animé au jeu de stratégie. Chaque parcours suit le même chemin :
- <b>cours projeté → TP à missions → jeux de révision → évaluation notée</b>.</p>
- <div class="stats">
- <div class="s"><b>32</b>séquences</div>
- <div class="s"><b>99</b>animations pédagogiques</div>
- <div class="s"><b>70</b>exercices compétitifs</div>
- <div class="s"><b>30</b>évaluations Firebase</div>
- </div>
-</header>
-
-<!-- ================= 5ème ================= -->
-<section class="niveau">
- <div class="bandeau">
- <div class="pastille" style="background:var(--c5)">5e</div>
- <h2 style="color:var(--c5f)">Cinquième</h2>
- <div class="fil" style="background:var(--c5)"></div>
- </div>
- <div class="duo">
- <div class="seq" style="--accent:var(--c5f)">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_habitat_5e.html">Les ponts</a></h3>
- <div class="desc">Ponts, barrages, tours : pourquoi ça tient debout ? Forces, triangulation et inspection d'ouvrages.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_habitat_5e.html">Hub</a>
- <a href="01_cours_habitat_ouvrages.html">Cours</a>
- <a href="02_tp_ponts.html">TP Ponts</a>
- <a href="03_jeu_batisseur.html">Bâtisseur</a>
- <a href="03b_jeu_inspecteur.html">Inspecteur</a>
- <a href="03c_jeu_chantier_express.html">Chantier Express</a>
- <a href="04_evaluation_habitat.html">Évaluation</a>
- <a href="https://youtu.be/ujwYjL1OdQc" target="_blank" rel="noopener">Vidéo — C'est pas sorcier : les ponts</a>
- <a href="04_evaluation_ponts_sorciers.html">Évaluation des sorciers</a>
- <a href="https://www.youtube.com/watch?v=JidxYO5IPGI" target="_blank" rel="noopener">Pont papier</a>
- <a href="https://play.kahoot.it/v2/?quizId=162e5bcd-f0a2-4fe5-abf5-c4b3103caaf7&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9" target="_blank" rel="noopener">Kahoot</a>
- </div>
- </div>
- <div class="seq" style="--accent:var(--c5)">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_energies_5e.html">Les Énergies</a></h3>
- <div class="desc">Sources, chaînes d'énergie et mix électrique : alimenter une ville sans blackout ni excès de CO₂.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_energies_5e.html">Hub</a>
- <a href="01_cours_energies.html">Cours</a>
- <a href="02_tp_energies.html">TP Mix</a>
- <a href="02b_tp_manuel_eolienne_savonius.html">TP manuel</a>
- <a href="03_jeu_energie_panic.html">Énergie Panic</a>
- <a href="03b_jeu_gardien_reseau.html">Gardien du réseau</a>
- <a href="03c_jeu_pluie_watts.html">Pluie de Watts</a>
- <a href="04_evaluation_energies.html">Évaluation</a>
- <a href="https://www.france.tv/france-4/c-est-toujours-pas-sorcier/c-est-toujours-pas-sorcier-saison-2/1467579-energie-rien-ne-se-cree-tout-se-transforme.html" target="_blank" rel="noopener">Vidéo — C’est toujours pas sorcier : l’énergie</a>
- <a href="04_evaluation_energies_sorciers.html">Évaluation des sorciers</a>
- <a href="04_evaluation_ecrite_energies_5e.pdf" target="_blank" rel="noopener">Évaluation écrite</a>
- <a href="https://play.kahoot.it/v2/?quizId=a2171712-4376-43ee-b923-3a31b81b7b39&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9" target="_blank" rel="noopener">Kahoot</a>
- </div>
- </div>
- <div class="seq" style="--accent:#1d4ed8">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_cao_5e.html">La conception assistée par ordinateur</a></h3>
- <div class="desc">Esquisse cotée, bossage, enlèvement de matière : modéliser une pièce en 3D et connaître sa masse avant de la fabriquer.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_cao_5e.html">Hub</a>
- <a href="01_cours_cao.html">Cours</a>
- <a href="02_tp_cao.html">TP 1</a>
- <a href="02_tp_cao_5e_2.html">TP 2</a>
- <a href="02_tp_cao_5e_3.html">TP 3</a>
- <a href="02_tp_cao_5e_4.html">TP 4</a>
- <a href="08_atelier_3d_5e.html">Atelier 3D</a>
- <a href="02b_logiciel_cao.html">Logiciel CAO Studio</a>
- <a href="04_evaluation_cao.html">Évaluation</a>
- <a href="https://www.youtube.com/watch?v=Dzc6kseH3xE" target="_blank" rel="noopener">Vidéo — C’est pas sorcier : voyage en 3D</a>
- <a href="04_evaluation_cao_sorciers.html">Évaluation des sorciers</a>
- </div>
- </div>
- <div class="seq" style="--accent:#7c3aed">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_arcade_5e.html">Programmer un jeu vidéo</a></h3>
- <div class="desc">Sprites, événements, score et vies : des blocs comme sur MakeCode Arcade, puis ton propre jeu sur le vrai MakeCode.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_arcade_5e.html">Hub</a>
- <a href="01_cours_arcade_5e.html">Cours</a>
- <a href="02_tp_arcade_5e_1.html">TP 1</a>
- <a href="02_tp_arcade_5e_2.html">TP 2</a>
- <a href="02_tp_arcade_5e_3.html">TP 3</a>
- <a href="02_tp_arcade_5e_4.html">TP 4</a>
- <a href="05_projet_makecode_5e.html">Projet MakeCode</a>
- <a href="04_evaluation_arcade_5e.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#4ade80">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_cycle_de_vie.html">Développement durable &amp; cycle de vie</a></h3>
- <div class="desc">Les trois piliers, les cinq étapes de la vie d'un produit et l'éco-conception : réduire l'impact d'un objet, de la mine à la poubelle.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_cycle_de_vie.html">Hub</a>
- <a href="01_cours_dd_cycle_vie.html">Cours</a>
- <a href="02_tp_dd_carnet.html">Carnet d'exercices</a>
- <a href="03_simulateur_cycle_vie.html">Simulateur</a>
- <a href="https://play.kahoot.it/v2?quizId=27b912e8-4cc1-483d-9c06-371f07a8e5ff&amp;activeWorkspace=PERSONAL&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9&amp;autoAuth=true" target="_blank" rel="noopener">Kahoot</a>
- </div>
- </div>
- <div class="seq" style="--accent:#b85c2e">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_materiaux.html">Les matériaux et leurs propriétés</a></h3>
- <div class="desc">Cinq familles, quatre catégories de propriétés : comprendre pourquoi un objet est en métal, en polymère ou en composite — et savoir le justifier.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_materiaux.html">Hub</a>
- <a href="01b_presentation_materiaux.html">Présentation</a>
- <a href="01_cours_materiaux.html">Cours</a>
- <a href="02_tp_materiaux.html">Activités</a>
- <a href="03_jeu_defi_materiaux.html">Grand Défi</a>
- <a href="04_evaluation_materiaux.html">Évaluation</a>
- <a href="https://www.youtube.com/watch?v=TMe2vZ6DEy4" target="_blank" rel="noopener">Vidéo — Le monde des matériaux</a>
- <a href="05_tableau_bord_materiaux.html">Tableau de bord</a>
- <a href="https://play.kahoot.it/v2?quizId=d3380584-d63d-452c-bd41-99d82694b27d&amp;activeWorkspace=PERSONAL&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9&amp;autoAuth=true" target="_blank" rel="noopener">Kahoot</a>
- </div>
- </div>
- <div class="seq" style="--accent:#b45309">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_evolution_5e.html">L'évolution des objets techniques</a></h3>
- <div class="desc">Lignées, invention et innovation : du grand-bi au smartphone, pourquoi et comment les objets changent.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_evolution_5e.html">Hub</a>
- <a href="01_cours_evolution.html">Cours</a>
- <a href="02_tp_lignees.html">TP Lignées</a>
- <a href="03_jeu_chrono_rush.html">Chrono Rush</a>
- <a href="03b_jeu_bureau_inventions.html">Bureau des inventions</a>
- <a href="03c_jeu_couloirs_temps.html">Couloirs du Temps</a>
- <a href="04_evaluation_evolution.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#db2777">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_besoin_5e.html">Le besoin & le cahier des charges</a></h3>
- <div class="desc">Bête à cornes, fonctions d'usage et d'estime, critères et niveaux : formuler le besoin et contrôler un prototype.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_besoin_5e.html">Hub</a>
- <a href="01_cours_besoin.html">Cours</a>
- <a href="02_tp_bureau_projets.html">TP Bureau des projets</a>
- <a href="03_jeu_fonction_rush.html">Fonction Rush</a>
- <a href="03b_jeu_bureau_etudes.html">Bureau d'études</a>
- <a href="03c_jeu_drone_be.html">Drone du BE</a>
- <a href="04_evaluation_besoin.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#0284c7">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_environnement_num_5e.html">L'environnement numérique</a></h3>
- <div class="desc">Fichiers, dossiers, serveur du collège, sessions et tailles Ko/Mo/Go : ne plus jamais perdre un exposé.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_environnement_num_5e.html">Hub</a>
- <a href="01_cours_environnement_num.html">Cours</a>
- <a href="02_tp_salle_info.html">TP Salle info</a>
- <a href="03_jeu_extension_rush.html">Extension Rush</a>
- <a href="03b_jeu_salle_info.html">SOS Salle info</a>
- <a href="03c_jeu_data_runner.html">Data Runner</a>
- <a href="04_evaluation_environnement_num.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#d97706">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_design_5e.html">Design & ergonomie</a></h3>
- <div class="desc">La poignée qui épouse la main, la porte de Norman, la chaise aux bonnes mesures : penser comme un designer.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_design_5e.html">Hub</a>
- <a href="01_cours_design.html">Cours</a>
- <a href="02_tp_bureau_design.html">TP Bureau design</a>
- <a href="03_jeu_design_rush.html">Design Rush</a>
- <a href="03b_jeu_bureau_etude.html">Bureau d'étude</a>
- <a href="03c_jeu_rafle_studio.html">Rafle au Studio</a>
- <a href="04_evaluation_design.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#b91c1c">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_transports_5e.html">Transports & mobilité</a></h3>
- <div class="desc">Quatre familles, des critères pour choisir (temps, CO₂, capacité) et la multimodalité : décoder le système qui déplace le monde.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_transports_5e.html">Hub</a>
- <a href="01_cours_transports.html">Cours</a>
- <a href="02_tp_pc_mobilite.html">TP PC mobilité</a>
- <a href="03_jeu_transport_rush.html">Transport Rush</a>
- <a href="03b_jeu_pc_mobilite.html">PC Mobilité</a>
- <a href="03c_jeu_trottinette_express.html">Trottinette Express</a>
- <a href="04_evaluation_transports.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#15803d">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_velo_5e.html">Le vélo, objet technique</a></h3>
- <div class="desc">Fonction d'usage, fonctions techniques, solutions : 200 pièces pour apprendre à analyser n'importe quel objet — transmission et freinage compris.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_velo_5e.html">Hub</a>
- <a href="01_cours_velo.html">Cours</a>
- <a href="02_tp_atelier_velo.html">TP atelier vélo</a>
- <a href="03_jeu_velo_rush.html">Vélo Rush</a>
- <a href="03b_jeu_atelier_velo.html">Atelier réparation</a>
- <a href="03c_jeu_echappee_peloton.html">Échappée Peloton</a>
- <a href="04_evaluation_velo.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#155e75">
- <div class="tete"><span class="ic"></span><div><h3>L’eau dans la ville</h3><span class="niv">5ème</span></div></div>
- <p>Le château d’eau et sa pression venue de la gravité, le circuit complet de la rivière à la rivière, la station d’épuration et la chasse aux fuites.</p>
- <div class="liens">
- <a href="00_hub_eau_5e.html">Hub</a>
- <a href="01_cours_eau.html">Cours</a>
- <a href="02_tp_regie_eaux.html">TP</a>
- <a href="03_jeu_aqua_rush.html">Jeu</a>
- <a href="03b_jeu_regie_eaux.html">Jeu 2</a>
- <a href="03c_jeu_torrent_propre.html">Torrent Propre</a>
- <a href="04_evaluation_eau.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#ca8a04">
- <div class="tete"><span class="ic"></span><div><h3>Météo &amp; instruments de mesure</h3><span class="niv">5ème</span></div></div>
- <p>Les quatre capteurs de la station, la chaîne complète de la prévision (mesurer, transmettre, calculer, diffuser), le baromètre qui annonce la pluie et la chasse aux capteurs menteurs.</p>
- <div class="liens">
- <a href="00_hub_meteo_5e.html">Hub</a>
- <a href="01_cours_meteo.html">Cours</a>
- <a href="02_tp_station_meteo.html">TP</a>
- <a href="03_jeu_meteo_rush.html">Jeu</a>
- <a href="03b_jeu_station_meteo.html">Jeu 2</a>
- <a href="03c_jeu_ballon_sonde.html">Ballon-Sonde</a>
- <a href="04_evaluation_meteo.html">Évaluation</a>
- </div>
- </div>
- </div>
-</section>
-
-<!-- ================= 4ème ================= -->
-<section class="niveau">
- <div class="bandeau">
- <div class="pastille" style="background:var(--c4)">4e</div>
- <h2 style="color:var(--c4f)">Quatrième</h2>
- <div class="fil" style="background:var(--c4)"></div>
- </div>
- <div class="duo">
- <div class="seq" style="--accent:var(--c4f)">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_domotique_4e.html">La Domotique</a></h3>
- <div class="desc">Capteurs, actionneurs et logique SI/ALORS : la maison connectée décortiquée et programmée.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_domotique_4e.html">Hub</a>
- <a href="01_cours_domotique.html">Cours</a>
- <a href="02_tp_maison_connectee.html">TP Maison</a>
- <a href="03_jeu_signal_rush.html">Signal Rush</a>
- <a href="03b_jeu_nuit_de_garde.html">Nuit de garde</a>
- <a href="04_evaluation_domotique.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:var(--c4)">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_transmissions_4e.html">Transmissions de mouvement</a></h3>
- <div class="desc">Engrenages, courroies, pignon-crémaillère : sens de rotation et rapports N₂ = N₁ × Z₁ ÷ Z₂.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_transmissions_4e.html">Hub</a>
- <a href="01_cours_transmissions.html">Cours</a>
- <a href="02_tp_engrenages.html">TP Engrenages</a>
- <a href="03_jeu_gear_rush.html">Gear Rush</a>
- <a href="03b_jeu_atelier_meca.html">Atelier Méca</a>
- <a href="04_evaluation_transmissions.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#059669">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_chaine_energie_4e.html">La chaîne d'énergie</a></h3>
- <div class="desc">Alimenter, distribuer, convertir, transmettre : le voyage de l'énergie dans le vélo électrique, rendement et pertes compris.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_chaine_energie_4e.html">Hub</a>
- <a href="01_cours_chaine_energie.html">Cours</a>
- <a href="02_tp_garage_vae.html">TP Garage VAE</a>
- <a href="03_jeu_moteur_rush.html">Moteur Rush</a>
- <a href="03b_jeu_sos_depannage.html">SOS Dépannage</a>
- <a href="04_evaluation_chaine_energie.html">Évaluation</a>
- <a href="https://play.kahoot.it/v2/?quizId=a2171712-4376-43ee-b923-3a31b81b7b39&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9" target="_blank" rel="noopener">Kahoot</a>
- </div>
- </div>
- <div class="seq" style="--accent:#7c3aed">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_impression3d_4e.html">Modélisation & impression 3D</a></h3>
- <div class="desc">La chaîne numérique : modéliser par volumes, exporter en STL, trancher en couches, imprimer — et diagnostiquer les ratés.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_impression3d_4e.html">Hub</a>
- <a href="01_cours_impression3d.html">Cours</a>
- <a href="02_tp_fablab.html">TP Fab lab</a>
- <a href="03_jeu_procede_rush.html">Procédé Rush</a>
- <a href="03b_jeu_ferme_impression.html">Ferme d'impression</a>
- <a href="04_evaluation_impression3d.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#059669">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_reseaux_4e.html">Les réseaux informatiques</a></h3>
- <div class="desc">Switch, box, serveur, adresses IP : comprendre le réseau local et diagnostiquer les pannes de proche en proche.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_reseaux_4e.html">Hub</a>
- <a href="01_cours_reseaux.html">Cours</a>
- <a href="02_tp_admin_reseau.html">TP Admin réseau</a>
- <a href="03_jeu_reseau_rush.html">Réseau Rush</a>
- <a href="03b_jeu_admin_reseau.html">Admin Réseau</a>
- <a href="04_evaluation_reseaux.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#65a30d">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_dessin_4e.html">Dessin technique & représentation</a></h3>
- <div class="desc">Vues, cotes, échelle, cartouche : le langage universel qui transforme une idée en pièce fabricable, sans ambiguïté.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_dessin_4e.html">Hub</a>
- <a href="01_cours_dessin.html">Cours</a>
- <a href="02_tp_bureau_methodes.html">TP Bureau des méthodes</a>
- <a href="03_jeu_plan_rush.html">Plan Rush</a>
- <a href="03b_jeu_bureau_methodes.html">Contrôle des plans</a>
- <a href="04_evaluation_dessin.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#0369a1">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_aero_4e.html">Aéronautique — comment vole un avion</a></h3>
- <div class="desc">Portance, poids, traction, traînée : le duel des forces, l'aile qui fabrique la portance et les trois gouvernes du pilotage.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_aero_4e.html">Hub</a>
- <a href="01_cours_aero.html">Cours</a>
- <a href="02_tp_bureau_aero.html">TP Bureau d'études aéro</a>
- <a href="03_jeu_aero_rush.html">Aéro Rush</a>
- <a href="03b_jeu_tour_controle.html">Tour de contrôle</a>
- <a href="04_evaluation_aero.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#92400e">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_auto_4e.html">Automobile & sécurité routière</a></h3>
- <div class="desc">Distance d'arrêt, sécurité active et passive, la ceinture face à l'inertie : la technologie qui garde les occupants en vie.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_auto_4e.html">Hub</a>
- <a href="01_cours_auto.html">Cours</a>
- <a href="02_tp_securite_routiere.html">TP sécurité routière</a>
- <a href="03_jeu_securite_rush.html">Sécurité Rush</a>
- <a href="03b_jeu_controle_technique.html">Contrôle technique</a>
- <a href="04_evaluation_auto.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#334155">
- <div class="tete"><span class="ic"></span><div><h3>Le smartphone décortiqué</h3><span class="niv">4ème</span></div></div>
- <p>200 g, 60 matériaux : l’écorché du téléphone, la grille invisible de l’écran tactile, la batterie pièce d’usure et le réflexe réparer plutôt que jeter.</p>
- <div class="liens">
- <a href="00_hub_smartphone_4e.html">Hub</a>
- <a href="01_cours_smartphone.html">Cours</a>
- <a href="02_tp_labo_demontage.html">TP</a>
- <a href="03_jeu_tactile_rush.html">Jeu</a>
- <a href="03b_jeu_sav_telephone.html">Jeu 2</a>
- <a href="04_evaluation_smartphone.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#0f766e">
- <div class="tete"><span class="ic"></span><div><h3>L’ascenseur</h3><span class="niv">4ème</span></div></div>
- <p>Le secret du contrepoids qui soulage le moteur, le parachute d’Otis (1854), l’armoire qui choisit quel appel servir, et la maintenance préventive qui rend l’ascenseur si sûr.</p>
- <div class="liens">
- <a href="00_hub_ascenseur_4e.html">Hub</a>
- <a href="01_cours_ascenseur.html">Cours</a>
- <a href="02_tp_maintenance_ascenseur.html">TP</a>
- <a href="03_jeu_ascenseur_rush.html">Jeu</a>
- <a href="03b_jeu_tour_maintenance.html">Jeu 2</a>
- <a href="04_evaluation_ascenseur.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#0e7490">
- <div class="tete"><span class="ic"></span><div><h3>Le binaire, le langage des machines</h3><span class="niv">4ème</span></div></div>
- <p>Bit, octet et poids des bits, puis tous les « dialectes » du binaire : hexadécimal, code ASCII, couleurs RVB, DCB et code Gray.</p>
- <div class="liens">
- <a href="00_hub_binaire_4e.html">Hub</a>
- <a href="01_cours_binaire.html">Cours</a>
- <a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">TP</a>
- <a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">Salle d’arcade</a>
- <a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#059669">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_arcade_4e.html">Variables, conditions et boucles</a></h3>
- <div class="desc">Un jeu qui mémorise, décide et répète : du tunnel au casse-briques complet, puis un jeu à niveaux sur MakeCode.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_arcade_4e.html">Hub</a>
- <a href="01_cours_arcade_4e.html">Cours</a>
- <a href="02_tp_arcade_4e_1.html">TP 1</a>
- <a href="02_tp_arcade_4e_2.html">TP 2</a>
- <a href="02_tp_arcade_4e_3.html">TP 3</a>
- <a href="02_tp_arcade_4e_4.html">TP 4</a>
- <a href="05_projet_makecode_4e.html">Projet MakeCode</a>
- <a href="04_evaluation_arcade_4e.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#0e7490">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_cao_4e.html">La CAO : lire, modéliser, calculer</a></h3>
- <div class="desc">Lire un vrai plan, modéliser sur plusieurs faces, calculer une masse, corriger un modèle et suivre un cahier des charges.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_cao_4e.html">Hub</a>
- <a href="01_cours_cao_4e.html">Cours</a>
- <a href="02_tp_cao_4e_1.html">TP 1</a>
- <a href="02_tp_cao_4e_2.html">TP 2</a>
- <a href="02_tp_cao_4e_3.html">TP 3</a>
- <a href="02_tp_cao_4e_4.html">TP 4</a>
- <a href="02_tp_cao_4e_5.html">TP 5</a>
- <a href="08_atelier_3d_4e.html">Atelier 3D</a>
- <a href="02b_logiciel_cao.html">Logiciel CAO Studio</a>
- <a href="04_evaluation_cao_4e.html">Évaluation</a>
- </div>
- </div>
- </div>
-</section>
-
-<!-- ================= 3ème ================= -->
-<section class="niveau">
- <div class="bandeau">
- <div class="pastille" style="background:var(--c3)">3e</div>
- <h2 style="color:var(--c3f)">Troisième</h2>
- <div class="fil" style="background:var(--c3)"></div>
- </div>
- <div class="duo">
- <div class="seq" style="--accent:var(--c3f)">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_robotique_3e.html">La Robotique</a></h3>
- <div class="desc">Chaîne d'information, capteurs et programmation : du robot suiveur de ligne à la gestion d'entrepôt.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_robotique_3e.html">Hub</a>
- <a href="01_cours_robotique.html">Cours</a>
- <a href="02_tp_robot.html">TP Robot</a>
- <a href="03_jeu_robo_race.html">Robo Race</a>
- <a href="03b_jeu_entrepot.html">Entrepôt</a>
- <a href="04_evaluation_robotique.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:var(--c3)">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_internet_3e.html">Internet & Cybersécurité</a></h3>
- <div class="desc">Paquets, routeurs, DNS, chiffrement : le voyage des données — et comment les défendre.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_internet_3e.html">Hub</a>
- <a href="01_cours_internet.html">Cours</a>
- <a href="02_tp_reseau.html">TP Routeur</a>
- <a href="03_jeu_phishing_hunter.html">Phishing Hunter</a>
- <a href="03b_jeu_cyberdefense.html">Cyberdéfense</a>
- <a href="04_evaluation_internet.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#0d9488">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_cycle_vie_3e.html">Éco-conception & cycle de vie</a></h3>
- <div class="desc">ACV, économie circulaire, éco-conception : la vie cachée des objets, du minerai à la borne de recyclage.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_cycle_vie_3e.html">Hub</a>
- <a href="01_cours_cycle_vie.html">Cours</a>
- <a href="02_tp_mission_acv.html">TP Mission ACV</a>
- <a href="03_jeu_tri_rush.html">Tri Rush</a>
- <a href="03b_jeu_centre_valorisation.html">Centre de valorisation</a>
- <a href="04_evaluation_cycle_vie.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#4f46e5">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_algo_3e.html">Algorithmes & programmation</a></h3>
- <div class="desc">Variables, conditions, boucles : lire un programme, prévoir sa sortie et traquer les bugs — objectif brevet.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_algo_3e.html">Hub</a>
- <a href="01_cours_algo.html">Cours</a>
- <a href="02_tp_studio_code.html">TP Studio de code</a>
- <a href="03_jeu_bloc_rush.html">Bloc Rush</a>
- <a href="03b_jeu_studio_debug.html">Studio Debug</a>
- <a href="04_evaluation_algo.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#be123c">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_arcade_3e.html">Fonctions, listes et algorithmes</a></h3>
- <div class="desc">Découper en fonctions, ranger des données dans des listes et programmer gravité, poursuite et états du jeu.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_arcade_3e.html">Hub</a>
- <a href="01_cours_arcade_3e.html">Cours</a>
- <a href="02_tp_arcade_3e_1.html">TP 1</a>
- <a href="02_tp_arcade_3e_2.html">TP 2</a>
- <a href="02_tp_arcade_3e_3.html">TP 3</a>
- <a href="02_tp_arcade_3e_4.html">TP 4</a>
- <a href="05_projet_makecode_3e.html">Projet MakeCode</a>
- <a href="04_evaluation_arcade_3e.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#4f46e5">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_cao_3e.html">La CAO : simuler et assembler</a></h3>
- <div class="desc">Pièces mécaniques, simulation de résistance, mécanisme bielle-manivelle et projet d’optimisation.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_cao_3e.html">Hub</a>
- <a href="01_cours_cao_3e.html">Cours</a>
- <a href="02_tp_cao_3e_1.html">TP 1</a>
- <a href="02_tp_cao_3e_2.html">TP 2</a>
- <a href="02_tp_cao_3e_3.html">TP 3</a>
- <a href="02_tp_cao_3e_4.html">TP 4</a>
- <a href="02_tp_cao_3e_5.html">TP 5</a>
- <a href="08_atelier_3d_3e.html">Atelier 3D</a>
- <a href="02b_logiciel_cao.html">Logiciel CAO Studio</a>
- <a href="04_evaluation_cao_3e.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#c026d3">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_objets_connectes_3e.html">Les objets connectés</a></h3>
- <div class="desc">Capteurs, actionneurs, voyage de la donnée jusqu'au cloud et boucles automatiques — sans oublier la vie privée.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_objets_connectes_3e.html">Hub</a>
- <a href="01_cours_objets_connectes.html">Cours</a>
- <a href="02_tp_objets_connectes.html">TP Laboratoire</a>
- <a href="03_jeu_capteur_rush.html">Capteur Rush</a>
- <a href="03b_jeu_maison_connectee.html">Maison connectée</a>
- <a href="04_evaluation_objets_connectes.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#e11d48">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_simulation_3e.html">Modélisation & simulation</a></h3>
- <div class="desc">Casser des ponts dans l'ordinateur : modèle, simulation, coefficient de sécurité… et l'essai réel qui prouve.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_simulation_3e.html">Hub</a>
- <a href="01_cours_simulation.html">Cours</a>
- <a href="02_tp_bureau_simulation.html">TP Bureau simulation</a>
- <a href="03_jeu_simu_rush.html">Simu Rush</a>
- <a href="03b_jeu_labo_simulation.html">Labo de simulation</a>
- <a href="04_evaluation_simulation.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#9333ea">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_ia_3e.html">Intelligence artificielle & données</a></h3>
- <div class="desc">Données étiquetées, entraînement, prédiction, biais : comment une machine apprend — et pourquoi on ne la croit jamais les yeux fermés.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_ia_3e.html">Hub</a>
- <a href="01_cours_ia.html">Cours</a>
- <a href="02_tp_centre_ia.html">TP Centre d'entraînement</a>
- <a href="03_jeu_ia_rush.html">IA Rush</a>
- <a href="03b_jeu_centre_ia.html">Centre IA</a>
- <a href="04_evaluation_ia.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#0c4a6e">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_espace_3e.html">Espace & satellites</a></h3>
- <div class="desc">Action-réaction, l'orbite comme chute permanente, le GPS décodé et les débris spatiaux : l'espace que tu utilises 50 fois par jour.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_espace_3e.html">Hub</a>
- <a href="01_cours_espace.html">Cours</a>
- <a href="02_tp_centre_spatial.html">TP centre spatial</a>
- <a href="03_jeu_orbite_rush.html">Orbite Rush</a>
- <a href="03b_jeu_centre_spatial.html">Centre spatial</a>
- <a href="04_evaluation_espace.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#9d174d">
- <div class="tete"><span class="ic"></span><div><h3>Santé & technologie</h3><span class="niv">3ème</span></div></div>
- <p>La prothèse sur mesure du scan à l’impression 3D, le pacemaker chaîne d’information dans le corps, l’imagerie qui voit sans ouvrir.</p>
- <div class="liens">
- <a href="00_hub_sante_3e.html">Hub</a>
- <a href="01_cours_sante.html">Cours</a>
- <a href="02_tp_labo_biomedical.html">TP</a>
- <a href="03_jeu_bio_rush.html">Jeu</a>
- <a href="03b_jeu_labo_biomedical.html">Jeu 2</a>
- <a href="04_evaluation_sante.html">Évaluation</a>
- </div>
- </div>
- <div class="seq" style="--accent:#b45309">
- <div class="tete"><span class="ic"></span><div><h3>Le réseau électrique intelligent</h3><span class="niv">3ème</span></div></div>
- <p>La balance des 50 Hz et le pic de 19 h, une journée du mix électrique, le smart grid qui ne gaspille rien : produire, transporter, stocker et piloter la plus grande machine du monde.</p>
- <div class="liens">
- <a href="00_hub_energie_3e.html">Hub</a>
- <a href="01_cours_energie.html">Cours</a>
- <a href="02_tp_dispatching.html">TP</a>
- <a href="03_jeu_watt_rush.html">Jeu</a>
- <a href="03b_jeu_dispatching.html">Jeu 2</a>
- <a href="04_evaluation_energie.html">Évaluation</a>
- </div>
- </div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>Sujets type DNB</h3><span class="niv">3ème</span></div></div>
- <p>S’entraîner à l’épreuve : des documents à lire — plans cotés, tableaux de données, caractéristiques techniques — puis des questions qui s’appuient dessus. 25 points, 30 minutes, correction à la remise.</p>
- <div class="ressources">
- <a href="05_brevet_domespace.html">La maison qui suit le soleil</a>
- <a href="05_brevet_trottinette.html">La trottinette électrique</a>
- </div>
-</div>
- </div>
-</section>
-
-<section class="niveau">
- <div class="bandeau">
- <div class="pastille" style="background:#2563eb">M</div>
- <h2 style="color:#1e40af">Mathématiques — cycle 4</h2>
- <div class="fil" style="background:#2563eb"></div>
- </div>
- <div class="duo">
- <div class="seq" style="--accent:#2563eb">
- <div class="haut"><div class="ic">x²</div><div>
- <h3><a href="01_cours_calcul_litteral.html">Calcul littéral — développer, réduire, factoriser</a></h3>
- <div class="desc">Calculer une expression, réduire, simple et double distributivité, signe moins, (a + b)², factorisation et a² − b². Neuf animations sur des rectangles d’aires, un simulateur et un vérificateur. TP de 9 missions avec mini-cours sur les exercices difficiles.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="01_cours_calcul_litteral.html">Cours projeté</a>
- <a href="02_tp_calcul_litteral.html">TP — 9 missions</a>
- </div>
- </div>
- </div>
-</section>
-
-<section class="niveau">
- <div class="bandeau">
- <div class="pastille" style="background:#0891b2">+</div>
- <h2 style="color:#155e75">En plus — escape games et activités bonus</h2>
- <div class="fil" style="background:#0891b2"></div>
- </div>
- <div class="duo">
- <div class="seq" style="--accent:#7c2d12">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="https://gengiscard.github.io/Erebus7/" target="_blank" rel="noopener">EREBUS-7 — Escape game spatial</a></h3>
- <div class="desc">Station abandonnée, 12 énigmes, 60 minutes et une seule chance. Transmission mécanique, loi d'Ohm et loi des mailles, diagramme d'états SysML, lecture de plan, chaîne d'énergie, algorigramme, programmation en blocs, code ASCII : tout le programme y passe. Chaque énigme donne un code, et le dernier ouvre la capsule d'éjection.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="https://gengiscard.github.io/Erebus7/" target="_blank" rel="noopener">Lancer la mission</a>
- </div>
- </div>
- <div class="seq" style="--accent:#b45309">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="https://gengiscard.github.io/Rouillo/" target="_blank" rel="noopener">L'atelier de ROUILLO — Escape méca</a></h3>
- <div class="desc">Le robot du professeur a subi une surtension : 7 systèmes à réparer en 25 minutes. Lecture de schéma, outils et leur usage, calcul d'engrenages, ordre d'une procédure, électronique de base, programmation par blocs et chaînes d'énergie et d'information. Chaque système restauré livre un chiffre du code final, plus quatre mini-jeux bonus.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="https://gengiscard.github.io/Rouillo/" target="_blank" rel="noopener">Entrer dans l'atelier</a>
- </div>
- </div>
- <div class="seq" style="--accent:#0e7490">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="https://gengiscard.github.io/technooubli-es/" target="_blank" rel="noopener">Les technos oubliées</a></h3>
- <div class="desc">Activité bonus autour des objets techniques tombés en désuétude.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="https://gengiscard.github.io/technooubli-es/" target="_blank" rel="noopener">Ouvrir</a>
- </div>
- </div>
- <div class="seq" style="--accent:#475569">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="https://gengiscard.github.io/Perceuse/" target="_blank" rel="noopener">La perceuse</a></h3>
- <div class="desc">Activité sur la perceuse : constitution, usage et sécurité. Les résultats remontent sur le nœud Firebase <code>resultats_perceuse</code>.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="https://gengiscard.github.io/Perceuse/" target="_blank" rel="noopener">Ouvrir</a>
- </div>
- </div>
- <div class="seq" style="--accent:#ea580c">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="https://gengiscard.github.io/perteenergie/" target="_blank" rel="noopener">Les pertes d'énergie</a></h3>
- <div class="desc">Activité bonus sur les pertes d'énergie et le rendement.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="https://gengiscard.github.io/perteenergie/" target="_blank" rel="noopener">Ouvrir</a>
- </div>
- </div>
- <div class="seq" style="--accent:#16a34a">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="https://gengiscard.github.io/jointsilicone/" target="_blank" rel="noopener">Le joint silicone</a></h3>
- <div class="desc">Activité bonus autour de la pose d'un joint silicone.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="https://gengiscard.github.io/jointsilicone/" target="_blank" rel="noopener">Ouvrir</a>
- </div>
- </div>
- <div class="seq" style="--accent:#0f766e">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="https://gengiscard.github.io/Fabclicker/" target="_blank" rel="noopener">FAB-CLICKER — L'atelier des procédés</a></h3>
- <div class="desc">Jeu de production incrémental : on fait tourner une ligne d'usinage, poste après poste. Pour acheter une machine il faut d'abord passer son habilitation — lire la fiche du procédé, puis réussir le quiz. Neuf habilitations à décrocher, qui couvrent les grandes familles de procédés : enlèvement de matière, déformation, moulage, addition de matière et assemblage.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="https://gengiscard.github.io/Fabclicker/" target="_blank" rel="noopener">Ouvrir l'atelier</a>
- </div>
- </div>
- <div class="seq" style="--accent:#be123c">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="https://gengiscard.github.io/TechnoSurvivor/" target="_blank" rel="noopener">TECHNO SURVIVOR — Sciences de l'ingénieur</a></h3>
- <div class="desc">Jeu de survie où les armes tirent seules : l'élève esquive et collecte. À chaque montée de niveau, une question du brevet ; toutes les deux minutes, un exercice de technologie qui améliore une arme ; à la mort, une seconde chance si la réponse est bonne. Un mode classe permet au professeur d'invoquer les menaces, que seuls les exercices résolus repoussent.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="https://gengiscard.github.io/TechnoSurvivor/" target="_blank" rel="noopener">Lancer la simulation</a>
- </div>
- </div>
- </div>
-</section>
-
-<section class="niveau">
- <div class="bandeau">
- <div class="pastille" style="background:var(--cl)">SI</div>
- <h2 style="color:var(--clf)">Sciences de l'ingénieur — Lycée</h2>
- <div class="fil" style="background:var(--cl)"></div>
- </div>
- <div class="duo">
- <div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>Sujets type Bac SI</h3><span class="niv">Terminale</span></div></div>
- <p>S’entraîner à l’épreuve écrite : diagramme des exigences, chaîne de puissance et relevés à exploiter, puis trois parties — analyser le besoin, modéliser, valider les performances. 20 points, correction à la remise.</p>
- <div class="ressources">
- <a href="05_bac_si_portail.html">Le portail coulissant automatisé</a>
- </div>
-</div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>Sujets type BTS CPI</h3><span class="niv">BTS</span></div></div>
- <p>Conception de produits industriels : dessin d’ensemble et nomenclature, analyse des liaisons, cotation fonctionnelle et chaîne de cotes, dimensionnement en flexion et durée de vie des roulements. 60 points, 3 h.</p>
- <div class="ressources">
- <a href="05_bts_cpi_galet.html">Galet tendeur de courroie</a>
- </div>
-</div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAO et dimensionnement — CAO Studio</h3><span class="niv">Première · Terminale</span></div></div>
- <p>Potence murale : calcul de RdM et simulation par éléments finis (Von Mises), dimensionnement de la section, choix du matériau par indice de performance, concentration de contraintes en coupe, dessin de définition avec coupe A-A.</p>
- <div class="ressources">
- <a href="02_tp_cao_si_1.html">TP — Dimensionner une potence</a>
- <a href="02b_logiciel_cao.html">Logiciel CAO Studio</a>
- </div>
-</div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>Sujets type CAFEP-CAPET SII</h3><span class="niv">Concours</span></div></div>
- <p>Séquence complète : le cours de méthode, un TP de six missions chiffrées, puis le sujet type — modélisation cinématique, inertie équivalente, dimensionnement dynamique, choix sur catalogue et <b>exploitation pédagogique</b>.</p>
- <div class="ressources">
- <a href="01_cours_capet_axe.html">Cours — méthode de dimensionnement</a>
- <a href="02_tp_capet_axe.html">TP — 6 missions chiffrées</a>
- <a href="05_capet_sii_axe.html">Sujet type — axe linéaire à vis à billes</a>
- </div>
-</div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Statique</h3><span class="niv">Concours</span></div></div>
- <p>Le pilier de l’écrit : modéliser une action, compter les inconnues, choisir l’isolement et résoudre. Cours de méthode, six cas chiffrés, puis un sujet type complet sur une grue d’atelier hydraulique.</p>
- <div class="ressources">
- <a href="01_cours_capet_statique.html">Cours — méthode d’isolement</a>
- <a href="02_tp_capet_statique.html">TP — 6 cas chiffrés</a>
- <a href="05_capet_sii_statique.html">Sujet type — grue d’atelier à vérin</a>
- </div>
-</div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Trains d’engrenages</h3><span class="niv">Concours</span></div></div>
- <p>Train ordinaire, puis train épicycloïdal et formule de Willis. Cours de méthode avec simulateur de denture, six cas chiffrés, puis un sujet type complet sur un treuil de levage à deux vitesses.</p>
- <div class="ressources">
- <a href="01_cours_capet_trains.html">Cours — Willis et trains ordinaires</a>
- <a href="02_tp_capet_trains.html">TP — 6 cas chiffrés</a>
- <a href="05_capet_sii_trains.html">Sujet type — treuil à deux vitesses</a>
- </div>
-</div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Résistance des matériaux</h3><span class="niv">Concours</span></div></div>
- <p>Flexion, torsion, contrainte équivalente et surtout <b>concentration de contraintes</b> — l’oubli qui fait rompre les pièces au congé. Cours de méthode avec simulateur, six cas chiffrés, puis un sujet type complet sur un arbre de réducteur à deux sections singulières.</p>
- <div class="ressources">
- <a href="01_cours_capet_rdm.html">Cours — méthode de vérification</a>
- <a href="02_tp_capet_rdm.html">TP — 6 cas chiffrés</a>
- <a href="05_capet_sii_rdm.html">Sujet type — arbre de réducteur</a>
- </div>
-</div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Cotation fonctionnelle</h3><span class="niv">Concours</span></div></div>
- <p>La cote condition, le tracé des chaînes de cotes, les valeurs extrêmes et la répartition des tolérances. Cours de méthode avec simulateur, puis six cas chiffrés — jeux extrêmes, répartition des tolérances, chaîne longue et ajustement normalisé.</p>
- <div class="ressources">
- <a href="01_cours_capet_cotation.html">Cours — tracer et calculer une chaîne</a>
- <a href="02_tp_capet_cotation.html">TP — 6 cas chiffrés</a>
- <a href="05_capet_sii_cotation.html">Sujet type — réglage du jeu d’un arbre de pompe</a>
- </div>
-</div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Spécification géométrique et conception</h3><span class="niv">Concours</span></div></div>
- <p>Tolérances de forme, d’orientation et de position, cadre et zone de tolérance, système de références, maximum de matière — et surtout le choix de conception qui les justifie. Simulateur : la même pièce refusée puis acceptée au maximum de matière.</p>
- <div class="ressources">
- <a href="01_cours_capet_gps.html">Cours — spécifier à partir de la fonction</a>
- <a href="02_tp_capet_gps.html">TP — 6 cas chiffrés</a>
- <a href="05_capet_sii_gps.html">Sujet type — flasque de moteur</a>
- </div></div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Cinématique</h3><span class="niv">Concours</span></div></div>
- <p>Bielle-manivelle : loi entrée-sortie, vitesse d’un point, équiprojectivité et centre instantané de rotation. Simulateurs animés de la position du piston et des deux constructions graphiques.</p>
- <div class="ressources">
- <a href="01_cours_capet_cinematique.html">Cours — la bielle-manivelle</a>
- <a href="02_tp_capet_cinematique.html">TP — cinématique d’un moteur</a>
- <a href="05_capet_sii_cinematique.html">Sujet type — compresseur monocylindre</a>
- </div></div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Liaisons et hyperstatisme</h3><span class="niv">Concours</span></div></div>
- <p>Liaisons normalisées, graphe des liaisons, degré d’hyperstatisme h = m − Nc + 6γ et conditions géométriques associées. Simulateur : un arbre sur deux paliers, avec défaut d’alignement et dilatation.</p>
- <div class="ressources">
- <a href="01_cours_capet_liaisons.html">Cours — compter mobilités et inconnues</a>
- <a href="02_tp_capet_liaisons.html">TP — 6 montages chiffrés</a>
- <a href="05_capet_sii_liaisons.html">Sujet type — convoyeur, vérin et tiroir</a>
- </div></div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Guidage par roulements</h3><span class="niv">Concours</span></div></div>
- <p>Types de roulements, règles de montage, charge équivalente P = XFr + YFa et durée de vie L10. Simulateurs : dilatation d’un arbre, durée de vie en fonction de la charge.</p>
- <div class="ressources">
- <a href="01_cours_capet_roulements.html">Cours — choisir et monter un roulement</a>
- <a href="02_tp_capet_roulements.html">TP — choisir au catalogue</a>
- <a href="05_capet_sii_roulements.html">Sujet type — arbre de réducteur</a>
- </div></div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Frottement et adhérence</h3><span class="niv">Concours</span></div></div>
- <p>Lois de Coulomb, cône de frottement, couple d’un embrayage et relation d’Euler pour les courroies. Simulateurs : plan incliné, embrayage, courroie.</p>
- <div class="ressources">
- <a href="01_cours_capet_frottement.html">Cours — Coulomb, embrayage, courroie</a>
- <a href="02_tp_capet_frottement.html">TP — 6 cas chiffrés</a>
- <a href="05_capet_sii_frottement.html">Sujet type — tondeuse autoportée</a>
- </div></div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Dynamique</h3><span class="niv">Concours</span></div></div>
- <p>Principe fondamental en translation et en rotation, moment d’inertie, démarrage et freinage, levage. Simulateurs : chariot, course disque contre anneau, démarrage d’un moteur.</p>
- <div class="ressources">
- <a href="01_cours_capet_dynamique.html">Cours — accélérer et freiner</a>
- <a href="02_tp_capet_dynamique.html">TP — 6 cas chiffrés</a>
- <a href="05_capet_sii_dynamique.html">Sujet type — monte-charge de chantier</a>
- </div></div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Énergétique</h3><span class="niv">Concours</span></div></div>
- <p>Puissance, chaîne des rendements, énergie cinétique, inertie ramenée et couple de démarrage. Simulateurs : flux de puissance avec pertes, inertie vue à travers un réducteur.</p>
- <div class="ressources">
- <a href="01_cours_capet_energetique.html">Cours — puissance et rendement</a>
- <a href="02_tp_capet_energetique.html">TP — énergétique d’un treuil</a>
- <a href="05_capet_sii_energetique.html">Sujet type — ascenseur à contrepoids</a>
- </div></div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Hydraulique et pneumatique</h3><span class="niv">Concours</span></div></div>
- <p>Pression, principe de Pascal, vérin double effet, débit et puissance hydraulique, choix entre huile et air comprimé. Simulateurs : presse de Pascal, vérin animé.</p>
- <div class="ressources">
- <a href="01_cours_capet_hydraulique.html">Cours — pression, débit, vérins</a>
- <a href="02_tp_capet_hydraulique.html">TP — 6 cas chiffrés</a>
- <a href="05_capet_sii_hydraulique.html">Sujet type — fendeuse de bûches</a>
- </div></div>
-<div class="seq" style="--accent:#7c2d12">
- <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Matériaux et procédés</h3><span class="niv">Concours</span></div></div>
- <p>Essai de traction, indices de performance, carte des matériaux, familles de procédés. Simulateurs : essai animé, tirants comparés, carte module-masse volumique.</p>
- <div class="ressources">
- <a href="01_cours_capet_materiaux.html">Cours — choisir un matériau et un procédé</a>
- <a href="02_tp_capet_materiaux.html">TP — 6 cas chiffrés</a>
- <a href="05_capet_sii_materiaux.html">Sujet type — manivelle de pédalier</a>
- </div></div></div></div></div></div>
-</div>
-<div class="seq" style="--accent:var(--clf)">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="00_hub_lecture_plan.html">Lire un plan d'ensemble</a></h3>
- <div class="desc">Vues et correspondances, types de traits, construction d'une coupe, règles de hachures, cotation et nomenclature — sur un palier lisse en plan normalisé et en perspective 3D.</div>
- </div></div>
- <div class="ressources">
- <a class="hub" href="00_hub_lecture_plan.html">Hub</a>
- <a href="01_cours_lecture_plan.html">Cours</a>
- <a href="08_exo_lecture_plan.html">Découverte guidée</a>
- <a href="02_tp_lecture_plan.html">TP · 5 exercices</a>
- <a href="plan_palier.svg">Plan imprimable</a>
- </div>
- </div>
- <div class="seq" style="--accent:var(--cl)">
- <div class="haut"><div class="ic"></div><div>
- <h3><a href="06_exo_trajectoires.html">Trajectoires et analyse graphique</a></h3>
- <div class="desc">Identifier le mouvement de chaque pièce d'un mécanisme, puis tracer à la main la trajectoire d'un point : rotation, translation rectiligne, translation circulaire, mouvement plan quelconque.</div>
- </div></div>
- <div class="ressources">
- <a href="06_exo_trajectoires.html">Exercice de tracé</a>
- <a href="00_hub_lecture_plan.html">Séquence associée</a>
- </div>
- </div>
- </div>
-</section>
-
-<section class="niveau">
- <div class="bandeau">
- <div class="pastille" style="background:#c0392b">BP</div>
- <h2 style="color:#922b21">Bac Pro MFER — Maquette numérique (BIM)</h2>
- <div class="fil" style="background:#c0392b"></div>
- </div>
- <div class="duo">
- <div class="seq" style="--accent:#c0392b">
- <div class="tete"><span class="ic"></span><div><h3>Lire une maquette BIM</h3><span class="niv">Bac Pro MFER</span></div></div>
- <p>Visionneur 3D intégré : arborescence IFC, propriétés, systèmes, mesures et coupes. Chaque TP se termine par un document réponse : schéma de principe et fiche technique.</p>
- <div class="ressources">
- <a href="02_tp_bim_1_crapauduc.html">TP 1 — Le crapauduc</a>
- <a href="02_tp_bim_2_maison.html">TP 2 — Maison PAC air/eau</a>
- <a href="02_tp_bim_3_bureaux.html">TP 3 — Bureaux PAC réversible</a>
- <a href="02_tp_bim_4_superette.html">TP 4 — Supérette, froid commercial</a>
- </div>
-</div>
-<div class="seq" style="--accent:#c0392b">
- <div class="tete"><span class="ic"></span><div><h3>Évaluation BIM — Chaufferie de l’hôpital</h3><span class="niv">Bac Pro MFER</span></div></div>
- <p>Chaufferie fioul extraite d’une vraie maquette Revit : explorer, identifier, mesurer, compléter le schéma. Chaque aide utilisée retire 0,5 point. Note envoyée au tableau de bord.</p>
- <div class="ressources">
- <a href="04_evaluation_bim_chaufferie.html">Lancer l’évaluation</a>
- </div>
-</div>
- </div>
-</section>
-
-<section class="niveau">
-  <div class="bandeau">
-    <div class="pastille" style="background:#7c3aed">EN</div>
-    <h2 style="color:#5b21b6">Entraînement quotidien</h2>
-    <div class="fil" style="background:#7c3aed"></div>
-  </div>
-  <div class="duo">
-    <div class="seq" style="--accent:#7c3aed">
-      <div class="haut"><div class="ic">EN</div><div>
-        <h3><a href="10_entrainement_techno.html">Entraînement Techno — séance du jour</a></h3>
-        <div class="desc">Séance courte de 10 minutes, à faire régulièrement : vocabulaire technique syllabe par syllabe, mémoire visuelle d'un schéma vu en un éclair, et tenue d'une cadence régulière. La difficulté s'adapte automatiquement au niveau de chaque élève, et la progression est conservée d'une séance à l'autre.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="10_entrainement_techno.html">Lancer une séance</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="niveau">
-  <div class="bandeau">
-    <div class="pastille" style="background:#b45309">CM</div>
-    <h2 style="color:#7c2d12">Comment ça marche ? — les inventions du quotidien</h2>
-    <div class="fil" style="background:#b45309"></div>
-  </div>
-  <div class="duo">
-    <div class="seq" style="--accent:#b45309">
-      <div class="haut"><div class="ic">TR</div><div>
-        <h3><a href="00_hub_roue_tramway.html">La roue de tramway</a></h3>
-        <div class="desc">Un train sans volant ni capteur qui prend les virages et se recentre tout seul : la conicité des roues, l auto-centrage, le mouvement de lacet et le vrai role du boudin. Avec simulateur de decalage lateral.</div>
-      </div></div>
-      <div class="ressources">
-        <a class="hub" href="00_hub_roue_tramway.html">Hub</a>
-        <a href="01_cours_roue_tramway.html">Cours interactif</a>
-        <a href="05_brevet_roue_tramway.html">Sujet type DNB</a>
-        <a href="01_cours_serrure.html">Cours — la serrure</a>
- <a href="05_brevet_serrure.html">Sujet DNB — la serrure</a>
- <a href="01_cours_chasse_eau.html">Cours — la chasse d’eau</a>
- <a href="05_brevet_chasse_eau.html">Sujet DNB — la chasse d’eau</a>
- <a href="01_cours_differentiel.html">Cours — le différentiel</a>
- <a href="05_brevet_differentiel.html">Sujet DNB — le différentiel</a>
- <a href="01_cours_epingle_linge.html">Cours — l’épingle à linge</a>
- <a href="05_brevet_epingle_linge.html">Sujet DNB — l’épingle à linge</a>
- <a href="01_cours_fermeture_eclair.html">Cours — la fermeture éclair</a>
- <a href="05_brevet_fermeture_eclair.html">Sujet DNB — la fermeture éclair</a>
- <a href="01_cours_thermostat.html">Cours — le thermostat</a>
- <a href="05_brevet_thermostat.html">Sujet DNB — le thermostat</a>
-      </div>
-    </div>
-    <div class="seq" style="--accent:#0e7490">
-      <div class="haut"><div class="ic">CA</div><div>
-        <h3><a href="00_catalogue_inventions.html">Catalogue des inventions</a></h3>
-        <div class="desc">Douze objets du quotidien - fermeture eclair, serrure a goupilles, chasse d eau, differentiel, thermostat, ecran tactile - et les concepts de technologie que chacun permet de construire.</div>
-      </div></div>
-      <div class="ressources">
-        <a href="00_catalogue_inventions.html">Ouvrir le catalogue</a>
-        <a href="00_programme_technologie.html">Ancrage au programme</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="prof">
- <div class="boite">
- <h2>Coin professeur</h2>
- <p>Chaque <b>évaluation</b>enregistre automatiquement les résultats (note /20, durée, détail par activité) et embarque un
- <b>tableau de bord protégé par mot de passe</b>avec export CSV — accessible depuis le bouton discret en bas de page de chaque évaluation.
- Les <b>TP</b>sauvegardent la progression des élèves sur le poste (localStorage) et délivrent en mission finale le <b>code de déverrouillage des deux jeux</b> :
- la révision devient une récompense. Tous les fichiers sont autonomes et fonctionnent hors-ligne — seules les évaluations nécessitent Internet pour la remontée des résultats.</p>
- <p style="margin-top:10px"><a href="000_tableau_de_bord.html" style="display:inline-block;background:#0e7490;color:#fff;padding:10px 20px;border-radius:11px;text-decoration:none;font-weight:900">Tableau de bord — toutes les évaluations</a>
- &nbsp;<span style="font-size:13px;color:#64748b">résultats consolidés des 30 séquences, filtres par niveau, classe et élève, export CSV global</span></p>
- <p style="margin-top:10px"><a href="000_suivi_classes.html" style="display:inline-block;background:#15803d;color:#fff;padding:10px 20px;border-radius:11px;text-decoration:none;font-weight:900">Suivi des classes — avancement des séquences</a>
- &nbsp;<span style="font-size:13px;color:#64748b">où en est chaque classe : un clic par séquence pour marquer à faire, en cours ou terminé, avec filtres et export CSV</span></p>
- <p style="margin-top:10px">La séquence <b>Sciences de l'ingénieur</b>inaugure une nouvelle génération d'activités : plus aucun QCM,
+html{scroll-behavior:smooth;scroll-padding-top:74px}
+body{font-family:Nunito,'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--ink);overflow-x:clip}
+a{color:inherit}
+.bar{display:flex;align-items:center;gap:12px;padding:10px max(4vw,16px);background:#fff;border-bottom:1px solid var(--ligne)}
+.bar img{height:40px}.bar .id b{display:block;font-size:15px}.bar .id span{font-size:12.5px;color:var(--gris)}
+.bar .sp{flex:1}.bar .prof-l{font-size:13.5px;font-weight:800;text-decoration:none;color:var(--ink);border:1.5px solid var(--ligne);border-radius:999px;padding:7px 14px}.bar .prof-l:hover{border-color:var(--ink)}
+.hero{background:linear-gradient(160deg,#5ab0f0 0%,#7cc4f5 45%,#b9e0fb 100%);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:60px;background:var(--fond);clip-path:ellipse(70% 100% at 50% 100%)}
+.hero .in{max-width:1240px;margin:0 auto;padding:40px max(4vw,16px) 70px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:24px;align-items:center;position:relative;z-index:1}
+.hero .eye{display:inline-block;background:#ffffffcc;color:#0b3b66;font-weight:800;font-size:13px;border-radius:999px;padding:5px 12px}
+.hero h1{font-size:clamp(34px,4.6vw,54px);line-height:1.04;margin:14px 0 12px;color:#0b2a4a;font-weight:900;text-wrap:balance}
+.hero p.lead{font-size:17.5px;line-height:1.5;color:#123c63;max-width:56ch}
+.path{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 20px}.path span{background:#fff;border-radius:10px;padding:6px 11px;font-weight:800;font-size:13.5px;color:#0b3b66;box-shadow:0 2px 8px #0b3b6614}
+.path svg{vertical-align:-3px}
+.search{display:flex;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:6px 6px 6px 14px;box-shadow:0 8px 24px #0b3b6624;max-width:520px}
+.search input{flex:1;border:0;outline:0;font:inherit;font-size:16px;color:var(--ink);min-height:40px;background:transparent}
+.search kbd{font:inherit;font-size:12px;color:var(--gris);border:1px solid var(--ligne);border-radius:6px;padding:2px 6px}
+.illu{width:100%;height:auto;display:block;filter:drop-shadow(0 18px 30px #0b3b6630)}
+.spin{animation:spin 18s linear infinite}.spin.rev{animation-direction:reverse;animation-duration:12s}.float{animation:fl 5s ease-in-out infinite}.float2{animation:fl 6s ease-in-out infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes fl{50%{transform:translateY(-8px)}}
+.stats{max-width:1240px;margin:-34px auto 0;padding:0 max(4vw,16px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;position:relative;z-index:2}
+.stats div{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:14px 16px;font-weight:800;color:var(--gris);font-size:14px}.stats b{display:block;font-size:28px;color:var(--ink);line-height:1.1}
+nav.niv{position:sticky;top:0;z-index:20;background:#f6f8fcee;backdrop-filter:blur(8px);border-bottom:1px solid var(--ligne);margin-top:24px}
+nav.niv .in{max-width:1240px;margin:0 auto;padding:10px max(4vw,16px);display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+nav.niv a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;font-weight:800;font-size:14px;background:#fff;border:1.5px solid var(--ligne);border-radius:999px;padding:5px 13px 5px 5px;min-height:40px}
+nav.niv a b{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border-radius:999px;background:var(--a);color:#fff;font-size:13px}
+nav.niv a:hover{border-color:var(--a)}
+main{max-width:1240px;margin:0 auto;padding:6px max(4vw,16px) 40px}
+.niveau{margin-top:34px}
+.niveau .head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.niveau .badge{display:flex;align-items:center;justify-content:center;min-width:58px;height:58px;padding:0 10px;border-radius:18px;background:var(--a);color:#fff;font-weight:900;font-size:24px;box-shadow:0 8px 18px color-mix(in srgb,var(--a) 35%,transparent)}
+.niveau h2{font-size:clamp(24px,2.6vw,32px);font-weight:900;color:var(--a);line-height:1.1}.niveau .cnt{color:var(--gris);font-weight:700;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px}
+.card{background:#fff;border-radius:18px;box-shadow:var(--ombre);display:flex;flex-direction:column;overflow:hidden;border:1px solid #edf1f7;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(30,58,95,.14)}
+.card .top{display:flex;gap:13px;padding:16px 16px 10px;text-decoration:none;align-items:flex-start}
+.card .ico{flex:none;width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--a);background:color-mix(in srgb,var(--a) 13%,#fff)}
+.card h3{font-size:18px;font-weight:900;line-height:1.2;color:var(--ink)}
+.card .tt p{font-size:14px;color:var(--gris);line-height:1.45;margin-top:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .res{padding:2px 16px 8px;display:flex;flex-direction:column;gap:6px}
+.card .row{display:grid;grid-template-columns:62px minmax(0,1fr);gap:8px;align-items:start}
+.card .lab{font-size:12px;font-weight:800;color:#94a3b8;padding-top:5px}
+.card .chips{display:flex;flex-wrap:wrap;gap:5px}
+.card .chips a{font-size:13px;font-weight:700;text-decoration:none;color:var(--ink);background:#f1f5f9;border-radius:8px;padding:4px 9px;line-height:1.35}
+.card .chips a:hover{background:var(--a);color:#fff}
+.card .go{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;font-weight:900;font-size:14.5px;color:#fff;background:color-mix(in srgb,var(--a) 82%,#0b1b30);padding:12px;min-height:46px}
+.card .go:hover{filter:brightness(1.1)}
+.card[hidden],.niveau[hidden]{display:none}
+.vide{display:none;text-align:center;color:var(--gris);font-weight:700;padding:30px}
+.prof{max-width:1240px;margin:20px auto 50px;padding:0 max(4vw,16px)}
+.prof .boite{background:#fff;border-radius:20px;box-shadow:var(--ombre);padding:24px 26px;border:1px solid #edf1f7;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.prof h2{font-size:24px;font-weight:900;color:#c2410c}
+.prof p{font-size:15px;color:var(--gris);line-height:1.6}.prof p b{color:var(--ink)}
+.prof .pbtn{display:inline-flex;align-items:center;min-height:44px;background:var(--ink);color:#fff;padding:10px 18px;border-radius:12px;text-decoration:none;font-weight:900;margin-right:10px}
+.prof p:nth-of-type(3) .pbtn{background:#15803d}.prof .pdesc{font-size:14px}
+footer{text-align:center;color:var(--gris);font-size:13px;padding:0 16px 30px}
+a:focus-visible,input:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+@media(max-width:600px){.search kbd{display:none}.hero .illu{max-width:300px}.bar .id span{display:none}}
+@media(max-width:860px){.hero .in{grid-template-columns:1fr}.illu{max-width:420px;margin:0 auto}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){.spin,.float,.float2{animation:none}html{scroll-behavior:auto}.card{transition:none}}
+</style></head><body>
+<div class="bar"><img alt="Logo ESTIC" src="logo_estic.png"><div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC — Saint-Dizier</span></div><span class="sp"></span><a class="prof-l" href="#coin-prof">Espace professeur</a></div>
+<header class="hero"><div class="in">
+ <div>
+  <span class="eye">Technologie · Cycle 4 · Collège</span>
+  <h1>Bienvenue dans l’atelier de technologie</h1>
+  <p class="lead">Choisis ton niveau, ouvre ta séquence et suis le parcours : on découvre, on manipule, on s’entraîne en jouant, puis on montre ce qu’on sait.</p>
+  <div class="path"><span>Cours</span><span>TP à missions</span><span>Jeux de révision</span><span>Évaluation</span></div>
+  <label class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#5b6b80" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg><input id="q" type="search" placeholder="Rechercher une séquence : ponts, robot, énergie…" autocomplete="off"><kbd>/</kbd></label>
+ </div>
+ <svg viewBox="0 0 520 400" class="illu" role="img" aria-label="Illustration : engrenages, ampoule, fusée et ordinateur">
+  <defs><linearGradient id="gS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".9"/><stop offset="1" stop-color="#ffffff" stop-opacity=".55"/></linearGradient></defs>
+  <ellipse cx="270" cy="360" rx="230" ry="26" fill="#0b3b66" opacity=".18"/>
+  <path d="M60 300c-30-90 40-190 150-200 70-6 110-60 190-40 90 22 120 130 70 210-40 64-120 80-220 74-90-6-170 18-190-44z" fill="url(#gS)"/>
+  <g class="spin" style="transform-origin:150px 250px"><polygon points="199.6,250.0 211.2,259.7 209.0,269.2 194.2,272.5 190.1,279.2 193.8,293.8 186.4,300.2 172.5,294.2 165.3,297.2 159.7,311.2 150.0,312.0 142.2,299.0 134.7,297.2 121.9,305.2 113.6,300.2 114.9,285.1 109.9,279.2 94.8,278.1 91.0,269.2 101.0,257.8 100.4,250.0 88.8,240.3 91.0,230.8 105.8,227.5 109.9,220.8 106.2,206.2 113.6,199.8 127.5,205.8 134.7,202.8 140.3,188.8 150.0,188.0 157.8,201.0 165.3,202.8 178.1,194.8 186.4,199.8 185.1,214.9 190.1,220.8 205.2,221.9 209.0,230.8 199.0,242.2" fill="#f59e0b"/><circle cx="150" cy="250" r="19.8" fill="#fff"/></g>
+  <g class="spin rev" style="transform-origin:236px 196px"><polygon points="265.8,202.0 271.1,210.7 267.5,217.2 257.4,217.6 252.8,221.3 250.4,231.2 243.3,233.3 235.9,226.4 230.0,225.8 221.3,231.1 214.8,227.5 214.4,217.4 210.7,212.8 200.8,210.4 198.7,203.3 205.6,195.9 206.2,190.0 200.9,181.3 204.5,174.8 214.6,174.4 219.2,170.7 221.6,160.8 228.7,158.7 236.1,165.6 242.0,166.2 250.7,160.9 257.2,164.5 257.6,174.6 261.3,179.2 271.2,181.6 273.3,188.7 266.4,196.1" fill="#16a34a"/><circle cx="236" cy="196" r="12.2" fill="#fff"/></g>
+  <rect x="270" y="210" width="190" height="122" rx="10" fill="#1e3a5f"/><rect x="282" y="222" width="166" height="98" rx="5" fill="#0f172a"/>
+  <path d="M296 244h44M296 262h76M310 280h58M296 298h36" stroke="#38bdf8" stroke-width="7" stroke-linecap="round"/><path d="M386 244h30M380 280h40" stroke="#f472b6" stroke-width="7" stroke-linecap="round"/>
+  <path d="M250 332h240l-16 18H266z" fill="#94a3b8"/>
+  <g class="float"><circle cx="400" cy="120" r="44" fill="#fde047"/><path d="M386 162h28v14h-28z" fill="#64748b"/><path d="M384 170h32M388 178h24" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+    <path d="M392 136l8-18 8 18" stroke="#b45309" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M455 86l14-10M462 120h18M452 152l14 10M345 86l-14-10M338 120h-18" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/></g>
+  <g class="float2"><path d="M96 92c18-14 44-14 52 0l-8 50h-36z" fill="#e2e8f0"/><path d="M96 92c18-14 44-14 52 0" fill="#ef4444"/><circle cx="122" cy="112" r="9" fill="#38bdf8" stroke="#1e3a5f" stroke-width="3"/>
+    <path d="M104 142l-14 18 18-6zM140 142l14 18-18-6z" fill="#ef4444"/><path d="M114 146c2 14 14 14 16 0z" fill="#f97316"/></g>
+  <g fill="#fff"><circle cx="40" cy="60" r="4"/><circle cx="486" cy="40" r="3"/><circle cx="480" cy="250" r="5"/><circle cx="210" cy="60" r="3"/></g>
+</svg>
+</div></header>
+<div class="stats"><div><b>40</b>séquences de la 5e à la 3e</div><div><b>81</b>TP et activités</div><div><b>72</b>jeux de révision</div><div><b>42</b>évaluations</div></div>
+<nav class="niv" aria-label="Niveaux"><div class="in"><a href="#niv-5e" style="--a:#16a34a"><b>5e</b>Cinquième</a><a href="#niv-4e" style="--a:#7c3aed"><b>4e</b>Quatrième</a><a href="#niv-3e" style="--a:#1d4ed8"><b>3e</b>Troisième</a><a href="#niv-m3" style="--a:#2563eb"><b>M</b>Mathématiques</a><a href="#niv-4" style="--a:#0891b2"><b>+</b>En plus</a><a href="#niv-si" style="--a:#0e7490"><b>SI</b>Sciences de l&#x27;ingénieur</a><a href="#niv-bp" style="--a:#c0392b"><b>BP</b>Bac Pro MFER</a><a href="#niv-en" style="--a:#7c3aed"><b>EN</b>Entraînement quotidien</a><a href="#niv-cm" style="--a:#b45309"><b>CM</b>Comment ça marche ?</a></div></nav>
+<main><section class="niveau" id="niv-5e" style="--a:#16a34a">
+  <div class="head"><span class="badge">5e</span><div><h2>Cinquième</h2><span class="cnt">14 séquences</span></div></div>
+  <div class="grid"><article class="card" style="--a:#15803d" data-q="les ponts ponts, barrages, tours : pourquoi ça tient debout ? forces, triangulation et inspection d&#x27;ouvrages.">
+  <a class="top" href="00_hub_habitat_5e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 16h20M4 16v4M20 16v4M2 16c4-8 16-8 20 0M7 16v-3.5M12 16v-5M17 16v-3.5"/></svg></span><span class="tt"><h3>Les ponts</h3><p>Ponts, barrages, tours : pourquoi ça tient debout ? Forces, triangulation et inspection d&#x27;ouvrages.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_habitat_ouvrages.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_ponts.html">TP Ponts</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_batisseur.html">Bâtisseur</a><a href="03b_jeu_inspecteur.html">Inspecteur</a><a href="03c_jeu_chantier_express.html">Chantier Express</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_habitat.html">Évaluation</a><a href="04_evaluation_ponts_sorciers.html">Évaluation des sorciers</a></div></div><div class="row"><span class="lab">Plus</span><div class="chips"><a href="https://youtu.be/ujwYjL1OdQc" target="_blank" rel="noopener">Vidéo — C&#x27;est pas sorcier : les ponts</a><a href="https://www.youtube.com/watch?v=JidxYO5IPGI" target="_blank" rel="noopener">Pont papier</a><a href="https://play.kahoot.it/v2/?quizId=162e5bcd-f0a2-4fe5-abf5-c4b3103caaf7&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9" target="_blank" rel="noopener">Kahoot</a></div></div></div>
+  <a class="go" href="00_hub_habitat_5e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#16a34a" data-q="les énergies sources, chaînes d&#x27;énergie et mix électrique : alimenter une ville sans blackout ni excès de co₂.">
+  <a class="top" href="00_hub_energies_5e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 5 13h6l-1 9 8-12h-6z"/></svg></span><span class="tt"><h3>Les Énergies</h3><p>Sources, chaînes d&#x27;énergie et mix électrique : alimenter une ville sans blackout ni excès de CO₂.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_energies.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_energies.html">TP Mix</a><a href="02b_tp_manuel_eolienne_savonius.html">TP manuel</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_energie_panic.html">Énergie Panic</a><a href="03b_jeu_gardien_reseau.html">Gardien du réseau</a><a href="03c_jeu_pluie_watts.html">Pluie de Watts</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_energies.html">Évaluation</a><a href="04_evaluation_energies_sorciers.html">Évaluation des sorciers</a><a href="04_evaluation_ecrite_energies_5e.pdf" target="_blank" rel="noopener">Évaluation écrite</a></div></div><div class="row"><span class="lab">Plus</span><div class="chips"><a href="https://www.france.tv/france-4/c-est-toujours-pas-sorcier/c-est-toujours-pas-sorcier-saison-2/1467579-energie-rien-ne-se-cree-tout-se-transforme.html" target="_blank" rel="noopener">Vidéo — C’est toujours pas sorcier : l’énergie</a><a href="https://play.kahoot.it/v2/?quizId=a2171712-4376-43ee-b923-3a31b81b7b39&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9" target="_blank" rel="noopener">Kahoot</a></div></div></div>
+  <a class="go" href="00_hub_energies_5e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#1d4ed8" data-q="la conception assistée par ordinateur esquisse cotée, bossage, enlèvement de matière : modéliser une pièce en 3d et connaître sa masse avant de la fabriquer.">
+  <a class="top" href="00_hub_cao_5e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7zM3 7l9 5 9-5M12 12v10"/></svg></span><span class="tt"><h3>La conception assistée par ordinateur</h3><p>Esquisse cotée, bossage, enlèvement de matière : modéliser une pièce en 3D et connaître sa masse avant de la fabriquer.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_cao.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_cao.html">TP 1</a><a href="02_tp_cao_5e_2.html">TP 2</a><a href="02_tp_cao_5e_3.html">TP 3</a><a href="02_tp_cao_5e_4.html">TP 4</a><a href="02b_logiciel_cao.html">Logiciel CAO Studio</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_cao.html">Évaluation</a><a href="04_evaluation_cao_sorciers.html">Évaluation des sorciers</a></div></div><div class="row"><span class="lab">Plus</span><div class="chips"><a href="08_atelier_3d_5e.html">Atelier 3D</a><a href="https://www.youtube.com/watch?v=Dzc6kseH3xE" target="_blank" rel="noopener">Vidéo — C’est pas sorcier : voyage en 3D</a></div></div></div>
+  <a class="go" href="00_hub_cao_5e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c3aed" data-q="programmer un jeu vidéo sprites, événements, score et vies : des blocs comme sur makecode arcade, puis ton propre jeu sur le vrai makecode.">
+  <a class="top" href="00_hub_arcade_5e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.4 1.8L15 14H9l-1.6 1.8A3 3 0 0 1 2 14v-1a4 4 0 0 1 4-4zM7 11.5v3M5.5 13h3M16 12h.01M18 14h.01"/></svg></span><span class="tt"><h3>Programmer un jeu vidéo</h3><p>Sprites, événements, score et vies : des blocs comme sur MakeCode Arcade, puis ton propre jeu sur le vrai MakeCode.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_arcade_5e.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_arcade_5e_1.html">TP 1</a><a href="02_tp_arcade_5e_2.html">TP 2</a><a href="02_tp_arcade_5e_3.html">TP 3</a><a href="02_tp_arcade_5e_4.html">TP 4</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_arcade_5e.html">Évaluation</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_projet_makecode_5e.html">Projet MakeCode</a></div></div></div>
+  <a class="go" href="00_hub_arcade_5e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#4ade80" data-q="développement durable &amp; cycle de vie les trois piliers, les cinq étapes de la vie d&#x27;un produit et l&#x27;éco-conception : réduire l&#x27;impact d&#x27;un objet, de la mine à la poubelle.">
+  <a class="top" href="00_hub_cycle_de_vie.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19C5 9 11 4 20 4c0 9-5 15-15 15zM5 19l8-8"/></svg></span><span class="tt"><h3>Développement durable &amp; cycle de vie</h3><p>Les trois piliers, les cinq étapes de la vie d&#x27;un produit et l&#x27;éco-conception : réduire l&#x27;impact d&#x27;un objet, de la mine à la poubelle.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_dd_cycle_vie.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_dd_carnet.html">Carnet d&#x27;exercices</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_simulateur_cycle_vie.html">Simulateur</a></div></div><div class="row"><span class="lab">Plus</span><div class="chips"><a href="https://play.kahoot.it/v2?quizId=27b912e8-4cc1-483d-9c06-371f07a8e5ff&amp;activeWorkspace=PERSONAL&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9&amp;autoAuth=true" target="_blank" rel="noopener">Kahoot</a></div></div></div>
+  <a class="go" href="00_hub_cycle_de_vie.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#b85c2e" data-q="les matériaux et leurs propriétés cinq familles, quatre catégories de propriétés : comprendre pourquoi un objet est en métal, en polymère ou en composite — et savoir le justifier.">
+  <a class="top" href="00_hub_materiaux.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5-9 5zM3 12l9 5 9-5M3 16l9 5 9-5"/></svg></span><span class="tt"><h3>Les matériaux et leurs propriétés</h3><p>Cinq familles, quatre catégories de propriétés : comprendre pourquoi un objet est en métal, en polymère ou en composite — et savoir le justifier.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01b_presentation_materiaux.html">Présentation</a><a href="01_cours_materiaux.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_materiaux.html">Activités</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_defi_materiaux.html">Grand Défi</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_materiaux.html">Évaluation</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_tableau_bord_materiaux.html">Tableau de bord</a></div></div><div class="row"><span class="lab">Plus</span><div class="chips"><a href="https://www.youtube.com/watch?v=TMe2vZ6DEy4" target="_blank" rel="noopener">Vidéo — Le monde des matériaux</a><a href="https://play.kahoot.it/v2?quizId=d3380584-d63d-452c-bd41-99d82694b27d&amp;activeWorkspace=PERSONAL&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9&amp;autoAuth=true" target="_blank" rel="noopener">Kahoot</a></div></div></div>
+  <a class="go" href="00_hub_materiaux.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#b45309" data-q="l&#x27;évolution des objets techniques lignées, invention et innovation : du grand-bi au smartphone, pourquoi et comment les objets changent.">
+  <a class="top" href="00_hub_evolution_5e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v5l3 2M21 12a9 9 0 1 1-3-6.7M21 4v4h-4"/></svg></span><span class="tt"><h3>L&#x27;évolution des objets techniques</h3><p>Lignées, invention et innovation : du grand-bi au smartphone, pourquoi et comment les objets changent.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_evolution.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_lignees.html">TP Lignées</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_chrono_rush.html">Chrono Rush</a><a href="03b_jeu_bureau_inventions.html">Bureau des inventions</a><a href="03c_jeu_couloirs_temps.html">Couloirs du Temps</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_evolution.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_evolution_5e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#db2777" data-q="le besoin &amp; le cahier des charges bête à cornes, fonctions d&#x27;usage et d&#x27;estime, critères et niveaux : formuler le besoin et contrôler un prototype.">
+  <a class="top" href="00_hub_besoin_5e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6v3H9zM7 5H5v16h14V5h-2M8 11h8M8 15h5"/></svg></span><span class="tt"><h3>Le besoin &amp; le cahier des charges</h3><p>Bête à cornes, fonctions d&#x27;usage et d&#x27;estime, critères et niveaux : formuler le besoin et contrôler un prototype.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_besoin.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_bureau_projets.html">TP Bureau des projets</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_fonction_rush.html">Fonction Rush</a><a href="03b_jeu_bureau_etudes.html">Bureau d&#x27;études</a><a href="03c_jeu_drone_be.html">Drone du BE</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_besoin.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_besoin_5e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#0284c7" data-q="l&#x27;environnement numérique fichiers, dossiers, serveur du collège, sessions et tailles ko/mo/go : ne plus jamais perdre un exposé.">
+  <a class="top" href="00_hub_environnement_num_5e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h18v12H3zM8 20h8M12 16v4"/></svg></span><span class="tt"><h3>L&#x27;environnement numérique</h3><p>Fichiers, dossiers, serveur du collège, sessions et tailles Ko/Mo/Go : ne plus jamais perdre un exposé.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_environnement_num.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_salle_info.html">TP Salle info</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_extension_rush.html">Extension Rush</a><a href="03b_jeu_salle_info.html">SOS Salle info</a><a href="03c_jeu_data_runner.html">Data Runner</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_environnement_num.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_environnement_num_5e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#d97706" data-q="design &amp; ergonomie la poignée qui épouse la main, la porte de norman, la chaise aux bonnes mesures : penser comme un designer.">
+  <a class="top" href="00_hub_design_5e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l4-1L19 8l-3-3L5 16zM14 7l3 3"/></svg></span><span class="tt"><h3>Design &amp; ergonomie</h3><p>La poignée qui épouse la main, la porte de Norman, la chaise aux bonnes mesures : penser comme un designer.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_design.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_bureau_design.html">TP Bureau design</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_design_rush.html">Design Rush</a><a href="03b_jeu_bureau_etude.html">Bureau d&#x27;étude</a><a href="03c_jeu_rafle_studio.html">Rafle au Studio</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_design.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_design_5e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#b91c1c" data-q="transports &amp; mobilité quatre familles, des critères pour choisir (temps, co₂, capacité) et la multimodalité : décoder le système qui déplace le monde.">
+  <a class="top" href="00_hub_transports_5e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16V7a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v9M5 12h14M5 16h14v2H5zM8 19v1M16 19v1"/></svg></span><span class="tt"><h3>Transports &amp; mobilité</h3><p>Quatre familles, des critères pour choisir (temps, CO₂, capacité) et la multimodalité : décoder le système qui déplace le monde.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_transports.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_pc_mobilite.html">TP PC mobilité</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_transport_rush.html">Transport Rush</a><a href="03b_jeu_pc_mobilite.html">PC Mobilité</a><a href="03c_jeu_trottinette_express.html">Trottinette Express</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_transports.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_transports_5e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#15803d" data-q="le vélo, objet technique fonction d&#x27;usage, fonctions techniques, solutions : 200 pièces pour apprendre à analyser n&#x27;importe quel objet — transmission et freinage compris.">
+  <a class="top" href="00_hub_velo_5e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 17m-3.5 0a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0-7 0M18 17m-3.5 0a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0-7 0M6 17l4-8h6l2 8M10 9l2 8 4-8M14 6h3"/></svg></span><span class="tt"><h3>Le vélo, objet technique</h3><p>Fonction d&#x27;usage, fonctions techniques, solutions : 200 pièces pour apprendre à analyser n&#x27;importe quel objet — transmission et freinage compris.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_velo.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_atelier_velo.html">TP atelier vélo</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_velo_rush.html">Vélo Rush</a><a href="03b_jeu_atelier_velo.html">Atelier réparation</a><a href="03c_jeu_echappee_peloton.html">Échappée Peloton</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_velo.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_velo_5e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#155e75" data-q="l’eau dans la ville le château d’eau et sa pression venue de la gravité, le circuit complet de la rivière à la rivière, la station d’épuration et la chasse aux fuites.">
+  <a class="top" href="00_hub_eau_5e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z"/></svg></span><span class="tt"><h3>L’eau dans la ville</h3><p>Le château d’eau et sa pression venue de la gravité, le circuit complet de la rivière à la rivière, la station d’épuration et la chasse aux fuites.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_eau.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_regie_eaux.html">TP</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_aqua_rush.html">Jeu</a><a href="03b_jeu_regie_eaux.html">Jeu 2</a><a href="03c_jeu_torrent_propre.html">Torrent Propre</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_eau.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_eau_5e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#ca8a04" data-q="météo &amp; instruments de mesure les quatre capteurs de la station, la chaîne complète de la prévision (mesurer, transmettre, calculer, diffuser), le baromètre qui annonce la pluie et la chasse aux capteurs menteurs.">
+  <a class="top" href="00_hub_meteo_5e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 0-8 6 6 0 0 0-11.6 1.5A3.3 3.3 0 0 0 7 18z"/></svg></span><span class="tt"><h3>Météo &amp; instruments de mesure</h3><p>Les quatre capteurs de la station, la chaîne complète de la prévision (mesurer, transmettre, calculer, diffuser), le baromètre qui annonce la pluie et la chasse aux capteurs menteurs.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_meteo.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_station_meteo.html">TP</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_meteo_rush.html">Jeu</a><a href="03b_jeu_station_meteo.html">Jeu 2</a><a href="03c_jeu_ballon_sonde.html">Ballon-Sonde</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_meteo.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_meteo_5e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article></div>
+</section><section class="niveau" id="niv-4e" style="--a:#7c3aed">
+  <div class="head"><span class="badge">4e</span><div><h2>Quatrième</h2><span class="cnt">13 séquences</span></div></div>
+  <div class="grid"><article class="card" style="--a:#6d28d9" data-q="la domotique capteurs, actionneurs et logique si/alors : la maison connectée décortiquée et programmée.">
+  <a class="top" href="00_hub_domotique_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7M5 9.5V20h14V9.5M10 20v-6h4v6"/></svg></span><span class="tt"><h3>La Domotique</h3><p>Capteurs, actionneurs et logique SI/ALORS : la maison connectée décortiquée et programmée.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_domotique.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_maison_connectee.html">TP Maison</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_signal_rush.html">Signal Rush</a><a href="03b_jeu_nuit_de_garde.html">Nuit de garde</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_domotique.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_domotique_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c3aed" data-q="transmissions de mouvement engrenages, courroies, pignon-crémaillère : sens de rotation et rapports n₂ = n₁ × z₁ ÷ z₂.">
+  <a class="top" href="00_hub_transmissions_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg></span><span class="tt"><h3>Transmissions de mouvement</h3><p>Engrenages, courroies, pignon-crémaillère : sens de rotation et rapports N₂ = N₁ × Z₁ ÷ Z₂.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_transmissions.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_engrenages.html">TP Engrenages</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_gear_rush.html">Gear Rush</a><a href="03b_jeu_atelier_meca.html">Atelier Méca</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_transmissions.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_transmissions_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#059669" data-q="la chaîne d&#x27;énergie alimenter, distribuer, convertir, transmettre : le voyage de l&#x27;énergie dans le vélo électrique, rendement et pertes compris.">
+  <a class="top" href="00_hub_chaine_energie_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 5 13h6l-1 9 8-12h-6z"/></svg></span><span class="tt"><h3>La chaîne d&#x27;énergie</h3><p>Alimenter, distribuer, convertir, transmettre : le voyage de l&#x27;énergie dans le vélo électrique, rendement et pertes compris.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_chaine_energie.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_garage_vae.html">TP Garage VAE</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_moteur_rush.html">Moteur Rush</a><a href="03b_jeu_sos_depannage.html">SOS Dépannage</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_chaine_energie.html">Évaluation</a></div></div><div class="row"><span class="lab">Plus</span><div class="chips"><a href="https://play.kahoot.it/v2/?quizId=a2171712-4376-43ee-b923-3a31b81b7b39&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9" target="_blank" rel="noopener">Kahoot</a></div></div></div>
+  <a class="go" href="00_hub_chaine_energie_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c3aed" data-q="modélisation &amp; impression 3d la chaîne numérique : modéliser par volumes, exporter en stl, trancher en couches, imprimer — et diagnostiquer les ratés.">
+  <a class="top" href="00_hub_impression3d_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v4H4zM6 8v8h12V8M9 16v3h6v-3M10 11h4"/></svg></span><span class="tt"><h3>Modélisation &amp; impression 3D</h3><p>La chaîne numérique : modéliser par volumes, exporter en STL, trancher en couches, imprimer — et diagnostiquer les ratés.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_impression3d.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_fablab.html">TP Fab lab</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_procede_rush.html">Procédé Rush</a><a href="03b_jeu_ferme_impression.html">Ferme d&#x27;impression</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_impression3d.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_impression3d_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#059669" data-q="les réseaux informatiques switch, box, serveur, adresses ip : comprendre le réseau local et diagnostiquer les pannes de proche en proche.">
+  <a class="top" href="00_hub_reseaux_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z"/></svg></span><span class="tt"><h3>Les réseaux informatiques</h3><p>Switch, box, serveur, adresses IP : comprendre le réseau local et diagnostiquer les pannes de proche en proche.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_reseaux.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_admin_reseau.html">TP Admin réseau</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_reseau_rush.html">Réseau Rush</a><a href="03b_jeu_admin_reseau.html">Admin Réseau</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_reseaux.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_reseaux_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#65a30d" data-q="dessin technique &amp; représentation vues, cotes, échelle, cartouche : le langage universel qui transforme une idée en pièce fabricable, sans ambiguïté.">
+  <a class="top" href="00_hub_dessin_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>Dessin technique &amp; représentation</h3><p>Vues, cotes, échelle, cartouche : le langage universel qui transforme une idée en pièce fabricable, sans ambiguïté.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_dessin.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_bureau_methodes.html">TP Bureau des méthodes</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_plan_rush.html">Plan Rush</a><a href="03b_jeu_bureau_methodes.html">Contrôle des plans</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_dessin.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_dessin_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#0369a1" data-q="aéronautique — comment vole un avion portance, poids, traction, traînée : le duel des forces, l&#x27;aile qui fabrique la portance et les trois gouvernes du pilotage.">
+  <a class="top" href="00_hub_aero_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15l-8-5V4.5a1.5 1.5 0 0 0-3 0V10l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-4.5l8 2.5z"/></svg></span><span class="tt"><h3>Aéronautique — comment vole un avion</h3><p>Portance, poids, traction, traînée : le duel des forces, l&#x27;aile qui fabrique la portance et les trois gouvernes du pilotage.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_aero.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_bureau_aero.html">TP Bureau d&#x27;études aéro</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_aero_rush.html">Aéro Rush</a><a href="03b_jeu_tour_controle.html">Tour de contrôle</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_aero.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_aero_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#92400e" data-q="automobile &amp; sécurité routière distance d&#x27;arrêt, sécurité active et passive, la ceinture face à l&#x27;inertie : la technologie qui garde les occupants en vie.">
+  <a class="top" href="00_hub_auto_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 16v-3l2-5h14l2 5v3zM3 16v2h3v-2M18 16v2h3v-2M7 13h.01M17 13h.01"/></svg></span><span class="tt"><h3>Automobile &amp; sécurité routière</h3><p>Distance d&#x27;arrêt, sécurité active et passive, la ceinture face à l&#x27;inertie : la technologie qui garde les occupants en vie.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_auto.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_securite_routiere.html">TP sécurité routière</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_securite_rush.html">Sécurité Rush</a><a href="03b_jeu_controle_technique.html">Contrôle technique</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_auto.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_auto_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#334155" data-q="le smartphone décortiqué 200 g, 60 matériaux : l’écorché du téléphone, la grille invisible de l’écran tactile, la batterie pièce d’usure et le réflexe réparer plutôt que jeter.">
+  <a class="top" href="00_hub_smartphone_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2h10v20H7zM11 18h2"/></svg></span><span class="tt"><h3>Le smartphone décortiqué</h3><p>200 g, 60 matériaux : l’écorché du téléphone, la grille invisible de l’écran tactile, la batterie pièce d’usure et le réflexe réparer plutôt que jeter.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_smartphone.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_labo_demontage.html">TP</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_tactile_rush.html">Jeu</a><a href="03b_jeu_sav_telephone.html">Jeu 2</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_smartphone.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_smartphone_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#0f766e" data-q="l’ascenseur le secret du contrepoids qui soulage le moteur, le parachute d’otis (1854), l’armoire qui choisit quel appel servir, et la maintenance préventive qui rend l’ascenseur si sûr.">
+  <a class="top" href="00_hub_ascenseur_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h14v18H5zM12 3v18M8.5 9 7 11h3zM15.5 11 14 9l-1.5 2z"/></svg></span><span class="tt"><h3>L’ascenseur</h3><p>Le secret du contrepoids qui soulage le moteur, le parachute d’Otis (1854), l’armoire qui choisit quel appel servir, et la maintenance préventive qui rend l’ascenseur si sûr.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_ascenseur.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_maintenance_ascenseur.html">TP</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_ascenseur_rush.html">Jeu</a><a href="03b_jeu_tour_maintenance.html">Jeu 2</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_ascenseur.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_ascenseur_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#0e7490" data-q="le binaire, le langage des machines bit, octet et poids des bits, puis tous les « dialectes » du binaire : hexadécimal, code ascii, couleurs rvb, dcb et code gray.">
+  <a class="top" href="00_hub_binaire_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v6M5 4h2M5 10h4M15 4a2 3 0 1 0 0 .1zM15 14a2 3 0 1 0 0 .1zM7 14v6M5 14h2M5 20h4"/></svg></span><span class="tt"><h3>Le binaire, le langage des machines</h3><p>Bit, octet et poids des bits, puis tous les « dialectes » du binaire : hexadécimal, code ASCII, couleurs RVB, DCB et code Gray.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_binaire.html">Cours</a></div></div><div class="row"><span class="lab">Plus</span><div class="chips"><a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">TP</a><a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">Salle d’arcade</a><a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_binaire_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#059669" data-q="variables, conditions et boucles un jeu qui mémorise, décide et répète : du tunnel au casse-briques complet, puis un jeu à niveaux sur makecode.">
+  <a class="top" href="00_hub_arcade_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span><span class="tt"><h3>Variables, conditions et boucles</h3><p>Un jeu qui mémorise, décide et répète : du tunnel au casse-briques complet, puis un jeu à niveaux sur MakeCode.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_arcade_4e.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_arcade_4e_1.html">TP 1</a><a href="02_tp_arcade_4e_2.html">TP 2</a><a href="02_tp_arcade_4e_3.html">TP 3</a><a href="02_tp_arcade_4e_4.html">TP 4</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_arcade_4e.html">Évaluation</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_projet_makecode_4e.html">Projet MakeCode</a></div></div></div>
+  <a class="go" href="00_hub_arcade_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#0e7490" data-q="la cao : lire, modéliser, calculer lire un vrai plan, modéliser sur plusieurs faces, calculer une masse, corriger un modèle et suivre un cahier des charges.">
+  <a class="top" href="00_hub_cao_4e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7zM3 7l9 5 9-5M12 12v10"/></svg></span><span class="tt"><h3>La CAO : lire, modéliser, calculer</h3><p>Lire un vrai plan, modéliser sur plusieurs faces, calculer une masse, corriger un modèle et suivre un cahier des charges.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_cao_4e.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_cao_4e_1.html">TP 1</a><a href="02_tp_cao_4e_2.html">TP 2</a><a href="02_tp_cao_4e_3.html">TP 3</a><a href="02_tp_cao_4e_4.html">TP 4</a><a href="02_tp_cao_4e_5.html">TP 5</a><a href="02b_logiciel_cao.html">Logiciel CAO Studio</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_cao_4e.html">Évaluation</a></div></div><div class="row"><span class="lab">Plus</span><div class="chips"><a href="08_atelier_3d_4e.html">Atelier 3D</a></div></div></div>
+  <a class="go" href="00_hub_cao_4e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article></div>
+</section><section class="niveau" id="niv-3e" style="--a:#1d4ed8">
+  <div class="head"><span class="badge">3e</span><div><h2>Troisième</h2><span class="cnt">13 séquences</span></div></div>
+  <div class="grid"><article class="card" style="--a:#1e40af" data-q="la robotique chaîne d&#x27;information, capteurs et programmation : du robot suiveur de ligne à la gestion d&#x27;entrepôt.">
+  <a class="top" href="00_hub_robotique_3e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12v10H6zM12 4v4M9 12h.01M15 12h.01M9 15h6M3 11v4M21 11v4"/></svg></span><span class="tt"><h3>La Robotique</h3><p>Chaîne d&#x27;information, capteurs et programmation : du robot suiveur de ligne à la gestion d&#x27;entrepôt.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_robotique.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_robot.html">TP Robot</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_robo_race.html">Robo Race</a><a href="03b_jeu_entrepot.html">Entrepôt</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_robotique.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_robotique_3e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#1d4ed8" data-q="internet &amp; cybersécurité paquets, routeurs, dns, chiffrement : le voyage des données — et comment les défendre.">
+  <a class="top" href="00_hub_internet_3e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4"/></svg></span><span class="tt"><h3>Internet &amp; Cybersécurité</h3><p>Paquets, routeurs, DNS, chiffrement : le voyage des données — et comment les défendre.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_internet.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_reseau.html">TP Routeur</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_phishing_hunter.html">Phishing Hunter</a><a href="03b_jeu_cyberdefense.html">Cyberdéfense</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_internet.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_internet_3e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#0d9488" data-q="éco-conception &amp; cycle de vie acv, économie circulaire, éco-conception : la vie cachée des objets, du minerai à la borne de recyclage.">
+  <a class="top" href="00_hub_cycle_vie_3e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19C5 9 11 4 20 4c0 9-5 15-15 15zM5 19l8-8"/></svg></span><span class="tt"><h3>Éco-conception &amp; cycle de vie</h3><p>ACV, économie circulaire, éco-conception : la vie cachée des objets, du minerai à la borne de recyclage.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_cycle_vie.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_mission_acv.html">TP Mission ACV</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_tri_rush.html">Tri Rush</a><a href="03b_jeu_centre_valorisation.html">Centre de valorisation</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_cycle_vie.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_cycle_vie_3e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#4f46e5" data-q="algorithmes &amp; programmation variables, conditions, boucles : lire un programme, prévoir sa sortie et traquer les bugs — objectif brevet.">
+  <a class="top" href="00_hub_algo_3e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span><span class="tt"><h3>Algorithmes &amp; programmation</h3><p>Variables, conditions, boucles : lire un programme, prévoir sa sortie et traquer les bugs — objectif brevet.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_algo.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_studio_code.html">TP Studio de code</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_bloc_rush.html">Bloc Rush</a><a href="03b_jeu_studio_debug.html">Studio Debug</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_algo.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_algo_3e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#be123c" data-q="fonctions, listes et algorithmes découper en fonctions, ranger des données dans des listes et programmer gravité, poursuite et états du jeu.">
+  <a class="top" href="00_hub_arcade_3e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span><span class="tt"><h3>Fonctions, listes et algorithmes</h3><p>Découper en fonctions, ranger des données dans des listes et programmer gravité, poursuite et états du jeu.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_arcade_3e.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_arcade_3e_1.html">TP 1</a><a href="02_tp_arcade_3e_2.html">TP 2</a><a href="02_tp_arcade_3e_3.html">TP 3</a><a href="02_tp_arcade_3e_4.html">TP 4</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_arcade_3e.html">Évaluation</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_projet_makecode_3e.html">Projet MakeCode</a></div></div></div>
+  <a class="go" href="00_hub_arcade_3e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#4f46e5" data-q="la cao : simuler et assembler pièces mécaniques, simulation de résistance, mécanisme bielle-manivelle et projet d’optimisation.">
+  <a class="top" href="00_hub_cao_3e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7zM3 7l9 5 9-5M12 12v10"/></svg></span><span class="tt"><h3>La CAO : simuler et assembler</h3><p>Pièces mécaniques, simulation de résistance, mécanisme bielle-manivelle et projet d’optimisation.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_cao_3e.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_cao_3e_1.html">TP 1</a><a href="02_tp_cao_3e_2.html">TP 2</a><a href="02_tp_cao_3e_3.html">TP 3</a><a href="02_tp_cao_3e_4.html">TP 4</a><a href="02_tp_cao_3e_5.html">TP 5</a><a href="02b_logiciel_cao.html">Logiciel CAO Studio</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_cao_3e.html">Évaluation</a></div></div><div class="row"><span class="lab">Plus</span><div class="chips"><a href="08_atelier_3d_3e.html">Atelier 3D</a></div></div></div>
+  <a class="go" href="00_hub_cao_3e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#c026d3" data-q="les objets connectés capteurs, actionneurs, voyage de la donnée jusqu&#x27;au cloud et boucles automatiques — sans oublier la vie privée.">
+  <a class="top" href="00_hub_objets_connectes_3e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10H7zM10 10h4v4h-4zM9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4"/></svg></span><span class="tt"><h3>Les objets connectés</h3><p>Capteurs, actionneurs, voyage de la donnée jusqu&#x27;au cloud et boucles automatiques — sans oublier la vie privée.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_objets_connectes.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_objets_connectes.html">TP Laboratoire</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_capteur_rush.html">Capteur Rush</a><a href="03b_jeu_maison_connectee.html">Maison connectée</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_objets_connectes.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_objets_connectes_3e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#e11d48" data-q="modélisation &amp; simulation casser des ponts dans l&#x27;ordinateur : modèle, simulation, coefficient de sécurité… et l&#x27;essai réel qui prouve.">
+  <a class="top" href="00_hub_simulation_3e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18M6 15l4-5 4 3 5-7"/></svg></span><span class="tt"><h3>Modélisation &amp; simulation</h3><p>Casser des ponts dans l&#x27;ordinateur : modèle, simulation, coefficient de sécurité… et l&#x27;essai réel qui prouve.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_simulation.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_bureau_simulation.html">TP Bureau simulation</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_simu_rush.html">Simu Rush</a><a href="03b_jeu_labo_simulation.html">Labo de simulation</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_simulation.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_simulation_3e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#9333ea" data-q="intelligence artificielle &amp; données données étiquetées, entraînement, prédiction, biais : comment une machine apprend — et pourquoi on ne la croit jamais les yeux fermés.">
+  <a class="top" href="00_hub_ia_3e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h1V4zM15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3h-1V4z"/></svg></span><span class="tt"><h3>Intelligence artificielle &amp; données</h3><p>Données étiquetées, entraînement, prédiction, biais : comment une machine apprend — et pourquoi on ne la croit jamais les yeux fermés.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_ia.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_centre_ia.html">TP Centre d&#x27;entraînement</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_ia_rush.html">IA Rush</a><a href="03b_jeu_centre_ia.html">Centre IA</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_ia.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_ia_3e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#0c4a6e" data-q="espace &amp; satellites action-réaction, l&#x27;orbite comme chute permanente, le gps décodé et les débris spatiaux : l&#x27;espace que tu utilises 50 fois par jour.">
+  <a class="top" href="00_hub_espace_3e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2c3 2 5 6 5 10l-2 4H9l-2-4c0-4 2-8 5-10zM12 9h.01M9 16l-3 3 4-1M15 16l3 3-4-1M10 20h4"/></svg></span><span class="tt"><h3>Espace &amp; satellites</h3><p>Action-réaction, l&#x27;orbite comme chute permanente, le GPS décodé et les débris spatiaux : l&#x27;espace que tu utilises 50 fois par jour.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_espace.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_centre_spatial.html">TP centre spatial</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_orbite_rush.html">Orbite Rush</a><a href="03b_jeu_centre_spatial.html">Centre spatial</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_espace.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_espace_3e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#9d174d" data-q="santé &amp; technologie la prothèse sur mesure du scan à l’impression 3d, le pacemaker chaîne d’information dans le corps, l’imagerie qui voit sans ouvrir.">
+  <a class="top" href="00_hub_sante_3e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z"/></svg></span><span class="tt"><h3>Santé &amp; technologie</h3><p>La prothèse sur mesure du scan à l’impression 3D, le pacemaker chaîne d’information dans le corps, l’imagerie qui voit sans ouvrir.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_sante.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_labo_biomedical.html">TP</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_bio_rush.html">Jeu</a><a href="03b_jeu_labo_biomedical.html">Jeu 2</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_sante.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_sante_3e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#b45309" data-q="le réseau électrique intelligent la balance des 50 hz et le pic de 19 h, une journée du mix électrique, le smart grid qui ne gaspille rien : produire, transporter, stocker et piloter la plus grande machine du monde.">
+  <a class="top" href="00_hub_energie_3e.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2v5M15 2v5M6 7h12v4a6 6 0 0 1-12 0zM12 17v5"/></svg></span><span class="tt"><h3>Le réseau électrique intelligent</h3><p>La balance des 50 Hz et le pic de 19 h, une journée du mix électrique, le smart grid qui ne gaspille rien : produire, transporter, stocker et piloter la plus grande machine du monde.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_energie.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_dispatching.html">TP</a></div></div><div class="row"><span class="lab">Jeux</span><div class="chips"><a href="03_jeu_watt_rush.html">Jeu</a><a href="03b_jeu_dispatching.html">Jeu 2</a></div></div><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_energie.html">Évaluation</a></div></div></div>
+  <a class="go" href="00_hub_energie_3e.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="sujets type dnb s’entraîner à l’épreuve : des documents à lire — plans cotés, tableaux de données, caractéristiques techniques — puis des questions qui s’appuient dessus. 25 points, 30 minutes, correction à la remise.">
+  <a class="top" href="05_brevet_domespace.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4zM20 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6z"/></svg></span><span class="tt"><h3>Sujets type DNB</h3><p>S’entraîner à l’épreuve : des documents à lire — plans cotés, tableaux de données, caractéristiques techniques — puis des questions qui s’appuient dessus. 25 points, 30 minutes, correction à la remise.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_brevet_domespace.html">La maison qui suit le soleil</a><a href="05_brevet_trottinette.html">La trottinette électrique</a></div></div></div>
+  <a class="go" href="05_brevet_domespace.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article></div>
+</section><section class="niveau" id="niv-m3" style="--a:#2563eb">
+  <div class="head"><span class="badge">M</span><div><h2>Mathématiques — cycle 4</h2><span class="cnt">1 séquence</span></div></div>
+  <div class="grid"><article class="card" style="--a:#2563eb" data-q="calcul littéral — développer, réduire, factoriser calculer une expression, réduire, simple et double distributivité, signe moins, (a + b)², factorisation et a² − b². neuf animations sur des rectangles d’aires, un simulateur et un vérificateur. tp de 9 missions avec mini-cours sur les exercices difficiles.">
+  <a class="top" href="01_cours_calcul_litteral.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 5H7l6 7-6 7h10"/></svg></span><span class="tt"><h3>Calcul littéral — développer, réduire, factoriser</h3><p>Calculer une expression, réduire, simple et double distributivité, signe moins, (a + b)², factorisation et a² − b². Neuf animations sur des rectangles d’aires, un simulateur et un vérificateur. TP de 9 missions avec mini-cours sur les exercices difficiles.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_calcul_litteral.html">Cours projeté</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_calcul_litteral.html">TP — 9 missions</a></div></div></div>
+  <a class="go" href="01_cours_calcul_litteral.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article></div>
+</section><section class="niveau" id="niv-4" style="--a:#0891b2">
+  <div class="head"><span class="badge">+</span><div><h2>En plus — escape games et activités bonus</h2><span class="cnt">8 séquences</span></div></div>
+  <div class="grid"><article class="card" style="--a:#7c2d12" data-q="erebus-7 — escape game spatial station abandonnée, 12 énigmes, 60 minutes et une seule chance. transmission mécanique, loi d&#x27;ohm et loi des mailles, diagramme d&#x27;états sysml, lecture de plan, chaîne d&#x27;énergie, algorigramme, programmation en blocs, code ascii : tout le programme y passe. chaque énigme donne un code, et le dernier ouvre la capsule d&#x27;éjection.">
+  <a class="top" href="https://gengiscard.github.io/Erebus7/"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 15a4 4 0 1 1 3.5-6H21v3h-2v3h-3v-3h-4.5A4 4 0 0 1 8 15z"/></svg></span><span class="tt"><h3>EREBUS-7 — Escape game spatial</h3><p>Station abandonnée, 12 énigmes, 60 minutes et une seule chance. Transmission mécanique, loi d&#x27;Ohm et loi des mailles, diagramme d&#x27;états SysML, lecture de plan, chaîne d&#x27;énergie, algorigramme, programmation en blocs, code ASCII : tout le programme y passe. Chaque énigme donne un code, et le dernier ouvre la capsule d&#x27;éjection.</p></span></a>
+  
+  <a class="go" href="https://gengiscard.github.io/Erebus7/">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#b45309" data-q="l&#x27;atelier de rouillo — escape méca le robot du professeur a subi une surtension : 7 systèmes à réparer en 25 minutes. lecture de schéma, outils et leur usage, calcul d&#x27;engrenages, ordre d&#x27;une procédure, électronique de base, programmation par blocs et chaînes d&#x27;énergie et d&#x27;information. chaque système restauré livre un chiffre du code final, plus quatre mini-jeux bonus.">
+  <a class="top" href="https://gengiscard.github.io/Rouillo/"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 15a4 4 0 1 1 3.5-6H21v3h-2v3h-3v-3h-4.5A4 4 0 0 1 8 15z"/></svg></span><span class="tt"><h3>L&#x27;atelier de ROUILLO — Escape méca</h3><p>Le robot du professeur a subi une surtension : 7 systèmes à réparer en 25 minutes. Lecture de schéma, outils et leur usage, calcul d&#x27;engrenages, ordre d&#x27;une procédure, électronique de base, programmation par blocs et chaînes d&#x27;énergie et d&#x27;information. Chaque système restauré livre un chiffre du code final, plus quatre mini-jeux bonus.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Plus</span><div class="chips"><a href="https://gengiscard.github.io/Rouillo/" target="_blank" rel="noopener">Entrer dans l&#x27;atelier</a></div></div></div>
+  <a class="go" href="https://gengiscard.github.io/Rouillo/">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#0e7490" data-q="les technos oubliées activité bonus autour des objets techniques tombés en désuétude.">
+  <a class="top" href="https://gengiscard.github.io/technooubli-es/"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v5l3 2M21 12a9 9 0 1 1-3-6.7M21 4v4h-4"/></svg></span><span class="tt"><h3>Les technos oubliées</h3><p>Activité bonus autour des objets techniques tombés en désuétude.</p></span></a>
+  
+  <a class="go" href="https://gengiscard.github.io/technooubli-es/">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#475569" data-q="la perceuse activité sur la perceuse : constitution, usage et sécurité. les résultats remontent sur le nœud firebase resultats_perceuse .">
+  <a class="top" href="https://gengiscard.github.io/Perceuse/"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.6-.6-.6-2.6z"/></svg></span><span class="tt"><h3>La perceuse</h3><p>Activité sur la perceuse : constitution, usage et sécurité. Les résultats remontent sur le nœud Firebase resultats_perceuse .</p></span></a>
+  
+  <a class="go" href="https://gengiscard.github.io/Perceuse/">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#ea580c" data-q="les pertes d&#x27;énergie activité bonus sur les pertes d&#x27;énergie et le rendement.">
+  <a class="top" href="https://gengiscard.github.io/perteenergie/"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 5 13h6l-1 9 8-12h-6z"/></svg></span><span class="tt"><h3>Les pertes d&#x27;énergie</h3><p>Activité bonus sur les pertes d&#x27;énergie et le rendement.</p></span></a>
+  
+  <a class="go" href="https://gengiscard.github.io/perteenergie/">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#16a34a" data-q="le joint silicone activité bonus autour de la pose d&#x27;un joint silicone.">
+  <a class="top" href="https://gengiscard.github.io/jointsilicone/"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.6-.6-.6-2.6z"/></svg></span><span class="tt"><h3>Le joint silicone</h3><p>Activité bonus autour de la pose d&#x27;un joint silicone.</p></span></a>
+  
+  <a class="go" href="https://gengiscard.github.io/jointsilicone/">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#0f766e" data-q="fab-clicker — l&#x27;atelier des procédés jeu de production incrémental : on fait tourner une ligne d&#x27;usinage, poste après poste. pour acheter une machine il faut d&#x27;abord passer son habilitation — lire la fiche du procédé, puis réussir le quiz. neuf habilitations à décrocher, qui couvrent les grandes familles de procédés : enlèvement de matière, déformation, moulage, addition de matière et assemblage.">
+  <a class="top" href="https://gengiscard.github.io/Fabclicker/"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg></span><span class="tt"><h3>FAB-CLICKER — L&#x27;atelier des procédés</h3><p>Jeu de production incrémental : on fait tourner une ligne d&#x27;usinage, poste après poste. Pour acheter une machine il faut d&#x27;abord passer son habilitation — lire la fiche du procédé, puis réussir le quiz. Neuf habilitations à décrocher, qui couvrent les grandes familles de procédés : enlèvement de matière, déformation, moulage, addition de matière et assemblage.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Plus</span><div class="chips"><a href="https://gengiscard.github.io/Fabclicker/" target="_blank" rel="noopener">Ouvrir l&#x27;atelier</a></div></div></div>
+  <a class="go" href="https://gengiscard.github.io/Fabclicker/">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#be123c" data-q="techno survivor — sciences de l&#x27;ingénieur jeu de survie où les armes tirent seules : l&#x27;élève esquive et collecte. à chaque montée de niveau, une question du brevet ; toutes les deux minutes, un exercice de technologie qui améliore une arme ; à la mort, une seconde chance si la réponse est bonne. un mode classe permet au professeur d&#x27;invoquer les menaces, que seuls les exercices résolus repoussent.">
+  <a class="top" href="https://gengiscard.github.io/TechnoSurvivor/"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.4 1.8L15 14H9l-1.6 1.8A3 3 0 0 1 2 14v-1a4 4 0 0 1 4-4zM7 11.5v3M5.5 13h3M16 12h.01M18 14h.01"/></svg></span><span class="tt"><h3>TECHNO SURVIVOR — Sciences de l&#x27;ingénieur</h3><p>Jeu de survie où les armes tirent seules : l&#x27;élève esquive et collecte. À chaque montée de niveau, une question du brevet ; toutes les deux minutes, un exercice de technologie qui améliore une arme ; à la mort, une seconde chance si la réponse est bonne. Un mode classe permet au professeur d&#x27;invoquer les menaces, que seuls les exercices résolus repoussent.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Plus</span><div class="chips"><a href="https://gengiscard.github.io/TechnoSurvivor/" target="_blank" rel="noopener">Lancer la simulation</a></div></div></div>
+  <a class="go" href="https://gengiscard.github.io/TechnoSurvivor/">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article></div>
+</section><section class="niveau" id="niv-si" style="--a:#0e7490">
+  <div class="head"><span class="badge">SI</span><div><h2>Sciences de l&#x27;ingénieur — Lycée</h2><span class="cnt">19 séquences</span></div></div>
+  <div class="grid"><article class="card" style="--a:#7c2d12" data-q="sujets type bac si s’entraîner à l’épreuve écrite : diagramme des exigences, chaîne de puissance et relevés à exploiter, puis trois parties — analyser le besoin, modéliser, valider les performances. 20 points, correction à la remise.">
+  <a class="top" href="05_bac_si_portail.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4zM20 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6z"/></svg></span><span class="tt"><h3>Sujets type Bac SI</h3><p>S’entraîner à l’épreuve écrite : diagramme des exigences, chaîne de puissance et relevés à exploiter, puis trois parties — analyser le besoin, modéliser, valider les performances. 20 points, correction à la remise.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_bac_si_portail.html">Le portail coulissant automatisé</a></div></div></div>
+  <a class="go" href="05_bac_si_portail.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="sujets type bts cpi conception de produits industriels : dessin d’ensemble et nomenclature, analyse des liaisons, cotation fonctionnelle et chaîne de cotes, dimensionnement en flexion et durée de vie des roulements. 60 points, 3 h.">
+  <a class="top" href="05_bts_cpi_galet.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4zM20 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6z"/></svg></span><span class="tt"><h3>Sujets type BTS CPI</h3><p>Conception de produits industriels : dessin d’ensemble et nomenclature, analyse des liaisons, cotation fonctionnelle et chaîne de cotes, dimensionnement en flexion et durée de vie des roulements. 60 points, 3 h.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_bts_cpi_galet.html">Galet tendeur de courroie</a></div></div></div>
+  <a class="go" href="05_bts_cpi_galet.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="cao et dimensionnement — cao studio potence murale : calcul de rdm et simulation par éléments finis (von mises), dimensionnement de la section, choix du matériau par indice de performance, concentration de contraintes en coupe, dessin de définition avec coupe a-a.">
+  <a class="top" href="02_tp_cao_si_1.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7zM3 7l9 5 9-5M12 12v10"/></svg></span><span class="tt"><h3>CAO et dimensionnement — CAO Studio</h3><p>Potence murale : calcul de RdM et simulation par éléments finis (Von Mises), dimensionnement de la section, choix du matériau par indice de performance, concentration de contraintes en coupe, dessin de définition avec coupe A-A.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_cao_si_1.html">TP — Dimensionner une potence</a><a href="02b_logiciel_cao.html">Logiciel CAO Studio</a></div></div></div>
+  <a class="go" href="02_tp_cao_si_1.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="sujets type cafep-capet sii séquence complète : le cours de méthode, un tp de six missions chiffrées, puis le sujet type — modélisation cinématique, inertie équivalente, dimensionnement dynamique, choix sur catalogue et exploitation pédagogique .">
+  <a class="top" href="01_cours_capet_axe.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>Sujets type CAFEP-CAPET SII</h3><p>Séquence complète : le cours de méthode, un TP de six missions chiffrées, puis le sujet type — modélisation cinématique, inertie équivalente, dimensionnement dynamique, choix sur catalogue et exploitation pédagogique .</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_axe.html">Cours — méthode de dimensionnement</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_axe.html">TP — 6 missions chiffrées</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_axe.html">Sujet type — axe linéaire à vis à billes</a></div></div></div>
+  <a class="go" href="01_cours_capet_axe.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — statique le pilier de l’écrit : modéliser une action, compter les inconnues, choisir l’isolement et résoudre. cours de méthode, six cas chiffrés, puis un sujet type complet sur une grue d’atelier hydraulique.">
+  <a class="top" href="01_cours_capet_statique.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>CAPET SII — Statique</h3><p>Le pilier de l’écrit : modéliser une action, compter les inconnues, choisir l’isolement et résoudre. Cours de méthode, six cas chiffrés, puis un sujet type complet sur une grue d’atelier hydraulique.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_statique.html">Cours — méthode d’isolement</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_statique.html">TP — 6 cas chiffrés</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_statique.html">Sujet type — grue d’atelier à vérin</a></div></div></div>
+  <a class="go" href="01_cours_capet_statique.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — trains d’engrenages train ordinaire, puis train épicycloïdal et formule de willis. cours de méthode avec simulateur de denture, six cas chiffrés, puis un sujet type complet sur un treuil de levage à deux vitesses.">
+  <a class="top" href="01_cours_capet_trains.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>CAPET SII — Trains d’engrenages</h3><p>Train ordinaire, puis train épicycloïdal et formule de Willis. Cours de méthode avec simulateur de denture, six cas chiffrés, puis un sujet type complet sur un treuil de levage à deux vitesses.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_trains.html">Cours — Willis et trains ordinaires</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_trains.html">TP — 6 cas chiffrés</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_trains.html">Sujet type — treuil à deux vitesses</a></div></div></div>
+  <a class="go" href="01_cours_capet_trains.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — résistance des matériaux flexion, torsion, contrainte équivalente et surtout concentration de contraintes — l’oubli qui fait rompre les pièces au congé. cours de méthode avec simulateur, six cas chiffrés, puis un sujet type complet sur un arbre de réducteur à deux sections singulières.">
+  <a class="top" href="01_cours_capet_rdm.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5-9 5zM3 12l9 5 9-5M3 16l9 5 9-5"/></svg></span><span class="tt"><h3>CAPET SII — Résistance des matériaux</h3><p>Flexion, torsion, contrainte équivalente et surtout concentration de contraintes — l’oubli qui fait rompre les pièces au congé. Cours de méthode avec simulateur, six cas chiffrés, puis un sujet type complet sur un arbre de réducteur à deux sections singulières.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_rdm.html">Cours — méthode de vérification</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_rdm.html">TP — 6 cas chiffrés</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_rdm.html">Sujet type — arbre de réducteur</a></div></div></div>
+  <a class="go" href="01_cours_capet_rdm.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — cotation fonctionnelle la cote condition, le tracé des chaînes de cotes, les valeurs extrêmes et la répartition des tolérances. cours de méthode avec simulateur, puis six cas chiffrés — jeux extrêmes, répartition des tolérances, chaîne longue et ajustement normalisé.">
+  <a class="top" href="01_cours_capet_cotation.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>CAPET SII — Cotation fonctionnelle</h3><p>La cote condition, le tracé des chaînes de cotes, les valeurs extrêmes et la répartition des tolérances. Cours de méthode avec simulateur, puis six cas chiffrés — jeux extrêmes, répartition des tolérances, chaîne longue et ajustement normalisé.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_cotation.html">Cours — tracer et calculer une chaîne</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_cotation.html">TP — 6 cas chiffrés</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_cotation.html">Sujet type — réglage du jeu d’un arbre de pompe</a></div></div></div>
+  <a class="go" href="01_cours_capet_cotation.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — spécification géométrique et conception tolérances de forme, d’orientation et de position, cadre et zone de tolérance, système de références, maximum de matière — et surtout le choix de conception qui les justifie. simulateur : la même pièce refusée puis acceptée au maximum de matière.">
+  <a class="top" href="01_cours_capet_gps.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>CAPET SII — Spécification géométrique et conception</h3><p>Tolérances de forme, d’orientation et de position, cadre et zone de tolérance, système de références, maximum de matière — et surtout le choix de conception qui les justifie. Simulateur : la même pièce refusée puis acceptée au maximum de matière.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_gps.html">Cours — spécifier à partir de la fonction</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_gps.html">TP — 6 cas chiffrés</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_gps.html">Sujet type — flasque de moteur</a></div></div></div>
+  <a class="go" href="01_cours_capet_gps.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — cinématique bielle-manivelle : loi entrée-sortie, vitesse d’un point, équiprojectivité et centre instantané de rotation. simulateurs animés de la position du piston et des deux constructions graphiques.">
+  <a class="top" href="01_cours_capet_cinematique.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>CAPET SII — Cinématique</h3><p>Bielle-manivelle : loi entrée-sortie, vitesse d’un point, équiprojectivité et centre instantané de rotation. Simulateurs animés de la position du piston et des deux constructions graphiques.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_cinematique.html">Cours — la bielle-manivelle</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_cinematique.html">TP — cinématique d’un moteur</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_cinematique.html">Sujet type — compresseur monocylindre</a></div></div></div>
+  <a class="go" href="01_cours_capet_cinematique.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — liaisons et hyperstatisme liaisons normalisées, graphe des liaisons, degré d’hyperstatisme h = m − nc + 6γ et conditions géométriques associées. simulateur : un arbre sur deux paliers, avec défaut d’alignement et dilatation.">
+  <a class="top" href="01_cours_capet_liaisons.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>CAPET SII — Liaisons et hyperstatisme</h3><p>Liaisons normalisées, graphe des liaisons, degré d’hyperstatisme h = m − Nc + 6γ et conditions géométriques associées. Simulateur : un arbre sur deux paliers, avec défaut d’alignement et dilatation.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_liaisons.html">Cours — compter mobilités et inconnues</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_liaisons.html">TP — 6 montages chiffrés</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_liaisons.html">Sujet type — convoyeur, vérin et tiroir</a></div></div></div>
+  <a class="go" href="01_cours_capet_liaisons.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — guidage par roulements types de roulements, règles de montage, charge équivalente p = xfr + yfa et durée de vie l10. simulateurs : dilatation d’un arbre, durée de vie en fonction de la charge.">
+  <a class="top" href="01_cours_capet_roulements.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>CAPET SII — Guidage par roulements</h3><p>Types de roulements, règles de montage, charge équivalente P = XFr + YFa et durée de vie L10. Simulateurs : dilatation d’un arbre, durée de vie en fonction de la charge.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_roulements.html">Cours — choisir et monter un roulement</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_roulements.html">TP — choisir au catalogue</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_roulements.html">Sujet type — arbre de réducteur</a></div></div></div>
+  <a class="go" href="01_cours_capet_roulements.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — frottement et adhérence lois de coulomb, cône de frottement, couple d’un embrayage et relation d’euler pour les courroies. simulateurs : plan incliné, embrayage, courroie.">
+  <a class="top" href="01_cours_capet_frottement.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>CAPET SII — Frottement et adhérence</h3><p>Lois de Coulomb, cône de frottement, couple d’un embrayage et relation d’Euler pour les courroies. Simulateurs : plan incliné, embrayage, courroie.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_frottement.html">Cours — Coulomb, embrayage, courroie</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_frottement.html">TP — 6 cas chiffrés</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_frottement.html">Sujet type — tondeuse autoportée</a></div></div></div>
+  <a class="go" href="01_cours_capet_frottement.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — dynamique principe fondamental en translation et en rotation, moment d’inertie, démarrage et freinage, levage. simulateurs : chariot, course disque contre anneau, démarrage d’un moteur.">
+  <a class="top" href="01_cours_capet_dynamique.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>CAPET SII — Dynamique</h3><p>Principe fondamental en translation et en rotation, moment d’inertie, démarrage et freinage, levage. Simulateurs : chariot, course disque contre anneau, démarrage d’un moteur.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_dynamique.html">Cours — accélérer et freiner</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_dynamique.html">TP — 6 cas chiffrés</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_dynamique.html">Sujet type — monte-charge de chantier</a></div></div></div>
+  <a class="go" href="01_cours_capet_dynamique.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — énergétique puissance, chaîne des rendements, énergie cinétique, inertie ramenée et couple de démarrage. simulateurs : flux de puissance avec pertes, inertie vue à travers un réducteur.">
+  <a class="top" href="01_cours_capet_energetique.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>CAPET SII — Énergétique</h3><p>Puissance, chaîne des rendements, énergie cinétique, inertie ramenée et couple de démarrage. Simulateurs : flux de puissance avec pertes, inertie vue à travers un réducteur.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_energetique.html">Cours — puissance et rendement</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_energetique.html">TP — énergétique d’un treuil</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_energetique.html">Sujet type — ascenseur à contrepoids</a></div></div></div>
+  <a class="go" href="01_cours_capet_energetique.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — hydraulique et pneumatique pression, principe de pascal, vérin double effet, débit et puissance hydraulique, choix entre huile et air comprimé. simulateurs : presse de pascal, vérin animé.">
+  <a class="top" href="01_cours_capet_hydraulique.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>CAPET SII — Hydraulique et pneumatique</h3><p>Pression, principe de Pascal, vérin double effet, débit et puissance hydraulique, choix entre huile et air comprimé. Simulateurs : presse de Pascal, vérin animé.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_hydraulique.html">Cours — pression, débit, vérins</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_hydraulique.html">TP — 6 cas chiffrés</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_hydraulique.html">Sujet type — fendeuse de bûches</a></div></div></div>
+  <a class="go" href="01_cours_capet_hydraulique.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#7c2d12" data-q="capet sii — matériaux et procédés essai de traction, indices de performance, carte des matériaux, familles de procédés. simulateurs : essai animé, tirants comparés, carte module-masse volumique.">
+  <a class="top" href="01_cours_capet_materiaux.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5-9 5zM3 12l9 5 9-5M3 16l9 5 9-5"/></svg></span><span class="tt"><h3>CAPET SII — Matériaux et procédés</h3><p>Essai de traction, indices de performance, carte des matériaux, familles de procédés. Simulateurs : essai animé, tirants comparés, carte module-masse volumique.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_capet_materiaux.html">Cours — choisir un matériau et un procédé</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_capet_materiaux.html">TP — 6 cas chiffrés</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_capet_sii_materiaux.html">Sujet type — manivelle de pédalier</a></div></div></div>
+  <a class="go" href="01_cours_capet_materiaux.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#155e75" data-q="lire un plan d&#x27;ensemble vues et correspondances, types de traits, construction d&#x27;une coupe, règles de hachures, cotation et nomenclature — sur un palier lisse en plan normalisé et en perspective 3d.">
+  <a class="top" href="00_hub_lecture_plan.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span class="tt"><h3>Lire un plan d&#x27;ensemble</h3><p>Vues et correspondances, types de traits, construction d&#x27;une coupe, règles de hachures, cotation et nomenclature — sur un palier lisse en plan normalisé et en perspective 3D.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_lecture_plan.html">Cours</a></div></div><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_lecture_plan.html">TP · 5 exercices</a></div></div><div class="row"><span class="lab">Plus</span><div class="chips"><a href="08_exo_lecture_plan.html">Découverte guidée</a><a href="plan_palier.svg">Plan imprimable</a></div></div></div>
+  <a class="go" href="00_hub_lecture_plan.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#0e7490" data-q="trajectoires et analyse graphique identifier le mouvement de chaque pièce d&#x27;un mécanisme, puis tracer à la main la trajectoire d&#x27;un point : rotation, translation rectiligne, translation circulaire, mouvement plan quelconque.">
+  <a class="top" href="00_hub_lecture_plan.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18M6 15l4-5 4 3 5-7"/></svg></span><span class="tt"><h3>Trajectoires et analyse graphique</h3><p>Identifier le mouvement de chaque pièce d&#x27;un mécanisme, puis tracer à la main la trajectoire d&#x27;un point : rotation, translation rectiligne, translation circulaire, mouvement plan quelconque.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Plus</span><div class="chips"><a href="06_exo_trajectoires.html">Exercice de tracé</a></div></div></div>
+  <a class="go" href="00_hub_lecture_plan.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article></div>
+</section><section class="niveau" id="niv-bp" style="--a:#c0392b">
+  <div class="head"><span class="badge">BP</span><div><h2>Bac Pro MFER — Maquette numérique (BIM)</h2><span class="cnt">2 séquences</span></div></div>
+  <div class="grid"><article class="card" style="--a:#c0392b" data-q="lire une maquette bim visionneur 3d intégré : arborescence ifc, propriétés, systèmes, mesures et coupes. chaque tp se termine par un document réponse : schéma de principe et fiche technique.">
+  <a class="top" href="02_tp_bim_1_crapauduc.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V7l8-4 8 4v14zM9 21v-5h6v5M8 9h2M14 9h2M8 13h2M14 13h2"/></svg></span><span class="tt"><h3>Lire une maquette BIM</h3><p>Visionneur 3D intégré : arborescence IFC, propriétés, systèmes, mesures et coupes. Chaque TP se termine par un document réponse : schéma de principe et fiche technique.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">TP</span><div class="chips"><a href="02_tp_bim_1_crapauduc.html">TP 1 — Le crapauduc</a><a href="02_tp_bim_2_maison.html">TP 2 — Maison PAC air/eau</a><a href="02_tp_bim_3_bureaux.html">TP 3 — Bureaux PAC réversible</a><a href="02_tp_bim_4_superette.html">TP 4 — Supérette, froid commercial</a></div></div></div>
+  <a class="go" href="02_tp_bim_1_crapauduc.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#c0392b" data-q="évaluation bim — chaufferie de l’hôpital chaufferie fioul extraite d’une vraie maquette revit : explorer, identifier, mesurer, compléter le schéma. chaque aide utilisée retire 0,5 point. note envoyée au tableau de bord.">
+  <a class="top" href="04_evaluation_bim_chaufferie.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V7l8-4 8 4v14zM9 21v-5h6v5M8 9h2M14 9h2M8 13h2M14 13h2"/></svg></span><span class="tt"><h3>Évaluation BIM — Chaufferie de l’hôpital</h3><p>Chaufferie fioul extraite d’une vraie maquette Revit : explorer, identifier, mesurer, compléter le schéma. Chaque aide utilisée retire 0,5 point. Note envoyée au tableau de bord.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Évaluer</span><div class="chips"><a href="04_evaluation_bim_chaufferie.html">Lancer l’évaluation</a></div></div></div>
+  <a class="go" href="04_evaluation_bim_chaufferie.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article></div>
+</section><section class="niveau" id="niv-en" style="--a:#7c3aed">
+  <div class="head"><span class="badge">EN</span><div><h2>Entraînement quotidien</h2><span class="cnt">1 séquence</span></div></div>
+  <div class="grid"><article class="card" style="--a:#7c3aed" data-q="entraînement techno — séance du jour séance courte de 10 minutes, à faire régulièrement : vocabulaire technique syllabe par syllabe, mémoire visuelle d&#x27;un schéma vu en un éclair, et tenue d&#x27;une cadence régulière. la difficulté s&#x27;adapte automatiquement au niveau de chaque élève, et la progression est conservée d&#x27;une séance à l&#x27;autre.">
+  <a class="top" href="10_entrainement_techno.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v16H4zM4 10h16M9 3v4M15 3v4M8 14h3v3H8z"/></svg></span><span class="tt"><h3>Entraînement Techno — séance du jour</h3><p>Séance courte de 10 minutes, à faire régulièrement : vocabulaire technique syllabe par syllabe, mémoire visuelle d&#x27;un schéma vu en un éclair, et tenue d&#x27;une cadence régulière. La difficulté s&#x27;adapte automatiquement au niveau de chaque élève, et la progression est conservée d&#x27;une séance à l&#x27;autre.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Plus</span><div class="chips"><a href="10_entrainement_techno.html">Lancer une séance</a></div></div></div>
+  <a class="go" href="10_entrainement_techno.html">Ouvrir<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article></div>
+</section><section class="niveau" id="niv-cm" style="--a:#b45309">
+  <div class="head"><span class="badge">CM</span><div><h2>Comment ça marche ? — les inventions du quotidien</h2><span class="cnt">2 séquences</span></div></div>
+  <div class="grid"><article class="card" style="--a:#b45309" data-q="la roue de tramway un train sans volant ni capteur qui prend les virages et se recentre tout seul : la conicité des roues, l auto-centrage, le mouvement de lacet et le vrai role du boudin. avec simulateur de decalage lateral.">
+  <a class="top" href="00_hub_roue_tramway.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg></span><span class="tt"><h3>La roue de tramway</h3><p>Un train sans volant ni capteur qui prend les virages et se recentre tout seul : la conicité des roues, l auto-centrage, le mouvement de lacet et le vrai role du boudin. Avec simulateur de decalage lateral.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Cours</span><div class="chips"><a href="01_cours_roue_tramway.html">Cours interactif</a><a href="01_cours_serrure.html">Cours — la serrure</a><a href="01_cours_chasse_eau.html">Cours — la chasse d’eau</a><a href="01_cours_differentiel.html">Cours — le différentiel</a><a href="01_cours_epingle_linge.html">Cours — l’épingle à linge</a><a href="01_cours_fermeture_eclair.html">Cours — la fermeture éclair</a><a href="01_cours_thermostat.html">Cours — le thermostat</a></div></div><div class="row"><span class="lab">Sujets</span><div class="chips"><a href="05_brevet_roue_tramway.html">Sujet type DNB</a><a href="05_brevet_serrure.html">Sujet DNB — la serrure</a><a href="05_brevet_chasse_eau.html">Sujet DNB — la chasse d’eau</a><a href="05_brevet_differentiel.html">Sujet DNB — le différentiel</a><a href="05_brevet_epingle_linge.html">Sujet DNB — l’épingle à linge</a><a href="05_brevet_fermeture_eclair.html">Sujet DNB — la fermeture éclair</a><a href="05_brevet_thermostat.html">Sujet DNB — le thermostat</a></div></div></div>
+  <a class="go" href="00_hub_roue_tramway.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article><article class="card" style="--a:#0e7490" data-q="catalogue des inventions douze objets du quotidien - fermeture eclair, serrure a goupilles, chasse d eau, differentiel, thermostat, ecran tactile - et les concepts de technologie que chacun permet de construire.">
+  <a class="top" href="00_catalogue_inventions.html"><span class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/></svg></span><span class="tt"><h3>Catalogue des inventions</h3><p>Douze objets du quotidien - fermeture eclair, serrure a goupilles, chasse d eau, differentiel, thermostat, ecran tactile - et les concepts de technologie que chacun permet de construire.</p></span></a>
+  <div class="res"><div class="row"><span class="lab">Plus</span><div class="chips"><a href="00_programme_technologie.html">Ancrage au programme</a></div></div></div>
+  <a class="go" href="00_catalogue_inventions.html">Ouvrir la séquence<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+</article></div>
+</section><div class="vide" id="vide">Aucune séquence ne correspond à ta recherche.</div></main>
+<div class="prof" id="coin-prof"><div class="boite"><h2>Coin professeur</h2><p>Chaque <b>évaluation</b> enregistre automatiquement les résultats (note /20, durée, détail par activité) et embarque un
+ <b>tableau de bord protégé par mot de passe</b> avec export CSV — accessible depuis le bouton discret en bas de page de chaque évaluation.
+ Les <b>TP</b> sauvegardent la progression des élèves sur le poste (localStorage) et délivrent en mission finale le <b>code de déverrouillage des deux jeux</b> :
+ la révision devient une récompense. Tous les fichiers sont autonomes et fonctionnent hors-ligne — seules les évaluations nécessitent Internet pour la remontée des résultats.</p><p><a class="pbtn" href="000_tableau_de_bord.html">Tableau de bord — toutes les évaluations</a>
+  <span class="pdesc">résultats consolidés des 30 séquences, filtres par niveau, classe et élève, export CSV global</span></p><p><a class="pbtn" href="000_suivi_classes.html">Suivi des classes — avancement des séquences</a>
+  <span class="pdesc">où en est chaque classe : un clic par séquence pour marquer à faire, en cours ou terminé, avec filtres et export CSV</span></p><p>La séquence <b>Sciences de l'ingénieur</b> inaugure une nouvelle génération d'activités : plus aucun QCM,
  des exercices à saisie libre, à calcul ou à tracé, avec <b>validation globale</b> — aucune réponse n'est dévoilée avant la fin, et le barème
  décroît à chaque essai (3 étoiles au premier, 2 au deuxième, 1 ensuite). Les plans sont dessinés aux normes ISO et accompagnés de perspectives
- d'ensemble, éclatée et en demi-coupe.</p>
- </div>
-</div>
-
-<footer>Portail Technologie · Cycle 4 · ESTIC Don Bosco — Saint-Dizier</footer>
-</body>
-</html>
+ d'ensemble, éclatée et en demi-coupe.</p></div></div>
+<footer>Portail Technologie · Cycle 4 · ESTIC Don Bosco — Saint-Dizier · © ESTIC — Tous droits réservés</footer>
+<script>
+{
+ const q=document.getElementById('q'), cards=[...document.querySelectorAll('.card')], secs=[...document.querySelectorAll('.niveau')], vide=document.getElementById('vide');
+ const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+ cards.forEach(c=>c.dataset.n=norm(c.dataset.q||''));
+ q.addEventListener('input',()=>{ const t=norm(q.value.trim()); let n=0;
+  cards.forEach(c=>{ const ok=!t||c.dataset.n.includes(t); c.hidden=!ok; if(ok) n++; });
+  secs.forEach(s=>s.hidden=![...s.querySelectorAll('.card')].some(c=>!c.hidden)); vide.style.display=n?'none':'block'; });
+ addEventListener('keydown',e=>{ if(e.key==='/'&&document.activeElement!==q){ e.preventDefault(); q.focus(); } });
+}
+</script>
+</body></html>
