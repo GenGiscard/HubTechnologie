@@ -65,6 +65,7 @@ tr:hover td{background:#fbf8f1}
  <input id="fNom" placeholder="rechercher un élève…" style="flex:1;min-width:180px">
  <button class="btn sec" id="rafraichir">Rafraîchir</button>
  <button class="btn sec" id="csv">Exporter CSV</button>
+ <button class="btn sec" id="modifNotes">Modifier des notes</button>
  </div>
  <div class="stats" id="stats"></div>
  <div id="etat" class="vide">Chargement des résultats…</div>
@@ -72,7 +73,7 @@ tr:hover td{background:#fbf8f1}
  <thead><tr>
  <th data-tri="nom">Élève</th><th data-tri="classe">Classe</th><th data-tri="seq">Séquence</th>
  <th data-tri="niv">Niveau</th><th data-tri="note">Note /20</th><th>Réussite</th>
- <th data-tri="duree">Durée</th><th data-tri="date">Date</th><th id="thSuppr" style="display:none"></th>
+ <th data-tri="duree">Durée</th><th data-tri="date">Date</th><th id="thModif" style="display:none"></th><th id="thSuppr" style="display:none"></th>
  </tr></thead><tbody id="corps"></tbody>
  </table>
 </div>
@@ -379,6 +380,7 @@ async function charger(){
  cle, seq:ev.titre, fb:ev.fb, niv:ev.niv, fichier:ev.f,
  nom:((v.nom||'')+' '+(v.prenom||'')).trim()||'(anonyme)',
  abandon:v.statut==='abandon',
+ raw:v, modif:(v.statut==='modifiee' && v.note20_brute!==undefined)? v.note20_brute : null,
  classe:v.classe||'—',
   note:parseFloat(v.note20!==undefined?v.note20:v.note)||0,
   bonus:parseFloat(v.bonus)||0,
@@ -441,9 +443,10 @@ function afficher(){
  return '<tr><td>'+d.nom+(d.abandon?'<span style="display:inline-block;margin-left:6px;padding:0 6px;border-radius:5px;background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5;font-size:11px;font-weight:800">ABANDON</span>':'')+'</td><td>'+d.classe+'</td>'+
  '<td><a class="lien" href="'+d.fichier+'">'+d.seq+'</a></td>'+
  '<td><span class="badge" style="background:'+(d.niv==='5e'?'#16a34a':(d.niv==='4e'?'#b45309':(d.niv==='Bac Pro'?'#c0392b':'#1d4ed8')))+'">'+d.niv+'</span></td>'+
- '<td class="note" style="color:'+coul+'">'+String(d.note).replace('.',',')+(d.bonus>0? ' <span title="dont points Kahoot" style="font-size:11px;color:#6d28d9;font-weight:800">+'+String(d.bonus).replace('.',',')+'</span>':'')+(d.kahoot? (/^aides /.test(d.kahoot)? '<div style="font-size:11px;color:#c0392b;font-weight:700;margin-top:2px">'+d.kahoot.replace(/[<>&]/g,'').replace(/^a/,'A')+'</div>' : '<div style="font-size:11px;color:#6d28d9;font-weight:700;margin-top:2px">Kahoot : '+d.kahoot.replace(/[<>&]/g,'')+'</div>'):'')+(d.sansKahoot? '<div style="font-size:10.5px;color:#94a3b8;margin-top:2px" title="Cette copie a été faite avec une version de l’évaluation qui ne gère pas les points Kahoot">version sans Kahoot</div>':'')+'</td>'+
+ '<td class="note" style="color:'+coul+'">'+String(d.note).replace('.',',')+(d.modif!==null? '<div title="note modifiée par le professeur" style="font-size:11px;color:#1d4ed8;font-weight:700;margin-top:2px">modifiée (était '+String(d.modif).replace('.',',')+')</div>':'')+(d.bonus>0? ' <span title="dont points Kahoot" style="font-size:11px;color:#6d28d9;font-weight:800">+'+String(d.bonus).replace('.',',')+'</span>':'')+(d.kahoot? (/^aides /.test(d.kahoot)? '<div style="font-size:11px;color:#c0392b;font-weight:700;margin-top:2px">'+d.kahoot.replace(/[<>&]/g,'').replace(/^a/,'A')+'</div>' : '<div style="font-size:11px;color:#6d28d9;font-weight:700;margin-top:2px">Kahoot : '+d.kahoot.replace(/[<>&]/g,'')+'</div>'):'')+(d.sansKahoot? '<div style="font-size:10.5px;color:#94a3b8;margin-top:2px" title="Cette copie a été faite avec une version de l’évaluation qui ne gère pas les points Kahoot">version sans Kahoot</div>':'')+'</td>'+
  '<td><div class="jauge"><div style="width:'+Math.min(100,d.note/20*100)+'%;background:'+coul+'"></div></div></td>'+
  '<td>'+(d.duree||'—')+'</td><td>'+(d.date||'—')+'</td>'+
+ (window.MODE_MODIF? '<td><button type="button" class="modif-copie" data-fb="'+d.fb+'" data-cle="'+d.cle+'" style="background:#eff6ff;color:#1d4ed8;border:1px solid #93c5fd;border-radius:7px;padding:3px 9px;cursor:pointer;font-size:12px">Modifier</button></td>':'')+
  (window.MODE_NETTOYAGE? '<td><button type="button" class="suppr-copie" data-fb="'+d.fb+'" data-cle="'+d.cle+'" data-nom="'+String(d.nom).replace(/"/g,'')+'" style="background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5;border-radius:7px;padding:3px 9px;cursor:pointer;font-size:12px">Supprimer</button></td>':'')+'</tr>';
  }).join('');
 }
@@ -683,6 +686,43 @@ document.getElementById('csv').addEventListener('click',()=>{
    if(!r.ok) throw new Error(r.status);
    msg('Copie de '+b.dataset.nom+' supprimée.',true); charger();
   }catch(err){ msg('Suppression refusée : les règles Firebase doivent être mises à jour.',false); }
+ });
+})();
+</script>
+<script>
+/* ===== MODIFICATION D'UNE NOTE (code « modif ») =====
+   Les règles Firebase interdisent de réécrire une copie existante : la note corrigée
+   est enregistrée comme une nouvelle copie (mêmes informations, statut « modifiee »,
+   note d'origine gardée dans note20_brute), puis l'ancienne copie est supprimée. */
+(function(){
+ const bt=document.getElementById('modifNotes'); if(!bt) return;
+ const info=function(t,ok){ const e=document.getElementById('etat'); if(!e) return; e.style.display='block'; e.innerHTML='<span style="color:'+(ok?'#15803d':'#b91c1c')+';font-weight:700">'+t+'</span>'; setTimeout(function(){ if(DONNEES.length) e.style.display='none'; },4000); };
+ bt.addEventListener('click',function(){
+  if(window.MODE_MODIF){ window.MODE_MODIF=false; bt.textContent='Modifier des notes'; document.getElementById('thModif').style.display='none'; afficher(); return; }
+  const c=prompt('Code de modification des notes :'); if(c===null) return;
+  if(c.trim().toLowerCase()!=='modif'){ alert('Code incorrect.'); return; }
+  window.MODE_MODIF=true; bt.textContent='Terminer les modifications'; document.getElementById('thModif').style.display=''; afficher();
+ });
+ document.addEventListener('click',async function(e){
+  const b=e.target.closest && e.target.closest('.modif-copie'); if(!b) return;
+  const d=DONNEES.find(function(x){ return x.fb===b.dataset.fb && x.cle===b.dataset.cle; }); if(!d) return;
+  const rep=prompt('Nouvelle note sur 20 pour '+d.nom+' ('+d.seq+')\nNote actuelle : '+String(d.note).replace('.',','),String(d.note).replace('.',','));
+  if(rep===null) return;
+  const n=Math.round(parseFloat(rep.replace(',','.'))*10)/10;
+  if(isNaN(n)||n<0||n>20){ alert('La note doit être un nombre entre 0 et 20.'); return; }
+  if(n===d.note) return;
+  const v=Object.assign({},d.raw);
+  v.note20_brute=(v.statut==='modifiee' && v.note20_brute!==undefined)? v.note20_brute : (v.note20!==undefined? v.note20 : (parseFloat(v.note)||0));
+  v.note20=n; v.statut='modifiee'; if(!v.date) v.date=new Date().toISOString();
+  b.disabled=true; b.textContent='…';
+  try{
+   const r=await fetch(BASE+d.fb+'.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(v)});
+   if(!r.ok) throw new Error('ajout '+r.status);
+   const r2=await fetch(BASE+d.fb+'/'+d.cle+'.json',{method:'DELETE'});
+   if(!r2.ok){ info('Note enregistrée, mais l’ancienne copie n’a pas pu être retirée : supprime-la avec le bouton Supprimer.',false); }
+   else info('Note de '+d.nom+' modifiée : '+String(n).replace('.',',')+' / 20.',true);
+   await charger();
+  }catch(err){ b.disabled=false; b.textContent='Modifier'; alert('Modification refusée par Firebase ('+err.message+'). Vérifie la connexion ou les règles de la base.'); }
  });
 })();
 </script>
