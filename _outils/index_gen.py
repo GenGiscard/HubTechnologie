@@ -1,7 +1,8 @@
 # Refonte graphique de index.html : relit le contenu actuel (sections, séquences, liens) et le réaffiche
-import re, math, html, sys
+import re, math, html, sys, os, json
+SLUGS = []; SECNAME = ['', '']
 from bs4 import BeautifulSoup
-SRC = sys.argv[1]; OUT = sys.argv[2]
+SRC = sys.argv[1]; OUT = sys.argv[2]; REPO = os.path.dirname(os.path.abspath(OUT))
 soup = BeautifulSoup(open(SRC, encoding='utf-8').read(), 'html.parser')
 E = lambda t: html.escape(t, quote=True)
 
@@ -108,17 +109,26 @@ def card(c):
         chips = ''.join(f'<a href="{E(h)}"{" target=\"_blank\" rel=\"noopener\"" if ext else ""}>{E(t)}</a>' for t, h, ext in groups[k])
         rows += f'<div class="row"><span class="lab">{lab}</span><div class="chips">{chips}</div></div>'
     search = E((c['title'] + ' ' + c['desc']).lower())
-    return f'''<article class="card" style="--a:{c['accent']}" data-q="{search}">
-  <a class="top" href="{E(main)}"><span class="ico">{svg_icon(icon(c['title']))}</span><span class="tt"><h3>{E(c['title'])}</h3>{f'<p>{E(c["desc"])}</p>' if c['desc'] else ''}</span></a>
+    import unicodedata
+    base = unicodedata.normalize('NFD', c['title'].split('—')[-1] if c['title'].startswith('CAPET') else c['title'].split('—')[0]).encode('ascii', 'ignore').decode().lower()
+    slug = re.sub(r'[^a-z0-9]+', '-', base).strip('-')[:40].strip('-') + '-' + (re.sub(r'[^a-z0-9]', '', SECNAME[1].lower()) or 'bonus')  #[1].lower()) or 'bonus'))
+    while any(x[0] == slug for x in SLUGS): slug += '-b'
+    SLUGS.append((slug, c['title'], c['desc'], SECNAME[0], c['accent']))
+    img = next((f'img/portail/{slug}.{ext}' for ext in ('webp', 'jpg', 'png') if os.path.exists(os.path.join(REPO, f'img/portail/{slug}.{ext}'))), None)
+    cover = f'<img src="{img}" alt="" loading="lazy">' if img else f'<span class="motif"></span><span class="big">{svg_icon(icon(c["title"]), 64, 1.5)}</span>'
+    arrow = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h11" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M13.5 7 20 12l-6.5 5z" fill="currentColor"/></svg>'
+    return f'''<article class="card{' img' if img else ''}" style="--a:{c['accent']}" data-q="{search}">
+  <a class="cover" href="{E(main)}" tabindex="-1" aria-hidden="true">{cover}</a>
+  <div class="body"><h3><a href="{E(main)}">{E(c['title'])}</a></h3>{f'<p>{E(c["desc"])}</p>' if c['desc'] else ''}
   {f'<div class="res">{rows}</div>' if rows else ''}
-  <a class="go" href="{E(main)}">{'Ouvrir la séquence' if hub else 'Ouvrir'}<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 7.5 20 12l-6 4.5z" fill="currentColor"/></svg></a>
+  <a class="go" href="{E(main)}">{'Ouvrir la séquence' if hub else 'Ouvrir'}{arrow}</a></div>
 </article>'''
 
 SID = lambda i, s: 'niv-' + re.sub(r'[^a-z0-9]+', '-', s['badge'].lower()).strip('-') + ('' if s['badge'] not in ('M', '+') else str(i))
 nav = ''.join(f'<a href="#{SID(i, s)}" role="tab" data-tab="{SID(i, s)}" style="--a:{s["color"]}"><b>{E(s["badge"])}</b>{E(s["name"].split("—")[0].strip())}<i>{len(s["cards"])}</i></a>' for i, s in enumerate(sections))
 body = ''
 for i, s in enumerate(sections):
-    n = len(s['cards'])
+    n = len(s['cards']); SECNAME[0] = s['name']; SECNAME[1] = s['badge']
     body += f'''<section class="niveau" id="{SID(i, s)}" style="--a:{s['color']}">
   <div class="head"><span class="badge">{E(s['badge'])}</span><div><h2>{E(s['name'])}</h2><span class="cnt">{n} {'séquence' if n == 1 else 'séquences'}</span></div></div>
   <div class="grid">{''.join(card(c) for c in s['cards'])}</div>
@@ -152,6 +162,7 @@ ILLU = f'''<svg viewBox="0 0 520 400" class="illu" role="img" aria-label="Illust
   <g fill="#fff"><circle cx="40" cy="60" r="4"/><circle cx="486" cy="40" r="3"/><circle cx="480" cy="250" r="5"/><circle cx="210" cy="60" r="3"/></g>
 </svg>'''
 
+HERO = '<img class="illu heroimg" src="img/portail/hero.webp" alt="">' if os.path.exists(os.path.join(REPO, 'img/portail/hero.webp')) else ILLU
 profhtml = ''
 if prof:
     for a in prof.select('a'): a['class'] = 'pbtn'; del a['style']
@@ -167,13 +178,13 @@ page = f'''<!DOCTYPE html>
 :root{{--ink:#1e3a5f;--gris:#5b6b80;--fond:#f6f8fc;--ligne:#e2e8f0;--ombre:0 6px 22px rgba(30,58,95,.09)}}
 *{{margin:0;padding:0;box-sizing:border-box}}
 html{{scroll-behavior:smooth;scroll-padding-top:74px}}
-body{{font-family:Nunito,'Segoe UI',system-ui,sans-serif;background:var(--fond);color:var(--ink);overflow-x:clip}}
+body{{--lvl:#16a34a;font-family:Nunito,'Segoe UI',system-ui,sans-serif;background:radial-gradient(900px 600px at 0% 40%,color-mix(in srgb,var(--lvl) 14%,transparent),transparent 70%),radial-gradient(800px 700px at 100% 75%,color-mix(in srgb,var(--lvl) 12%,transparent),transparent 70%),linear-gradient(#f3f6fb,#eef2f8);background-attachment:fixed;color:var(--ink);overflow-x:clip}}
 a{{color:inherit}}
 .bar{{display:flex;align-items:center;gap:12px;padding:10px max(4vw,16px);background:#fff;border-bottom:1px solid var(--ligne)}}
 .bar img{{height:40px}}.bar .id b{{display:block;font-size:15px}}.bar .id span{{font-size:12.5px;color:var(--gris)}}
 .bar .sp{{flex:1}}.bar .prof-l{{font-size:13.5px;font-weight:800;text-decoration:none;color:var(--ink);border:1.5px solid var(--ligne);border-radius:999px;padding:7px 14px}}.bar .prof-l:hover{{border-color:var(--ink)}}
 .hero{{background:linear-gradient(160deg,#5ab0f0 0%,#7cc4f5 45%,#b9e0fb 100%);position:relative;overflow:hidden}}
-.hero::after{{content:"";position:absolute;left:0;right:0;bottom:-1px;height:60px;background:var(--fond);clip-path:ellipse(70% 100% at 50% 100%)}}
+.hero::after{{content:"";position:absolute;left:0;right:0;bottom:-1px;height:60px;background:#f3f6fb;clip-path:ellipse(70% 100% at 50% 100%)}}
 .hero .in{{max-width:1240px;margin:0 auto;padding:40px max(4vw,16px) 70px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:24px;align-items:center;position:relative;z-index:1}}
 .hero .eye{{display:inline-block;background:#ffffffcc;color:#0b3b66;font-weight:800;font-size:13px;border-radius:999px;padding:5px 12px}}
 .hero h1{{font-size:clamp(34px,4.6vw,54px);line-height:1.04;margin:14px 0 12px;color:#0b2a4a;font-weight:900;text-wrap:balance}}
@@ -183,12 +194,13 @@ a{{color:inherit}}
 .search{{display:flex;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:6px 6px 6px 14px;box-shadow:0 8px 24px #0b3b6624;max-width:520px}}
 .search input{{flex:1;border:0;outline:0;font:inherit;font-size:16px;color:var(--ink);min-height:40px;background:transparent}}
 .search kbd{{font:inherit;font-size:12px;color:var(--gris);border:1px solid var(--ligne);border-radius:6px;padding:2px 6px}}
+.heroimg{{border-radius:28px;aspect-ratio:4/3;object-fit:cover}}
 .illu{{width:100%;height:auto;display:block;filter:drop-shadow(0 18px 30px #0b3b6630)}}
 .spin{{animation:spin 18s linear infinite}}.spin.rev{{animation-direction:reverse;animation-duration:12s}}.float{{animation:fl 5s ease-in-out infinite}}.float2{{animation:fl 6s ease-in-out infinite reverse}}
 @keyframes spin{{to{{transform:rotate(360deg)}}}}@keyframes fl{{50%{{transform:translateY(-8px)}}}}
 .stats{{max-width:1240px;margin:-34px auto 0;padding:0 max(4vw,16px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;position:relative;z-index:2}}
-.stats div{{background:#fff;border-radius:14px;box-shadow:var(--ombre);padding:14px 16px;font-weight:800;color:var(--gris);font-size:14px}}.stats b{{display:block;font-size:28px;color:var(--ink);line-height:1.1}}
-nav.niv{{position:sticky;top:0;z-index:20;background:#f6f8fcee;backdrop-filter:blur(8px);border-bottom:1px solid var(--ligne);margin-top:24px}}
+.stats div{{background:rgba(255,255,255,.75);backdrop-filter:blur(12px);border:1px solid #fff;border-radius:18px;box-shadow:var(--ombre);padding:14px 16px;font-weight:800;color:var(--gris);font-size:14px}}.stats b{{display:block;font-size:28px;color:var(--ink);line-height:1.1}}
+nav.niv{{position:sticky;top:0;z-index:20;background:rgba(243,246,251,.8);backdrop-filter:blur(8px);border-bottom:1px solid var(--ligne);margin-top:24px}}
 nav.niv .in{{max-width:1240px;margin:0 auto;padding:10px max(4vw,16px);display:flex;flex-wrap:wrap;gap:8px;overflow-x:auto;scrollbar-width:none}}
 @media(max-width:700px){{nav.niv .in{{flex-wrap:nowrap}}}}
 nav.niv a{{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;font-weight:800;font-size:14px;background:#fff;border:1.5px solid var(--ligne);border-radius:999px;padding:5px 13px 5px 5px;min-height:40px}}
@@ -203,25 +215,31 @@ main{{max-width:1240px;margin:0 auto;padding:6px max(4vw,16px) 40px}}
 .niveau .badge{{display:flex;align-items:center;justify-content:center;min-width:58px;height:58px;padding:0 10px;border-radius:18px;background:var(--a);color:#fff;font-weight:900;font-size:24px;box-shadow:0 8px 18px color-mix(in srgb,var(--a) 35%,transparent)}}
 .niveau h2{{font-size:clamp(24px,2.6vw,32px);font-weight:900;color:var(--a);line-height:1.1}}.niveau .cnt{{color:var(--gris);font-weight:700;font-size:14px}}
 .niveau{{margin-top:26px}}
-.grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px}}
-.card{{background:#fff;border-radius:18px;box-shadow:var(--ombre);display:flex;flex-direction:column;overflow:hidden;border:1px solid #edf1f7;transition:transform .15s,box-shadow .15s}}
-.card:hover{{transform:translateY(-3px);box-shadow:0 12px 30px rgba(30,58,95,.14)}}
-.card .top{{display:flex;gap:13px;padding:16px 16px 10px;text-decoration:none;align-items:flex-start}}
-.card .ico{{flex:none;width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--a);background:color-mix(in srgb,var(--a) 13%,#fff)}}
-.card h3{{font-size:18px;font-weight:900;line-height:1.2;color:var(--ink)}}
-.card .tt p{{font-size:14px;color:var(--gris);line-height:1.45;margin-top:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
-.card .res{{padding:2px 16px 8px;display:flex;flex-direction:column;gap:6px}}
+.grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:22px}}
+.card{{position:relative;display:flex;flex-direction:column;border-radius:24px;overflow:hidden;background:rgba(255,255,255,.66);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border:1px solid rgba(255,255,255,.95);box-shadow:0 1px 0 #fff inset,0 10px 30px -12px color-mix(in srgb,var(--a) 45%,transparent),0 2px 6px rgba(15,23,42,.05);transition:transform .2s,box-shadow .2s}}
+.card:hover{{transform:translateY(-4px);box-shadow:0 1px 0 #fff inset,0 22px 40px -14px color-mix(in srgb,var(--a) 60%,transparent),0 2px 6px rgba(15,23,42,.05)}}
+.card .cover{{position:relative;display:block;aspect-ratio:16/8;overflow:hidden;background:radial-gradient(120% 90% at 85% 10%,color-mix(in srgb,var(--a) 55%,#fff) 0,transparent 55%),linear-gradient(135deg,var(--a),color-mix(in srgb,var(--a) 60%,#0b1b30))}}
+.card .cover img{{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}}.card:hover .cover img{{transform:scale(1.05)}}
+.card .motif{{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.22) 1.4px,transparent 1.6px);background-size:16px 16px;mask-image:linear-gradient(115deg,transparent 30%,#000 90%)}}
+.card .motif::before,.card .motif::after{{content:"";position:absolute;border-radius:50%;border:2px solid rgba(255,255,255,.18)}}.card .motif::before{{width:220px;height:220px;right:-60px;top:-90px}}.card .motif::after{{width:140px;height:140px;left:-40px;bottom:-70px;background:rgba(255,255,255,.08)}}
+.card .big{{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:104px;height:104px;border-radius:30px;display:flex;align-items:center;justify-content:center;color:#fff;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);box-shadow:0 12px 30px rgba(0,0,0,.18);backdrop-filter:blur(6px);transition:transform .3s}}
+.card:hover .big{{transform:translate(-50%,-50%) rotate(-6deg) scale(1.06)}}
+.card .body{{display:flex;flex-direction:column;gap:8px;padding:16px 18px 18px;flex:1}}
+.card h3{{font-size:19px;font-weight:900;line-height:1.2}}.card h3 a{{text-decoration:none;color:var(--ink)}}.card h3 a:hover{{color:var(--a)}}
+.card .body>p{{font-size:14px;color:var(--gris);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}}
+.card .res{{display:flex;flex-direction:column;gap:6px;padding-top:4px;border-top:1px dashed color-mix(in srgb,var(--a) 25%,transparent);margin-top:2px;padding-top:10px}}
 .card .row{{display:grid;grid-template-columns:62px minmax(0,1fr);gap:8px;align-items:start}}
-.card .lab{{font-size:12px;font-weight:800;color:#94a3b8;padding-top:5px}}
+.card .lab{{font-size:11.5px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:color-mix(in srgb,var(--a) 70%,#64748b);padding-top:5px}}
 .card .chips{{display:flex;flex-wrap:wrap;gap:5px}}
-.card .chips a{{font-size:13px;font-weight:700;text-decoration:none;color:var(--ink);background:#f1f5f9;border-radius:8px;padding:4px 9px;line-height:1.35}}
-.card .chips a:hover{{background:var(--a);color:#fff}}
-.card .go{{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;font-weight:900;font-size:14.5px;color:#fff;background:color-mix(in srgb,var(--a) 82%,#0b1b30);padding:12px;min-height:46px}}
-.card .go:hover{{filter:brightness(1.1)}}
+.card .chips a{{font-size:13px;font-weight:800;text-decoration:none;color:color-mix(in srgb,var(--a) 75%,#0f172a);background:color-mix(in srgb,var(--a) 10%,#fff);border:1px solid color-mix(in srgb,var(--a) 18%,transparent);border-radius:999px;padding:3px 10px;line-height:1.4;transition:background .15s,color .15s}}
+.card .chips a:hover{{background:var(--a);color:#fff;border-color:var(--a)}}
+.card .go{{margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:900;font-size:14.5px;color:#fff;background:linear-gradient(135deg,var(--a),color-mix(in srgb,var(--a) 70%,#0b1b30));padding:10px 18px;border-radius:999px;min-height:44px;box-shadow:0 8px 18px -8px var(--a)}}
+.card .res+.go{{margin-top:10px}}
+.card .go svg{{transition:transform .2s}}.card .go:hover svg{{transform:translateX(3px)}}
 .card[hidden],.niveau[hidden]{{display:none}}
 .vide{{display:none;text-align:center;color:var(--gris);font-weight:700;padding:30px}}
 .prof{{max-width:1240px;margin:20px auto 50px;padding:0 max(4vw,16px)}}
-.prof .boite{{background:#fff;border-radius:20px;box-shadow:var(--ombre);padding:24px 26px;border:1px solid #edf1f7;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}}
+.prof .boite{{background:rgba(255,255,255,.7);backdrop-filter:blur(14px);border-radius:20px;box-shadow:var(--ombre);padding:24px 26px;border:1px solid #edf1f7;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}}
 .prof h2{{font-size:24px;font-weight:900;color:#c2410c}}
 .prof p{{font-size:15px;color:var(--gris);line-height:1.6}}.prof p b{{color:var(--ink)}}
 .prof .pbtn{{display:inline-flex;align-items:center;min-height:44px;background:var(--ink);color:#fff;padding:10px 18px;border-radius:12px;text-decoration:none;font-weight:900;margin-right:10px}}
@@ -241,7 +259,7 @@ a:focus-visible,input:focus-visible{{outline:3px solid #f59e0b;outline-offset:2p
   <div class="path"><span>Cours</span><span>TP à missions</span><span>Jeux de révision</span><span>Évaluation</span></div>
   <label class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#5b6b80" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg><input id="q" type="search" placeholder="Rechercher une séquence : ponts, robot, énergie…" autocomplete="off"><kbd>/</kbd></label>
  </div>
- {ILLU}
+ {HERO}
 </div></header>
 <div class="stats"><div><b>{nseq}</b>séquences de la 5e à la 3e</div><div><b>{ntp}</b>TP et activités</div><div><b>{njeux}</b>jeux de révision</div><div><b>{neval}</b>évaluations</div></div>
 <nav class="niv" aria-label="Niveaux"><div class="in">{nav}</div></nav>
@@ -258,7 +276,7 @@ a:focus-visible,input:focus-visible{{outline:3px solid #f59e0b;outline-offset:2p
   secs.forEach(s=>s.hidden=![...s.querySelectorAll('.card')].some(c=>!c.hidden)); vide.style.display=n?'none':'block'; }});
  const tabs=[...document.querySelectorAll('nav.niv a')];
  function show(id,scroll){{ if(!secs.some(s=>s.id===id)) id=secs[0].id;
-  secs.forEach(s=>s.classList.toggle('off',s.id!==id)); tabs.forEach(a=>{{const on=a.dataset.tab===id;a.classList.toggle('on',on);a.setAttribute('aria-selected',on);if(on)a.scrollIntoView({{block:'nearest',inline:'nearest'}});}});
+  secs.forEach(s=>s.classList.toggle('off',s.id!==id)); const cur=secs.find(s=>s.id===id); document.body.style.setProperty('--lvl',cur.style.getPropertyValue('--a')); tabs.forEach(a=>{{const on=a.dataset.tab===id;a.classList.toggle('on',on);a.setAttribute('aria-selected',on);if(on)a.scrollIntoView({{block:'nearest',inline:'nearest'}});}});
   try{{localStorage.setItem('portail_onglet',id)}}catch(e){{}}
   if(scroll){{const n=document.querySelector('nav.niv');const y=n.getBoundingClientRect().top+scrollY;if(scrollY>y)scrollTo({{top:y}});}} }}
  tabs.forEach(a=>a.addEventListener('click',e=>{{e.preventDefault();if(q.value){{q.value='';q.dispatchEvent(new Event('input'));}}history.replaceState(null,'','#'+a.dataset.tab);show(a.dataset.tab,true);}}));
@@ -269,4 +287,5 @@ a:focus-visible,input:focus-visible{{outline:3px solid #f59e0b;outline-offset:2p
 </script>
 </body></html>'''
 open(OUT, 'w', encoding='utf-8').write(page)
+json.dump(SLUGS, open('/tmp/portail_slugs.json', 'w'), ensure_ascii=False, indent=0)
 print('cartes', sum(len(s['cards']) for s in sections), 'liens', len(alla))
