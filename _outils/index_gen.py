@@ -107,6 +107,7 @@ def short(t, k):
     if k == 'video': t = re.sub(r'^Vidéo\s*—\s*', '', t)
     return t
 
+KS = lambda t: re.sub(r'[.#$\[\]/]', '-', t)
 def card(c):
     groups = {k: [] for k, _ in CATS}; hub = None
     seen = set()
@@ -140,9 +141,10 @@ def card(c):
     img = next((f'img/portail/{slug}.{ext}' for ext in ('webp', 'jpg', 'png') if os.path.exists(os.path.join(REPO, f'img/portail/{slug}.{ext}'))), None)
     cover = f'<img src="{img}" alt="" loading="lazy">' if img else f'<span class="motif"></span><span class="big">{svg_icon(icon(c["title"]), 64, 1.5)}</span>'
     arrow = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h11" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M13.5 7 20 12l-6.5 5z" fill="currentColor"/></svg>'
-    return f'''<article class="card{' img' if img else ''}" style="--a:{c['accent']}" data-q="{search}">
+    return f'''<article class="card{' img' if img else ''}" style="--a:{c['accent']}" data-q="{search}" data-k="{E(SECNAME[1] + '|' + KS(c['title']))}">
   <a class="cover" href="{E(main)}" tabindex="-1" aria-hidden="true">{cover}</a>
   <div class="body"><h3><a href="{E(main)}">{E(c['title'])}</a></h3>{f'<p>{E(c["desc"])}</p>' if c['desc'] else ''}
+  <div class="prog" hidden><span><i></i></span><b></b></div>
   {f'<ol class="tree">{rows}</ol>' if rows else ''}
   <a class="go" href="{E(main)}">{'Ouvrir la séquence' if hub else 'Ouvrir'}{arrow}</a></div>
 </article>'''
@@ -157,6 +159,16 @@ for i, s in enumerate(sections):
   <div class="grid">{''.join(card(c) for c in s['cards'])}</div>
 </section>'''
 
+MAP = {}
+for se in sections:
+    for c in se['cards']:
+        for t, h, _ in c['links']:
+            if cat(h, t) == 'hub' or not h or h.startswith('#'): continue
+            key = h if h.startswith('http') else h.split('#')[0].split('?')[0].split('/')[-1]
+            MAP.setdefault(key, [se['badge'], KS(c['title']), KS(t)])
+_js = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'portail_suivi_tpl.js'), encoding='utf-8').read().replace('__MAP__', json.dumps(MAP, ensure_ascii=False, separators=(',', ':')))
+open(os.path.join(REPO, 'portail_suivi.js'), 'w', encoding='utf-8').write(_js)
+INDEXJS = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'portail_index_tpl.js'), encoding='utf-8').read()
 nseq = sum(len(s['cards']) for s in sections[:3])
 alla = [h for s in sections for c in s['cards'] for _, h, _ in c['links']]
 LK = [(t, h) for s in sections for c in s['cards'] for t, h, _ in c['links']]
@@ -284,13 +296,53 @@ main{{max-width:1240px;margin:0 auto;padding:6px max(4vw,16px) 40px}}
 .prof p{{font-size:15px;color:var(--gris);line-height:1.6}}.prof p b{{color:var(--ink)}}
 .prof .pbtn{{display:inline-flex;align-items:center;min-height:44px;background:var(--ink);color:#fff;padding:10px 18px;border-radius:12px;text-decoration:none;font-weight:900;margin-right:10px}}
 .prof p:nth-of-type(3) .pbtn{{background:#15803d}}.prof .pdesc{{font-size:14px}}
+
+.chipcl{{display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:13.5px;font-weight:800;border:0;border-radius:999px;background:#1e3a5f;color:#fff;padding:5px 6px 5px 13px;cursor:pointer;margin-right:8px;min-height:38px}}
+.chipcl span{{opacity:.75}}.chipcl b{{background:#fff;color:#1e3a5f;border-radius:999px;padding:3px 11px}}.chipcl.libre{{background:#64748b}}.chipcl[hidden]{{display:none}}
+.reprise{{max-width:1240px;margin:18px auto 0;padding:0 max(4vw,16px);display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}}
+.reprise[hidden]{{display:none}}
+.reprise>*{{position:relative}}.reprise::before{{content:none}}
+.reprise{{--r:#1e3a5f}}
+.rp-t{{display:flex;align-items:center;gap:14px;flex:1 1 380px;background:rgba(255,255,255,.8);backdrop-filter:blur(12px);border:1px solid #fff;border-radius:20px;padding:12px 16px;box-shadow:var(--ombre)}}
+.rp-c{{flex:none;min-width:56px;height:56px;padding:0 8px;border-radius:16px;background:var(--lvl);color:#fff;font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center}}
+.rp-t b{{display:block;font-size:17px;line-height:1.25}}.rp-t div span{{font-size:14px;color:var(--gris);font-weight:700}}
+.rp-b{{display:flex;gap:8px;flex-wrap:wrap}}
+.rp-b a,.rp-b button{{font:inherit;font-weight:900;font-size:15px;border:0;border-radius:999px;min-height:46px;padding:0 20px;display:inline-flex;align-items:center;text-decoration:none;cursor:pointer}}
+.rp-b a{{background:var(--lvl);color:#fff;box-shadow:0 8px 18px -8px var(--lvl)}}.rp-b button{{background:#fff;color:var(--ink);border:1.5px solid var(--ligne)}}
+.prog{{display:flex;align-items:center;gap:10px}}.prog[hidden]{{display:none}}.prog span{{flex:1;height:8px;border-radius:99px;background:color-mix(in srgb,var(--a) 14%,#fff);overflow:hidden}}.prog i{{display:block;height:100%;background:var(--a);border-radius:99px;transition:width .4s}}.prog b{{font-size:12.5px;font-weight:900;color:var(--a);white-space:nowrap}}
+.tree a.vu,.tree a.fait{{}}
+.tree a.vu::after,.tree a.fait::after{{content:"";flex:none;margin-left:auto;width:18px;height:18px;border-radius:50%;background:#16a34a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/13px no-repeat}}
+.tree a.vu::after{{background-color:#f59e0b}}
+.tree ol a.vu,.tree ol a.fait{{display:flex;align-items:center}}
+.tree a.vu .tl,.tree a.fait .tl{{color:var(--gris)}}
+.tree details.complet>summary .n{{background:#16a34a;color:#fff}}.tree details.partiel>summary .n{{background:#f59e0b;color:#fff}}
+.card.last{{outline:3px solid var(--a);outline-offset:3px}}
+.card.last::before{{content:"Dernière séance";position:absolute;z-index:3;top:12px;left:12px;background:#fff;color:var(--a);font-weight:900;font-size:13px;border-radius:999px;padding:5px 12px;box-shadow:0 4px 14px rgba(0,0,0,.18)}}
+.card.flash{{animation:flash 1.2s ease 2}}@keyframes flash{{50%{{transform:scale(1.03)}}}}
+.choix{{position:fixed;inset:0;z-index:100;background:rgba(11,27,48,.55);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px}}.choix[hidden]{{display:none}}
+body.modal{{overflow:hidden}}
+.cbox{{background:#fff;border-radius:26px;padding:clamp(20px,3vw,32px);width:min(720px,100%);max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.35)}}
+.cbox h2{{font-size:clamp(26px,3vw,34px);font-weight:900;line-height:1.1}}.cbox>p{{color:var(--gris);margin:6px 0 16px;font-size:15.5px}}
+.cg{{display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;align-items:center;margin-bottom:10px}}.cn{{font-weight:900;color:var(--gris);font-size:15px}}
+.cb{{display:flex;flex-wrap:wrap;gap:8px}}
+.cl{{font:inherit;font-weight:900;font-size:19px;min-width:76px;min-height:56px;border-radius:16px;border:0;cursor:pointer;color:#fff;background:#475569;box-shadow:0 6px 14px -6px rgba(0,0,0,.35);transition:transform .12s}}
+.cl.n5e{{background:#16a34a}}.cl.n4e{{background:#7c3aed}}.cl.n3e{{background:#1d4ed8}}.cl:hover{{transform:translateY(-2px)}}
+.cl.der{{outline:3px solid #f59e0b;outline-offset:2px}}
+.libre-b{{margin-top:8px;width:100%;font:inherit;font-weight:900;font-size:17px;border:2px dashed #cbd5e1;background:#f8fafc;color:var(--ink);border-radius:16px;min-height:60px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px}}
+.libre-b span{{font-size:13.5px;font-weight:700;color:var(--gris)}}.libre-b:hover{{border-color:#64748b}}
+.poste{{margin-top:6px;border-top:1px dashed var(--ligne);padding-top:12px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}}
+.poste>span{{font-size:14px;color:var(--gris);flex:1 1 260px}}
+.poste form{{display:flex;flex-wrap:wrap;gap:8px;align-items:center}}.poste form[hidden],.poste button[hidden]{{display:none}}
+.poste input{{font:inherit;font-size:16px;border:1.5px solid var(--ligne);border-radius:12px;padding:0 12px;min-height:44px}}
+.poste button{{font:inherit;font-weight:900;border:0;border-radius:12px;background:var(--ink);color:#fff;min-height:44px;padding:0 16px;cursor:pointer}}.poste button.off{{background:#e2e8f0;color:var(--ink)}}
+.err{{color:#b91c1c;font-weight:800;font-size:14px}}
 footer{{text-align:center;color:var(--gris);font-size:13px;padding:0 16px 30px}}
 a:focus-visible,input:focus-visible{{outline:3px solid #f59e0b;outline-offset:2px}}
 @media(max-width:600px){{.search kbd{{display:none}}.hero .illu{{max-width:300px}}.bar .id span{{display:none}}}}
 @media(max-width:860px){{.hero .in{{grid-template-columns:1fr}}.illu{{max-width:420px;margin:0 auto}}.stats{{grid-template-columns:repeat(2,minmax(0,1fr))}}}}
 @media(prefers-reduced-motion:reduce){{.spin,.float,.float2{{animation:none}}html{{scroll-behavior:auto}}.card{{transition:none}}}}
 </style></head><body>
-<div class="bar"><img alt="Logo ESTIC" src="logo_estic.png"><div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC — Saint-Dizier</span></div><span class="sp"></span><a class="prof-l" href="#coin-prof">Espace professeur</a></div>
+<div class="bar"><img alt="Logo ESTIC" src="logo_estic.png"><div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC — Saint-Dizier</span></div><span class="sp"></span><button type="button" id="classeChip" class="chipcl" hidden><span>Classe</span><b>Choisir</b></button><a class="prof-l" href="#coin-prof">Espace professeur</a></div>
 <header class="hero"><div class="in">
  <div>
   <span class="eye">Technologie · Cycle 4 · Collège</span>
@@ -302,10 +354,20 @@ a:focus-visible,input:focus-visible{{outline:3px solid #f59e0b;outline-offset:2p
  {HERO}
 </div></header>
 <div class="stats"><div><b>{nseq}</b>séquences de la 5e à la 3e</div><div><b>{ntp}</b>TP et activités</div><div><b>{njeux}</b>jeux de révision</div><div><b>{neval}</b>évaluations</div></div>
+<div class="reprise" id="reprise" hidden></div>
 <nav class="niv" aria-label="Niveaux"><div class="in">{nav}</div></nav>
 <main>{body}<div class="vide" id="vide">Aucune séquence ne correspond à ta recherche.</div></main>
-<div class="prof" id="coin-prof"><div class="boite"><h2>Coin professeur</h2>{profhtml}</div></div>
+<div class="prof" id="coin-prof"><div class="boite"><h2>Coin professeur</h2>{profhtml}
+<div class="poste"><b>Suivi des classes sur ce poste</b><span id="posteEtat"></span>
+<form id="posteForm"><input type="password" id="posteMdp" placeholder="Code professeur" autocomplete="off" aria-label="Code professeur"><button type="submit">Activer sur ce poste</button><span id="posteErr" class="err"></span></form>
+<button type="button" id="posteOff" class="off" hidden>Désactiver sur ce poste</button></div></div></div>
+<div class="choix" id="choix" hidden role="dialog" aria-modal="true" aria-labelledby="choixT"><div class="cbox">
+<h2 id="choixT">Avec quelle classe ?</h2><p>Le portail retient ce qui est ouvert pour savoir où la classe en est.</p>
+<div id="choixListe"></div>
+<button type="button" id="choixLibre" class="libre-b">Libre, sans suivi<span>pour préparer ou montrer sans fausser la progression</span></button>
+</div></div>
 <footer>Portail Technologie · Cycle 4 · ESTIC Don Bosco — Saint-Dizier · © ESTIC — Tous droits réservés</footer>
+<script>window.PORTAIL_INDEX=true</script><script src="portail_suivi.js"></script>
 <script>
 {{
  const q=document.getElementById('q'), cards=[...document.querySelectorAll('.card')], secs=[...document.querySelectorAll('.niveau')], vide=document.getElementById('vide');
@@ -320,10 +382,14 @@ a:focus-visible,input:focus-visible{{outline:3px solid #f59e0b;outline-offset:2p
   try{{localStorage.setItem('portail_onglet',id)}}catch(e){{}}
   if(scroll){{const n=document.querySelector('nav.niv');const y=n.getBoundingClientRect().top+scrollY;if(scrollY>y)scrollTo({{top:y}});}} }}
  tabs.forEach(a=>a.addEventListener('click',e=>{{e.preventDefault();if(q.value){{q.value='';q.dispatchEvent(new Event('input'));}}history.replaceState(null,'','#'+a.dataset.tab);show(a.dataset.tab,true);}}));
+ window.__montrerNiveau=id=>show(id,false);
  let init=location.hash.slice(1); if(!init){{try{{init=localStorage.getItem('portail_onglet')}}catch(e){{}}}} show(init||secs[0].id,false);
  q.addEventListener('input',()=>document.body.classList.toggle('rech',!!q.value.trim()));
  addEventListener('keydown',e=>{{ if(e.key==='/'&&document.activeElement!==q){{ e.preventDefault(); q.focus(); }} }});
 }}
+</script>
+<script>
+{INDEXJS}
 </script>
 </body></html>'''
 open(OUT, 'w', encoding='utf-8').write(page)
