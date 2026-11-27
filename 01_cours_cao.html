@@ -62,6 +62,81 @@ table.mat tr:nth-child(even) td{background:#f8fafc}
 .kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
 @media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style id="theme-moderne">/* THEME-MODERNE */
+:root{--c:#16a34a;--cf:#15803d;--ct:color-mix(in srgb,var(--c) 10%,#fff);--ink:#1b2f4b;--gris:#5b6b80;--ligne:#e3e9f2;--ombre-c:0 14px 34px -16px color-mix(in srgb,var(--c) 45%,transparent),0 2px 6px rgba(15,23,42,.05)}
+body{font-family:Nunito,'Segoe UI',system-ui,sans-serif;color:var(--ink);background:radial-gradient(900px 600px at 100% 0%,color-mix(in srgb,var(--c) 13%,transparent),transparent 70%),radial-gradient(800px 700px at 0% 100%,color-mix(in srgb,var(--c) 9%,transparent),transparent 70%),#f4f7fb;background-attachment:fixed}
+.estic-bar{background:rgba(255,255,255,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--ligne);box-shadow:none;padding:10px 22px}
+.estic-bar .id b{color:var(--ink);font-size:15px}.estic-bar .id span{font-size:12.5px}
+.estic-bar .copy{font-size:12px}
+nav.side{top:76px;left:14px;bottom:14px;width:236px;background:rgba(255,255,255,.75);backdrop-filter:blur(14px);border:1px solid #fff;border-radius:22px;box-shadow:var(--ombre-c);padding:14px 10px}
+nav.side a{font-size:14px;font-weight:800;color:var(--gris);border-radius:12px;padding:10px 12px}
+nav.side a .dot{width:8px;height:8px;background:#cbd5e1}
+nav.side a:hover{background:var(--ct);color:var(--cf)}
+nav.side a.actif{background:linear-gradient(135deg,var(--c),var(--cf));color:#fff;box-shadow:0 8px 18px -10px var(--c)}
+nav.side a.actif .dot{background:#fff;transform:none}
+nav.side .aide{background:var(--ct);border-radius:12px;font-size:12px}
+main{margin-left:264px}
+section.slide,#sObj:not(div),#sTrace{padding:56px clamp(22px,4vw,64px);border-bottom:0;max-width:1120px}
+#sObj:not(div),#sTrace{min-height:auto}
+.eyebrow{display:inline-block;align-self:flex-start;letter-spacing:0;text-transform:none;font-size:14px;font-weight:900;color:var(--cf);background:var(--ct);border-radius:999px;padding:6px 14px;margin-bottom:14px}
+h1{font-size:clamp(38px,4.6vw,58px);line-height:1.04;color:var(--ink);font-weight:900;text-wrap:balance}
+h2{font-size:clamp(28px,3vw,38px);line-height:1.1;color:var(--ink);font-weight:900;margin-bottom:22px;text-wrap:balance}
+h2::after{content:"";display:block;width:56px;height:6px;border-radius:99px;background:linear-gradient(90deg,var(--c),color-mix(in srgb,var(--c) 40%,#fff));margin-top:12px}
+.sous{font-size:18.5px;color:#3b4d66;line-height:1.55}
+.sous b,.retenir b,.carte p b{color:var(--cf)}
+.intro{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:28px;align-items:center}
+.intro-txt{display:flex;flex-direction:column}
+.intro-img{width:100%;border-radius:28px;box-shadow:var(--ombre-c);aspect-ratio:16/10;object-fit:cover}
+.cartes{gap:20px}
+.carte{border-top:0;border-radius:22px;background:rgba(255,255,255,.85);border:1px solid #fff;box-shadow:0 14px 30px -18px color-mix(in srgb,var(--accent,var(--c)) 55%,transparent),0 2px 6px rgba(15,23,42,.05);padding:22px;transition:transform .2s}
+.carte:hover{transform:translateY(-3px)}
+.carte .ic{width:66px;height:66px;border-radius:20px;display:flex;align-items:center;justify-content:center;color:var(--accent,var(--c));background:color-mix(in srgb,var(--accent,var(--c)) 13%,#fff);font-size:20px;font-weight:900;margin-bottom:6px}
+.carte .ic:empty{display:none}.carte .ic svg{width:46px;height:46px}
+.carte h3{font-size:19px;font-weight:900;color:var(--ink)}
+.carte p{font-size:15px}
+.carte .ex{font-size:13px;font-weight:800;background:color-mix(in srgb,var(--accent,var(--c)) 10%,#fff);color:color-mix(in srgb,var(--accent,var(--c)) 75%,#0f172a);border-radius:10px;padding:4px 12px}
+.animbox,.encart,.formule,.retenir,table.mat{border-radius:24px;background:rgba(255,255,255,.88);border:1px solid #fff;box-shadow:var(--ombre-c)}
+.animbox{padding:20px}
+.animbox canvas{border-radius:16px;border:1px solid var(--ligne)}
+.legende .caption{font-size:17px;font-weight:800;color:var(--ink);background:var(--ct);border-left:0;border-radius:14px;padding:12px 16px}
+.navbtn,.legende button{border-radius:999px;background:linear-gradient(135deg,var(--c),var(--cf));font-weight:900;min-height:44px;padding:0 22px;box-shadow:0 8px 18px -10px var(--c)}
+.navbtn:hover:not(:disabled),.legende button:hover{filter:brightness(1.08);background:linear-gradient(135deg,var(--c),var(--cf))}
+.navbtn:disabled{box-shadow:none}
+.rejbtn{border-radius:999px;border:1.5px solid var(--ligne);color:var(--ink);min-height:44px;font-weight:800}
+.rejbtn:hover{border-color:var(--c);background:#fff}
+.phasepts span{height:8px;border-radius:99px}.phasepts span.on{background:var(--c)}
+.formule{border-left:0}.formule .f{color:var(--cf)}
+table.mat{overflow:hidden}
+table.mat th{background:linear-gradient(135deg,var(--c),var(--cf));font-weight:900}
+table.mat td{font-size:15px;border-bottom:1px solid var(--ligne)}
+table.mat tr:nth-child(even) td{background:color-mix(in srgb,var(--c) 4%,#fff)}
+.plus,.moins{display:inline-block;border-radius:999px;padding:1px 10px;font-weight:800}
+.plus{background:#dcfce7;color:#166534}.moins{background:#fee2e2;color:#991b1b}
+.encart{padding:22px}.encart h3{color:var(--ink);font-weight:900}
+.retenir{border-left:0;padding:26px 28px}
+.retenir ul{list-style:none}
+.retenir li{position:relative;margin:12px 0;padding-left:38px;font-size:17.5px}
+.retenir li::before{content:"";position:absolute;left:0;top:2px;width:26px;height:26px;border-radius:50%;background:var(--c) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.obj-bloc{background:rgba(255,255,255,.88);border:1px solid #fff;border-radius:22px;box-shadow:var(--ombre-c);padding:20px 24px;margin:0 0 14px;max-width:900px}
+div#sObj.obj-bloc{margin-top:28px}
+.obj-t{font-size:13px;font-weight:900;color:var(--cf);background:var(--ct);display:inline-block;border-radius:999px;padding:4px 12px;margin:4px 0 10px}
+.obj-bloc ul{margin:0 0 10px 22px;line-height:1.75;font-size:15.5px}
+.obj-bloc li::marker{color:var(--c)}
+.obj-bloc table{width:100%;border-collapse:collapse;font-size:14.5px;line-height:1.55}
+.obj-bloc td{padding:8px 10px;border-bottom:1px solid var(--ligne);vertical-align:top}
+.obj-bloc tr:last-child td{border-bottom:0}
+.obj-code{white-space:nowrap;font-weight:900;color:var(--cf)}
+.obj-rep{margin-top:10px;font-size:14px;color:var(--gris)}
+#sTrace{position:relative}
+#sTrace .tr-consigne{font-size:15px;color:var(--gris);font-weight:700;margin-bottom:12px}
+#sTrace .tr-schema{width:100%;display:block;border-radius:18px;background:#fff;border:1px solid var(--ligne);box-shadow:var(--ombre-c)}
+#sTrace .tr-liste{margin-top:16px;background:#fff;border-radius:20px;box-shadow:var(--ombre-c);padding:16px 22px 16px 44px;line-height:2;font-size:16px;background-image:repeating-linear-gradient(transparent 0 31px,#e8eef7 31px 32px);background-position:0 14px}
+.kbd{border-radius:6px;background:#fff;border:1px solid var(--ligne)}
+button:focus-visible,a:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+@media (max-width:900px){main{margin-left:0}.intro{grid-template-columns:1fr}.intro-img{max-width:520px}section.slide,#sObj:not(div),#sTrace{padding:36px 20px}}
+@media (prefers-reduced-motion:reduce){.carte{transition:none}}
+</style>
 </head>
 <body>
 <!-- Logo ESTIC Don Bosco (officiel) -->
@@ -88,16 +163,16 @@ table.mat tr:nth-child(even) td{background:#f8fafc}
 <main>
 
 <section class="slide" id="s1">
- <div class="eyebrow">Technologie · 5ème · Séquence CAO</div>
+ <div class="intro"><div class="intro-txt"><div class="eyebrow">Technologie · 5ème · Séquence CAO</div>
  <h1>On le dessine en 3D…<br>avant de le fabriquer.</h1>
  <p class="sous" style="margin-top:16px">Une coque de téléphone, une roue de robot, une pièce de vélo : tout commence sur un écran.
- La <b>conception assistée par ordinateur</b> (CAO) crée l’objet <b>en virtuel</b>, sans gaspiller de matière.</p>
+ La <b>conception assistée par ordinateur</b> (CAO) crée l’objet <b>en virtuel</b>, sans gaspiller de matière.</p></div><img class="intro-img" src="img/portail/la-conception-assistee-par-ordinateur-5e.webp" alt=""></div>
 
- <div id="sObj" style="background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.10);border-left:5px solid #0e7490;border-radius:14px;padding:18px 22px;margin-top:26px;text-align:left;font-size:15px;line-height:1.7">
-  <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:6px">OBJECTIFS DE LA SÉQUENCE</div>
-  <ul style="margin:0 0 14px 20px;line-height:1.85"><li>Distinguer un objet réel de sa maquette numérique.</li><li>Construire une pièce simple : esquisse cotée, puis bossage ou enlèvement de matière.</li><li>Exploiter la maquette numérique : dimensions, volume et masse.</li></ul>
-  <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:5px">COMPÉTENCES TRAVAILLÉES — BO n° 9 du 29 février 2024</div>
-  <table style="width:100%;border-collapse:collapse;font-size:14px"><tr><td style="white-space:nowrap;font-weight:800;color:#0e7490;padding:5px 9px;border-bottom:1px solid #e2e8f0;vertical-align:top">T3 · C7</td><td style="padding:5px 9px;border-bottom:1px solid #e2e8f0">Imaginer, concevoir et réaliser une ou des solutions en réponse à un besoin, à des exigences ou à la nécessité d’améliorations dans une démarche de créativité</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#0e7490;padding:5px 9px;border-bottom:1px solid #e2e8f0;vertical-align:top">T3 · C8</td><td style="padding:5px 9px;border-bottom:1px solid #e2e8f0">Valider les solutions techniques par des simulations ou par des protocoles de tests</td></tr></table>
+ <div id="sObj" class="obj-bloc">
+  <div class="obj-t">OBJECTIFS DE LA SÉQUENCE</div>
+  <ul><li>Distinguer un objet réel de sa maquette numérique.</li><li>Construire une pièce simple : esquisse cotée, puis bossage ou enlèvement de matière.</li><li>Exploiter la maquette numérique : dimensions, volume et masse.</li></ul>
+  <div class="obj-t">COMPÉTENCES TRAVAILLÉES — BO n° 9 du 29 février 2024</div>
+  <table><tr><td class="obj-code">T3 · C7</td><td>Imaginer, concevoir et réaliser une ou des solutions en réponse à un besoin, à des exigences ou à la nécessité d’améliorations dans une démarche de créativité</td></tr><tr><td class="obj-code">T3 · C8</td><td>Valider les solutions techniques par des simulations ou par des protocoles de tests</td></tr></table>
  </div>
 </section>
 
@@ -192,10 +267,10 @@ table.mat tr:nth-child(even) td{background:#f8fafc}
 
 <section class="slide" id="s9">
  <h2>À retenir</h2>
- <div id="sTrace" style="text-align:left">
-  <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:8px">TRACE ÉCRITE — À RECOPIER SUR LE CAHIER</div>
-  <canvas id="cvTrace" width="860" height="200" style="width:100%;max-width:860px;height:auto;display:block;margin:0 auto 14px;background:#fff;border:1px solid #e2e8f0;border-radius:12px"></canvas>
-  <ul style="margin:0 0 0 20px;line-height:1.95;font-size:16px">
+ <div id="sTrace" class="trace-bloc">
+  <h2>Trace écrite</h2><p class="tr-consigne">À recopier sur le cahier, schéma compris.</p>
+  <canvas id="cvTrace" width="860" height="200" class="tr-schema"></canvas>
+  <ul class="tr-liste">
    <li>La <b>CAO</b> crée une <b>maquette numérique</b> de l’objet avant de le fabriquer.</li>
    <li>Une <b>esquisse</b> est un contour fermé, dessiné sur un plan et <b>coté</b> en mm.</li>
    <li>Le <b>bossage</b> ajoute de la matière ; l’<b>enlèvement</b> en retire.</li>
@@ -209,238 +284,289 @@ table.mat tr:nth-child(even) td{background:#f8fafc}
 </div>
 
 <script>
-/* ====== Moteur d'animations pédagogiques en phases ====== */
+/* ============================================================
+ MOTEUR D'ANIMATIONS PÉDAGOGIQUES EN PHASES (version illustrée)
+ Chaque animation = phases successives {dur, caption, draw(ctx,p,W,H,t)}
+ p : avancement de la phase (0 → 1), t : temps en secondes (décor vivant)
+ Rendu net sur écran haute définition, décor animé tant que la diapositive est visible.
+ ============================================================ */
 const ANIMS={};
 function creerAnim(nom,canvasId,capId,ptsId,phases){
  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+ const W=+cv.getAttribute('width'),H=+cv.getAttribute('height'),dpr=Math.min(2,window.devicePixelRatio||1)*1.25;
+ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
- const etat={i:0,t0:null,raf:null};
+ const etat={i:0,t0:null,raf:null,vis:false,debut:performance.now()};
  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
  function majBtns(){
- const bp=document.querySelector('button[data-prev="'+nom+'"]');
- const bn=document.querySelector('button[data-next="'+nom+'"]');
- if(bp) bp.disabled=(etat.i===0);
- if(bn) bn.disabled=(etat.i===phases.length-1);
+  const bp=document.querySelector('button[data-prev="'+nom+'"]'),bn=document.querySelector('button[data-next="'+nom+'"]');
+  if(bp) bp.disabled=(etat.i===0); if(bn) bn.disabled=(etat.i===phases.length-1);
+ }
+ function peindre(p,ts){
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+  phases[etat.i].draw(ctx,p,W,H,(ts-etat.debut)/1000);
+ }
+ function boucle(ts){
+  if(etat.t0===null) etat.t0=ts;
+  const p=Math.min(1,(ts-etat.t0)/phases[etat.i].dur);
+  peindre(p,ts);
+  if(p<1||etat.vis) etat.raf=requestAnimationFrame(boucle); else etat.raf=null;
  }
  function jouer(){
- cancelAnimationFrame(etat.raf); etat.t0=null;
- cap.textContent=phases[etat.i].caption; majPts(); majBtns();
- etat.raf=requestAnimationFrame(function frame(ts){
- if(etat.t0===null)etat.t0=ts;
- const p=Math.min(1,(ts-etat.t0)/phases[etat.i].dur);
- ctx.clearRect(0,0,cv.width,cv.height);
- phases[etat.i].draw(ctx,p,cv.width,cv.height);
- if(p<1) etat.raf=requestAnimationFrame(frame);
- });
+  cancelAnimationFrame(etat.raf); etat.t0=null;
+  cap.textContent=phases[etat.i].caption; majPts(); majBtns();
+  etat.raf=requestAnimationFrame(boucle);
  }
+ if('IntersectionObserver' in window) new IntersectionObserver(es=>es.forEach(e=>{
+  etat.vis=e.isIntersecting; if(etat.vis&&etat.raf===null&&etat.t0!==null){etat.t0=performance.now()-phases[etat.i].dur; etat.raf=requestAnimationFrame(boucle);} })).observe(cv);
  ANIMS[nom]={
- demarrer(){ etat.i=0; jouer(); },
- rejouer(){ jouer(); },
- suivant(){ if(etat.i<phases.length-1){ etat.i++; jouer(); } },
- precedent(){ if(etat.i>0){ etat.i--; jouer(); } }
+  demarrer(){ etat.i=0; jouer(); }, rejouer(){ jouer(); },
+  suivant(){ if(etat.i<phases.length-1){ etat.i++; jouer(); } },
+  precedent(){ if(etat.i>0){ etat.i--; jouer(); } }
  };
  cap.textContent=phases[0].caption; majPts(); majBtns();
- phases[0].draw(ctx,0,cv.width,cv.height);
+ const go=()=>peindre(0,performance.now());
+ document.fonts&&document.fonts.ready? document.fonts.ready.then(go):go(); go();
 }
-const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
-function etiquette(ctx,txt,x,y,coul='#b45309',taille=15){
- ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
-}
+const lisse = p =>p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+const rebond = p => p<1 ? 1-Math.pow(1-p,3)*Math.cos(p*9)*(1-p) : 1;
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const sous=(p,a,b)=>clamp((p-a)/(b-a));   // avancement entre a et b
+const POLICE='Nunito, Segoe UI, sans-serif';
 
-/* ====== Outils de dessin : projection isométrique, flèches, cotes ====== */
-const ACC = '#b45309', BLEU = '#1d4ed8', TEAL = '#0e7490';
-function P(o, x, y, z) { return [o.x + (x - y) * 0.866 * o.k, o.y + (x + y) * 0.5 * o.k - z * o.k]; }
-function poly(ctx, pts, fill, stroke, lw) {
-  ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath();
-  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
-  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw || 2; ctx.lineJoin = 'round'; ctx.stroke(); }
+/* ---------- Bibliothèque de dessin ---------- */
+const G={
+ ciel(c,W,H,haut='#bfe3ff',bas='#f2f9ff'){ const g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,haut); g.addColorStop(1,bas); c.fillStyle=g; c.fillRect(0,0,W,H); },
+ soleil(c,x,y,r=26){ const g=c.createRadialGradient(x,y,0,x,y,r*3); g.addColorStop(0,'rgba(255,236,150,.9)'); g.addColorStop(.35,'rgba(255,236,150,.35)'); g.addColorStop(1,'rgba(255,236,150,0)');
+  c.fillStyle=g; c.beginPath(); c.arc(x,y,r*3,0,7); c.fill(); c.fillStyle='#ffd65a'; c.beginPath(); c.arc(x,y,r,0,7); c.fill(); },
+ nuage(c,x,y,s=1,a=.9){ c.save(); c.globalAlpha=a; c.fillStyle='#fff'; c.beginPath();
+  [[0,0,22],[24,-10,26],[50,0,20],[26,8,22]].forEach(([dx,dy,r])=>{c.moveTo(x+dx*s+r*s,y+dy*s); c.arc(x+dx*s,y+dy*s,r*s,0,7);}); c.fill(); c.restore(); },
+ nuages(c,W,t,y0=40){ [[.1,0,1],[.55,18,.8],[.85,-6,1.1]].forEach(([fx,dy,s],k)=>{ const x=((fx*W+t*(8+k*4))%(W+160))-80; G.nuage(c,x,y0+dy,s,.85); }); },
+ collines(c,W,y,coul1='#cfe8d6',coul2='#b4dcc2'){
+  c.fillStyle=coul1; c.beginPath(); c.moveTo(0,y); for(let x=0;x<=W;x+=20) c.lineTo(x,y-18-14*Math.sin(x/90)-8*Math.sin(x/37)); c.lineTo(W,y); c.closePath(); c.fill();
+  c.fillStyle=coul2; c.beginPath(); c.moveTo(0,y); for(let x=0;x<=W;x+=20) c.lineTo(x,y-6-10*Math.sin(x/70+2)); c.lineTo(W,y); c.closePath(); c.fill(); },
+ sol(c,x0,x1,y,H){ const g=c.createLinearGradient(0,y,0,H); g.addColorStop(0,'#8fcf7a'); g.addColorStop(.12,'#7cbf66'); g.addColorStop(.13,'#a0794f'); g.addColorStop(1,'#7a5a3a');
+  c.fillStyle=g; c.fillRect(x0,y,x1-x0,H-y); },
+ eau(c,x0,x1,y,H,t){ const g=c.createLinearGradient(0,y,0,H); g.addColorStop(0,'#5ab4e8'); g.addColorStop(1,'#2a7fbf'); c.fillStyle=g; c.fillRect(x0,y,x1-x0,H-y);
+  c.strokeStyle='rgba(255,255,255,.55)'; c.lineWidth=2; c.lineCap='round';
+  for(let k=0;k<9;k++){ const yy=y+10+((k*13)%(H-y-12)), xx=x0+((k*97+t*22)%(x1-x0-40)); c.beginPath(); c.moveTo(xx,yy); c.lineTo(xx+18+(k%3)*8,yy); c.stroke(); } },
+ boite(c,x,y,w,h,r=8){ c.beginPath(); c.roundRect(x,y,w,h,r); },
+ // étiquette en pastille
+ pastille(c,txt,x,y,coul,taille=15,fond='#fff'){
+  c.font=`900 ${taille}px ${POLICE}`; const w=c.measureText(txt).width+taille*1.3, h=taille*1.85;
+  c.save(); c.shadowColor='rgba(15,23,42,.18)'; c.shadowBlur=10; c.shadowOffsetY=3;
+  c.fillStyle=fond; G.boite(c,x-w/2,y-h/2,w,h,h/2); c.fill(); c.restore();
+  c.strokeStyle=coul; c.lineWidth=2; G.boite(c,x-w/2,y-h/2,w,h,h/2); c.stroke();
+  c.fillStyle=coul; c.textAlign='center'; c.textBaseline='middle'; c.fillText(txt,x,y+1); c.textBaseline='alphabetic'; },
+ titre(c,txt,x,y,coul='#1b2f4b',taille=22){ c.font=`900 ${taille}px ${POLICE}`; c.fillStyle=coul; c.textAlign='center'; c.fillText(txt,x,y); },
+ texte(c,txt,x,y,coul='#475569',taille=14,al='center'){ c.font=`800 ${taille}px ${POLICE}`; c.fillStyle=coul; c.textAlign=al; c.fillText(txt,x,y); },
+ // flèche épaisse avec liseré blanc : le trait s'arrête à la base de la pointe, la pointe va jusqu'à (x2,y2)
+ fleche(c,x1,y1,x2,y2,coul,ep=6){
+  const a=Math.atan2(y2-y1,x2-x1), L=ep*2.6+6, l=ep*1.7+4, bx=x2-L*Math.cos(a), by=y2-L*Math.sin(a);
+  const tete=()=>{ c.beginPath(); c.moveTo(x2,y2); c.lineTo(bx-l*Math.sin(a),by+l*Math.cos(a)); c.lineTo(bx+l*Math.sin(a),by-l*Math.cos(a)); c.closePath(); };
+  c.lineCap='butt'; c.lineJoin='round';
+  c.strokeStyle='#fff'; c.lineWidth=ep+5; c.beginPath(); c.moveTo(x1,y1); c.lineTo(bx,by); c.stroke(); tete(); c.lineWidth=5; c.stroke();
+  c.strokeStyle=coul; c.lineWidth=ep; c.beginPath(); c.moveTo(x1,y1); c.lineTo(bx+Math.cos(a),by+Math.sin(a)); c.stroke(); c.fillStyle=coul; tete(); c.fill(); },
+ // camion
+ camion(c,x,y,s=1,coul='#f59e0b'){ c.save(); c.translate(x,y); c.scale(s,s);
+  c.fillStyle='rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(0,1,40,4,0,0,7); c.fill();
+  const g=c.createLinearGradient(0,-34,0,-8); g.addColorStop(0,coul); g.addColorStop(1,'#d97706');
+  c.fillStyle=g; G.boite(c,-40,-34,50,26,4); c.fill();
+  c.fillStyle='#1e3a8a'; G.boite(c,12,-28,22,20,5); c.fill(); c.fillStyle='#bfdbfe'; G.boite(c,22,-25,9,9,2); c.fill();
+  c.fillStyle='#334155'; c.fillRect(-40,-10,74,4);
+  [-26,22].forEach(wx=>{ c.fillStyle='#1f2937'; c.beginPath(); c.arc(wx,-4,7.5,0,7); c.fill(); c.fillStyle='#cbd5e1'; c.beginPath(); c.arc(wx,-4,3,0,7); c.fill(); });
+  c.restore(); },
+ // appui en béton avec ombre
+ appui(c,x,y){ c.fillStyle='rgba(0,0,0,.15)'; c.beginPath(); c.ellipse(x,y+38,34,5,0,0,7); c.fill();
+  const g=c.createLinearGradient(x-26,0,x+26,0); g.addColorStop(0,'#cbd5e1'); g.addColorStop(1,'#94a3b8');
+  c.fillStyle=g; c.beginPath(); c.moveTo(x-12,y); c.lineTo(x+12,y); c.lineTo(x+26,y+36); c.lineTo(x-26,y+36); c.closePath(); c.fill();
+  c.fillStyle='#e2e8f0'; c.fillRect(x-14,y-4,28,5); },
+ // caisse en bois
+ caisse(c,x,y,w=70,h=52,coul='#c0843d'){ c.save(); c.translate(x,y);
+  const g=c.createLinearGradient(0,-h,0,0); g.addColorStop(0,'#d9a35e'); g.addColorStop(1,coul); c.fillStyle=g; G.boite(c,-w/2,-h,w,h,5); c.fill();
+  c.strokeStyle='#8a5a24'; c.lineWidth=3; G.boite(c,-w/2,-h,w,h,5); c.stroke();
+  c.beginPath(); c.moveTo(-w/2+6,-h+6); c.lineTo(w/2-6,-6); c.moveTo(w/2-6,-h+6); c.lineTo(-w/2+6,-6); c.stroke();
+  c.fillStyle='#fff'; c.font=`900 13px ${POLICE}`; c.textAlign='center'; c.restore(); },
+ boulon(c,x,y,r=9){ const g=c.createRadialGradient(x-r*.35,y-r*.35,1,x,y,r); g.addColorStop(0,'#f8fafc'); g.addColorStop(1,'#475569');
+  c.fillStyle=g; c.beginPath(); c.arc(x,y,r,0,7); c.fill(); c.strokeStyle='#1e293b'; c.lineWidth=1.5; c.stroke(); },
+ // barre métallique (deux passes + reflet)
+ barre(c,x1,y1,x2,y2,coul='#64748b',ep=14){ c.lineCap='round';
+  c.strokeStyle='rgba(15,23,42,.25)'; c.lineWidth=ep+4; c.beginPath(); c.moveTo(x1,y1+3); c.lineTo(x2,y2+3); c.stroke();
+  c.strokeStyle=coul; c.lineWidth=ep; c.beginPath(); c.moveTo(x1,y1); c.lineTo(x2,y2); c.stroke();
+  c.strokeStyle='rgba(255,255,255,.45)'; c.lineWidth=ep*.25; c.beginPath(); const a=Math.atan2(y2-y1,x2-x1), ox=Math.sin(a)*ep*.22, oy=-Math.cos(a)*ep*.22;
+  c.moveTo(x1+ox,y1+oy); c.lineTo(x2+ox,y2+oy); c.stroke(); },
+ halo(c,x,y,r,coul){ const g=c.createRadialGradient(x,y,0,x,y,r); g.addColorStop(0,coul); g.addColorStop(1,'rgba(255,255,255,0)'); c.fillStyle=g; c.beginPath(); c.arc(x,y,r,0,7); c.fill(); }
+};
+
+
+/* ====== Outils CAO : fenêtre de logiciel, projection isométrique, cotes ====== */
+const ACC='#b45309', BLEU='#1d4ed8', TEAL='#0e7490';
+function P(o,x,y,z){ return [o.x+(x-y)*0.866*o.k, o.y+(x+y)*0.5*o.k-z*o.k]; }
+function poly(c,pts,fill,stroke,lw){ c.beginPath(); pts.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1])); c.closePath();
+ if(fill){ c.fillStyle=fill; c.fill(); } if(stroke){ c.strokeStyle=stroke; c.lineWidth=lw||2; c.lineJoin='round'; c.stroke(); } }
+function degrade(c,pts,c1,c2){ const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]); const g=c.createLinearGradient(Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys)); g.addColorStop(0,c1); g.addColorStop(1,c2); return g; }
+const MAT={ top:['#f7fbff','#dbe7f3'], right:['#b7c8da','#93a9c1'], front:['#a3b6cb','#7d93ad'], arete:'#3f546d' };
+function pave(c,o,L,W,H,opt={}){ const m=opt.mat||MAT;
+ const R=[P(o,L,0,0),P(o,L,W,0),P(o,L,W,H),P(o,L,0,H)], F=[P(o,0,W,0),P(o,L,W,0),P(o,L,W,H),P(o,0,W,H)], T=[P(o,0,0,H),P(o,L,0,H),P(o,L,W,H),P(o,0,W,H)];
+ c.save(); c.shadowColor='rgba(15,23,42,.22)'; c.shadowBlur=18; c.shadowOffsetY=10; poly(c,[P(o,0,0,0),P(o,L,0,0),P(o,L,W,0),P(o,0,W,0)],'rgba(0,0,0,.01)'); c.restore();
+ poly(c,R,degrade(c,R,m.right[0],m.right[1]),m.arete,1.6); poly(c,F,degrade(c,F,m.front[0],m.front[1]),m.arete,1.6); poly(c,T,degrade(c,T,m.top[0],m.top[1]),m.arete,1.6);
+ if(opt.faceSel){ poly(c,T,'rgba(37,99,235,.28)','#2563eb',2.5); }
+ c.strokeStyle='rgba(255,255,255,.8)'; c.lineWidth=1.2; c.beginPath(); c.moveTo(...T[3]); c.lineTo(...T[2]); c.lineTo(...T[1]); c.stroke(); }
+function ellIso(c,o,cx,cy,z,r){ const p=P(o,cx,cy,z); c.beginPath(); c.ellipse(p[0],p[1],r*o.k*1.2247,r*o.k*0.7071,0,0,Math.PI*2); }
+function trouIso(c,o,cx,cy,H,r,frac){ // trou débouchant avec paroi intérieure ombrée
+ c.save(); ellIso(c,o,cx,cy,H,r); c.clip();
+ const p=P(o,cx,cy,H), g=c.createLinearGradient(p[0]-r*o.k*1.2,0,p[0]+r*o.k*1.2,0); g.addColorStop(0,'#3f546d'); g.addColorStop(.6,'#64748b'); g.addColorStop(1,'#94a3b8');
+ c.fillStyle=g; c.fillRect(p[0]-80,p[1]-80,160,160);
+ const q=P(o,cx,cy,H-H*frac); c.beginPath(); c.ellipse(q[0],q[1],r*o.k*1.2247,r*o.k*0.7071,0,0,7); c.fillStyle=frac>=1?'#eef3f8':'#7d93ad'; c.fill(); c.restore();
+ ellIso(c,o,cx,cy,H,r); c.strokeStyle=MAT.arete; c.lineWidth=1.8; c.stroke(); }
+function cote(c,a,b,t,col='#b91c1c'){ const m=[(a[0]+b[0])/2,(a[1]+b[1])/2];
+ const fl=(x1,y1,x2,y2)=>{ const an=Math.atan2(y2-y1,x2-x1),h=9,bx=x2-Math.cos(an)*h,by=y2-Math.sin(an)*h; c.strokeStyle=col; c.fillStyle=col; c.lineWidth=1.6; c.beginPath(); c.moveTo(x1,y1); c.lineTo(bx,by); c.stroke(); c.beginPath(); c.moveTo(x2,y2); c.lineTo(bx+Math.sin(an)*4,by-Math.cos(an)*4); c.lineTo(bx-Math.sin(an)*4,by+Math.cos(an)*4); c.closePath(); c.fill(); };
+ fl(m[0],m[1],a[0],a[1]); fl(m[0],m[1],b[0],b[1]);
+ c.font=`900 14px ${POLICE}`; const w=c.measureText(t).width+14; c.fillStyle='#fff'; G.boite(c,m[0]-w/2,m[1]-11,w,22,11); c.fill(); c.strokeStyle=col; c.lineWidth=1.5; c.stroke();
+ c.fillStyle=col; c.textAlign='center'; c.textBaseline='middle'; c.fillText(t,m[0],m[1]+1); c.textBaseline='alphabetic'; }
+function attache(c,a,b,col='#b91c1c'){ c.strokeStyle=col; c.lineWidth=1; c.globalAlpha=.55; c.beginPath(); c.moveTo(...a); c.lineTo(...b); c.stroke(); c.globalAlpha=1; }
+function grillePlan(c,o,x0,y0,x1,y1,pas,col){ c.strokeStyle=col||'rgba(37,99,235,.16)'; c.lineWidth=1;
+ for(let x=x0;x<=x1;x+=pas){ const a=P(o,x,y0,0),b=P(o,x,y1,0); c.beginPath(); c.moveTo(...a); c.lineTo(...b); c.stroke(); }
+ for(let y=y0;y<=y1;y+=pas){ const a=P(o,x0,y,0),b=P(o,x1,y,0); c.beginPath(); c.moveTo(...a); c.lineTo(...b); c.stroke(); } }
+function curseur(c,x,y){ c.save(); c.translate(x,y); c.fillStyle='#fff'; c.strokeStyle='#0f172a'; c.lineWidth=1.5; c.beginPath(); c.moveTo(0,0); c.lineTo(0,18); c.lineTo(5,14); c.lineTo(9,22); c.lineTo(12,20.5); c.lineTo(8,13); c.lineTo(14,13); c.closePath(); c.fill(); c.stroke(); c.restore(); }
+// icônes de la barre d'outils
+const OUTILS=[['Esquisse',(c)=>{c.strokeRect(-7,-6,14,12);}],['Cote',(c)=>{c.beginPath();c.moveTo(-8,4);c.lineTo(8,4);c.moveTo(-8,0);c.lineTo(-8,8);c.moveTo(8,0);c.lineTo(8,8);c.stroke(); c.font=`900 8px ${POLICE}`; c.fillText('60',0,-1);}],
+ ['Bossage',(c)=>{c.beginPath();c.moveTo(-7,6);c.lineTo(7,6);c.lineTo(7,-2);c.lineTo(-7,-2);c.closePath();c.stroke();c.beginPath();c.moveTo(0,-3);c.lineTo(0,-9);c.stroke();c.beginPath();c.moveTo(0,-11);c.lineTo(-3,-7);c.lineTo(3,-7);c.closePath();c.fill();}],
+ ['Enlèvement',(c)=>{c.strokeRect(-8,-4,16,10);c.beginPath();c.ellipse(0,1,4,2.5,0,0,7);c.fill();}],['Masse',(c)=>{c.beginPath();c.moveTo(-7,6);c.lineTo(7,6);c.lineTo(4,-3);c.lineTo(-4,-3);c.closePath();c.stroke();c.beginPath();c.arc(0,-6,2.5,0,7);c.stroke();}]];
+// fenêtre du logiciel : barre de titre, outils, arbre de construction à gauche, vue 3D
+function fenetre(c,W,H,o){ // o : {outil, arbre:[[nom,couleur,sel]], statut}
+ c.fillStyle='#e2e8f0'; c.fillRect(0,0,W,H);
+ c.fillStyle='#1e293b'; c.fillRect(0,0,W,26); [['#f87171',14],['#fbbf24',30],['#4ade80',46]].forEach(([col,x])=>{ c.fillStyle=col; c.beginPath(); c.arc(x,13,5,0,7); c.fill(); });
+ G.texte(c,'CAO Studio — plaque.part',W/2,18,'#cbd5e1',12);
+ c.fillStyle='#f8fafc'; c.fillRect(0,26,W,38); c.fillStyle='#cbd5e1'; c.fillRect(0,63,W,1);
+ let xo=214; OUTILS.forEach(([nom,ic])=>{ const on=o.outil===nom; c.font=`800 12px ${POLICE}`; const w=c.measureText(nom).width+44; if(on){ c.fillStyle='#dbeafe'; G.boite(c,xo,30,w,30,8); c.fill(); c.strokeStyle='#3b82f6'; c.lineWidth=1.5; c.stroke(); }
+  c.save(); c.translate(xo+17,45); c.strokeStyle=on?'#1d4ed8':'#475569'; c.fillStyle=on?'#1d4ed8':'#475569'; c.lineWidth=1.6; c.textAlign='center'; ic(c); c.restore(); G.texte(c,nom,xo+32,49,on?'#1d4ed8':'#475569',12,'left'); xo+=w+10; });
+ // arbre
+ c.fillStyle='#f8fafc'; c.fillRect(0,64,196,H-64); c.fillStyle='#cbd5e1'; c.fillRect(196,64,1,H-64);
+ G.texte(c,'ARBRE DE CONSTRUCTION',98,84,'#64748b',10.5);
+ (o.arbre||[]).forEach(([nom,col,sel,sous],k)=>{ const y=98+k*(sous?44:30); if(sel){ c.fillStyle='#fff7ed'; G.boite(c,8,y,180,sous?40:26,7); c.fill(); c.strokeStyle='#ea580c'; c.lineWidth=1.5; c.stroke(); }
+  c.fillStyle=col; G.boite(c,16,y+7,12,12,3); c.fill(); G.texte(c,nom,36,y+18,'#1e293b',12.5,'left'); if(sous) G.texte(c,sous,36,y+34,'#64748b',11,'left'); });
+ // vue 3D
+ const g=c.createLinearGradient(0,64,0,H); g.addColorStop(0,'#f1f5f9'); g.addColorStop(1,'#cfd9e6'); c.fillStyle=g; c.fillRect(197,64,W-197,H-64);
+ // trièdre
+ const ox=226,oy=H-26; [[22,0,'#dc2626','X'],[-12,-10,'#16a34a','Y'],[0,-24,'#2563eb','Z']].forEach(([dx,dy,col,l])=>{ c.strokeStyle=col; c.lineWidth=2.5; c.beginPath(); c.moveTo(ox,oy); c.lineTo(ox+dx,oy+dy); c.stroke(); G.texte(c,l,ox+dx*1.35,oy+dy*1.35+4,col,10); });
+ if(o.statut){ c.fillStyle='rgba(255,255,255,.85)'; G.boite(c,W-250,H-34,238,24,12); c.fill(); G.texte(c,o.statut,W-131,H-17,'#334155',12); }
 }
-/* pavé x 0..L, y 0..W, z 0..H : faces visibles dessus, droite (x=L), avant (y=W) */
-function pave(ctx, o, L, W, H, cols) {
-  cols = cols || {};
-  const t = cols.top || '#fde7c2', r = cols.right || '#f2c98d', f = cols.front || '#e9b46a', s = cols.stroke || '#7c4a12';
-  poly(ctx, [P(o, L, 0, 0), P(o, L, W, 0), P(o, L, W, H), P(o, L, 0, H)], r, s, 2);
-  poly(ctx, [P(o, 0, W, 0), P(o, L, W, 0), P(o, L, W, H), P(o, 0, W, H)], f, s, 2);
-  poly(ctx, [P(o, 0, 0, H), P(o, L, 0, H), P(o, L, W, H), P(o, 0, W, H)], t, s, 2);
-}
-/* ellipse isométrique d'un cercle horizontal (plan XY) */
-function ellIso(ctx, o, cx, cy, z, r) {
-  const c = P(o, cx, cy, z); ctx.beginPath(); ctx.ellipse(c[0], c[1], r * o.k * 1.2247, r * o.k * 0.7071, 0, 0, Math.PI * 2);
-}
-/* flèche : le trait s'arrête à la base de la pointe, la pointe dépasse */
-function fleche(ctx, x1, y1, x2, y2, col, lw, tete) {
-  const a = Math.atan2(y2 - y1, x2 - x1), h = tete || 12, bx = x2 - Math.cos(a) * h, by = y2 - Math.sin(a) * h;
-  ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw || 3; ctx.lineCap = 'butt';
-  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(bx, by); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(bx + Math.sin(a) * h * 0.45, by - Math.cos(a) * h * 0.45); ctx.lineTo(bx - Math.sin(a) * h * 0.45, by + Math.cos(a) * h * 0.45); ctx.closePath(); ctx.fill();
-}
-/* cote : deux flèches de ligne de cote, pointes sur les lignes d'attache */
-function cote(ctx, a, b, txt, col) {
-  col = col || '#b91c1c';
-  const m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
-  fleche(ctx, m[0], m[1], a[0], a[1], col, 1.6, 9); fleche(ctx, m[0], m[1], b[0], b[1], col, 1.6, 9);
-  ctx.font = 'bold 15px Segoe UI, sans-serif'; const w = ctx.measureText(txt).width + 10;
-  ctx.fillStyle = '#fff'; ctx.fillRect(m[0] - w / 2, m[1] - 11, w, 22);
-  ctx.fillStyle = col; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, m[0], m[1]); ctx.textBaseline = 'alphabetic';
-}
-function attache(ctx, a, b, col) { ctx.strokeStyle = col || '#b91c1c'; ctx.lineWidth = 1; ctx.globalAlpha = .6; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.globalAlpha = 1; }
-function grillePlan(ctx, o, x0, y0, x1, y1, pas, col) {
-  ctx.strokeStyle = col || 'rgba(14,116,144,.18)'; ctx.lineWidth = 1;
-  for (let x = x0; x <= x1; x += pas) { const a = P(o, x, y0, 0), b = P(o, x, y1, 0); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
-  for (let y = y0; y <= y1; y += pas) { const a = P(o, x0, y, 0), b = P(o, x1, y, 0); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
-}
-function txt(ctx, s, x, y, col, t, al) { ctx.font = 'bold ' + (t || 15) + 'px Segoe UI, sans-serif'; ctx.fillStyle = col || ACC; ctx.textAlign = al || 'center'; ctx.fillText(s, x, y); }
+function info(c,t,x,y,col){ G.pastille(c,t,x,y,col||'#1d4ed8',13); }
 
 /* ====== ANIM 1 : DE L'ESQUISSE AU VOLUME ====== */
-const O1 = { x: 420, y: 90, k: 4.6 };
-function planDessus(ctx, alpha) {
-  poly(ctx, [P(O1, -12, -12, 0), P(O1, 72, -12, 0), P(O1, 72, 52, 0), P(O1, -12, 52, 0)], 'rgba(14,116,144,' + (0.07 * alpha) + ')', 'rgba(14,116,144,' + (0.6 * alpha) + ')', 1.5);
-  grillePlan(ctx, O1, -12, -12, 72, 52, 6);
-  const p = P(O1, -12, 52, 0); txt(ctx, 'plan de Dessus', p[0] - 10, p[1] + 26, TEAL, 15);
-}
-function contour(ctx, frac) {
-  const pts = [[0, 0], [60, 0], [60, 40], [0, 40], [0, 0]], seg = [60, 40, 60, 40], tot = 200;
-  let rest = frac * tot; ctx.strokeStyle = BLEU; ctx.lineWidth = 3.2; ctx.beginPath();
-  let p0 = P(O1, 0, 0, 0); ctx.moveTo(p0[0], p0[1]); let last = p0;
-  for (let i = 0; i < 4 && rest > 0; i++) {
-    const t = Math.min(1, rest / seg[i]), a = pts[i], b = pts[i + 1];
-    last = P(O1, a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, 0); ctx.lineTo(last[0], last[1]); rest -= seg[i];
-  }
-  ctx.stroke();
-  if (frac < 1) { ctx.fillStyle = '#ea580c'; ctx.beginPath(); ctx.arc(last[0], last[1], 6, 0, 7); ctx.fill(); }
-}
-function cotesEsq(ctx) {
-  const a = P(O1, 0, 52, 0), b = P(O1, 60, 52, 0); attache(ctx, P(O1, 0, 40, 0), a); attache(ctx, P(O1, 60, 40, 0), b); cote(ctx, a, b, '60');
-  const c = P(O1, 72, 0, 0), d = P(O1, 72, 40, 0); attache(ctx, P(O1, 60, 0, 0), c); attache(ctx, P(O1, 60, 40, 0), d); cote(ctx, c, d, '40');
-}
-creerAnim('esq', 'cvEsq', 'capEsq', 'ptsEsq', [
-  { dur: 1800, caption: 'On choisit un plan d’esquisse : ici le plan de Dessus.', draw(ctx, p) { planDessus(ctx, lisse(p)); } },
-  { dur: 2600, caption: 'On dessine un contour fermé : un rectangle.', draw(ctx, p) { planDessus(ctx, 1); contour(ctx, lisse(p)); } },
-  { dur: 2000, caption: 'On cote l’esquisse : 60 mm × 40 mm. Les cotes fixent la taille.', draw(ctx, p) { planDessus(ctx, 1); contour(ctx, 1); ctx.globalAlpha = Math.min(1, p * 2); cotesEsq(ctx); ctx.globalAlpha = 1; } },
-  { dur: 2800, caption: 'Le bossage tire l’esquisse en épaisseur : 10 mm. Le volume est né.', draw(ctx, p) {
-    const h = 10 * lisse(p); planDessus(ctx, 1); cotesEsq(ctx);
-    pave(ctx, O1, 60, 40, h);
-    const b = P(O1, 60, 0, 0);
-    if (h > 1) { fleche(ctx, b[0] + 40, b[1] + 10, b[0] + 40, b[1] - 10 * O1.k - 40, '#16a34a', 4, 14); txt(ctx, 'bossage', b[0] + 40, b[1] - 10 * O1.k - 50, '#16a34a', 15); }
-    if (p > .95) { const c = P(O1, 0, 40, 0), d = P(O1, 0, 40, 10); attache(ctx, c, [c[0] - 30, c[1]]); attache(ctx, d, [d[0] - 30, d[1]]); cote(ctx, [c[0] - 26, c[1]], [d[0] - 26, d[1]], '10'); }
-  } }
+const O1={x:526,y:120,k:3.6};
+function planDessus(c,a){ poly(c,[P(O1,-12,-12,0),P(O1,72,-12,0),P(O1,72,52,0),P(O1,-12,52,0)],`rgba(37,99,235,${.08*a})`,`rgba(37,99,235,${.55*a})`,1.5); grillePlan(c,O1,-12,-12,72,52,6,`rgba(37,99,235,${.15*a})`); }
+function contour(c,frac){ const pts=[[0,0],[60,0],[60,40],[0,40],[0,0]],seg=[60,40,60,40],tot=200; let rest=frac*tot; c.strokeStyle=BLEU; c.lineWidth=3.2; c.beginPath();
+ let p0=P(O1,0,0,0); c.moveTo(...p0); let last=p0; for(let i=0;i<4&&rest>0;i++){ const t=Math.min(1,rest/seg[i]),a=pts[i],b=pts[i+1]; last=P(O1,a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,0); c.lineTo(...last); rest-=seg[i]; }
+ c.stroke(); [[0,0],[60,0],[60,40],[0,40]].forEach((q,i)=>{ if(frac*4>i+.98||(i===0&&frac>0)){ const r=P(O1,q[0],q[1],0); c.fillStyle='#fff'; c.strokeStyle=BLEU; c.lineWidth=2; c.beginPath(); c.arc(r[0],r[1],4,0,7); c.fill(); c.stroke(); } }); return last; }
+function cotesEsq(c){ const a=P(O1,0,52,0),b=P(O1,60,52,0); attache(c,P(O1,0,40,0),a); attache(c,P(O1,60,40,0),b); cote(c,a,b,'60');
+ const d1=P(O1,72,0,0),d2=P(O1,72,40,0); attache(c,P(O1,60,0,0),d1); attache(c,P(O1,60,40,0),d2); cote(c,d1,d2,'40'); }
+const AR1=(n,sel)=>[['Plan de Dessus','#3b82f6',sel===0],['Esquisse 1','#2563eb',sel===1],['Bossage 1','#16a34a',sel===2]].slice(0,n);
+creerAnim('esq','cvEsq','capEsq','ptsEsq',[
+ {dur:2000,caption:'On choisit un plan d’esquisse : ici le plan de Dessus.',draw(c,p,W,H,t){ fenetre(c,W,H,{outil:'Esquisse',arbre:AR1(1,0)}); planDessus(c,lisse(p)); c.globalAlpha=lisse(p); info(c,'plan de Dessus',P(O1,-12,52,0)[0]-10,P(O1,-12,52,0)[1]+30,'#2563eb'); c.globalAlpha=1; }},
+ {dur:2800,caption:'On dessine un contour fermé : un rectangle.',draw(c,p,W,H,t){ fenetre(c,W,H,{outil:'Esquisse',arbre:AR1(2,1)}); planDessus(c,1); const q=contour(c,lisse(p)); if(p<1) curseur(c,q[0]+2,q[1]+2); }},
+ {dur:2400,caption:'On cote l’esquisse : 60 mm × 40 mm. Les cotes fixent la taille.',draw(c,p,W,H,t){ fenetre(c,W,H,{outil:'Cote',arbre:AR1(2,1)}); planDessus(c,1); contour(c,1); c.globalAlpha=Math.min(1,p*2); cotesEsq(c); c.globalAlpha=1; }},
+ {dur:3000,caption:'Le bossage tire l’esquisse en épaisseur : 10 mm. Le volume est né.',draw(c,p,W,H,t){ const h=10*lisse(p); fenetre(c,W,H,{outil:'Bossage',arbre:AR1(3,2),statut:p>.95?'Volume : 24,00 cm³':''}); planDessus(c,1-lisse(p)*.6); cotesEsq(c);
+   if(h>.2) pave(c,O1,60,40,h); const b=P(O1,60,0,0);
+   if(h>1){ G.fleche(c,b[0]+44,b[1]+8,b[0]+44,b[1]-10*O1.k-34,'#16a34a',5); info(c,'bossage',b[0]+44,b[1]-10*O1.k-50,'#16a34a'); }
+   if(p>.95){ const q1=P(O1,0,40,0),q2=P(O1,0,40,10); attache(c,q1,[q1[0]-30,q1[1]]); attache(c,q2,[q2[0]-30,q2[1]]); cote(c,[q1[0]-26,q1[1]],[q2[0]-26,q2[1]],'10'); } }}
 ]);
 
 /* ====== ANIM 2 : ENLÈVEMENT DE MATIÈRE ====== */
-const O2 = { x: 420, y: 95, k: 4.6 };
-function plaque(ctx, hi) { pave(ctx, O2, 60, 40, 10, hi ? { top: '#bfe3ee' } : null); }
-function trou(ctx, r, frac) {
-  // trou débouchant : on voit le fond ouvert à travers
-  ctx.save(); ellIso(ctx, O2, 30, 20, 10, r); ctx.fillStyle = '#5b3a12'; ctx.fill(); ctx.clip();
-  const c = P(O2, 30, 20, 10 - 10 * frac); ctx.beginPath(); ctx.ellipse(c[0], c[1], r * O2.k * 1.2247, r * O2.k * 0.7071, 0, 0, Math.PI * 2); ctx.fillStyle = '#f8fafc'; ctx.fill(); ctx.restore();
-  ellIso(ctx, O2, 30, 20, 10, r); ctx.strokeStyle = '#7c4a12'; ctx.lineWidth = 2; ctx.stroke();
-}
-creerAnim('enl', 'cvEnl', 'capEnl', 'ptsEnl', [
-  { dur: 1600, caption: 'On part de la plaque. On choisit la face du dessus comme plan.', draw(ctx, p) { plaque(ctx, p > .3); } },
-  { dur: 2200, caption: 'On y dessine un cercle de diamètre 10 mm, au centre.', draw(ctx, p) {
-    plaque(ctx, true); ctx.setLineDash([6, 5]); ellIso(ctx, O2, 30, 20, 10, 5 * lisse(p)); ctx.strokeStyle = BLEU; ctx.lineWidth = 3; ctx.stroke(); ctx.setLineDash([]);
-    if (p > .8) { const a = P(O2, 30, 20, 10), e = [a[0] + 5 * O2.k * 1.2247 * .7, a[1] - 5 * O2.k * .7071 * .7]; fleche(ctx, e[0] + 70, e[1] - 50, e[0], e[1], '#b91c1c', 1.8, 10); txt(ctx, 'Ø10', e[0] + 88, e[1] - 54, '#b91c1c', 16); }
-  } },
-  { dur: 2600, caption: 'Enlèvement de matière « à travers tout » : le trou traverse la plaque.', draw(ctx, p) {
-    plaque(ctx, false); trou(ctx, 5, lisse(p));
-    const a = P(O2, 30, 20, 10); fleche(ctx, a[0], a[1] - 90, a[0], a[1] - 24, '#dc2626', 4, 14); txt(ctx, 'enlèvement', a[0] + 70, a[1] - 70, '#dc2626', 15);
-  } },
-  { dur: 2400, caption: 'Bossage : on ajoute de la matière. Enlèvement : on en retire.', draw(ctx, p) {
-    plaque(ctx, false); trou(ctx, 5, 1);
-    fleche(ctx, 150, 300, 150, 220, '#16a34a', 5, 16); txt(ctx, '+ matière', 150, 330, '#16a34a', 17); txt(ctx, 'bossage', 150, 352, '#16a34a', 14);
-    fleche(ctx, 680, 220, 680, 300, '#dc2626', 5, 16); txt(ctx, '− matière', 680, 330, '#dc2626', 17); txt(ctx, 'enlèvement', 680, 352, '#dc2626', 14);
-  } }
+const O2={x:520,y:140,k:4.1};
+const AR2=(n,sel)=>[['Plan de Dessus','#3b82f6',false],['Esquisse 1','#2563eb',false],['Bossage 1','#16a34a',false],['Esquisse 2','#2563eb',sel===3],['Enlèvement 1','#ea580c',sel===4]].slice(0,n);
+creerAnim('enl','cvEnl','capEnl','ptsEnl',[
+ {dur:1800,caption:'On part de la plaque. On choisit la face du dessus comme plan.',draw(c,p,W,H,t){ fenetre(c,W,H,{outil:'Esquisse',arbre:AR2(3,-1)}); pave(c,O2,60,40,10,{faceSel:p>.3}); const q=P(O2,40,26,10); curseur(c,q[0]+(1-lisse(p))*120,q[1]+(1-lisse(p))*60); }},
+ {dur:2400,caption:'On y dessine un cercle de diamètre 10 mm, au centre.',draw(c,p,W,H,t){ fenetre(c,W,H,{outil:'Esquisse',arbre:AR2(4,3)}); pave(c,O2,60,40,10,{faceSel:true});
+   c.setLineDash([6,5]); ellIso(c,O2,30,20,10,5*lisse(p)); c.strokeStyle=BLEU; c.lineWidth=3; c.stroke(); c.setLineDash([]);
+   if(p>.8){ const a=P(O2,30,20,10),e=[a[0]+5*O2.k*1.2247*.7,a[1]-5*O2.k*.7071*.7]; G.fleche(c,e[0]+80,e[1]-56,e[0]+2,e[1]-2,'#b91c1c',3); info(c,'Ø10',e[0]+104,e[1]-64,'#b91c1c'); } }},
+ {dur:2800,caption:'Enlèvement de matière « à travers tout » : le trou traverse la plaque.',draw(c,p,W,H,t){ fenetre(c,W,H,{outil:'Enlèvement',arbre:AR2(5,4)}); pave(c,O2,60,40,10); trouIso(c,O2,30,20,10,5,lisse(p));
+   const a=P(O2,30,20,10); G.fleche(c,a[0],a[1]-100,a[0],a[1]-26,'#dc2626',6); info(c,'enlèvement',a[0]+90,a[1]-74,'#dc2626'); }},
+ {dur:2600,caption:'Bossage : on ajoute de la matière. Enlèvement : on en retire.',draw(c,p,W,H,t){ fenetre(c,W,H,{arbre:AR2(5,-1),statut:'Volume : 23,21 cm³'}); pave(c,O2,60,40,10); trouIso(c,O2,30,20,10,5,1);
+   const a=lisse(p); c.globalAlpha=a; G.fleche(c,270,280,270,190,'#16a34a',7); info(c,'+ matière : bossage',290,306,'#16a34a'); G.fleche(c,W-70,190,W-70,276,'#dc2626',7); info(c,'− matière : enlèvement',W-110,300,'#dc2626'); c.globalAlpha=1; }}
 ]);
 
 /* ====== ANIM 3 : LES TROIS PLANS ====== */
-const O3 = { x: 410, y: 210, k: 3.4 };
-function plans(ctx, hi) {
-  const S = 44, col = n => hi === n ? 'rgba(29,78,216,.30)' : 'rgba(100,116,139,.10)', st = n => hi === n ? '#1d4ed8' : 'rgba(100,116,139,.55)';
-  poly(ctx, [P(O3, 0, 0, 0), P(O3, S, 0, 0), P(O3, S, 0, S), P(O3, 0, 0, S)], col('face'), st('face'), hi === 'face' ? 3 : 1.5);
-  poly(ctx, [P(O3, 0, 0, 0), P(O3, 0, S, 0), P(O3, 0, S, S), P(O3, 0, 0, S)], col('droite'), st('droite'), hi === 'droite' ? 3 : 1.5);
-  poly(ctx, [P(O3, 0, 0, 0), P(O3, S, 0, 0), P(O3, S, S, 0), P(O3, 0, S, 0)], col('dessus'), st('dessus'), hi === 'dessus' ? 3 : 1.5);
-  const o = P(O3, 0, 0, 0);
-  [[[60, 0, 0], 'X', '#dc2626'], [[0, 60, 0], 'Y', '#16a34a'], [[0, 0, 60], 'Z', '#1d4ed8']].forEach(([v, l, c]) => { const e = P(O3, ...v); fleche(ctx, o[0], o[1], e[0], e[1], c, 2.5, 11); txt(ctx, l, e[0] + (l === 'Y' ? -14 : 14), e[1] + (l === 'Z' ? -6 : 6), c, 15); });
-  const lab = { dessus: [[22, 22, 0], 'Dessus'], face: [[22, 0, 30], 'Face'], droite: [[0, 22, 30], 'Droite'] };
-  Object.keys(lab).forEach(k => { const p = P(O3, ...lab[k][0]); txt(ctx, lab[k][1], p[0], p[1] + 5, hi === k ? '#1d4ed8' : '#64748b', hi === k ? 17 : 14); });
-}
-creerAnim('plans', 'cvPlans', 'capPlans', 'ptsPlans', [
-  { dur: 1800, caption: 'Trois plans de base se croisent à l’origine : Dessus, Face et Droite.', draw(ctx) { plans(ctx, null); } },
-  { dur: 1800, caption: 'Dessus : pour une plaque, une roue, une boîte vue d’en haut.', draw(ctx) { plans(ctx, 'dessus'); } },
-  { dur: 1800, caption: 'Face : pour un profil vu de devant, comme une équerre en L.', draw(ctx) { plans(ctx, 'face'); } },
-  { dur: 1800, caption: 'Droite : pour un profil vu de côté.', draw(ctx) { plans(ctx, 'droite'); } },
-  { dur: 2200, caption: 'On peut aussi dessiner directement sur une face plane de la pièce.', draw(ctx, p) {
-    const o = { x: 400, y: 120, k: 4.4 }; pave(ctx, o, 60, 40, 14, { top: p > .3 ? '#bfdbfe' : '#fde7c2' });
-    const c = P(o, 30, 20, 14); fleche(ctx, c[0] + 140, c[1] - 70, c[0] + 16, c[1] - 6, '#1d4ed8', 2.5, 12); txt(ctx, 'face choisie', c[0] + 175, c[1] - 78, '#1d4ed8', 16);
-  } }
+const O3={x:520,y:250,k:2.4};
+function plans(c,hi){ const S=44, col=n=>hi===n?'rgba(37,99,235,.32)':'rgba(100,116,139,.12)', st=n=>hi===n?'#1d4ed8':'rgba(71,85,105,.55)';
+ poly(c,[P(O3,0,0,0),P(O3,S,0,0),P(O3,S,0,S),P(O3,0,0,S)],col('face'),st('face'),hi==='face'?3:1.5);
+ poly(c,[P(O3,0,0,0),P(O3,0,S,0),P(O3,0,S,S),P(O3,0,0,S)],col('droite'),st('droite'),hi==='droite'?3:1.5);
+ poly(c,[P(O3,0,0,0),P(O3,S,0,0),P(O3,S,S,0),P(O3,0,S,0)],col('dessus'),st('dessus'),hi==='dessus'?3:1.5);
+ const o=P(O3,0,0,0); [[[62,0,0],'X','#dc2626'],[[0,62,0],'Y','#16a34a'],[[0,0,62],'Z','#2563eb']].forEach(([v,l,cc])=>{ const e=P(O3,...v); G.fleche(c,o[0],o[1],e[0],e[1],cc,3); G.texte(c,l,e[0]+(l==='Y'?-16:16),e[1]+(l==='Z'?-6:6),cc,15); });
+ G.boulon(c,o[0],o[1],5);
+ const lab={dessus:[[22,22,0],'Dessus'],face:[[22,0,30],'Face'],droite:[[0,22,30],'Droite']};
+ Object.keys(lab).forEach(k=>{ const p=P(O3,...lab[k][0]); hi===k?G.pastille(c,lab[k][1],p[0],p[1],'#1d4ed8',15):G.texte(c,lab[k][1],p[0],p[1]+5,'#64748b',14); }); }
+const AR3=sel=>[['Origine','#475569',false],['Plan de Dessus','#3b82f6',sel==='dessus'],['Plan de Face','#3b82f6',sel==='face'],['Plan de Droite','#3b82f6',sel==='droite']];
+creerAnim('plans','cvPlans','capPlans','ptsPlans',[
+ {dur:1800,caption:'Trois plans de base se croisent à l’origine : Dessus, Face et Droite.',draw(c,p,W,H,t){ fenetre(c,W,H,{arbre:AR3(null)}); plans(c,null); }},
+ {dur:1800,caption:'Dessus : pour une plaque, une roue, une boîte vue d’en haut.',draw(c,p,W,H,t){ fenetre(c,W,H,{arbre:AR3('dessus')}); plans(c,'dessus'); }},
+ {dur:1800,caption:'Face : pour un profil vu de devant, comme une équerre en L.',draw(c,p,W,H,t){ fenetre(c,W,H,{arbre:AR3('face')}); plans(c,'face'); }},
+ {dur:1800,caption:'Droite : pour un profil vu de côté.',draw(c,p,W,H,t){ fenetre(c,W,H,{arbre:AR3('droite')}); plans(c,'droite'); }},
+ {dur:2400,caption:'On peut aussi dessiner directement sur une face plane de la pièce.',draw(c,p,W,H,t){ fenetre(c,W,H,{outil:'Esquisse',arbre:[['Bossage 1','#16a34a',false],['Esquisse 2','#2563eb',p>.3,'sur une face']]}); const o={x:500,y:150,k:4}; pave(c,o,60,40,14,{faceSel:p>.3});
+   const q=P(o,30,20,14); curseur(c,q[0]+(1-lisse(sous(p,0,.3)))*140,q[1]+(1-lisse(sous(p,0,.3)))*80); if(p>.35){ G.fleche(c,q[0]+150,q[1]-60,q[0]+18,q[1]-6,'#1d4ed8',4); info(c,'face choisie',q[0]+196,q[1]-70); } }}
 ]);
 
 /* ====== ANIM 4 : MODIFIER UNE COTE ====== */
-const O4 = { x: 500, y: 110, k: 4.2 };
-function arbre(ctx, sel, valeur, edit) {
-  ctx.fillStyle = '#fff'; ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(30, 40, 230, 220, 12); ctx.fill(); ctx.stroke();
-  txt(ctx, 'ARBRE DE CONSTRUCTION', 145, 66, '#64748b', 12);
-  [['Bossage 1', 'rectangle 60 × 40 · 10 mm', '#1d4ed8'], ['Enlèvement 1', 'cercle Ø' + valeur + ' · à travers tout', '#c2410c']].forEach((f, i) => {
-    const y = 90 + i * 70; if (sel === i) { ctx.fillStyle = '#fff7ed'; ctx.beginPath(); ctx.roundRect(42, y - 4, 206, 58, 8); ctx.fill(); ctx.strokeStyle = '#ea580c'; ctx.stroke(); }
-    txt(ctx, f[0], 58, y + 20, f[2], 15, 'left'); txt(ctx, f[1], 58, y + 42, '#475569', 12.5, 'left');
-  });
-  if (edit) { ctx.fillStyle = '#fff'; ctx.strokeStyle = '#ea580c'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect(70, 222, 150, 30, 8); ctx.fill(); ctx.stroke(); txt(ctx, edit, 145, 243, '#b91c1c', 16); }
-}
-function piece4(ctx, r) {
-  pave(ctx, O4, 60, 40, 10);
-  ctx.save(); ellIso(ctx, O4, 30, 20, 10, r); ctx.fillStyle = '#5b3a12'; ctx.fill(); ctx.clip();
-  const c = P(O4, 30, 20, 0); ctx.beginPath(); ctx.ellipse(c[0], c[1], r * O4.k * 1.2247, r * O4.k * 0.7071, 0, 0, 7); ctx.fillStyle = '#f8fafc'; ctx.fill(); ctx.restore();
-  ellIso(ctx, O4, 30, 20, 10, r); ctx.strokeStyle = '#7c4a12'; ctx.lineWidth = 2; ctx.stroke();
-}
-const vol = d => (24000 - Math.PI * (d / 2) ** 2 * 10) / 1000;
-creerAnim('param', 'cvParam', 'capParam', 'ptsParam', [
-  { dur: 1800, caption: 'Le logiciel garde chaque fonction en mémoire : c’est l’arbre de construction.', draw(ctx) { arbre(ctx, -1, 5); piece4(ctx, 2.5); } },
-  { dur: 2400, caption: 'On sélectionne l’enlèvement et on change la cote : Ø5 devient Ø10.', draw(ctx, p) { const t = p < .5 ? 'Ø5' : 'Ø1' + (p > .75 ? '0' : ''); arbre(ctx, 1, 5, t); piece4(ctx, 2.5); } },
-  { dur: 2400, caption: 'La pièce se reconstruit toute seule, sans rien redessiner.', draw(ctx, p) { const d = 5 + 5 * lisse(p); arbre(ctx, 1, Math.round(d)); piece4(ctx, d / 2); } },
-  { dur: 2400, caption: 'Le volume se met à jour aussi : on vérifie avant de fabriquer.', draw(ctx) {
-    arbre(ctx, -1, 10); piece4(ctx, 5);
-    txt(ctx, 'Volume', 145, 300, '#64748b', 14);
-    txt(ctx, vol(5).toFixed(2).replace('.', ',') + ' cm³', 82, 330, '#64748b', 16);
-    fleche(ctx, 132, 324, 166, 324, '#16a34a', 3, 11);
-    txt(ctx, vol(10).toFixed(2).replace('.', ',') + ' cm³', 215, 330, '#16a34a', 17);
-  } }
+const O4={x:540,y:140,k:3.9};
+function piece4(c,r){ pave(c,O4,60,40,10); trouIso(c,O4,30,20,10,r,1); }
+const vol=d=>(24000-Math.PI*(d/2)**2*10)/1000, fmt=v=>v.toFixed(2).replace('.',',');
+function dialogue(c,txtVal,x,y){ c.save(); c.shadowColor='rgba(15,23,42,.25)'; c.shadowBlur=16; c.shadowOffsetY=6; c.fillStyle='#fff'; G.boite(c,x,y,190,92,12); c.fill(); c.restore();
+ c.fillStyle='#1e293b'; G.boite(c,x,y,190,24,12); c.fill(); c.fillRect(x,y+12,190,12); G.texte(c,'Modifier la cote',x+95,y+17,'#e2e8f0',12);
+ c.strokeStyle='#ea580c'; c.lineWidth=2; G.boite(c,x+20,y+36,150,30,8); c.stroke(); G.texte(c,txtVal,x+95,y+57,'#b91c1c',17);
+ G.texte(c,'Entrée pour valider',x+95,y+84,'#94a3b8',11); }
+const AR4=(sel,d)=>[['Bossage 1','#16a34a',false,'rectangle 60 × 40 · 10 mm'],['Enlèvement 1','#ea580c',sel,'cercle Ø'+d+' · à travers tout']];
+creerAnim('param','cvParam','capParam','ptsParam',[
+ {dur:1800,caption:'Le logiciel garde chaque fonction en mémoire : c’est l’arbre de construction.',draw(c,p,W,H,t){ fenetre(c,W,H,{arbre:AR4(false,5),statut:'Volume : '+fmt(vol(5))+' cm³'}); piece4(c,2.5); c.globalAlpha=lisse(p); G.fleche(c,250,170,198,140,'#ea580c',4); info(c,'l’arbre',282,180,'#ea580c'); c.globalAlpha=1; }},
+ {dur:2600,caption:'On sélectionne l’enlèvement et on change la cote : Ø5 devient Ø10.',draw(c,p,W,H,t){ const v=p<.45?'Ø5':'Ø1'+(p>.7?'0':''); fenetre(c,W,H,{arbre:AR4(true,5),statut:'Volume : '+fmt(vol(5))+' cm³'}); piece4(c,2.5); dialogue(c,v,232,80); }},
+ {dur:2600,caption:'La pièce se reconstruit toute seule, sans rien redessiner.',draw(c,p,W,H,t){ const d=5+5*lisse(p); fenetre(c,W,H,{arbre:AR4(true,Math.round(d)),statut:'Reconstruction…'}); piece4(c,d/2); if(p<.95){ c.strokeStyle='#2563eb'; c.lineWidth=3; c.beginPath(); c.arc(W-40,90,12,t*6,t*6+4.5); c.stroke(); } }},
+ {dur:2800,caption:'Le volume se met à jour aussi : on vérifie avant de fabriquer.',draw(c,p,W,H,t){ fenetre(c,W,H,{arbre:AR4(false,10),statut:'Volume : '+fmt(vol(10))+' cm³'}); piece4(c,5);
+   const a=lisse(p); c.globalAlpha=a; c.save(); c.shadowColor='rgba(15,23,42,.2)'; c.shadowBlur=14; c.fillStyle='#fff'; G.boite(c,236,82,250,76,14); c.fill(); c.restore();
+   G.texte(c,'Volume',361,104,'#64748b',13); G.texte(c,fmt(vol(5))+' cm³',296,138,'#64748b',16); G.fleche(c,346,132,382,132,'#16a34a',3); G.texte(c,fmt(vol(10))+' cm³',430,138,'#16a34a',17); c.globalAlpha=1; }}
 ]);
 
-/* ====== MASSE : choix du matériau ====== */
-(function () {
-  const M = [['PLA', 1.24, '#60a5fa'], ['Bois (pin)', 0.5, '#d6a46b'], ['Aluminium', 2.7, '#94a3b8'], ['Acier', 7.85, '#475569']];
-  const z = document.getElementById('matBtns'), cv = document.getElementById('cvMasse'), c = cv.getContext('2d');
-  let cur = 0;
-  function dessiner() {
-    c.clearRect(0, 0, 820, 230);
-    const m = M[cur], masse = 24 * m[1];
-    txt(c, '24 cm³', 150, 120, '#1e3a5f', 30); txt(c, 'volume', 150, 148, '#64748b', 14);
-    txt(c, '×', 280, 122, '#64748b', 30);
-    txt(c, String(m[1]).replace('.', ',') + ' g/cm³', 420, 120, m[2] === '#94a3b8' ? '#475569' : m[2], 30); txt(c, 'masse volumique — ' + m[0], 420, 148, '#64748b', 14);
-    txt(c, '=', 560, 122, '#64748b', 30);
-    txt(c, masse.toFixed(1).replace('.', ',') + ' g', 690, 120, '#b45309', 34); txt(c, 'masse de la plaque', 690, 148, '#64748b', 14);
-    const w = Math.min(560, masse / (24 * 7.85) * 560);
-    c.fillStyle = '#e2e8f0'; c.fillRect(130, 185, 560, 16); c.fillStyle = m[2]; c.fillRect(130, 185, w, 16);
-  }
-  M.forEach((m, i) => { const b = document.createElement('button'); b.className = 'navbtn'; b.textContent = m[0]; b.addEventListener('click', () => { cur = i; [...z.children].forEach((x, k) => x.style.background = k === i ? 'var(--niv-fonce)' : ''); dessiner(); }); z.appendChild(b); });
-  z.children[0].style.background = 'var(--niv-fonce)'; dessiner();
+/* ====== MASSE : choix du matériau (balance) ====== */
+(function(){
+ const M=[['PLA',1.24,'#60a5fa','#3b82f6'],['Bois (pin)',0.5,'#e0b07a','#b7804a'],['Aluminium',2.7,'#d1d9e2','#94a3b8'],['Acier',7.85,'#7b8796','#475569']];
+ const z=document.getElementById('matBtns'), cv=document.getElementById('cvMasse'); const W=820,H=230,dpr=2.5; cv.width=W*dpr; cv.height=H*dpr; const c=cv.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0);
+ let cur=0, aff=0, raf=null;
+ function plaqueMat(x,y,m){ const o={x,y,k:1.5}; const mat={top:[m[2],m[3]],right:[m[3],m[3]],front:[m[3],'#1e293b'],arete:'#1e293b'};
+  if(m[0]==='Bois (pin)'){ mat.top=['#f0c48e','#d9a46a']; mat.right=['#c88f55','#b07a44']; mat.front=['#b9834c','#8a5a2e']; }
+  pave(c,o,60,40,10,{mat}); if(m[0]==='Bois (pin)'){ c.strokeStyle='rgba(122,72,30,.35)'; c.lineWidth=1; for(let k=0;k<6;k++){ const a=P(o,0,6+k*6,10),b=P(o,60,6+k*6,10); c.beginPath(); c.moveTo(...a); c.quadraticCurveTo((a[0]+b[0])/2,(a[1]+b[1])/2-3,b[0],b[1]); c.stroke(); } } }
+ function dessiner(){ c.clearRect(0,0,W,H);
+  const m=M[cur], masse=24*m[1];
+  // balance
+  c.fillStyle='rgba(15,23,42,.12)'; c.beginPath(); c.ellipse(200,206,150,10,0,0,7); c.fill();
+  const g=c.createLinearGradient(0,150,0,200); g.addColorStop(0,'#475569'); g.addColorStop(1,'#1e293b'); c.fillStyle=g; G.boite(c,60,150,280,50,14); c.fill();
+  c.fillStyle='#cbd5e1'; G.boite(c,80,138,240,14,6); c.fill();
+  c.fillStyle='#0f172a'; G.boite(c,220,162,104,28,6); c.fill(); c.font=`900 18px ui-monospace,monospace`; c.fillStyle='#4ade80'; c.textAlign='right'; c.fillText(aff.toFixed(1).replace('.',',')+' g',316,183);
+  plaqueMat(190,98,m);
+  // calcul
+  G.texte(c,'24 cm³',450,92,'#1e3a5f',26); G.texte(c,'volume',450,116,'#64748b',13);
+  G.texte(c,'×',530,94,'#64748b',26);
+  G.texte(c,String(m[1]).replace('.',',')+' g/cm³',630,92,m[3],26); G.texte(c,'masse volumique · '+m[0],630,116,'#64748b',13);
+  G.pastille(c,'= '+masse.toFixed(1).replace('.',',')+' g',590,170,'#b45309',20);
+ }
+ function anim(){ const cible=24*M[cur][1]; aff+= (cible-aff)*.12; if(Math.abs(cible-aff)<.05) aff=cible; dessiner(); if(aff!==cible) raf=requestAnimationFrame(anim); else raf=null; }
+ M.forEach((m,i)=>{ const b=document.createElement('button'); b.className='navbtn'; b.textContent=m[0]; b.addEventListener('click',()=>{ cur=i; [...z.children].forEach((x,k)=>x.style.opacity=k===i?'1':'.55'); if(!raf) anim(); }); z.appendChild(b); });
+ [...z.children].forEach((x,k)=>x.style.opacity=k===0?'1':'.55'); aff=24*M[0][1]; dessiner(); document.fonts&&document.fonts.ready&&document.fonts.ready.then(dessiner);
 })();
 
 /* ====== TRACE ÉCRITE ====== */
-(function () {
-  const cv = document.getElementById('cvTrace'), c = cv.getContext('2d');
-  const B = [['PLAN', 'où dessiner'], ['ESQUISSE COTÉE', 'contour fermé en mm'], ['BOSSAGE / ENLÈVEMENT', '+ ou − matière'], ['VÉRIFIER', 'dimensions, masse']], A = TEAL, F = '#155e75';
-  c.fillStyle = '#fff'; c.fillRect(0, 0, 860, 200);
-  txt(c, 'CONSTRUIRE UNE PIÈCE EN CAO', 430, 28, F, 14.5);
-  const n = B.length, m = 24, e = 26, w = Math.floor((860 - 2 * m - (n - 1) * e) / n);
-  B.forEach((b, i) => {
-    const x = m + i * (w + e);
-    c.fillStyle = '#fff'; c.strokeStyle = A; c.lineWidth = 2.4; c.beginPath(); c.roundRect(x, 58, w, 68, 12); c.fill(); c.stroke();
-    txt(c, b[0], x + w / 2, 88, F, 13); txt(c, b[1], x + w / 2, 108, '#5b544a', 11.5);
-    if (i < n - 1) fleche(c, x + w + 3, 92, x + w + e - 2, 92, A, 3, 9);
-  });
-  txt(c, 'une maquette numérique se vérifie avant de fabriquer l’objet réel', 430, 168, '#5b544a', 13.5);
+(function(){
+ const cv=document.getElementById('cvTrace'); const W=860,H=200,dpr=2.5; cv.width=W*dpr; cv.height=H*dpr; const c=cv.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0);
+ const B=[['PLAN','où dessiner'],['ESQUISSE COTÉE','contour fermé en mm'],['BOSSAGE / ENLÈVEMENT','+ ou − matière'],['VÉRIFIER','dimensions, masse']], A='#0e7490', F='#155e75';
+ const dessin=()=>{ c.clearRect(0,0,W,H); c.fillStyle='#fff'; c.fillRect(0,0,W,H);
+  G.texte(c,'CONSTRUIRE UNE PIÈCE EN CAO',430,28,F,14.5);
+  const n=B.length, m=24, e=26, w=Math.floor((W-2*m-(n-1)*e)/n);
+  B.forEach((b,i)=>{ const x=m+i*(w+e);
+   c.save(); c.shadowColor='rgba(14,116,144,.18)'; c.shadowBlur=10; c.shadowOffsetY=3; const g=c.createLinearGradient(0,58,0,126); g.addColorStop(0,'#f0fdfa'); g.addColorStop(1,'#ccfbf1'); c.fillStyle=g; G.boite(c,x,58,w,68,14); c.fill(); c.restore();
+   c.strokeStyle=A; c.lineWidth=2; G.boite(c,x,58,w,68,14); c.stroke();
+   G.texte(c,b[0],x+w/2,88,F,13); G.texte(c,b[1],x+w/2,108,'#4b6b70',11.5);
+   if(i<n-1) G.fleche(c,x+w+3,92,x+w+e-2,92,A,4); });
+  G.texte(c,'une maquette numérique se vérifie avant de fabriquer l’objet réel',430,168,'#475569',13.5); };
+ dessin(); document.fonts&&document.fonts.ready&&document.fonts.ready.then(dessin);
 })();
 
 /* ---------- Boutons + auto + menu + clavier ---------- */
