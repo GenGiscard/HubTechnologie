@@ -230,7 +230,7 @@ a{{color:inherit}}
 .search{{display:flex;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:6px 6px 6px 14px;box-shadow:0 8px 24px #0b3b6624;max-width:520px}}
 .search input{{flex:1;border:0;outline:0;font:inherit;font-size:16px;color:var(--ink);min-height:40px;background:transparent}}
 .search kbd{{font:inherit;font-size:12px;color:var(--gris);border:1px solid var(--ligne);border-radius:6px;padding:2px 6px}}
-.heroimg{{border-radius:28px;aspect-ratio:4/3;object-fit:cover}}
+.heroimg{{aspect-ratio:4/3;object-fit:cover;filter:none;-webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 55%,transparent 100%);mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 55%,transparent 100%)}}
 .illu{{width:100%;height:auto;display:block;filter:drop-shadow(0 18px 30px #0b3b6630)}}
 .spin{{animation:spin 18s linear infinite}}.spin.rev{{animation-direction:reverse;animation-duration:12s}}.float{{animation:fl 5s ease-in-out infinite}}.float2{{animation:fl 6s ease-in-out infinite reverse}}
 @keyframes spin{{to{{transform:rotate(360deg)}}}}@keyframes fl{{50%{{transform:translateY(-8px)}}}}
