@@ -63,6 +63,81 @@ table.mat tr:nth-child(even) td{background:#f8fafc}
 .kbd{font-size:12px;background:#e2e8f0;border-radius:5px;padding:2px 7px;font-family:monospace}
 @media (max-width:900px){nav.side{display:none}main{margin-left:0}section.slide{padding:36px 22px}h1{font-size:36px}h2{font-size:27px}}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style id="theme-moderne">/* THEME-MODERNE */
+:root{--c:#16a34a;--cf:#15803d;--ct:color-mix(in srgb,var(--c) 10%,#fff);--ink:#1b2f4b;--gris:#5b6b80;--ligne:#e3e9f2;--ombre-c:0 14px 34px -16px color-mix(in srgb,var(--c) 45%,transparent),0 2px 6px rgba(15,23,42,.05)}
+body{font-family:Nunito,'Segoe UI',system-ui,sans-serif;color:var(--ink);background:radial-gradient(900px 600px at 100% 0%,color-mix(in srgb,var(--c) 13%,transparent),transparent 70%),radial-gradient(800px 700px at 0% 100%,color-mix(in srgb,var(--c) 9%,transparent),transparent 70%),#f4f7fb;background-attachment:fixed}
+.estic-bar{background:rgba(255,255,255,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--ligne);box-shadow:none;padding:10px 22px}
+.estic-bar .id b{color:var(--ink);font-size:15px}.estic-bar .id span{font-size:12.5px}
+.estic-bar .copy{font-size:12px}
+nav.side{top:76px;left:14px;bottom:14px;width:236px;background:rgba(255,255,255,.75);backdrop-filter:blur(14px);border:1px solid #fff;border-radius:22px;box-shadow:var(--ombre-c);padding:14px 10px}
+nav.side a{font-size:14px;font-weight:800;color:var(--gris);border-radius:12px;padding:10px 12px}
+nav.side a .dot{width:8px;height:8px;background:#cbd5e1}
+nav.side a:hover{background:var(--ct);color:var(--cf)}
+nav.side a.actif{background:linear-gradient(135deg,var(--c),var(--cf));color:#fff;box-shadow:0 8px 18px -10px var(--c)}
+nav.side a.actif .dot{background:#fff;transform:none}
+nav.side .aide{background:var(--ct);border-radius:12px;font-size:12px}
+main{margin-left:264px}
+section.slide,#sObj:not(div),#sTrace{padding:56px clamp(22px,4vw,64px);border-bottom:0;max-width:1120px}
+#sObj:not(div),#sTrace{min-height:auto}
+.eyebrow{display:inline-block;align-self:flex-start;letter-spacing:0;text-transform:none;font-size:14px;font-weight:900;color:var(--cf);background:var(--ct);border-radius:999px;padding:6px 14px;margin-bottom:14px}
+h1{font-size:clamp(38px,4.6vw,58px);line-height:1.04;color:var(--ink);font-weight:900;text-wrap:balance}
+h2{font-size:clamp(28px,3vw,38px);line-height:1.1;color:var(--ink);font-weight:900;margin-bottom:22px;text-wrap:balance}
+h2::after{content:"";display:block;width:56px;height:6px;border-radius:99px;background:linear-gradient(90deg,var(--c),color-mix(in srgb,var(--c) 40%,#fff));margin-top:12px}
+.sous{font-size:18.5px;color:#3b4d66;line-height:1.55}
+.sous b,.retenir b,.carte p b{color:var(--cf)}
+.intro{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:28px;align-items:center}
+.intro-txt{display:flex;flex-direction:column}
+.intro-img{width:100%;border-radius:28px;box-shadow:var(--ombre-c);aspect-ratio:16/10;object-fit:cover}
+.cartes{gap:20px}
+.carte{border-top:0;border-radius:22px;background:rgba(255,255,255,.85);border:1px solid #fff;box-shadow:0 14px 30px -18px color-mix(in srgb,var(--accent,var(--c)) 55%,transparent),0 2px 6px rgba(15,23,42,.05);padding:22px;transition:transform .2s}
+.carte:hover{transform:translateY(-3px)}
+.carte .ic{width:66px;height:66px;border-radius:20px;display:flex;align-items:center;justify-content:center;color:var(--accent,var(--c));background:color-mix(in srgb,var(--accent,var(--c)) 13%,#fff);font-size:20px;font-weight:900;margin-bottom:6px}
+.carte .ic:empty{display:none}.carte .ic svg{width:46px;height:46px}
+.carte h3{font-size:19px;font-weight:900;color:var(--ink)}
+.carte p{font-size:15px}
+.carte .ex{font-size:13px;font-weight:800;background:color-mix(in srgb,var(--accent,var(--c)) 10%,#fff);color:color-mix(in srgb,var(--accent,var(--c)) 75%,#0f172a);border-radius:10px;padding:4px 12px}
+.animbox,.encart,.formule,.retenir,table.mat{border-radius:24px;background:rgba(255,255,255,.88);border:1px solid #fff;box-shadow:var(--ombre-c)}
+.animbox{padding:20px}
+.animbox canvas{border-radius:16px;border:1px solid var(--ligne)}
+.legende .caption{font-size:17px;font-weight:800;color:var(--ink);background:var(--ct);border-left:0;border-radius:14px;padding:12px 16px}
+.navbtn,.legende button{border-radius:999px;background:linear-gradient(135deg,var(--c),var(--cf));font-weight:900;min-height:44px;padding:0 22px;box-shadow:0 8px 18px -10px var(--c)}
+.navbtn:hover:not(:disabled),.legende button:hover{filter:brightness(1.08);background:linear-gradient(135deg,var(--c),var(--cf))}
+.navbtn:disabled{box-shadow:none}
+.rejbtn{border-radius:999px;border:1.5px solid var(--ligne);color:var(--ink);min-height:44px;font-weight:800}
+.rejbtn:hover{border-color:var(--c);background:#fff}
+.phasepts span{height:8px;border-radius:99px}.phasepts span.on{background:var(--c)}
+.formule{border-left:0}.formule .f{color:var(--cf)}
+table.mat{overflow:hidden}
+table.mat th{background:linear-gradient(135deg,var(--c),var(--cf));font-weight:900}
+table.mat td{font-size:15px;border-bottom:1px solid var(--ligne)}
+table.mat tr:nth-child(even) td{background:color-mix(in srgb,var(--c) 4%,#fff)}
+.plus,.moins{display:inline-block;border-radius:999px;padding:1px 10px;font-weight:800}
+.plus{background:#dcfce7;color:#166534}.moins{background:#fee2e2;color:#991b1b}
+.encart{padding:22px}.encart h3{color:var(--ink);font-weight:900}
+.retenir{border-left:0;padding:26px 28px}
+.retenir ul{list-style:none}
+.retenir li{position:relative;margin:12px 0;padding-left:38px;font-size:17.5px}
+.retenir li::before{content:"";position:absolute;left:0;top:2px;width:26px;height:26px;border-radius:50%;background:var(--c) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.obj-bloc{background:rgba(255,255,255,.88);border:1px solid #fff;border-radius:22px;box-shadow:var(--ombre-c);padding:20px 24px;margin:0 0 14px;max-width:900px}
+div#sObj.obj-bloc{margin-top:28px}
+.obj-t{font-size:13px;font-weight:900;color:var(--cf);background:var(--ct);display:inline-block;border-radius:999px;padding:4px 12px;margin:4px 0 10px}
+.obj-bloc ul{margin:0 0 10px 22px;line-height:1.75;font-size:15.5px}
+.obj-bloc li::marker{color:var(--c)}
+.obj-bloc table{width:100%;border-collapse:collapse;font-size:14.5px;line-height:1.55}
+.obj-bloc td{padding:8px 10px;border-bottom:1px solid var(--ligne);vertical-align:top}
+.obj-bloc tr:last-child td{border-bottom:0}
+.obj-code{white-space:nowrap;font-weight:900;color:var(--cf)}
+.obj-rep{margin-top:10px;font-size:14px;color:var(--gris)}
+#sTrace{position:relative}
+#sTrace .tr-consigne{font-size:15px;color:var(--gris);font-weight:700;margin-bottom:12px}
+#sTrace .tr-schema{width:100%;display:block;border-radius:18px;background:#fff;border:1px solid var(--ligne);box-shadow:var(--ombre-c)}
+#sTrace .tr-liste{margin-top:16px;background:#fff;border-radius:20px;box-shadow:var(--ombre-c);padding:16px 22px 16px 44px;line-height:2;font-size:16px;background-image:repeating-linear-gradient(transparent 0 31px,#e8eef7 31px 32px);background-position:0 14px}
+.kbd{border-radius:6px;background:#fff;border:1px solid var(--ligne)}
+button:focus-visible,a:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+@media (max-width:900px){main{margin-left:0}.intro{grid-template-columns:1fr}.intro-img{max-width:520px}section.slide,#sObj:not(div),#sTrace{padding:36px 20px}}
+@media (prefers-reduced-motion:reduce){.carte{transition:none}}
+</style>
 </head>
 <body>
 <!-- Logo ESTIC Don Bosco (officiel) -->
@@ -90,22 +165,22 @@ table.mat tr:nth-child(even) td{background:#f8fafc}
 <main>
 
 <section class="slide" id="s1">
- <div class="eyebrow">Technologie · 5ème · Séquence Les Énergies</div>
+ <div class="intro"><div class="intro-txt"><div class="eyebrow">Technologie · 5ème · Séquence Les Énergies</div>
  <h1>Rien ne marche<br>sans énergie</h1>
  <p class="sous" style="margin-top:16px">Ton réveil, le bus, la lumière de la classe, ce cours projeté au tableau : tout consomme de l'énergie,
  en permanence. Mais un pays ne se branche pas sur une prise magique — <b>quelqu'un doit produire chaque watt</b>. La question de ce chapitre :
- d'où vient l'énergie, et comment choisir ses sources ?</p>
+ d'où vient l'énergie, et comment choisir ses sources ?</p></div><img class="intro-img" src="img/portail/les-energies-5e.webp" alt=""></div>
 </section>
 <section id="sObj">
  <h2>Objectifs et compétences travaillées</h2>
- <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:14px;padding:14px 18px;margin-bottom:12px">
-  <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:6px">OBJECTIFS D’APPRENTISSAGE</div>
-  <ul style="margin-left:20px;line-height:1.8;font-size:15px"><li>Distinguer les sources d’énergie renouvelables et non renouvelables.</li><li>Identifier les conversions d’énergie mises en jeu dans une centrale ou un objet technique.</li><li>Repérer les pertes d’énergie et donner du sens à la notion de rendement.</li><li>Comparer deux solutions techniques du point de vue énergétique et environnemental.</li></ul>
+ <div class="obj-bloc">
+  <div class="obj-t">OBJECTIFS D’APPRENTISSAGE</div>
+  <ul><li>Distinguer les sources d’énergie renouvelables et non renouvelables.</li><li>Identifier les conversions d’énergie mises en jeu dans une centrale ou un objet technique.</li><li>Repérer les pertes d’énergie et donner du sens à la notion de rendement.</li><li>Comparer deux solutions techniques du point de vue énergétique et environnemental.</li></ul>
  </div>
- <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:14px;padding:14px 18px">
-  <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:6px">COMPÉTENCES DU PROGRAMME (BO n° 9 du 29 février 2024)</div>
-  <table style="width:100%;border-collapse:collapse;font-size:14.5px;line-height:1.6"><tr><td style="white-space:nowrap;font-weight:800;color:#15803d">T2 · C4</td><td>Décrire et caractériser l’organisation interne d’un objet ou d’un système technique et ses échanges avec son environnement (énergies, données)</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#15803d">T1 · C3</td><td>Caractériser et choisir un objet ou un système technique selon différents critères</td></tr><tr><td style="white-space:nowrap;font-weight:800;color:#15803d">T1 · C1</td><td>Décrire les liens entre usages et évolutions technologiques des objets et des systèmes techniques</td></tr></table>
-  <div style="margin-top:10px;font-size:14px;color:#475569"><b>Repère de progressivité :</b> 5e — Indiquer la nature des énergies en entrée et en sortie d’un objet technique ; repérer les formes et les conversions d’énergie.</div>
+ <div class="obj-bloc">
+  <div class="obj-t">COMPÉTENCES DU PROGRAMME (BO n° 9 du 29 février 2024)</div>
+  <table><tr><td class="obj-code">T2 · C4</td><td>Décrire et caractériser l’organisation interne d’un objet ou d’un système technique et ses échanges avec son environnement (énergies, données)</td></tr><tr><td class="obj-code">T1 · C3</td><td>Caractériser et choisir un objet ou un système technique selon différents critères</td></tr><tr><td class="obj-code">T1 · C1</td><td>Décrire les liens entre usages et évolutions technologiques des objets et des systèmes techniques</td></tr></table>
+  <div class="obj-rep"><b>Repère de progressivité :</b> 5e — Indiquer la nature des énergies en entrée et en sortie d’un objet technique ; repérer les formes et les conversions d’énergie.</div>
  </div>
 </section>
 
@@ -114,11 +189,11 @@ table.mat tr:nth-child(even) td{background:#f8fafc}
  <h2>Les formes d'énergie</h2>
  <p class="sous">L'énergie change de forme, mais ne disparaît jamais : elle se <b>convertit</b>.</p>
  <div class="cartes">
- <div class="carte" style="--accent:#1d4ed8"><div class="ic"></div><h3>Mécanique</h3><p>Un objet qui bouge ou qui est en hauteur.</p><span class="ex">eau du barrage, vent, roue</span></div>
- <div class="carte" style="--accent:#d97706"><div class="ic"></div><h3>Électrique</h3><p>Facile à transporter par câbles… mais difficile à stocker !</p><span class="ex">prises, batteries</span></div>
- <div class="carte" style="--accent:#dc2626"><div class="ic"></div><h3>Thermique</h3><p>La chaleur.</p><span class="ex">radiateur, moteur qui chauffe</span></div>
- <div class="carte" style="--accent:#16a34a"><div class="ic"></div><h3>Chimique</h3><p>Stockée dans la matière, libérée en brûlant ou en réagissant.</p><span class="ex">essence, pile, aliments</span></div>
- <div class="carte" style="--accent:#7c3aed"><div class="ic"></div><h3>Lumineuse</h3><p>Transportée par la lumière.</p><span class="ex">Soleil, ampoule</span></div>
+ <div class="carte" style="--accent:#1d4ed8"><div class="ic"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="17" cy="28" r="8"/><path d="M28 28L37.0 28.0"/><path d="M44 28L37.0 32.2L37.0 23.8Z" fill="currentColor" stroke-width="1.5"/><path d="M6 40h36"/></svg></div><h3>Mécanique</h3><p>Un objet qui bouge ou qui est en hauteur.</p><span class="ex">eau du barrage, vent, roue</span></div>
+ <div class="carte" style="--accent:#d97706"><div class="ic"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M27 4L11 27h11l-3 17 17-24H25z"/></svg></div><h3>Électrique</h3><p>Facile à transporter par câbles… mais difficile à stocker !</p><span class="ex">prises, batteries</span></div>
+ <div class="carte" style="--accent:#dc2626"><div class="ic"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 5c7 8 12 13 12 21a12 12 0 0 1-24 0c0-5 3-9 6-12 0 5 2 8 5 9-2-7 1-13 1-18z"/></svg></div><h3>Thermique</h3><p>La chaleur.</p><span class="ex">radiateur, moteur qui chauffe</span></div>
+ <div class="carte" style="--accent:#16a34a"><div class="ic"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5h10M21 5v13L10 38a3 3 0 0 0 3 5h22a3 3 0 0 0 3-5L27 18V5M14 31h20"/></svg></div><h3>Chimique</h3><p>Stockée dans la matière, libérée en brûlant ou en réagissant.</p><span class="ex">essence, pile, aliments</span></div>
+ <div class="carte" style="--accent:#7c3aed"><div class="ic"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="24" r="8"/><path d="M24 4v6M24 38v6M4 24h6M38 24h6M10 10l4 4M34 34l4 4M10 38l4-4M34 14l4-4"/></svg></div><h3>Lumineuse</h3><p>Transportée par la lumière.</p><span class="ex">Soleil, ampoule</span></div>
  </div>
 </section>
 
@@ -180,24 +255,24 @@ table.mat tr:nth-child(even) td{background:#f8fafc}
 <section class="slide" id="s7">
  <h2>Le casse-tête de l'ingénieur : le mix énergétique</h2>
  <p class="sous">Aucune source n'est parfaite. Un pays combine donc plusieurs sources — son <b>mix énergétique</b> —
- pour produire <b>exactement</b>ce qui est consommé, à chaque seconde, même la nuit sans vent.</p>
+ pour produire <b>exactement</b> ce qui est consommé, à chaque seconde, même la nuit sans vent.</p>
  <div class="cartes" style="max-width:880px">
- <div class="carte" style="--accent:#16a34a"><div class="ic"></div><h3>Objectif climat</h3><p>Le maximum de renouvelable pour limiter le CO₂.</p></div>
- <div class="carte" style="--accent:#1d4ed8"><div class="ic"></div><h3>Objectif fiabilité</h3><p>Des sources <b>pilotables</b> (barrages, centrales) pour compenser les creux du soleil et du vent.</p></div>
- <div class="carte" style="--accent:#ea580c"><div class="ic"></div><h3>Objectif coût</h3><p>Produire au meilleur prix… sans hypothéquer l'avenir.</p></div>
+ <div class="carte" style="--accent:#16a34a"><div class="ic"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 38C10 20 21 9 40 8c0 19-10 30-30 30zM10 38l15-15"/></svg></div><h3>Objectif climat</h3><p>Le maximum de renouvelable pour limiter le CO₂.</p></div>
+ <div class="carte" style="--accent:#1d4ed8"><div class="ic"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 5l15 6v11c0 10-7 17-15 20-8-3-15-10-15-20V11z"/><path d="M17 24l5 5 9-10"/></svg></div><h3>Objectif fiabilité</h3><p>Des sources <b>pilotables</b> (barrages, centrales) pour compenser les creux du soleil et du vent.</p></div>
+ <div class="carte" style="--accent:#ea580c"><div class="ic"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="24" cy="13" rx="13" ry="5"/><path d="M11 13v8c0 3 6 5 13 5s13-2 13-5v-8M11 21v8c0 3 6 5 13 5s13-2 13-5v-8M11 29v6c0 3 6 5 13 5s13-2 13-5v-6"/></svg></div><h3>Objectif coût</h3><p>Produire au meilleur prix… sans hypothéquer l'avenir.</p></div>
  </div>
  <p class="sous" style="margin-top:20px">C'est exactement le métier que tu vas exercer au <b>TP « Alimente ta ville »</b> !</p>
 </section>
 
 <section class="slide" id="s8">
- <h2>✓ À retenir</h2>
+ <h2>À retenir</h2>
  <div class="retenir">
  <ul>
- <li>L'énergie existe sous plusieurs <b>formes</b> (mécanique, électrique, thermique, chimique, lumineuse) et se <b>convertit</b>de l'une à l'autre.</li>
+ <li>L'énergie existe sous plusieurs <b>formes</b> (mécanique, électrique, thermique, chimique, lumineuse) et se <b>convertit</b> de l'une à l'autre.</li>
  <li>Un barrage convertit : eau en hauteur (<b>mécanique</b>) → turbine → alternateur → <b>électricité</b>.</li>
  <li>Source <b>renouvelable</b> = un FLUX qui revient (soleil, vent, eau). Source <b>non renouvelable</b> = un STOCK qui s'épuise (pétrole, gaz, charbon, uranium).</li>
  <li>Le soleil et le vent sont <b>intermittents</b> : leur production varie et peut tomber à zéro.</li>
- <li>Le <b>mix énergétique</b>combine plusieurs sources pour couvrir la demande à chaque instant, en limitant le CO₂.</li>
+ <li>Le <b>mix énergétique</b> combine plusieurs sources pour couvrir la demande à chaque instant, en limitant le CO₂.</li>
  </ul>
  </div>
 </section>
@@ -205,9 +280,9 @@ table.mat tr:nth-child(even) td{background:#f8fafc}
 
 <section id="sTrace">
  <h2>Trace écrite</h2>
- <p style="font-size:15px;color:#64748b;margin-bottom:8px">À recopier sur le cahier, schéma compris.</p>
- <canvas id="trace_ene" width="860" height="230" style="width:100%;display:block;border-radius:12px;background:#fff;border:1px solid #cbd5e1"></canvas>
- <ul style="margin-left:20px;line-height:1.95;font-size:15.5px;margin-top:12px"><li>Une <b>source</b> d’énergie est renouvelable si elle se reconstitue à l’échelle humaine : soleil, vent, eau, biomasse.</li><li>Une <b>chaîne d’énergie</b> se lit toujours ainsi : <b>alimenter ou stocker → distribuer → convertir → transmettre</b>.</li><li>Un <b>convertisseur</b> change la forme de l’énergie sans jamais la créer ni la détruire.</li><li>Une partie de l’énergie est toujours <b>perdue</b>, le plus souvent en chaleur : c’est ce que mesure le <b>rendement</b>.</li><li>La meilleure énergie reste celle qu’on ne consomme pas : <b>sobriété</b> avant production.</li></ul>
+ <p class="tr-consigne">À recopier sur le cahier, schéma compris.</p>
+ <canvas id="trace_ene" width="860" height="230" class="tr-schema"></canvas>
+ <ul class="tr-liste"><li>Une <b>source</b> d’énergie est renouvelable si elle se reconstitue à l’échelle humaine : soleil, vent, eau, biomasse.</li><li>Une <b>chaîne d’énergie</b> se lit toujours ainsi : <b>alimenter ou stocker → distribuer → convertir → transmettre</b>.</li><li>Un <b>convertisseur</b> change la forme de l’énergie sans jamais la créer ni la détruire.</li><li>Une partie de l’énergie est toujours <b>perdue</b>, le plus souvent en chaleur : c’est ce que mesure le <b>rendement</b>.</li><li>La meilleure énergie reste celle qu’on ne consomme pas : <b>sobriété</b> avant production.</li></ul>
 </section>
 
 
