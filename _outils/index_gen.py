@@ -220,7 +220,7 @@ a{{color:inherit}}
 .bar img{{height:40px}}.bar .id b{{display:block;font-size:15px}}.bar .id span{{font-size:12.5px;color:var(--gris)}}
 .bar .sp{{flex:1}}.bar .prof-l{{font-size:13.5px;font-weight:800;text-decoration:none;color:var(--ink);border:1.5px solid var(--ligne);border-radius:999px;padding:7px 14px}}.bar .prof-l:hover{{border-color:var(--ink)}}
 .hero{{background:linear-gradient(160deg,#5ab0f0 0%,#7cc4f5 45%,#b9e0fb 100%);position:relative;overflow:hidden}}
-.hero::after{{content:"";position:absolute;left:0;right:0;bottom:-1px;height:60px;background:#f3f6fb;clip-path:ellipse(70% 100% at 50% 100%)}}
+.hero{{border-radius:0 0 50% 50% / 0 0 60px 60px}}
 .hero .in{{max-width:1240px;margin:0 auto;padding:40px max(4vw,16px) 70px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:24px;align-items:center;position:relative;z-index:1}}
 .hero .eye{{display:inline-block;background:#ffffffcc;color:#0b3b66;font-weight:800;font-size:13px;border-radius:999px;padding:5px 12px}}
 .hero h1{{font-size:clamp(34px,4.6vw,54px);line-height:1.04;margin:14px 0 12px;color:#0b2a4a;font-weight:900;text-wrap:balance}}
@@ -230,7 +230,7 @@ a{{color:inherit}}
 .search{{display:flex;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:6px 6px 6px 14px;box-shadow:0 8px 24px #0b3b6624;max-width:520px}}
 .search input{{flex:1;border:0;outline:0;font:inherit;font-size:16px;color:var(--ink);min-height:40px;background:transparent}}
 .search kbd{{font:inherit;font-size:12px;color:var(--gris);border:1px solid var(--ligne);border-radius:6px;padding:2px 6px}}
-.heroimg{{aspect-ratio:4/3;object-fit:cover;filter:none;-webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 55%,transparent 100%);mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 55%,transparent 100%)}}
+.illu.heroimg{{aspect-ratio:4/3;object-fit:cover;filter:none;-webkit-mask-image:radial-gradient(ellipse 58% 60% at 50% 52%,#000 38%,rgba(0,0,0,.6) 55%,transparent 72%);mask-image:radial-gradient(ellipse 58% 60% at 50% 52%,#000 38%,rgba(0,0,0,.6) 55%,transparent 72%);transform:scale(1.12)}}
 .illu{{width:100%;height:auto;display:block;filter:drop-shadow(0 18px 30px #0b3b6630)}}
 .spin{{animation:spin 18s linear infinite}}.spin.rev{{animation-direction:reverse;animation-duration:12s}}.float{{animation:fl 5s ease-in-out infinite}}.float2{{animation:fl 6s ease-in-out infinite reverse}}
 @keyframes spin{{to{{transform:rotate(360deg)}}}}@keyframes fl{{50%{{transform:translateY(-8px)}}}}
@@ -353,7 +353,6 @@ a:focus-visible,input:focus-visible{{outline:3px solid #f59e0b;outline-offset:2p
  </div>
  {HERO}
 </div></header>
-<div class="stats"><div><b>{nseq}</b>séquences de la 5e à la 3e</div><div><b>{ntp}</b>TP et activités</div><div><b>{njeux}</b>jeux de révision</div><div><b>{neval}</b>évaluations</div></div>
 <div class="reprise" id="reprise" hidden></div>
 <nav class="niv" aria-label="Niveaux"><div class="in">{nav}</div></nav>
 <main>{body}<div class="vide" id="vide">Aucune séquence ne correspond à ta recherche.</div></main>
