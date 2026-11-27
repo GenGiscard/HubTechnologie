@@ -271,33 +271,31 @@ button:focus-visible,a:focus-visible{outline:3px solid #f59e0b;outline-offset:2p
  </ul>
  </div>
 
- <div id="sTrace" style="margin-top:30px;text-align:left">
-  <div style="font-size:12.5px;font-weight:900;letter-spacing:1px;color:#64748b;margin-bottom:8px">TRACE ÉCRITE — À RECOPIER SUR LE CAHIER</div>
-  <canvas id="cvTrace" width="860" height="200" style="width:100%;max-width:860px;height:auto;display:block;margin:0 auto 14px;background:#fff;border:1px solid #e2e8f0;border-radius:12px"></canvas>
-  <ul style="margin:0 0 0 20px;line-height:1.95;font-size:16px"><li>Deux roues dentées en contact tournent en <b>sens inverse</b> ; une <b>chaîne</b> conserve le sens.</li><li>Rapport de transmission = <b>dents du menant ÷ dents du mené</b>.</li><li>Un grand pignon menant fait tourner le mené <b>plus vite</b>, mais avec <b>moins de force</b>.</li><li>On ne gagne jamais les deux : <b>vitesse et force s’échangent</b>.</li></ul>
+ <div id="sTrace" class="trace-bloc">
+  <h2>Trace écrite</h2><p class="tr-consigne">À recopier sur le cahier, schéma compris.</p>
+  <canvas id="cvTrace" width="860" height="200" class="tr-schema"></canvas>
+  <ul class="tr-liste"><li>Deux roues dentées en contact tournent en <b>sens inverse</b> ; une <b>chaîne</b> conserve le sens.</li><li>Rapport de transmission = <b>dents du menant ÷ dents du mené</b>.</li><li>Un grand pignon menant fait tourner le mené <b>plus vite</b>, mais avec <b>moins de force</b>.</li><li>On ne gagne jamais les deux : <b>vitesse et force s’échangent</b>.</li></ul>
  </div>
 <script>
-(function(){
-  var cv=document.getElementById("cvTrace"); if(!cv) return;
-  var c=cv.getContext("2d");
-  function T(s,x,y,t,co){c.font="bold "+(t||13)+"px Segoe UI";c.fillStyle=co||"#3f3a34";c.textAlign="center";c.fillText(s,x,y);}
-  var B=[["MOTEUR", "il entraîne"], ["PIGNON MENANT", "il commande"], ["PIGNON MENÉ", "il subit"], ["RÉCEPTEUR", "il agit"]], A="#0e7490", F="#155e75";
-  c.fillStyle="#fff"; c.fillRect(0,0,860,200);
-  T("TRANSMETTRE LE MOUVEMENT",430,28,14.5,F);
-  var n=B.length, m=24, e=18, w=Math.floor((860-2*m-(n-1)*e)/n);
-  B.forEach(function(b,i){
-    var x=m+i*(w+e);
-    c.fillStyle="#fff"; c.strokeStyle=A; c.lineWidth=2.4;
-    c.beginPath(); c.roundRect(x,58,w,68,12); c.fill(); c.stroke();
-    T(b[0],x+w/2,88,13,F); T(b[1],x+w/2,108,11.5,"#5b544a");
-    if(i<n-1){
-      c.strokeStyle=A; c.fillStyle=A; c.lineWidth=3; c.lineCap="butt";
-      c.beginPath(); c.moveTo(x+w+2,92); c.lineTo(x+w+e-9,92); c.stroke();
-      c.beginPath(); c.moveTo(x+w+e,92); c.lineTo(x+w+e-9,86); c.lineTo(x+w+e-9,98); c.closePath(); c.fill();
-    }
-  });
-  T("gagner en vitesse, c’est perdre en force — et réciproquement",430,168,13.5,"#5b544a");
-})();
+/* ═══ schéma de la trace écrite — transmissions ═══ */
+window.addEventListener('DOMContentLoaded',function(){
+  const cv=document.getElementById("cvTrace"); if(!cv) return;
+  const W=860,H=200,dpr=2.5; cv.width=W*dpr; cv.height=H*dpr; const c=cv.getContext("2d"); c.setTransform(dpr,0,0,dpr,0,0);
+  const T=(s,x,y,t,co)=>{c.font=`800 ${t||13}px ${POLICE}`;c.fillStyle=co||"#334155";c.textAlign="center";c.fillText(s,x,y);};
+  const B=[["MOTEUR","il entraîne"],["PIGNON MENANT","il commande"],["PIGNON MENÉ","il subit"],["RÉCEPTEUR","il agit"]], A="#7c3aed", F="#5b21b6";
+  const dessin=()=>{ c.clearRect(0,0,W,H); c.fillStyle="#fff"; c.fillRect(0,0,W,H);
+   T("TRANSMETTRE LE MOUVEMENT",430,28,14.5,F);
+   const n=B.length, m=24, e=26, w=Math.floor((W-2*m-(n-1)*e)/n);
+   B.forEach((b,i)=>{ const x=m+i*(w+e);
+    c.save(); c.shadowColor='rgba(124,58,237,.18)'; c.shadowBlur=10; c.shadowOffsetY=3; const g=c.createLinearGradient(0,56,0,126); g.addColorStop(0,'#faf5ff'); g.addColorStop(1,'#ede9fe'); c.fillStyle=g; G.boite(c,x,56,w,70,14); c.fill(); c.restore();
+    c.strokeStyle=A; c.lineWidth=2; G.boite(c,x,56,w,70,14); c.stroke();
+    T(b[0],x+w/2,87,13,F); T(b[1],x+w/2,107,12,"#6b5b8a");
+    if(i<n-1) G.fleche(c,x+w+3,91,x+w+e-2,91,A,4);
+   });
+   T("gagner en vitesse, c’est perdre en force — et réciproquement",430,166,13.5,"#475569");
+  };
+  dessin(); document.fonts&&document.fonts.ready&&document.fonts.ready.then(dessin);
+});
 </script>
 </section>
 
@@ -305,171 +303,253 @@ button:focus-visible,a:focus-visible{outline:3px solid #f59e0b;outline-offset:2p
 </div>
 
 <script>
-/* ====== Moteur d'animations pédagogiques en phases ====== */
+/* ============================================================
+ MOTEUR D'ANIMATIONS PÉDAGOGIQUES EN PHASES (version illustrée)
+ Chaque animation = phases successives {dur, caption, draw(ctx,p,W,H,t)}
+ p : avancement de la phase (0 → 1), t : temps en secondes (décor vivant)
+ Rendu net sur écran haute définition, décor animé tant que la diapositive est visible.
+ ============================================================ */
 const ANIMS={};
 function creerAnim(nom,canvasId,capId,ptsId,phases){
  const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+ const W=+cv.getAttribute('width'),H=+cv.getAttribute('height'),dpr=Math.min(2,window.devicePixelRatio||1)*1.25;
+ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
  const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
  phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
- const etat={i:0,t0:null,raf:null};
+ const etat={i:0,t0:null,raf:null,vis:false,debut:performance.now()};
  function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
  function majBtns(){
- const bp=document.querySelector('button[data-prev="'+nom+'"]');
- const bn=document.querySelector('button[data-next="'+nom+'"]');
- if(bp) bp.disabled=(etat.i===0);
- if(bn) bn.disabled=(etat.i===phases.length-1);
+  const bp=document.querySelector('button[data-prev="'+nom+'"]'),bn=document.querySelector('button[data-next="'+nom+'"]');
+  if(bp) bp.disabled=(etat.i===0); if(bn) bn.disabled=(etat.i===phases.length-1);
+ }
+ function peindre(p,ts){
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+  phases[etat.i].draw(ctx,p,W,H,(ts-etat.debut)/1000);
+ }
+ function boucle(ts){
+  if(etat.t0===null) etat.t0=ts;
+  const p=Math.min(1,(ts-etat.t0)/phases[etat.i].dur);
+  peindre(p,ts);
+  if(p<1||etat.vis) etat.raf=requestAnimationFrame(boucle); else etat.raf=null;
  }
  function jouer(){
- cancelAnimationFrame(etat.raf); etat.t0=null;
- cap.textContent=phases[etat.i].caption; majPts(); majBtns();
- etat.raf=requestAnimationFrame(function frame(ts){
- if(etat.t0===null)etat.t0=ts;
- const p=Math.min(1,(ts-etat.t0)/phases[etat.i].dur);
- ctx.clearRect(0,0,cv.width,cv.height);
- phases[etat.i].draw(ctx,p,cv.width,cv.height);
- if(p<1) etat.raf=requestAnimationFrame(frame);
- });
+  cancelAnimationFrame(etat.raf); etat.t0=null;
+  cap.textContent=phases[etat.i].caption; majPts(); majBtns();
+  etat.raf=requestAnimationFrame(boucle);
  }
+ if('IntersectionObserver' in window) new IntersectionObserver(es=>es.forEach(e=>{
+  etat.vis=e.isIntersecting; if(etat.vis&&etat.raf===null&&etat.t0!==null){etat.t0=performance.now()-phases[etat.i].dur; etat.raf=requestAnimationFrame(boucle);} })).observe(cv);
  ANIMS[nom]={
- demarrer(){ etat.i=0; jouer(); },
- rejouer(){ jouer(); },
- suivant(){ if(etat.i<phases.length-1){ etat.i++; jouer(); } },
- precedent(){ if(etat.i>0){ etat.i--; jouer(); } }
+  demarrer(){ etat.i=0; jouer(); }, rejouer(){ jouer(); },
+  suivant(){ if(etat.i<phases.length-1){ etat.i++; jouer(); } },
+  precedent(){ if(etat.i>0){ etat.i--; jouer(); } }
  };
  cap.textContent=phases[0].caption; majPts(); majBtns();
- phases[0].draw(ctx,0,cv.width,cv.height);
+ const go=()=>peindre(0,performance.now());
+ document.fonts&&document.fonts.ready? document.fonts.ready.then(go):go(); go();
 }
-const lisse=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
-function etiquette(ctx,txt,x,y,coul='#6d28d9',taille=16){
- ctx.font=`bold ${taille}px Segoe UI, sans-serif`;ctx.fillStyle=coul;ctx.textAlign='center';ctx.fillText(txt,x,y);
-}
-function flecheArc(ctx,x,y,r,horaire,coul){
- /* Pointe placée AU point d'arrivée, trait raccourci d'autant, base perpendiculaire
-    à la TANGENTE. L'ancienne version orientait la pointe sur le rayon : elle
-    regardait vers le centre au lieu de prolonger la courbe. */
- const L=14, W=12;
- ctx.strokeStyle=coul; ctx.fillStyle=coul; ctx.lineWidth=4; ctx.lineCap='butt';
- const a0=horaire? -1.2 : Math.PI+1.2, a1=horaire? 0.5 : Math.PI-0.5;
- const dir=horaire?1:-1;
- ctx.beginPath(); ctx.arc(x,y,r,a0,a1-dir*(L/r),!horaire); ctx.stroke();
- const fx=x+r*Math.cos(a1), fy=y+r*Math.sin(a1);
- const tx=-Math.sin(a1)*dir, ty=Math.cos(a1)*dir;
- const nx=-ty, ny=tx, bx=fx-tx*L, by=fy-ty*L;
- ctx.beginPath(); ctx.moveTo(fx,fy);
- ctx.lineTo(bx+nx*W/2,by+ny*W/2); ctx.lineTo(bx-nx*W/2,by-ny*W/2);
- ctx.closePath(); ctx.fill();
-}
-/* roue dentée : rayon ∝ nombre de dents, marqueur rouge pour suivre la rotation */
-function roueDentee(ctx,x,y,dents,ang,coul){
- const r=dents*3.4;
- ctx.save(); ctx.translate(x,y); ctx.rotate(ang);
- ctx.fillStyle=coul;
- for(let k=0;k<dents;k++){
- ctx.save(); ctx.rotate(k*Math.PI*2/dents);
- ctx.fillRect(r-3,-4,10,8); ctx.restore();
- }
- ctx.beginPath(); ctx.arc(0,0,r,0,7); ctx.fill();
- ctx.fillStyle='#f8fafc'; ctx.beginPath(); ctx.arc(0,0,7,0,7); ctx.fill();
- ctx.fillStyle='#dc2626'; ctx.beginPath(); ctx.arc(r*0.62,0,6,0,7); ctx.fill();
- ctx.restore();
- return r;
-}
+const lisse = p =>p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+const rebond = p => p<1 ? 1-Math.pow(1-p,3)*Math.cos(p*9)*(1-p) : 1;
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const sous=(p,a,b)=>clamp((p-a)/(b-a));   // avancement entre a et b
+const POLICE='Nunito, Segoe UI, sans-serif';
+
+/* ---------- Bibliothèque de dessin ---------- */
+const G={
+ ciel(c,W,H,haut='#bfe3ff',bas='#f2f9ff'){ const g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,haut); g.addColorStop(1,bas); c.fillStyle=g; c.fillRect(0,0,W,H); },
+ soleil(c,x,y,r=26){ const g=c.createRadialGradient(x,y,0,x,y,r*3); g.addColorStop(0,'rgba(255,236,150,.9)'); g.addColorStop(.35,'rgba(255,236,150,.35)'); g.addColorStop(1,'rgba(255,236,150,0)');
+  c.fillStyle=g; c.beginPath(); c.arc(x,y,r*3,0,7); c.fill(); c.fillStyle='#ffd65a'; c.beginPath(); c.arc(x,y,r,0,7); c.fill(); },
+ nuage(c,x,y,s=1,a=.9){ c.save(); c.globalAlpha=a; c.fillStyle='#fff'; c.beginPath();
+  [[0,0,22],[24,-10,26],[50,0,20],[26,8,22]].forEach(([dx,dy,r])=>{c.moveTo(x+dx*s+r*s,y+dy*s); c.arc(x+dx*s,y+dy*s,r*s,0,7);}); c.fill(); c.restore(); },
+ nuages(c,W,t,y0=40){ [[.1,0,1],[.55,18,.8],[.85,-6,1.1]].forEach(([fx,dy,s],k)=>{ const x=((fx*W+t*(8+k*4))%(W+160))-80; G.nuage(c,x,y0+dy,s,.85); }); },
+ collines(c,W,y,coul1='#cfe8d6',coul2='#b4dcc2'){
+  c.fillStyle=coul1; c.beginPath(); c.moveTo(0,y); for(let x=0;x<=W;x+=20) c.lineTo(x,y-18-14*Math.sin(x/90)-8*Math.sin(x/37)); c.lineTo(W,y); c.closePath(); c.fill();
+  c.fillStyle=coul2; c.beginPath(); c.moveTo(0,y); for(let x=0;x<=W;x+=20) c.lineTo(x,y-6-10*Math.sin(x/70+2)); c.lineTo(W,y); c.closePath(); c.fill(); },
+ sol(c,x0,x1,y,H){ const g=c.createLinearGradient(0,y,0,H); g.addColorStop(0,'#8fcf7a'); g.addColorStop(.12,'#7cbf66'); g.addColorStop(.13,'#a0794f'); g.addColorStop(1,'#7a5a3a');
+  c.fillStyle=g; c.fillRect(x0,y,x1-x0,H-y); },
+ eau(c,x0,x1,y,H,t){ const g=c.createLinearGradient(0,y,0,H); g.addColorStop(0,'#5ab4e8'); g.addColorStop(1,'#2a7fbf'); c.fillStyle=g; c.fillRect(x0,y,x1-x0,H-y);
+  c.strokeStyle='rgba(255,255,255,.55)'; c.lineWidth=2; c.lineCap='round';
+  for(let k=0;k<9;k++){ const yy=y+10+((k*13)%(H-y-12)), xx=x0+((k*97+t*22)%(x1-x0-40)); c.beginPath(); c.moveTo(xx,yy); c.lineTo(xx+18+(k%3)*8,yy); c.stroke(); } },
+ boite(c,x,y,w,h,r=8){ c.beginPath(); c.roundRect(x,y,w,h,r); },
+ // étiquette en pastille
+ pastille(c,txt,x,y,coul,taille=15,fond='#fff'){
+  c.font=`900 ${taille}px ${POLICE}`; const w=c.measureText(txt).width+taille*1.3, h=taille*1.85;
+  c.save(); c.shadowColor='rgba(15,23,42,.18)'; c.shadowBlur=10; c.shadowOffsetY=3;
+  c.fillStyle=fond; G.boite(c,x-w/2,y-h/2,w,h,h/2); c.fill(); c.restore();
+  c.strokeStyle=coul; c.lineWidth=2; G.boite(c,x-w/2,y-h/2,w,h,h/2); c.stroke();
+  c.fillStyle=coul; c.textAlign='center'; c.textBaseline='middle'; c.fillText(txt,x,y+1); c.textBaseline='alphabetic'; },
+ titre(c,txt,x,y,coul='#1b2f4b',taille=22){ c.font=`900 ${taille}px ${POLICE}`; c.fillStyle=coul; c.textAlign='center'; c.fillText(txt,x,y); },
+ texte(c,txt,x,y,coul='#475569',taille=14,al='center'){ c.font=`800 ${taille}px ${POLICE}`; c.fillStyle=coul; c.textAlign=al; c.fillText(txt,x,y); },
+ // flèche épaisse avec liseré blanc : le trait s'arrête à la base de la pointe, la pointe va jusqu'à (x2,y2)
+ fleche(c,x1,y1,x2,y2,coul,ep=6){
+  const a=Math.atan2(y2-y1,x2-x1), L=ep*2.6+6, l=ep*1.7+4, bx=x2-L*Math.cos(a), by=y2-L*Math.sin(a);
+  const tete=()=>{ c.beginPath(); c.moveTo(x2,y2); c.lineTo(bx-l*Math.sin(a),by+l*Math.cos(a)); c.lineTo(bx+l*Math.sin(a),by-l*Math.cos(a)); c.closePath(); };
+  c.lineCap='butt'; c.lineJoin='round';
+  c.strokeStyle='#fff'; c.lineWidth=ep+5; c.beginPath(); c.moveTo(x1,y1); c.lineTo(bx,by); c.stroke(); tete(); c.lineWidth=5; c.stroke();
+  c.strokeStyle=coul; c.lineWidth=ep; c.beginPath(); c.moveTo(x1,y1); c.lineTo(bx+Math.cos(a),by+Math.sin(a)); c.stroke(); c.fillStyle=coul; tete(); c.fill(); },
+ // camion
+ camion(c,x,y,s=1,coul='#f59e0b'){ c.save(); c.translate(x,y); c.scale(s,s);
+  c.fillStyle='rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(0,1,40,4,0,0,7); c.fill();
+  const g=c.createLinearGradient(0,-34,0,-8); g.addColorStop(0,coul); g.addColorStop(1,'#d97706');
+  c.fillStyle=g; G.boite(c,-40,-34,50,26,4); c.fill();
+  c.fillStyle='#1e3a8a'; G.boite(c,12,-28,22,20,5); c.fill(); c.fillStyle='#bfdbfe'; G.boite(c,22,-25,9,9,2); c.fill();
+  c.fillStyle='#334155'; c.fillRect(-40,-10,74,4);
+  [-26,22].forEach(wx=>{ c.fillStyle='#1f2937'; c.beginPath(); c.arc(wx,-4,7.5,0,7); c.fill(); c.fillStyle='#cbd5e1'; c.beginPath(); c.arc(wx,-4,3,0,7); c.fill(); });
+  c.restore(); },
+ // appui en béton avec ombre
+ appui(c,x,y){ c.fillStyle='rgba(0,0,0,.15)'; c.beginPath(); c.ellipse(x,y+38,34,5,0,0,7); c.fill();
+  const g=c.createLinearGradient(x-26,0,x+26,0); g.addColorStop(0,'#cbd5e1'); g.addColorStop(1,'#94a3b8');
+  c.fillStyle=g; c.beginPath(); c.moveTo(x-12,y); c.lineTo(x+12,y); c.lineTo(x+26,y+36); c.lineTo(x-26,y+36); c.closePath(); c.fill();
+  c.fillStyle='#e2e8f0'; c.fillRect(x-14,y-4,28,5); },
+ // caisse en bois
+ caisse(c,x,y,w=70,h=52,coul='#c0843d'){ c.save(); c.translate(x,y);
+  const g=c.createLinearGradient(0,-h,0,0); g.addColorStop(0,'#d9a35e'); g.addColorStop(1,coul); c.fillStyle=g; G.boite(c,-w/2,-h,w,h,5); c.fill();
+  c.strokeStyle='#8a5a24'; c.lineWidth=3; G.boite(c,-w/2,-h,w,h,5); c.stroke();
+  c.beginPath(); c.moveTo(-w/2+6,-h+6); c.lineTo(w/2-6,-6); c.moveTo(w/2-6,-h+6); c.lineTo(-w/2+6,-6); c.stroke();
+  c.fillStyle='#fff'; c.font=`900 13px ${POLICE}`; c.textAlign='center'; c.restore(); },
+ boulon(c,x,y,r=9){ const g=c.createRadialGradient(x-r*.35,y-r*.35,1,x,y,r); g.addColorStop(0,'#f8fafc'); g.addColorStop(1,'#475569');
+  c.fillStyle=g; c.beginPath(); c.arc(x,y,r,0,7); c.fill(); c.strokeStyle='#1e293b'; c.lineWidth=1.5; c.stroke(); },
+ // barre métallique (deux passes + reflet)
+ barre(c,x1,y1,x2,y2,coul='#64748b',ep=14){ c.lineCap='round';
+  c.strokeStyle='rgba(15,23,42,.25)'; c.lineWidth=ep+4; c.beginPath(); c.moveTo(x1,y1+3); c.lineTo(x2,y2+3); c.stroke();
+  c.strokeStyle=coul; c.lineWidth=ep; c.beginPath(); c.moveTo(x1,y1); c.lineTo(x2,y2); c.stroke();
+  c.strokeStyle='rgba(255,255,255,.45)'; c.lineWidth=ep*.25; c.beginPath(); const a=Math.atan2(y2-y1,x2-x1), ox=Math.sin(a)*ep*.22, oy=-Math.cos(a)*ep*.22;
+  c.moveTo(x1+ox,y1+oy); c.lineTo(x2+ox,y2+oy); c.stroke(); },
+ halo(c,x,y,r,coul){ const g=c.createRadialGradient(x,y,0,x,y,r); g.addColorStop(0,coul); g.addColorStop(1,'rgba(255,255,255,0)'); c.fillStyle=g; c.beginPath(); c.arc(x,y,r,0,7); c.fill(); }
+};
+
+
+/* ---------- éléments propres au cours Transmissions ---------- */
+function fondAtelier(c,W,H){ const g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,'#f5f3ff'); g.addColorStop(1,'#eef2ff'); c.fillStyle=g; c.fillRect(0,0,W,H);
+ c.strokeStyle='rgba(124,58,237,.07)'; c.lineWidth=1; for(let x=0;x<W;x+=24){ c.beginPath(); c.moveTo(x,0); c.lineTo(x,H); c.stroke(); } for(let y=0;y<H;y+=24){ c.beginPath(); c.moveTo(0,y); c.lineTo(W,y); c.stroke(); } }
+function platine(c,x,y,w,h){ c.save(); c.shadowColor='rgba(15,23,42,.15)'; c.shadowBlur=14; c.shadowOffsetY=5; const g=c.createLinearGradient(0,y,0,y+h); g.addColorStop(0,'#f8fafc'); g.addColorStop(1,'#e2e8f0'); c.fillStyle=g; G.boite(c,x,y,w,h,18); c.fill(); c.restore();
+ c.strokeStyle='#cbd5e1'; c.lineWidth=1.5; G.boite(c,x,y,w,h,18); c.stroke(); [[x+16,y+16],[x+w-16,y+16],[x+16,y+h-16],[x+w-16,y+h-16]].forEach(([a,b])=>G.boulon(c,a,b,5)); }
+// roue dentée métallique : rayon primitif rp, Z dents, angle a (radians, sens horaire positif)
+function roue(c,x,y,Z,a,coul,o={}){
+ const rp=Z*3.4, h=5.5, rr=rp-h, rt=rp+h, pas=Math.PI*2/Z;
+ c.save(); c.translate(x,y);
+ c.fillStyle='rgba(15,23,42,.18)'; c.beginPath(); c.arc(4,6,rt,0,7); c.fill();
+ c.rotate(a);
+ c.beginPath();
+ for(let k=0;k<Z;k++){ const m=k*pas; const pts=[[rr,m-pas*.5],[rr,m-pas*.28],[rt,m-pas*.16],[rt,m+pas*.16],[rr,m+pas*.28]];
+  pts.forEach(([r,an],i)=>{ const X=r*Math.cos(an),Y=r*Math.sin(an); (k===0&&i===0)?c.moveTo(X,Y):c.lineTo(X,Y); }); }
+ c.closePath();
+ const g=c.createRadialGradient(-rp*.3,-rp*.35,rp*.1,0,0,rt); g.addColorStop(0,o.clair||'#fff'); g.addColorStop(.25,coul); g.addColorStop(1,o.fonce||coul);
+ c.fillStyle=g; c.fill(); c.strokeStyle='rgba(15,23,42,.35)'; c.lineWidth=1.2; c.stroke();
+ // évidements
+ if(rp>34){ const n=Z>18?6:4; c.fillStyle='rgba(15,23,42,.18)'; for(let k=0;k<n;k++){ c.save(); c.rotate(k*Math.PI*2/n+pas/2); c.beginPath(); c.ellipse(rp*.55,0,rp*.17,rp*.12,0,0,7); c.fill(); c.restore(); } }
+ c.strokeStyle='rgba(255,255,255,.35)'; c.lineWidth=2; c.beginPath(); c.arc(0,0,rr-6,0,7); c.stroke();
+ // moyeu
+ const gm=c.createRadialGradient(-3,-3,1,0,0,12); gm.addColorStop(0,'#f8fafc'); gm.addColorStop(1,'#64748b'); c.fillStyle=gm; c.beginPath(); c.arc(0,0,11,0,7); c.fill(); c.fillStyle='#1e293b'; c.beginPath(); c.arc(0,0,4,0,7); c.fill();
+ // repère rouge
+ c.fillStyle='#ef4444'; c.strokeStyle='#fff'; c.lineWidth=2; c.beginPath(); c.arc(rp*.72,0,6.5,0,7); c.fill(); c.stroke();
+ c.restore(); return rp; }
+// flèche courbe de rotation (pointe tangente, au bout de l'arc)
+function flecheRot(c,x,y,r,horaire,coul,a0=-1.25,long=1.75){
+ const dir=horaire?1:-1, deb=horaire?a0:Math.PI-a0, fin=deb+dir*long, L=16, l=8;
+ const tracer=(col,ep)=>{ c.strokeStyle=col; c.lineWidth=ep; c.lineCap='butt'; c.beginPath(); c.arc(x,y,r,deb,fin-dir*(L/r),!horaire); c.stroke(); };
+ const fx=x+r*Math.cos(fin), fy=y+r*Math.sin(fin), tx=-Math.sin(fin)*dir, ty=Math.cos(fin)*dir, bx=fx-tx*L, by=fy-ty*L, nx=-ty, ny=tx;
+ const tete=()=>{ c.beginPath(); c.moveTo(fx,fy); c.lineTo(bx+nx*l,by+ny*l); c.lineTo(bx-nx*l,by-ny*l); c.closePath(); };
+ tracer('#fff',10); tete(); c.strokeStyle='#fff'; c.lineWidth=5; c.stroke(); tracer(coul,5); c.fillStyle=coul; tete(); c.fill(); }
+function moteur(c,x,y,a){ // moteur électrique vu de côté, arbre vers la droite
+ c.save(); c.shadowColor='rgba(15,23,42,.2)'; c.shadowBlur=10; c.shadowOffsetY=4; const g=c.createLinearGradient(0,y-30,0,y+30); g.addColorStop(0,'#475569'); g.addColorStop(1,'#1e293b'); c.fillStyle=g; G.boite(c,x-70,y-30,84,60,12); c.fill(); c.restore();
+ c.strokeStyle='rgba(255,255,255,.18)'; c.lineWidth=2; for(let k=0;k<5;k++){ c.beginPath(); c.moveTo(x-58+k*14,y-24); c.lineTo(x-58+k*14,y+24); c.stroke(); }
+ c.fillStyle='#94a3b8'; c.fillRect(x+14,y-5,22,10); c.fillStyle='#facc15'; c.beginPath(); c.moveTo(x-34,y-8); c.lineTo(x-42,y+3); c.lineTo(x-36,y+3); c.lineTo(x-40,y+12); c.lineTo(x-28,y-1); c.lineTo(x-34,y-1); c.closePath(); c.fill(); }
+function compteur(c,x,y,tours,coul,titre){ c.save(); c.shadowColor='rgba(15,23,42,.15)'; c.shadowBlur=8; c.fillStyle='#fff'; c.beginPath(); c.arc(x,y,30,0,7); c.fill(); c.restore();
+ c.strokeStyle=coul; c.lineWidth=3; c.beginPath(); c.arc(x,y,30,0,7); c.stroke();
+ const f=tours%1; c.strokeStyle=coul; c.globalAlpha=.25; c.lineWidth=7; c.beginPath(); c.arc(x,y,22,-Math.PI/2,-Math.PI/2+f*Math.PI*2); c.stroke(); c.globalAlpha=1;
+ G.texte(c,tours.toFixed(1),x,y+6,coul,17); G.texte(c,titre,x,y+50,coul,13); }
 
 /* ====== ANIM 1 : L'ENGRENAGE (sens + rapport) ====== */
-const ENG={Z1:12,Z2:24,x1:280,x2:280+12*3.4+24*3.4+7,y:200};
-function decorEng(ctx,a1){
- const a2=-a1*ENG.Z1/ENG.Z2 + Math.PI/ENG.Z2; // engrènement
- roueDentee(ctx,ENG.x1,ENG.y,ENG.Z1,a1,'#7c3aed');
- roueDentee(ctx,ENG.x2,ENG.y,ENG.Z2,a2,'#0e7490');
- etiquette(ctx,'MENANTE · Z₁ = 12 dents',ENG.x1,ENG.y+70,'#6d28d9',15);
- etiquette(ctx,'MENÉE · Z₂ = 24 dents',ENG.x2,ENG.y+108,'#0e7490',15);
- return a2;
-}
+const ENG={Z1:12,Z2:24,x1:300,y:206}; ENG.x2=ENG.x1+ENG.Z1*3.4+ENG.Z2*3.4;
+function decorEng(c,W,H,a1){
+ fondAtelier(c,W,H); platine(c,170,96,470,240);
+ const a2=-a1*ENG.Z1/ENG.Z2+Math.PI/ENG.Z2;
+ moteur(c,ENG.x1-48,ENG.y+92,a1); c.strokeStyle='#94a3b8'; c.lineWidth=6; c.beginPath(); c.moveTo(ENG.x1-12,ENG.y+92); c.lineTo(ENG.x1,ENG.y+92); c.lineTo(ENG.x1,ENG.y+14); c.stroke();
+ roue(c,ENG.x1,ENG.y,ENG.Z1,a1,'#8b5cf6',{fonce:'#5b21b6'}); roue(c,ENG.x2,ENG.y,ENG.Z2,a2,'#14b8a6',{fonce:'#0f766e'});
+ G.pastille(c,'MENANTE · Z₁ = 12',ENG.x1-40,ENG.y-74,'#6d28d9',14); G.pastille(c,'MENÉE · Z₂ = 24',ENG.x2+20,ENG.y-112,'#0f766e',14);
+ G.texte(c,'moteur',ENG.x1-82,ENG.y+138,'#334155',13);
+ return a2; }
 creerAnim('eng','cvEng','capEng','ptsEng',[
  {dur:2600,caption:'STRUCTURE — Deux roues dentées en contact : la MENANTE (reliée au moteur, 12 dents) engrène la MENÉE (24 dents). Suis les points rouges !',
- draw(ctx,p,W,H){ decorEng(ctx,0); }},
+  draw(c,p,W,H,t){ decorEng(c,W,H,0); }},
  {dur:4200,caption:'ACTION — Le moteur tourne : dent contre dent, la menante ENTRAÎNE la menée… qui tourne en SENS INVERSE.',
- draw(ctx,p,W,H){ const a1=lisse(p)*Math.PI*2.5;
- decorEng(ctx,a1);
- flecheArc(ctx,ENG.x1,ENG.y,ENG.Z1*3.4+22,true,'#6d28d9');
- flecheArc(ctx,ENG.x2,ENG.y,ENG.Z2*3.4+22,false,'#0e7490'); }},
- {dur:5200,caption:'ACTION — Comptons : quand la petite (12 dents) fait 2 TOURS complets… la grande (24 dents) n\u2019en fait qu\u2019UN. Deux fois plus de dents = deux fois plus lente.',
- draw(ctx,p,W,H){ const a1=lisse(p)*Math.PI*4;
- decorEng(ctx,a1);
- etiquette(ctx,'tours : '+(a1/(Math.PI*2)).toFixed(1),ENG.x1,80,'#6d28d9',18);
- etiquette(ctx,'tours : '+(a1*ENG.Z1/ENG.Z2/(Math.PI*2)).toFixed(1),ENG.x2,80,'#0e7490',18); }},
- {dur:3800,caption:'PROPRIÉTÉ — Sens INVERSÉ, et N₂ = N₁ × Z₁ ÷ Z₂ : ici la sortie tourne 2× plus lentement (réducteur ÷2)… mais avec 2× plus de force !',
- draw(ctx,p,W,H){ decorEng(ctx,p*2);
- ctx.font='bold 20px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
- ctx.fillText('N₂ = N₁ × 12 ÷ 24 = N₁ ÷ 2', W/2, 52); }},
+  draw(c,p,W,H,t){ const a1=lisse(p)*Math.PI*2.5; decorEng(c,W,H,a1); c.globalAlpha=sous(p,.1,.3);
+   flecheRot(c,ENG.x1,ENG.y,ENG.Z1*3.4+24,true,'#6d28d9',2.3,1.5); flecheRot(c,ENG.x2,ENG.y,ENG.Z2*3.4+22,false,'#0f766e',2.4,1.5); c.globalAlpha=1;
+   if(p>.5){ c.globalAlpha=sous(p,.5,.7); G.pastille(c,'sens inverse !',W-110,ENG.y+10,'#dc2626',15); c.globalAlpha=1; } }},
+ {dur:5200,caption:'ACTION — Comptons : quand la petite (12 dents) fait 2 TOURS complets… la grande (24 dents) n’en fait qu’UN. Deux fois plus de dents = deux fois plus lente.',
+  draw(c,p,W,H,t){ const a1=lisse(p)*Math.PI*4; decorEng(c,W,H,a1);
+   compteur(c,W-150,110,a1/(Math.PI*2),'#6d28d9','tours menante'); compteur(c,W-70,110,a1*ENG.Z1/ENG.Z2/(Math.PI*2),'#0f766e','menée'); }},
+ {dur:4200,caption:'PROPRIÉTÉ — Sens INVERSÉ, et N₂ = N₁ × Z₁ ÷ Z₂ : ici la sortie tourne 2× plus lentement (réducteur ÷2)… mais avec 2× plus de force !',
+  draw(c,p,W,H,t){ decorEng(c,W,H,t*1.6); const a=lisse(sous(p,0,.5));
+   c.globalAlpha=a; G.pastille(c,'N₂ = N₁ × 12 ÷ 24 = N₁ ÷ 2',W/2-40,40,'#15803d',18);
+   const bx=W-150; G.texte(c,'vitesse',bx-20,150,'#475569',13); G.texte(c,'force',bx-20,230,'#475569',13);
+   c.fillStyle='#e2e8f0'; G.boite(c,bx-50,160,120,14,7); c.fill(); G.boite(c,bx-50,240,120,14,7); c.fill();
+   const v=lisse(sous(p,.3,.8)); c.fillStyle='#0ea5e9'; G.boite(c,bx-50,160,120-60*v,14,7); c.fill(); c.fillStyle='#f97316'; G.boite(c,bx-50,240,60+60*v,14,7); c.fill();
+   G.texte(c,v>.5?'÷ 2':'',bx+90,172,'#0369a1',14); G.texte(c,v>.5?'× 2':'',bx+90,252,'#c2410c',14); c.globalAlpha=1; }},
 ]);
 
 /* ====== ANIM 2 : COURROIE vs ENGRENAGE ====== */
-function decorSens(ctx,a){
- // gauche : engrenages
- etiquette(ctx,' ENGRENAGES',210,44,'#6d28d9',17);
- roueDentee(ctx,150,190,14,a,'#7c3aed');
- roueDentee(ctx,150+14*3.4+14*3.4+7,190,14,-a+Math.PI/14,'#7c3aed');
- // droite : poulies + courroie
- etiquette(ctx,' POULIES-COURROIE',600,44,'#ea580c',17);
- const p1x=520,p2x=690,py=190,r=42;
- ctx.strokeStyle='#57534e'; ctx.lineWidth=7;
- ctx.beginPath(); ctx.moveTo(p1x,py-r); ctx.lineTo(p2x,py-r); ctx.stroke();
- ctx.beginPath(); ctx.moveTo(p1x,py+r); ctx.lineTo(p2x,py+r); ctx.stroke();
- ctx.beginPath(); ctx.arc(p1x,py,r,Math.PI/2,-Math.PI/2); ctx.stroke();
- ctx.beginPath(); ctx.arc(p2x,py,r,-Math.PI/2,Math.PI/2); ctx.stroke();
- [[p1x,py],[p2x,py]].forEach(([x,y])=>{
- ctx.fillStyle='#ea580c'; ctx.beginPath(); ctx.arc(x,y,r-6,0,7); ctx.fill();
- ctx.fillStyle='#f8fafc'; ctx.beginPath(); ctx.arc(x,y,6,0,7); ctx.fill();
- ctx.save(); ctx.translate(x,y); ctx.rotate(a);
- ctx.fillStyle='#dc2626'; ctx.beginPath(); ctx.arc((r-6)*0.6,0,6,0,7); ctx.fill(); ctx.restore();
- });
-}
+function poulie(c,x,y,r,a){ c.save(); c.translate(x,y); c.fillStyle='rgba(15,23,42,.15)'; c.beginPath(); c.arc(4,6,r,0,7); c.fill(); c.rotate(a);
+ const g=c.createRadialGradient(-r*.3,-r*.3,2,0,0,r); g.addColorStop(0,'#fed7aa'); g.addColorStop(.3,'#f97316'); g.addColorStop(1,'#c2410c'); c.fillStyle=g; c.beginPath(); c.arc(0,0,r,0,7); c.fill();
+ c.strokeStyle='rgba(124,45,18,.5)'; c.lineWidth=2; c.beginPath(); c.arc(0,0,r-5,0,7); c.stroke();
+ c.fillStyle='rgba(124,45,18,.25)'; for(let k=0;k<4;k++){ c.save(); c.rotate(k*Math.PI/2+.4); c.beginPath(); c.ellipse(r*.5,0,r*.18,r*.13,0,0,7); c.fill(); c.restore(); }
+ c.fillStyle='#e2e8f0'; c.beginPath(); c.arc(0,0,8,0,7); c.fill(); c.fillStyle='#1e293b'; c.beginPath(); c.arc(0,0,3.5,0,7); c.fill();
+ c.fillStyle='#ef4444'; c.strokeStyle='#fff'; c.lineWidth=2; c.beginPath(); c.arc(r*.66,0,6.5,0,7); c.fill(); c.stroke(); c.restore(); }
+function courroie(c,x1,x2,y,r,decal){ c.save(); c.strokeStyle='#292524'; c.lineWidth=9; c.lineJoin='round';
+ c.beginPath(); c.moveTo(x1,y-r-2); c.lineTo(x2,y-r-2); c.arc(x2,y,r+2,-Math.PI/2,Math.PI/2); c.lineTo(x1,y+r+2); c.arc(x1,y,r+2,Math.PI/2,Math.PI*1.5); c.closePath(); c.stroke();
+ c.strokeStyle='rgba(255,255,255,.35)'; c.lineWidth=2.5; c.setLineDash([6,10]); c.lineDashOffset=-decal; c.stroke(); c.restore(); }
+function decorSens(c,W,H,a){
+ fondAtelier(c,W,H); platine(c,24,62,370,258); platine(c,426,62,370,258);
+ G.pastille(c,'ENGRENAGES',209,40,'#6d28d9',15); G.pastille(c,'POULIES-COURROIE',611,40,'#c2410c',15);
+ const r=14*3.4; roue(c,140,190,14,a,'#8b5cf6',{fonce:'#5b21b6'}); roue(c,140+2*r,190,14,-a+Math.PI/14,'#8b5cf6',{fonce:'#5b21b6'});
+ const R=42; courroie(c,526,696,190,R,a*R); poulie(c,526,190,R,a); poulie(c,696,190,R,a);
+ return r; }
 creerAnim('sens','cvSens','capSens','ptsSens',[
  {dur:2600,caption:'STRUCTURE — À gauche, deux roues dentées en CONTACT. À droite, deux poulies reliées par une COURROIE.',
- draw(ctx,p,W,H){ decorSens(ctx,0); }},
- {dur:4600,caption:'ACTION — Tout tourne ! Compare les points rouges : les engrenages tournent en sens OPPOSÉS… les poulies dans le MÊME sens (la courroie les entraîne pareil).',
- draw(ctx,p,W,H){ const a=lisse(p)*Math.PI*3; decorSens(ctx,a);
- flecheArc(ctx,150,190,70,true,'#6d28d9'); flecheArc(ctx,150+14*3.4*2+7,190,70,false,'#6d28d9');
- flecheArc(ctx,520,190,58,true,'#ea580c'); flecheArc(ctx,690,190,58,true,'#ea580c'); }},
- {dur:4000,caption:'PROPRIÉTÉ — Engrenages : sens INVERSÉ, jamais de glissement. Courroie : MÊME sens, axes éloignés possibles… mais la courroie peut GLISSER ou casser (pense à la machine à laver !).',
- draw(ctx,p,W,H){ decorSens(ctx,p*3);
- etiquette(ctx,'sens INVERSÉ · sans glissement',210,330,'#6d28d9',15);
- etiquette(ctx,'MÊME sens · glissement possible',600,330,'#ea580c',15); }},
+  draw(c,p,W,H,t){ decorSens(c,W,H,0); }},
+ {dur:4800,caption:'ACTION — Tout tourne ! Compare les points rouges : les engrenages tournent en sens OPPOSÉS… les poulies dans le MÊME sens (la courroie les entraîne pareil).',
+  draw(c,p,W,H,t){ const a=lisse(p)*Math.PI*3; const r=decorSens(c,W,H,a); c.globalAlpha=sous(p,.1,.3);
+   flecheRot(c,140,190,r+24,true,'#6d28d9',2.3,1.5); flecheRot(c,140+2*r,190,r+24,false,'#6d28d9',2.3,1.5);
+   flecheRot(c,526,190,66,true,'#c2410c',2.3,1.5); flecheRot(c,696,190,66,true,'#c2410c',-.75,1.5); c.globalAlpha=1; }},
+ {dur:4400,caption:'PROPRIÉTÉ — Engrenages : sens INVERSÉ, jamais de glissement. Courroie : MÊME sens, axes éloignés possibles… mais la courroie peut GLISSER ou casser (pense à la machine à laver !).',
+  draw(c,p,W,H,t){ const a=t*2; const R=42; fondAtelier(c,W,H); platine(c,24,62,370,258); platine(c,426,62,370,258);
+   G.pastille(c,'ENGRENAGES',209,40,'#6d28d9',15); G.pastille(c,'POULIES-COURROIE',611,40,'#c2410c',15);
+   const r=14*3.4; roue(c,140,190,14,a,'#8b5cf6',{fonce:'#5b21b6'}); roue(c,140+2*r,190,14,-a+Math.PI/14,'#8b5cf6',{fonce:'#5b21b6'});
+   const gl=sous(p,.3,.6); const a2=a*(1-.45*gl); courroie(c,526,696,190,R,a*R); poulie(c,526,190,R,a); poulie(c,696,190,R,a2);
+   if(gl>0){ c.globalAlpha=gl; G.pastille(c,'la courroie glisse : la poulie menée ralentit',611,128,'#dc2626',13); c.globalAlpha=1; }
+   c.globalAlpha=lisse(sous(p,0,.3)); G.pastille(c,'sens INVERSÉ · sans glissement',209,H-22,'#6d28d9',14); G.pastille(c,'MÊME sens · glissement possible',611,H-22,'#c2410c',14); c.globalAlpha=1; }},
 ]);
 
-/* ====== ANIM 3 : PIGNON-CRÉMAILLÈRE ====== */
-function decorCrem(ctx,a,W){
- const Z=14, r=Z*3.4, cx=330, cy=160;
- // crémaillère : barre + dents, position liée à l'angle
- const depl=a*r;
- ctx.fillStyle='#94a3b8';
- ctx.fillRect(60,cy+r+2,700,20);
- ctx.fillStyle='#64748b';
- const pas=2*Math.PI*r/Z;
- for(let k=-2;k<40;k++){
- const x=60+((k*pas - depl)%740+740)%740;
- ctx.fillRect(x,cy+r-8,10,12);
- }
- roueDentee(ctx,cx,cy,Z,a,'#16a34a');
- etiquette(ctx,'pignon (rotation)',cx,cy-r-18,'#15803d',15);
- etiquette(ctx,'crémaillère (translation)',cx+230,cy+r+52,'#475569',15);
- return {cx,cy,r,depl};
-}
+/* ====== ANIM 3 : PIGNON-CRÉMAILLÈRE (direction de voiture) ====== */
+function decorCrem(c,W,H,a,o={}){
+ fondAtelier(c,W,H);
+ const Z=16, rp=Z*3.4, cx=W/2, cy=150, yR=cy+rp, pas=Math.PI*2*rp/Z, depl=a*rp;
+ // volant + colonne
+ if(o.volant){ c.globalAlpha=o.volant; c.strokeStyle='#94a3b8'; c.lineWidth=8; c.beginPath(); c.moveTo(cx,cy); c.lineTo(cx,52); c.stroke();
+  c.save(); c.translate(cx,48); c.rotate(a); c.strokeStyle='#1e293b'; c.lineWidth=8; c.beginPath(); c.arc(0,0,30,0,7); c.stroke(); c.lineWidth=6; c.beginPath(); c.moveTo(-28,0); c.lineTo(28,0); c.moveTo(0,0); c.lineTo(0,28); c.stroke(); c.fillStyle='#475569'; c.beginPath(); c.arc(0,0,8,0,7); c.fill(); c.restore(); c.globalAlpha=1; }
+ // roues de la voiture (vue de dessus) reliées par biellettes
+ const xg=cx-300, xd=cx+300, ang=-depl/150;
+ if(o.roues){ c.globalAlpha=o.roues; [[xg,1],[xd,-1]].forEach(([x,s])=>{ c.save(); c.translate(x,yR+10); c.rotate(ang); c.fillStyle='#1f2937'; G.boite(c,-16,-36,32,72,8); c.fill(); c.fillStyle='#4b5563'; for(let k=-2;k<=2;k++) c.fillRect(-16,k*14-2,32,4); c.restore(); });
+  c.strokeStyle='#64748b'; c.lineWidth=6; c.beginPath(); c.moveTo(cx-190-depl,yR+10); c.lineTo(xg+22*Math.cos(ang)-0,yR+10+22*Math.sin(ang)); c.moveTo(cx+190-depl,yR+10); c.lineTo(xd-22*Math.cos(ang),yR+10-22*Math.sin(ang)); c.stroke(); c.globalAlpha=1; }
+ // crémaillère
+ const x0=cx-200-depl, x1=cx+200-depl; c.save(); c.shadowColor='rgba(15,23,42,.18)'; c.shadowBlur=8; c.shadowOffsetY=4;
+ const g=c.createLinearGradient(0,yR,0,yR+26); g.addColorStop(0,'#cbd5e1'); g.addColorStop(1,'#64748b'); c.fillStyle=g; G.boite(c,x0,yR+4,x1-x0,22,6); c.fill(); c.restore();
+ c.fillStyle='#94a3b8'; for(let k=-14;k<=14;k++){ const xc=cx+pas/2+k*pas-depl; if(xc<x0+6||xc>x1-6) continue; c.beginPath(); c.moveTo(xc-pas*.32,yR+5); c.lineTo(xc-pas*.16,yR-5.5); c.lineTo(xc+pas*.16,yR-5.5); c.lineTo(xc+pas*.32,yR+5); c.closePath(); c.fill(); }
+ c.strokeStyle='rgba(15,23,42,.3)'; c.lineWidth=1; G.boite(c,x0,yR+4,x1-x0,22,6); c.stroke();
+ // pignon : dent pointée vers le bas à a=0 (Z=16 → dent à 90°)
+ roue(c,cx,cy,Z,a,'#22c55e',{fonce:'#15803d'});
+ return {cx,cy,rp,yR,depl,xg,xd}; }
 creerAnim('crem','cvCrem','capCrem','ptsCrem',[
  {dur:2600,caption:'STRUCTURE — Un PIGNON (roue dentée) posé sur une CRÉMAILLÈRE (barre dentée droite).',
- draw(ctx,p,W,H){ decorCrem(ctx,0,W); }},
+  draw(c,p,W,H,t){ const s=decorCrem(c,W,H,0); c.globalAlpha=lisse(p); G.pastille(c,'pignon : rotation',s.cx+150,s.cy-40,'#15803d',14); G.pastille(c,'crémaillère : translation',s.cx+150,s.yR+60,'#475569',14); c.globalAlpha=1; }},
  {dur:4600,caption:'ACTION — Le pignon TOURNE… et pousse la crémaillère dent après dent : la barre GLISSE en ligne droite.',
- draw(ctx,p,W,H){ const g=decorCrem(ctx,lisse(p)*Math.PI*2.2,W);
- flecheArc(ctx,g.cx,g.cy,g.r+20,true,'#15803d');
- ctx.strokeStyle='#ea580c'; ctx.lineWidth=5;
- ctx.beginPath(); ctx.moveTo(g.cx+90,g.cy+g.r+34); ctx.lineTo(g.cx+170,g.cy+g.r+34); ctx.stroke();
- ctx.fillStyle='#ea580c'; ctx.beginPath();
- ctx.moveTo(g.cx+180,g.cy+g.r+34); ctx.lineTo(g.cx+164,g.cy+g.r+26); ctx.lineTo(g.cx+164,g.cy+g.r+42); ctx.closePath(); ctx.fill(); }},
- {dur:3800,caption:'PROPRIÉTÉ — La ROTATION est transformée en TRANSLATION. C\u2019est exactement ce qui oriente les roues quand tu tournes un volant de voiture !',
- draw(ctx,p,W,H){ decorCrem(ctx,p*2,W);
- ctx.font='bold 19px Segoe UI'; ctx.fillStyle='#16a34a'; ctx.textAlign='center';
- ctx.fillText('ROTATION ⟳ → TRANSLATION ⟶', W/2, 46); }},
+  draw(c,p,W,H,t){ const a=lisse(p)*1.1; const s=decorCrem(c,W,H,a);
+   c.globalAlpha=sous(p,.05,.2); flecheRot(c,s.cx,s.cy,s.rp+24,true,'#15803d',-2.4,1.5); G.fleche(c,s.cx-60,s.yR+56,s.cx-150,s.yR+56,'#ea580c',6); G.pastille(c,'la barre glisse',s.cx+40,s.yR+56,'#ea580c',14); c.globalAlpha=1; }},
+ {dur:6000,caption:'PROPRIÉTÉ — La ROTATION est transformée en TRANSLATION. C’est exactement ce qui oriente les roues quand tu tournes un volant de voiture !',
+  draw(c,p,W,H,t){ const e=lisse(sous(p,0,.25)); const a=Math.sin(t*1.3)*.9*lisse(sous(p,.2,.4)); const s=decorCrem(c,W,H,a,{volant:e,roues:e});
+   c.globalAlpha=e; G.pastille(c,'volant',s.cx+80,48,'#1e293b',13); G.pastille(c,'roue',s.xg,s.yR+72,'#1e293b',13); G.pastille(c,'roue',s.xd,s.yR+72,'#1e293b',13);
+   G.pastille(c,'ROTATION → TRANSLATION',W/2,H-18,'#15803d',16); c.globalAlpha=1; }},
 ]);
 
 /* ---------- Boutons + auto + menu + clavier ---------- */
