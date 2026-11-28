@@ -66,9 +66,10 @@ IC = {
  'outil': 'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.6-.6-.6-2.6z',
  'immeuble': 'M4 21V7l8-4 8 4v14zM9 21v-5h6v5M8 9h2M14 9h2M8 13h2M14 13h2',
  'calendrier': 'M4 5h16v16H4zM4 10h16M9 3v4M15 3v4M8 14h3v3H8z',
+ 'sysml': 'M3 4h7v5H3zM14 4h7v5h-7zM8.5 15h7v5h-7zM6.5 9v3h11V9M12 12v3',
  'ampoule': 'M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z',
 }
-KW = [('pont', 'pont'), ('énergie', 'energie'), ('energie', 'energie'), ('électrique', 'prise'), ('cao', 'cao'), ('conception assist', 'cao'), ('jeu vidéo', 'jeu'), ('durable', 'feuille'), ('cycle de vie', 'feuille'), ('matériau', 'materiaux'), ('évolution', 'evolution'),
+KW = [('sysml', 'sysml'), ('pont', 'pont'), ('énergie', 'energie'), ('energie', 'energie'), ('électrique', 'prise'), ('cao', 'cao'), ('conception assist', 'cao'), ('jeu vidéo', 'jeu'), ('durable', 'feuille'), ('cycle de vie', 'feuille'), ('matériau', 'materiaux'), ('évolution', 'evolution'),
       ('besoin', 'besoin'), ('environnement numérique', 'ecran'), ('design', 'design'), ('transport', 'transport'), ('vélo', 'velo'), ('eau', 'eau'), ('météo', 'meteo'), ('domotique', 'maison'), ('transmission', 'engrenage'),
       ('impression', 'imprimante'), ('réseaux', 'reseau'), ('dessin', 'regle'), ('aéronautique', 'avion'), ('automobile', 'voiture'), ('smartphone', 'telephone'), ('ascenseur', 'ascenseur'), ('binaire', 'binaire'),
       ('variables', 'code'), ('fonctions, listes', 'code'), ('algorithme', 'code'), ('robotique', 'robot'), ('cybersécurité', 'bouclier'), ('objets connectés', 'puce'), ('simulation', 'courbe'), ('intelligence', 'cerveau'),

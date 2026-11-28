@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SysML Blaster — Définition de blocs · ESTIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap" rel="stylesheet"><style>:root{--a:#4f46e5;--af:#1e1b4b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Nunito,'Segoe UI',system-ui,sans-serif;background:#0b1026;color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column}
+.estic-bar{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.95);color:#1b2f4b;padding:8px 20px}
+.estic-bar img{height:34px}.estic-bar b{font-size:14px}.estic-bar span{display:block;font-size:12px;color:#5b6b80}.estic-bar a{margin-left:auto;font-weight:800;color:#1d4ed8;text-decoration:none;font-size:14px}
+.scene{position:relative;flex:1;display:flex;align-items:center;justify-content:center;padding:14px}
+canvas#jeu{width:min(100%,calc((100vh - 90px)*16/9));aspect-ratio:16/9;border-radius:20px;box-shadow:0 30px 70px -30px rgba(0,0,0,.8);background:#111833;touch-action:none}
+.ov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,8,25,.6);backdrop-filter:blur(4px);z-index:5}
+.ov.cache{display:none}
+.carte{background:#fff;color:#1b2f4b;border-radius:24px;padding:26px 30px;max-width:520px;width:calc(100% - 32px);text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
+.carte h1{font-size:30px;font-weight:900;margin-bottom:6px}.carte p{font-size:16px;color:#475569;margin:8px 0;font-weight:700}
+.carte input{font:inherit;font-size:22px;font-weight:900;letter-spacing:3px;text-align:center;text-transform:uppercase;border:2px solid #cbd5e1;border-radius:14px;padding:10px;width:100%;margin:10px 0}
+.carte .btn{font:inherit;font-weight:900;font-size:17px;border:0;border-radius:999px;min-height:50px;padding:0 28px;color:#fff;background:linear-gradient(135deg,var(--a),var(--af));cursor:pointer;margin-top:8px}
+.err{color:#dc2626;font-weight:800;min-height:22px}
+.touches{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}.touches span{background:#f1f5f9;border-radius:10px;padding:5px 10px;font-weight:800;font-size:13px}
+.record{font-weight:900;color:#b45309}
+</style></head><body><div class="estic-bar"><img alt="Logo ESTIC" src="logo_estic.png"><div><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div><a href="00_hub_sysml_bdd_3e.html">Retour à la séquence</a></div>
+<div class="scene"><canvas id="jeu" width="960" height="540"></canvas>
+<div class="ov" id="ovCode"><div class="carte"><h1>SysML Blaster</h1><p>Ce jeu se débloque avec le code donné à la fin du TP.</p>
+<input id="inCode" maxlength="12" autocomplete="off" aria-label="Code"><div class="err" id="errCode"></div><button class="btn" id="btnCode">Déverrouiller</button></div></div>
+<div class="ov cache" id="ovIntro"><div class="carte"><h1>SysML Blaster</h1><p>Une question s’affiche en haut. Tire sur la bonne réponse avant qu’elle ne touche le sol ! Les mauvaises réponses te coûtent une vie.</p><div class="touches"><span>← → ou souris : se déplacer</span><span>Espace ou clic : tirer</span></div><p>Record : <span class="record recAff">0</span></p><button class="btn go">Jouer</button></div></div>
+<div class="ov cache" id="ovFin"><div class="carte"><h1 id="titreFin">Partie terminée</h1><p>Score : <b id="scoreFin">0</b></p><p>Record : <span class="record recAff">0</span></p><button class="btn go">Rejouer</button></div></div></div>
+<script>const J={"cle": "bdd", "code": "BDD3E", "accent": "#4f46e5", "qcm": [["Que signifie « bdd » ?", ["block definition diagram", "base de données", "bloc de départ"], 0], ["Le losange noir se place :", ["côté système (le tout)", "côté pièce (la partie)", "au milieu du trait"], 0], ["Le chiffre 2 près du moteur signifie :", ["il y a 2 moteurs de roue", "le moteur coûte 2 €", "c’est le 2e bloc"], 0], ["« capacité = 2600 mAh » est :", ["une valeur du bloc Batterie", "un cas d’utilisation", "une exigence"], 0], ["Quel élément est un bloc ?", ["la brosse", "nettoyer", "l’utilisateur"], 0], ["Ce diagramme répond à la question :", ["de quoi est fait le système ?", "qui l’utilise ?", "dans quel ordre ?"], 0], ["Le bloc en haut du diagramme représente :", ["le système entier", "la plus petite pièce", "l’utilisateur"], 0], ["Que signifie «block» au-dessus du nom ?", ["c’est un bloc", "c’est bloqué", "c’est un acteur"], 0], ["La composition signifie :", ["le tout est composé des parties", "les parties se déplacent", "l’énergie circule"], 0], ["« puissance = 350 W » appartient au bloc :", ["Moteur", "Guidon", "Roue"], 0], ["Combien de roues a la trottinette d’après le diagramme ?", ["2", "1", "4"], 0], ["Une valeur d’un bloc est :", ["une caractéristique chiffrée", "une action", "un message"], 0]], "jeu": "blaster"};
+const OKK='sysml_jeux_'+J.cle; const ok=()=>{ try{ return localStorage.getItem(OKK)==='1'; }catch(e){ return false; } };
+function verrou(){ const v=document.getElementById('inCode').value.trim().toUpperCase(); if(v===J.code){ try{ localStorage.setItem(OKK,'1'); }catch(e){} document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); } else document.getElementById('errCode').textContent='Code incorrect : il est donné à la fin du TP.'; }
+document.getElementById('btnCode').onclick=verrou; document.getElementById('inCode').addEventListener('keydown',e=>{ if(e.key==='Enter') verrou(); });
+if(ok()){ document.getElementById('ovCode').classList.add('cache'); document.getElementById('ovIntro').classList.remove('cache'); }
+const REC='sysml_rec_'+J.jeu+'_'+J.cle; const lireRec=()=>{ try{ return +localStorage.getItem(REC)||0; }catch(e){ return 0; } };
+document.querySelectorAll('.recAff').forEach(x=>x.textContent=lireRec());
+
+const cv=document.getElementById('jeu'), W=960, H=540, R=Math.min(2,devicePixelRatio||1); cv.width=W*R; cv.height=H*R; const c=cv.getContext('2d'); c.setTransform(R,0,0,R,0,0);
+const F='Nunito, Segoe UI, sans-serif'; const melange=a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+let G=null; const keys={}; const etoiles=[...Array(90)].map(()=>({x:Math.random()*W,y:Math.random()*H,v:10+Math.random()*40,r:Math.random()*1.6+.3}));
+function nouvelle(){ G={x:W/2,vies:3,score:0,combo:0,niveau:1,bonnes:0,tirs:[],bulles:[],parts:[],q:null,file:melange(J.qcm),t:0,fin:false,msg:null,cad:0}; question(); }
+function question(){ if(!G.file.length) G.file=melange(J.qcm); const q=G.file.pop(); G.q=q; const rep=melange(q[1].map((t,i)=>({t,ok:i===q[2]})));
+ const v=22+G.niveau*6; G.bulles=rep.map((r,i)=>({...r,x:160+i*((W-320)/(rep.length-1||1)),y:110-i*36,a:0,vy:v*(0.9+Math.random()*.2),vx:(Math.random()-.5)*30,r:0,mort:false})); }
+function boum(x,y,col,n=24){ for(let i=0;i<n;i++){ const a=Math.random()*7,v=60+Math.random()*180; G.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:0,col}); } }
+function tirer(){ if(G.cad>0||G.fin) return; G.cad=.28; G.tirs.push({x:G.x,y:H-70}); }
+function bulle(b){ c.font=`900 16px ${F}`; const lignes=[]; let cur=''; b.t.split(' ').forEach(m=>{ const t=cur?cur+' '+m:m; if(c.measureText(t).width>170&&cur){ lignes.push(cur); cur=m; } else cur=t; }); lignes.push(cur);
+ const w=Math.max(...lignes.map(l=>c.measureText(l).width))+34, h=lignes.length*20+26; b.w=w; b.h=h;
+ const g=c.createLinearGradient(b.x,b.y-h/2,b.x,b.y+h/2); g.addColorStop(0,'#38bdf8'); g.addColorStop(1,'#6366f1'); c.save(); c.shadowColor='rgba(56,189,248,.6)'; c.shadowBlur=18; c.fillStyle=g; c.beginPath(); c.roundRect(b.x-w/2,b.y-h/2,w,h,h/2>26?18:h/2); c.fill(); c.restore();
+ c.strokeStyle='rgba(255,255,255,.6)'; c.lineWidth=2; c.stroke(); c.fillStyle='#fff'; c.textAlign='center'; lignes.forEach((l,i)=>c.fillText(l,b.x,b.y-(lignes.length-1)*10+i*20+6)); }
+function vaisseau(x,y){ c.save(); c.translate(x,y); c.fillStyle='rgba(56,189,248,.35)'; c.beginPath(); c.ellipse(0,26,10,18+Math.random()*6,0,0,7); c.fill();
+ const g=c.createLinearGradient(0,-30,0,24); g.addColorStop(0,'#f8fafc'); g.addColorStop(1,'#94a3b8'); c.fillStyle=g; c.beginPath(); c.moveTo(0,-32); c.lineTo(22,20); c.lineTo(8,14); c.lineTo(-8,14); c.lineTo(-22,20); c.closePath(); c.fill();
+ c.fillStyle=J.accent; c.beginPath(); c.moveTo(0,-14); c.lineTo(8,6); c.lineTo(-8,6); c.closePath(); c.fill(); c.restore(); }
+let last=performance.now();
+function boucle(ts){ const dt=Math.min(.05,(ts-last)/1000); last=ts; maj(dt); dessin(); requestAnimationFrame(boucle); }
+function maj(dt){ etoiles.forEach(s=>{ s.y+=s.v*dt; if(s.y>H){ s.y=0; s.x=Math.random()*W; } }); if(!G||G.fin) return; G.t+=dt; G.cad=Math.max(0,G.cad-dt);
+ const v=420; if(keys.ArrowLeft) G.x-=v*dt; if(keys.ArrowRight) G.x+=v*dt; if(G.cible!=null) G.x+=(G.cible-G.x)*Math.min(1,dt*10); G.x=Math.max(30,Math.min(W-30,G.x));
+ if(keys[' ']) tirer();
+ G.tirs.forEach(t=>t.y-=700*dt); G.tirs=G.tirs.filter(t=>t.y>-20);
+ G.bulles.forEach(b=>{ if(b.mort) return; b.y+=b.vy*dt; b.x+=b.vx*dt; if(b.x<110||b.x>W-110) b.vx*=-1;
+  G.tirs.forEach(t=>{ if(!t.mort&&b.w&&Math.abs(t.x-b.x)<b.w/2&&Math.abs(t.y-b.y)<b.h/2){ t.mort=true; b.mort=true; touche(b); } });
+  if(b.y>H-60&&!b.mort){ b.mort=true; if(b.ok){ G.vies--; G.combo=0; G.msg={t:'Bonne réponse ratée : '+b.t,col:'#fca5a5',d:2.4}; boum(b.x,H-60,'#f87171'); suite(); } } });
+ G.tirs=G.tirs.filter(t=>!t.mort); G.parts.forEach(p=>{ p.t+=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=200*dt; }); G.parts=G.parts.filter(p=>p.t<1);
+ if(G.msg){ G.msg.d-=dt; if(G.msg.d<=0) G.msg=null; }
+ if(G.vies<=0) finPartie(); }
+function touche(b){ if(b.ok){ G.combo++; const gain=100+50*(G.combo-1); G.score+=gain; G.bonnes++; G.msg={t:'+'+gain+(G.combo>1?'  combo ×'+G.combo:''),col:'#86efac',d:1.4}; boum(b.x,b.y,'#4ade80',36); if(G.bonnes%4===0){ G.niveau++; G.msg={t:'Niveau '+G.niveau+' : plus rapide !',col:'#fde68a',d:1.8}; } G.bulles.forEach(x=>x.mort=true); setTimeout(suite,500); }
+ else { G.vies--; G.combo=0; G.msg={t:'Raté : « '+b.t+' » est faux',col:'#fca5a5',d:2}; boum(b.x,b.y,'#f87171'); } }
+function suite(){ if(G.fin) return; if(G.bulles.every(b=>b.mort)) question(); }
+function finPartie(){ G.fin=true; const r=lireRec(); if(G.score>r){ try{ localStorage.setItem(REC,G.score); }catch(e){} }
+ document.getElementById('scoreFin').textContent=G.score; document.querySelectorAll('.recAff').forEach(x=>x.textContent=lireRec()); document.getElementById('ovFin').classList.remove('cache'); }
+function dessin(){ const g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,'#0b1026'); g.addColorStop(1,'#1e1b4b'); c.fillStyle=g; c.fillRect(0,0,W,H);
+ etoiles.forEach(s=>{ c.fillStyle=`rgba(255,255,255,${.3+s.r/2})`; c.fillRect(s.x,s.y,s.r,s.r); });
+ c.fillStyle='rgba(99,102,241,.25)'; c.beginPath(); c.arc(W*.82,H*.3,90,0,7); c.fill();
+ if(!G) return;
+ // question
+ c.fillStyle='rgba(255,255,255,.95)'; c.beginPath(); c.roundRect(20,14,W-40,54,18); c.fill(); c.fillStyle='#1b2f4b'; c.font=`900 19px ${F}`; c.textAlign='center'; c.fillText(G.q[0],W/2,48);
+ G.bulles.forEach(b=>{ if(!b.mort){ b.a=Math.min(1,(b.a||0)+.04); c.globalAlpha=b.a; bulle(b); c.globalAlpha=1; } });
+ G.tirs.forEach(t=>{ c.fillStyle='#fde047'; c.shadowColor='#fde047'; c.shadowBlur=12; c.fillRect(t.x-2,t.y-12,4,16); c.shadowBlur=0; });
+ G.parts.forEach(p=>{ c.globalAlpha=1-p.t; c.fillStyle=p.col; c.fillRect(p.x,p.y,4,4); }); c.globalAlpha=1;
+ vaisseau(G.x,H-46);
+ c.font=`900 18px ${F}`; c.textAlign='left'; c.fillStyle='#fff'; c.fillText('Score '+G.score,24,H-16); c.textAlign='right'; c.fillText('Niveau '+G.niveau,W-24,H-16);
+ for(let i=0;i<3;i++){ c.fillStyle=i<G.vies?'#f87171':'rgba(255,255,255,.2)'; c.beginPath(); const x=180+i*30, y=H-22; c.moveTo(x,y+8); c.bezierCurveTo(x-14,y-2,x-8,y-14,x,y-6); c.bezierCurveTo(x+8,y-14,x+14,y-2,x,y+8); c.fill(); }
+ if(G.msg){ c.font=`900 22px ${F}`; c.textAlign='center'; c.fillStyle=G.msg.col; c.fillText(G.msg.t,W/2,H/2+120); } }
+addEventListener('keydown',e=>{ keys[e.key]=true; if([' ','ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault(); });
+addEventListener('keyup',e=>{ keys[e.key]=false; });
+cv.addEventListener('pointermove',e=>{ if(!G) return; const r=cv.getBoundingClientRect(); G.cible=(e.clientX-r.left)*W/r.width; });
+cv.addEventListener('pointerdown',e=>{ if(!G) return; const r=cv.getBoundingClientRect(); G.cible=(e.clientX-r.left)*W/r.width; tirer(); });
+document.querySelectorAll('.go').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.ov').forEach(o=>o.classList.add('cache')); nouvelle(); });
+requestAnimationFrame(boucle);
+</script></body></html>

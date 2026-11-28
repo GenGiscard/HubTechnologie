@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technologie Collège — Portail des séquences · ESTIC</title>
+<style>
+:root{ --ink:#1e3a5f; --gris:#64748b; --papier:#f8fafc;
+ --c5:#16a34a; --c5f:#15803d; --c4:#7c3aed; --c4f:#6d28d9; --cl:#0e7490;--clf:#155e75;--c3:#1d4ed8; --c3f:#1e40af;
+ --orange:#ea580c; --ombre:0 4px 14px rgba(30,58,95,.10);}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink);min-height:100vh}
+.estic-bar{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:3px solid var(--ink);padding:10px 22px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.estic-bar img{height:44px}
+.estic-bar .id b{color:var(--ink);font-size:15px}
+.estic-bar .id span{display:block;font-size:12px;color:var(--gris)}
+.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+header.portail{max-width:1080px;margin:38px auto 6px;padding:0 24px;text-align:center}
+header.portail .eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:700}
+header.portail h1{font-size:44px;margin:8px 0 8px}
+header.portail p{color:var(--gris);font-size:17px;max-width:720px;margin:0 auto}
+.stats{display:flex;justify-content:center;gap:14px;margin:22px 0 8px;flex-wrap:wrap}
+.stats .s{background:#fff;border-radius:12px;box-shadow:var(--ombre);padding:10px 20px;font-size:14px;font-weight:700;color:var(--gris)}
+.stats .s b{display:block;font-size:24px;color:var(--ink)}
+section.niveau{max-width:1080px;margin:34px auto 0;padding:0 24px}
+section.niveau .bandeau{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+section.niveau .bandeau .pastille{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:900;color:#fff}
+section.niveau .bandeau h2{font-size:26px}
+section.niveau .bandeau .fil{flex:1;height:3px;border-radius:2px;opacity:.25}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:20px}
+.seq{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:22px;border-top:5px solid var(--accent)}
+.seq .haut{display:flex;align-items:flex-start;gap:12px}
+.seq .ic{font-size:38px}
+.seq h3{font-size:20px;color:var(--accent)}
+.seq h3 a{color:inherit;text-decoration:none}
+.seq h3 a:hover{text-decoration:underline}
+.seq .desc{font-size:13.5px;color:var(--gris);line-height:1.5;margin-top:3px}
+.ressources{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.ressources a{font-size:12.5px;font-weight:700;text-decoration:none;color:var(--accent);border:1.5px solid var(--accent);border-radius:18px;padding:5px 12px;transition:.13s}
+.ressources a:hover{background:var(--accent);color:#fff}
+.ressources a.hub{background:var(--accent);color:#fff}
+.ressources a.hub:hover{filter:brightness(1.12)}
+/* blocs au format « tete / p / liens » : même rendu que les autres */
+.seq .tete{display:flex;align-items:flex-start;gap:12px}
+.seq .tete .niv{display:none}
+.seq>p{font-size:13.5px;color:var(--gris);line-height:1.5;margin:3px 0 0 12px}
+.liens{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.liens a{font-size:12.5px;font-weight:700;text-decoration:none;color:var(--accent);border:1.5px solid var(--accent);border-radius:18px;padding:5px 12px;transition:.13s}
+.liens a:hover{background:var(--accent);color:#fff}
+.liens a[href^="00_hub"],.ressources a[href^="00_hub"]{background:var(--accent);color:#fff}
+.prof{max-width:1080px;margin:44px auto 60px;padding:0 24px}
+.prof .boite{background:#fff;border-radius:16px;box-shadow:var(--ombre);border-left:6px solid var(--orange);padding:20px 24px}
+.prof h2{font-size:19px;color:var(--orange);margin-bottom:8px}
+.prof p{font-size:14px;color:var(--gris);line-height:1.65}
+.prof b{color:var(--ink)}
+footer{padding:18px;text-align:center;font-size:12px;color:var(--gris)}
+@media (max-width:880px){.duo{grid-template-columns:1fr}header.portail h1{font-size:32px}}
+</style>
+</head>
+<body>
+<!-- Logo ESTIC Don Bosco (officiel) -->
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC — Saint-Dizier</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+
+<header class="portail">
+ <div class="eyebrow">Technologie · Cycle 4 · Collège</div>
+ <h1>Le portail des séquences</h1>
+ <p>Six séquences complètes, du cours animé au jeu de stratégie. Chaque parcours suit le même chemin :
+ <b>cours projeté → TP à missions → jeux de révision → évaluation notée</b>.</p>
+ <div class="stats">
+ <div class="s"><b>32</b>séquences</div>
+ <div class="s"><b>99</b>animations pédagogiques</div>
+ <div class="s"><b>70</b>exercices compétitifs</div>
+ <div class="s"><b>30</b>évaluations Firebase</div>
+ </div>
+</header>
+
+<!-- ================= 5ème ================= -->
+<section class="niveau">
+ <div class="bandeau">
+ <div class="pastille" style="background:var(--c5)">5e</div>
+ <h2 style="color:var(--c5f)">Cinquième</h2>
+ <div class="fil" style="background:var(--c5)"></div>
+ </div>
+ <div class="duo">
+ <div class="seq" style="--accent:var(--c5f)">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_habitat_5e.html">Les ponts</a></h3>
+ <div class="desc">Ponts, barrages, tours : pourquoi ça tient debout ? Forces, triangulation et inspection d'ouvrages.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_habitat_5e.html">Hub</a>
+ <a href="01_cours_habitat_ouvrages.html">Cours</a>
+ <a href="02_tp_ponts.html">TP Ponts</a>
+ <a href="03_jeu_batisseur.html">Bâtisseur</a>
+ <a href="03b_jeu_inspecteur.html">Inspecteur</a>
+ <a href="03c_jeu_chantier_express.html">Chantier Express</a>
+ <a href="04_evaluation_habitat.html">Évaluation</a>
+ <a href="https://youtu.be/ujwYjL1OdQc" target="_blank" rel="noopener">Vidéo — C'est pas sorcier : les ponts</a>
+ <a href="04_evaluation_ponts_sorciers.html">Évaluation des sorciers</a>
+ <a href="https://www.youtube.com/watch?v=JidxYO5IPGI" target="_blank" rel="noopener">Pont papier</a>
+ <a href="https://play.kahoot.it/v2/?quizId=162e5bcd-f0a2-4fe5-abf5-c4b3103caaf7&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9" target="_blank" rel="noopener">Kahoot</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:var(--c5)">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_energies_5e.html">Les Énergies</a></h3>
+ <div class="desc">Sources, chaînes d'énergie et mix électrique : alimenter une ville sans blackout ni excès de CO₂.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_energies_5e.html">Hub</a>
+ <a href="01_cours_energies.html">Cours</a>
+ <a href="02_tp_energies.html">TP Mix</a>
+ <a href="02b_tp_manuel_eolienne_savonius.html">TP manuel</a>
+ <a href="03_jeu_energie_panic.html">Énergie Panic</a>
+ <a href="03b_jeu_gardien_reseau.html">Gardien du réseau</a>
+ <a href="03c_jeu_pluie_watts.html">Pluie de Watts</a>
+ <a href="04_evaluation_energies.html">Évaluation</a>
+ <a href="https://www.france.tv/france-4/c-est-toujours-pas-sorcier/c-est-toujours-pas-sorcier-saison-2/1467579-energie-rien-ne-se-cree-tout-se-transforme.html" target="_blank" rel="noopener">Vidéo — C’est toujours pas sorcier : l’énergie</a>
+ <a href="04_evaluation_energies_sorciers.html">Évaluation des sorciers</a>
+ <a href="04_evaluation_ecrite_energies_5e.pdf" target="_blank" rel="noopener">Évaluation écrite</a>
+ <a href="https://play.kahoot.it/v2/?quizId=a2171712-4376-43ee-b923-3a31b81b7b39&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9" target="_blank" rel="noopener">Kahoot</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#1d4ed8">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_cao_5e.html">La conception assistée par ordinateur</a></h3>
+ <div class="desc">Esquisse cotée, bossage, enlèvement de matière : modéliser une pièce en 3D et connaître sa masse avant de la fabriquer.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_cao_5e.html">Hub</a>
+ <a href="01_cours_cao.html">Cours</a>
+ <a href="02_tp_cao.html">TP 1</a>
+ <a href="02_tp_cao_5e_2.html">TP 2</a>
+ <a href="02_tp_cao_5e_3.html">TP 3</a>
+ <a href="02_tp_cao_5e_4.html">TP 4</a>
+ <a href="08_atelier_3d_5e.html">Atelier 3D</a>
+ <a href="02b_logiciel_cao.html">Logiciel CAO Studio</a>
+ <a href="04_evaluation_cao.html">Évaluation</a>
+ <a href="https://www.youtube.com/watch?v=Dzc6kseH3xE" target="_blank" rel="noopener">Vidéo — C’est pas sorcier : voyage en 3D</a>
+ <a href="04_evaluation_cao_sorciers.html">Évaluation des sorciers</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#7c3aed">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_arcade_5e.html">Programmer un jeu vidéo</a></h3>
+ <div class="desc">Sprites, événements, score et vies : des blocs comme sur MakeCode Arcade, puis ton propre jeu sur le vrai MakeCode.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_arcade_5e.html">Hub</a>
+ <a href="01_cours_arcade_5e.html">Cours</a>
+ <a href="02_tp_arcade_5e_1.html">TP 1</a>
+ <a href="02_tp_arcade_5e_2.html">TP 2</a>
+ <a href="02_tp_arcade_5e_3.html">TP 3</a>
+ <a href="02_tp_arcade_5e_4.html">TP 4</a>
+ <a href="05_projet_makecode_5e.html">Projet MakeCode</a>
+ <a href="04_evaluation_arcade_5e.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#4ade80">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_cycle_de_vie.html">Développement durable &amp; cycle de vie</a></h3>
+ <div class="desc">Les trois piliers, les cinq étapes de la vie d'un produit et l'éco-conception : réduire l'impact d'un objet, de la mine à la poubelle.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_cycle_de_vie.html">Hub</a>
+ <a href="01_cours_dd_cycle_vie.html">Cours</a>
+ <a href="02_tp_dd_carnet.html">Carnet d'exercices</a>
+ <a href="03_simulateur_cycle_vie.html">Simulateur</a>
+ <a href="https://play.kahoot.it/v2?quizId=27b912e8-4cc1-483d-9c06-371f07a8e5ff&amp;activeWorkspace=PERSONAL&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9&amp;autoAuth=true" target="_blank" rel="noopener">Kahoot</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#b85c2e">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_materiaux.html">Les matériaux et leurs propriétés</a></h3>
+ <div class="desc">Cinq familles, quatre catégories de propriétés : comprendre pourquoi un objet est en métal, en polymère ou en composite — et savoir le justifier.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_materiaux.html">Hub</a>
+ <a href="01b_presentation_materiaux.html">Présentation</a>
+ <a href="01_cours_materiaux.html">Cours</a>
+ <a href="02_tp_materiaux.html">Activités</a>
+ <a href="03_jeu_defi_materiaux.html">Grand Défi</a>
+ <a href="04_evaluation_materiaux.html">Évaluation</a>
+ <a href="https://www.youtube.com/watch?v=TMe2vZ6DEy4" target="_blank" rel="noopener">Vidéo — Le monde des matériaux</a>
+ <a href="05_tableau_bord_materiaux.html">Tableau de bord</a>
+ <a href="https://play.kahoot.it/v2?quizId=d3380584-d63d-452c-bd41-99d82694b27d&amp;activeWorkspace=PERSONAL&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9&amp;autoAuth=true" target="_blank" rel="noopener">Kahoot</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#b45309">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_evolution_5e.html">L'évolution des objets techniques</a></h3>
+ <div class="desc">Lignées, invention et innovation : du grand-bi au smartphone, pourquoi et comment les objets changent.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_evolution_5e.html">Hub</a>
+ <a href="01_cours_evolution.html">Cours</a>
+ <a href="02_tp_lignees.html">TP Lignées</a>
+ <a href="03_jeu_chrono_rush.html">Chrono Rush</a>
+ <a href="03b_jeu_bureau_inventions.html">Bureau des inventions</a>
+ <a href="03c_jeu_couloirs_temps.html">Couloirs du Temps</a>
+ <a href="04_evaluation_evolution.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#db2777">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_besoin_5e.html">Le besoin & le cahier des charges</a></h3>
+ <div class="desc">Bête à cornes, fonctions d'usage et d'estime, critères et niveaux : formuler le besoin et contrôler un prototype.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_besoin_5e.html">Hub</a>
+ <a href="01_cours_besoin.html">Cours</a>
+ <a href="02_tp_bureau_projets.html">TP Bureau des projets</a>
+ <a href="03_jeu_fonction_rush.html">Fonction Rush</a>
+ <a href="03b_jeu_bureau_etudes.html">Bureau d'études</a>
+ <a href="03c_jeu_drone_be.html">Drone du BE</a>
+ <a href="04_evaluation_besoin.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#0284c7">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_environnement_num_5e.html">L'environnement numérique</a></h3>
+ <div class="desc">Fichiers, dossiers, serveur du collège, sessions et tailles Ko/Mo/Go : ne plus jamais perdre un exposé.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_environnement_num_5e.html">Hub</a>
+ <a href="01_cours_environnement_num.html">Cours</a>
+ <a href="02_tp_salle_info.html">TP Salle info</a>
+ <a href="03_jeu_extension_rush.html">Extension Rush</a>
+ <a href="03b_jeu_salle_info.html">SOS Salle info</a>
+ <a href="03c_jeu_data_runner.html">Data Runner</a>
+ <a href="04_evaluation_environnement_num.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#d97706">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_design_5e.html">Design & ergonomie</a></h3>
+ <div class="desc">La poignée qui épouse la main, la porte de Norman, la chaise aux bonnes mesures : penser comme un designer.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_design_5e.html">Hub</a>
+ <a href="01_cours_design.html">Cours</a>
+ <a href="02_tp_bureau_design.html">TP Bureau design</a>
+ <a href="03_jeu_design_rush.html">Design Rush</a>
+ <a href="03b_jeu_bureau_etude.html">Bureau d'étude</a>
+ <a href="03c_jeu_rafle_studio.html">Rafle au Studio</a>
+ <a href="04_evaluation_design.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#b91c1c">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_transports_5e.html">Transports & mobilité</a></h3>
+ <div class="desc">Quatre familles, des critères pour choisir (temps, CO₂, capacité) et la multimodalité : décoder le système qui déplace le monde.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_transports_5e.html">Hub</a>
+ <a href="01_cours_transports.html">Cours</a>
+ <a href="02_tp_pc_mobilite.html">TP PC mobilité</a>
+ <a href="03_jeu_transport_rush.html">Transport Rush</a>
+ <a href="03b_jeu_pc_mobilite.html">PC Mobilité</a>
+ <a href="03c_jeu_trottinette_express.html">Trottinette Express</a>
+ <a href="04_evaluation_transports.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#15803d">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_velo_5e.html">Le vélo, objet technique</a></h3>
+ <div class="desc">Fonction d'usage, fonctions techniques, solutions : 200 pièces pour apprendre à analyser n'importe quel objet — transmission et freinage compris.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_velo_5e.html">Hub</a>
+ <a href="01_cours_velo.html">Cours</a>
+ <a href="02_tp_atelier_velo.html">TP atelier vélo</a>
+ <a href="03_jeu_velo_rush.html">Vélo Rush</a>
+ <a href="03b_jeu_atelier_velo.html">Atelier réparation</a>
+ <a href="03c_jeu_echappee_peloton.html">Échappée Peloton</a>
+ <a href="04_evaluation_velo.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#155e75">
+ <div class="tete"><span class="ic"></span><div><h3>L’eau dans la ville</h3><span class="niv">5ème</span></div></div>
+ <p>Le château d’eau et sa pression venue de la gravité, le circuit complet de la rivière à la rivière, la station d’épuration et la chasse aux fuites.</p>
+ <div class="liens">
+ <a href="00_hub_eau_5e.html">Hub</a>
+ <a href="01_cours_eau.html">Cours</a>
+ <a href="02_tp_regie_eaux.html">TP</a>
+ <a href="03_jeu_aqua_rush.html">Jeu</a>
+ <a href="03b_jeu_regie_eaux.html">Jeu 2</a>
+ <a href="03c_jeu_torrent_propre.html">Torrent Propre</a>
+ <a href="04_evaluation_eau.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#ca8a04">
+ <div class="tete"><span class="ic"></span><div><h3>Météo &amp; instruments de mesure</h3><span class="niv">5ème</span></div></div>
+ <p>Les quatre capteurs de la station, la chaîne complète de la prévision (mesurer, transmettre, calculer, diffuser), le baromètre qui annonce la pluie et la chasse aux capteurs menteurs.</p>
+ <div class="liens">
+ <a href="00_hub_meteo_5e.html">Hub</a>
+ <a href="01_cours_meteo.html">Cours</a>
+ <a href="02_tp_station_meteo.html">TP</a>
+ <a href="03_jeu_meteo_rush.html">Jeu</a>
+ <a href="03b_jeu_station_meteo.html">Jeu 2</a>
+ <a href="03c_jeu_ballon_sonde.html">Ballon-Sonde</a>
+ <a href="04_evaluation_meteo.html">Évaluation</a>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- ================= 4ème ================= -->
+<section class="niveau">
+ <div class="bandeau">
+ <div class="pastille" style="background:var(--c4)">4e</div>
+ <h2 style="color:var(--c4f)">Quatrième</h2>
+ <div class="fil" style="background:var(--c4)"></div>
+ </div>
+ <div class="duo">
+ <div class="seq" style="--accent:var(--c4f)">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_domotique_4e.html">La Domotique</a></h3>
+ <div class="desc">Capteurs, actionneurs et logique SI/ALORS : la maison connectée décortiquée et programmée.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_domotique_4e.html">Hub</a>
+ <a href="01_cours_domotique.html">Cours</a>
+ <a href="02_tp_maison_connectee.html">TP Maison</a>
+ <a href="03_jeu_signal_rush.html">Signal Rush</a>
+ <a href="03b_jeu_nuit_de_garde.html">Nuit de garde</a>
+ <a href="04_evaluation_domotique.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:var(--c4)">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_transmissions_4e.html">Transmissions de mouvement</a></h3>
+ <div class="desc">Engrenages, courroies, pignon-crémaillère : sens de rotation et rapports N₂ = N₁ × Z₁ ÷ Z₂.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_transmissions_4e.html">Hub</a>
+ <a href="01_cours_transmissions.html">Cours</a>
+ <a href="02_tp_engrenages.html">TP Engrenages</a>
+ <a href="03_jeu_gear_rush.html">Gear Rush</a>
+ <a href="03b_jeu_atelier_meca.html">Atelier Méca</a>
+ <a href="04_evaluation_transmissions.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#059669">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_chaine_energie_4e.html">La chaîne d'énergie</a></h3>
+ <div class="desc">Alimenter, distribuer, convertir, transmettre : le voyage de l'énergie dans le vélo électrique, rendement et pertes compris.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_chaine_energie_4e.html">Hub</a>
+ <a href="01_cours_chaine_energie.html">Cours</a>
+ <a href="02_tp_garage_vae.html">TP Garage VAE</a>
+ <a href="03_jeu_moteur_rush.html">Moteur Rush</a>
+ <a href="03b_jeu_sos_depannage.html">SOS Dépannage</a>
+ <a href="04_evaluation_chaine_energie.html">Évaluation</a>
+ <a href="https://play.kahoot.it/v2/?quizId=a2171712-4376-43ee-b923-3a31b81b7b39&amp;hostId=4fe3d595-5a74-409d-9f56-862a5af5dfa9" target="_blank" rel="noopener">Kahoot</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#7c3aed">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_impression3d_4e.html">Modélisation & impression 3D</a></h3>
+ <div class="desc">La chaîne numérique : modéliser par volumes, exporter en STL, trancher en couches, imprimer — et diagnostiquer les ratés.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_impression3d_4e.html">Hub</a>
+ <a href="01_cours_impression3d.html">Cours</a>
+ <a href="02_tp_fablab.html">TP Fab lab</a>
+ <a href="03_jeu_procede_rush.html">Procédé Rush</a>
+ <a href="03b_jeu_ferme_impression.html">Ferme d'impression</a>
+ <a href="04_evaluation_impression3d.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#059669">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_reseaux_4e.html">Les réseaux informatiques</a></h3>
+ <div class="desc">Switch, box, serveur, adresses IP : comprendre le réseau local et diagnostiquer les pannes de proche en proche.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_reseaux_4e.html">Hub</a>
+ <a href="01_cours_reseaux.html">Cours</a>
+ <a href="02_tp_admin_reseau.html">TP Admin réseau</a>
+ <a href="03_jeu_reseau_rush.html">Réseau Rush</a>
+ <a href="03b_jeu_admin_reseau.html">Admin Réseau</a>
+ <a href="04_evaluation_reseaux.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#65a30d">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_dessin_4e.html">Dessin technique & représentation</a></h3>
+ <div class="desc">Vues, cotes, échelle, cartouche : le langage universel qui transforme une idée en pièce fabricable, sans ambiguïté.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_dessin_4e.html">Hub</a>
+ <a href="01_cours_dessin.html">Cours</a>
+ <a href="02_tp_bureau_methodes.html">TP Bureau des méthodes</a>
+ <a href="03_jeu_plan_rush.html">Plan Rush</a>
+ <a href="03b_jeu_bureau_methodes.html">Contrôle des plans</a>
+ <a href="04_evaluation_dessin.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#0369a1">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_aero_4e.html">Aéronautique — comment vole un avion</a></h3>
+ <div class="desc">Portance, poids, traction, traînée : le duel des forces, l'aile qui fabrique la portance et les trois gouvernes du pilotage.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_aero_4e.html">Hub</a>
+ <a href="01_cours_aero.html">Cours</a>
+ <a href="02_tp_bureau_aero.html">TP Bureau d'études aéro</a>
+ <a href="03_jeu_aero_rush.html">Aéro Rush</a>
+ <a href="03b_jeu_tour_controle.html">Tour de contrôle</a>
+ <a href="04_evaluation_aero.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#92400e">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_auto_4e.html">Automobile & sécurité routière</a></h3>
+ <div class="desc">Distance d'arrêt, sécurité active et passive, la ceinture face à l'inertie : la technologie qui garde les occupants en vie.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_auto_4e.html">Hub</a>
+ <a href="01_cours_auto.html">Cours</a>
+ <a href="02_tp_securite_routiere.html">TP sécurité routière</a>
+ <a href="03_jeu_securite_rush.html">Sécurité Rush</a>
+ <a href="03b_jeu_controle_technique.html">Contrôle technique</a>
+ <a href="04_evaluation_auto.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#334155">
+ <div class="tete"><span class="ic"></span><div><h3>Le smartphone décortiqué</h3><span class="niv">4ème</span></div></div>
+ <p>200 g, 60 matériaux : l’écorché du téléphone, la grille invisible de l’écran tactile, la batterie pièce d’usure et le réflexe réparer plutôt que jeter.</p>
+ <div class="liens">
+ <a href="00_hub_smartphone_4e.html">Hub</a>
+ <a href="01_cours_smartphone.html">Cours</a>
+ <a href="02_tp_labo_demontage.html">TP</a>
+ <a href="03_jeu_tactile_rush.html">Jeu</a>
+ <a href="03b_jeu_sav_telephone.html">Jeu 2</a>
+ <a href="04_evaluation_smartphone.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#0f766e">
+ <div class="tete"><span class="ic"></span><div><h3>L’ascenseur</h3><span class="niv">4ème</span></div></div>
+ <p>Le secret du contrepoids qui soulage le moteur, le parachute d’Otis (1854), l’armoire qui choisit quel appel servir, et la maintenance préventive qui rend l’ascenseur si sûr.</p>
+ <div class="liens">
+ <a href="00_hub_ascenseur_4e.html">Hub</a>
+ <a href="01_cours_ascenseur.html">Cours</a>
+ <a href="02_tp_maintenance_ascenseur.html">TP</a>
+ <a href="03_jeu_ascenseur_rush.html">Jeu</a>
+ <a href="03b_jeu_tour_maintenance.html">Jeu 2</a>
+ <a href="04_evaluation_ascenseur.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#0e7490">
+ <div class="tete"><span class="ic"></span><div><h3>Le binaire, le langage des machines</h3><span class="niv">4ème</span></div></div>
+ <p>Bit, octet et poids des bits, puis tous les « dialectes » du binaire : hexadécimal, code ASCII, couleurs RVB, DCB et code Gray.</p>
+ <div class="liens">
+ <a href="00_hub_binaire_4e.html">Hub</a>
+ <a href="01_cours_binaire.html">Cours</a>
+ <a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">TP</a>
+ <a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">Salle d’arcade</a>
+ <a href="https://gengiscard.github.io/Binaire/" target="_blank" rel="noopener">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#059669">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_arcade_4e.html">Variables, conditions et boucles</a></h3>
+ <div class="desc">Un jeu qui mémorise, décide et répète : du tunnel au casse-briques complet, puis un jeu à niveaux sur MakeCode.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_arcade_4e.html">Hub</a>
+ <a href="01_cours_arcade_4e.html">Cours</a>
+ <a href="02_tp_arcade_4e_1.html">TP 1</a>
+ <a href="02_tp_arcade_4e_2.html">TP 2</a>
+ <a href="02_tp_arcade_4e_3.html">TP 3</a>
+ <a href="02_tp_arcade_4e_4.html">TP 4</a>
+ <a href="05_projet_makecode_4e.html">Projet MakeCode</a>
+ <a href="04_evaluation_arcade_4e.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#0e7490">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_cao_4e.html">La CAO : lire, modéliser, calculer</a></h3>
+ <div class="desc">Lire un vrai plan, modéliser sur plusieurs faces, calculer une masse, corriger un modèle et suivre un cahier des charges.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_cao_4e.html">Hub</a>
+ <a href="01_cours_cao_4e.html">Cours</a>
+ <a href="02_tp_cao_4e_1.html">TP 1</a>
+ <a href="02_tp_cao_4e_2.html">TP 2</a>
+ <a href="02_tp_cao_4e_3.html">TP 3</a>
+ <a href="02_tp_cao_4e_4.html">TP 4</a>
+ <a href="02_tp_cao_4e_5.html">TP 5</a>
+ <a href="08_atelier_3d_4e.html">Atelier 3D</a>
+ <a href="02b_logiciel_cao.html">Logiciel CAO Studio</a>
+ <a href="04_evaluation_cao_4e.html">Évaluation</a>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- ================= 3ème ================= -->
+<section class="niveau">
+ <div class="bandeau">
+ <div class="pastille" style="background:var(--c3)">3e</div>
+ <h2 style="color:var(--c3f)">Troisième</h2>
+ <div class="fil" style="background:var(--c3)"></div>
+ </div>
+ <div class="duo">
+ <div class="seq" style="--accent:var(--c3f)">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_robotique_3e.html">La Robotique</a></h3>
+ <div class="desc">Chaîne d'information, capteurs et programmation : du robot suiveur de ligne à la gestion d'entrepôt.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_robotique_3e.html">Hub</a>
+ <a href="01_cours_robotique.html">Cours</a>
+ <a href="02_tp_robot.html">TP Robot</a>
+ <a href="03_jeu_robo_race.html">Robo Race</a>
+ <a href="03b_jeu_entrepot.html">Entrepôt</a>
+ <a href="04_evaluation_robotique.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:var(--c3)">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_internet_3e.html">Internet & Cybersécurité</a></h3>
+ <div class="desc">Paquets, routeurs, DNS, chiffrement : le voyage des données — et comment les défendre.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_internet_3e.html">Hub</a>
+ <a href="01_cours_internet.html">Cours</a>
+ <a href="02_tp_reseau.html">TP Routeur</a>
+ <a href="03_jeu_phishing_hunter.html">Phishing Hunter</a>
+ <a href="03b_jeu_cyberdefense.html">Cyberdéfense</a>
+ <a href="04_evaluation_internet.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#0d9488">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_cycle_vie_3e.html">Éco-conception & cycle de vie</a></h3>
+ <div class="desc">ACV, économie circulaire, éco-conception : la vie cachée des objets, du minerai à la borne de recyclage.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_cycle_vie_3e.html">Hub</a>
+ <a href="01_cours_cycle_vie.html">Cours</a>
+ <a href="02_tp_mission_acv.html">TP Mission ACV</a>
+ <a href="03_jeu_tri_rush.html">Tri Rush</a>
+ <a href="03b_jeu_centre_valorisation.html">Centre de valorisation</a>
+ <a href="04_evaluation_cycle_vie.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#4f46e5">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_algo_3e.html">Algorithmes & programmation</a></h3>
+ <div class="desc">Variables, conditions, boucles : lire un programme, prévoir sa sortie et traquer les bugs — objectif brevet.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_algo_3e.html">Hub</a>
+ <a href="01_cours_algo.html">Cours</a>
+ <a href="02_tp_studio_code.html">TP Studio de code</a>
+ <a href="03_jeu_bloc_rush.html">Bloc Rush</a>
+ <a href="03b_jeu_studio_debug.html">Studio Debug</a>
+ <a href="04_evaluation_algo.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#be123c">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_arcade_3e.html">Fonctions, listes et algorithmes</a></h3>
+ <div class="desc">Découper en fonctions, ranger des données dans des listes et programmer gravité, poursuite et états du jeu.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_arcade_3e.html">Hub</a>
+ <a href="01_cours_arcade_3e.html">Cours</a>
+ <a href="02_tp_arcade_3e_1.html">TP 1</a>
+ <a href="02_tp_arcade_3e_2.html">TP 2</a>
+ <a href="02_tp_arcade_3e_3.html">TP 3</a>
+ <a href="02_tp_arcade_3e_4.html">TP 4</a>
+ <a href="05_projet_makecode_3e.html">Projet MakeCode</a>
+ <a href="04_evaluation_arcade_3e.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#4f46e5">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_cao_3e.html">La CAO : simuler et assembler</a></h3>
+ <div class="desc">Pièces mécaniques, simulation de résistance, mécanisme bielle-manivelle et projet d’optimisation.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_cao_3e.html">Hub</a>
+ <a href="01_cours_cao_3e.html">Cours</a>
+ <a href="02_tp_cao_3e_1.html">TP 1</a>
+ <a href="02_tp_cao_3e_2.html">TP 2</a>
+ <a href="02_tp_cao_3e_3.html">TP 3</a>
+ <a href="02_tp_cao_3e_4.html">TP 4</a>
+ <a href="02_tp_cao_3e_5.html">TP 5</a>
+ <a href="08_atelier_3d_3e.html">Atelier 3D</a>
+ <a href="02b_logiciel_cao.html">Logiciel CAO Studio</a>
+ <a href="04_evaluation_cao_3e.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#c026d3">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_objets_connectes_3e.html">Les objets connectés</a></h3>
+ <div class="desc">Capteurs, actionneurs, voyage de la donnée jusqu'au cloud et boucles automatiques — sans oublier la vie privée.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_objets_connectes_3e.html">Hub</a>
+ <a href="01_cours_objets_connectes.html">Cours</a>
+ <a href="02_tp_objets_connectes.html">TP Laboratoire</a>
+ <a href="03_jeu_capteur_rush.html">Capteur Rush</a>
+ <a href="03b_jeu_maison_connectee.html">Maison connectée</a>
+ <a href="04_evaluation_objets_connectes.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#e11d48">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_simulation_3e.html">Modélisation & simulation</a></h3>
+ <div class="desc">Casser des ponts dans l'ordinateur : modèle, simulation, coefficient de sécurité… et l'essai réel qui prouve.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_simulation_3e.html">Hub</a>
+ <a href="01_cours_simulation.html">Cours</a>
+ <a href="02_tp_bureau_simulation.html">TP Bureau simulation</a>
+ <a href="03_jeu_simu_rush.html">Simu Rush</a>
+ <a href="03b_jeu_labo_simulation.html">Labo de simulation</a>
+ <a href="04_evaluation_simulation.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#9333ea">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_ia_3e.html">Intelligence artificielle & données</a></h3>
+ <div class="desc">Données étiquetées, entraînement, prédiction, biais : comment une machine apprend — et pourquoi on ne la croit jamais les yeux fermés.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_ia_3e.html">Hub</a>
+ <a href="01_cours_ia.html">Cours</a>
+ <a href="02_tp_centre_ia.html">TP Centre d'entraînement</a>
+ <a href="03_jeu_ia_rush.html">IA Rush</a>
+ <a href="03b_jeu_centre_ia.html">Centre IA</a>
+ <a href="04_evaluation_ia.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#0c4a6e">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_espace_3e.html">Espace & satellites</a></h3>
+ <div class="desc">Action-réaction, l'orbite comme chute permanente, le GPS décodé et les débris spatiaux : l'espace que tu utilises 50 fois par jour.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_espace_3e.html">Hub</a>
+ <a href="01_cours_espace.html">Cours</a>
+ <a href="02_tp_centre_spatial.html">TP centre spatial</a>
+ <a href="03_jeu_orbite_rush.html">Orbite Rush</a>
+ <a href="03b_jeu_centre_spatial.html">Centre spatial</a>
+ <a href="04_evaluation_espace.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#9d174d">
+ <div class="tete"><span class="ic"></span><div><h3>Santé & technologie</h3><span class="niv">3ème</span></div></div>
+ <p>La prothèse sur mesure du scan à l’impression 3D, le pacemaker chaîne d’information dans le corps, l’imagerie qui voit sans ouvrir.</p>
+ <div class="liens">
+ <a href="00_hub_sante_3e.html">Hub</a>
+ <a href="01_cours_sante.html">Cours</a>
+ <a href="02_tp_labo_biomedical.html">TP</a>
+ <a href="03_jeu_bio_rush.html">Jeu</a>
+ <a href="03b_jeu_labo_biomedical.html">Jeu 2</a>
+ <a href="04_evaluation_sante.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#b45309">
+ <div class="tete"><span class="ic"></span><div><h3>Le réseau électrique intelligent</h3><span class="niv">3ème</span></div></div>
+ <p>La balance des 50 Hz et le pic de 19 h, une journée du mix électrique, le smart grid qui ne gaspille rien : produire, transporter, stocker et piloter la plus grande machine du monde.</p>
+ <div class="liens">
+ <a href="00_hub_energie_3e.html">Hub</a>
+ <a href="01_cours_energie.html">Cours</a>
+ <a href="02_tp_dispatching.html">TP</a>
+ <a href="03_jeu_watt_rush.html">Jeu</a>
+ <a href="03b_jeu_dispatching.html">Jeu 2</a>
+ <a href="04_evaluation_energie.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#c2410c">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_sysml_req_3e.html">SysML : Exigences</a></h3>
+ <div class="desc">Avant de construire, on écrit ce que l’objet DOIT faire, et à quel niveau de performance.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_sysml_req_3e.html">Hub</a>
+ <a href="01_cours_sysml_req.html">Cours</a>
+ <a href="02_tp_sysml_req.html">TP — 8 missions</a>
+ <a href="03_jeu_sysml_req.html">SysML Blaster</a>
+ <a href="03b_jeu_sysml_req.html">Atelier express</a>
+ <a href="04_evaluation_sysml_req.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#0e7490">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_sysml_uc_3e.html">SysML : Cas d’utilisation</a></h3>
+ <div class="desc">Qui utilise l’objet, et pour quoi faire ? Le diagramme des cas d’utilisation répond.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_sysml_uc_3e.html">Hub</a>
+ <a href="01_cours_sysml_uc.html">Cours</a>
+ <a href="02_tp_sysml_uc.html">TP — 8 missions</a>
+ <a href="03_jeu_sysml_uc.html">SysML Blaster</a>
+ <a href="03b_jeu_sysml_uc.html">Atelier express</a>
+ <a href="04_evaluation_sysml_uc.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#4f46e5">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_sysml_bdd_3e.html">SysML : Définition de blocs</a></h3>
+ <div class="desc">De quoi est fait le robot ? Le diagramme de définition de blocs décrit son architecture.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_sysml_bdd_3e.html">Hub</a>
+ <a href="01_cours_sysml_bdd.html">Cours</a>
+ <a href="02_tp_sysml_bdd.html">TP — 8 missions</a>
+ <a href="03_jeu_sysml_bdd.html">SysML Blaster</a>
+ <a href="03b_jeu_sysml_bdd.html">Atelier express</a>
+ <a href="04_evaluation_sysml_bdd.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#ea580c">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_sysml_ibd_3e.html">SysML : Blocs internes</a></h3>
+ <div class="desc">Comment les éléments échangent-ils énergie, information et matière à l’intérieur du robot ?</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_sysml_ibd_3e.html">Hub</a>
+ <a href="01_cours_sysml_ibd.html">Cours</a>
+ <a href="02_tp_sysml_ibd.html">TP — 8 missions</a>
+ <a href="03_jeu_sysml_ibd.html">SysML Blaster</a>
+ <a href="03b_jeu_sysml_ibd.html">Atelier express</a>
+ <a href="04_evaluation_sysml_ibd.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#6d28d9">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_sysml_seq_3e.html">SysML : Séquence</a></h3>
+ <div class="desc">Qui envoie quoi, à qui, et dans quel ordre ? Le diagramme de séquence raconte un scénario.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_sysml_seq_3e.html">Hub</a>
+ <a href="01_cours_sysml_seq.html">Cours</a>
+ <a href="02_tp_sysml_seq.html">TP — 8 missions</a>
+ <a href="03_jeu_sysml_seq.html">SysML Blaster</a>
+ <a href="03b_jeu_sysml_seq.html">Atelier express</a>
+ <a href="04_evaluation_sysml_seq.html">Évaluation</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#15803d">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_sysml_stm_3e.html">SysML : États</a></h3>
+ <div class="desc">Un système passe d’un état à un autre quand un événement se produit.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_sysml_stm_3e.html">Hub</a>
+ <a href="01_cours_sysml_stm.html">Cours</a>
+ <a href="02_tp_sysml_stm.html">TP — 8 missions</a>
+ <a href="03_jeu_sysml_stm.html">SysML Blaster</a>
+ <a href="03b_jeu_sysml_stm.html">Atelier express</a>
+ <a href="04_evaluation_sysml_stm.html">Évaluation</a>
+ </div>
+ </div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>Sujets type DNB</h3><span class="niv">3ème</span></div></div>
+ <p>S’entraîner à l’épreuve : des documents à lire — plans cotés, tableaux de données, caractéristiques techniques — puis des questions qui s’appuient dessus. 25 points, 30 minutes, correction à la remise.</p>
+ <div class="ressources">
+ <a href="05_brevet_domespace.html">La maison qui suit le soleil</a>
+ <a href="05_brevet_trottinette.html">La trottinette électrique</a>
+ </div>
+</div>
+ </div>
+</section>
+
+<section class="niveau">
+ <div class="bandeau">
+ <div class="pastille" style="background:#2563eb">M</div>
+ <h2 style="color:#1e40af">Mathématiques — cycle 4</h2>
+ <div class="fil" style="background:#2563eb"></div>
+ </div>
+ <div class="duo">
+ <div class="seq" style="--accent:#2563eb">
+ <div class="haut"><div class="ic">x²</div><div>
+ <h3><a href="01_cours_calcul_litteral.html">Calcul littéral — développer, réduire, factoriser</a></h3>
+ <div class="desc">Calculer une expression, réduire, simple et double distributivité, signe moins, (a + b)², factorisation et a² − b². Neuf animations sur des rectangles d’aires, un simulateur et un vérificateur. TP de 9 missions avec mini-cours sur les exercices difficiles.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="01_cours_calcul_litteral.html">Cours projeté</a>
+ <a href="02_tp_calcul_litteral.html">TP — 9 missions</a>
+ </div>
+ </div>
+ </div>
+</section>
+
+<section class="niveau">
+ <div class="bandeau">
+ <div class="pastille" style="background:#0891b2">+</div>
+ <h2 style="color:#155e75">En plus — escape games et activités bonus</h2>
+ <div class="fil" style="background:#0891b2"></div>
+ </div>
+ <div class="duo">
+ <div class="seq" style="--accent:#7c2d12">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="https://gengiscard.github.io/Erebus7/" target="_blank" rel="noopener">EREBUS-7 — Escape game spatial</a></h3>
+ <div class="desc">Station abandonnée, 12 énigmes, 60 minutes et une seule chance. Transmission mécanique, loi d'Ohm et loi des mailles, diagramme d'états SysML, lecture de plan, chaîne d'énergie, algorigramme, programmation en blocs, code ASCII : tout le programme y passe. Chaque énigme donne un code, et le dernier ouvre la capsule d'éjection.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="https://gengiscard.github.io/Erebus7/" target="_blank" rel="noopener">Lancer la mission</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#b45309">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="https://gengiscard.github.io/Rouillo/" target="_blank" rel="noopener">L'atelier de ROUILLO — Escape méca</a></h3>
+ <div class="desc">Le robot du professeur a subi une surtension : 7 systèmes à réparer en 25 minutes. Lecture de schéma, outils et leur usage, calcul d'engrenages, ordre d'une procédure, électronique de base, programmation par blocs et chaînes d'énergie et d'information. Chaque système restauré livre un chiffre du code final, plus quatre mini-jeux bonus.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="https://gengiscard.github.io/Rouillo/" target="_blank" rel="noopener">Entrer dans l'atelier</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#0e7490">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="https://gengiscard.github.io/technooubli-es/" target="_blank" rel="noopener">Les technos oubliées</a></h3>
+ <div class="desc">Activité bonus autour des objets techniques tombés en désuétude.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="https://gengiscard.github.io/technooubli-es/" target="_blank" rel="noopener">Ouvrir</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#475569">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="https://gengiscard.github.io/Perceuse/" target="_blank" rel="noopener">La perceuse</a></h3>
+ <div class="desc">Activité sur la perceuse : constitution, usage et sécurité. Les résultats remontent sur le nœud Firebase <code>resultats_perceuse</code>.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="https://gengiscard.github.io/Perceuse/" target="_blank" rel="noopener">Ouvrir</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#ea580c">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="https://gengiscard.github.io/perteenergie/" target="_blank" rel="noopener">Les pertes d'énergie</a></h3>
+ <div class="desc">Activité bonus sur les pertes d'énergie et le rendement.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="https://gengiscard.github.io/perteenergie/" target="_blank" rel="noopener">Ouvrir</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#16a34a">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="https://gengiscard.github.io/jointsilicone/" target="_blank" rel="noopener">Le joint silicone</a></h3>
+ <div class="desc">Activité bonus autour de la pose d'un joint silicone.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="https://gengiscard.github.io/jointsilicone/" target="_blank" rel="noopener">Ouvrir</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#0f766e">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="https://gengiscard.github.io/Fabclicker/" target="_blank" rel="noopener">FAB-CLICKER — L'atelier des procédés</a></h3>
+ <div class="desc">Jeu de production incrémental : on fait tourner une ligne d'usinage, poste après poste. Pour acheter une machine il faut d'abord passer son habilitation — lire la fiche du procédé, puis réussir le quiz. Neuf habilitations à décrocher, qui couvrent les grandes familles de procédés : enlèvement de matière, déformation, moulage, addition de matière et assemblage.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="https://gengiscard.github.io/Fabclicker/" target="_blank" rel="noopener">Ouvrir l'atelier</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:#be123c">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="https://gengiscard.github.io/TechnoSurvivor/" target="_blank" rel="noopener">TECHNO SURVIVOR — Sciences de l'ingénieur</a></h3>
+ <div class="desc">Jeu de survie où les armes tirent seules : l'élève esquive et collecte. À chaque montée de niveau, une question du brevet ; toutes les deux minutes, un exercice de technologie qui améliore une arme ; à la mort, une seconde chance si la réponse est bonne. Un mode classe permet au professeur d'invoquer les menaces, que seuls les exercices résolus repoussent.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="https://gengiscard.github.io/TechnoSurvivor/" target="_blank" rel="noopener">Lancer la simulation</a>
+ </div>
+ </div>
+ </div>
+</section>
+
+<section class="niveau">
+ <div class="bandeau">
+ <div class="pastille" style="background:var(--cl)">SI</div>
+ <h2 style="color:var(--clf)">Sciences de l'ingénieur — Lycée</h2>
+ <div class="fil" style="background:var(--cl)"></div>
+ </div>
+ <div class="duo">
+ <div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>Sujets type Bac SI</h3><span class="niv">Terminale</span></div></div>
+ <p>S’entraîner à l’épreuve écrite : diagramme des exigences, chaîne de puissance et relevés à exploiter, puis trois parties — analyser le besoin, modéliser, valider les performances. 20 points, correction à la remise.</p>
+ <div class="ressources">
+ <a href="05_bac_si_portail.html">Le portail coulissant automatisé</a>
+ </div>
+</div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>Sujets type BTS CPI</h3><span class="niv">BTS</span></div></div>
+ <p>Conception de produits industriels : dessin d’ensemble et nomenclature, analyse des liaisons, cotation fonctionnelle et chaîne de cotes, dimensionnement en flexion et durée de vie des roulements. 60 points, 3 h.</p>
+ <div class="ressources">
+ <a href="05_bts_cpi_galet.html">Galet tendeur de courroie</a>
+ </div>
+</div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAO et dimensionnement — CAO Studio</h3><span class="niv">Première · Terminale</span></div></div>
+ <p>Potence murale : calcul de RdM et simulation par éléments finis (Von Mises), dimensionnement de la section, choix du matériau par indice de performance, concentration de contraintes en coupe, dessin de définition avec coupe A-A.</p>
+ <div class="ressources">
+ <a href="02_tp_cao_si_1.html">TP — Dimensionner une potence</a>
+ <a href="02b_logiciel_cao.html">Logiciel CAO Studio</a>
+ </div>
+</div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>Sujets type CAFEP-CAPET SII</h3><span class="niv">Concours</span></div></div>
+ <p>Séquence complète : le cours de méthode, un TP de six missions chiffrées, puis le sujet type — modélisation cinématique, inertie équivalente, dimensionnement dynamique, choix sur catalogue et <b>exploitation pédagogique</b>.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_axe.html">Cours — méthode de dimensionnement</a>
+ <a href="02_tp_capet_axe.html">TP — 6 missions chiffrées</a>
+ <a href="05_capet_sii_axe.html">Sujet type — axe linéaire à vis à billes</a>
+ </div>
+</div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Statique</h3><span class="niv">Concours</span></div></div>
+ <p>Le pilier de l’écrit : modéliser une action, compter les inconnues, choisir l’isolement et résoudre. Cours de méthode, six cas chiffrés, puis un sujet type complet sur une grue d’atelier hydraulique.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_statique.html">Cours — méthode d’isolement</a>
+ <a href="02_tp_capet_statique.html">TP — 6 cas chiffrés</a>
+ <a href="05_capet_sii_statique.html">Sujet type — grue d’atelier à vérin</a>
+ </div>
+</div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Trains d’engrenages</h3><span class="niv">Concours</span></div></div>
+ <p>Train ordinaire, puis train épicycloïdal et formule de Willis. Cours de méthode avec simulateur de denture, six cas chiffrés, puis un sujet type complet sur un treuil de levage à deux vitesses.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_trains.html">Cours — Willis et trains ordinaires</a>
+ <a href="02_tp_capet_trains.html">TP — 6 cas chiffrés</a>
+ <a href="05_capet_sii_trains.html">Sujet type — treuil à deux vitesses</a>
+ </div>
+</div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Résistance des matériaux</h3><span class="niv">Concours</span></div></div>
+ <p>Flexion, torsion, contrainte équivalente et surtout <b>concentration de contraintes</b> — l’oubli qui fait rompre les pièces au congé. Cours de méthode avec simulateur, six cas chiffrés, puis un sujet type complet sur un arbre de réducteur à deux sections singulières.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_rdm.html">Cours — méthode de vérification</a>
+ <a href="02_tp_capet_rdm.html">TP — 6 cas chiffrés</a>
+ <a href="05_capet_sii_rdm.html">Sujet type — arbre de réducteur</a>
+ </div>
+</div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Cotation fonctionnelle</h3><span class="niv">Concours</span></div></div>
+ <p>La cote condition, le tracé des chaînes de cotes, les valeurs extrêmes et la répartition des tolérances. Cours de méthode avec simulateur, puis six cas chiffrés — jeux extrêmes, répartition des tolérances, chaîne longue et ajustement normalisé.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_cotation.html">Cours — tracer et calculer une chaîne</a>
+ <a href="02_tp_capet_cotation.html">TP — 6 cas chiffrés</a>
+ <a href="05_capet_sii_cotation.html">Sujet type — réglage du jeu d’un arbre de pompe</a>
+ </div>
+</div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Spécification géométrique et conception</h3><span class="niv">Concours</span></div></div>
+ <p>Tolérances de forme, d’orientation et de position, cadre et zone de tolérance, système de références, maximum de matière — et surtout le choix de conception qui les justifie. Simulateur : la même pièce refusée puis acceptée au maximum de matière.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_gps.html">Cours — spécifier à partir de la fonction</a>
+ <a href="02_tp_capet_gps.html">TP — 6 cas chiffrés</a>
+ <a href="05_capet_sii_gps.html">Sujet type — flasque de moteur</a>
+ </div></div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Cinématique</h3><span class="niv">Concours</span></div></div>
+ <p>Bielle-manivelle : loi entrée-sortie, vitesse d’un point, équiprojectivité et centre instantané de rotation. Simulateurs animés de la position du piston et des deux constructions graphiques.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_cinematique.html">Cours — la bielle-manivelle</a>
+ <a href="02_tp_capet_cinematique.html">TP — cinématique d’un moteur</a>
+ <a href="05_capet_sii_cinematique.html">Sujet type — compresseur monocylindre</a>
+ </div></div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Liaisons et hyperstatisme</h3><span class="niv">Concours</span></div></div>
+ <p>Liaisons normalisées, graphe des liaisons, degré d’hyperstatisme h = m − Nc + 6γ et conditions géométriques associées. Simulateur : un arbre sur deux paliers, avec défaut d’alignement et dilatation.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_liaisons.html">Cours — compter mobilités et inconnues</a>
+ <a href="02_tp_capet_liaisons.html">TP — 6 montages chiffrés</a>
+ <a href="05_capet_sii_liaisons.html">Sujet type — convoyeur, vérin et tiroir</a>
+ </div></div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Guidage par roulements</h3><span class="niv">Concours</span></div></div>
+ <p>Types de roulements, règles de montage, charge équivalente P = XFr + YFa et durée de vie L10. Simulateurs : dilatation d’un arbre, durée de vie en fonction de la charge.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_roulements.html">Cours — choisir et monter un roulement</a>
+ <a href="02_tp_capet_roulements.html">TP — choisir au catalogue</a>
+ <a href="05_capet_sii_roulements.html">Sujet type — arbre de réducteur</a>
+ </div></div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Frottement et adhérence</h3><span class="niv">Concours</span></div></div>
+ <p>Lois de Coulomb, cône de frottement, couple d’un embrayage et relation d’Euler pour les courroies. Simulateurs : plan incliné, embrayage, courroie.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_frottement.html">Cours — Coulomb, embrayage, courroie</a>
+ <a href="02_tp_capet_frottement.html">TP — 6 cas chiffrés</a>
+ <a href="05_capet_sii_frottement.html">Sujet type — tondeuse autoportée</a>
+ </div></div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Dynamique</h3><span class="niv">Concours</span></div></div>
+ <p>Principe fondamental en translation et en rotation, moment d’inertie, démarrage et freinage, levage. Simulateurs : chariot, course disque contre anneau, démarrage d’un moteur.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_dynamique.html">Cours — accélérer et freiner</a>
+ <a href="02_tp_capet_dynamique.html">TP — 6 cas chiffrés</a>
+ <a href="05_capet_sii_dynamique.html">Sujet type — monte-charge de chantier</a>
+ </div></div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Énergétique</h3><span class="niv">Concours</span></div></div>
+ <p>Puissance, chaîne des rendements, énergie cinétique, inertie ramenée et couple de démarrage. Simulateurs : flux de puissance avec pertes, inertie vue à travers un réducteur.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_energetique.html">Cours — puissance et rendement</a>
+ <a href="02_tp_capet_energetique.html">TP — énergétique d’un treuil</a>
+ <a href="05_capet_sii_energetique.html">Sujet type — ascenseur à contrepoids</a>
+ </div></div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Hydraulique et pneumatique</h3><span class="niv">Concours</span></div></div>
+ <p>Pression, principe de Pascal, vérin double effet, débit et puissance hydraulique, choix entre huile et air comprimé. Simulateurs : presse de Pascal, vérin animé.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_hydraulique.html">Cours — pression, débit, vérins</a>
+ <a href="02_tp_capet_hydraulique.html">TP — 6 cas chiffrés</a>
+ <a href="05_capet_sii_hydraulique.html">Sujet type — fendeuse de bûches</a>
+ </div></div>
+<div class="seq" style="--accent:#7c2d12">
+ <div class="tete"><span class="ic"></span><div><h3>CAPET SII — Matériaux et procédés</h3><span class="niv">Concours</span></div></div>
+ <p>Essai de traction, indices de performance, carte des matériaux, familles de procédés. Simulateurs : essai animé, tirants comparés, carte module-masse volumique.</p>
+ <div class="ressources">
+ <a href="01_cours_capet_materiaux.html">Cours — choisir un matériau et un procédé</a>
+ <a href="02_tp_capet_materiaux.html">TP — 6 cas chiffrés</a>
+ <a href="05_capet_sii_materiaux.html">Sujet type — manivelle de pédalier</a>
+ </div></div></div></div></div></div>
+</div>
+<div class="seq" style="--accent:var(--clf)">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="00_hub_lecture_plan.html">Lire un plan d'ensemble</a></h3>
+ <div class="desc">Vues et correspondances, types de traits, construction d'une coupe, règles de hachures, cotation et nomenclature — sur un palier lisse en plan normalisé et en perspective 3D.</div>
+ </div></div>
+ <div class="ressources">
+ <a class="hub" href="00_hub_lecture_plan.html">Hub</a>
+ <a href="01_cours_lecture_plan.html">Cours</a>
+ <a href="08_exo_lecture_plan.html">Découverte guidée</a>
+ <a href="02_tp_lecture_plan.html">TP · 5 exercices</a>
+ <a href="plan_palier.svg">Plan imprimable</a>
+ </div>
+ </div>
+ <div class="seq" style="--accent:var(--cl)">
+ <div class="haut"><div class="ic"></div><div>
+ <h3><a href="06_exo_trajectoires.html">Trajectoires et analyse graphique</a></h3>
+ <div class="desc">Identifier le mouvement de chaque pièce d'un mécanisme, puis tracer à la main la trajectoire d'un point : rotation, translation rectiligne, translation circulaire, mouvement plan quelconque.</div>
+ </div></div>
+ <div class="ressources">
+ <a href="06_exo_trajectoires.html">Exercice de tracé</a>
+ <a href="00_hub_lecture_plan.html">Séquence associée</a>
+ </div>
+ </div>
+ </div>
+</section>
+
+<section class="niveau">
+ <div class="bandeau">
+ <div class="pastille" style="background:#c0392b">BP</div>
+ <h2 style="color:#922b21">Bac Pro MFER — Maquette numérique (BIM)</h2>
+ <div class="fil" style="background:#c0392b"></div>
+ </div>
+ <div class="duo">
+ <div class="seq" style="--accent:#c0392b">
+ <div class="tete"><span class="ic"></span><div><h3>Lire une maquette BIM</h3><span class="niv">Bac Pro MFER</span></div></div>
+ <p>Visionneur 3D intégré : arborescence IFC, propriétés, systèmes, mesures et coupes. Chaque TP se termine par un document réponse : schéma de principe et fiche technique.</p>
+ <div class="ressources">
+ <a href="02_tp_bim_1_crapauduc.html">TP 1 — Le crapauduc</a>
+ <a href="02_tp_bim_2_maison.html">TP 2 — Maison PAC air/eau</a>
+ <a href="02_tp_bim_3_bureaux.html">TP 3 — Bureaux PAC réversible</a>
+ <a href="02_tp_bim_4_superette.html">TP 4 — Supérette, froid commercial</a>
+ </div>
+</div>
+<div class="seq" style="--accent:#c0392b">
+ <div class="tete"><span class="ic"></span><div><h3>Évaluation BIM — Chaufferie de l’hôpital</h3><span class="niv">Bac Pro MFER</span></div></div>
+ <p>Chaufferie fioul extraite d’une vraie maquette Revit : explorer, identifier, mesurer, compléter le schéma. Chaque aide utilisée retire 0,5 point. Note envoyée au tableau de bord.</p>
+ <div class="ressources">
+ <a href="04_evaluation_bim_chaufferie.html">Lancer l’évaluation</a>
+ </div>
+</div>
+ </div>
+</section>
+
+<section class="niveau">
+  <div class="bandeau">
+    <div class="pastille" style="background:#7c3aed">EN</div>
+    <h2 style="color:#5b21b6">Entraînement quotidien</h2>
+    <div class="fil" style="background:#7c3aed"></div>
+  </div>
+  <div class="duo">
+    <div class="seq" style="--accent:#7c3aed">
+      <div class="haut"><div class="ic">EN</div><div>
+        <h3><a href="10_entrainement_techno.html">Entraînement Techno — séance du jour</a></h3>
+        <div class="desc">Séance courte de 10 minutes, à faire régulièrement : vocabulaire technique syllabe par syllabe, mémoire visuelle d'un schéma vu en un éclair, et tenue d'une cadence régulière. La difficulté s'adapte automatiquement au niveau de chaque élève, et la progression est conservée d'une séance à l'autre.</div>
+      </div></div>
+      <div class="ressources">
+        <a class="hub" href="10_entrainement_techno.html">Lancer une séance</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="niveau">
+  <div class="bandeau">
+    <div class="pastille" style="background:#b45309">CM</div>
+    <h2 style="color:#7c2d12">Comment ça marche ? — les inventions du quotidien</h2>
+    <div class="fil" style="background:#b45309"></div>
+  </div>
+  <div class="duo">
+    <div class="seq" style="--accent:#b45309">
+      <div class="haut"><div class="ic">TR</div><div>
+        <h3><a href="00_hub_roue_tramway.html">La roue de tramway</a></h3>
+        <div class="desc">Un train sans volant ni capteur qui prend les virages et se recentre tout seul : la conicité des roues, l auto-centrage, le mouvement de lacet et le vrai role du boudin. Avec simulateur de decalage lateral.</div>
+      </div></div>
+      <div class="ressources">
+        <a class="hub" href="00_hub_roue_tramway.html">Hub</a>
+        <a href="01_cours_roue_tramway.html">Cours interactif</a>
+        <a href="05_brevet_roue_tramway.html">Sujet type DNB</a>
+        <a href="01_cours_serrure.html">Cours — la serrure</a>
+ <a href="05_brevet_serrure.html">Sujet DNB — la serrure</a>
+ <a href="01_cours_chasse_eau.html">Cours — la chasse d’eau</a>
+ <a href="05_brevet_chasse_eau.html">Sujet DNB — la chasse d’eau</a>
+ <a href="01_cours_differentiel.html">Cours — le différentiel</a>
+ <a href="05_brevet_differentiel.html">Sujet DNB — le différentiel</a>
+ <a href="01_cours_epingle_linge.html">Cours — l’épingle à linge</a>
+ <a href="05_brevet_epingle_linge.html">Sujet DNB — l’épingle à linge</a>
+ <a href="01_cours_fermeture_eclair.html">Cours — la fermeture éclair</a>
+ <a href="05_brevet_fermeture_eclair.html">Sujet DNB — la fermeture éclair</a>
+ <a href="01_cours_thermostat.html">Cours — le thermostat</a>
+ <a href="05_brevet_thermostat.html">Sujet DNB — le thermostat</a>
+      </div>
+    </div>
+    <div class="seq" style="--accent:#0e7490">
+      <div class="haut"><div class="ic">CA</div><div>
+        <h3><a href="00_catalogue_inventions.html">Catalogue des inventions</a></h3>
+        <div class="desc">Douze objets du quotidien - fermeture eclair, serrure a goupilles, chasse d eau, differentiel, thermostat, ecran tactile - et les concepts de technologie que chacun permet de construire.</div>
+      </div></div>
+      <div class="ressources">
+        <a href="00_catalogue_inventions.html">Ouvrir le catalogue</a>
+        <a href="00_programme_technologie.html">Ancrage au programme</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="prof">
+ <div class="boite">
+ <h2>Coin professeur</h2>
+ <p>Chaque <b>évaluation</b>enregistre automatiquement les résultats (note /20, durée, détail par activité) et embarque un
+ <b>tableau de bord protégé par mot de passe</b>avec export CSV — accessible depuis le bouton discret en bas de page de chaque évaluation.
+ Les <b>TP</b>sauvegardent la progression des élèves sur le poste (localStorage) et délivrent en mission finale le <b>code de déverrouillage des deux jeux</b> :
+ la révision devient une récompense. Tous les fichiers sont autonomes et fonctionnent hors-ligne — seules les évaluations nécessitent Internet pour la remontée des résultats.</p>
+ <p style="margin-top:10px"><a href="000_tableau_de_bord.html" style="display:inline-block;background:#0e7490;color:#fff;padding:10px 20px;border-radius:11px;text-decoration:none;font-weight:900">Tableau de bord — toutes les évaluations</a>
+ &nbsp;<span style="font-size:13px;color:#64748b">résultats consolidés des 30 séquences, filtres par niveau, classe et élève, export CSV global</span></p>
+ <p style="margin-top:10px"><a href="000_suivi_classes.html" style="display:inline-block;background:#15803d;color:#fff;padding:10px 20px;border-radius:11px;text-decoration:none;font-weight:900">Suivi des classes — avancement des séquences</a>
+ &nbsp;<span style="font-size:13px;color:#64748b">où en est chaque classe : un clic par séquence pour marquer à faire, en cours ou terminé, avec filtres et export CSV</span></p>
+ <p style="margin-top:10px">La séquence <b>Sciences de l'ingénieur</b>inaugure une nouvelle génération d'activités : plus aucun QCM,
+ des exercices à saisie libre, à calcul ou à tracé, avec <b>validation globale</b> — aucune réponse n'est dévoilée avant la fin, et le barème
+ décroît à chaque essai (3 étoiles au premier, 2 au deuxième, 1 ensuite). Les plans sont dessinés aux normes ISO et accompagnés de perspectives
+ d'ensemble, éclatée et en demi-coupe.</p>
+ </div>
+</div>
+
+<footer>Portail Technologie · Cycle 4 · ESTIC Don Bosco — Saint-Dizier</footer>
+</body>
+</html>

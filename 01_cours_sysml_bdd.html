@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours 3ème — Le diagramme de définition de blocs · ESTIC</title>
+<style>
+:root{--ink:#1e3a5f;--niv:#1d4ed8;--niv-fonce:#1e40af;--orange:#ea580c;--papier:#f8fafc;--gris:#64748b;--vert:#16a34a;--rouge:#dc2626;--ombre:0 4px 14px rgba(30,58,95,.10)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--papier);color:var(--ink)}
+.estic-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;background:#fff;padding:8px 20px}
+.estic-bar img{height:38px}.estic-bar .id span{display:block;font-size:11px;color:var(--gris)}.estic-bar .copy{margin-left:auto;font-size:11px;color:var(--gris)}
+nav.side{position:fixed;left:0;top:64px;bottom:0;width:230px;overflow-y:auto}
+nav.side a{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 0;text-decoration:none}
+nav.side a .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+nav.side .aide{margin-top:18px;padding:10px 12px;line-height:1.5}
+main{margin-left:230px}
+section.slide{min-height:calc(100vh - 64px);display:flex;flex-direction:column;justify-content:center}
+.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:26px}
+.carte p{color:var(--gris);line-height:1.5;margin:6px 0}.carte .ex{display:inline-block;margin-top:8px}
+.animbox{max-width:900px}.animbox canvas{width:100%;height:auto;display:block;background:#fff}
+.legende{display:flex;align-items:center;gap:14px;margin-top:12px}.legende .caption{flex:1;min-height:46px;display:flex;align-items:center}
+.anavig{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px;flex-wrap:wrap}
+.phasepts{display:flex;gap:6px}.phasepts span{width:26px;height:6px;background:#e2e8f0}
+.navbtn{border:none;color:#fff;font-size:15px;cursor:pointer}.navbtn:disabled{background:#e2e8f0!important;color:#94a3b8;cursor:not-allowed}
+.rejbtn{background:#fff;font-size:13px;padding:0 15px;cursor:pointer}
+table.mat{border-collapse:collapse;width:100%;max-width:900px;margin-top:24px}table.mat th,table.mat td{padding:12px 14px;text-align:left;color:inherit}table.mat th{color:#fff}
+.kbd{font-size:12px;padding:2px 7px;font-family:monospace}
+@media (max-width:900px){nav.side{display:none}main{margin-left:0}}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style id="theme-moderne">/* THEME-MODERNE */
+:root{--c:#1d4ed8;--cf:#1e40af;--ct:color-mix(in srgb,var(--c) 10%,#fff);--ink:#1b2f4b;--gris:#5b6b80;--ligne:#e3e9f2;--ombre-c:0 14px 34px -16px color-mix(in srgb,var(--c) 45%,transparent),0 2px 6px rgba(15,23,42,.05)}
+body{font-family:Nunito,'Segoe UI',system-ui,sans-serif;color:var(--ink);background:radial-gradient(900px 600px at 100% 0%,color-mix(in srgb,var(--c) 13%,transparent),transparent 70%),radial-gradient(800px 700px at 0% 100%,color-mix(in srgb,var(--c) 9%,transparent),transparent 70%),#f4f7fb;background-attachment:fixed}
+.estic-bar{background:rgba(255,255,255,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--ligne);box-shadow:none;padding:10px 22px}
+.estic-bar .id b{color:var(--ink);font-size:15px}.estic-bar .id span{font-size:12.5px}
+.estic-bar .copy{font-size:12px}
+nav.side{top:76px;left:14px;bottom:14px;width:236px;background:rgba(255,255,255,.75);backdrop-filter:blur(14px);border:1px solid #fff;border-radius:22px;box-shadow:var(--ombre-c);padding:14px 10px}
+nav.side a{font-size:14px;font-weight:800;color:var(--gris);border-radius:12px;padding:10px 12px}
+nav.side a .dot{width:8px;height:8px;background:#cbd5e1}
+nav.side a:hover{background:var(--ct);color:var(--cf)}
+nav.side a.actif{background:linear-gradient(135deg,var(--c),var(--cf));color:#fff;box-shadow:0 8px 18px -10px var(--c)}
+nav.side a.actif .dot{background:#fff;transform:none}
+nav.side .aide{background:var(--ct);border-radius:12px;font-size:12px}
+main{margin-left:264px}
+section.slide,#sObj:not(div),#sTrace{padding:56px clamp(22px,4vw,64px);border-bottom:0;max-width:1120px}
+#sObj:not(div),#sTrace{min-height:auto}
+.eyebrow{display:inline-block;align-self:flex-start;letter-spacing:0;text-transform:none;font-size:14px;font-weight:900;color:var(--cf);background:var(--ct);border-radius:999px;padding:6px 14px;margin-bottom:14px}
+h1{font-size:clamp(38px,4.6vw,58px);line-height:1.04;color:var(--ink);font-weight:900;text-wrap:balance}
+h2{font-size:clamp(28px,3vw,38px);line-height:1.1;color:var(--ink);font-weight:900;margin-bottom:22px;text-wrap:balance}
+h2::after{content:"";display:block;width:56px;height:6px;border-radius:99px;background:linear-gradient(90deg,var(--c),color-mix(in srgb,var(--c) 40%,#fff));margin-top:12px}
+.sous{font-size:18.5px;color:#3b4d66;line-height:1.55}
+.sous b,.retenir b,.carte p b{color:var(--cf)}
+.intro{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:28px;align-items:center}
+.intro-txt{display:flex;flex-direction:column}
+.intro-img{width:100%;border-radius:28px;box-shadow:var(--ombre-c);aspect-ratio:16/10;object-fit:cover}
+.cartes{gap:20px}
+.carte{border-top:0;border-radius:22px;background:rgba(255,255,255,.85);border:1px solid #fff;box-shadow:0 14px 30px -18px color-mix(in srgb,var(--accent,var(--c)) 55%,transparent),0 2px 6px rgba(15,23,42,.05);padding:22px;transition:transform .2s}
+.carte:hover{transform:translateY(-3px)}
+.carte .ic{width:66px;height:66px;border-radius:20px;display:flex;align-items:center;justify-content:center;color:var(--accent,var(--c));background:color-mix(in srgb,var(--accent,var(--c)) 13%,#fff);font-size:20px;font-weight:900;margin-bottom:6px}
+.carte .ic:empty{display:none}.carte .ic svg{width:46px;height:46px}
+.carte h3{font-size:19px;font-weight:900;color:var(--ink)}
+.carte p{font-size:15px}
+.carte .ex{font-size:13px;font-weight:800;background:color-mix(in srgb,var(--accent,var(--c)) 10%,#fff);color:color-mix(in srgb,var(--accent,var(--c)) 75%,#0f172a);border-radius:10px;padding:4px 12px}
+.animbox,.encart,.formule,.retenir,table.mat{border-radius:24px;background:rgba(255,255,255,.88);border:1px solid #fff;box-shadow:var(--ombre-c)}
+.animbox{padding:20px}
+.animbox canvas{border-radius:16px;border:1px solid var(--ligne)}
+.legende .caption{font-size:17px;font-weight:800;color:var(--ink);background:var(--ct);border-left:0;border-radius:14px;padding:12px 16px}
+.navbtn,.legende button{border-radius:999px;background:linear-gradient(135deg,var(--c),var(--cf));font-weight:900;min-height:44px;padding:0 22px;box-shadow:0 8px 18px -10px var(--c)}
+.navbtn:hover:not(:disabled),.legende button:hover{filter:brightness(1.08);background:linear-gradient(135deg,var(--c),var(--cf))}
+.navbtn:disabled{box-shadow:none}
+.rejbtn{border-radius:999px;border:1.5px solid var(--ligne);color:var(--ink);min-height:44px;font-weight:800}
+.rejbtn:hover{border-color:var(--c);background:#fff}
+.phasepts span{height:8px;border-radius:99px}.phasepts span.on{background:var(--c)}
+.formule{border-left:0}.formule .f{color:var(--cf)}
+table.mat{overflow:hidden}
+table.mat th{background:linear-gradient(135deg,var(--c),var(--cf));font-weight:900}
+table.mat td{font-size:15px;border-bottom:1px solid var(--ligne)}
+table.mat tr:nth-child(even) td{background:color-mix(in srgb,var(--c) 4%,#fff)}
+.plus,.moins{display:inline-block;border-radius:999px;padding:1px 10px;font-weight:800}
+.plus{background:#dcfce7;color:#166534}.moins{background:#fee2e2;color:#991b1b}
+.encart{padding:22px}.encart h3{color:var(--ink);font-weight:900}
+.retenir{border-left:0;padding:26px 28px}
+.retenir ul{list-style:none}
+.retenir li{position:relative;margin:12px 0;padding-left:38px;font-size:17.5px}
+.retenir li::before{content:"";position:absolute;left:0;top:2px;width:26px;height:26px;border-radius:50%;background:var(--c) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.obj-bloc{background:rgba(255,255,255,.88);border:1px solid #fff;border-radius:22px;box-shadow:var(--ombre-c);padding:20px 24px;margin:0 0 14px;max-width:900px}
+div#sObj.obj-bloc{margin-top:28px}
+.obj-t{font-size:13px;font-weight:900;color:var(--cf);background:var(--ct);display:inline-block;border-radius:999px;padding:4px 12px;margin:4px 0 10px}
+.obj-bloc ul{margin:0 0 10px 22px;line-height:1.75;font-size:15.5px}
+.obj-bloc li::marker{color:var(--c)}
+.obj-bloc table{width:100%;border-collapse:collapse;font-size:14.5px;line-height:1.55}
+.obj-bloc td{padding:8px 10px;border-bottom:1px solid var(--ligne);vertical-align:top}
+.obj-bloc tr:last-child td{border-bottom:0}
+.obj-code{white-space:nowrap;font-weight:900;color:var(--cf)}
+.obj-rep{margin-top:10px;font-size:14px;color:var(--gris)}
+#sTrace{position:relative}
+#sTrace .tr-consigne{font-size:15px;color:var(--gris);font-weight:700;margin-bottom:12px}
+#sTrace .tr-schema{width:100%;display:block;border-radius:18px;background:#fff;border:1px solid var(--ligne);box-shadow:var(--ombre-c)}
+#sTrace .tr-liste{margin-top:16px;background:#fff;border-radius:20px;box-shadow:var(--ombre-c);padding:16px 22px 16px 44px;line-height:2;font-size:16px;background-image:repeating-linear-gradient(transparent 0 31px,#e8eef7 31px 32px);background-position:0 14px}
+.kbd{border-radius:6px;background:#fff;border:1px solid var(--ligne)}
+button:focus-visible,a:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+@media (max-width:900px){main{margin-left:0}.intro{grid-template-columns:1fr}.intro-img{max-width:520px}section.slide,#sObj:not(div),#sTrace{padding:36px 20px}}
+@media (prefers-reduced-motion:reduce){.carte{transition:none}}
+</style>
+</head>
+<body>
+<div class="estic-bar">
+ <img alt="Logo ESTIC" src="logo_estic.png">
+ <div class="id"><b>Professeur AGOSTINI</b><span>Technologie · ESTIC</span></div>
+ <div class="copy">© ESTIC — Tous droits réservés</div>
+</div>
+<div class="layout">
+<nav class="side" id="menu"><a href="#s1"><span class="dot"></span>Définition de blocs</a><a href="#sObj"><span class="dot"></span>Objectifs &amp; compétences</a><a href="#s2"><span class="dot"></span>À quoi ça sert ?</a><a href="#s3"><span class="dot"></span>Diagramme de définition de blocs (animation)</a><a href="#s4"><span class="dot"></span>Le vocabulaire</a><a href="#s5"><span class="dot"></span>Lire un autre diagramme</a><a href="#s6"><span class="dot"></span>Bloc ou pas bloc ?</a><a href="#s7"><span class="dot"></span>À retenir</a><a href="#sTrace"><span class="dot"></span>Trace écrite</a><div class="aide">Navigation : molette ou touches <span class="kbd">↑</span> <span class="kbd">↓</span></div></nav>
+<main>
+<section class="slide" id="s1">
+ <div class="intro"><div class="intro-txt"><div class="eyebrow">Technologie · 3ème · SysML · Diagramme bdd</div>
+ <h1>Le diagramme de définition de blocs</h1>
+ <p class="sous" style="margin-top:16px">De quoi est fait le robot ? Le diagramme de définition de blocs décrit son architecture. Notre fil rouge : un <b>robot aspirateur</b>.</p></div><img class="intro-img" src="img/portail/sysml-definition-de-blocs-3e.webp" alt=""></div>
+</section>
+<section id="sObj">
+ <h2>Objectifs et compétences travaillées</h2>
+ <div class="obj-bloc"><div class="obj-t">OBJECTIFS D’APPRENTISSAGE</div><ul><li>Identifier le bloc système et ses sous-ensembles.</li><li>Lire le losange noir : la composition.</li><li>Lire une multiplicité et une valeur.</li></ul></div>
+ <div class="obj-bloc"><div class="obj-t">COMPÉTENCES DU PROGRAMME (BO n° 9 du 29 février 2024)</div><table><tr><td class="obj-code">T2 · C4</td><td>Décrire et caractériser l’organisation interne d’un objet ou d’un système technique et ses échanges avec son environnement (énergies, données)</td></tr><tr><td class="obj-code">T1 · C3</td><td>Caractériser et choisir un objet ou un système technique selon différents critères</td></tr></table>
+ <div class="obj-rep"><b>Repère de progressivité :</b> 3e — décrire la structure et le comportement d’un système avec un langage adapté (SysML).</div></div>
+</section>
+<section class="slide" id="s2">
+ <h2>À quoi sert ce diagramme ?</h2>
+ <div class="cartes"><div class="carte" style="--accent:#4f46e5"><h3>LE BLOC</h3><p>Un élément du système : pièce ou sous-ensemble.</p><span class="ex">«block» Batterie</span></div><div class="carte" style="--accent:#1e293b"><h3>LA COMPOSITION</h3><p>Le losange noir : le tout est composé des parties.</p><span class="ex">robot ◆— batterie</span></div><div class="carte" style="--accent:#0e7490"><h3>LES VALEURS</h3><p>Les caractéristiques chiffrées d’un bloc.</p><span class="ex">2600 mAh</span></div></div>
+</section>
+<section class="slide" id="s3"><h2>Construire le diagramme de définition de blocs</h2><div class="animbox">
+ <canvas id="cvA1" width="820" height="420"></canvas>
+ <div class="legende"><div class="caption" id="cap_a1"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="a1">◀ Précédent</button>
+ <div class="phasepts" id="pts_a1"></div>
+ <button class="navbtn" data-next="a1">Suivant ▶</button>
+ <button class="rejbtn" data-anim="a1">⟳ Rejouer l’étape</button>
+ </div>
+</div></section>
+<section class="slide" id="s4"><h2>Le vocabulaire</h2><table class="mat"><tr><th>Mot</th><th>Ce que ça veut dire</th></tr><tr><td><b>Bloc «block»</b></td><td>élément du système : pièce, sous-ensemble ou système entier</td></tr><tr><td><b>Composition ◆</b></td><td>losange noir côté « tout » : le tout est fait des parties</td></tr><tr><td><b>Multiplicité</b></td><td>nombre d’exemplaires d’une partie : 2 moteurs</td></tr><tr><td><b>Valeurs (values)</b></td><td>caractéristiques chiffrées : capacité, tension, vitesse</td></tr><tr><td><b>Architecture</b></td><td>organisation des blocs qui composent le système</td></tr></table></section>
+<section class="slide" id="s5"><h2>Lire un autre diagramme : la trottinette</h2><div class="animbox">
+ <canvas id="cvA2" width="820" height="420"></canvas>
+ <div class="legende"><div class="caption" id="cap_a2"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="a2">◀ Précédent</button>
+ <div class="phasepts" id="pts_a2"></div>
+ <button class="navbtn" data-next="a2">Suivant ▶</button>
+ <button class="rejbtn" data-anim="a2">⟳ Rejouer l’étape</button>
+ </div>
+</div></section>
+<section class="slide" id="s6"><h2>Bloc ou pas bloc ?</h2><div class="animbox">
+ <canvas id="cvA3" width="820" height="420"></canvas>
+ <div class="legende"><div class="caption" id="cap_a3"></div></div>
+ <div class="anavig">
+ <button class="navbtn" data-prev="a3">◀ Précédent</button>
+ <div class="phasepts" id="pts_a3"></div>
+ <button class="navbtn" data-next="a3">Suivant ▶</button>
+ <button class="rejbtn" data-anim="a3">⟳ Rejouer l’étape</button>
+ </div>
+</div></section>
+<section class="slide" id="s7"><h2>À retenir</h2><div class="retenir"><ul><li>Le diagramme de définition de blocs (bdd) décrit de <b>quoi est fait</b> le système.</li><li>Chaque élément est un <b>bloc</b> : «block» + son nom.</li><li>Le <b>losange noir</b> côté « tout » indique la <b>composition</b>.</li><li>La <b>multiplicité</b> donne le nombre d’exemplaires : 2 moteurs.</li><li>Les <b>valeurs</b> d’un bloc sont ses caractéristiques chiffrées.</li></ul></div>
+ <p class="sous" style="margin-top:22px">Prochaine étape : le <b>TP</b>, pour lire et compléter des diagrammes toi-même.</p></section>
+<section id="sTrace">
+ <h2>Trace écrite</h2>
+ <p class="tr-consigne">À recopier sur le cahier, schéma compris.</p>
+ <canvas id="trace_sysml" width="820" height="420" class="tr-schema"></canvas>
+ <ul class="tr-liste"><li>Un <b>bloc</b> représente un élément du système, avec son nom.</li><li>Le <b>losange noir</b> (composition) relie le système aux blocs qui le composent.</li><li>La <b>multiplicité</b> indique le nombre d’exemplaires d’un bloc.</li><li>Les <b>valeurs</b> donnent les caractéristiques chiffrées d’un bloc.</li></ul>
+</section>
+</main>
+</div>
+<script>
+/* ===== SYS : dessin de diagrammes SysML sur canvas (cours, TP, jeux, évaluations) =====
+   Un modèle = {W,H, el:[éléments], liens:[liens]}. SYS.dessiner(c,M,o) le trace.
+   o.vis(id) → opacité 0..1 (apparition progressive), o.hl : ids surlignés,
+   o.trous : ids dont le texte est masqué (case à compléter), o.remplis : {id:texte},
+   o.faux : ids marqués en rouge. Les flèches s'arrêtent à la base de la pointe. */
+const SYS=(function(){
+ const F='Nunito, Segoe UI, sans-serif';
+ const COUL={ink:'#1e293b',trait:'#334155',bloc:'#eef2ff',blocB:'#4f46e5',exig:'#fff7ed',exigB:'#c2410c',cu:'#ecfeff',cuB:'#0e7490',etat:'#f0fdf4',etatB:'#15803d',vie:'#f5f3ff',vieB:'#6d28d9',
+  energie:'#ea580c',info:'#2563eb',matiere:'#92400e',hl:'#f59e0b',faux:'#dc2626'};
+ function setup(cv){ const W=+cv.getAttribute('width'),H=+cv.getAttribute('height'),R=Math.min(2,window.devicePixelRatio||1)*1.25;
+  cv.width=Math.round(W*R); cv.height=Math.round(H*R); const c=cv.getContext('2d'); c.setTransform(R,0,0,R,0,0); c.W=W; c.H=H; c.R=R; return c; }
+ function boite(c,x,y,w,h,r){ c.beginPath(); c.roundRect(x,y,w,h,r); }
+ function lignes(c,txt,maxw){ const mots=String(txt).split(' '), L=[]; let cur=''; mots.forEach(m=>{ const t=cur?cur+' '+m:m; if(c.measureText(t).width>maxw&&cur){ L.push(cur); cur=m; } else cur=t; }); if(cur) L.push(cur); return L; }
+ function texteC(c,txt,x,y,maxw,taille,coul,poids=800,lh){ c.font=`${poids} ${taille}px ${F}`; c.fillStyle=coul; c.textAlign='center'; const L=lignes(c,txt,maxw); lh=lh||taille*1.22; const y0=y-(L.length-1)*lh/2; L.forEach((l,i)=>c.fillText(l,x,y0+i*lh+taille*.35)); return L.length; }
+ function ombre(c,on){ if(on){ c.shadowColor='rgba(15,23,42,.16)'; c.shadowBlur=10; c.shadowOffsetY=4; } else { c.shadowColor='transparent'; c.shadowBlur=0; c.shadowOffsetY=0; } }
+ function halo(c,e){ const z=zoneEl(e); if(!z) return; c.save(); c.fillStyle='rgba(250,204,21,.28)'; c.beginPath(); c.roundRect(z[0]-8,z[1]-8,z[2]+16,z[3]+16,14); c.fill(); c.restore(); }
+ function zoneEl(e){ if(e.type==='cu') return [e.x-e.rx,e.y-e.ry,2*e.rx,2*e.ry]; if(e.type==='acteur') return [e.x-34,e.y-46,68,90]; if(e.type==='vie') return [e.x-e.w/2,e.y,e.w,36]; if(e.type==='init'||e.type==='final') return [e.x-12,e.y-12,24,24]; if(e.w&&e.h) return [e.x,e.y,e.w,e.h]; return null; }
+ function etatEl(o,e){ return {hl:o.hl&&o.hl.includes(e.id), trou:o.trous&&o.trous.includes(e.id)&&!(o.remplis&&o.remplis[e.id]), txt:(o.remplis&&o.remplis[e.id])||e.txt, faux:o.faux&&o.faux.includes(e.id)}; }
+ function contour(c,s,base){ return s.faux?COUL.faux:s.hl?COUL.hl:base; }
+ function trou(c,x,y,w,h){ c.save(); c.setLineDash([6,5]); c.strokeStyle='#94a3b8'; c.lineWidth=2; boite(c,x,y,w,h,8); c.fillStyle='#f8fafc'; c.fill(); c.stroke(); c.restore(); c.font=`900 18px ${F}`; c.fillStyle='#94a3b8'; c.textAlign='center'; c.fillText('?',x+w/2,y+h/2+6); }
+ /* ---------- éléments ---------- */
+ const D={
+  cadre(c,e,s){ c.strokeStyle='#64748b'; c.lineWidth=1.6; c.strokeRect(e.x,e.y,e.w,e.h); c.font=`800 13px ${F}`; const t=e.txt, w=c.measureText(t).width+24;
+   c.fillStyle='#f1f5f9'; c.beginPath(); c.moveTo(e.x,e.y); c.lineTo(e.x+w,e.y); c.lineTo(e.x+w,e.y+14); c.lineTo(e.x+w-10,e.y+26); c.lineTo(e.x,e.y+26); c.closePath(); c.fill(); c.stroke(); c.fillStyle='#334155'; c.textAlign='left'; c.fillText(t,e.x+8,e.y+18); },
+  frontiere(c,e,s){ c.fillStyle='rgba(255,255,255,.7)'; c.strokeStyle=contour(c,s,'#475569'); c.lineWidth=2; boite(c,e.x,e.y,e.w,e.h,6); c.fill(); c.stroke(); if(s.trou) trou(c,e.x+e.w/2-80,e.y+6,160,26); else { c.font=`900 15px ${F}`; c.fillStyle='#334155'; c.textAlign='center'; c.fillText(s.txt,e.x+e.w/2,e.y+22); } },
+  bloc(c,e,s){ const B=e.coul||COUL.blocB; ombre(c,1); c.fillStyle=e.fond||COUL.bloc; boite(c,e.x,e.y,e.w,e.h,6); c.fill(); ombre(c,0); c.strokeStyle=contour(c,s,B); c.lineWidth=s.hl||s.faux?3.5:2; c.stroke();
+   const hT=e.props?44:e.h; c.font=`700 11px ${F}`; c.fillStyle='#64748b'; c.textAlign='center'; c.fillText(e.stereo||'«block»',e.x+e.w/2,e.y+(e.props?16:e.h/2-8));
+   if(s.trou) trou(c,e.x+12,e.y+(e.props?20:e.h/2-4),e.w-24,22); else { let fs=14; c.font=`900 ${fs}px ${F}`; while(e.props&&fs>10.5&&c.measureText(s.txt).width>e.w-12){ fs-=.5; c.font=`900 ${fs}px ${F}`; } if(e.props){ c.fillStyle=COUL.ink; c.textAlign='center'; c.fillText(s.txt,e.x+e.w/2,e.y+36); } else texteC(c,s.txt,e.x+e.w/2,e.y+e.h/2+8,e.w-14,14,COUL.ink,900); }
+   if(e.props){ c.strokeStyle=B; c.lineWidth=1.2; c.beginPath(); c.moveTo(e.x,e.y+hT); c.lineTo(e.x+e.w,e.y+hT); c.stroke(); c.font=`700 11px ${F}`; c.fillStyle='#64748b'; c.textAlign='left'; c.fillText(e.titreProps||'values',e.x+8,e.y+hT+14);
+    c.font=`700 12px ${F}`; c.fillStyle=COUL.ink; e.props.forEach((p,i)=>{ if(o_trouProp(s,e,i)) trou(c,e.x+8,e.y+hT+20+i*18,e.w-16,16); else c.fillText(p,e.x+8,e.y+hT+32+i*18); }); } },
+  part(c,e,s){ const B=e.coul||COUL.blocB; ombre(c,1); c.fillStyle='#fff'; boite(c,e.x,e.y,e.w,e.h,6); c.fill(); ombre(c,0); c.strokeStyle=contour(c,s,B); c.lineWidth=s.hl||s.faux?3.5:2; c.stroke();
+   if(s.trou) trou(c,e.x+10,e.y+e.h/2-11,e.w-20,22); else { const n=texteC(c,s.txt,e.x+e.w/2,e.y+e.h/2,e.w-14,13.5,COUL.ink,900); } },
+  exig(c,e,s){ const B=COUL.exigB; ombre(c,1); c.fillStyle=COUL.exig; boite(c,e.x,e.y,e.w,e.h,6); c.fill(); ombre(c,0); c.strokeStyle=contour(c,s,B); c.lineWidth=s.hl||s.faux?3.5:2; c.stroke();
+   c.font=`700 11px ${F}`; c.fillStyle='#9a3412'; c.textAlign='center'; c.fillText('«requirement»',e.x+e.w/2,e.y+15); c.font=`900 13.5px ${F}`; c.fillStyle=COUL.ink; c.fillText(e.nom,e.x+e.w/2,e.y+32);
+   c.strokeStyle=B; c.lineWidth=1.2; c.beginPath(); c.moveTo(e.x,e.y+40); c.lineTo(e.x+e.w,e.y+40); c.stroke();
+   c.font=`800 11.5px ${F}`; c.fillStyle='#475569'; c.textAlign='left'; c.fillText('id = '+e.num,e.x+8,e.y+56);
+   if(s.trou) trou(c,e.x+8,e.y+62,e.w-16,e.h-68); else { c.font=`700 12px ${F}`; c.fillStyle=COUL.ink; lignes(c,'texte = « '+s.txt+' »',e.w-16).forEach((l,i)=>c.fillText(l,e.x+8,e.y+74+i*15)); } },
+  acteur(c,e,s){ const x=e.x,y=e.y,k=e.k||1, col=contour(c,s,'#1e293b'); c.strokeStyle=col; c.lineWidth=2.6; c.lineCap='round';
+   c.beginPath(); c.arc(x,y-34*k,9*k,0,7); c.fillStyle='#fff'; c.fill(); c.stroke(); c.beginPath(); c.moveTo(x,y-25*k); c.lineTo(x,y); c.moveTo(x-14*k,y-16*k); c.lineTo(x+14*k,y-16*k); c.moveTo(x,y); c.lineTo(x-11*k,y+18*k); c.moveTo(x,y); c.lineTo(x+11*k,y+18*k); c.stroke();
+   if(s.trou) trou(c,x-56,y+24*k,112,22); else texteC(c,s.txt,x,y+34*k,120,13,COUL.ink,900); },
+  cu(c,e,s){ ombre(c,1); c.fillStyle=COUL.cu; c.beginPath(); c.ellipse(e.x,e.y,e.rx,e.ry,0,0,7); c.fill(); ombre(c,0); c.strokeStyle=contour(c,s,COUL.cuB); c.lineWidth=s.hl||s.faux?3.5:2; c.stroke();
+   if(s.trou) trou(c,e.x-e.rx+16,e.y-11,2*e.rx-32,22); else texteC(c,s.txt,e.x,e.y,2*e.rx-20,13,COUL.ink,900); },
+  vie(c,e,s){ ombre(c,1); c.fillStyle=COUL.vie; boite(c,e.x-e.w/2,e.y,e.w,36,6); c.fill(); ombre(c,0); c.strokeStyle=contour(c,s,COUL.vieB); c.lineWidth=s.hl?3.5:2; c.stroke();
+   if(s.trou) trou(c,e.x-e.w/2+8,e.y+7,e.w-16,22); else texteC(c,s.txt,e.x,e.y+18,e.w-10,13,COUL.ink,900);
+   c.save(); c.setLineDash([7,6]); c.strokeStyle='#7c3aed'; c.lineWidth=1.8; c.beginPath(); c.moveTo(e.x,e.y+36); c.lineTo(e.x,e.y2); c.stroke(); c.restore();
+   (e.act||[]).forEach(([a,b])=>{ c.fillStyle='#ede9fe'; c.strokeStyle='#6d28d9'; c.lineWidth=1.5; c.fillRect(e.x-6,a,12,b-a); c.strokeRect(e.x-6,a,12,b-a); }); },
+  etat(c,e,s){ ombre(c,1); c.fillStyle=COUL.etat; boite(c,e.x,e.y,e.w,e.h,18); c.fill(); ombre(c,0); c.strokeStyle=contour(c,s,COUL.etatB); c.lineWidth=s.hl||s.faux?3.5:2; c.stroke();
+   if(s.trou) trou(c,e.x+12,e.y+e.h/2-11,e.w-24,22); else texteC(c,s.txt,e.x+e.w/2,e.y+e.h/2,e.w-16,14,COUL.ink,900);
+   if(e.entree){ c.font=`700 11px ${F}`; c.fillStyle='#166534'; c.textAlign='center'; c.fillText(e.entree,e.x+e.w/2,e.y+e.h-8); } },
+  init(c,e,s){ c.fillStyle=contour(c,s,'#1e293b'); c.beginPath(); c.arc(e.x,e.y,9,0,7); c.fill(); },
+  final(c,e,s){ c.strokeStyle='#1e293b'; c.lineWidth=2; c.beginPath(); c.arc(e.x,e.y,11,0,7); c.stroke(); c.fillStyle='#1e293b'; c.beginPath(); c.arc(e.x,e.y,6.5,0,7); c.fill(); },
+  port(c,e,s){ c.fillStyle='#fff'; c.strokeStyle=contour(c,s,'#1e293b'); c.lineWidth=2; c.fillRect(e.x-7,e.y-7,14,14); c.strokeRect(e.x-7,e.y-7,14,14); },
+  texte(c,e,s){ if(s.trou){ trou(c,e.x-e.w/2,e.y-11,e.w,22); return; } c.font=`${e.poids||800} ${e.taille||13}px ${F}`; c.fillStyle=e.coul||COUL.ink; c.textAlign=e.al||'center'; c.fillText(s.txt,e.x,e.y+5); },
+  fragment(c,e,s){ c.strokeStyle='#64748b'; c.lineWidth=1.6; c.strokeRect(e.x,e.y,e.w,e.h); c.font=`900 12px ${F}`; const w=c.measureText(e.txt).width+18; c.fillStyle='#f1f5f9'; c.beginPath(); c.moveTo(e.x,e.y); c.lineTo(e.x+w,e.y); c.lineTo(e.x+w,e.y+12); c.lineTo(e.x+w-8,e.y+20); c.lineTo(e.x,e.y+20); c.closePath(); c.fill(); c.stroke(); c.fillStyle='#334155'; c.textAlign='left'; c.fillText(e.txt,e.x+6,e.y+15); if(e.garde){ c.font=`800 12px ${F}`; c.fillText(e.garde,e.x+w+8,e.y+15); } },
+ };
+ function o_trouProp(s,e,i){ return s.trousProps&&s.trousProps.includes(i); }
+ /* ---------- géométrie des liens ---------- */
+ function centre(e){ if(e.type==='cu'||e.type==='acteur'||e.type==='init'||e.type==='final'||e.type==='port') return [e.x,e.type==='acteur'?e.y-12:e.y]; if(e.type==='vie') return [e.x,e.y+18]; return [e.x+e.w/2,e.y+e.h/2]; }
+ function bord(e,vers){ const [cx,cy]=centre(e), dx=vers[0]-cx, dy=vers[1]-cy;
+  if(e.type==='cu'){ const t=1/Math.sqrt((dx*dx)/(e.rx*e.rx)+(dy*dy)/(e.ry*e.ry)); return [cx+dx*t,cy+dy*t]; }
+  if(e.type==='acteur'){ const d=Math.hypot(dx,dy)||1; return [cx+dx/d*30,cy+dy/d*34]; }
+  if(e.type==='init'||e.type==='final'){ const d=Math.hypot(dx,dy)||1, r=e.type==='init'?9:11; return [cx+dx/d*r,cy+dy/d*r]; }
+  if(e.type==='port') return [cx,cy];
+  const hw=e.w/2, hh=e.h/2; const t=Math.min(Math.abs(dx)>1e-6?hw/Math.abs(dx):1e9, Math.abs(dy)>1e-6?hh/Math.abs(dy):1e9); return [cx+dx*t,cy+dy*t]; }
+ function tete(c,x1,y1,x2,y2,style,col){ const a=Math.atan2(y2-y1,x2-x1), L=14, l=7, bx=x2-L*Math.cos(a), by=y2-L*Math.sin(a);
+  c.beginPath(); c.moveTo(bx+l*Math.sin(a),by-l*Math.cos(a)); c.lineTo(x2,y2); c.lineTo(bx-l*Math.sin(a),by+l*Math.cos(a));
+  if(style==='plein'){ c.closePath(); c.fillStyle=col; c.fill(); return [bx,by]; } c.setLineDash([]); c.strokeStyle=col; c.lineWidth=2; c.stroke(); return [x2,y2]; }
+ function losange(c,x,y,a,plein,col){ c.save(); c.translate(x,y); c.rotate(a); c.beginPath(); c.moveTo(0,0); c.lineTo(10,-6); c.lineTo(20,0); c.lineTo(10,6); c.closePath(); c.fillStyle=plein?col:'#fff'; c.fill(); c.strokeStyle=col; c.lineWidth=1.8; c.stroke(); c.restore(); return [x+20*Math.cos(a),y+20*Math.sin(a)]; }
+ function plusCercle(c,x,y,a,col){ const cx=x+8*Math.cos(a), cy=y+8*Math.sin(a); c.fillStyle='#fff'; c.strokeStyle=col; c.lineWidth=1.8; c.beginPath(); c.arc(cx,cy,8,0,7); c.fill(); c.stroke(); c.beginPath(); c.moveTo(cx-5,cy); c.lineTo(cx+5,cy); c.moveTo(cx,cy-5); c.lineTo(cx,cy+5); c.stroke(); return [x+16*Math.cos(a),y+16*Math.sin(a)]; }
+ const STY={ assoc:{d:0,fin:0}, compo:{d:0,deb:'losangeP'}, agreg:{d:0,deb:'losangeV'}, contient:{d:0,deb:'plus'}, satisfait:{d:1,fin:'ouvert',st:'«satisfy»'}, raffine:{d:1,fin:'ouvert',st:'«refine»'}, verifie:{d:1,fin:'ouvert',st:'«verify»'}, derive:{d:1,fin:'ouvert',st:'«deriveReqt»'},
+  include:{d:1,fin:'ouvert',st:'«include»'}, extend:{d:1,fin:'ouvert',st:'«extend»'}, flux:{d:0,fin:'plein'}, msg:{d:0,fin:'plein'}, async:{d:0,fin:'ouvert'}, retour:{d:1,fin:'ouvert'}, trans:{d:0,fin:'ouvert'}, connecteur:{d:0,fin:0} };
+ function lien(c,M,L,s){ const E=id=>M.el.find(e=>e.id===id); const A=E(L.de), B=E(L.a); if(!A||!B) return; const st=STY[L.type]||STY.assoc;
+  let col=L.coul||(L.nature?COUL[L.nature]:'#334155'); if(s.faux) col=COUL.faux; else if(s.hl&&!L.nature) col=COUL.hl;
+  let pts;
+  if(L.type==='msg'||L.type==='retour'||L.type==='async'){ pts=[[A.x+(B.x>A.x?6:-6),L.y],[B.x+(B.x>A.x?-6:6),L.y]]; }
+  else { const mid=L.pts||[]; const p0=bord(A,mid[0]||centre(B)), p1=bord(B,mid.length?mid[mid.length-1]:centre(A)); pts=[p0,...mid,p1]; }
+  if(s.hl){ c.save(); c.strokeStyle='rgba(250,204,21,.45)'; c.lineWidth=14; c.lineCap='round'; c.beginPath(); c.moveTo(...pts[0]); for(let i=1;i<pts.length;i++) c.lineTo(...pts[i]); c.stroke(); c.restore(); }
+  c.save(); c.strokeStyle=col; c.lineWidth=s.hl||s.faux?3.2:(L.type==='flux'?3:2); c.lineCap='butt';
+  // extrémités décorées
+  let [x0,y0]=pts[0], [xa,ya]=pts[1]; const a0=Math.atan2(ya-y0,xa-x0);
+  if(st.deb==='losangeP'||st.deb==='losangeV'){ const p=losange(c,x0,y0,a0,st.deb==='losangeP',col); pts[0]=p; }
+  if(st.deb==='plus'){ const p=plusCercle(c,x0,y0,a0,col); pts[0]=p; }
+  const n=pts.length, [xb,yb]=pts[n-2], [x1,y1]=pts[n-1];
+  let fin=[x1,y1]; if(st.fin) fin=tete(c,xb,yb,x1,y1,st.fin,col);
+  c.strokeStyle=col; if(st.d) c.setLineDash([7,5]); c.beginPath(); c.moveTo(...pts[0]); for(let i=1;i<n-1;i++) c.lineTo(...pts[i]); c.lineTo(...(st.fin==='plein'?fin:[x1,y1])); c.stroke(); c.setLineDash([]);
+  // étiquette
+  const lab=s.trou?null:(L.label!=null?L.label:st.st); const mi=Math.floor((n-1)/2), m=[(pts[mi][0]+pts[mi+1][0])/2+(L.lx||0),(pts[mi][1]+pts[mi+1][1])/2+(L.ly||0)];
+  if(s.trou){ trou(c,m[0]-60,m[1]-12,120,24); }
+  else if(lab){ c.font=`800 12px ${F}`; const w=c.measureText(lab).width+12; c.fillStyle='rgba(255,255,255,.92)'; boite(c,m[0]-w/2,m[1]-10,w,20,10); c.fill(); c.fillStyle=L.nature?col:(s.hl?'#b45309':'#334155'); c.textAlign='center'; c.fillText(lab,m[0],m[1]+4); }
+  if(L.mult){ c.font=`900 12px ${F}`; c.fillStyle='#334155'; c.textAlign='center'; c.fillText(L.mult,x1+(L.mx||12),y1+(L.my||-8)); }
+  c.restore(); }
+ function dessiner(c,M,o={}){ const vis=o.vis||(()=>1);
+  (M.el||[]).filter(e=>e.type==='cadre'||e.type==='frontiere'||e.type==='fragment').forEach(e=>{ const a=vis(e.id); if(a<=0) return; c.globalAlpha=a; D[e.type](c,e,etatEl(o,e)); });
+  (M.liens||[]).forEach(L=>{ const a=vis(L.id||(L.de+'>'+L.a)); if(a<=0) return; c.globalAlpha=a; const id=L.id||(L.de+'>'+L.a); lien(c,M,L,{hl:o.hl&&o.hl.includes(id),faux:o.faux&&o.faux.includes(id),trou:o.trous&&o.trous.includes(id)&&!(o.remplis&&o.remplis[id])}); if(o.remplis&&o.remplis[id]){} });
+  (M.el||[]).filter(e=>e.type!=='cadre'&&e.type!=='frontiere'&&e.type!=='fragment').forEach(e=>{ const a=vis(e.id); if(a<=0) return; c.globalAlpha=a; const s=etatEl(o,e); if(s.hl) halo(c,e); s.trousProps=o.trousProps&&o.trousProps[e.id]; D[e.type](c,e,s); });
+  c.globalAlpha=1; }
+ // zone cliquable d'un élément ou du milieu d'un lien (pour les TP)
+ function zone(M,id){ const e=M.el.find(x=>x.id===id); if(e){ if(e.type==='cu') return [e.x-e.rx,e.y-e.ry,2*e.rx,2*e.ry]; if(e.type==='acteur') return [e.x-40,e.y-48,80,96]; if(e.type==='vie') return [e.x-e.w/2,e.y,e.w,36]; if(e.type==='init'||e.type==='final') return [e.x-14,e.y-14,28,28]; if(e.type==='texte') return [e.x-(e.w||100)/2,e.y-14,e.w||100,28]; if(e.type==='frontiere') return [e.x+e.w/2-80,e.y+4,160,30]; return [e.x,e.y,e.w,e.h]; }
+  const L=M.liens.find(l=>(l.id||(l.de+'>'+l.a))===id); if(!L) return null; const A=M.el.find(x=>x.id===L.de),B=M.el.find(x=>x.id===L.a);
+  if(L.type==='msg'||L.type==='retour'||L.type==='async') return [Math.min(A.x,B.x),L.y-14,Math.abs(B.x-A.x),28];
+  const ca=centre(A), cb=centre(B), mid=L.pts&&L.pts.length?L.pts[Math.floor((L.pts.length)/2)]:[(ca[0]+cb[0])/2,(ca[1]+cb[1])/2]; return [mid[0]-60+(L.lx||0),mid[1]-14+(L.ly||0),120,28]; }
+ return {setup,dessiner,zone,COUL,F,texteC,boite};
+})();
+
+/* ===== Modèles SysML du fil rouge (robot aspirateur) et modèles de transfert ===== */
+const MODELES={
+/* ---------- EXIGENCES ---------- */
+req:{W:820,H:420,el:[
+ {id:'cadre',type:'cadre',x:6,y:6,w:808,h:408,txt:'req [Exigences] Robot aspirateur'},
+ {id:'e0',type:'exig',x:300,y:40,w:220,h:104,nom:'Nettoyer le sol',num:'1',txt:'Aspirer la poussière d’une pièce sans aide'},
+ {id:'e1',type:'exig',x:24,y:196,w:220,h:104,nom:'Autonomie',num:'1.1',txt:'Nettoyer 90 min au moins sans recharge'},
+ {id:'e2',type:'exig',x:300,y:196,w:220,h:104,nom:'Discrétion',num:'1.2',txt:'Bruit inférieur à 65 dB'},
+ {id:'e3',type:'exig',x:576,y:196,w:220,h:104,nom:'Sécurité',num:'1.3',txt:'Ne jamais tomber dans un escalier'},
+ {id:'b1',type:'bloc',x:64,y:348,w:140,h:52,txt:'Batterie'},
+ {id:'b3',type:'bloc',x:616,y:348,w:140,h:52,txt:'Capteur de vide'}],
+ liens:[{id:'l1',de:'e0',a:'e1',type:'contient'},{id:'l2',de:'e0',a:'e2',type:'contient'},{id:'l3',de:'e0',a:'e3',type:'contient'},
+ {id:'s1',de:'b1',a:'e1',type:'satisfait',lx:58},{id:'s3',de:'b3',a:'e3',type:'satisfait',lx:58}]},
+req_trott:{W:820,H:420,el:[
+ {id:'cadre',type:'cadre',x:6,y:6,w:808,h:408,txt:'req [Exigences] Trottinette électrique'},
+ {id:'e0',type:'exig',x:300,y:40,w:220,h:104,nom:'Se déplacer en ville',num:'1',txt:'Transporter une personne en ville'},
+ {id:'e1',type:'exig',x:24,y:196,w:220,h:104,nom:'Vitesse',num:'1.1',txt:'Vitesse maximale de 25 km/h'},
+ {id:'e2',type:'exig',x:300,y:196,w:220,h:104,nom:'Freinage',num:'1.2',txt:'S’arrêter en moins de 4 m'},
+ {id:'e3',type:'exig',x:576,y:196,w:220,h:104,nom:'Masse',num:'1.3',txt:'Peser moins de 15 kg'},
+ {id:'b1',type:'bloc',x:64,y:348,w:140,h:52,txt:'Moteur'},
+ {id:'b2',type:'bloc',x:340,y:348,w:140,h:52,txt:'Frein à disque'}],
+ liens:[{id:'l1',de:'e0',a:'e1',type:'contient'},{id:'l2',de:'e0',a:'e2',type:'contient'},{id:'l3',de:'e0',a:'e3',type:'contient'},
+ {id:'s1',de:'b1',a:'e1',type:'satisfait',lx:58},{id:'s2',de:'b2',a:'e2',type:'satisfait',lx:58}]},
+/* ---------- CAS D'UTILISATION ---------- */
+uc:{W:820,H:420,el:[
+ {id:'cadre',type:'cadre',x:6,y:6,w:808,h:408,txt:'uc [Cas d’utilisation] Robot aspirateur'},
+ {id:'sys',type:'frontiere',x:250,y:44,w:340,h:362,txt:'Robot aspirateur'},
+ {id:'a1',type:'acteur',x:120,y:200,txt:'Utilisateur'},
+ {id:'a2',type:'acteur',x:710,y:310,txt:'Base de charge'},
+ {id:'c1',type:'cu',x:420,y:110,rx:120,ry:30,txt:'Nettoyer une pièce'},
+ {id:'c2',type:'cu',x:420,y:190,rx:120,ry:30,txt:'Programmer un nettoyage'},
+ {id:'c3',type:'cu',x:420,y:270,rx:120,ry:30,txt:'Vider le bac à poussière'},
+ {id:'c4',type:'cu',x:420,y:350,rx:120,ry:30,txt:'Recharger la batterie'}],
+ liens:[{id:'u1',de:'a1',a:'c1',type:'assoc'},{id:'u2',de:'a1',a:'c2',type:'assoc'},{id:'u3',de:'a1',a:'c3',type:'assoc'},{id:'u4',de:'a2',a:'c4',type:'assoc'}]},
+uc_portail:{W:820,H:420,el:[
+ {id:'cadre',type:'cadre',x:6,y:6,w:808,h:408,txt:'uc [Cas d’utilisation] Portail automatique'},
+ {id:'sys',type:'frontiere',x:250,y:44,w:340,h:362,txt:'Portail automatique'},
+ {id:'a1',type:'acteur',x:120,y:160,txt:'Habitant'},
+ {id:'a2',type:'acteur',x:120,y:330,txt:'Visiteur'},
+ {id:'a3',type:'acteur',x:710,y:250,txt:'Installateur'},
+ {id:'c1',type:'cu',x:420,y:120,rx:120,ry:30,txt:'Ouvrir le portail'},
+ {id:'c2',type:'cu',x:420,y:220,rx:120,ry:30,txt:'Sonner à l’interphone'},
+ {id:'c3',type:'cu',x:420,y:320,rx:120,ry:30,txt:'Régler la vitesse'}],
+ liens:[{id:'u1',de:'a1',a:'c1',type:'assoc'},{id:'u2',de:'a2',a:'c2',type:'assoc'},{id:'u3',de:'a3',a:'c3',type:'assoc'}]},
+/* ---------- DÉFINITION DE BLOCS ---------- */
+bdd:{W:820,H:420,el:[
+ {id:'cadre',type:'cadre',x:6,y:6,w:808,h:408,txt:'bdd [Architecture] Robot aspirateur'},
+ {id:'b0',type:'bloc',x:320,y:44,w:180,h:58,txt:'Robot aspirateur'},
+ {id:'b1',type:'bloc',x:18,y:250,w:146,h:118,txt:'Batterie',props:['capacité = 2600 mAh','tension = 14,4 V']},
+ {id:'b2',type:'bloc',x:178,y:250,w:146,h:118,txt:'Moteur de roue',props:['vitesse = 0,3 m/s']},
+ {id:'b3',type:'bloc',x:338,y:250,w:146,h:118,txt:'Brosse',props:['diamètre = 17 cm']},
+ {id:'b4',type:'bloc',x:498,y:250,w:146,h:118,txt:'Capteur',props:['portée = 10 cm']},
+ {id:'b5',type:'bloc',x:658,y:250,w:146,h:118,txt:'Carte de commande',props:['type = microcontrôleur']}],
+ liens:[{id:'k1',de:'b0',a:'b1',type:'compo',pts:[[410,170],[91,170]],label:''},{id:'k2',de:'b0',a:'b2',type:'compo',pts:[[410,170],[251,170]],label:'',mult:'2',mx:14,my:-10},
+ {id:'k3',de:'b0',a:'b3',type:'compo',label:''},{id:'k4',de:'b0',a:'b4',type:'compo',pts:[[410,170],[571,170]],label:'',mult:'6',mx:14,my:-10},{id:'k5',de:'b0',a:'b5',type:'compo',pts:[[410,170],[731,170]],label:''}]},
+bdd_trott:{W:820,H:420,el:[
+ {id:'cadre',type:'cadre',x:6,y:6,w:808,h:408,txt:'bdd [Architecture] Trottinette électrique'},
+ {id:'b0',type:'bloc',x:320,y:44,w:180,h:58,txt:'Trottinette'},
+ {id:'b1',type:'bloc',x:40,y:250,w:160,h:100,txt:'Batterie',props:['énergie = 360 Wh']},
+ {id:'b2',type:'bloc',x:230,y:250,w:160,h:100,txt:'Moteur',props:['puissance = 350 W']},
+ {id:'b3',type:'bloc',x:420,y:250,w:160,h:100,txt:'Roue',props:['diamètre = 8,5 pouces']},
+ {id:'b4',type:'bloc',x:610,y:250,w:160,h:100,txt:'Guidon',props:['largeur = 42 cm']}],
+ liens:[{id:'k1',de:'b0',a:'b1',type:'compo',pts:[[410,170],[120,170]],label:''},{id:'k2',de:'b0',a:'b2',type:'compo',pts:[[410,170],[310,170]],label:''},
+ {id:'k3',de:'b0',a:'b3',type:'compo',pts:[[410,170],[500,170]],label:'',mult:'2',mx:14,my:-10},{id:'k4',de:'b0',a:'b4',type:'compo',pts:[[410,170],[690,170]],label:''}]},
+/* ---------- BLOCS INTERNES ---------- */
+ibd:{W:820,H:420,el:[
+ {id:'cadre',type:'cadre',x:6,y:6,w:808,h:408,txt:'ibd [Robot aspirateur]'},
+ {id:'p1',type:'part',x:40,y:80,w:170,h:64,txt:'batterie : Batterie',coul:'#059669'},
+ {id:'p2',type:'part',x:325,y:80,w:170,h:64,txt:'carte : Carte de commande',coul:'#4f46e5'},
+ {id:'p3',type:'part',x:610,y:80,w:170,h:64,txt:'moteurs : Moteur de roue',coul:'#ea580c'},
+ {id:'p4',type:'part',x:40,y:290,w:170,h:64,txt:'capteurs : Capteur',coul:'#2563eb'},
+ {id:'p5',type:'part',x:325,y:290,w:170,h:64,txt:'brosse : Brosse',coul:'#ea580c'},
+ {id:'p6',type:'part',x:610,y:290,w:170,h:64,txt:'bac : Bac à poussière',coul:'#92400e'}],
+ liens:[{id:'f1',de:'p1',a:'p2',type:'flux',nature:'energie',label:'énergie électrique',ly:-16},
+ {id:'f2',de:'p2',a:'p3',type:'flux',nature:'energie',label:'énergie électrique',ly:-16},
+ {id:'f3',de:'p4',a:'p2',type:'flux',nature:'info',label:'obstacle détecté',lx:-44,ly:22},
+ {id:'f4',de:'p2',a:'p5',type:'flux',nature:'energie',label:'énergie électrique',lx:70},
+ {id:'f5',de:'p5',a:'p6',type:'flux',nature:'matiere',label:'poussière',ly:-16}]},
+ibd_lampe:{W:820,H:420,el:[
+ {id:'cadre',type:'cadre',x:6,y:6,w:808,h:408,txt:'ibd [Lampe connectée]'},
+ {id:'p1',type:'part',x:40,y:80,w:170,h:64,txt:'pile : Batterie',coul:'#059669'},
+ {id:'p2',type:'part',x:325,y:80,w:170,h:64,txt:'module : Carte Wi-Fi',coul:'#4f46e5'},
+ {id:'p3',type:'part',x:610,y:80,w:170,h:64,txt:'led : DEL',coul:'#ea580c'},
+ {id:'p4',type:'part',x:325,y:290,w:170,h:64,txt:'capteur : Capteur de lumière',coul:'#2563eb'}],
+ liens:[{id:'f1',de:'p1',a:'p2',type:'flux',nature:'energie',label:'énergie électrique',ly:-16},
+ {id:'f2',de:'p2',a:'p3',type:'flux',nature:'energie',label:'énergie électrique',ly:-16},
+ {id:'f3',de:'p4',a:'p2',type:'flux',nature:'info',label:'luminosité',lx:-48}]},
+/* ---------- SÉQUENCE ---------- */
+seq:{W:820,H:420,el:[
+ {id:'cadre',type:'cadre',x:6,y:6,w:808,h:408,txt:'sd [Lancer un nettoyage]'},
+ {id:'v1',type:'vie',x:130,y:46,w:130,y2:404,txt:'Utilisateur'},
+ {id:'v2',type:'vie',x:410,y:46,w:130,y2:404,txt:'Application'},
+ {id:'v3',type:'vie',x:690,y:46,w:130,y2:404,txt:'Robot'}],
+ liens:[{id:'m1',de:'v1',a:'v2',type:'msg',y:116,label:'appuyer sur « Nettoyer »'},
+ {id:'m2',de:'v2',a:'v3',type:'msg',y:166,label:'ordre de démarrage'},
+ {id:'m3',de:'v3',a:'v2',type:'retour',y:216,label:'état : en cours'},
+ {id:'m4',de:'v2',a:'v1',type:'retour',y:262,label:'afficher « nettoyage »'},
+ {id:'m5',de:'v3',a:'v2',type:'async',y:322,label:'nettoyage terminé'},
+ {id:'m6',de:'v2',a:'v1',type:'async',y:372,label:'notification'}]},
+seq_portail:{W:820,H:420,el:[
+ {id:'cadre',type:'cadre',x:6,y:6,w:808,h:408,txt:'sd [Ouvrir le portail]'},
+ {id:'v1',type:'vie',x:130,y:46,w:130,y2:404,txt:'Habitant'},
+ {id:'v2',type:'vie',x:410,y:46,w:130,y2:404,txt:'Télécommande'},
+ {id:'v3',type:'vie',x:690,y:46,w:130,y2:404,txt:'Portail'}],
+ liens:[{id:'m1',de:'v1',a:'v2',type:'msg',y:120,label:'appuyer sur le bouton'},
+ {id:'m2',de:'v2',a:'v3',type:'msg',y:180,label:'signal radio « ouvrir »'},
+ {id:'m4',de:'v3',a:'v1',type:'async',y:250,label:'feu orange clignote'},
+ {id:'m5',de:'v3',a:'v1',type:'async',y:320,label:'portail ouvert'}]},
+/* ---------- ÉTATS ---------- */
+stm:{W:820,H:420,el:[
+ {id:'cadre',type:'cadre',x:6,y:6,w:808,h:408,txt:'stm [Robot aspirateur]'},
+ {id:'i0',type:'init',x:46,y:212},
+ {id:'s1',type:'etat',x:90,y:180,w:160,h:64,txt:'Veille'},
+ {id:'s2',type:'etat',x:330,y:56,w:170,h:64,txt:'Nettoyage'},
+ {id:'s3',type:'etat',x:600,y:180,w:190,h:64,txt:'Retour à la base'},
+ {id:'s4',type:'etat',x:330,y:320,w:170,h:64,txt:'Charge'}],
+ liens:[{id:'t0',de:'i0',a:'s1',type:'trans',label:''},
+ {id:'t1',de:'s1',a:'s2',type:'trans',label:'bouton appuyé',lx:-58,ly:-8},
+ {id:'t2',de:'s2',a:'s3',type:'trans',label:'batterie < 15 %',lx:62,ly:-8},
+ {id:'t3',de:'s3',a:'s4',type:'trans',label:'arrivé sur la base',lx:72,ly:8},
+ {id:'t4',de:'s4',a:'s1',type:'trans',label:'batterie pleine',lx:-62,ly:8}]},
+stm_portail:{W:820,H:420,el:[
+ {id:'cadre',type:'cadre',x:6,y:6,w:808,h:408,txt:'stm [Portail automatique]'},
+ {id:'i0',type:'init',x:46,y:212},
+ {id:'s1',type:'etat',x:90,y:180,w:160,h:64,txt:'Fermé'},
+ {id:'s2',type:'etat',x:330,y:56,w:170,h:64,txt:'Ouverture'},
+ {id:'s3',type:'etat',x:600,y:180,w:190,h:64,txt:'Ouvert'},
+ {id:'s4',type:'etat',x:330,y:320,w:170,h:64,txt:'Fermeture'}],
+ liens:[{id:'t0',de:'i0',a:'s1',type:'trans',label:''},
+ {id:'t1',de:'s1',a:'s2',type:'trans',label:'bouton appuyé',lx:-58,ly:-8},
+ {id:'t2',de:'s2',a:'s3',type:'trans',label:'fin de course',lx:62,ly:-8},
+ {id:'t3',de:'s3',a:'s4',type:'trans',label:'après 30 s',lx:62,ly:8},
+ {id:'t4',de:'s4',a:'s1',type:'trans',label:'fin de course',lx:-62,ly:8}]},
+};
+
+/* ============================================================
+ MOTEUR D'ANIMATIONS PÉDAGOGIQUES EN PHASES (version illustrée)
+ Chaque animation = phases successives {dur, caption, draw(ctx,p,W,H,t)}
+ p : avancement de la phase (0 → 1), t : temps en secondes (décor vivant)
+ Rendu net sur écran haute définition, décor animé tant que la diapositive est visible.
+ ============================================================ */
+const ANIMS={};
+function creerAnim(nom,canvasId,capId,ptsId,phases){
+ const cv=document.getElementById(canvasId),ctx=cv.getContext('2d');
+ const W=+cv.getAttribute('width'),H=+cv.getAttribute('height'),dpr=Math.min(2,window.devicePixelRatio||1)*1.25;
+ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+ const cap=document.getElementById(capId),pts=document.getElementById(ptsId);
+ phases.forEach(()=>{const s=document.createElement('span');pts.appendChild(s);});
+ const etat={i:0,t0:null,raf:null,vis:false,debut:performance.now()};
+ function majPts(){[...pts.children].forEach((s,k)=>s.classList.toggle('on',k<=etat.i));}
+ function majBtns(){
+  const bp=document.querySelector('button[data-prev="'+nom+'"]'),bn=document.querySelector('button[data-next="'+nom+'"]');
+  if(bp) bp.disabled=(etat.i===0); if(bn) bn.disabled=(etat.i===phases.length-1);
+ }
+ function peindre(p,ts){
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+  phases[etat.i].draw(ctx,p,W,H,(ts-etat.debut)/1000);
+ }
+ function boucle(ts){
+  if(etat.t0===null) etat.t0=ts;
+  const p=Math.min(1,(ts-etat.t0)/phases[etat.i].dur);
+  peindre(p,ts);
+  if(p<1||etat.vis) etat.raf=requestAnimationFrame(boucle); else etat.raf=null;
+ }
+ function jouer(){
+  cancelAnimationFrame(etat.raf); etat.t0=null;
+  cap.textContent=phases[etat.i].caption; majPts(); majBtns();
+  etat.raf=requestAnimationFrame(boucle);
+ }
+ if('IntersectionObserver' in window) new IntersectionObserver(es=>es.forEach(e=>{
+  etat.vis=e.isIntersecting; if(etat.vis&&etat.raf===null&&etat.t0!==null){etat.t0=performance.now()-phases[etat.i].dur; etat.raf=requestAnimationFrame(boucle);} })).observe(cv);
+ ANIMS[nom]={
+  demarrer(){ etat.i=0; jouer(); }, rejouer(){ jouer(); },
+  suivant(){ if(etat.i<phases.length-1){ etat.i++; jouer(); } },
+  precedent(){ if(etat.i>0){ etat.i--; jouer(); } }
+ };
+ cap.textContent=phases[0].caption; majPts(); majBtns();
+ const go=()=>peindre(0,performance.now());
+ document.fonts&&document.fonts.ready? document.fonts.ready.then(go):go(); go();
+}
+const lisse = p =>p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+const rebond = p => p<1 ? 1-Math.pow(1-p,3)*Math.cos(p*9)*(1-p) : 1;
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const sous=(p,a,b)=>clamp((p-a)/(b-a));   // avancement entre a et b
+const POLICE='Nunito, Segoe UI, sans-serif';
+
+/* ---------- Bibliothèque de dessin ---------- */
+const G={
+ ciel(c,W,H,haut='#bfe3ff',bas='#f2f9ff'){ const g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,haut); g.addColorStop(1,bas); c.fillStyle=g; c.fillRect(0,0,W,H); },
+ soleil(c,x,y,r=26){ const g=c.createRadialGradient(x,y,0,x,y,r*3); g.addColorStop(0,'rgba(255,236,150,.9)'); g.addColorStop(.35,'rgba(255,236,150,.35)'); g.addColorStop(1,'rgba(255,236,150,0)');
+  c.fillStyle=g; c.beginPath(); c.arc(x,y,r*3,0,7); c.fill(); c.fillStyle='#ffd65a'; c.beginPath(); c.arc(x,y,r,0,7); c.fill(); },
+ nuage(c,x,y,s=1,a=.9){ c.save(); c.globalAlpha=a; c.fillStyle='#fff'; c.beginPath();
+  [[0,0,22],[24,-10,26],[50,0,20],[26,8,22]].forEach(([dx,dy,r])=>{c.moveTo(x+dx*s+r*s,y+dy*s); c.arc(x+dx*s,y+dy*s,r*s,0,7);}); c.fill(); c.restore(); },
+ nuages(c,W,t,y0=40){ [[.1,0,1],[.55,18,.8],[.85,-6,1.1]].forEach(([fx,dy,s],k)=>{ const x=((fx*W+t*(8+k*4))%(W+160))-80; G.nuage(c,x,y0+dy,s,.85); }); },
+ collines(c,W,y,coul1='#cfe8d6',coul2='#b4dcc2'){
+  c.fillStyle=coul1; c.beginPath(); c.moveTo(0,y); for(let x=0;x<=W;x+=20) c.lineTo(x,y-18-14*Math.sin(x/90)-8*Math.sin(x/37)); c.lineTo(W,y); c.closePath(); c.fill();
+  c.fillStyle=coul2; c.beginPath(); c.moveTo(0,y); for(let x=0;x<=W;x+=20) c.lineTo(x,y-6-10*Math.sin(x/70+2)); c.lineTo(W,y); c.closePath(); c.fill(); },
+ sol(c,x0,x1,y,H){ const g=c.createLinearGradient(0,y,0,H); g.addColorStop(0,'#8fcf7a'); g.addColorStop(.12,'#7cbf66'); g.addColorStop(.13,'#a0794f'); g.addColorStop(1,'#7a5a3a');
+  c.fillStyle=g; c.fillRect(x0,y,x1-x0,H-y); },
+ eau(c,x0,x1,y,H,t){ const g=c.createLinearGradient(0,y,0,H); g.addColorStop(0,'#5ab4e8'); g.addColorStop(1,'#2a7fbf'); c.fillStyle=g; c.fillRect(x0,y,x1-x0,H-y);
+  c.strokeStyle='rgba(255,255,255,.55)'; c.lineWidth=2; c.lineCap='round';
+  for(let k=0;k<9;k++){ const yy=y+10+((k*13)%(H-y-12)), xx=x0+((k*97+t*22)%(x1-x0-40)); c.beginPath(); c.moveTo(xx,yy); c.lineTo(xx+18+(k%3)*8,yy); c.stroke(); } },
+ boite(c,x,y,w,h,r=8){ c.beginPath(); c.roundRect(x,y,w,h,r); },
+ // étiquette en pastille
+ pastille(c,txt,x,y,coul,taille=15,fond='#fff'){
+  c.font=`900 ${taille}px ${POLICE}`; const w=c.measureText(txt).width+taille*1.3, h=taille*1.85;
+  c.save(); c.shadowColor='rgba(15,23,42,.18)'; c.shadowBlur=10; c.shadowOffsetY=3;
+  c.fillStyle=fond; G.boite(c,x-w/2,y-h/2,w,h,h/2); c.fill(); c.restore();
+  c.strokeStyle=coul; c.lineWidth=2; G.boite(c,x-w/2,y-h/2,w,h,h/2); c.stroke();
+  c.fillStyle=coul; c.textAlign='center'; c.textBaseline='middle'; c.fillText(txt,x,y+1); c.textBaseline='alphabetic'; },
+ titre(c,txt,x,y,coul='#1b2f4b',taille=22){ c.font=`900 ${taille}px ${POLICE}`; c.fillStyle=coul; c.textAlign='center'; c.fillText(txt,x,y); },
+ texte(c,txt,x,y,coul='#475569',taille=14,al='center'){ c.font=`800 ${taille}px ${POLICE}`; c.fillStyle=coul; c.textAlign=al; c.fillText(txt,x,y); },
+ // flèche épaisse avec liseré blanc : le trait s'arrête à la base de la pointe, la pointe va jusqu'à (x2,y2)
+ fleche(c,x1,y1,x2,y2,coul,ep=6){
+  const a=Math.atan2(y2-y1,x2-x1), L=ep*2.6+6, l=ep*1.7+4, bx=x2-L*Math.cos(a), by=y2-L*Math.sin(a);
+  const tete=()=>{ c.beginPath(); c.moveTo(x2,y2); c.lineTo(bx-l*Math.sin(a),by+l*Math.cos(a)); c.lineTo(bx+l*Math.sin(a),by-l*Math.cos(a)); c.closePath(); };
+  c.lineCap='butt'; c.lineJoin='round';
+  c.strokeStyle='#fff'; c.lineWidth=ep+5; c.beginPath(); c.moveTo(x1,y1); c.lineTo(bx,by); c.stroke(); tete(); c.lineWidth=5; c.stroke();
+  c.strokeStyle=coul; c.lineWidth=ep; c.beginPath(); c.moveTo(x1,y1); c.lineTo(bx+Math.cos(a),by+Math.sin(a)); c.stroke(); c.fillStyle=coul; tete(); c.fill(); },
+ // camion
+ camion(c,x,y,s=1,coul='#f59e0b'){ c.save(); c.translate(x,y); c.scale(s,s);
+  c.fillStyle='rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(0,1,40,4,0,0,7); c.fill();
+  const g=c.createLinearGradient(0,-34,0,-8); g.addColorStop(0,coul); g.addColorStop(1,'#d97706');
+  c.fillStyle=g; G.boite(c,-40,-34,50,26,4); c.fill();
+  c.fillStyle='#1e3a8a'; G.boite(c,12,-28,22,20,5); c.fill(); c.fillStyle='#bfdbfe'; G.boite(c,22,-25,9,9,2); c.fill();
+  c.fillStyle='#334155'; c.fillRect(-40,-10,74,4);
+  [-26,22].forEach(wx=>{ c.fillStyle='#1f2937'; c.beginPath(); c.arc(wx,-4,7.5,0,7); c.fill(); c.fillStyle='#cbd5e1'; c.beginPath(); c.arc(wx,-4,3,0,7); c.fill(); });
+  c.restore(); },
+ // appui en béton avec ombre
+ appui(c,x,y){ c.fillStyle='rgba(0,0,0,.15)'; c.beginPath(); c.ellipse(x,y+38,34,5,0,0,7); c.fill();
+  const g=c.createLinearGradient(x-26,0,x+26,0); g.addColorStop(0,'#cbd5e1'); g.addColorStop(1,'#94a3b8');
+  c.fillStyle=g; c.beginPath(); c.moveTo(x-12,y); c.lineTo(x+12,y); c.lineTo(x+26,y+36); c.lineTo(x-26,y+36); c.closePath(); c.fill();
+  c.fillStyle='#e2e8f0'; c.fillRect(x-14,y-4,28,5); },
+ // caisse en bois
+ caisse(c,x,y,w=70,h=52,coul='#c0843d'){ c.save(); c.translate(x,y);
+  const g=c.createLinearGradient(0,-h,0,0); g.addColorStop(0,'#d9a35e'); g.addColorStop(1,coul); c.fillStyle=g; G.boite(c,-w/2,-h,w,h,5); c.fill();
+  c.strokeStyle='#8a5a24'; c.lineWidth=3; G.boite(c,-w/2,-h,w,h,5); c.stroke();
+  c.beginPath(); c.moveTo(-w/2+6,-h+6); c.lineTo(w/2-6,-6); c.moveTo(w/2-6,-h+6); c.lineTo(-w/2+6,-6); c.stroke();
+  c.fillStyle='#fff'; c.font=`900 13px ${POLICE}`; c.textAlign='center'; c.restore(); },
+ boulon(c,x,y,r=9){ const g=c.createRadialGradient(x-r*.35,y-r*.35,1,x,y,r); g.addColorStop(0,'#f8fafc'); g.addColorStop(1,'#475569');
+  c.fillStyle=g; c.beginPath(); c.arc(x,y,r,0,7); c.fill(); c.strokeStyle='#1e293b'; c.lineWidth=1.5; c.stroke(); },
+ // barre métallique (deux passes + reflet)
+ barre(c,x1,y1,x2,y2,coul='#64748b',ep=14){ c.lineCap='round';
+  c.strokeStyle='rgba(15,23,42,.25)'; c.lineWidth=ep+4; c.beginPath(); c.moveTo(x1,y1+3); c.lineTo(x2,y2+3); c.stroke();
+  c.strokeStyle=coul; c.lineWidth=ep; c.beginPath(); c.moveTo(x1,y1); c.lineTo(x2,y2); c.stroke();
+  c.strokeStyle='rgba(255,255,255,.45)'; c.lineWidth=ep*.25; c.beginPath(); const a=Math.atan2(y2-y1,x2-x1), ox=Math.sin(a)*ep*.22, oy=-Math.cos(a)*ep*.22;
+  c.moveTo(x1+ox,y1+oy); c.lineTo(x2+ox,y2+oy); c.stroke(); },
+ halo(c,x,y,r,coul){ const g=c.createRadialGradient(x,y,0,x,y,r); g.addColorStop(0,coul); g.addColorStop(1,'rgba(255,255,255,0)'); c.fillStyle=g; c.beginPath(); c.arc(x,y,r,0,7); c.fill(); }
+};
+
+
+/* ===== Animations construites à partir des modèles ===== */
+const ANIMS_DEF={"anim1": {"titre": "Construire le diagramme de définition de blocs", "modele": "bdd", "phases": [["STRUCTURE — Le cadre « bdd » : block definition diagram.", ["cadre"], []], ["En haut, le bloc du système entier : le robot aspirateur.", ["b0"], ["b0"]], ["En dessous, les blocs qui le composent : batterie, moteurs, brosse…", ["b1", "b2", "b3", "b4", "b5"], ["b1", "b2", "b3", "b4", "b5"]], ["Le losange noir côté robot : le robot est composé de ces blocs.", ["k1", "k2", "k3", "k4", "k5"], ["k1", "k3", "k5"]], ["Le chiffre est une multiplicité : 2 moteurs de roue, 6 capteurs.", [], ["k2", "k4"]]]}, "anim2": {"titre": "Lire un autre diagramme : la trottinette", "modele": "bdd_trott", "phases": [["À toi de lire : l’architecture d’une trottinette électrique.", ["*"], []], ["La trottinette est composée de 4 sortes de blocs.", [], ["b0", "k1", "k2", "k3", "k4"]], ["Multiplicité 2 : la trottinette a deux roues.", [], ["k3", "b3"]], ["Valeur du moteur : puissance = 350 W.", [], ["b2"]]]}, "anim3": {"titre": "Bloc ou pas bloc ?", "modele": "bdd", "phases": [["Un bloc est un élément du système : on peut le toucher ou le remplacer.", ["*"], ["b1", "b3"]], ["« Nettoyer » est une action, pas un bloc : sa place est dans un cas d’utilisation.", [], [], ["b3"], {"b3": "Nettoyer"}], ["Le losange est toujours côté système : le tout, pas la partie.", [], ["k1", "k2", "k3", "k4", "k5"]]]}};
+function idsModele(M){ return [...M.el.map(e=>e.id),...M.liens.map(l=>l.id||(l.de+'>'+l.a))]; }
+function fondDiag(c,W,H){ const g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,'#ffffff'); g.addColorStop(1,'#f5f8ff'); c.fillStyle=g; c.fillRect(0,0,W,H);
+ c.fillStyle='rgba(29,78,216,.05)'; for(let x=14;x<W;x+=24) for(let y=14;y<H;y+=24){ c.beginPath(); c.arc(x,y,1.2,0,7); c.fill(); } }
+function phasesDe(def){ const M=MODELES[def.modele], tous=idsModele(M); let deja=[];
+ return def.phases.map(ph=>{ const [cap,show,hl,faux,rempl]=ph; const nouv=show.includes('*')?tous.filter(i=>!deja.includes(i)):show; const avant=deja.slice(); deja=deja.concat(nouv);
+  const n=Math.max(1,nouv.length);
+  return {dur:Math.max(2600,1400+nouv.length*500), caption:cap, draw(c,p,W,H,t){ fondDiag(c,W,H);
+   const vis=id=>{ if(avant.includes(id)) return 1; const k=nouv.indexOf(id); if(k<0) return 0; return clamp((p*1.4-k/n*.9)*n/1.2); };
+   const pulse=.5+.5*Math.sin(t*5);
+   SYS.dessiner(c,M,{vis,hl:p>.15?hl:[],faux:faux||[],remplis:rempl||{}});
+  }}; }); }
+creerAnim('a1','cvA1','cap_a1','pts_a1',phasesDe(ANIMS_DEF.anim1));
+creerAnim('a2','cvA2','cap_a2','pts_a2',phasesDe(ANIMS_DEF.anim2));
+creerAnim('a3','cvA3','cap_a3','pts_a3',phasesDe(ANIMS_DEF.anim3));
+/* ===== Trace écrite : le diagramme du fil rouge ===== */
+(function(){ const cv=document.getElementById('trace_sysml'); const c=SYS.setup(cv); const dessin=()=>{ c.clearRect(0,0,820,420); c.fillStyle='#fff'; c.fillRect(0,0,820,420); SYS.dessiner(c,MODELES[ANIMS_DEF.anim1.modele],{}); }; dessin(); document.fonts&&document.fonts.ready&&document.fonts.ready.then(dessin); })();
+/* ===== Navigation ===== */
+document.querySelectorAll('button[data-prev]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.prev].precedent()));
+document.querySelectorAll('button[data-next]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.next].suivant()));
+document.querySelectorAll('button[data-anim]').forEach(b=>b.addEventListener('click',()=>ANIMS[b.dataset.anim].rejouer()));
+const slideAnim={s3:'a1',s5:'a2',s6:'a3'}, lancees=new Set();
+const obsAnim=new IntersectionObserver(es=>{es.forEach(en=>{const n=slideAnim[en.target.id]; if(en.isIntersecting&&n&&!lancees.has(n)){lancees.add(n);ANIMS[n].demarrer();}});},{threshold:0.5});
+Object.keys(slideAnim).forEach(id=>obsAnim.observe(document.getElementById(id)));
+const liensMenu=[...document.querySelectorAll('#menu a')];
+const obsMenu=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)liensMenu.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#'+en.target.id));});},{rootMargin:'-30% 0px -60% 0px'});
+document.querySelectorAll('main > section').forEach(s=>obsMenu.observe(s));
+const slides=[...document.querySelectorAll('main > section')];
+function slideCourante(){const y=window.scrollY+window.innerHeight/2;let best=0;slides.forEach((s,i)=>{if(s.offsetTop<y)best=i;});return best;}
+document.addEventListener('keydown',e=>{
+ if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,slideCourante()+1)].scrollIntoView({behavior:'smooth'});}
+ if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,slideCourante()-1)].scrollIntoView({behavior:'smooth'});}
+});
+</script>
+<script src="portail_suivi.js"></script>
+</body>
+</html>
