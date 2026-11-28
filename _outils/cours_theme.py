@@ -39,6 +39,13 @@ ICONS = {
  'Franchir': ic('<path d="M3 30h42M7 30v10M41 30v10M3 30c8-16 34-16 42 0M15 30v-7M24 30v-9M33 30v-7"/><path d="M14 44c3-2 6-2 9 0s6 2 9 0" opacity=".6"/>'),
  'Protéger / Retenir': ic('<path d="M8 8l8 34h16l8-34"/><path d="M12 22h24M14 31h20"/><path d="M40 16c2 2 4 2 6 0M40 24c2 2 4 2 6 0" opacity=".6"/>'),
  'Communiquer': ic('<path d="M24 16L14 44M24 16l10 28M18 32h12M16 38h16"/><circle cx="24" cy="12" r="3"/><path d="M16 6a11 11 0 0 0 0 12M32 6a11 11 0 0 1 0 12"/>'),
+ "L'ALGORITHME": ic('<path d="M10 8h28M10 18h20M10 28h24M10 38h14"/><circle cx="38" cy="36" r="5"/>'),
+ 'Le PROGRAMME': ic('<path d="M16 12L5 24l11 12M32 12l11 12-11 12M27 8l-6 32"/>'),
+ 'Le BUG': ic('<ellipse cx="24" cy="28" rx="9" ry="12"/><circle cx="24" cy="13" r="5"/><path d="M15 24H6M42 24h-9M15 33l-8 5M33 33l8 5M16 18l-6-5M32 18l6-5M24 18v22"/>'),
+ 'ALIMENTER': ic('<rect x="6" y="14" width="32" height="20" rx="3"/><path d="M38 20h4v8h-4M12 20v8M18 20v8"/>'),
+ 'DISTRIBUER': ic('<path d="M4 30h10l16-12M30 30h14"/><circle cx="14" cy="30" r="3"/><circle cx="30" cy="30" r="3"/>'),
+ 'CONVERTIR': ic('<circle cx="24" cy="24" r="15"/><path d="M17 31V17l7 9 7-9v14"/>'),
+ 'TRANSMETTRE': ic('<circle cx="13" cy="24" r="8"/><circle cx="37" cy="24" r="5"/><path d="M13 16l24 3M13 32l24-3"/>'),
  'Compression': ic('<rect x="17" y="14" width="14" height="20" rx="2"/>' + arrow(2, 24, 15, 24) + arrow(46, 24, 33, 24)),
  'Traction': ic('<rect x="17" y="18" width="14" height="12" rx="2"/>' + arrow(17, 24, 3, 24) + arrow(31, 24, 45, 24)),
  'Flexion': ic('<path d="M4 30c8 7 32 7 40 0"/><path d="M4 30v6M44 30v6"/>' + arrow(24, 6, 24, 31)),
@@ -82,7 +89,7 @@ if m:
 # intro : texte + image de la séquence
 if 'class="intro"' not in s:
     s = re.sub(r'(<section class="slide" id="s1">\s*)(<div class="eyebrow">.*?</p>)',
-               lambda m: m.group(1) + f'<div class="intro"><div class="intro-txt">{m.group(2)}</div><img class="intro-img" src="img/portail/{SLUG}.webp" alt=""></div>', s, count=1, flags=re.S)
+               lambda m: m.group(1) + f'<div class="intro"><div class="intro-txt">{m.group(2)}</div><img class="intro-img" src="img/portail/{SLUG}.webp" alt="" onerror="this.remove()"></div>', s, count=1, flags=re.S)
 
 THEME = f'''<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
 <style id="theme-moderne">{MARK}
